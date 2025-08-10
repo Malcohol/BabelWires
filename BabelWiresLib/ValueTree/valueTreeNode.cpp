@@ -204,8 +204,8 @@ void babelwires::ValueTreeNode::initializeChildren(const TypeSystem& typeSystem)
 
     const unsigned int numChildrenNow = compound->getNumChildren(value);
     for (unsigned int i = 0; i < numChildrenNow; ++i) {
-        auto [childValue, step, type] = compound->getChild(value, i);
-        auto child = std::make_unique<ValueTreeChild>(type, *childValue, this);
+        auto [childValue, step, childTypeRef] = compound->getChild(value, i);
+        auto child = std::make_unique<ValueTreeChild>(childTypeRef, *childValue, this);
         child->initializeChildren(typeSystem);
         m_children.insert_or_assign(step, i, std::move(child));
     }
@@ -234,8 +234,8 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
         std::map<PathStep, NewChildInfo> otherValues;
         unsigned int newNumChildren = compound->getNumChildren(other);
         for (unsigned int i = 0; i < newNumChildren; ++i) {
-            auto [child, step, typeRef] = compound->getChild(other, i);
-            otherValues.emplace(std::pair{step, NewChildInfo{child, typeRef, i}});
+            auto [child, step, childTypeRef] = compound->getChild(other, i);
+            otherValues.emplace(std::pair{step, NewChildInfo{child, childTypeRef, i}});
         }
 
         auto currentIt = currentChildren.begin();
@@ -252,6 +252,8 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
         auto preserveExistingChild = [&typeSystem, &newChildMap] (const auto& currentIt, const auto& otherIt) {
             std::unique_ptr<ValueTreeChild> temp;
             temp.swap(*currentIt->second);
+            // Update the type, just in case the compound has changed type (e.g. when type variables are instantiated).
+            temp->m_typeRef = otherIt->second.m_typeRef;
             temp->reconcileChangesAndSynchronizeChildren(typeSystem, *otherIt->second.m_value);
             newChildMap.insert_or_assign(otherIt->first, otherIt->second.m_index, std::move(temp));
         };
@@ -265,7 +267,6 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
                 addNewChild(otherIt);
                 ++otherIt;
             } else {
-                // TODO Assert types are the same.
                 preserveExistingChild(currentIt, otherIt);
                 ++currentIt;
                 ++otherIt;
@@ -311,6 +312,5 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
 }
 
 void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const TypeSystem& typeSystem, const ValueHolder& other, const Path& path) {
-    assert(path.getNumSteps() > 0);
     reconcileChangesAndSynchronizeChildren(typeSystem, other, path, 0);
 }

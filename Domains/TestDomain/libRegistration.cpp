@@ -18,6 +18,7 @@
 #include <Domains/TestDomain/testRecordWithVariantsTypeHierarchy.hpp>
 #include <Domains/TestDomain/testSumType.hpp>
 #include <Domains/TestDomain/testTupleType.hpp>
+#include <Domains/TestDomain/testGenericType.hpp>
 
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
@@ -37,6 +38,7 @@ void testDomain::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<testDomain::TestTupleType>();
     context.m_typeSystem.addEntry<testDomain::RecordWithNoFields>();
     context.m_typeSystem.addEntry<testDomain::TestSumType>();
+    context.m_typeSystem.addEntry<testDomain::TestGenericType>();
 
     context.m_typeSystem.addEntry<testDomain::RecordA0>();
     context.m_typeSystem.addEntry<testDomain::RecordA1>();

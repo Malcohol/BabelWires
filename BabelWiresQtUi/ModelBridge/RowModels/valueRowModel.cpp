@@ -89,7 +89,7 @@ QString babelwires::ValueRowModel::getTooltip(ColumnType c) const {
     if (rowTooltip.isEmpty() || columnTooltip.isEmpty()) {
         return rowTooltip + columnTooltip;
     } else {
-        return rowTooltip + "/n" + columnTooltip;
+        return rowTooltip + "\n" + columnTooltip;
     }
 }
 

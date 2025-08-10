@@ -10,19 +10,20 @@
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
-std::unique_ptr<babelwires::Type>
+babelwires::TypeConstructor::TypeConstructorResult
 babelwires::RecordTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
-                                                 const std::vector<const Type*>& typeArguments,
-                                                 const std::vector<EditableValueHolder>& valueArguments) const {
-    if (typeArguments.size() != valueArguments.size()) {
+                                                 const TypeConstructorArguments& arguments,
+                                                 const std::vector<const Type*>& resolvedTypeArguments) const {
+    if (arguments.m_typeArguments.size() != arguments.m_valueArguments.size()) {
         throw TypeSystemException() << "RecordTypeConstructor requires the same number of types and values, but got "
-                                    << typeArguments.size() << " and " << valueArguments.size() << " respectively";
+                                    << arguments.m_typeArguments.size() << " and " << arguments.m_valueArguments.size()
+                                    << " respectively";
     }
 
     std::vector<RecordType::Field> fields;
-    for (unsigned int i = 0; i < valueArguments.size(); ++i) {
-        if (const FieldIdValue* fieldId = valueArguments[i]->as<FieldIdValue>()) {
-            fields.emplace_back(RecordType::Field{fieldId->get(), typeArguments[i]->getTypeRef()});
+    for (unsigned int i = 0; i < arguments.m_valueArguments.size(); ++i) {
+        if (const FieldIdValue* fieldId = arguments.m_valueArguments[i]->as<FieldIdValue>()) {
+            fields.emplace_back(RecordType::Field{fieldId->get(), arguments.m_typeArguments[i]});
         } else {
             throw TypeSystemException() << "RecordTypeConstructor value argument " << i << " was not a FieldIdValue";
         }

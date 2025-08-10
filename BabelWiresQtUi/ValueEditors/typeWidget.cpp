@@ -1,4 +1,11 @@
-#include <BabelWiresQtUi/ComplexValueEditors/MapEditor/typeWidget.hpp>
+/**
+ *
+ *
+ * (C) 2025 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#include <BabelWiresQtUi/ValueEditors/typeWidget.hpp>
 
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
@@ -10,8 +17,7 @@
 #include <cassert>
 #include <unordered_set>
 
-babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem,
-                                   const MapProject::AllowedTypes& allowedTypeRefs)
+babelwires::TypeWidget::TypeWidget(QWidget* parent, const std::vector<TypeRef>& allowedTypeRefs)
     : QComboBox(parent)
     , m_hasBadItem(false) {
     m_defaultStyleSheet = styleSheet();
@@ -22,7 +28,7 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
 
     // Ensure uniqueness.
     std::unordered_set<TypeRef> typeRefSet;
-    for (const auto& typeRef : allowedTypeRefs.m_typeRefs) {
+    for (const auto& typeRef : allowedTypeRefs) {
         typeRefSet.insert(typeRef);
     }
 
@@ -30,8 +36,7 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const TypeSystem& typeSystem
     sortedNames.reserve(typeRefSet.size());
 
     for (const auto& typeRef : typeRefSet) {
-        const Type& type = typeRef.resolve(typeSystem);
-        sortedNames.emplace_back(std::tuple{type.getName(), typeRef});
+        sortedNames.emplace_back(std::tuple{typeRef.toString(), typeRef});
     }
     
     std::sort(sortedNames.begin(), sortedNames.end(), [](const auto& a, const auto& b) {
