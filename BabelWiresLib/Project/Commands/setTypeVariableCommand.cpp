@@ -7,25 +7,25 @@
  **/
 #include <BabelWiresLib/Project/Commands/setTypeVariableCommand.hpp>
 
-#include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/setTypeVariableModifierData.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
+#include <BabelWiresLib/Types/Generic/genericType.hpp>
+#include <BabelWiresLib/Types/Generic/genericValue.hpp>
+#include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
-#include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
-#include <BabelWiresLib/Types/Generic/genericType.hpp>
-#include <BabelWiresLib/Types/Generic/genericValue.hpp>
-#include <BabelWiresLib/Project/Modifiers/setTypeVariableModifierData.hpp>
 
 #include <cassert>
 
 babelwires::SetTypeVariableCommand::SetTypeVariableCommand(std::string commandName, NodeId nodeId,
-                                                           Path pathToGenericType, unsigned int variableIndex, TypeRef newType)
+                                                           Path pathToGenericType, unsigned int variableIndex,
+                                                           TypeRef newType)
     : CompoundCommand(commandName)
     , m_nodeId(nodeId)
     , m_pathToGenericType(std::move(pathToGenericType))
@@ -44,11 +44,16 @@ bool babelwires::SetTypeVariableCommand::initializeAndExecute(Project& project) 
         return false;
     }
 
-    const GenericType* const genericType = input->getType().as<GenericType>();
+    const ValueTreeNode* const genericTypeNode = tryFollowPath(m_pathToGenericType, *input);
+    if (!genericTypeNode) {
+        return false;
+    }
+
+    const GenericType* const genericType = genericTypeNode->getType().as<GenericType>();
     if (!genericType) {
         return false;
     }
-    const GenericValue& genericValue = input->getValue()->is<GenericValue>();
+    const GenericValue& genericValue = genericTypeNode->getValue()->is<GenericValue>();
     if (genericType->getTypeAssignment(genericValue, m_variableIndex) == m_newType) {
         // No change needed.
         return false;
