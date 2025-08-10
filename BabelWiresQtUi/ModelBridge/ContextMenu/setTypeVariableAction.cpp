@@ -17,21 +17,23 @@
 #include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
 #include <BabelWiresLib/Project/Commands/setTypeVariableCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableData.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <QInputDialog>
 
-babelwires::SetTypeVariableAction::SetTypeVariableAction(ProjectDataLocation pathToGenericType, unsigned int variableIndex)
-    : NodeContentsContextMenuActionBase(getActionName(variableIndex).c_str())
+babelwires::SetTypeVariableAction::SetTypeVariableAction(ProjectDataLocation pathToGenericType,
+                                                         unsigned int variableIndex, bool isSetTypeVariable)
+    : NodeContentsContextMenuActionBase(getActionName(variableIndex, isSetTypeVariable).c_str())
     , m_locationOfGenericType(std::move(pathToGenericType))
-    , m_variableIndex(variableIndex) {}
+    , m_variableIndex(variableIndex)
+    , m_isSetTypeVariable(isSetTypeVariable) {}
 
-std::string babelwires::SetTypeVariableAction::getActionName(unsigned int variableIndex) {
+std::string babelwires::SetTypeVariableAction::getActionName(unsigned int variableIndex, bool isSetTypeVariable) {
     std::ostringstream oss;
-    oss << "Set type variable " << TypeVariableData{variableIndex}.toString();
+    oss << (isSetTypeVariable ? "Set" : "Reset") << " type variable " << TypeVariableData{variableIndex}.toString();
     return oss.str();
 }
 
@@ -40,13 +42,14 @@ void babelwires::SetTypeVariableAction::actionTriggered(babelwires::NodeContents
     ProjectGraphModel& projectGraphModel = model.getProjectGraphModel();
 
     TypeRef currentAssignment;
-    
+
     // Don't keep the project locked.
     {
         AccessModelScope scope(projectGraphModel);
         const Node* const node = scope.getProject().getNode(m_locationOfGenericType.getNodeId());
 
-        const babelwires::ValueTreeNode* const input = tryFollowPath(m_locationOfGenericType.getPathToValue(), *node->getInput());
+        const babelwires::ValueTreeNode* const input =
+            tryFollowPath(m_locationOfGenericType.getPathToValue(), *node->getInput());
         if (!input) {
             return;
         }
@@ -61,7 +64,6 @@ void babelwires::SetTypeVariableAction::actionTriggered(babelwires::NodeContents
         }
     }
 
-    bool ok;
     std::ostringstream text;
     text << "GenericType at " << m_locationOfGenericType;
 
@@ -70,13 +72,17 @@ void babelwires::SetTypeVariableAction::actionTriggered(babelwires::NodeContents
         allowedTypes.emplace_back(typeId);
     }
 
-    const std::string actionName = getActionName(m_variableIndex);
+    const std::string actionName = getActionName(m_variableIndex, m_isSetTypeVariable);
 
-    TypeRef newType = TypeInputDialog::getType(nullptr, actionName.c_str(), text.str().c_str(), allowedTypes,
-                                               currentAssignment, &ok);
-
+    bool ok = true;
+    TypeRef newType;
+    if (m_isSetTypeVariable) {
+        newType = TypeInputDialog::getType(nullptr, actionName.c_str(), text.str().c_str(), allowedTypes,
+                                           currentAssignment, &ok);
+    }
     if (ok) {
         projectGraphModel.scheduleCommand(std::make_unique<SetTypeVariableCommand>(
-            actionName, m_locationOfGenericType.getNodeId(), m_locationOfGenericType.getPathToValue(), m_variableIndex, std::move(newType)));
+            actionName, m_locationOfGenericType.getNodeId(), m_locationOfGenericType.getPathToValue(), m_variableIndex,
+            std::move(newType)));
     }
 }

@@ -25,11 +25,13 @@ void babelwires::GenericTypeValueModel::getContextMenuActions(
             const GenericType& genericType = m_type->is<GenericType>();
             const GenericValue& genericValue = getValue()->is<GenericValue>();
             for (unsigned int i = 0; i < genericType.getNumVariables(); ++i) {
-                auto setTypeVariable = std::make_unique<SetTypeVariableAction>(*projectDataLocation, i);
-                // TODO Is this needed for generic types?
+                auto setTypeVariable = std::make_unique<SetTypeVariableAction>(*projectDataLocation, i, true);
                 // TODO tooltip.
                 setTypeVariable->setEnabled(m_isStructureEditable);
                 entryGroup->addContextMenuAction(std::move(setTypeVariable));
+                auto resetTypeVariable = std::make_unique<SetTypeVariableAction>(*projectDataLocation, i, false);
+                resetTypeVariable->setEnabled(m_isStructureEditable && (genericType.getTypeAssignment(getValue(), i) != TypeRef()));
+                entryGroup->addContextMenuAction(std::move(resetTypeVariable));
             }
         } else {
             logDebug() << "Generic type encountered outside the project. No context menu options available.";
