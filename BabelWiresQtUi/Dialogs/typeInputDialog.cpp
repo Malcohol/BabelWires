@@ -19,13 +19,14 @@ babelwires::TypeInputDialog::TypeInputDialog(QWidget* parent, const QString& tit
     : QDialog(parent) {
     setWindowTitle(title);
     setModal(true);
-    //setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     setWindowFlags(flags | Qt::WindowType::WindowTitleHint);
 
     QLabel* const labelWidget = new QLabel(label, this);
     m_typeWidget = new TypeWidget(this, allowedTypeRefs);
-    //m_typeWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-
+    if (initialTypeRef) {
+        m_typeWidget->setTypeRef(initialTypeRef);
+    }
+   
     auto* const buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
                                      | QDialogButtonBox::Cancel);
 
