@@ -9,16 +9,19 @@
 
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresQtUi/ModelBridge/ContextMenu/nodeContentsContextMenuActionBase.hpp>
+#include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
 
 namespace babelwires {
-
+ 
     struct SetTypeVariableAction : babelwires::NodeContentsContextMenuActionBase {
-        SetTypeVariableAction(babelwires::Path pathToArray, unsigned int variableIndex);
+        SetTypeVariableAction(ProjectDataLocation genericTypeLocation, unsigned int variableIndex);
 
         virtual void actionTriggered(babelwires::NodeContentsModel& model, const QModelIndex& index) const override;
 
+        static std::string getActionName(unsigned int variableIndex);
+
       private:
-        babelwires::Path m_pathToGenericType;
+        ProjectDataLocation m_locationOfGenericType;
         unsigned int m_variableIndex; // Index of the type variable to set.
     };
 
