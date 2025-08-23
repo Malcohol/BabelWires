@@ -136,7 +136,7 @@ std::string babelwires::GenericType::valueToString(const TypeSystem& typeSystem,
 }
 
 babelwires::ShortId babelwires::GenericType::getStepToValue() {
-    return BW_SHORT_ID("wrappd", "value", "69d92618-a000-476e-afc1-9121e1bfac1e");
+    return BW_SHORT_ID("wrappd", "generic value", "69d92618-a000-476e-afc1-9121e1bfac1e");
 }
 
 void babelwires::GenericType::setTypeVariableAssignmentAndInstantiate(
