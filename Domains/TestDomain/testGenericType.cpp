@@ -53,9 +53,7 @@ babelwires::Path testDomain::TestGenericType::getPathToVar0_member() {
 }
 
 babelwires::Path testDomain::TestGenericType::getPathToVar0_inNestedGenericType() {
-    babelwires::Path path;
-    path.pushStep(getStepToValue());
-    path.pushStep(getIdOfNestedGenericType());
+    babelwires::Path path = getPathToNestedGenericType();
     path.pushStep(getStepToValue());
     path.pushStep(getIdOfNestedX());
     return path;
@@ -81,10 +79,15 @@ babelwires::Path testDomain::TestGenericType::getPathToVar1_member() {
     return path;
 }
 
-babelwires::Path testDomain::TestGenericType::getPathToNestedVar0() {
+babelwires::Path testDomain::TestGenericType::getPathToNestedGenericType() {
     babelwires::Path path;
     path.pushStep(getStepToValue());
     path.pushStep(getIdOfNestedGenericType());
+    return path;
+}
+
+babelwires::Path testDomain::TestGenericType::getPathToNestedVar0() {
+    babelwires::Path path = getPathToNestedGenericType();
     path.pushStep(getStepToValue());
     path.pushStep(getIdOfNestedZ());
     return path;

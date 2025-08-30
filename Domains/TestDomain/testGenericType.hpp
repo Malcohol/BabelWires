@@ -21,6 +21,7 @@ namespace testDomain {
         static babelwires::Path getPathToArray();
 
         static babelwires::Path getPathToVar0_member();
+        static babelwires::Path getPathToNestedGenericType();
         static babelwires::Path getPathToVar0_inNestedGenericType();
         static babelwires::Path getPathToNestedVar0();
         static babelwires::Path getPathToVar0_inArray();
