@@ -24,6 +24,7 @@ SET( LIB_TESTS_SRCS
     nodeTest.cpp
     featurePathTest.cpp
     editTreeTest.cpp
+    genericTypeTest.cpp
     intValueTest.cpp
     intTypeTest.cpp
     mapValueTest.cpp
