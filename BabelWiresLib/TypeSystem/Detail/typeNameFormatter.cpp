@@ -18,21 +18,26 @@ namespace {
     constexpr char closeType = '}';
     constexpr char openValue = '[';
     constexpr char closeValue = ']';
-    constexpr char operatorDelimiter = '|';
+    constexpr char repeatDelimiter = '|';
     constexpr char escapeCharacter = '\\';
+    constexpr char optionalDelimiter = '?';
 
+    using SpecificArgument = unsigned int;
     struct RepeatedOperator {
         unsigned int m_startIndex;
         std::string m_operator;
     };
-    using SpecificArgument = unsigned int;
+    struct OptionalArgument {
+        unsigned int m_index;
+        std::string m_replacement;
+    };
     // monostate == error.
-    using FormattingExpression = std::variant<std::monostate, SpecificArgument, RepeatedOperator>;
+    using ArgumentExpression = std::variant<std::monostate, SpecificArgument, RepeatedOperator, OptionalArgument>;
 
     // Foo{0}[[[0], [0|+]]]
 
     // <integer>[|<operator>]<closingDelimiter>
-    FormattingExpression parseFormattingExpression(std::string_view::const_iterator& it,
+    ArgumentExpression parseArgumentExpression(std::string_view::const_iterator& it,
                                                    std::string_view::const_iterator end, const char closingDelimiter) {
         const char currentChar = *it;
         enum { parsingInteger, justReadEscapeCharacter, parsingOperator } state = parsingInteger;
@@ -40,6 +45,9 @@ namespace {
         unsigned int argumentIndex = 0;
 
         std::ostringstream op;
+        
+        // If we encounter a repeat or closing delimiter, record it here.
+        char operatorChar = 0;
 
         // Prevent "{}" meaning the same as "{0}".
         if (*it == closingDelimiter) {
@@ -53,7 +61,8 @@ namespace {
                     if ((currentChar >= '0') && (currentChar <= '9')) {
                         const std::size_t indexCharAsIndex = currentChar - '0';
                         argumentIndex = (10 * argumentIndex) + indexCharAsIndex;
-                    } else if (currentChar == operatorDelimiter) {
+                    } else if ((currentChar == repeatDelimiter) || (currentChar == optionalDelimiter)) {
+                        operatorChar = currentChar;
                         state = parsingOperator;
                     } else if (currentChar == closingDelimiter) {
                         return argumentIndex;
@@ -63,7 +72,14 @@ namespace {
                     break;
                 case parsingOperator:
                     if (currentChar == closingDelimiter) {
-                        return RepeatedOperator{argumentIndex, op.str()};
+                        if (operatorChar == repeatDelimiter) {
+                            return RepeatedOperator{argumentIndex, op.str()};
+                        } else if (operatorChar == optionalDelimiter) {
+                            return OptionalArgument{argumentIndex, op.str()};
+                        } else {
+                            assert(false && "Unexpected operator");
+                            return {};
+                        }
                     } else if (currentChar == escapeCharacter) {
                         state = justReadEscapeCharacter;
                     } else {
@@ -85,7 +101,7 @@ namespace {
         return {};
     }
 
-    bool processFormattingExpression(const FormattingExpression& formattingExpression, std::ostream& os,
+    bool processFormattingExpression(const ArgumentExpression& formattingExpression, std::ostream& os,
                                      const std::vector<std::string>& args) {
         struct VisitorMethods {
             bool operator()(std::monostate) { return false; }
@@ -105,6 +121,14 @@ namespace {
                 m_os << m_args[op.m_startIndex];
                 for (int i = op.m_startIndex + 1; i < m_args.size(); ++i) {
                     m_os << op.m_operator << m_args[i];
+                }
+                return true;
+            }
+            bool operator()(const OptionalArgument& opt) {
+                if (opt.m_index >= m_args.size()) {
+                    m_os << opt.m_replacement;
+                } else {
+                    m_os << m_args[opt.m_index];
                 }
                 return true;
             }
@@ -153,7 +177,7 @@ std::string babelwires::typeNameFormatter(std::string_view format, const std::ve
                 if (currentChar == openType) {
                     oss << openType;
                 } else {
-                    const auto formatExpression = parseFormattingExpression(it, end, closeType);
+                    const auto formatExpression = parseArgumentExpression(it, end, closeType);
                     if (!processFormattingExpression(formatExpression, oss, typeArguments)) {
                         return {};
                     }
@@ -174,7 +198,7 @@ std::string babelwires::typeNameFormatter(std::string_view format, const std::ve
                 if (currentChar == openValue) {
                     oss << openValue;
                 } else {
-                    const auto formatExpression = parseFormattingExpression(it, end, closeValue);
+                    const auto formatExpression = parseArgumentExpression(it, end, closeValue);
                     if (!processFormattingExpression(formatExpression, oss, valueArguments)) {
                         return {};
                     }

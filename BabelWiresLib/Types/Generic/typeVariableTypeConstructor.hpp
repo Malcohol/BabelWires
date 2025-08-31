@@ -20,7 +20,7 @@ namespace babelwires {
     /// generic types to traverse upwards to find the generic type of which this is a variable.
     class TypeVariableTypeConstructor : public TypeConstructor {
       public:
-        TYPE_CONSTRUCTOR("TVar", "TVar([0|,])", "33f14749-b652-4d53-808b-8d8c281c310f", 1);
+        TYPE_CONSTRUCTOR("TVar", "TVar([0],[1],{0?-})", "33f14749-b652-4d53-808b-8d8c281c310f", 1);
 
         TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
                                             const std::vector<const Type*>& resolvedTypeArguments) const override;

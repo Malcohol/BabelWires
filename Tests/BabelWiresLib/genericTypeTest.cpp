@@ -3,6 +3,7 @@
 #include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
 
 #include <Domains/TestDomain/testGenericType.hpp>
 
@@ -69,14 +70,10 @@ namespace {
 } // namespace
 
 TEST(GenericTypeTest, createValue) {
-    using namespace babelwires;
-
     testUtils::TestEnvironment env;
     babelwires::TypeSystem& typeSystem = env.m_typeSystem;
 
-    babelwires::TypeRef testGenericTypeRef = testDomain::TestGenericType::getThisType();
-
-    const babelwires::Type* const type = testGenericTypeRef.tryResolve(typeSystem);
+    const babelwires::Type* const type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
     ASSERT_NE(type, nullptr);
 
     const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
@@ -95,14 +92,10 @@ TEST(GenericTypeTest, createValue) {
 }
 
 TEST(GenericTypeTest, instantiateTypeVariables) {
-    using namespace babelwires;
-
     testUtils::TestEnvironment env;
     babelwires::TypeSystem& typeSystem = env.m_typeSystem;
 
-    babelwires::TypeRef testGenericTypeRef = testDomain::TestGenericType::getThisType();
-
-    const babelwires::Type* const type = testGenericTypeRef.tryResolve(typeSystem);
+    const babelwires::Type* const type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
     ASSERT_NE(type, nullptr);
 
     const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
@@ -151,14 +144,10 @@ TEST(GenericTypeTest, instantiateTypeVariables) {
 }
 
 TEST(GenericTypeTest, instantiateNestedTypeVariable) {
-    using namespace babelwires;
-
     testUtils::TestEnvironment env;
     babelwires::TypeSystem& typeSystem = env.m_typeSystem;
 
-    babelwires::TypeRef testGenericTypeRef = testDomain::TestGenericType::getThisType();
-
-    const babelwires::Type* const type = testGenericTypeRef.tryResolve(typeSystem);
+    const babelwires::Type* const type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
     ASSERT_NE(type, nullptr);
 
     const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
@@ -196,4 +185,55 @@ TEST(GenericTypeTest, instantiateNestedTypeVariable) {
 
     checkNestedInstantiation(true);
     checkInstantiations(typeSystem, *genericType, valueHolder, false, false);
+}
+
+TEST(GenericTypeTest, childTypeAndTypeNames) {
+    testUtils::TestEnvironment env;
+    babelwires::TypeSystem& typeSystem = env.m_typeSystem;
+
+    const babelwires::Type* const type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
+    ASSERT_NE(type, nullptr);
+
+    const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
+    ASSERT_NE(genericType, nullptr);
+
+    babelwires::ValueHolder valueHolder = genericType->createValue(typeSystem);
+    ASSERT_TRUE(valueHolder);
+
+    EXPECT_EQ(genericType->valueToString(typeSystem, valueHolder), "<T, U>");
+
+    auto checkNames = [&](bool var0Assigned, bool var1Assigned)  {
+        auto [childValue, step, childTypeRef] = genericType->getChild(valueHolder, 0);
+        const babelwires::Type* const childType = childTypeRef.tryResolve(typeSystem);
+        EXPECT_NE(childType, nullptr);
+        EXPECT_EQ(step, babelwires::GenericType::getStepToValue());
+
+        // "Record{x, y, int, nested generic, arr : TVar(0,0,-), TVar(1,0,-), Integer, Gen<1>{Record{x, z : TVar(0,1,-), TVar(0,0,-)}}, Array<TVar(0,0,-)>[0..8]}"
+        const std::string childTypeName = childType->getName();
+        EXPECT_NE(childTypeName.find("TVar(0,0,-)"), std::string::npos);
+        if (var1Assigned) {
+            EXPECT_NE(childTypeName.find("TVar(1,0,String)"), std::string::npos);
+        } else {
+            EXPECT_NE(childTypeName.find("TVar(1,0,-)"), std::string::npos);
+        }
+        EXPECT_EQ(childTypeName.find("Record{"), 0);
+        EXPECT_NE(childTypeName.find("Gen<1>{Record{"), std::string::npos);
+        if (var0Assigned) {
+            EXPECT_EQ(childTypeName.find("TVar(0,1,String)"), std::string::npos);
+            EXPECT_NE(childTypeName.find("Array<TVar(0,0,String)>["), std::string::npos);
+        } else {
+            EXPECT_NE(childTypeName.find("TVar(0,1,-)"), std::string::npos);
+            EXPECT_NE(childTypeName.find("Array<TVar(0,0,-)>["), std::string::npos);
+        }
+    };
+
+    checkNames(false, false);
+
+    std::vector<babelwires::TypeRef> typeAssignments(2);
+    typeAssignments[1] = babelwires::StringType::getThisType();
+
+    genericType->setTypeVariableAssignmentAndInstantiate(typeSystem, valueHolder, typeAssignments);
+
+    EXPECT_EQ(genericType->valueToString(typeSystem, valueHolder), "<T, String>");
+    checkNames(false, true);
 }

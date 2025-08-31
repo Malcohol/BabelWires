@@ -13,7 +13,7 @@ namespace babelwires {
     /// Construct a GenericType from a TypeRef and a number of type variables.
     class GenericTypeConstructor : public TypeConstructor {
       public:
-        TYPE_CONSTRUCTOR("Gen", "Gen<[0]>", "56ff5848-9be4-4288-a893-eec7ef15e675", 1);
+        TYPE_CONSTRUCTOR("Gen", "Gen<[0]>{{{0}}}", "56ff5848-9be4-4288-a893-eec7ef15e675", 1);
 
         TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
                                             const std::vector<const Type*>& resolvedTypeArguments) const override;
