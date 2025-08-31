@@ -20,6 +20,7 @@ namespace babelwires {
     /// * Value arguments are referenced using "[n]"
     /// * Curly and square brackets can be escaped using "{{", "}}", "[[" and "]]".
     /// * Optional arguments can be given replacements using {n?<replacement>} and [n?<replacement>].
+    ///   The replacement can be empty.
     /// * Variadic type can be represented using format expressions of the form "{n|<operator chars>}"
     ///   This states that the types from n up should be written with the <operator chars> between them.
     /// * "}" and "]" used in optional or variadic expressions should be escaped with a "\" character.
