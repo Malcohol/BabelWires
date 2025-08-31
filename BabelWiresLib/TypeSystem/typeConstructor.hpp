@@ -68,7 +68,7 @@ namespace babelwires {
     };
 
     /// A convenience class which can used by type constructors for the type they want to construct.
-    /// It provides an implementing getTypeRef.
+    /// It provides an implementation of getTypeRef.
     /// Type constructors are not obliged to use this template.
     template <typename T> class ConstructedType : public T {
       public:
