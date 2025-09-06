@@ -38,18 +38,6 @@ babelwires::ContentsCacheEntry::ContentsCacheEntry(std::string label, const Valu
 babelwires::ContentsCache::ContentsCache(EditTree& edits)
     : m_edits(edits) {}
 
-namespace {
-    std::string getArrayEntryLabel(int i, const babelwires::ValueNames* names) {
-        std::ostringstream os;
-        os << "[" << i << "]";
-        std::string name;
-        if (names && names->getNameForValue(i, name)) {
-            os << " (" << name << ")";
-        }
-        return os.str();
-    }
-} // namespace
-
 namespace babelwires {
     namespace Detail {
 
