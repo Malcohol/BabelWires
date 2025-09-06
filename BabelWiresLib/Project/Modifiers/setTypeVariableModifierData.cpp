@@ -38,6 +38,10 @@ void babelwires::SetTypeVariableModifierData::visitIdentifiers(IdentifierVisitor
 void babelwires::SetTypeVariableModifierData::apply(ValueTreeNode* target) const {
     if (auto genericType = target->getType().as<GenericType>()) {
         ValueHolder newValue = target->getValue();
+        if (m_typeAssignments.size() != genericType->getNumVariables()) {
+            throw ModelException()
+                << "SetTypeVariable modifier has incorrect number of type assignments for Generic Type";
+        }
         genericType->setTypeVariableAssignmentAndInstantiate(target->getTypeSystem(), newValue, m_typeAssignments);
         target->setValue(newValue);
     } else {

@@ -19,6 +19,7 @@ namespace babelwires {
         CLONEABLE(ValueAssignmentData);
         SERIALIZABLE(ValueAssignmentData, "assign", LocalModifierData, 1);
         
+        //TODO These should take the target path.
         ValueAssignmentData();
         ValueAssignmentData(std::unique_ptr<EditableValue> value);
         ValueAssignmentData(EditableValueHolder value);

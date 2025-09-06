@@ -82,6 +82,21 @@ TEST(SetTypeVariableModifierDataTest, failureNotAGenericType) {
     EXPECT_THROW(data.apply(&valueTree), babelwires::ModelException);
 }
 
+TEST(SetTypeVariableModifierDataTest, failureTooFewTypeVariables) {
+    testUtils::TestEnvironment testEnvironment;
+    
+    babelwires::SetTypeVariableModifierData data;
+    data.m_typeAssignments.resize(1);
+    data.m_typeAssignments[0] = babelwires::StringType::getThisType();
+
+    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisType());
+
+    valueTree.setToDefault();
+
+    EXPECT_THROW(data.apply(&valueTree), babelwires::ModelException);
+}
+
+
 TEST(SetTypeVariableModifierDataTest, failureTooManyTypeVariables) {
     testUtils::TestEnvironment testEnvironment;
     

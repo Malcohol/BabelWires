@@ -72,7 +72,7 @@ bool babelwires::AddConnectionCommand::initializeAndExecute(Project& project) {
             const GenericType& genericType = genericNode->getType().is<GenericType>();
             assert (variableData->m_typeVariableIndex < genericType.getNumVariables());
             // Consciously skip any wrappers here by getting the TypeRef of the output type object,
-            // rather than the TypeRef are the output node.
+            // rather than the TypeRef at the output node.
             const TypeRef& currentAssignment = genericType.getTypeAssignment(genericNode->getValue(), variableData->m_typeVariableIndex);
             if (!currentAssignment) {
                 auto subCommand = std::make_unique<SetTypeVariableCommand>(

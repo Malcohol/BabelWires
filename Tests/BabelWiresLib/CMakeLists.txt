@@ -2,6 +2,7 @@ SET( LIB_TESTS_SRCS
     babelWiresTests.cpp
     activateOptionalsModifierDataTest.cpp
     activateOptionalCommandTest.cpp
+    addConnectionCommandTest.cpp
     addNodeCommandTest.cpp
     addNodeForInputTreeValueCommandTest.cpp
     addNodeForOutputTreeValueCommandTest.cpp
