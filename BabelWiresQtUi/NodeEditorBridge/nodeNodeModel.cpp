@@ -123,7 +123,13 @@ QtNodes::PortIndex babelwires::NodeNodeModel::getPortAtPath(const AccessModelSco
 
 QString babelwires::NodeNodeModel::getCaption(const AccessModelScope& scope) const {
     if (const Node* const node = scope.getProject().getNode(m_nodeId)) {
-        return QString(node->getLabel().c_str());
+        std::string label = node->getLabel();
+        constexpr unsigned int maxLabelLength = 35;
+        if (label.size() > maxLabelLength) {
+            // TODO Non-unicode truncation.
+            label = label.substr(0, maxLabelLength - 1) + "\u2026";
+        }
+        return QString(label.c_str());
     } else {
         return "Dying node";
     }
