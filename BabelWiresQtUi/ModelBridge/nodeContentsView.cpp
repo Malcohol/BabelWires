@@ -15,6 +15,8 @@
 #include <BabelWiresLib/Project/Commands/addNodeForOutputTreeValueCommand.hpp>
 #include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <QtWidgets/QHeaderView>
 
@@ -130,6 +132,10 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
                     // TODO Log a warning (outside scope)
                     return;
                 }
+                if (containsUnresolvedTypeVariable(*input)) {
+                    // Don't allow dragging to create a node for an input with an unresolved type variable.
+                    return;
+                }
                 path = cacheEntry->getPath();
             }
             UiPosition positionForNewNode = getFlowScenePositionFromLocalPosition(event->pos());
@@ -155,6 +161,10 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
                 const ValueTreeNode* const output = cacheEntry->getOutput();
                 if (!output) {
                     // TODO Log a warning (outside scope)
+                    return;
+                }
+                if (containsUnresolvedTypeVariable(*output)) {
+                    // Don't allow dragging to create a node for an input with an unresolved type variable.
                     return;
                 }
                 path = cacheEntry->getPath();

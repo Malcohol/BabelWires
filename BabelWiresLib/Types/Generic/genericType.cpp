@@ -1,5 +1,5 @@
 /**
- *
+ * GenericType is a type that wraps another type containing type variables that can be instantiated in different ways.
  *
  * (C) 2025 Malcolm Tyrrell
  *

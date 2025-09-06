@@ -1,5 +1,5 @@
 /**
- *
+ * GenericType is a type that wraps another type containing type variables that can be instantiated in different ways.
  *
  * (C) 2025 Malcolm Tyrrell
  *
@@ -23,15 +23,17 @@ namespace babelwires {
 
         std::string getFlavour() const override;
 
+        /// The PathStep from the GenericType to the child it wraps.
         static babelwires::ShortId getStepToValue();
 
         /// Instantiate the specified type variable using the given type.
-        void setTypeVariableAssignmentAndInstantiate(const TypeSystem& typeSystem, ValueHolder& genericValue, 
-            const std::vector<TypeRef>& typeVariableAssignments) const;
+        void setTypeVariableAssignmentAndInstantiate(const TypeSystem& typeSystem, ValueHolder& genericValue,
+                                                     const std::vector<TypeRef>& typeVariableAssignments) const;
 
         /// Get the number of type variables in this GenericType.
         unsigned int getNumVariables() const;
 
+        /// Get the type assigned to the given type variable.
         const TypeRef& getTypeAssignment(const ValueHolder& genericValue, unsigned int variableIndex) const;
 
       public:
