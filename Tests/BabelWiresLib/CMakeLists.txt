@@ -65,6 +65,7 @@ SET( LIB_TESTS_SRCS
     setMapCommandTest.cpp
     setMapSourceTypeCommandTest.cpp
     setMapTargetTypeCommandTest.cpp
+    setTypeVariableCommandTest.cpp
     sourceFileNodeTest.cpp
     stringTypeTest.cpp
     stringValueTest.cpp

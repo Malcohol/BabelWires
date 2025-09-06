@@ -53,6 +53,10 @@ bool babelwires::SetTypeVariableCommand::initializeAndExecute(Project& project) 
     if (!genericType) {
         return false;
     }
+    if (m_variableIndex >= genericType->getNumVariables()) {
+        return false;
+    }
+
     const GenericValue& genericValue = genericTypeNode->getValue()->is<GenericValue>();
     if (genericType->getTypeAssignment(genericValue, m_variableIndex) == m_newType) {
         // No change needed.
