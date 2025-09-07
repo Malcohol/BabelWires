@@ -37,7 +37,7 @@ TEST(ValueTreeGenericTypeUtilsTest, tryGetGenericTypeFromVariable) {
                      testDomain::TestGenericType::getPathToNestedZ());
 }
 
-TEST(ValueTreeGenericTypeUtilsTest, containsUnresolvedTypeVariable) {
+TEST(ValueTreeGenericTypeUtilsTest, containsUnassignedTypeVariable) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisType());
     valueTree.setToDefault();
@@ -52,7 +52,7 @@ TEST(ValueTreeGenericTypeUtilsTest, containsUnresolvedTypeVariable) {
 
     auto checkForVariable = [&](const babelwires::Path& pathToVariable) {
         const babelwires::ValueTreeNode& variable = babelwires::followPath(pathToVariable, valueTree);
-        return babelwires::containsUnresolvedTypeVariable(variable);
+        return babelwires::containsUnassignedTypeVariable(variable);
     };
 
     EXPECT_EQ(checkForVariable(babelwires::Path()), false);

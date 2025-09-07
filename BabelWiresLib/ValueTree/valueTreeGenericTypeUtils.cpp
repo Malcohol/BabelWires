@@ -48,16 +48,13 @@ const babelwires::ValueTreeNode* babelwires::tryGetGenericTypeFromVariable(const
 }
 
 namespace {
-    bool isUnderGenericTypeWithUnresolvedVariables(const babelwires::ValueTreeNode& valueTreeNode) {
+    bool isUnderGenericTypeWithUnassignedVariables(const babelwires::ValueTreeNode& valueTreeNode) {
         const babelwires::ValueTreeNode* current = &valueTreeNode;
         const babelwires::ValueTreeNode* parent = current->getOwner();
         while (parent) {
-            if (parent->getType().as<babelwires::GenericType>()) {
-                const babelwires::GenericType& genericType = parent->getType().is<babelwires::GenericType>();
-                for (unsigned int i = 0; i < genericType.getNumVariables(); ++i) {
-                    if (genericType.getTypeAssignment(parent->getValue(), i) == babelwires::TypeRef()) {
-                        return true;
-                    }
+            if (const babelwires::GenericType* genericType = parent->getType().as<babelwires::GenericType>()) {
+                if (genericType->isAnyTypeVariableUnassigned(parent->getValue())) {
+                    return true;
                 }
             }
             current = parent;
@@ -98,12 +95,12 @@ namespace {
         return typeRef.visit<Visitor, bool>(visitor);
     }
 
-    bool containsUnresolvedTypeVariableImpl(const babelwires::ValueTreeNode& valueTreeNode,
+    bool containsUnassignedTypeVariableImpl(const babelwires::ValueTreeNode& valueTreeNode,
                                             unsigned int genericTypeDepth = 0) {
         if (valueTreeNode.getType().as<babelwires::TypeVariableType>()) {
             const auto typeVarData = babelwires::TypeVariableData::isTypeVariable(valueTreeNode.getTypeRef());
             if (typeVarData && (typeVarData->m_numGenericTypeLevels >= genericTypeDepth)) {
-                // The variable is unresolved and references a generic type above the start point of the search.
+                // The variable is unassigned and references a generic type above the start point of the search.
                 return true;
             }
         }
@@ -119,7 +116,7 @@ namespace {
                     return true;
                 }
             }
-            if (containsUnresolvedTypeVariableImpl(*child, genericTypeDepth)) {
+            if (containsUnassignedTypeVariableImpl(*child, genericTypeDepth)) {
                 return true;
             }
         }
@@ -128,13 +125,13 @@ namespace {
 
 } // namespace
 
-bool babelwires::containsUnresolvedTypeVariable(const ValueTreeNode& valueTreeNode) {
+bool babelwires::containsUnassignedTypeVariable(const ValueTreeNode& valueTreeNode) {
     // Two early out conditions to avoid doing a full traversal.
-    if (!isUnderGenericTypeWithUnresolvedVariables(valueTreeNode)) {
+    if (!isUnderGenericTypeWithUnassignedVariables(valueTreeNode)) {
         return false;
     }
     if (!typeRefContainsTypeVariable(valueTreeNode.getTypeRef())) {
         return false;
     }
-    return containsUnresolvedTypeVariableImpl(valueTreeNode, 0);
+    return containsUnassignedTypeVariableImpl(valueTreeNode, 0);
 }

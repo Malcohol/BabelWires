@@ -15,5 +15,5 @@ namespace babelwires
     const ValueTreeNode* tryGetGenericTypeFromVariable(const ValueTreeNode& valueTreeNode);
 
     /// Check whether a node is between an unresolved type variables and the GenericType that contains it.
-    bool containsUnresolvedTypeVariable(const ValueTreeNode& valueTreeNode);
+    bool containsUnassignedTypeVariable(const ValueTreeNode& valueTreeNode);
 }

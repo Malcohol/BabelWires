@@ -132,7 +132,7 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
                     // TODO Log a warning (outside scope)
                     return;
                 }
-                if (containsUnresolvedTypeVariable(*input)) {
+                if (containsUnassignedTypeVariable(*input)) {
                     // Don't allow dragging to create a node for an input with an unresolved type variable.
                     return;
                 }
@@ -163,7 +163,7 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
                     // TODO Log a warning (outside scope)
                     return;
                 }
-                if (containsUnresolvedTypeVariable(*output)) {
+                if (containsUnassignedTypeVariable(*output)) {
                     // Don't allow dragging to create a node for an input with an unresolved type variable.
                     return;
                 }
