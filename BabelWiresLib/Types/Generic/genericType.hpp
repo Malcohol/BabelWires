@@ -36,6 +36,9 @@ namespace babelwires {
         /// Get the type assigned to the given type variable.
         const TypeRef& getTypeAssignment(const ValueHolder& genericValue, unsigned int variableIndex) const;
 
+        /// Are any of the type variables unassigned?
+        bool isAnyTypeVariableUnassigned(const ValueHolder& genericValue) const;
+
       public:
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
         bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;

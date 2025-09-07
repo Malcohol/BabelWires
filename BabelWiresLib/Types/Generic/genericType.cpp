@@ -59,6 +59,17 @@ const babelwires::TypeRef& babelwires::GenericType::getTypeAssignment(const Valu
     return typeAssignments[variableIndex];
 }
 
+bool babelwires::GenericType::isAnyTypeVariableUnassigned(const ValueHolder& genericValue) const {
+    const GenericValue& value = genericValue->is<GenericValue>();
+    const auto& typeAssignments = value.getTypeAssignments();
+    for (const auto& assignment : typeAssignments) {
+        if (!assignment) {
+            return true;
+        }
+    }
+    return false;
+}
+
 unsigned int babelwires::GenericType::getNumVariables() const {
     return m_numVariables;
 }
@@ -140,13 +151,14 @@ babelwires::ShortId babelwires::GenericType::getStepToValue() {
 }
 
 void babelwires::GenericType::setTypeVariableAssignmentAndInstantiate(
-    const TypeSystem& typeSystem, ValueHolder& genericValue, const std::vector<TypeRef>& typeVariableAssignments) const {
+    const TypeSystem& typeSystem, ValueHolder& genericValue,
+    const std::vector<TypeRef>& typeVariableAssignments) const {
     if (typeVariableAssignments.size() > m_numVariables) {
         throw ModelException() << "Too many type variable assignments for GenericType";
     }
     const GenericValue& constGenericValue = genericValue->is<GenericValue>();
     const auto& currentAssignments = constGenericValue.getTypeAssignments();
-    
+
     bool changed = false;
     for (unsigned int i = 0; i < typeVariableAssignments.size(); ++i) {
         if (currentAssignments[i] != typeVariableAssignments[i]) {
