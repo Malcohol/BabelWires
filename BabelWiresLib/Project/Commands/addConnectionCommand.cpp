@@ -78,7 +78,7 @@ bool babelwires::AddConnectionCommand::initializeAndExecute(Project& project) {
             if (!currentAssignment) {
                 auto subCommand = std::make_unique<SetTypeVariableCommand>(
                     "Set type variable", m_targetNodeId, getPathTo(genericNode), variableData->m_typeVariableIndex,
-                    output->getType().getTypeRef());
+                    outputTreeNode->getType().getTypeRef());
                 addSubCommand(std::move(subCommand));
             }
         }

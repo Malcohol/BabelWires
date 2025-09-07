@@ -145,7 +145,7 @@ namespace {
 
         const babelwires::TypeRef& typeAssignment0 = genericType->getTypeAssignment(input->getValue(), 0);
         if (var0Instantiated) {
-            EXPECT_EQ(typeAssignment0, babelwires::StringType::getThisType());
+            EXPECT_EQ(typeAssignment0, babelwires::DefaultIntType::getThisType());
         } else {
             EXPECT_EQ(typeAssignment0, babelwires::TypeRef());
         }
@@ -170,11 +170,11 @@ TEST(AddConnectionCommandTest, connectToTypeVariable) {
     babelwires::TypeSystem& typeSystem = testEnvironment.m_typeSystem;
 
     const babelwires::NodeId genericNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestGenericType::getThisType()));
-    const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(babelwires::StringType::getThisType()));
+    const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisType()));
 
     babelwires::ConnectionModifierData connectionData;
     connectionData.m_targetPath = testDomain::TestGenericType::getPathToNestedX();
-    connectionData.m_sourcePath = babelwires::Path();
+    connectionData.m_sourcePath = testDomain::TestSimpleRecordElementData().getPathToRecordInt0();
     connectionData.m_sourceId = sourceNodeId, babelwires::Path();
     babelwires::AddConnectionCommand testCopyConstructor("Test command", genericNodeId, connectionData.clone());
     babelwires::AddConnectionCommand command = testCopyConstructor;
@@ -203,7 +203,7 @@ TEST(AddConnectionCommandTest, connectToAnotherTypeVariable) {
 
     babelwires::SetTypeVariableModifierData setFirstVariableData;
     setFirstVariableData.m_targetPath = babelwires::Path();
-    setFirstVariableData.m_typeAssignments.push_back(babelwires::StringType::getThisType());
+    setFirstVariableData.m_typeAssignments.push_back(babelwires::DefaultIntType::getThisType());
     setFirstVariableData.m_typeAssignments.push_back(babelwires::TypeRef());
     testEnvironment.m_project.addModifier(genericNodeId, setFirstVariableData);
     testEnvironment.m_project.process();
