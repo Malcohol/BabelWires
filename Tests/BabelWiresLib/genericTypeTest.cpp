@@ -16,7 +16,7 @@ namespace {
                              const babelwires::ValueHolder& valueHolder, bool var0Assigned, bool var1Assigned) {
         {
             const auto var0memberValue = babelwires::tryFollowPath(
-                typeSystem, genericType, testDomain::TestGenericType::getPathToVar0_member(), valueHolder);
+                typeSystem, genericType, testDomain::TestGenericType::getPathToX(), valueHolder);
             ASSERT_TRUE(var0memberValue);
             auto [var0memberType, var0memberValueHolder] = *var0memberValue;
             if (var0Assigned) {
@@ -29,7 +29,7 @@ namespace {
         } // namespace
         {
             const auto var0inNestedGenericTypeValue = babelwires::tryFollowPath(
-                typeSystem, genericType, testDomain::TestGenericType::getPathToVar0_inNestedGenericType(), valueHolder);
+                typeSystem, genericType, testDomain::TestGenericType::getPathToNestedX(), valueHolder);
             ASSERT_TRUE(var0inNestedGenericTypeValue);
             auto [var0inNestedGenericTypeType, var0inNestedGenericTypeValueHolder] = *var0inNestedGenericTypeValue;
             if (var0Assigned) {
@@ -42,7 +42,7 @@ namespace {
         }
         {
             const auto var0inArrayValue = babelwires::tryFollowPath(
-                typeSystem, genericType, testDomain::TestGenericType::getPathToVar0_inArray(), valueHolder);
+                typeSystem, genericType, testDomain::TestGenericType::getPathToArray0(), valueHolder);
             ASSERT_TRUE(var0inArrayValue);
             auto [var0inArrayType, var0inArrayValueHolder] = *var0inArrayValue;
             if (var0Assigned) {
@@ -55,7 +55,7 @@ namespace {
         }
         {
             const auto var1memberValue = babelwires::tryFollowPath(
-                typeSystem, genericType, testDomain::TestGenericType::getPathToVar1_member(), valueHolder);
+                typeSystem, genericType, testDomain::TestGenericType::getPathToY(), valueHolder);
             ASSERT_TRUE(var1memberValue);
             auto [var1memberType, var1memberValueHolder] = *var1memberValue;
             if (var1Assigned) {
@@ -164,7 +164,7 @@ TEST(GenericTypeTest, instantiateNestedTypeVariable) {
 
     auto checkNestedInstantiation = [&](bool isInstantiated)  {
         const auto nestedVarMemberValue = babelwires::tryFollowPath(
-            typeSystem, *genericType, testDomain::TestGenericType::getPathToNestedVar0(), valueHolder);
+            typeSystem, *genericType, testDomain::TestGenericType::getPathToNestedZ(), valueHolder);
         ASSERT_TRUE(nestedVarMemberValue);
         auto [nestedVar0Type, nestedVar0ValueHolder] = *nestedVarMemberValue;
         if (isInstantiated) {

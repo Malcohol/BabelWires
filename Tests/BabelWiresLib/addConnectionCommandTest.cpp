@@ -173,7 +173,7 @@ TEST(AddConnectionCommandTest, connectToTypeVariable) {
     const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(babelwires::StringType::getThisType()));
 
     babelwires::ConnectionModifierData connectionData;
-    connectionData.m_targetPath = testDomain::TestGenericType::getPathToVar0_inNestedGenericType();
+    connectionData.m_targetPath = testDomain::TestGenericType::getPathToNestedX();
     connectionData.m_sourcePath = babelwires::Path();
     connectionData.m_sourceId = sourceNodeId, babelwires::Path();
     babelwires::AddConnectionCommand testCopyConstructor("Test command", genericNodeId, connectionData.clone());
@@ -209,7 +209,7 @@ TEST(AddConnectionCommandTest, connectToAnotherTypeVariable) {
     testEnvironment.m_project.process();
     
     babelwires::ConnectionModifierData connectionData;
-    connectionData.m_targetPath = testDomain::TestGenericType::getPathToVar1_member();
+    connectionData.m_targetPath = testDomain::TestGenericType::getPathToY();
     connectionData.m_sourcePath = babelwires::Path();
     connectionData.m_sourceId = sourceNodeId, babelwires::Path();
     babelwires::AddConnectionCommand command("Test command", genericNodeId, connectionData.clone());

@@ -45,50 +45,63 @@ babelwires::ShortId testDomain::TestGenericType::getIdOfArray() {
     return BW_SHORT_ID("array", "arr", "2c4d9dfc-100c-4a56-9323-ff8f420b91ce");
 }
 
-babelwires::Path testDomain::TestGenericType::getPathToVar0_member() {
+babelwires::Path testDomain::TestGenericType::getPathToWrappedType() {
     babelwires::Path path;
     path.pushStep(getStepToValue());
+    return path;
+}
+
+babelwires::Path testDomain::TestGenericType::getPathToX() {
+    babelwires::Path path = getPathToWrappedType();
     path.pushStep(getIdOfX());
     return path;
 }
 
-babelwires::Path testDomain::TestGenericType::getPathToVar0_inNestedGenericType() {
+babelwires::Path testDomain::TestGenericType::getPathToY() {
+    babelwires::Path path = getPathToWrappedType();
+    path.pushStep(getIdOfY());
+    return path;
+}
+
+babelwires::Path testDomain::TestGenericType::getPathToInt() {
+    babelwires::Path path = getPathToWrappedType();
+    path.pushStep(getIdOfInt());
+    return path;
+}
+
+babelwires::Path testDomain::TestGenericType::getPathToNestedGenericType() {
+    babelwires::Path path = getPathToWrappedType();
+    path.pushStep(getIdOfNestedGenericType());
+    return path;
+}
+
+babelwires::Path testDomain::TestGenericType::getPathToNestedWrappedType() {
     babelwires::Path path = getPathToNestedGenericType();
     path.pushStep(getStepToValue());
+    return path;
+}
+
+babelwires::Path testDomain::TestGenericType::getPathToNestedX() {
+    babelwires::Path path = getPathToNestedWrappedType();
     path.pushStep(getIdOfNestedX());
     return path;
 }
 
+babelwires::Path testDomain::TestGenericType::getPathToNestedZ() {
+    babelwires::Path path = getPathToNestedWrappedType();
+    path.pushStep(getIdOfNestedZ());
+    return path;
+}
+
 babelwires::Path testDomain::TestGenericType::getPathToArray() {
-    babelwires::Path path;
-    path.pushStep(getStepToValue());
+    babelwires::Path path = getPathToWrappedType();
     path.pushStep(getIdOfArray());
     return path;
 }
 
-babelwires::Path testDomain::TestGenericType::getPathToVar0_inArray() {
+babelwires::Path testDomain::TestGenericType::getPathToArray0() {
     babelwires::Path path = getPathToArray();
     path.pushStep(0);
     return path;
 }
 
-babelwires::Path testDomain::TestGenericType::getPathToVar1_member() {
-    babelwires::Path path;
-    path.pushStep(getStepToValue());
-    path.pushStep(getIdOfY());
-    return path;
-}
-
-babelwires::Path testDomain::TestGenericType::getPathToNestedGenericType() {
-    babelwires::Path path;
-    path.pushStep(getStepToValue());
-    path.pushStep(getIdOfNestedGenericType());
-    return path;
-}
-
-babelwires::Path testDomain::TestGenericType::getPathToNestedVar0() {
-    babelwires::Path path = getPathToNestedGenericType();
-    path.pushStep(getStepToValue());
-    path.pushStep(getIdOfNestedZ());
-    return path;
-}

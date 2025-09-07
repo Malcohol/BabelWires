@@ -82,6 +82,7 @@ SET( LIB_TESTS_SRCS
     valueNamesTest.cpp
     valueHolderTest.cpp
     valueNodeTest.cpp
+    valueTreeGenericTypeUtilsTest.cpp
    )
 
 
