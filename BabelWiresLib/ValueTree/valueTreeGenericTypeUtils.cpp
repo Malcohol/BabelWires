@@ -100,6 +100,13 @@ namespace {
 
     bool containsUnresolvedTypeVariableImpl(const babelwires::ValueTreeNode& valueTreeNode,
                                             unsigned int genericTypeDepth = 0) {
+        if (valueTreeNode.getType().as<babelwires::TypeVariableType>()) {
+            const auto typeVarData = babelwires::TypeVariableData::isTypeVariable(valueTreeNode.getTypeRef());
+            if (typeVarData && (typeVarData->m_numGenericTypeLevels >= genericTypeDepth)) {
+                // The variable is unresolved and references a generic type above the start point of the search.
+                return true;
+            }
+        }
         for (int i = 0; i < valueTreeNode.getNumChildren(); ++i) {
             const babelwires::ValueTreeNode* const child = valueTreeNode.getChild(i);
             assert(child && "ValueTreeNode::getChild returned nullptr");

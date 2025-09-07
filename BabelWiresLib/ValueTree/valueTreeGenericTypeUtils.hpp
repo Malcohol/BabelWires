@@ -7,10 +7,10 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-
 namespace babelwires
 {
+    class ValueTreeNode;
+
     /// Given a node at a type variable, search up the tree for the GenericType that contains it.
     const ValueTreeNode* tryGetGenericTypeFromVariable(const ValueTreeNode& valueTreeNode);
 
