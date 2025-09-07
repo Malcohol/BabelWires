@@ -83,6 +83,7 @@ SET( BABELWIRESLIB_SRCS
 	ValueTree/valueTreeHelper.cpp
 	ValueTree/valueTreeNode.cpp
 	ValueTree/valueTreePathUtils.cpp
+	ValueTree/valueTreeGenericTypeUtils.cpp
 	ValueTree/valueTreeRoot.cpp
 	Path/path.cpp
 	Path/pathStep.cpp

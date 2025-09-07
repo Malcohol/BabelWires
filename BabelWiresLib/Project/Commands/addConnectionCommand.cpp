@@ -17,6 +17,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeGenericTypeUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableData.hpp>
 #include <BabelWiresLib/Types/Generic/genericType.hpp>

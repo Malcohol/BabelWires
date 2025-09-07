@@ -27,10 +27,4 @@ namespace babelwires
 
     ValueTreeNode* tryFollowPath(const Path& path, ValueTreeNode& start);
     const ValueTreeNode* tryFollowPath(const Path& path, const ValueTreeNode& start);
-
-    /// Given a node at a type variable, search up the tree for the GenericType that contains it.
-    const ValueTreeNode* tryGetGenericTypeFromVariable(const ValueTreeNode& valueTreeNode);
-
-    /// A utility function to check whether a node contains an unresolved type variables.
-    bool containsUnresolvedTypeVariable(const ValueTreeNode& valueTreeNode);
 }
