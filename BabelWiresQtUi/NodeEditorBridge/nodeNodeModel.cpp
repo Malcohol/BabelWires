@@ -54,16 +54,15 @@ unsigned int babelwires::NodeNodeModel::getNumberOfPorts(const AccessModelScope&
 
 QtNodes::NodeDataType babelwires::NodeNodeModel::getDataType(const AccessModelScope& scope, QtNodes::PortType portType,
                                                              QtNodes::PortIndex portIndex) const {
-    if (portType == QtNodes::PortType::In) {
-        return getDataTypeFromTreeValueNode(getInput(scope, portIndex));
-    } else {
-        return getDataTypeFromTreeValueNode(getOutput(scope, portIndex));
-    }
+    const auto [valueTreeNode, hasUnassignedTypeVariable] = (portType == QtNodes::PortType::In)
+        ? getInputInfo(scope, portIndex)
+        : getOutputInfo(scope, portIndex);
+    return getDataTypeFromTreeValueNode(valueTreeNode, hasUnassignedTypeVariable);
 }
 
 const babelwires::Type* babelwires::NodeNodeModel::getInputType(const AccessModelScope& scope,
                                                                 QtNodes::PortIndex portIndex) const {
-    if (const ValueTreeNode* const input = getInput(scope, portIndex)) {
+    if (const ValueTreeNode* const input = std::get<0>(getInputInfo(scope, portIndex))) {
         return &input->getType();
     }
     return nullptr;
@@ -71,33 +70,33 @@ const babelwires::Type* babelwires::NodeNodeModel::getInputType(const AccessMode
 
 const babelwires::Type* babelwires::NodeNodeModel::getOutputType(const AccessModelScope& scope,
                                                                  QtNodes::PortIndex portIndex) const {
-    if (const ValueTreeNode* const output = getOutput(scope, portIndex)) {
+    if (const ValueTreeNode* const output = std::get<0>(getOutputInfo(scope, portIndex))) {
         return &output->getType();
     }
     return nullptr;
 }
 
-const babelwires::ValueTreeNode* babelwires::NodeNodeModel::getInput(const AccessModelScope& scope,
+std::tuple<const babelwires::ValueTreeNode*, bool> babelwires::NodeNodeModel::getInputInfo(const AccessModelScope& scope,
                                                                      int portIndex) const {
     if (const babelwires::ContentsCacheEntry* entry = m_model->getEntry(scope, portIndex)) {
-        return entry->getInput();
+        return {entry->getInput(), entry->hasUnassignedInputTypeVariable()};
     } else {
-        return nullptr;
+        return {nullptr, false};
     }
 }
 
-const babelwires::ValueTreeNode* babelwires::NodeNodeModel::getOutput(const AccessModelScope& scope,
+std::tuple<const babelwires::ValueTreeNode*, bool> babelwires::NodeNodeModel::getOutputInfo(const AccessModelScope& scope,
                                                                       int portIndex) const {
     if (const babelwires::ContentsCacheEntry* entry = m_model->getEntry(scope, portIndex)) {
-        return entry->getOutput();
+        return {entry->getOutput(), entry->hasUnassignedOutputTypeVariable()};
     } else {
-        return nullptr;
+        return {nullptr, false};
     }
 }
 
-QtNodes::NodeDataType babelwires::NodeNodeModel::getDataTypeFromTreeValueNode(const babelwires::ValueTreeNode* f) {
-    if (f && f->getFlavour() != "") {
-        return QtNodes::NodeDataType{f->getFlavour().c_str(), ""};
+QtNodes::NodeDataType babelwires::NodeNodeModel::getDataTypeFromTreeValueNode(const babelwires::ValueTreeNode* valueTreeNode, bool hasUnassignedTypeVariable) {
+    if (valueTreeNode && !hasUnassignedTypeVariable && (valueTreeNode->getFlavour() != "")) {
+        return QtNodes::NodeDataType{valueTreeNode->getFlavour().c_str(), ""};
     }
     return QtNodes::NodeDataType();
 }

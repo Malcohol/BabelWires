@@ -76,10 +76,13 @@ namespace babelwires {
         void customContextMenuRequested(const QPoint& pos);
 
       protected:
-        static QtNodes::NodeDataType getDataTypeFromTreeValueNode(const ValueTreeNode* f);
+        static QtNodes::NodeDataType getDataTypeFromTreeValueNode(const ValueTreeNode* f, bool hasUnassignedTypeVariable);
 
-        const ValueTreeNode* getInput(const AccessModelScope& scope, int portIndex) const;
-        const ValueTreeNode* getOutput(const AccessModelScope& scope, int portIndex) const;
+        /// Get the ValueTreeNode and whether it is in an unassigned generic type tree.
+        std::tuple<const ValueTreeNode*, bool> getInputInfo(const AccessModelScope& scope, int portIndex) const;
+
+        /// Get the ValueTreeNode and whether it is in an unassigned generic type tree.
+        std::tuple<const ValueTreeNode*, bool> getOutputInfo(const AccessModelScope& scope, int portIndex) const;
 
       protected:
         babelwires::NodeId m_nodeId;

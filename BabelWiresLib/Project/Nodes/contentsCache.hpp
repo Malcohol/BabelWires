@@ -49,6 +49,8 @@ namespace babelwires {
         bool hasHiddenModifier() const { return m_hasHiddenModifiers; }
         bool hasFailedHiddenModifiers() const { return m_hasFailedHiddenModifiers; }
         bool hasSubmodifiers() const { return m_hasSubModifiers; }
+        bool hasUnassignedInputTypeVariable() const { return m_hasUnassignedInputTypeVariable; }
+        bool hasUnassignedOutputTypeVariable() const { return m_hasUnassignedOutputTypeVariable; }
 
         const ValueTreeNode* getInputThenOutput() const { return m_input ? m_input : m_output; }
 
@@ -66,6 +68,7 @@ namespace babelwires {
         const Path m_path;
 
         /// The number of levels of nesting.
+        // TODO Isn't this just m_path.getNumSteps()?
         std::uint8_t m_depth;
 
         /// The number of apparent levels of nesting, accounting for inlining.
@@ -97,6 +100,12 @@ namespace babelwires {
 
         /// Are there any modifiers at or beneath this entry?
         bool m_hasSubModifiers : 1;
+
+        /// Does the input type of this entry contain an unresolved type variable?
+        bool m_hasUnassignedInputTypeVariable : 1;
+
+        /// Does the output type of this entry contain an unresolved type variable?
+        bool m_hasUnassignedOutputTypeVariable : 1;
     };
 
     /// A cache of the contents of a Node visible to the user.
