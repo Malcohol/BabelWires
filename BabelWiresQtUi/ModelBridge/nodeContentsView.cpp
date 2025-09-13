@@ -127,12 +127,7 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
                 }
 
                 const ContentsCacheEntry* const cacheEntry = node->getContentsCache().getEntry(row);
-                const ValueTreeNode* const input = cacheEntry->getInput();
-                if (!input) {
-                    // TODO Log a warning (outside scope)
-                    return;
-                }
-                if (containsUnassignedTypeVariable(*input)) {
+                if (cacheEntry->isOrHasUnassignedInputTypeVariable()) {
                     // Don't allow dragging to create a node for an input with an unresolved type variable.
                     return;
                 }
@@ -158,12 +153,7 @@ void babelwires::NodeContentsView::mouseMoveEvent(QMouseEvent* event) {
                 }
 
                 const ContentsCacheEntry* const cacheEntry = node->getContentsCache().getEntry(row);
-                const ValueTreeNode* const output = cacheEntry->getOutput();
-                if (!output) {
-                    // TODO Log a warning (outside scope)
-                    return;
-                }
-                if (containsUnassignedTypeVariable(*output)) {
+                if (cacheEntry->isOrHasUnassignedOutputTypeVariable()) {
                     // Don't allow dragging to create a node for an input with an unresolved type variable.
                     return;
                 }

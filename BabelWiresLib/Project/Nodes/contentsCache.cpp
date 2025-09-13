@@ -40,6 +40,14 @@ babelwires::ContentsCacheEntry::ContentsCacheEntry(std::string label, const Valu
     , m_hasUnassignedInputTypeVariable(false)
     , m_hasUnassignedOutputTypeVariable(false) {}
 
+bool babelwires::ContentsCacheEntry::isOrHasUnassignedInputTypeVariable() const {
+    return m_hasUnassignedInputTypeVariable || !m_input || m_input->getType().as<babelwires::TypeVariableType>();
+}
+
+bool babelwires::ContentsCacheEntry::isOrHasUnassignedOutputTypeVariable() const {
+    return m_hasUnassignedOutputTypeVariable || !m_output || m_output->getType().as<babelwires::TypeVariableType>();
+}
+
 babelwires::ContentsCache::ContentsCache(EditTree& edits)
     : m_edits(edits) {}
 
@@ -90,8 +98,7 @@ namespace babelwires {
                     // If this is a generic type
                     if (const GenericType* type = valueTreeNode->getType().as<GenericType>()) {
                         // Record the row regardless of whether there are unassigned type variables or not.
-                        (isInput ? m_inputGenericTypeStack : m_outputGenericTypeStack)
-                            .push_back(m_rows.size() - 1);
+                        (isInput ? m_inputGenericTypeStack : m_outputGenericTypeStack).push_back(m_rows.size() - 1);
                         if (type->isAnyTypeVariableUnassigned(valueTreeNode->getValue())) {
                             isInUnassignedGenericTree = true;
                         }
@@ -101,11 +108,14 @@ namespace babelwires {
                         const auto typeVarData =
                             babelwires::TypeVariableData::isTypeVariable(valueTreeNode->getTypeRef());
                         assert(typeVarData);
-                        const unsigned int genericTypeStackSize = (isInput ? m_inputGenericTypeStack : m_outputGenericTypeStack).size();
+                        const unsigned int genericTypeStackSize =
+                            (isInput ? m_inputGenericTypeStack : m_outputGenericTypeStack).size();
                         if (typeVarData->m_numGenericTypeLevels < genericTypeStackSize) {
                             const unsigned int genericTypeRowIndex =
-                                (isInput ? m_inputGenericTypeStack : m_outputGenericTypeStack)[genericTypeStackSize - 1 - typeVarData->m_numGenericTypeLevels];
-                            unsigned int currentRowIndex = m_rows.size() - 1;
+                                (isInput ? m_inputGenericTypeStack
+                                         : m_outputGenericTypeStack)[genericTypeStackSize - 1 -
+                                                                     typeVarData->m_numGenericTypeLevels];
+                            unsigned int currentRowIndex = getParentRowIndex(m_rows.size() - 1);
                             while (currentRowIndex > genericTypeRowIndex) {
                                 if constexpr (isInput) {
                                     m_rows[currentRowIndex].m_hasUnassignedInputTypeVariable = true;
