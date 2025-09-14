@@ -48,19 +48,20 @@ const babelwires::ValueTreeNode* babelwires::tryGetGenericTypeFromVariable(const
 }
 
 namespace {
-    bool isUnderGenericTypeWithUnassignedVariables(const babelwires::ValueTreeNode& valueTreeNode) {
+    int getMaximumPossibleHeightOfUnassignedGenericType(const babelwires::ValueTreeNode& valueTreeNode) {
+        int height = -1;
         const babelwires::ValueTreeNode* current = &valueTreeNode;
         const babelwires::ValueTreeNode* parent = current->getOwner();
         while (parent) {
             if (const babelwires::GenericType* genericType = parent->getType().as<babelwires::GenericType>()) {
                 if (genericType->isAnyTypeVariableUnassigned(parent->getValue())) {
-                    return true;
+                    ++height;
                 }
             }
             current = parent;
             parent = current->getOwner();
         }
-        return false;
+        return height;
     }
 
     bool typeRefContainsTypeVariable(const babelwires::TypeRef& typeRef) {
@@ -95,43 +96,72 @@ namespace {
         return typeRef.visit<Visitor, bool>(visitor);
     }
 
-    bool containsUnassignedTypeVariableImpl(const babelwires::ValueTreeNode& valueTreeNode,
-                                            unsigned int genericTypeDepth = 0) {
-        if (valueTreeNode.getType().as<babelwires::TypeVariableType>()) {
-            const auto typeVarData = babelwires::TypeVariableData::isTypeVariable(valueTreeNode.getTypeRef());
-            if (typeVarData && (typeVarData->m_numGenericTypeLevels >= genericTypeDepth)) {
-                // The variable is unassigned and references a generic type above the start point of the search.
-                return true;
+    struct TypeVariableExplorer {
+        TypeVariableExplorer(int maximumPossibleHeight)
+            : m_maximumPossibleHeight(maximumPossibleHeight) {}
+
+        int m_maximumPossibleHeight;
+        int m_maximumHeightFound = -1;
+
+        // Returns true if the exploration can be stopped.
+        bool containsUnassignedTypeVariableImpl(const babelwires::ValueTreeNode& valueTreeNode,
+                                                unsigned int genericTypeDepth) {
+            if (valueTreeNode.getType().as<babelwires::TypeVariableType>()) {
+                // An unassigned type variable.
+                const auto typeVarData = babelwires::TypeVariableData::isTypeVariable(valueTreeNode.getTypeRef());
+                assert(typeVarData);
+                const int excess = typeVarData->m_numGenericTypeLevels - genericTypeDepth;
+                if (excess > m_maximumHeightFound) {
+                    // The variable is unassigned and references a generic type above the start point of the search (0).
+                    m_maximumHeightFound = excess;
+                    if (m_maximumHeightFound >= m_maximumPossibleHeight) {
+                        // The variable references the outermost generic type, which means we can stop exploring.
+                        // (If it references a more nested generic type, then we wouldn't know whether nodes on the
+                        // valueTree path between those types should be marked as having an unassigned type variable
+                        // or not. In that case, we need to keep exploring.)
+                        // We use >= and don't assert because a badly formed type might have been deserialized.
+                        return true;
+                    }
+                }
             }
-        }
-        for (int i = 0; i < valueTreeNode.getNumChildren(); ++i) {
-            const babelwires::ValueTreeNode* const child = valueTreeNode.getChild(i);
-            assert(child && "ValueTreeNode::getChild returned nullptr");
-            if (child->getType().as<babelwires::GenericType>()) {
-                ++genericTypeDepth;
-            } else if (auto typeVarData = babelwires::TypeVariableData::isTypeVariable(child->getTypeRef())) {
-                if ((typeVarData->m_numGenericTypeLevels >= genericTypeDepth) &&
-                    (child->getType().as<babelwires::TypeVariableType>())) {
-                    // The variable is unresolved and references a generic type above the start point of the search.
+            for (int i = 0; i < valueTreeNode.getNumChildren(); ++i) {
+                const babelwires::ValueTreeNode* const child = valueTreeNode.getChild(i);
+                assert(child && "ValueTreeNode::getChild returned nullptr");
+                if (child->getType().as<babelwires::GenericType>()) {
+                    ++genericTypeDepth;
+                }
+                if (containsUnassignedTypeVariableImpl(*child, genericTypeDepth)) {
+                    // Stop exploring.
                     return true;
                 }
             }
-            if (containsUnassignedTypeVariableImpl(*child, genericTypeDepth)) {
-                return true;
-            }
+            return false;
         }
-        return false;
-    }
+    };
 
 } // namespace
 
 bool babelwires::containsUnassignedTypeVariable(const ValueTreeNode& valueTreeNode) {
-    // Two early out conditions to avoid doing a full traversal.
-    if (!isUnderGenericTypeWithUnassignedVariables(valueTreeNode)) {
+    int maximumHeight = getMaximumPossibleHeightOfUnassignedGenericType(valueTreeNode);
+    if (maximumHeight < 0) {
         return false;
     }
     if (!typeRefContainsTypeVariable(valueTreeNode.getTypeRef())) {
         return false;
     }
-    return containsUnassignedTypeVariableImpl(valueTreeNode, 0);
+    TypeVariableExplorer explorer(maximumHeight);
+    explorer.containsUnassignedTypeVariableImpl(valueTreeNode, 0);
+    return explorer.m_maximumHeightFound >= 0;
+}
+
+int babelwires::getMaximumHeightOfUnassignedGenericType(const ValueTreeNode& valueTreeNode, int maximumPossible) {
+    assert(maximumPossible >= 0);
+    int tmpMax = getMaximumPossibleHeightOfUnassignedGenericType(valueTreeNode);
+    assert(maximumPossible == tmpMax);
+    if (!typeRefContainsTypeVariable(valueTreeNode.getTypeRef())) {
+        return -1;
+    }
+    TypeVariableExplorer explorer(maximumPossible);
+    explorer.containsUnassignedTypeVariableImpl(valueTreeNode, 0);
+    return explorer.m_maximumHeightFound >= 0;
 }

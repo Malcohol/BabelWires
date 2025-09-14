@@ -7,8 +7,7 @@
  **/
 #pragma once
 
-namespace babelwires
-{
+namespace babelwires {
     class ValueTreeNode;
 
     /// Given a node at a type variable, search up the tree for the GenericType that contains it.
@@ -16,4 +15,12 @@ namespace babelwires
 
     /// Check whether a node is between an unresolved type variables and the GenericType that contains it.
     bool containsUnassignedTypeVariable(const ValueTreeNode& valueTreeNode);
-}
+
+    /// Return the maximum level of generic types, above the ValueTreeNode, that any unassigned type variable in the node
+    /// references. A return value of -1 means that no unassigned type variables in the ValueTreeNode reference any generic type
+    /// above it. The given node is assumed to be maximumPossible levels under a GenericType with an unassigned
+    /// variable (i.e. in a well-formed type, the returned value won't exceed the maximumPossible).
+    /// To emphasize: If the valueTreeNode holds a GenericType itself, that isn't counted for the result (and shouldn't be
+    /// counted in the provided maximumPossible).
+    int getMaximumHeightOfUnassignedGenericType(const ValueTreeNode& valueTreeNode, int maximumPossible);
+} // namespace babelwires
