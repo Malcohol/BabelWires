@@ -16,7 +16,6 @@
 #include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeGenericTypeUtils.hpp>
 
 #include <QtWidgets/QHeaderView>
 
