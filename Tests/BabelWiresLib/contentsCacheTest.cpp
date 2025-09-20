@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <BabelWiresLib/Project/Modifiers/setTypeVariableModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/Nodes/contentsCache.hpp>
 #include <BabelWiresLib/Project/Nodes/editTree.hpp>
@@ -786,6 +787,17 @@ TEST(ContentsCacheTest, unassignedTypeVariables_noAssignments) {
                                         testDomain::TestGenericType::getThisType());
     valueTree.setToDefault();
 
+    babelwires::ValueTreeNode& nestedGenericTypeNode =
+        babelwires::followPath(testDomain::TestGenericType::getPathToNestedGenericType(), valueTree);
+    const babelwires::GenericType* const nestedGenericType =
+        nestedGenericTypeNode.getType().as<babelwires::GenericType>();
+    ASSERT_NE(nestedGenericType, nullptr);
+
+    // The algorithms are tricky, so we test all combinations of:
+    // - which nodes are expanded (none, root, wrapped type, nested generic type, nested wrapped type, array)
+    // - which type variables are assigned (T, U, nested T)
+    // - whether input and/or output is present
+
     for (unsigned int i = 0; i < 5; ++i) {
         switch (i) {
             case 0:
@@ -804,105 +816,132 @@ TEST(ContentsCacheTest, unassignedTypeVariables_noAssignments) {
                 editTree.setExpanded(testDomain::TestGenericType::getPathToArray(), true);
         }
 
-        for (unsigned int k = 1; k < 4; ++k) {
-            const bool hasInput = (k & 1) != 0;
-            const bool hasOutput = (k & 2) != 0;
+        for (unsigned int j = 0; j < 8; ++j) {
+            const bool tAssigned = (j & 1) != 0;
+            const bool uAssigned = (j & 2) != 0;
+            const bool nestedTAssigned = (j & 4) != 0;
 
-            cache.setValueTrees("Test", (hasInput ? &valueTree : nullptr), (hasOutput ? &valueTree : nullptr));
+            {
+                babelwires::SetTypeVariableModifierData data;
+                data.m_typeAssignments.resize(2);
+                data.m_typeAssignments[0] = tAssigned ? babelwires::StringType::getThisType() : babelwires::TypeRef();
+                data.m_typeAssignments[1] = uAssigned ? babelwires::StringType::getThisType() : babelwires::TypeRef();
+                data.apply(&valueTree);
 
-            ASSERT_LE(cache.getNumRows(), 11);
-            {
-                const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
-                EXPECT_EQ(entry->getPath(), babelwires::Path());
-                EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), false);
-                EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), false);
-                EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), false);
-                EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), false);
+                babelwires::SetTypeVariableModifierData nestedData;
+                nestedData.m_typeAssignments.resize(1);
+                nestedData.m_typeAssignments[0] =
+                    nestedTAssigned ? babelwires::StringType::getThisType() : babelwires::TypeRef();
+                nestedData.apply(&nestedGenericTypeNode);
             }
-            if (i == 0) continue;
-            {
-                const babelwires::ContentsCacheEntry* const entry = cache.getEntry(1);
-                EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToWrappedType());
-                EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), hasInput);
-                EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), hasOutput);
-                EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput);
-                EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput);
-            }
-            if (i == 1) continue;
-            {
-                const babelwires::ContentsCacheEntry* const entry = cache.getEntry(2);
-                EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToX());
-                EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), false);
-                EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), false);
-                EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput);
-                EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput);
-            }
-            {
-                const babelwires::ContentsCacheEntry* const entry = cache.getEntry(3);
-                EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToY());
-                EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), false);
-                EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), false);
-                EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput);
-                EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput);
-            }
-            {
-                const babelwires::ContentsCacheEntry* const entry = cache.getEntry(4);
-                EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToInt());
-                EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), false);
-                EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), false);
-                EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), false);
-                EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), false);
-            }
-            {
-                const babelwires::ContentsCacheEntry* const entry = cache.getEntry(5);
-                EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToNestedGenericType());
-                EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), hasInput);
-                EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), hasOutput);
-                EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput);
-                EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput);
-            }
-            if (i == 2) continue;
-            {
-                const babelwires::ContentsCacheEntry* const entry = cache.getEntry(6);
-                EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToNestedWrappedType());
-                EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), hasInput);
-                EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), hasOutput);
-                EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput);
-                EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput);
-            }
-            if (i == 3) continue;
-            {
-                const babelwires::ContentsCacheEntry* const entry = cache.getEntry(7);
-                EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToNestedX());
-                EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), false);
-                EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), false);
-                EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput);
-                EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput);
-            }
-            {
-                const babelwires::ContentsCacheEntry* const entry = cache.getEntry(8);
-                EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToNestedZ());
-                EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), false);
-                EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), false);
-                EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput);
-                EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput);
-            }
-            {
-                const babelwires::ContentsCacheEntry* const entry = cache.getEntry(9);
-                EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToArray());
-                EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), hasInput);
-                EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), hasOutput);
-                EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput);
-                EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput);
-            }
-            if (i == 4) continue;
-            {
-                const babelwires::ContentsCacheEntry* const entry = cache.getEntry(10);
-                EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToArray0());
-                EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), false);
-                EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), false);
-                EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput);
-                EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput);
+
+            for (unsigned int k = 1; k < 4; ++k) {
+                const bool hasInput = (k & 1) != 0;
+                const bool hasOutput = (k & 2) != 0;
+
+                cache.setValueTrees("Test", (hasInput ? &valueTree : nullptr), (hasOutput ? &valueTree : nullptr));
+
+                ASSERT_LE(cache.getNumRows(), 11);
+                {
+                    const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
+                    EXPECT_EQ(entry->getPath(), babelwires::Path());
+                    EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), false);
+                    EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), false);
+                    EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), false);
+                    EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), false);
+                }
+                if (i == 0)
+                    continue;
+                {
+                    const babelwires::ContentsCacheEntry* const entry = cache.getEntry(1);
+                    EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToWrappedType());
+                    EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), hasInput && (!tAssigned || !uAssigned));
+                    EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), hasOutput && (!tAssigned || !uAssigned));
+                    EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput && (!tAssigned || !uAssigned));
+                    EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput && (!tAssigned || !uAssigned));
+                }
+                if (i == 1)
+                    continue;
+                {
+                    const babelwires::ContentsCacheEntry* const entry = cache.getEntry(2);
+                    EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToX());
+                    EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), false);
+                    EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), false);
+                    EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput && !tAssigned);
+                    EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput && !tAssigned);
+                }
+                {
+                    const babelwires::ContentsCacheEntry* const entry = cache.getEntry(3);
+                    EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToY());
+                    EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), false);
+                    EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), false);
+                    EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput && !uAssigned);
+                    EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput && !uAssigned);
+                }
+                {
+                    const babelwires::ContentsCacheEntry* const entry = cache.getEntry(4);
+                    EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToInt());
+                    EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), false);
+                    EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), false);
+                    EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), false);
+                    EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), false);
+                }
+                {
+                    const babelwires::ContentsCacheEntry* const entry = cache.getEntry(5);
+                    EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToNestedGenericType());
+                    EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), hasInput && !tAssigned);
+                    EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), hasOutput && !tAssigned);
+                    EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput && !tAssigned);
+                    EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput && !tAssigned);
+                }
+                if (i == 2)
+                    continue;
+                {
+                    const babelwires::ContentsCacheEntry* const entry = cache.getEntry(6);
+                    EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToNestedWrappedType());
+                    EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), hasInput && (!tAssigned || !nestedTAssigned));
+                    EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), hasOutput && (!tAssigned || !nestedTAssigned));
+                    EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(),
+                              hasInput && (!tAssigned || !nestedTAssigned));
+                    EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(),
+                              hasOutput && (!tAssigned || !nestedTAssigned));
+                }
+                if (i == 3)
+                    continue;
+                {
+                    const babelwires::ContentsCacheEntry* const entry = cache.getEntry(7);
+                    EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToNestedX());
+                    EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), false);
+                    EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), false);
+                    EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput && !tAssigned);
+                    EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput && !tAssigned);
+                }
+                {
+                    const babelwires::ContentsCacheEntry* const entry = cache.getEntry(8);
+                    EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToNestedZ());
+                    EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), false);
+                    EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), false);
+                    EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput && !nestedTAssigned);
+                    EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput && !nestedTAssigned);
+                }
+                {
+                    const babelwires::ContentsCacheEntry* const entry = cache.getEntry(9);
+                    EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToArray());
+                    EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), hasInput && !tAssigned);
+                    EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), hasOutput && !tAssigned);
+                    EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput && !tAssigned);
+                    EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput && !tAssigned);
+                }
+                if (i == 4)
+                    continue;
+                {
+                    const babelwires::ContentsCacheEntry* const entry = cache.getEntry(10);
+                    EXPECT_EQ(entry->getPath(), testDomain::TestGenericType::getPathToArray0());
+                    EXPECT_EQ(entry->hasUnassignedInputTypeVariable(), false);
+                    EXPECT_EQ(entry->hasUnassignedOutputTypeVariable(), false);
+                    EXPECT_EQ(entry->isOrHasUnassignedInputTypeVariable(), hasInput && !tAssigned);
+                    EXPECT_EQ(entry->isOrHasUnassignedOutputTypeVariable(), hasOutput && !tAssigned);
+                }
             }
         }
     }
