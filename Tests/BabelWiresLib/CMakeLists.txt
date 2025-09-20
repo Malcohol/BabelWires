@@ -2,6 +2,7 @@ SET( LIB_TESTS_SRCS
     babelWiresTests.cpp
     activateOptionalsModifierDataTest.cpp
     activateOptionalCommandTest.cpp
+    addConnectionCommandTest.cpp
     addNodeCommandTest.cpp
     addNodeForInputTreeValueCommandTest.cpp
     addNodeForOutputTreeValueCommandTest.cpp
@@ -24,6 +25,7 @@ SET( LIB_TESTS_SRCS
     nodeTest.cpp
     featurePathTest.cpp
     editTreeTest.cpp
+    genericTypeTest.cpp
     intValueTest.cpp
     intTypeTest.cpp
     mapValueTest.cpp
@@ -64,6 +66,8 @@ SET( LIB_TESTS_SRCS
     setMapCommandTest.cpp
     setMapSourceTypeCommandTest.cpp
     setMapTargetTypeCommandTest.cpp
+    setTypeVariableCommandTest.cpp
+    setTypeVariableModifierDataTest.cpp
     sourceFileNodeTest.cpp
     stringTypeTest.cpp
     stringValueTest.cpp
@@ -78,6 +82,7 @@ SET( LIB_TESTS_SRCS
     valueNamesTest.cpp
     valueHolderTest.cpp
     valueNodeTest.cpp
+    valueTreeGenericTypeUtilsTest.cpp
    )
 
 

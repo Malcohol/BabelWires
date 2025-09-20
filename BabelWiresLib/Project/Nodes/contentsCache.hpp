@@ -49,6 +49,18 @@ namespace babelwires {
         bool hasHiddenModifier() const { return m_hasHiddenModifiers; }
         bool hasFailedHiddenModifiers() const { return m_hasFailedHiddenModifiers; }
         bool hasSubmodifiers() const { return m_hasSubModifiers; }
+        
+        /// This entry is strictly between an unassigned input type variable and its generic type.
+        bool hasUnassignedInputTypeVariable() const { return m_hasUnassignedInputTypeVariable; }
+
+        /// This entry is strictly between an unassigned output type variable and its generic type.
+        bool hasUnassignedOutputTypeVariable() const { return m_hasUnassignedOutputTypeVariable; }
+
+        /// Convenience method which also returns true for unassigned type variables.
+        bool isOrHasUnassignedInputTypeVariable() const;
+
+        /// Convenience method which also returns true for unassigned type variables.
+        bool isOrHasUnassignedOutputTypeVariable() const;
 
         const ValueTreeNode* getInputThenOutput() const { return m_input ? m_input : m_output; }
 
@@ -66,6 +78,7 @@ namespace babelwires {
         const Path m_path;
 
         /// The number of levels of nesting.
+        // TODO Isn't this just m_path.getNumSteps()?
         std::uint8_t m_depth;
 
         /// The number of apparent levels of nesting, accounting for inlining.
@@ -97,6 +110,12 @@ namespace babelwires {
 
         /// Are there any modifiers at or beneath this entry?
         bool m_hasSubModifiers : 1;
+
+        /// Does the input type of this entry contain an unresolved type variable?
+        bool m_hasUnassignedInputTypeVariable : 1;
+
+        /// Does the output type of this entry contain an unresolved type variable?
+        bool m_hasUnassignedOutputTypeVariable : 1;
     };
 
     /// A cache of the contents of a Node visible to the user.

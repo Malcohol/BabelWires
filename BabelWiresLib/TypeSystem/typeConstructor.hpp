@@ -28,7 +28,8 @@ namespace babelwires {
 
         /// Get the constructed type from the cache, or construct a new one.
         /// Returns null if the type cannot be constructed.
-        const Type* tryGetOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
+        const Type* tryGetOrConstructType(const TypeSystem& typeSystem,
+                                          const TypeConstructorArguments& arguments) const;
 
         /// Get the constructed type from the cache, or construct a new one.
         /// Throws a TypeSystemException if the type cannot be constructed.
@@ -38,16 +39,23 @@ namespace babelwires {
         virtual TypeConstructorId getTypeConstructorId() const = 0;
 
       protected:
-        /// Construct the new type or throw a TypeSystemException if it cannot be constructed.
-        /// The newTypeRef is provided to allow implementations to move it into the constructed type.
-        virtual std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
-                                                    const std::vector<const Type*>& typeArguments,
-                                                    const std::vector<EditableValueHolder>& valueArguments) const = 0;
+        using TypeConstructorResult = std::variant<std::unique_ptr<Type>, const Type*>;
+
+        /// Construct the new type, return an existing type (if the constructor is just a pure wrapper)
+        /// or throw a TypeSystemException if it cannot be constructed.
+        /// The newTypeRef is provided to allow implementations to move it into a newly constructed type.
+        /// Resolved types corresponding to the type arguments are provided. However, newly constructed
+        /// types should be passed TypeRefs from the arguments rather than using the TypeRefs of the 
+        /// resolved types.
+        virtual TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+                                                    const TypeConstructorArguments& arguments,
+                                                    const std::vector<const Type*>& resolvedTypeArguments) const = 0;
 
       private:
-        using PerTypeStorage = std::variant<std::monostate, std::unique_ptr<Type>, std::string>;
+        using PerTypeStorage = std::variant<std::monostate, std::unique_ptr<Type>, const Type*, std::string>;
 
-        const PerTypeStorage& getOrConstructTypeInternal(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
+        const PerTypeStorage& getOrConstructTypeInternal(const TypeSystem& typeSystem,
+                                                         const TypeConstructorArguments& arguments) const;
 
       private:
         /// A mutex which ensures thread-safe access to the cache.
@@ -56,12 +64,11 @@ namespace babelwires {
         mutable std::shared_mutex m_mutexForCache;
 
         /// A cache which stops the system ending up with multiple copies of the same constructed type.
-        mutable std::unordered_map < TypeConstructorArguments,
-            PerTypeStorage> m_cache;
+        mutable std::unordered_map<TypeConstructorArguments, PerTypeStorage> m_cache;
     };
 
     /// A convenience class which can used by type constructors for the type they want to construct.
-    /// It provides an implementing getTypeRef.
+    /// It provides an implementation of getTypeRef.
     /// Type constructors are not obliged to use this template.
     template <typename T> class ConstructedType : public T {
       public:

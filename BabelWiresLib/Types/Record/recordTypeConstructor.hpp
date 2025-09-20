@@ -18,9 +18,8 @@ namespace babelwires {
         // Example: Record{a, b, c : String, Integer, String}
         TYPE_CONSTRUCTOR("Record", "Record{{[0|, ] : {0|, }}}", "295459cc-9485-4526-86ac-e8f27e4e7667", 1);
 
-        std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
-                                            const std::vector<const Type*>& typeArguments,
-                                            const std::vector<EditableValueHolder>& valueArguments) const override;
+        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
+                                            const std::vector<const Type*>& resolvedTypeArguments) const override;
 
         /// Convenience method.
         template<typename... ARGS>

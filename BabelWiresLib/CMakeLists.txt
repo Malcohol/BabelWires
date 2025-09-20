@@ -22,6 +22,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Modifiers/connectionModifierData.cpp
 	Project/Modifiers/activateOptionalsModifierData.cpp
 	Project/Modifiers/selectRecordVariantModifierData.cpp
+	Project/Modifiers/setTypeVariableModifierData.cpp
 	Project/Modifiers/valueAssignmentData.cpp
 	Project/uiPosition.cpp
 	Project/projectData.cpp
@@ -37,6 +38,13 @@ SET( BABELWIRESLIB_SRCS
 	Types/Array/arrayValue.cpp
 	Types/File/fileType.cpp
 	Types/File/fileTypeConstructor.cpp
+	Types/Generic/genericType.cpp
+	Types/Generic/genericValue.cpp
+	Types/Generic/genericTypeConstructor.cpp
+	Types/Generic/typeVariableData.cpp
+	Types/Generic/typeVariableType.cpp
+	Types/Generic/typeVariableValue.cpp
+	Types/Generic/typeVariableTypeConstructor.cpp
 	Types/Map/Commands/addEntryToMapCommand.cpp
 	Types/Map/Commands/removeEntryFromMapCommand.cpp
 	Types/Map/Commands/replaceMapEntryCommand.cpp
@@ -75,11 +83,13 @@ SET( BABELWIRESLIB_SRCS
 	ValueTree/valueTreeHelper.cpp
 	ValueTree/valueTreeNode.cpp
 	ValueTree/valueTreePathUtils.cpp
+	ValueTree/valueTreeGenericTypeUtils.cpp
 	ValueTree/valueTreeRoot.cpp
 	Path/path.cpp
 	Path/pathStep.cpp
 	Serialization/projectBundle.cpp
 	Project/Commands/activateOptionalCommand.cpp
+	Project/Commands/addConnectionCommand.cpp
 	Project/Commands/addNodeCommand.cpp
 	Project/Commands/addNodeForInputTreeValueCommand.cpp
 	Project/Commands/addNodeForOutputTreeValueCommand.cpp
@@ -98,6 +108,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/resizeNodeCommand.cpp
 	Project/Commands/selectRecordVariantCommand.cpp
 	Project/Commands/setArraySizeCommand.cpp
+	Project/Commands/setTypeVariableCommand.cpp
 	Project/Commands/Subcommands/removeSimpleModifierSubcommand.cpp
 	Project/Commands/Subcommands/removeAllEditsSubcommand.cpp
 	Project/Commands/Subcommands/adjustModifiersInArraySubcommand.cpp

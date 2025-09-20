@@ -18,8 +18,8 @@ namespace babelwires {
         // TupleTypes are variadic.
         TYPE_CONSTRUCTOR("Tuple", "{0|*}", "e55f3a4d-9b62-4f54-964f-bca4a42e8f68", 1);
 
-        std::unique_ptr<Type> constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const std::vector<const Type*>& typeArguments,
-                                            const std::vector<EditableValueHolder>& valueArguments) const override;
+        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
+                                            const std::vector<const Type*>& resolvedTypeArguments) const override;
 
         // Convenience method
         static TypeRef makeTypeRef(std::vector<TypeRef> types);

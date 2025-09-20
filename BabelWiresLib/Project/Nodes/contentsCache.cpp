@@ -7,19 +7,23 @@
  **/
 #include <BabelWiresLib/Project/Nodes/contentsCache.hpp>
 
-#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/Project/Nodes/editTree.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+#include <BabelWiresLib/Project/Nodes/editTree.hpp>
+#include <BabelWiresLib/TypeSystem/type.hpp>
+#include <BabelWiresLib/Types/Generic/genericType.hpp>
+#include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
 #include <BabelWiresLib/ValueNames/valueNames.hpp>
+#include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeGenericTypeUtils.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 
 #include <unordered_set>
 
 babelwires::ContentsCacheEntry::ContentsCacheEntry(std::string label, const ValueTreeNode* input,
-                                                   const ValueTreeNode* output, const Path& path,
-                                                   std::uint8_t depth, std::uint8_t indent)
+                                                   const ValueTreeNode* output, const Path& path, std::uint8_t depth,
+                                                   std::uint8_t indent)
     : m_label(std::move(label))
     , m_input(input)
     , m_output(output)
@@ -33,22 +37,20 @@ babelwires::ContentsCacheEntry::ContentsCacheEntry(std::string label, const Valu
     , m_hasFailedModifier(false)
     , m_hasHiddenModifiers(false)
     , m_hasFailedHiddenModifiers(false)
-    , m_hasSubModifiers(false) {}
+    , m_hasSubModifiers(false)
+    , m_hasUnassignedInputTypeVariable(false)
+    , m_hasUnassignedOutputTypeVariable(false) {}
+
+bool babelwires::ContentsCacheEntry::isOrHasUnassignedInputTypeVariable() const {
+    return m_hasUnassignedInputTypeVariable || (m_input && m_input->getType().as<babelwires::TypeVariableType>());
+}
+
+bool babelwires::ContentsCacheEntry::isOrHasUnassignedOutputTypeVariable() const {
+    return m_hasUnassignedOutputTypeVariable || (m_output && m_output->getType().as<babelwires::TypeVariableType>());
+}
 
 babelwires::ContentsCache::ContentsCache(EditTree& edits)
     : m_edits(edits) {}
-
-namespace {
-    std::string getArrayEntryLabel(int i, const babelwires::ValueNames* names) {
-        std::ostringstream os;
-        os << "[" << i << "]";
-        std::string name;
-        if (names && names->getNameForValue(i, name)) {
-            os << " (" << name << ")";
-        }
-        return os.str();
-    }
-} // namespace
 
 namespace babelwires {
     namespace Detail {
@@ -58,6 +60,14 @@ namespace babelwires {
                 : m_identifierRegistry(IdentifierRegistry::read())
                 , m_rows(rows)
                 , m_edits(edits) {}
+
+            IdentifierRegistry::ReadAccess m_identifierRegistry;
+            std::vector<ContentsCacheEntry>& m_rows;
+            /// Stack of generic types encountered when exploring the tree, as indices into m_rows
+            std::vector<unsigned int> m_inputGenericTypeStack;
+            /// Stack of generic types encountered when exploring the tree, as indices into m_rows
+            std::vector<unsigned int> m_outputGenericTypeStack;
+            EditTree& m_edits;
 
             /// Sets some compound details and returns whether the compound is expanded or not.
             /// indentInOut will be set to the indent level of children.
@@ -71,52 +81,154 @@ namespace babelwires {
                     row.m_isExpanded = m_edits.isExpanded(path);
                     return row.m_isExpanded;
                 }
-                return true;
+                return false;
             }
 
-            void addInputFeatureToCache(std::string label, const babelwires::ValueTreeNode* f, const Path& path,
-                                        std::uint8_t depth, std::uint8_t indent) {
-                m_rows.emplace_back(ContentsCacheEntry(std::move(label), f, nullptr, path, depth, indent));
-                if (setAndGetCompoundIsExpanded(f, path, f->getNumChildren(), indent)) {
-                    ++depth;
-                    for (int i = 0; i < f->getNumChildren(); ++i) {
-                        const ValueTreeNode* child = f->getChild(i);
-                        // TODO Needless cost doing this.
-                        PathStep step = f->getStepToChild(child);
-                        Path pathToChild = path;
-                        pathToChild.pushStep(step);
-                        std::ostringstream os;
-                        step.writeToStreamReadable(os, *m_identifierRegistry);
-                        addInputFeatureToCache(os.str(), child, std::move(pathToChild), depth, indent);
+            struct GenericTypeInfo {
+                int m_depthInUnassignedGenericTree = -1;
+            };
+
+            template <bool isInput>
+            void markRowsWithUnassignedTypeVariables(unsigned int currentRowIndex, unsigned int levelsFromEnd) {
+                const unsigned int genericTypeStackSize =
+                    (isInput ? m_inputGenericTypeStack : m_outputGenericTypeStack).size();
+                if (levelsFromEnd >= genericTypeStackSize) {
+                    levelsFromEnd = genericTypeStackSize - 1;
+                }
+                const unsigned int genericTypeRowIndex =
+                    (isInput ? m_inputGenericTypeStack
+                             : m_outputGenericTypeStack)[genericTypeStackSize - 1 - levelsFromEnd];
+                while (currentRowIndex > genericTypeRowIndex) {
+                    if constexpr (isInput) {
+                        m_rows[currentRowIndex].m_hasUnassignedInputTypeVariable = true;
+                    } else {
+                        m_rows[currentRowIndex].m_hasUnassignedOutputTypeVariable = true;
+                    }
+                    currentRowIndex = getParentRowIndex(currentRowIndex);
+                }
+            }
+
+            /// This does two jobs:
+            /// 1. If the feature is a GenericType that has an unassigned type variable, then set the provided boolean
+            /// argument.
+            ///    - That signals to the traversal algorithm that some of the subtrees below this will have an
+            ///    unassigned type variables.
+            /// 2. If the feature is a TypeVariable, then mark all the rows between this and the corresponding
+            /// GenericType as having an unassigned type variable.
+            template <bool isInput>
+            void handleGenericTypes(const ValueTreeNode* valueTreeNode, unsigned int numChildren,
+                                    bool isExpanded, GenericTypeInfo& genericTypeInfo) {
+                if (genericTypeInfo.m_depthInUnassignedGenericTree >= 0) {
+                    if (numChildren == TypeVariableType::c_numChildren) {
+                        if (valueTreeNode->getType().as<TypeVariableType>()) {
+                            const auto typeVarData =
+                                TypeVariableData::isTypeVariable(valueTreeNode->getTypeRef());
+                            assert(typeVarData);
+                            unsigned int currentRowIndex = getParentRowIndex(m_rows.size() - 1);
+                            markRowsWithUnassignedTypeVariables<isInput>(currentRowIndex,
+                                                                         typeVarData->m_numGenericTypeLevels);
+                        }
+                    } else if (!isExpanded) {
+                        // In the case of a collapsed node, we have to traverse the valueTreeNode now, since the cache
+                        // algorithm stops exploring at collapsed nodes.
+                        ContentsCacheEntry& thisEntry = m_rows.back();
+                        const int heightOfUnassignedTypeVariable = getMaximumHeightOfUnassignedGenericType(
+                            *valueTreeNode, genericTypeInfo.m_depthInUnassignedGenericTree);
+                        if (heightOfUnassignedTypeVariable >= 0) {
+                            unsigned int currentRowIndex = m_rows.size() - 1;
+                            markRowsWithUnassignedTypeVariables<isInput>(currentRowIndex,
+                                                                         heightOfUnassignedTypeVariable);
+                        }
+                    }
+                }
+                if (numChildren == GenericType::c_numChildren) {
+                    // If this is a generic type, increase the depth.
+                    // We deliberately perform after testing for collapsed nodes, since the generic type itself
+                    // shouldn't be treated as a level when querying its own getMaximumHeightOfUnassignedGenericType.
+                    if (const GenericType* type = valueTreeNode->getType().as<GenericType>()) {
+                        // Record the row regardless of whether there are unassigned type variables or not.
+                        (isInput ? m_inputGenericTypeStack : m_outputGenericTypeStack).push_back(m_rows.size() - 1);
+                        // increment the depth if this generic type or any above it had unassigned type variables.
+                        if (type->isAnyTypeVariableUnassigned(valueTreeNode->getValue()) ||
+                            (genericTypeInfo.m_depthInUnassignedGenericTree >= 0)) {
+                            ++genericTypeInfo.m_depthInUnassignedGenericTree;
+                        }
                     }
                 }
             }
 
-            void addOutputFeatureToCache(std::string label, const babelwires::ValueTreeNode* f, const Path& path,
-                                         std::uint8_t depth, std::uint8_t indent) {
-                m_rows.emplace_back(ContentsCacheEntry(std::move(label), nullptr, f, path, depth, indent));
-                if (setAndGetCompoundIsExpanded(f, path, f->getNumChildren(), indent)) {
+            void handleGenericInputTypes(const babelwires::ValueTreeNode* valueTreeNode, unsigned int numChildren,
+                                         bool isExpanded, GenericTypeInfo& genericTypeInfo) {
+                handleGenericTypes<true>(valueTreeNode, numChildren, isExpanded, genericTypeInfo);
+            }
+
+            void handleGenericOutputTypes(const babelwires::ValueTreeNode* valueTreeNode, unsigned int numChildren,
+                                          bool isExpanded, GenericTypeInfo& genericTypeInfo) {
+                handleGenericTypes<false>(valueTreeNode, numChildren, isExpanded, genericTypeInfo);
+            }
+
+            void addInputFeatureToCache(std::string label, const babelwires::ValueTreeNode* valueTreeNode,
+                                        const Path& path, std::uint8_t depth, std::uint8_t indent,
+                                        GenericTypeInfo genericTypeInfo) {
+                ContentsCacheEntry& thisRow = m_rows.emplace_back(
+                    ContentsCacheEntry(std::move(label), valueTreeNode, nullptr, path, depth, indent));
+                const unsigned int numChildren = valueTreeNode->getNumChildren();
+                const bool isExpanded = setAndGetCompoundIsExpanded(valueTreeNode, path, numChildren, indent);
+                handleGenericInputTypes(valueTreeNode, numChildren, isExpanded, genericTypeInfo);
+                if (isExpanded) {
                     ++depth;
-                    for (int i = 0; i < f->getNumChildren(); ++i) {
-                        const ValueTreeNode* child = f->getChild(i);
+                    for (int i = 0; i < valueTreeNode->getNumChildren(); ++i) {
+                        const ValueTreeNode* child = valueTreeNode->getChild(i);
                         // TODO Needless cost doing this.
-                        PathStep step = f->getStepToChild(child);
+                        PathStep step = valueTreeNode->getStepToChild(child);
                         Path pathToChild = path;
                         pathToChild.pushStep(step);
                         std::ostringstream os;
                         step.writeToStreamReadable(os, *m_identifierRegistry);
-                        addOutputFeatureToCache(os.str(), child, std::move(pathToChild), depth, indent);
+                        addInputFeatureToCache(os.str(), child, std::move(pathToChild), depth, indent, genericTypeInfo);
+                    }
+                }
+            }
+
+            void addOutputFeatureToCache(std::string label, const babelwires::ValueTreeNode* valueTreeNode,
+                                         const Path& path, std::uint8_t depth, std::uint8_t indent,
+                                         GenericTypeInfo genericTypeInfo) {
+                ContentsCacheEntry& thisRow = m_rows.emplace_back(
+                    ContentsCacheEntry(std::move(label), nullptr, valueTreeNode, path, depth, indent));
+                const unsigned int numChildren = valueTreeNode->getNumChildren();
+                const bool isExpanded =
+                    setAndGetCompoundIsExpanded(valueTreeNode, path, valueTreeNode->getNumChildren(), indent);
+                handleGenericOutputTypes(valueTreeNode, numChildren, isExpanded, genericTypeInfo);
+                if (isExpanded) {
+                    ++depth;
+                    for (int i = 0; i < numChildren; ++i) {
+                        const ValueTreeNode* child = valueTreeNode->getChild(i);
+                        // TODO Needless cost doing this.
+                        PathStep step = valueTreeNode->getStepToChild(child);
+                        Path pathToChild = path;
+                        pathToChild.pushStep(step);
+                        std::ostringstream os;
+                        step.writeToStreamReadable(os, *m_identifierRegistry);
+                        addOutputFeatureToCache(os.str(), child, std::move(pathToChild), depth, indent,
+                                                genericTypeInfo);
                     }
                 }
             }
 
             void addFeatureToCache(std::string label, const ValueTreeNode* input, const ValueTreeNode* output,
-                                   const Path& path, std::uint8_t depth, std::uint8_t indent) {
-                m_rows.emplace_back(
-                    ContentsCacheEntry(std::move(label), input, output, path, depth, indent));
+                                   const Path& path, std::uint8_t depth, std::uint8_t indent,
+                                   GenericTypeInfo inputDepthInUnassignedGenericTree,
+                                   GenericTypeInfo outputDepthInUnassignedGenericTree) {
+                ContentsCacheEntry& thisRow =
+                    m_rows.emplace_back(ContentsCacheEntry(std::move(label), input, output, path, depth, indent));
+                const unsigned int numInputChildren = input->getNumChildren();
+                const unsigned int numOutputChildren = output->getNumChildren();
                 // Assume expandability is common to input and output feature.
-                if (setAndGetCompoundIsExpanded(
-                        input, path, input->getNumChildren() + output->getNumChildren(), indent)) {
+                const bool isExpanded =
+                    setAndGetCompoundIsExpanded(input, path, numInputChildren + numOutputChildren, indent);
+                handleGenericInputTypes(input, numInputChildren, isExpanded, inputDepthInUnassignedGenericTree);
+                handleGenericOutputTypes(output, numOutputChildren, isExpanded, outputDepthInUnassignedGenericTree);
+                if (isExpanded) {
                     ++depth;
                     std::unordered_set<int> outputIndicesHandled;
                     for (int i = 0; i < input->getNumChildren(); ++i) {
@@ -129,13 +241,13 @@ namespace babelwires {
                         std::ostringstream os;
                         step.writeToStreamReadable(os, *m_identifierRegistry);
                         if (outputChildIndex >= 0) {
-                            addFeatureToCache(os.str(), input->getChild(i),
-                                              output->getChild(outputChildIndex), std::move(pathToChild),
-                                              depth, indent);
+                            addFeatureToCache(os.str(), input->getChild(i), output->getChild(outputChildIndex),
+                                              std::move(pathToChild), depth, indent, inputDepthInUnassignedGenericTree,
+                                              outputDepthInUnassignedGenericTree);
                             outputIndicesHandled.insert(outputChildIndex);
                         } else {
-                            addInputFeatureToCache(os.str(), input->getChild(i), std::move(pathToChild), depth,
-                                                   indent);
+                            addInputFeatureToCache(os.str(), input->getChild(i), std::move(pathToChild), depth, indent,
+                                                   inputDepthInUnassignedGenericTree);
                         }
                     }
                     for (int i = 0; i < output->getNumChildren(); ++i) {
@@ -147,31 +259,46 @@ namespace babelwires {
                             pathToChild.pushStep(step);
                             std::ostringstream os;
                             step.writeToStreamReadable(os, *m_identifierRegistry);
-                            addOutputFeatureToCache(os.str(), child, std::move(pathToChild), depth, indent);
+                            addOutputFeatureToCache(os.str(), child, std::move(pathToChild), depth, indent,
+                                                    outputDepthInUnassignedGenericTree);
                         }
                     }
                 }
             }
 
-            IdentifierRegistry::ReadAccess m_identifierRegistry;
-            std::vector<ContentsCacheEntry>& m_rows;
-            EditTree& m_edits;
+            /// Get the parent row index of the given row index, using depth.
+            unsigned int getParentRowIndex(unsigned int rowIndex) {
+                assert(rowIndex > 0);
+                assert(rowIndex < m_rows.size());
+                assert(m_rows[0].getDepth() == 0);
+                assert(m_rows[rowIndex].getDepth() > 0);
+                const unsigned int depth = m_rows[rowIndex].getDepth();
+                do {
+                    --rowIndex;
+                } while (m_rows[rowIndex].getDepth() >= depth);
+                return rowIndex;
+            }
         };
 
     } // namespace Detail
 } // namespace babelwires
 
-void babelwires::ContentsCache::setValueTrees(std::string rootLabel, const ValueTreeNode* input, const ValueTreeNode* output) {
+void babelwires::ContentsCache::setValueTrees(std::string rootLabel, const ValueTreeNode* input,
+                                              const ValueTreeNode* output) {
     m_rows.clear();
     Detail::ContentsCacheBuilder builder(m_rows, m_edits);
     if (input && output) {
-        builder.addFeatureToCache(std::move(rootLabel), input, output, Path(), 0, 0);
+        builder.addFeatureToCache(std::move(rootLabel), input, output, Path(), 0, 0,
+                                  Detail::ContentsCacheBuilder::GenericTypeInfo(),
+                                  Detail::ContentsCacheBuilder::GenericTypeInfo());
     } else if (input) {
-        builder.addInputFeatureToCache(std::move(rootLabel), input, Path(), 0, 0);
+        builder.addInputFeatureToCache(std::move(rootLabel), input, Path(), 0, 0,
+                                       Detail::ContentsCacheBuilder::GenericTypeInfo());
     } else if (output) {
-        builder.addOutputFeatureToCache(std::move(rootLabel), output, Path(), 0, 0);
+        builder.addOutputFeatureToCache(std::move(rootLabel), output, Path(), 0, 0,
+                                        Detail::ContentsCacheBuilder::GenericTypeInfo());
     } else {
-        assert(!"Unimplemented");
+        assert(!"Invalid case");
     }
     setChanged(Changes::StructureChanged);
     updateModifierFlags();

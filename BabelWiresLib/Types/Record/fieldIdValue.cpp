@@ -1,5 +1,5 @@
 /**
- * Holds the identifier of a field name.
+ * Holds the identifier of a field.
  *
  * (C) 2025 Malcolm Tyrrell
  *
