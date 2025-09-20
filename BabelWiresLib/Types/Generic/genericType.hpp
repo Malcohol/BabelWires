@@ -14,7 +14,7 @@ namespace babelwires {
 
     /// Generic type (aka Parameterized Polymorphic Type, aka Template in C++) are types that wrap another type
     /// containing type variables that can be instantiated in different ways.
-    /// Type type always has a single child, which is the type it wraps.
+    /// The type always has a single child, which is the type it wraps.
     class GenericType : public CompoundType {
       public:
         /// Create a generic type with the given number of variables.
@@ -26,7 +26,7 @@ namespace babelwires {
         /// The PathStep from the GenericType to the child it wraps.
         static babelwires::ShortId getStepToValue();
 
-        /// Instantiate the specified type variable using the given type.
+        /// Instantiate the type variables using the given type type assignment.
         void setTypeVariableAssignmentAndInstantiate(const TypeSystem& typeSystem, ValueHolder& genericValue,
                                                      const std::vector<TypeRef>& typeVariableAssignments) const;
 
@@ -38,6 +38,9 @@ namespace babelwires {
 
         /// Are any of the type variables unassigned?
         bool isAnyTypeVariableUnassigned(const ValueHolder& genericValue) const;
+
+        /// A guarantee that there's always a single child, which is the wrapped type.
+        constexpr static unsigned int c_numChildren = 1;
 
       public:
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;

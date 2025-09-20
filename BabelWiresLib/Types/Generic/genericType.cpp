@@ -94,7 +94,8 @@ bool babelwires::GenericType::isValidValue(const TypeSystem& typeSystem, const V
 }
 
 unsigned int babelwires::GenericType::getNumChildren(const ValueHolder& compoundValue) const {
-    return 1;
+    static_assert(c_numChildren == 1, "c_numChildren must be 1");
+    return c_numChildren;
 }
 
 std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&>

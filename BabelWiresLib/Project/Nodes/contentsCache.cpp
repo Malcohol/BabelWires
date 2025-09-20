@@ -116,13 +116,13 @@ namespace babelwires {
             /// 2. If the feature is a TypeVariable, then mark all the rows between this and the corresponding
             /// GenericType as having an unassigned type variable.
             template <bool isInput>
-            void handleGenericTypes(const babelwires::ValueTreeNode* valueTreeNode, unsigned int numChildren,
+            void handleGenericTypes(const ValueTreeNode* valueTreeNode, unsigned int numChildren,
                                     bool isExpanded, GenericTypeInfo& genericTypeInfo) {
                 if (genericTypeInfo.m_depthInUnassignedGenericTree >= 0) {
-                    if (numChildren == 0) {
-                        if (valueTreeNode->getType().as<babelwires::TypeVariableType>()) {
+                    if (numChildren == TypeVariableType::c_numChildren) {
+                        if (valueTreeNode->getType().as<TypeVariableType>()) {
                             const auto typeVarData =
-                                babelwires::TypeVariableData::isTypeVariable(valueTreeNode->getTypeRef());
+                                TypeVariableData::isTypeVariable(valueTreeNode->getTypeRef());
                             assert(typeVarData);
                             unsigned int currentRowIndex = getParentRowIndex(m_rows.size() - 1);
                             markRowsWithUnassignedTypeVariables<isInput>(currentRowIndex,
@@ -141,7 +141,7 @@ namespace babelwires {
                         }
                     }
                 }
-                if (numChildren == 1) {
+                if (numChildren == GenericType::c_numChildren) {
                     // If this is a generic type, increase the depth.
                     // We deliberately perform after testing for collapsed nodes, since the generic type itself
                     // shouldn't be treated as a level when querying its own getMaximumHeightOfUnassignedGenericType.

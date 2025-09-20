@@ -24,6 +24,9 @@ namespace babelwires {
         /// The method asserts if this type was not constructed in the expected way.
         TypeVariableData getVariableData() const;
 
+        /// A guarantee that this type has no children.
+        constexpr static unsigned int c_numChildren = 0;
+
       public:
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
         bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
