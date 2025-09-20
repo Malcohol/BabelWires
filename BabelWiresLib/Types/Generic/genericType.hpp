@@ -12,8 +12,8 @@
 namespace babelwires {
     struct TypeVariableAssignment;
 
-    /// A type that wraps another type containing type variables that can be instantiated in
-    /// different ways.
+    /// Generic type (aka Parameterized Polymorphic Type, aka Template in C++) are types that wrap another type
+    /// containing type variables that can be instantiated in different ways.
     /// Type type always has a single child, which is the type it wraps.
     class GenericType : public CompoundType {
       public:
