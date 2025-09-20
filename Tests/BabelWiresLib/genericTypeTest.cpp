@@ -110,6 +110,7 @@ TEST(GenericTypeTest, instantiateTypeVariables) {
     EXPECT_FALSE(genericType->getTypeAssignment(valueHolder, 0));
     EXPECT_FALSE(genericType->getTypeAssignment(valueHolder, 1));
 
+    EXPECT_TRUE(genericType->isValidValue(typeSystem, *valueHolder));
     checkInstantiations(typeSystem, *genericType, valueHolder, false, false);
 
     std::vector<babelwires::TypeRef> typeAssignments(2);
@@ -119,6 +120,7 @@ TEST(GenericTypeTest, instantiateTypeVariables) {
     genericType->setTypeVariableAssignmentAndInstantiate(typeSystem, valueHolder, typeAssignments);
     EXPECT_FALSE(genericType->getTypeAssignment(valueHolder, 0));
     EXPECT_EQ(genericType->getTypeAssignment(valueHolder, 1), babelwires::DefaultIntType::getThisType());
+    EXPECT_TRUE(genericType->isValidValue(typeSystem, *valueHolder));
     checkInstantiations(typeSystem, *genericType, valueHolder, false, true);
 
     typeAssignments[0] = babelwires::DefaultIntType::getThisType();
@@ -126,6 +128,7 @@ TEST(GenericTypeTest, instantiateTypeVariables) {
     genericType->setTypeVariableAssignmentAndInstantiate(typeSystem, valueHolder, typeAssignments);
     EXPECT_EQ(genericType->getTypeAssignment(valueHolder, 0), babelwires::DefaultIntType::getThisType());
     EXPECT_EQ(genericType->getTypeAssignment(valueHolder, 1), babelwires::DefaultIntType::getThisType());
+    EXPECT_TRUE(genericType->isValidValue(typeSystem, *valueHolder));
     checkInstantiations(typeSystem, *genericType, valueHolder, true, true);
 
     typeAssignments[1] = babelwires::TypeRef();
@@ -133,6 +136,7 @@ TEST(GenericTypeTest, instantiateTypeVariables) {
     genericType->setTypeVariableAssignmentAndInstantiate(typeSystem, valueHolder, typeAssignments);
     EXPECT_EQ(genericType->getTypeAssignment(valueHolder, 0), babelwires::DefaultIntType::getThisType());
     EXPECT_FALSE(genericType->getTypeAssignment(valueHolder, 1));
+    EXPECT_TRUE(genericType->isValidValue(typeSystem, *valueHolder));
     checkInstantiations(typeSystem, *genericType, valueHolder, true, false);
 
     typeAssignments[0] = babelwires::TypeRef();
@@ -140,6 +144,7 @@ TEST(GenericTypeTest, instantiateTypeVariables) {
     genericType->setTypeVariableAssignmentAndInstantiate(typeSystem, valueHolder, typeAssignments);
     EXPECT_FALSE(genericType->getTypeAssignment(valueHolder, 0));
     EXPECT_FALSE(genericType->getTypeAssignment(valueHolder, 1));
+    EXPECT_TRUE(genericType->isValidValue(typeSystem, *valueHolder));
     checkInstantiations(typeSystem, *genericType, valueHolder, false, false);
 }
 
