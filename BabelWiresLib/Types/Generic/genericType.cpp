@@ -122,7 +122,13 @@ int babelwires::GenericType::getChildIndexFromStep(const ValueHolder& compoundVa
 
 std::optional<babelwires::SubtypeOrder> babelwires::GenericType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                                       const Type& other) const {
-    // TODO
+    const auto* otherGenericType = other.as<GenericType>();
+    if (!otherGenericType) {
+        return SubtypeOrder::IsDisjoint;
+    }
+    if ((m_numVariables == otherGenericType->m_numVariables) && (m_wrappedType == otherGenericType->m_wrappedType)) {
+        return SubtypeOrder::IsEquivalent;
+    }
     return SubtypeOrder::IsDisjoint;
 }
 
