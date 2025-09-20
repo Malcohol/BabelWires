@@ -89,6 +89,11 @@ namespace babelwires {
         template <typename Visitor, typename R = decltype(Visitor::operator()(std::monostate()))>
         R visit(Visitor& visitor) const;
 
+        /// Binary exploration of two typeRefs. The typeRefs are expected to be structurally similar, or else the
+        /// no argument operator of the visitor will be called.
+        template <typename Visitor, typename R = decltype(Visitor::operator()(std::monostate(), std::monostate()))>
+        static R visit(Visitor& visitor, const TypeRef& a, const TypeRef& b);
+
       private:
         // TODO More compact storage.
         using ConstructedTypeData = std::tuple<TypeConstructorId, TypeConstructorArguments>;

@@ -1,5 +1,5 @@
 /**
- * 
+ * A GenericValue holds the type assignment for a GenericType, and an instantiation of its wrapped type.
  *
  * (C) 2025 Malcolm Tyrrell
  *
@@ -19,7 +19,8 @@ namespace babelwires {
 
         GenericValue(const TypeSystem& typeSystem, TypeRef wrappedType, unsigned int numVariables);
 
-        const TypeRef& getWrappedType() const;
+        /// This may have instantiations
+        const TypeRef& getActualWrappedType() const;
 
         const std::vector<TypeRef>& getTypeAssignments() const;
         std::vector<TypeRef>& getTypeAssignments();

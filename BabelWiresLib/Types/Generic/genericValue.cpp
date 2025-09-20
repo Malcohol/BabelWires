@@ -20,7 +20,7 @@ babelwires::GenericValue::GenericValue(const TypeSystem& typeSystem, TypeRef wra
     , m_typeVariableAssignments(numVariables)
     , m_wrappedValue(m_actualWrappedType.resolve(typeSystem).createValue(typeSystem)) {}
 
-const babelwires::TypeRef& babelwires::GenericValue::getWrappedType() const {
+const babelwires::TypeRef& babelwires::GenericValue::getActualWrappedType() const {
     return m_actualWrappedType;
 }
 
