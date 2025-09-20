@@ -33,6 +33,10 @@ namespace babelwires {
 
         std::size_t getHash() const override;
         bool operator==(const Value& other) const override;
+
+        /// Check whether the actual wrapped type is a version of the given type with
+        bool isActualVersionOf(const TypeRef& wrappedType) const;
+
       private:
         /// Build a version of wrappedType where type variables are substituted according to the
         /// type assignment.

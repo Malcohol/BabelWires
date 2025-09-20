@@ -11,7 +11,6 @@
 #include <BabelWiresLib/Types/Generic/genericTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Generic/genericValue.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
-#include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
@@ -88,80 +87,10 @@ bool babelwires::GenericType::isValidValue(const TypeSystem& typeSystem, const V
     if (!genericValue) {
         return false;
     }
-
-    const std::vector<TypeRef>& typeAssignments = genericValue->getTypeAssignments();
-
-    if (typeAssignments.size() != m_numVariables) {
+    if (m_numVariables != genericValue->getTypeAssignments().size()) {
         return false;
     }
-    const auto actualWrappedType = genericValue->getActualWrappedType();
-
-    struct Visitor {
-        Visitor(const std::vector<TypeRef>& typeAssignments, unsigned int level = 0)
-            : m_typeAssignments(typeAssignments)
-            , m_level(level) {}
-        bool operator()() { return false; } // Called when structurally different
-        bool operator()(std::monostate, std::monostate) { return true; }
-        bool operator()(const RegisteredTypeId& typeIdGen, const RegisteredTypeId& typeIdAct) {
-            // Simplifying restriction for now: registered types may not contain unbound type variables.
-            return typeIdGen == typeIdAct;
-        }
-        bool operator()(const TypeConstructorId& constructorIdRef,
-                        const TypeConstructorArguments& constructorArgumentsRef,
-                        const TypeConstructorId& constructorIdAct,
-                        const TypeConstructorArguments& constructorArgumentsAct) {
-            if (constructorIdRef != constructorIdAct) {
-                return false;
-            }
-            if (constructorIdRef == TypeVariableTypeConstructor::getThisIdentifier()) {
-                const TypeVariableData variableDataRef =
-                    TypeVariableTypeConstructor::extractValueArguments(constructorArgumentsRef.m_valueArguments);
-                const TypeVariableData variableDataAct =
-                    TypeVariableTypeConstructor::extractValueArguments(constructorArgumentsAct.m_valueArguments);
-                if ((variableDataRef.m_typeVariableIndex != variableDataAct.m_typeVariableIndex) ||
-                    (variableDataRef.m_numGenericTypeLevels != variableDataAct.m_numGenericTypeLevels)) {
-                    return false;
-                }
-                if (variableDataAct.m_numGenericTypeLevels == m_level) {
-                    assert(variableDataAct.m_typeVariableIndex <= m_typeAssignments.size());
-                    assert(!m_typeAssignments[variableDataAct.m_typeVariableIndex] ||
-                           (constructorArgumentsAct.m_typeArguments.size() == 1));
-                    assert(!m_typeAssignments[variableDataAct.m_typeVariableIndex] || 
-                        (m_typeAssignments[variableDataAct.m_typeVariableIndex] ==
-                           constructorArgumentsAct.m_typeArguments[0]));
-                    // Allowed to differ here.
-                    return true;
-                }
-            }
-            unsigned int level = m_level;
-            if (constructorIdRef == GenericTypeConstructor::getThisIdentifier()) {
-                // Variables under this constructor would have to jump over this GenericType to
-                // reach the one were processing.
-                ++level;
-            }
-            // Compare the type and value arguments.
-            if ((constructorArgumentsRef.m_typeArguments.size() != constructorArgumentsAct.m_typeArguments.size()) ||
-                (constructorArgumentsRef.m_valueArguments.size() != constructorArgumentsAct.m_valueArguments.size())) {
-                return false;
-            }
-            for (unsigned int i = 0; i < constructorArgumentsAct.m_valueArguments.size(); ++i) {
-                if (constructorArgumentsRef.m_valueArguments[i] != constructorArgumentsAct.m_valueArguments[i]) {
-                    return false;
-                }
-            }
-            for (unsigned int i = 0; i < constructorArgumentsAct.m_typeArguments.size(); ++i) {
-                Visitor childVisitor(m_typeAssignments, level);
-                if (!TypeRef::visit<Visitor, bool>(childVisitor, constructorArgumentsRef.m_typeArguments[i],
-                                                      constructorArgumentsAct.m_typeArguments[i])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        const std::vector<TypeRef>& m_typeAssignments;
-        unsigned int m_level;
-    } visitor(typeAssignments);
-    return TypeRef::visit<Visitor, bool>(visitor, m_wrappedType, actualWrappedType);
+    return genericValue->isActualVersionOf(m_wrappedType);
 }
 
 unsigned int babelwires::GenericType::getNumChildren(const ValueHolder& compoundValue) const {
