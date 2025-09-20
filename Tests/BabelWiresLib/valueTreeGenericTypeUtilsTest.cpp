@@ -137,3 +137,90 @@ TEST(ValueTreeGenericTypeUtilsTest, containsUnassignedTypeVariable) {
     EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToArray()), false);
     EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToArray0()), false);
 }
+
+
+TEST(ValueTreeGenericTypeUtilsTest, getMaximumHeightOfUnassignedGenericType) {
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisType());
+    valueTree.setToDefault();
+
+    const testDomain::TestGenericType* const genericType = valueTree.getType().as<testDomain::TestGenericType>();
+
+    babelwires::ValueTreeNode& nestedGenericTypeNode =
+        babelwires::followPath(testDomain::TestGenericType::getPathToNestedGenericType(), valueTree);
+    const babelwires::GenericType* const nestedGenericType =
+        nestedGenericTypeNode.getType().as<babelwires::GenericType>();
+    ASSERT_NE(nestedGenericType, nullptr);
+
+    auto checkForVariable = [&](const babelwires::Path& pathToVariable, unsigned int maximumPossible) {
+        const babelwires::ValueTreeNode& variable = babelwires::followPath(pathToVariable, valueTree);
+        return babelwires::getMaximumHeightOfUnassignedGenericType(variable, maximumPossible);
+    };
+
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToWrappedType(), 0), 0);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToX(), 0), 0);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToY(), 0), 0);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToInt(), 0), -1);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedGenericType(), 0), 0);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedWrappedType(), 1), 1);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedX(), 1), 1);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedZ(), 1), 0);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToArray(), 0), 0);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToArray0(), 0), 0);
+
+    {
+        babelwires::SetTypeVariableModifierData nestedData;
+        nestedData.m_typeAssignments.resize(1);
+        nestedData.m_typeAssignments[0] = babelwires::StringType::getThisType();
+        nestedData.apply(&nestedGenericTypeNode);
+    }
+
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToWrappedType(), 0), 0);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToX(), 0), 0);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToY(), 0), 0);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToInt(), 0), -1);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedGenericType(), 0), 0);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedWrappedType(), 1), 1);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedX(), 1), 1);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedZ(), 1), -1);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToArray(), 0), 0);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToArray0(), 0), 0);
+
+    {
+        babelwires::SetTypeVariableModifierData data;
+        data.m_typeAssignments.resize(2);
+        data.m_typeAssignments[0] = babelwires::StringType::getThisType();
+        data.apply(&valueTree);
+
+        // Have to re-apply to the nested generic type, because the outer application will have overwritten it.
+        babelwires::SetTypeVariableModifierData nestedData;
+        nestedData.m_typeAssignments.resize(1);
+        nestedData.m_typeAssignments[0] = babelwires::StringType::getThisType();
+        nestedData.apply(&nestedGenericTypeNode);
+    }
+
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToWrappedType(), 0), 0);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToX(), 0), -1);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToY(), 0), 0);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToInt(), 0), -1);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedGenericType(), 0), -1);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedWrappedType(), 1), -1);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedX(), 1), -1);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedZ(), 1), -1);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToArray(), 0), -1);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToArray0(), 0), -1);
+
+    {
+        babelwires::SetTypeVariableModifierData data;
+        data.m_typeAssignments.resize(2);
+        data.m_typeAssignments[0] = babelwires::StringType::getThisType();
+        data.m_typeAssignments[1] = babelwires::StringType::getThisType();
+        data.apply(&valueTree);
+
+        // The nested generic type will be unassigned.
+    }
+
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedWrappedType(), 0), 0);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedX(), 0), -1);
+    EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedZ(), 0), 0);
+}

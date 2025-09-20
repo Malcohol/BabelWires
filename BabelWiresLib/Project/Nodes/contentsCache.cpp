@@ -111,11 +111,10 @@ namespace babelwires {
             /// This does two jobs:
             /// 1. If the feature is a GenericType that has an unassigned type variable, then set the provided boolean
             /// argument.
-            ///    - That signals to the traversal algorithm that some of the subtrees below this will be unassigned
-            ///    type variables.
+            ///    - That signals to the traversal algorithm that some of the subtrees below this will have an
+            ///    unassigned type variables.
             /// 2. If the feature is a TypeVariable, then mark all the rows between this and the corresponding
-            /// GenericType as
-            ///    having an unassigned type variable.
+            /// GenericType as having an unassigned type variable.
             template <bool isInput>
             void handleGenericTypes(const babelwires::ValueTreeNode* valueTreeNode, unsigned int numChildren,
                                     bool isExpanded, GenericTypeInfo& genericTypeInfo) {
