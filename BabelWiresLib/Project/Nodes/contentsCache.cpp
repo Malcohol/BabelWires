@@ -42,11 +42,11 @@ babelwires::ContentsCacheEntry::ContentsCacheEntry(std::string label, const Valu
     , m_hasUnassignedOutputTypeVariable(false) {}
 
 bool babelwires::ContentsCacheEntry::isOrHasUnassignedInputTypeVariable() const {
-    return m_hasUnassignedInputTypeVariable || !m_input || m_input->getType().as<babelwires::TypeVariableType>();
+    return m_hasUnassignedInputTypeVariable || (m_input && m_input->getType().as<babelwires::TypeVariableType>());
 }
 
 bool babelwires::ContentsCacheEntry::isOrHasUnassignedOutputTypeVariable() const {
-    return m_hasUnassignedOutputTypeVariable || !m_output || m_output->getType().as<babelwires::TypeVariableType>();
+    return m_hasUnassignedOutputTypeVariable || (m_output && m_output->getType().as<babelwires::TypeVariableType>());
 }
 
 babelwires::ContentsCache::ContentsCache(EditTree& edits)
@@ -298,7 +298,7 @@ void babelwires::ContentsCache::setValueTrees(std::string rootLabel, const Value
         builder.addOutputFeatureToCache(std::move(rootLabel), output, Path(), 0, 0,
                                         Detail::ContentsCacheBuilder::GenericTypeInfo());
     } else {
-        assert(!"Unimplemented");
+        assert(!"Invalid case");
     }
     setChanged(Changes::StructureChanged);
     updateModifierFlags();
