@@ -75,8 +75,7 @@ unsigned int babelwires::GenericType::getNumVariables() const {
 }
 
 std::string babelwires::GenericType::getFlavour() const {
-    // Not connectable.
-    return "";
+    return "Generic";
 }
 
 babelwires::NewValueHolder babelwires::GenericType::createValue(const TypeSystem& typeSystem) const {
