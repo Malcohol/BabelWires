@@ -26,8 +26,8 @@ TEST(TupleTypeTest, createValue) {
     EXPECT_TRUE(newValue);
     EXPECT_TRUE(tupleType.isValidValue(testEnvironment.m_typeSystem, *newValue));
 
-    const auto& intType = testEnvironment.m_typeSystem.getPrimitiveType(babelwires::DefaultIntType::getThisIdentifier());
-    const auto& rationalType = testEnvironment.m_typeSystem.getPrimitiveType(babelwires::DefaultRationalType::getThisIdentifier());
+    const auto& intType = testEnvironment.m_typeSystem.getRegisteredType(babelwires::DefaultIntType::getThisIdentifier());
+    const auto& rationalType = testEnvironment.m_typeSystem.getRegisteredType(babelwires::DefaultRationalType::getThisIdentifier());
 
     const auto* newTuple = newValue->as<babelwires::TupleValue>();
     ASSERT_NE(newTuple, nullptr);

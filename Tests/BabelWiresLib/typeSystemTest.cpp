@@ -121,7 +121,7 @@ TEST(TypeSystemTest, isRelatedTypes) {
 TEST(TypeSystemTest, getTaggedTypes) {
     testUtils::TestEnvironment testEnvironment;   
 
-    auto types = testEnvironment.m_typeSystem.getTaggedPrimitiveTypes(testUtils::TestType::getTestTypeTag());
+    auto types = testEnvironment.m_typeSystem.getTaggedRegisteredTypes(testUtils::TestType::getTestTypeTag());
 
     EXPECT_EQ(types.size(), 1);
     EXPECT_EQ(types[0], testUtils::TestType::getThisType());

@@ -25,17 +25,17 @@ namespace babelwires {
         template <typename TYPE, typename... ARGS,
                   std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
         TYPE* addEntry(ARGS&&... args) {
-            Type* newType = addPrimitiveType(TYPE::getThisIdentifier(), TYPE::getVersion(), std::make_unique<TYPE>(std::forward<ARGS>(args)...));
+            Type* newType = addRegisteredType(TYPE::getThisIdentifier(), TYPE::getVersion(), std::make_unique<TYPE>(std::forward<ARGS>(args)...));
             return &newType->is<TYPE>();
         }
 
         template <typename TYPE, std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
         const TYPE& getEntryByType() const {
-            return getPrimitiveType(TYPE::getThisIdentifier()).template is<TYPE>();
+            return getRegisteredType(TYPE::getThisIdentifier()).template is<TYPE>();
         }
 
-        const Type* tryGetPrimitiveType(PrimitiveTypeId id) const;
-        const Type& getPrimitiveType(PrimitiveTypeId id) const;
+        const Type* tryGetRegisteredType(RegisteredTypeId id) const;
+        const Type& getRegisteredType(RegisteredTypeId id) const;
 
         template <typename TYPE_CONSTRUCTOR, typename... ARGS,
                   std::enable_if_t<std::is_base_of_v<TypeConstructor, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
@@ -52,7 +52,7 @@ namespace babelwires {
         const TypeConstructor* tryGetTypeConstructor(TypeConstructorId id) const;
         const TypeConstructor& getTypeConstructor(TypeConstructorId id) const;
 
-        using TypeIdSet = std::vector<PrimitiveTypeId>;
+        using TypeIdSet = std::vector<RegisteredTypeId>;
 
         /// Determine how typeA and typeB are related by the subtype order.
         SubtypeOrder compareSubtype(const TypeRef& typeRefA, const TypeRef& typeRefB) const;
@@ -63,24 +63,24 @@ namespace babelwires {
         /// Do the two types have some values in common?
         bool isRelatedType(const TypeRef& typeRefA, const TypeRef& typeRefB) const;
 
-        TypeIdSet getAllPrimitiveTypes() const;
+        TypeIdSet getAllRegisteredTypes() const;
 
-        /// Get all the primitive types tagged with the given tag.
-        TypeIdSet getTaggedPrimitiveTypes(Type::Tag tag) const;
+        /// Get all the registered types tagged with the given tag.
+        TypeIdSet getTaggedRegisteredTypes(Type::Tag tag) const;
 
       protected:
-        Type* addPrimitiveType(LongId typeId, VersionNumber version, std::unique_ptr<Type> newType);
+        Type* addRegisteredType(LongId typeId, VersionNumber version, std::unique_ptr<Type> newType);
         TypeConstructor* addTypeConstructorInternal(TypeConstructorId typeConstructorId, VersionNumber version, std::unique_ptr<TypeConstructor> newTypeConstructor);
 
       protected:
-        using PrimitiveTypeInfo = std::tuple<std::unique_ptr<Type>, VersionNumber>;
-        std::unordered_map<PrimitiveTypeId, PrimitiveTypeInfo> m_primitiveTypeRegistry;
+        using RegisteredTypeInfo = std::tuple<std::unique_ptr<Type>, VersionNumber>;
+        std::unordered_map<RegisteredTypeId, RegisteredTypeInfo> m_registeredTypeRegistry;
 
         using TypeConstructorInfo = std::tuple<std::unique_ptr<TypeConstructor>, VersionNumber>;
         std::unordered_map<TypeConstructorId, TypeConstructorInfo> m_typeConstructorRegistry;
 
         /// Fast look-up of tagged types.
-        std::unordered_map<Type::Tag, std::vector<PrimitiveTypeId>> m_taggedPrimitiveTypes;
+        std::unordered_map<Type::Tag, std::vector<RegisteredTypeId>> m_taggedRegisteredTypes;
     };
 
 } // namespace babelwires

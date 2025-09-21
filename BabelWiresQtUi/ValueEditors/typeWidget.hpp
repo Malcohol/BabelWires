@@ -1,16 +1,13 @@
 /**
- * Editor for editing map values.
+ * 
  *
- * (C) 2021 Malcolm Tyrrell
+ * (C) 2025 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
 
-#include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
-
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 
 #include <QComboBox>
 #include <optional>
@@ -19,7 +16,7 @@ namespace babelwires {
     class TypeWidget : public QComboBox {
         Q_OBJECT
       public:
-        TypeWidget(QWidget* parent, const TypeSystem& typeSystem, const MapProject::AllowedTypes& allowedTypeRefs);
+        TypeWidget(QWidget* parent, const std::vector<TypeRef>& allowedTypeRefs);
 
         const TypeRef& getTypeRef() const;
         void setTypeRef(const TypeRef& id);

@@ -2,7 +2,7 @@
 
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 
-#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
+#include <BabelWiresLib/TypeSystem/registeredType.hpp>
 
 namespace testDomain {
 
@@ -10,7 +10,7 @@ namespace testDomain {
       public:
         TestRecordWithVariantsType();
 
-        PRIMITIVE_TYPE("vrecordT", "RecordWithVariants", "45442c6b-fa02-4a48-b7f8-9ca062c568ea", 1);
+        REGISTERED_TYPE("vrecordT", "RecordWithVariants", "45442c6b-fa02-4a48-b7f8-9ca062c568ea", 1);
 
         static babelwires::ShortId getTagAId();
         static babelwires::ShortId getTagBId(); // The default tag.

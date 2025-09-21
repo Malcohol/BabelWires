@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Instance/instance.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Processors/parallelProcessor.hpp>
-#include <BabelWiresLib/TypeSystem/primitiveType.hpp>
+#include <BabelWiresLib/TypeSystem/registeredType.hpp>
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>

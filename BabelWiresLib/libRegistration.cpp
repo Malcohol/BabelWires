@@ -14,12 +14,15 @@
 #include <BabelWiresLib/Types/Enum/enumUnionTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 #include <BabelWiresLib/Types/File/fileTypeConstructor.hpp>
+#include <BabelWiresLib/Types/Generic/genericTypeConstructor.hpp>
+#include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/mapTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalTypeConstructor.hpp>
+#include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/Sum/sumTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleTypeConstructor.hpp>
@@ -43,4 +46,7 @@ void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addTypeConstructor<ArrayTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<FileTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<TupleTypeConstructor>();
+    context.m_typeSystem.addTypeConstructor<RecordTypeConstructor>();
+    context.m_typeSystem.addTypeConstructor<GenericTypeConstructor>();
+    context.m_typeSystem.addTypeConstructor<TypeVariableTypeConstructor>();
 }

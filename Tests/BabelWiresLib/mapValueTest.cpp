@@ -17,8 +17,8 @@
 #include <Tests/TestUtils/testLog.hpp>
 
 namespace {
-    const babelwires::PrimitiveTypeId testTypeId1 = "TestType1";
-    const babelwires::PrimitiveTypeId testTypeId2 = "TestType2";
+    const babelwires::RegisteredTypeId testTypeId1 = "TestType1";
+    const babelwires::RegisteredTypeId testTypeId2 = "TestType2";
 } // namespace
 
 TEST(MapValueTest, types) {

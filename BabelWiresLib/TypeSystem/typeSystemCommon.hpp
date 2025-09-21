@@ -10,7 +10,7 @@
 #include <Common/Identifiers/identifier.hpp>
 
 namespace babelwires {
-    using PrimitiveTypeId = MediumId;
+    using RegisteredTypeId = MediumId;
     using TypeConstructorId = MediumId;
 
     /// The maximum supported number of type arguments for a type constructor.

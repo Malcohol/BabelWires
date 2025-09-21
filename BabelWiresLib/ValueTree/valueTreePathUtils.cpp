@@ -7,8 +7,13 @@
  **/
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
-#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
+#include <BabelWiresLib/Types/Generic/genericType.hpp>
+#include <BabelWiresLib/Types/Generic/genericTypeConstructor.hpp>
+#include <BabelWiresLib/Types/Generic/typeVariableData.hpp>
+#include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
+#include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 babelwires::Path babelwires::getPathTo(const ValueTreeNode* valueTreeNode) {
     std::vector<PathStep> steps;
@@ -16,7 +21,8 @@ babelwires::Path babelwires::getPathTo(const ValueTreeNode* valueTreeNode) {
     const ValueTreeNode* parent = current->getOwner();
     while (parent) {
         steps.push_back(parent->getStepToChild(current));
-        assert(!steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
+        assert(!steps.back().isNotAStep() &&
+               "ValueTreeNode with a parent and whose step from that parent is not a step");
         current = parent;
         parent = current->getOwner();
     }
@@ -24,18 +30,20 @@ babelwires::Path babelwires::getPathTo(const ValueTreeNode* valueTreeNode) {
     return Path(std::move(steps));
 }
 
-babelwires::RootAndPath<const babelwires::ValueTreeRoot> babelwires::getRootAndPathTo(const ValueTreeNode& valueTreeNode) {
+babelwires::RootAndPath<const babelwires::ValueTreeRoot>
+babelwires::getRootAndPathTo(const ValueTreeNode& valueTreeNode) {
     std::vector<PathStep> steps;
     const ValueTreeNode* current = &valueTreeNode;
     const ValueTreeNode* parent = valueTreeNode.getOwner();
     while (parent) {
         steps.emplace_back(parent->getStepToChild(current));
-        assert(!steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
+        assert(!steps.back().isNotAStep() &&
+               "ValueTreeNode with a parent and whose step from that parent is not a step");
         current = parent;
         parent = current->getOwner();
     }
     std::reverse(steps.begin(), steps.end());
-    return { current->is<ValueTreeRoot>(), Path(std::move(steps)) };
+    return {current->is<ValueTreeRoot>(), Path(std::move(steps))};
 }
 
 babelwires::RootAndPath<babelwires::ValueTreeRoot> babelwires::getRootAndPathTo(ValueTreeNode& valueTreeNode) {
@@ -44,14 +52,14 @@ babelwires::RootAndPath<babelwires::ValueTreeRoot> babelwires::getRootAndPathTo(
     ValueTreeNode* parent = valueTreeNode.getOwnerNonConst();
     while (parent) {
         steps.emplace_back(parent->getStepToChild(current));
-        assert(!steps.back().isNotAStep() && "ValueTreeNode with a parent and whose step from that parent is not a step");
+        assert(!steps.back().isNotAStep() &&
+               "ValueTreeNode with a parent and whose step from that parent is not a step");
         current = parent;
         parent = current->getOwnerNonConst();
     }
     std::reverse(steps.begin(), steps.end());
-    return { current->is<ValueTreeRoot>(), Path(std::move(steps)) };
+    return {current->is<ValueTreeRoot>(), Path(std::move(steps))};
 }
-
 
 namespace {
 
@@ -77,7 +85,6 @@ namespace {
 
 } // namespace
 
-
 babelwires::ValueTreeNode& babelwires::followPath(const Path& path, ValueTreeNode& start) {
     return followPathImpl<ValueTreeNode>(start, path);
 }
@@ -85,7 +92,6 @@ babelwires::ValueTreeNode& babelwires::followPath(const Path& path, ValueTreeNod
 const babelwires::ValueTreeNode& babelwires::followPath(const Path& path, const ValueTreeNode& start) {
     return followPathImpl<const ValueTreeNode>(start, path);
 }
-
 
 namespace {
 

@@ -9,6 +9,7 @@
 
 #include <BabelWiresQtUi/ValueModels/arrayValueModel.hpp>
 #include <BabelWiresQtUi/ValueModels/enumValueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/genericTypeValueModel.hpp>
 #include <BabelWiresQtUi/ValueModels/intValueModel.hpp>
 #include <BabelWiresQtUi/ValueModels/mapValueModel.hpp>
 #include <BabelWiresQtUi/ValueModels/rationalValueModel.hpp>
@@ -21,6 +22,7 @@
 
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
+#include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
 #include <BabelWiresLib/Types/Map/mapType.hpp>
@@ -67,6 +69,9 @@ void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModel
     } else if (type.as<SumType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::SumValueModel));
         new (m_valueModel) babelwires::SumValueModel();
+    } else if (type.as<GenericType>()) {
+        static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::GenericTypeValueModel));
+        new (m_valueModel) babelwires::GenericTypeValueModel();
     } else {
         // The base row model is used.
     }
