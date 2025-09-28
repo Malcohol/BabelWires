@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/TypeSystem/Detail/identifierValueBase.hpp>
+#include <BabelWiresLib/Types/Record/recordType.hpp>
 
 namespace babelwires {
 
@@ -19,9 +20,19 @@ namespace babelwires {
         SERIALIZABLE(FieldIdValue, "fieldId", EditableValue, 1);
 
         FieldIdValue();
-        FieldIdValue(ShortId value);
+        FieldIdValue(ShortId value, RecordType::Optionality optionality = RecordType::Optionality::alwaysActive );
+
+        RecordType::Optionality getOptionality() const { return m_optionality; }
+        void setOptionality(RecordType::Optionality isOptional) { m_optionality = isOptional; }
+
+        void serializeContents(Serializer& serializer) const override;
+        void deserializeContents(Deserializer& deserializer) override;
+        std::string toString() const override;
 
         std::size_t getHash() const override;
         bool operator==(const Value& other) const override;
+
+      private:
+        RecordType::Optionality m_optionality = RecordType::Optionality::alwaysActive;
     };
 } // namespace babelwires

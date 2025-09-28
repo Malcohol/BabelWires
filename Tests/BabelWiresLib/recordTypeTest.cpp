@@ -572,6 +572,29 @@ TEST(RecordTypeTest, constructorBasics) {
     EXPECT_EQ(recordType.getFields()[1].m_type, babelwires::StringType::getThisType());
 }
 
+TEST(RecordTypeTest, constructorWithOptionals) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeRef recordTypeRef(
+        babelwires::RecordTypeConstructor::getThisIdentifier(),
+        babelwires::TypeConstructorArguments{
+            {babelwires::DefaultIntType::getThisType(), babelwires::StringType::getThisType()},
+            {babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("int0")),
+             babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("str0"), babelwires::RecordType::Optionality::optionalDefaultInactive)}});
+
+    const babelwires::Type& type = recordTypeRef.resolve(testEnvironment.m_typeSystem);
+    ASSERT_TRUE(type.as<babelwires::RecordType>());
+    const babelwires::RecordType& recordType = type.is<babelwires::RecordType>();
+    EXPECT_EQ(recordType.getFields().size(), 2);
+    EXPECT_EQ(recordType.getOptionalFieldIds().size(), 1);
+    EXPECT_EQ(recordType.getFields()[0].m_identifier, "int0");
+    EXPECT_EQ(recordType.getFields()[0].m_type, babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(recordType.getFields()[0].m_optionality, babelwires::RecordType::Optionality::alwaysActive);
+    EXPECT_EQ(recordType.getFields()[1].m_identifier, "str0");
+    EXPECT_EQ(recordType.getFields()[1].m_type, babelwires::StringType::getThisType());
+    EXPECT_EQ(recordType.getFields()[1].m_optionality, babelwires::RecordType::Optionality::optionalDefaultInactive);
+}
+
 TEST(RecordTypeTest, constructorBadArgs) {
     testUtils::TestEnvironment testEnvironment;
 
