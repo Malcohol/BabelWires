@@ -27,8 +27,6 @@ babelwires::TypeRef::TypeRef(RegisteredTypeId typeId)
 
 babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments)
     : m_storage(ConstructedTypeData{typeConstructorId, std::move(arguments)}) {
-    assert((arguments.m_typeArguments.size() <= TypeConstructorArguments::s_maxNumArguments) &&
-           "Too many arguments for TypeRef");
 }
 
 const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSystem) const {
