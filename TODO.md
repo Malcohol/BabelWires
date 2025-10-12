@@ -56,8 +56,9 @@ Refactor:
 * Abandon EditableValue and EditableValueHolder (and ValueHolder template).
   - Will have to live with unimplemented asserts.
   - A tuple shouldn't have to be editable, but right now I have to choose.
-* Consider replacing virtual deserialize() method by deserializing constructor
-  - Tried this in PR #14. Removes the need for default constructors but breaks symmetry.
+* TypeRef could be a value:
+  - Among other things, type constructors could just take a single array of values.
+  - Additionally, I would expect to need a value containing a type at some point.
 * Move some of the logic in doProcess up into Node.
 * Think about modules and dlls.
   - Review plugin initialization
