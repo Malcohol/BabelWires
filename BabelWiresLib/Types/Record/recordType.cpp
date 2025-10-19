@@ -349,3 +349,21 @@ std::string babelwires::RecordType::valueToString(const TypeSystem& typeSystem, 
         return {};
     }
 }
+
+std::tuple<const babelwires::ValueHolder&, const babelwires::TypeRef&> babelwires::RecordType::getChildById(const ValueHolder& compoundValue,
+    ShortId fieldId) const {
+    assert(!isOptional(fieldId) || isActivated(compoundValue, fieldId));
+    const RecordValue& recordValue = compoundValue->is<RecordValue>();
+    const ValueHolder& fieldValue = recordValue.getValue(fieldId);
+    const Field& field = getField(fieldId);
+    return {fieldValue, field.m_type};   
+}
+
+std::tuple<babelwires::ValueHolder&, const babelwires::TypeRef&> babelwires::RecordType::getChildByIdNonConst(ValueHolder& compoundValue,
+                                                                    ShortId fieldId) const {
+    assert(!isOptional(fieldId) || isActivated(compoundValue, fieldId));
+    RecordValue& recordValue = compoundValue.copyContentsAndGetNonConst().is<RecordValue>();
+    ValueHolder& fieldValue = recordValue.getValue(fieldId);
+    const Field& field = getField(fieldId);
+    return {fieldValue, field.m_type};
+}
