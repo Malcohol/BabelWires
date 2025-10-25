@@ -631,6 +631,24 @@ void babelwires::Project::deactivateOptional(NodeId nodeId, const Path& pathToRe
         return; // Path cannot be followed.
     }
 
+    ActivateOptionalsModifierData* modifierData = nullptr;
+
+    if (Modifier* existingModifier = nodeToModify->getEdits().findModifier(pathToRecord)) {
+        if (auto activateOptionalsModifierData =
+                existingModifier->getModifierData().as<ActivateOptionalsModifierData>()) {
+            auto localModifier = existingModifier->as<LocalModifier>();
+            assert(localModifier && "Non-local modifier carrying local data");
+            modifierData = activateOptionalsModifierData;
+            activateOptionalsModifierData->m_selectedOptionals.emplace_back(optional);
+            localModifier->applyIfLocal(m_userLogger, input);
+        } else {
+            // Discard the existing modifier, since it should be broken anyway.
+            assert(existingModifier->isFailed() &&
+                   "A non-failed inapplicable modifier was found at an instance of a RecordType");
+            removeModifier(nodeId, pathToRecord);
+        }
+    }
+
     Modifier* existingModifier = nodeToModify->getEdits().findModifier(pathToRecord);
     assert(existingModifier);
 

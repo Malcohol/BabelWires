@@ -14,7 +14,7 @@ namespace babelwires {
     /// RecordType carries a sequence of Fields (some of which are optional and can be inactive).
     class RecordType : public CompoundType {
       public:
-        enum class Optionality { alwaysActive, optionalDefaultInactive /* TODO , optionalDefaultActive*/ };
+        enum class Optionality { alwaysActive, optionalDefaultInactive, optionalDefaultActive };
 
         struct Field {
             ShortId m_identifier;

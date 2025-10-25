@@ -188,7 +188,7 @@ namespace {
     void testCommonBehaviour(babelwires::ContentsCache& cache, babelwires::EditTree& editTree,
                              babelwires::ValueTreeNode* input, babelwires::ValueTreeNode* output) {
         cache.setValueTrees("Test", input, output);
-        ASSERT_EQ(cache.getNumRows(), 6);
+        ASSERT_EQ(cache.getNumRows(), 7);
         auto inputInfo = input ? std::make_unique<testDomain::TestComplexRecordTypeFeatureInfo>(*input) : nullptr;
         auto outputInfo = output ? std::make_unique<testDomain::TestComplexRecordTypeFeatureInfo>(*output) : nullptr;
         auto info = inputInfo ? inputInfo.get() : outputInfo.get();
@@ -215,7 +215,7 @@ namespace {
         // Expand the record
         editTree.setExpanded(info->m_pathToSubRecord, true);
         cache.setValueTrees("Test", input, output);
-        ASSERT_EQ(cache.getNumRows(), 8);
+        ASSERT_EQ(cache.getNumRows(), 9);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
             checkRootEntry(entry, inputInfo.get(), outputInfo.get());
@@ -244,7 +244,7 @@ namespace {
         // Expand the array
         editTree.setExpanded(info->m_pathToArray, true);
         cache.setValueTrees("Test", input, output);
-        ASSERT_EQ(cache.getNumRows(), 8 + testDomain::TestSimpleArrayType::s_defaultSize);
+        ASSERT_EQ(cache.getNumRows(), 9 + testDomain::TestSimpleArrayType::s_defaultSize);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
             checkRootEntry(entry, inputInfo.get(), outputInfo.get());
@@ -295,7 +295,7 @@ namespace {
         editTree.addModifier(createIntModifier(info->m_pathToInt));
         cache.updateModifierCache();
 
-        ASSERT_EQ(cache.getNumRows(), 8 + testDomain::TestSimpleArrayType::s_defaultSize);
+        ASSERT_EQ(cache.getNumRows(), 9 + testDomain::TestSimpleArrayType::s_defaultSize);
         for (int i = 2; i < 8 + testDomain::TestSimpleArrayType::s_defaultSize; ++i) {
             checkUnmodified(cache.getEntry(i));
         }
@@ -311,7 +311,7 @@ namespace {
         // Add a submodifier to the array
         editTree.addModifier(createIntModifier(info->m_pathToElem1));
         cache.updateModifierCache();
-        ASSERT_EQ(cache.getNumRows(), 8 + testDomain::TestSimpleArrayType::s_defaultSize);
+        ASSERT_EQ(cache.getNumRows(), 9 + testDomain::TestSimpleArrayType::s_defaultSize);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(7);
             checkArrayEntry(entry, inputInfo.get(), outputInfo.get());
@@ -340,7 +340,7 @@ namespace {
             editTree.addModifier(std::move(modifier));
         }
         cache.updateModifierCache();
-        ASSERT_EQ(cache.getNumRows(), 8 + testDomain::TestSimpleArrayType::s_defaultSize);
+        ASSERT_EQ(cache.getNumRows(), 9 + testDomain::TestSimpleArrayType::s_defaultSize);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(7);
             checkArrayEntry(entry, inputInfo.get(), outputInfo.get());
@@ -363,7 +363,7 @@ namespace {
         // Collapse the array
         editTree.setExpanded(info->m_pathToArray, false);
         cache.setValueTrees("Test", input, output);
-        ASSERT_EQ(cache.getNumRows(), 8);
+        ASSERT_EQ(cache.getNumRows(), 9);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(7);
             checkArrayEntry(entry, inputInfo.get(), outputInfo.get());
@@ -376,7 +376,7 @@ namespace {
         // Remove the failing modifier
         editTree.removeModifier(editTree.findModifier(info->m_pathToElem0));
         cache.updateModifierCache();
-        ASSERT_EQ(cache.getNumRows(), 8);
+        ASSERT_EQ(cache.getNumRows(), 9);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(7);
             checkArrayEntry(entry, inputInfo.get(), outputInfo.get());
@@ -388,7 +388,7 @@ namespace {
         }
         editTree.removeModifier(editTree.findModifier(info->m_pathToElem1));
         cache.updateModifierCache();
-        ASSERT_EQ(cache.getNumRows(), 8);
+        ASSERT_EQ(cache.getNumRows(), 9);
         {
             const babelwires::ContentsCacheEntry* const entry = cache.getEntry(7);
             checkArrayEntry(entry, inputInfo.get(), outputInfo.get());
@@ -470,15 +470,15 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
     output.getarray().setSize(testDomain::TestSimpleArrayType::s_nonDefaultSize);
 
     cache.setValueTrees("Test", &inputFeature, &outputFeature);
-    ASSERT_EQ(cache.getNumRows(), 6);
+    ASSERT_EQ(cache.getNumRows(), 7);
 
     editTree.setExpanded(inputInfo.m_pathToSubRecord, true);
     cache.setValueTrees("Test", &inputFeature, &outputFeature);
-    ASSERT_EQ(cache.getNumRows(), 8);
+    ASSERT_EQ(cache.getNumRows(), 9);
 
     editTree.setExpanded(inputInfo.m_pathToArray, true);
     cache.setValueTrees("Test", &inputFeature, &outputFeature);
-    ASSERT_EQ(cache.getNumRows(), 8 + testDomain::TestSimpleArrayType::s_nonDefaultSize);
+    ASSERT_EQ(cache.getNumRows(), 9 + testDomain::TestSimpleArrayType::s_nonDefaultSize);
 
     {
         const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
@@ -502,7 +502,7 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
     }
     {
         const babelwires::ContentsCacheEntry* const entry =
-            cache.getEntry(8 + testDomain::TestSimpleArrayType::s_nonDefaultSize - 1);
+            cache.getEntry(9 + testDomain::TestSimpleArrayType::s_nonDefaultSize - 2);
         EXPECT_FALSE(entry->getInput());
         EXPECT_EQ(entry->getOutput(),
                   outputInfo.m_array.getChild(testDomain::TestSimpleArrayType::s_nonDefaultSize - 1));
@@ -528,7 +528,7 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     editTree.setExpanded(babelwires::Path(), true);
 
     cache.setValueTrees("Test", &inputFeature, &outputFeature);
-    ASSERT_EQ(cache.getNumRows(), 6);
+    ASSERT_EQ(cache.getNumRows(), 7);
 
     // Adding a hidden failed modifier whose parent is logically the root requires us to present
     // a root entry to the user, so the UI functionality for failed modifiers has somewhere to live.
@@ -545,7 +545,7 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     cache.updateModifierCache();
 
     EXPECT_FALSE(cache.isChanged(babelwires::ContentsCache::Changes::StructureChanged));
-    EXPECT_EQ(cache.getNumRows(), 6);
+    EXPECT_EQ(cache.getNumRows(), 7);
 
     {
         const babelwires::ContentsCacheEntry* const entry = cache.getEntry(0);
@@ -582,7 +582,7 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     cache.updateModifierCache();
 
     EXPECT_FALSE(cache.isChanged(babelwires::ContentsCache::Changes::StructureChanged));
-    EXPECT_EQ(cache.getNumRows(), 6);
+    EXPECT_EQ(cache.getNumRows(), 7);
     {
         const babelwires::ContentsCacheEntry* const entry = cache.getEntry(1);
         checkFirstIntEntry(entry, &inputInfo, &outputInfo);
