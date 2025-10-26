@@ -84,8 +84,7 @@ void babelwires::RecordType::deactivateField(ValueHolder& value, ShortId fieldId
 }
 
 void babelwires::RecordType::selectOptionals(const TypeSystem& typeSystem, ValueHolder& value,
-                                             const std::vector<ShortId>& activatedOptionals,
-                                            const std::vector<ShortId>& deactivatedOptionals) const {
+                                             const std::map<ShortId, bool>& optionalsState) const {
     // Avoid modifying the value if we throw after partially processing the fields.
     ValueHolder temp = value;
     RecordValue& recordValue = temp.copyContentsAndGetNonConst().is<RecordValue>();
@@ -94,14 +93,17 @@ void babelwires::RecordType::selectOptionals(const TypeSystem& typeSystem, Value
     std::vector<ShortId> availableOptionals = getOptionalFieldIds();
     for (const ShortId& fieldId : availableOptionals) {
         const Field& field = getField(fieldId);
-        const bool inActivated = (std::find(activatedOptionals.begin(), activatedOptionals.end(), fieldId) != activatedOptionals.end());
-        const bool inDeactivated = (std::find(deactivatedOptionals.begin(), deactivatedOptionals.end(), fieldId) != deactivatedOptionals.end());
-        if (inActivated || inDeactivated) {
+
+        const auto it = optionalsState.find(fieldId);
+        const bool isAssigned = (it != optionalsState.end());
+        const bool isSetActivated = isAssigned && it->second;
+        const bool isSetDeactivated = isAssigned && !it->second;
+        if (isAssigned) {
             ++count;
         }
-        assert(!(inActivated && inDeactivated) && "Field cannot be both activated and deactivated");
-        const bool shouldBeActive = inActivated || (!inDeactivated && field.m_optionality == Optionality::optionalDefaultActive);
-        const bool shouldBeInactive = inDeactivated || (!inActivated && field.m_optionality == Optionality::optionalDefaultInactive);
+        assert(!(isSetActivated && isSetDeactivated) && "Field cannot be both activated and deactivated");
+        const bool shouldBeActive = isSetActivated || (!isSetDeactivated && field.m_optionality == Optionality::optionalDefaultActive);
+        const bool shouldBeInactive = isSetDeactivated || (!isSetActivated && field.m_optionality == Optionality::optionalDefaultInactive);
         if (shouldBeActive && !isActivated(temp, fieldId)) {
             const Type& fieldType = field.m_type.resolve(typeSystem);
             recordValue.setValue(fieldId, fieldType.createValue(typeSystem));
@@ -109,7 +111,7 @@ void babelwires::RecordType::selectOptionals(const TypeSystem& typeSystem, Value
             recordValue.removeValue(fieldId);
         }
     }
-    if (count < activatedOptionals.size() + deactivatedOptionals.size()) {
+    if (count < optionalsState.size()) {
         throw ModelException() << "Trying to set the state of an optional field which is not present in the record";
     }
     value = temp;

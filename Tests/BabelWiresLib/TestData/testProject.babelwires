@@ -6,9 +6,9 @@
                 <processor id="4" factory="TestProcessor'1">
                     <modifiers>
                         <selectOptionals path="">
-                            <activateOptionals>
-                                <activate value="OptInt'1"/>
-                            </activateOptionals>
+                            <optionals>
+                                <activate optional="OptInt'1"/>
+                            </optionals>
                         </selectOptionals>
                         <assignFrom path="Int'1" sourceId="5" sourcePath="Conts'1/intR0'1"/>
                         <assignFrom path="OptInt'1" sourceId="5" sourcePath="Conts'1/intR1'1"/>

@@ -9,6 +9,8 @@
 
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
+#include <map>
+
 namespace babelwires {
 
     /// RecordType carries a sequence of Fields (some of which are optional and can be inactive).
@@ -43,8 +45,7 @@ namespace babelwires {
 
         /// Ensure the optionals in the value have the state as specified in the arrays.
         void selectOptionals(const TypeSystem& typeSystem, ValueHolder& value,
-                             const std::vector<ShortId>& activatedOptionals,
-                            const std::vector<ShortId>& deactivatedOptionals) const;
+                             const std::map<ShortId, bool>& optionalsState) const;
 
         /// Is the given field an optional.
         bool isOptional(ShortId fieldId) const;

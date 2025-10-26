@@ -29,13 +29,11 @@ namespace babelwires {
 
         void resetOptionalActivation(ShortId optional);
 
-        std::map<ShortId, bool> getOptionalActivationData() const;
+        const std::map<ShortId, bool>& getOptionalActivationData() const;
 
         bool isDefaultState() const;
 
       private:
-        // TODO Should be a map
-        std::vector<ShortId> m_activatedOptionals;
-        std::vector<ShortId> m_deactivatedOptionals;
+        std::map<ShortId, bool> m_optionalsActivation;
     };
 }

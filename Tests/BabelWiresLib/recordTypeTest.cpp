@@ -85,10 +85,10 @@ namespace {
         EXPECT_EQ(recordType.isActivated(value, testDomain::TestComplexRecordType::getOpIntId()), isOpIntActive);
         EXPECT_EQ(recordType.isActivated(value, testDomain::TestComplexRecordType::getOpRecId()), isOpRecActive);
 
-        EXPECT_TRUE(testUtils::areEqualSets(
-            recordType.getOptionalFieldIds(),
-            {testDomain::TestComplexRecordType::getOpIntId(), testDomain::TestComplexRecordType::getOpRecId(),
-             testDomain::TestComplexRecordType::getOpIntOnId()}));
+        EXPECT_TRUE(testUtils::areEqualSets(recordType.getOptionalFieldIds(),
+                                            {testDomain::TestComplexRecordType::getOpIntId(),
+                                             testDomain::TestComplexRecordType::getOpRecId(),
+                                             testDomain::TestComplexRecordType::getOpIntOnId()}));
 
         EXPECT_NE(recordValue->getValue(testDomain::TestComplexRecordType::getInt0Id())->as<babelwires::IntValue>(),
                   nullptr);
@@ -216,32 +216,36 @@ TEST(RecordTypeTest, selectOptionals) {
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false, true);
 
     recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
-                               {testDomain::TestComplexRecordType::getOpIntId()}, {});
+                               {{testDomain::TestComplexRecordType::getOpIntId(), true}});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, false, true);
 
-    recordType.selectOptionals(
-        testEnvironment.m_typeSystem, newValue,
-        {testDomain::TestComplexRecordType::getOpIntId(), testDomain::TestComplexRecordType::getOpRecId()}, {testDomain::TestComplexRecordType::getOpIntOnId()});
+    recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
+                               {{testDomain::TestComplexRecordType::getOpIntId(), true},
+                                {testDomain::TestComplexRecordType::getOpRecId(), true},
+                                {testDomain::TestComplexRecordType::getOpIntOnId(), false}});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, true, false);
 
     recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
-                               {testDomain::TestComplexRecordType::getOpRecId()}, {});
+                               {{testDomain::TestComplexRecordType::getOpRecId(), true}});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, true, true);
 
-    recordType.selectOptionals(testEnvironment.m_typeSystem, newValue, {}, {});
+    recordType.selectOptionals(testEnvironment.m_typeSystem, newValue, {});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false, true);
 
-    recordType.selectOptionals(
-        testEnvironment.m_typeSystem, newValue,
-        {testDomain::TestComplexRecordType::getOpIntId(), testDomain::TestComplexRecordType::getOpRecId(), testDomain::TestComplexRecordType::getOpIntOnId()}, {});
+    recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
+                               {{testDomain::TestComplexRecordType::getOpIntId(), true},
+                                {testDomain::TestComplexRecordType::getOpRecId(), true},
+                                {testDomain::TestComplexRecordType::getOpIntOnId(), true}});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, true, true);
 
-    recordType.selectOptionals(testEnvironment.m_typeSystem, newValue, {}, {testDomain::TestComplexRecordType::getOpRecId(), testDomain::TestComplexRecordType::getOpIntOnId()});
+    recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
+                               {{testDomain::TestComplexRecordType::getOpRecId(), false},
+                                {testDomain::TestComplexRecordType::getOpIntOnId(), false}});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false, false);
 }
@@ -591,7 +595,8 @@ TEST(RecordTypeTest, constructorWithOptionals) {
         babelwires::TypeConstructorArguments{
             {babelwires::DefaultIntType::getThisType(), babelwires::StringType::getThisType()},
             {babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("int0")),
-             babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("str0"), babelwires::RecordType::Optionality::optionalDefaultInactive)}});
+             babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("str0"),
+                                      babelwires::RecordType::Optionality::optionalDefaultInactive)}});
 
     const babelwires::Type& type = recordTypeRef.resolve(testEnvironment.m_typeSystem);
     ASSERT_TRUE(type.as<babelwires::RecordType>());
