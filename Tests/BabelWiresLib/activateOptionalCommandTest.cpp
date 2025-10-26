@@ -4,7 +4,7 @@
 
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
-#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/selectOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
@@ -47,7 +47,7 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
         const babelwires::Modifier* modifier =
             element->getEdits().findModifier(pathToValue);
         EXPECT_NE(modifier, nullptr);
-        EXPECT_NE(modifier->getModifierData().as<babelwires::ActivateOptionalsModifierData>(), nullptr);
+        EXPECT_NE(modifier->getModifierData().as<babelwires::SelectOptionalsModifierData>(), nullptr);
     }
 
     command.undo(testEnvironment.m_project);
@@ -65,7 +65,7 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
         const babelwires::Modifier* modifier =
             element->getEdits().findModifier(pathToValue);
         EXPECT_NE(modifier, nullptr);
-        EXPECT_NE(modifier->getModifierData().as<babelwires::ActivateOptionalsModifierData>(), nullptr);
+        EXPECT_NE(modifier->getModifierData().as<babelwires::SelectOptionalsModifierData>(), nullptr);
     }
 }
 

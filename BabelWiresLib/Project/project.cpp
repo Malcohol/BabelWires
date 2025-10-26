@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
-#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/selectOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
@@ -592,11 +592,11 @@ void babelwires::Project::setOptionalActivation(NodeId nodeId, const Path& pathT
         return; // Path cannot be followed.
     }
 
-    ActivateOptionalsModifierData* modifierData = nullptr;
+    SelectOptionalsModifierData* modifierData = nullptr;
 
     if (Modifier* existingModifier = nodeToModify->getEdits().findModifier(pathToRecord)) {
         if (auto activateOptionalsModifierData =
-                existingModifier->getModifierData().as<ActivateOptionalsModifierData>()) {
+                existingModifier->getModifierData().as<SelectOptionalsModifierData>()) {
             auto localModifier = existingModifier->as<LocalModifier>();
             assert(localModifier && "Non-local modifier carrying local data");
             modifierData = activateOptionalsModifierData;
@@ -611,7 +611,7 @@ void babelwires::Project::setOptionalActivation(NodeId nodeId, const Path& pathT
     }
 
     if (!modifierData) {
-        ActivateOptionalsModifierData newData;
+        SelectOptionalsModifierData newData;
         newData.m_targetPath = pathToRecord;
         newData.setOptionalActivation(optional, isActivated);
         addModifier(nodeId, newData);
@@ -625,7 +625,7 @@ void babelwires::Project::resetOptionalActivation(NodeId nodeId, const Path& pat
     assert(input);
     Modifier* existingModifier = nodeToModify->getEdits().findModifier(pathToRecord);
     assert(existingModifier && "There must be a modifier if an optional is being reset");
-    auto& modifierData = existingModifier->getModifierData().is<ActivateOptionalsModifierData>();
+    auto& modifierData = existingModifier->getModifierData().is<SelectOptionalsModifierData>();
     modifierData.resetOptionalActivation(optional);
     auto& localModifier = existingModifier->is<LocalModifier>();
     localModifier.applyIfLocal(m_userLogger, input);

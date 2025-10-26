@@ -1,5 +1,5 @@
 /**
- * ActivateOptionalsModifierData is used to select a set of optionals in a RecordType
+ * SelectOptionalsModifierData is used to select a set of optionals in a RecordType
  *
  * (C) 2021 Malcolm Tyrrell
  * 
@@ -10,13 +10,14 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
 #include <map>
+
 namespace babelwires {
-    /// ActivateOptionalsModifierData is used to select a set of optionals in a RecordType
-    class ActivateOptionalsModifierData : public LocalModifierData {
+    /// SelectOptionalsModifierData is used to select a set of optionals in a RecordType
+    class SelectOptionalsModifierData : public LocalModifierData {
       public:
         virtual void apply(ValueTreeNode* target) const override;
-        CLONEABLE(ActivateOptionalsModifierData);
-        SERIALIZABLE(ActivateOptionalsModifierData, "selectOptionals", LocalModifierData, 1);
+        CLONEABLE(SelectOptionalsModifierData);
+        SERIALIZABLE(SelectOptionalsModifierData, "selectOptionals", LocalModifierData, 1);
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;

@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Project/Commands/Subcommands/adjustModifiersInArraySubcommand.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeSimpleModifierSubcommand.hpp>
-#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/selectOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
@@ -73,7 +73,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
                                                                                      initialSize - currentSize));
                 }
             }
-        } else if (const auto* optModifierData = modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
+        } else if (const auto* optModifierData = modifier->getModifierData().as<SelectOptionalsModifierData>()) {
             auto [compoundFeature, optionals] =
                 ValueTreeHelper::getInfoFromRecordWithOptionals(tryFollowPath(m_path, *input));
             if (compoundFeature) {

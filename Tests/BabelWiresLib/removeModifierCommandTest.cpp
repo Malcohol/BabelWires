@@ -4,7 +4,7 @@
 
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
-#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/selectOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
@@ -148,7 +148,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
     pathToIntInSimpleRecord.pushStep(testDomain::TestSimpleRecordType::getInt1Id());
 
     {
-        babelwires::ActivateOptionalsModifierData activateOptionalsModifierData;
+        babelwires::SelectOptionalsModifierData activateOptionalsModifierData;
         activateOptionalsModifierData.m_targetPath = pathToValue;
         activateOptionalsModifierData.setOptionalActivation(testDomain::TestComplexRecordType::getOpRecId(), true);
         testEnvironment.m_project.addModifier(elementId, activateOptionalsModifierData);

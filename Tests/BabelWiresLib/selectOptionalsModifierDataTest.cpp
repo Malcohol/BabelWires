@@ -3,7 +3,7 @@
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/selectOptionalsModifierData.hpp>
 
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Serialization/XML/xmlDeserializer.hpp>
@@ -16,7 +16,7 @@
 #include <Tests/TestUtils/equalSets.hpp>
 #include <Tests/TestUtils/testLog.hpp>
 
-TEST(ActivateOptionalsModifierDataTest, apply) {
+TEST(SelectOptionalsModifierDataTest, apply) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                 testDomain::TestComplexRecordType::getThisType());
@@ -26,7 +26,7 @@ TEST(ActivateOptionalsModifierDataTest, apply) {
     EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testDomain::TestComplexRecordType::getOpIntId()));
     EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testDomain::TestComplexRecordType::getOpRecId()));
 
-    babelwires::ActivateOptionalsModifierData data;
+    babelwires::SelectOptionalsModifierData data;
     data.setOptionalActivation(testDomain::TestComplexRecordType::getOpIntId(), true);
 
     data.apply(&valueFeature);
@@ -34,7 +34,7 @@ TEST(ActivateOptionalsModifierDataTest, apply) {
     EXPECT_TRUE(type->isActivated(valueFeature.getValue(), testDomain::TestComplexRecordType::getOpIntId()));
     EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testDomain::TestComplexRecordType::getOpRecId()));
 
-    babelwires::ActivateOptionalsModifierData data2;
+    babelwires::SelectOptionalsModifierData data2;
     data2.setOptionalActivation(testDomain::TestComplexRecordType::getOpRecId(), true);
 
     data2.apply(&valueFeature);
@@ -43,7 +43,7 @@ TEST(ActivateOptionalsModifierDataTest, apply) {
     EXPECT_TRUE(type->isActivated(valueFeature.getValue(), testDomain::TestComplexRecordType::getOpRecId()));
 }
 
-TEST(ActivateOptionalsModifierDataTest, failureNotOptionals) {
+TEST(SelectOptionalsModifierDataTest, failureNotOptionals) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                 testDomain::TestComplexRecordType::getThisType());
@@ -52,7 +52,7 @@ TEST(ActivateOptionalsModifierDataTest, failureNotOptionals) {
 
     babelwires::ValueHolder before = valueFeature.getValue();
 
-    babelwires::ActivateOptionalsModifierData data;
+    babelwires::SelectOptionalsModifierData data;
     data.setOptionalActivation(testDomain::TestComplexRecordType::getOpIntId(), true);
     data.setOptionalActivation("foo", true);
 
@@ -61,20 +61,20 @@ TEST(ActivateOptionalsModifierDataTest, failureNotOptionals) {
     EXPECT_EQ(before, valueFeature.getValue());
 }
 
-TEST(ActivateOptionalsModifierDataTest, failureNotARecordWithOptionals) {
+TEST(SelectOptionalsModifierDataTest, failureNotARecordWithOptionals) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                 testDomain::TestSimpleRecordType::getThisType());
     valueFeature.setToDefault();
 
-    babelwires::ActivateOptionalsModifierData data;
+    babelwires::SelectOptionalsModifierData data;
     data.setOptionalActivation("op", true);
 
     EXPECT_THROW(data.apply(&valueFeature), babelwires::ModelException);
 }
 
-TEST(ActivateOptionalsModifierDataTest, clone) {
-    babelwires::ActivateOptionalsModifierData data;
+TEST(SelectOptionalsModifierDataTest, clone) {
+    babelwires::SelectOptionalsModifierData data;
     data.m_targetPath = babelwires::Path::deserializeFromString("foo/bar/boo");
     data.setOptionalActivation("op0", true);
     data.setOptionalActivation("op1", false);
@@ -88,10 +88,10 @@ TEST(ActivateOptionalsModifierDataTest, clone) {
     EXPECT_EQ(clonePtr->getOptionalActivationData().at("op1"), false);
 }
 
-TEST(ActivateOptionalsModifierDataTest, serialization) {
+TEST(SelectOptionalsModifierDataTest, serialization) {
     std::string serializedContents;
     {
-        babelwires::ActivateOptionalsModifierData data;
+        babelwires::SelectOptionalsModifierData data;
         data.m_targetPath = babelwires::Path::deserializeFromString("foo/bar/boo");
         data.setOptionalActivation("op0", true);
         data.setOptionalActivation("op1", false);
@@ -105,7 +105,7 @@ TEST(ActivateOptionalsModifierDataTest, serialization) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::ActivateOptionalsModifierData>();
+    auto dataPtr = deserializer.deserializeObject<babelwires::SelectOptionalsModifierData>();
     deserializer.finalize();
 
     ASSERT_NE(dataPtr, nullptr);

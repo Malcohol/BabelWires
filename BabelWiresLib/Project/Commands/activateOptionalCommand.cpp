@@ -8,7 +8,7 @@
 
 #include <BabelWiresLib/Project/Commands/activateOptionalCommand.hpp>
 
-#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/selectOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
@@ -52,7 +52,7 @@ bool babelwires::ActivateOptionalCommand::initialize(const Project& project) {
     }
 
     if (const Modifier* modifier = nodeToModify->findModifier(m_pathToRecord)) {
-        if (const auto* activateOptionalsModifierData = modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
+        if (const auto* activateOptionalsModifierData = modifier->getModifierData().as<SelectOptionalsModifierData>()) {
             auto activatedOptionals = activateOptionalsModifierData->getOptionalActivationData();
             auto ait = activatedOptionals.find(m_optional);
             if (ait != activatedOptionals.end()) {

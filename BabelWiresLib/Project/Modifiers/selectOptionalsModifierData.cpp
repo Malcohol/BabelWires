@@ -1,11 +1,11 @@
 /**
- * ActivateOptionalsModifierData is used to select a set of optionals in a RecordType
+ * SelectOptionalsModifierData is used to select a set of optionals in a RecordType
  *
  * (C) 2021 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/selectOptionalsModifierData.hpp>
 
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
@@ -14,13 +14,13 @@
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-void babelwires::ActivateOptionalsModifierData::serializeContents(Serializer& serializer) const {
+void babelwires::SelectOptionalsModifierData::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("path", m_targetPath);
     serializer.serializeValueArray("activateOptionals", m_activatedOptionals, "activate");
     serializer.serializeValueArray("deactivateOptionals", m_deactivatedOptionals, "deactivate");
 }
 
-void babelwires::ActivateOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
+void babelwires::SelectOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("path", m_targetPath);
     for (auto it =
              deserializer.deserializeValueArray<ShortId>("activateOptionals", Deserializer::IsOptional::Optional, "activate");
@@ -49,7 +49,7 @@ void babelwires::ActivateOptionalsModifierData::deserializeContents(Deserializer
     }
 }
 
-void babelwires::ActivateOptionalsModifierData::apply(ValueTreeNode* target) const {
+void babelwires::SelectOptionalsModifierData::apply(ValueTreeNode* target) const {
     if (auto recordType = target->getType().as<RecordType>()) {
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
@@ -60,14 +60,14 @@ void babelwires::ActivateOptionalsModifierData::apply(ValueTreeNode* target) con
     throw ModelException() << "Cannot activate optionals from a value which does not have optionals";
 }
 
-void babelwires::ActivateOptionalsModifierData::visitIdentifiers(IdentifierVisitor& visitor) {
+void babelwires::SelectOptionalsModifierData::visitIdentifiers(IdentifierVisitor& visitor) {
     ModifierData::visitIdentifiers(visitor);
     for (auto& f : m_activatedOptionals) {
         visitor(f);
     }
 }
 
-void babelwires::ActivateOptionalsModifierData::setOptionalActivation(ShortId optional, bool isActivate) {
+void babelwires::SelectOptionalsModifierData::setOptionalActivation(ShortId optional, bool isActivate) {
     const auto add = [](auto& vec, ShortId val) {
         if (std::find(vec.begin(), vec.end(), val) == vec.end()) {
             vec.emplace_back(val);
@@ -89,7 +89,7 @@ void babelwires::ActivateOptionalsModifierData::setOptionalActivation(ShortId op
     }
 } 
 
-void babelwires::ActivateOptionalsModifierData::resetOptionalActivation(ShortId optional) {
+void babelwires::SelectOptionalsModifierData::resetOptionalActivation(ShortId optional) {
     const auto remove = [](auto& vec, ShortId val) {
         const auto it = std::find(vec.begin(), vec.end(), val);
         if (it != vec.end()) {
@@ -105,11 +105,11 @@ void babelwires::ActivateOptionalsModifierData::resetOptionalActivation(ShortId 
     }
 }
 
-bool babelwires::ActivateOptionalsModifierData::isDefaultState() const {
+bool babelwires::SelectOptionalsModifierData::isDefaultState() const {
     return getOptionalActivationData().empty();
 }
 
-std::map<babelwires::ShortId, bool> babelwires::ActivateOptionalsModifierData::getOptionalActivationData() const {
+std::map<babelwires::ShortId, bool> babelwires::SelectOptionalsModifierData::getOptionalActivationData() const {
     std::map<ShortId, bool> result;
     for (const auto& opt : m_activatedOptionals) {
         result[opt] = true;

@@ -12,7 +12,7 @@
 #include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
-#include <BabelWiresLib/Project/Modifiers/activateOptionalsModifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/selectOptionalsModifierData.hpp>
 #include <BabelWiresLib/Project/Commands/Subcommands/removeAllEditsSubcommand.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
@@ -55,7 +55,7 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
 
     if (const Modifier* modifier = nodeToModify->getEdits().findModifier(m_pathToRecord)) {
         const auto& modifierData = modifier->getModifierData();
-        if (const auto* activateOptionalsModifierData = modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
+        if (const auto* activateOptionalsModifierData = modifier->getModifierData().as<SelectOptionalsModifierData>()) {
             auto activatedOptionals = activateOptionalsModifierData->getOptionalActivationData();
             auto ait = activatedOptionals.find(m_optional);
             if (ait != activatedOptionals.end()) {
