@@ -90,14 +90,12 @@ namespace babelwires {
         void adjustModifiersInArrayElements(NodeId nodeId, const Path& pathToArray, ArrayIndex startIndex,
                                             int adjustment);
 
-        /// Activate an optional in a RecordType.
-        void activateOptional(NodeId nodeId, const Path& pathToRecord, ShortId optional,
-                              bool ensureModifier);
+        /// Set the state of an optional in a RecordType.
+        void setOptionalActivation(NodeId nodeId, const Path& pathToRecord, ShortId optional,
+                              bool isActivated);
 
-        /// Deactivate an optional in a RecordType.
-        /// Note that this method is not responsible for removing modifiers.
-        void deactivateOptional(NodeId nodeId, const Path& pathToRecord, ShortId optional,
-                                bool ensureModifier);
+        /// Reset the state of an optional in a RecordType.
+        void resetOptionalActivation(NodeId nodeId, const Path& pathToRecord, ShortId optional);
 
         /// Set the Ui position of the Node.
         void setNodePosition(NodeId nodeId, const UiPosition& newPosition);

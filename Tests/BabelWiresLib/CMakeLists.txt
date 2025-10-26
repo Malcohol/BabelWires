@@ -1,6 +1,6 @@
 SET( LIB_TESTS_SRCS
     babelWiresTests.cpp
-    activateOptionalsModifierDataTest.cpp
+    selectOptionalsModifierDataTest.cpp
     activateOptionalCommandTest.cpp
     addConnectionCommandTest.cpp
     addNodeCommandTest.cpp

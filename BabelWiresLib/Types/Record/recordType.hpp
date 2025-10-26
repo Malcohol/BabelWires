@@ -9,12 +9,14 @@
 
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
+#include <map>
+
 namespace babelwires {
 
     /// RecordType carries a sequence of Fields (some of which are optional and can be inactive).
     class RecordType : public CompoundType {
       public:
-        enum class Optionality { alwaysActive, optionalDefaultInactive /* TODO , optionalDefaultActive*/ };
+        enum class Optionality { alwaysActive, optionalDefaultInactive, optionalDefaultActive };
 
         struct Field {
             ShortId m_identifier;
@@ -42,8 +44,8 @@ namespace babelwires {
         void deactivateField(ValueHolder& value, ShortId fieldId) const;
 
         /// Ensure the optionals in the value have the state as specified in the arrays.
-        void ensureActivated(const TypeSystem& typeSystem, ValueHolder& value,
-                             const std::vector<ShortId>& optionalsToEnsureActivated) const;
+        void selectOptionals(const TypeSystem& typeSystem, ValueHolder& value,
+                             const std::map<ShortId, bool>& optionalsState) const;
 
         /// Is the given field an optional.
         bool isOptional(ShortId fieldId) const;
@@ -61,6 +63,15 @@ namespace babelwires {
         unsigned int getNumActiveFields(const ValueHolder& value) const;
 
       public:
+        /// Get a reference to the child's value using its field identifier.
+        std::tuple<const ValueHolder&, const TypeRef&> getChildById(const ValueHolder& compoundValue,
+                                                                    ShortId fieldId) const;
+
+        /// Get a non-const reference to the child's value using its field identifier.
+        std::tuple<ValueHolder&, const TypeRef&> getChildByIdNonConst(ValueHolder& compoundValue,
+                                                                      ShortId fieldId) const;
+
+      public:
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
         bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
 
@@ -70,7 +81,8 @@ namespace babelwires {
         std::tuple<ValueHolder*, PathStep, const TypeRef&> getChildNonConst(ValueHolder& compoundValue,
                                                                             unsigned int i) const override;
         int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const override;
-        std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
+        std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem,
+                                                         const Type& other) const override;
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
 
       private:

@@ -5,11 +5,11 @@
             <elements>
                 <processor id="4" factory="TestProcessor'1">
                     <modifiers>
-                        <activatedOptionals path="">
+                        <selectOptionals path="">
                             <optionals>
-                                <activate value="OptInt'1"/>
+                                <activate optional="OptInt'1"/>
                             </optionals>
-                        </activatedOptionals>
+                        </selectOptionals>
                         <assignFrom path="Int'1" sourceId="5" sourcePath="Conts'1/intR0'1"/>
                         <assignFrom path="OptInt'1" sourceId="5" sourcePath="Conts'1/intR1'1"/>
                         <assignFrom path="Record'1" sourceId="5" sourcePath="Conts'1"/>

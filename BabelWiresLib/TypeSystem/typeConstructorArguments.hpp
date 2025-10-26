@@ -20,9 +20,6 @@ namespace babelwires {
       public:
         ~TypeConstructorArguments();
 
-        /// The maximum number of arguments a TypeRef can carry.
-        static constexpr std::size_t s_maxNumArguments = 10;
-
         std::vector<TypeRef> m_typeArguments;
         std::vector<EditableValueHolder> m_valueArguments;
 

@@ -83,53 +83,36 @@ void babelwires::RecordType::deactivateField(ValueHolder& value, ShortId fieldId
     recordValue.removeValue(field.m_identifier);
 }
 
-void babelwires::RecordType::ensureActivated(const TypeSystem& typeSystem, ValueHolder& value,
-                                             const std::vector<ShortId>& optionalsToEnsureActivated) const {
+void babelwires::RecordType::selectOptionals(const TypeSystem& typeSystem, ValueHolder& value,
+                                             const std::map<ShortId, bool>& optionalsState) const {
     // Avoid modifying the value if we throw after partially processing the fields.
     ValueHolder temp = value;
     RecordValue& recordValue = temp.copyContentsAndGetNonConst().is<RecordValue>();
 
+    unsigned int count = 0;
     std::vector<ShortId> availableOptionals = getOptionalFieldIds();
-    std::sort(availableOptionals.begin(), availableOptionals.end());
-    auto ait = availableOptionals.begin();
+    for (const ShortId& fieldId : availableOptionals) {
+        const Field& field = getField(fieldId);
 
-    std::vector<ShortId> ensureActivated = optionalsToEnsureActivated;
-    std::sort(ensureActivated.begin(), ensureActivated.end());
-    auto it = ensureActivated.begin();
-
-    std::vector<ShortId> missingOptionals;
-
-    while ((ait != availableOptionals.end()) && (it != ensureActivated.end())) {
-        if (*ait == *it) {
-            if (!recordValue.tryGetValue(*ait)) {
-                const Field& field = getField(*ait);
-                const Type& fieldType = field.m_type.resolve(typeSystem);
-                recordValue.setValue(*ait, fieldType.createValue(typeSystem));
-            }
-            ++ait;
-            ++it;
-        } else if (*ait < *it) {
-            if (recordValue.tryGetValue(*ait)) {
-                recordValue.removeValue(*ait);
-            }
-            ++ait;
-        } else {
-            missingOptionals.emplace_back(*it);
-            ++it;
+        const auto it = optionalsState.find(fieldId);
+        const bool isAssigned = (it != optionalsState.end());
+        const bool isSetActivated = isAssigned && it->second;
+        const bool isSetDeactivated = isAssigned && !it->second;
+        if (isAssigned) {
+            ++count;
+        }
+        assert(!(isSetActivated && isSetDeactivated) && "Field cannot be both activated and deactivated");
+        const bool shouldBeActive = isSetActivated || (!isSetDeactivated && field.m_optionality == Optionality::optionalDefaultActive);
+        const bool shouldBeInactive = isSetDeactivated || (!isSetActivated && field.m_optionality == Optionality::optionalDefaultInactive);
+        if (shouldBeActive && !isActivated(temp, fieldId)) {
+            const Type& fieldType = field.m_type.resolve(typeSystem);
+            recordValue.setValue(fieldId, fieldType.createValue(typeSystem));
+        } else if (shouldBeInactive && isActivated(temp, fieldId)) {
+            recordValue.removeValue(fieldId);
         }
     }
-    while (ait != availableOptionals.end()) {
-        if (recordValue.tryGetValue(*ait)) {
-            recordValue.removeValue(*ait);
-        }
-        ++ait;
-    }
-    while (it != ensureActivated.end()) {
-        missingOptionals.emplace_back(*it);
-        ++it;
-    }
-    if (!missingOptionals.empty()) {
-        throw ModelException() << "Not all of the optionals could be activated";
+    if (count < optionalsState.size()) {
+        throw ModelException() << "Trying to set the state of an optional field which is not present in the record";
     }
     value = temp;
 }
@@ -348,4 +331,22 @@ std::string babelwires::RecordType::valueToString(const TypeSystem& typeSystem, 
     } else {
         return {};
     }
+}
+
+std::tuple<const babelwires::ValueHolder&, const babelwires::TypeRef&> babelwires::RecordType::getChildById(const ValueHolder& compoundValue,
+    ShortId fieldId) const {
+    assert(!isOptional(fieldId) || isActivated(compoundValue, fieldId));
+    const RecordValue& recordValue = compoundValue->is<RecordValue>();
+    const ValueHolder& fieldValue = recordValue.getValue(fieldId);
+    const Field& field = getField(fieldId);
+    return {fieldValue, field.m_type};   
+}
+
+std::tuple<babelwires::ValueHolder&, const babelwires::TypeRef&> babelwires::RecordType::getChildByIdNonConst(ValueHolder& compoundValue,
+                                                                    ShortId fieldId) const {
+    assert(!isOptional(fieldId) || isActivated(compoundValue, fieldId));
+    RecordValue& recordValue = compoundValue.copyContentsAndGetNonConst().is<RecordValue>();
+    ValueHolder& fieldValue = recordValue.getValue(fieldId);
+    const Field& field = getField(fieldId);
+    return {fieldValue, field.m_type};
 }

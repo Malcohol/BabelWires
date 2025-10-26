@@ -1,8 +1,8 @@
 #include <Domains/TestDomain/testRecordType.hpp>
 
+#include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
-#include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <Domains/TestDomain/testArrayType.hpp>
@@ -26,7 +26,8 @@ testDomain::TestComplexRecordType::TestComplexRecordType()
                   {getInt1Id(), babelwires::IntTypeConstructor::makeTypeRef(c_int1min, c_int1max, c_int1default)},
                   {getOpRecId(), TestSimpleRecordType::getThisType(), Optionality::optionalDefaultInactive},
                   {getStringId(), babelwires::StringType::getThisType()},
-                  {getArrayId(), testDomain::TestSimpleArrayType::getThisType()}}) {}
+                  {getArrayId(), testDomain::TestSimpleArrayType::getThisType()},
+                  {getOpIntOnId(), babelwires::DefaultIntType::getThisType(), Optionality::optionalDefaultActive }}) {}
 
 babelwires::ShortId testDomain::TestComplexRecordType::getInt0Id() {
     return BW_SHORT_ID(s_intIdInitializer, s_intFieldName, "1aafde9a-fb39-4a2d-8a29-55fc9d6d093b");
@@ -54,6 +55,10 @@ babelwires::ShortId testDomain::TestComplexRecordType::getStringId() {
 
 babelwires::ShortId testDomain::TestComplexRecordType::getArrayId() {
     return BW_SHORT_ID(s_arrayIdInitializer, s_arrayFieldName, "5da653f4-44d5-4030-a956-771fc06fb769");
+}
+
+babelwires::ShortId testDomain::TestComplexRecordType::getOpIntOnId() {
+    return BW_SHORT_ID(s_opIntOnIdInitializer, s_opIntOnFieldName, "cb4e25af-9107-405a-bf02-18a95f56eae4");
 }
 
 testDomain::TestSimpleRecordElementData::TestSimpleRecordElementData()
@@ -142,21 +147,24 @@ babelwires::Path testDomain::TestComplexRecordElementData::getPathToRecordArrayE
     return path;
 }
 
+babelwires::Path testDomain::TestComplexRecordElementData::getPathToRecordOpIntOn() {
+    babelwires::Path path = getPathToRecord();
+    path.pushStep(TestComplexRecordType::getOpIntOnId());
+    return path;
+}
+
 testDomain::TestComplexRecordTypeFeatureInfo::TestComplexRecordTypeFeatureInfo(
     const babelwires::ValueTreeNode& testRecord)
     : m_record(testRecord)
-    , m_int(testRecord.getChildFromStep(testDomain::TestComplexRecordType::getInt0Id())
-                       .is<babelwires::ValueTreeNode>())
-    , m_array(testRecord.getChildFromStep(testDomain::TestComplexRecordType::getArrayId())
-                         .is<babelwires::ValueTreeNode>())
+    , m_int(testRecord.getChildFromStep(testDomain::TestComplexRecordType::getInt0Id()).is<babelwires::ValueTreeNode>())
+    , m_array(
+          testRecord.getChildFromStep(testDomain::TestComplexRecordType::getArrayId()).is<babelwires::ValueTreeNode>())
     , m_elem0(m_array.getChildFromStep(0).is<babelwires::ValueTreeNode>())
     , m_elem1(m_array.getChildFromStep(1).is<babelwires::ValueTreeNode>())
-    , m_subRecord(
-          testRecord.getChildFromStep(testDomain::TestComplexRecordType::getSubrecordId())
-              .is<babelwires::ValueTreeNode>())
+    , m_subRecord(testRecord.getChildFromStep(testDomain::TestComplexRecordType::getSubrecordId())
+                      .is<babelwires::ValueTreeNode>())
     , m_subRecordInt(
-          m_subRecord.getChildFromStep(testDomain::TestSimpleRecordType::getInt0Id())
-              .is<babelwires::ValueTreeNode>())
+          m_subRecord.getChildFromStep(testDomain::TestSimpleRecordType::getInt0Id()).is<babelwires::ValueTreeNode>())
     , m_pathToRecord(babelwires::getPathTo(&testRecord))
     , m_pathToInt(babelwires::getPathTo(&m_int))
     , m_pathToArray(babelwires::getPathTo(&m_array))

@@ -1,5 +1,5 @@
 /**
- * The typeNameFormatter allows complex type names to be provided for type constructors.
+ * A TypeRef describes a type.
  *
  * (C) 2021 Malcolm Tyrrell
  *

@@ -20,7 +20,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Modifiers/arraySizeModifierData.cpp
 	Project/Modifiers/connectionModifier.cpp
 	Project/Modifiers/connectionModifierData.cpp
-	Project/Modifiers/activateOptionalsModifierData.cpp
+	Project/Modifiers/selectOptionalsModifierData.cpp
 	Project/Modifiers/selectRecordVariantModifierData.cpp
 	Project/Modifiers/setTypeVariableModifierData.cpp
 	Project/Modifiers/valueAssignmentData.cpp
@@ -79,6 +79,7 @@ SET( BABELWIRESLIB_SRCS
 	Processors/processorFactoryRegistry.cpp
 	Processors/processor.cpp
 	Processors/processorFactory.cpp
+	Utilities/applyToSubvalues.cpp
 	ValueTree/valueTreeChild.cpp
 	ValueTree/valueTreeHelper.cpp
 	ValueTree/valueTreeNode.cpp
