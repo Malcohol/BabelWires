@@ -32,8 +32,8 @@ namespace babelwires {
 
         // Post initialization data
 
-        /// Did an old modifier get replaced (otherwise this is the first modification).
-        bool m_wasModifier = false;
+        /// Was this explicitly deactivated via a pre-existing modifier?
+        bool m_wasDeactivated = false;
     };
 
 } // namespace babelwires

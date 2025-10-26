@@ -42,8 +42,9 @@ namespace babelwires {
         void deactivateField(ValueHolder& value, ShortId fieldId) const;
 
         /// Ensure the optionals in the value have the state as specified in the arrays.
-        void ensureActivated(const TypeSystem& typeSystem, ValueHolder& value,
-                             const std::vector<ShortId>& optionalsToEnsureActivated) const;
+        void selectOptionals(const TypeSystem& typeSystem, ValueHolder& value,
+                             const std::vector<ShortId>& activatedOptionals,
+                            const std::vector<ShortId>& deactivatedOptionals) const;
 
         /// Is the given field an optional.
         bool isOptional(ShortId fieldId) const;

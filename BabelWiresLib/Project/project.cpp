@@ -582,8 +582,8 @@ babelwires::ProjectId babelwires::Project::getProjectId() const {
     return m_projectId;
 }
 
-void babelwires::Project::activateOptional(NodeId nodeId, const Path& pathToRecord, ShortId optional,
-                                           bool ensureModifier) {
+void babelwires::Project::setOptionalActivation(NodeId nodeId, const Path& pathToRecord, ShortId optional,
+                                           bool isActivated) {
     Node* nodeToModify = getNode(nodeId);
     assert(nodeToModify);
 
@@ -600,7 +600,7 @@ void babelwires::Project::activateOptional(NodeId nodeId, const Path& pathToReco
             auto localModifier = existingModifier->as<LocalModifier>();
             assert(localModifier && "Non-local modifier carrying local data");
             modifierData = activateOptionalsModifierData;
-            activateOptionalsModifierData->m_selectedOptionals.emplace_back(optional);
+            activateOptionalsModifierData->setOptionalActivation(optional, isActivated);
             localModifier->applyIfLocal(m_userLogger, input);
         } else {
             // Discard the existing modifier, since it should be broken anyway.
@@ -613,56 +613,24 @@ void babelwires::Project::activateOptional(NodeId nodeId, const Path& pathToReco
     if (!modifierData) {
         ActivateOptionalsModifierData newData;
         newData.m_targetPath = pathToRecord;
-        newData.m_selectedOptionals.emplace_back(optional);
+        newData.setOptionalActivation(optional, isActivated);
         addModifier(nodeId, newData);
-    }
-    if (!ensureModifier) {
-        removeModifier(nodeId, pathToRecord);
     }
 }
 
-void babelwires::Project::deactivateOptional(NodeId nodeId, const Path& pathToRecord, ShortId optional,
-                                             bool ensureModifier) {
+void babelwires::Project::resetOptionalActivation(NodeId nodeId, const Path& pathToRecord, ShortId optional) {
     Node* nodeToModify = getNode(nodeId);
     assert(nodeToModify);
-
     ValueTreeNode* const input = nodeToModify->getInputNonConst(pathToRecord);
-    if (!input) {
-        return; // Path cannot be followed.
-    }
-
-    ActivateOptionalsModifierData* modifierData = nullptr;
-
-    if (Modifier* existingModifier = nodeToModify->getEdits().findModifier(pathToRecord)) {
-        if (auto activateOptionalsModifierData =
-                existingModifier->getModifierData().as<ActivateOptionalsModifierData>()) {
-            auto localModifier = existingModifier->as<LocalModifier>();
-            assert(localModifier && "Non-local modifier carrying local data");
-            modifierData = activateOptionalsModifierData;
-            activateOptionalsModifierData->m_selectedOptionals.emplace_back(optional);
-            localModifier->applyIfLocal(m_userLogger, input);
-        } else {
-            // Discard the existing modifier, since it should be broken anyway.
-            assert(existingModifier->isFailed() &&
-                   "A non-failed inapplicable modifier was found at an instance of a RecordType");
-            removeModifier(nodeId, pathToRecord);
-        }
-    }
-
+    assert(input);
     Modifier* existingModifier = nodeToModify->getEdits().findModifier(pathToRecord);
-    assert(existingModifier);
+    assert(existingModifier && "There must be a modifier if an optional is being reset");
+    auto& modifierData = existingModifier->getModifierData().is<ActivateOptionalsModifierData>();
+    modifierData.resetOptionalActivation(optional);
+    auto& localModifier = existingModifier->is<LocalModifier>();
+    localModifier.applyIfLocal(m_userLogger, input);
 
-    auto activateOptionalsModifierData = existingModifier->getModifierData().as<ActivateOptionalsModifierData>();
-    assert(activateOptionalsModifierData);
-    assert(existingModifier->as<LocalModifier>() && "Non-local modifier carrying local data");
-    auto localModifier = static_cast<LocalModifier*>(existingModifier);
-
-    auto it = std::find(activateOptionalsModifierData->m_selectedOptionals.begin(),
-                        activateOptionalsModifierData->m_selectedOptionals.end(), optional);
-    activateOptionalsModifierData->m_selectedOptionals.erase(it);
-    localModifier->applyIfLocal(m_userLogger, input);
-
-    if (!ensureModifier) {
+    if (modifierData.isDefaultState()) {
         removeModifier(nodeId, pathToRecord);
     }
 }

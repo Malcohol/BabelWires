@@ -150,7 +150,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
     {
         babelwires::ActivateOptionalsModifierData activateOptionalsModifierData;
         activateOptionalsModifierData.m_targetPath = pathToValue;
-        activateOptionalsModifierData.m_selectedOptionals.emplace_back(testDomain::TestComplexRecordType::getOpRecId());
+        activateOptionalsModifierData.setOptionalActivation(testDomain::TestComplexRecordType::getOpRecId(), true);
         testEnvironment.m_project.addModifier(elementId, activateOptionalsModifierData);
     }
     {

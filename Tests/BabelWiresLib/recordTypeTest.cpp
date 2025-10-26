@@ -206,7 +206,7 @@ TEST(RecordTypeTest, activateOptional) {
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false, false);
 }
 
-TEST(RecordTypeTest, ensureActivated) {
+TEST(RecordTypeTest, selectOptionals) {
     testUtils::TestEnvironment testEnvironment;
     testDomain::TestComplexRecordType recordType;
 
@@ -215,33 +215,33 @@ TEST(RecordTypeTest, ensureActivated) {
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false, true);
 
-    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue,
-                               {testDomain::TestComplexRecordType::getOpIntId()});
+    recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
+                               {testDomain::TestComplexRecordType::getOpIntId()}, {});
 
-    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, false, false);
+    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, false, true);
 
-    recordType.ensureActivated(
+    recordType.selectOptionals(
         testEnvironment.m_typeSystem, newValue,
-        {testDomain::TestComplexRecordType::getOpIntId(), testDomain::TestComplexRecordType::getOpRecId()});
+        {testDomain::TestComplexRecordType::getOpIntId(), testDomain::TestComplexRecordType::getOpRecId()}, {testDomain::TestComplexRecordType::getOpIntOnId()});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, true, false);
 
-    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue,
-                               {testDomain::TestComplexRecordType::getOpRecId()});
+    recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
+                               {testDomain::TestComplexRecordType::getOpRecId()}, {});
 
-    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, true, false);
+    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, true, true);
 
-    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue, {});
+    recordType.selectOptionals(testEnvironment.m_typeSystem, newValue, {}, {});
 
-    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false, false);
+    verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false, true);
 
-    recordType.ensureActivated(
+    recordType.selectOptionals(
         testEnvironment.m_typeSystem, newValue,
-        {testDomain::TestComplexRecordType::getOpIntId(), testDomain::TestComplexRecordType::getOpRecId(), testDomain::TestComplexRecordType::getOpIntOnId()});
+        {testDomain::TestComplexRecordType::getOpIntId(), testDomain::TestComplexRecordType::getOpRecId(), testDomain::TestComplexRecordType::getOpIntOnId()}, {});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, true, true);
 
-    recordType.ensureActivated(testEnvironment.m_typeSystem, newValue, {});
+    recordType.selectOptionals(testEnvironment.m_typeSystem, newValue, {}, {testDomain::TestComplexRecordType::getOpRecId(), testDomain::TestComplexRecordType::getOpIntOnId()});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false, false);
 }

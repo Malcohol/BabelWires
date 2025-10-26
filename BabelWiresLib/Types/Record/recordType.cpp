@@ -83,53 +83,34 @@ void babelwires::RecordType::deactivateField(ValueHolder& value, ShortId fieldId
     recordValue.removeValue(field.m_identifier);
 }
 
-void babelwires::RecordType::ensureActivated(const TypeSystem& typeSystem, ValueHolder& value,
-                                             const std::vector<ShortId>& optionalsToEnsureActivated) const {
+void babelwires::RecordType::selectOptionals(const TypeSystem& typeSystem, ValueHolder& value,
+                                             const std::vector<ShortId>& activatedOptionals,
+                                            const std::vector<ShortId>& deactivatedOptionals) const {
     // Avoid modifying the value if we throw after partially processing the fields.
     ValueHolder temp = value;
     RecordValue& recordValue = temp.copyContentsAndGetNonConst().is<RecordValue>();
 
+    unsigned int count = 0;
     std::vector<ShortId> availableOptionals = getOptionalFieldIds();
-    std::sort(availableOptionals.begin(), availableOptionals.end());
-    auto ait = availableOptionals.begin();
-
-    std::vector<ShortId> ensureActivated = optionalsToEnsureActivated;
-    std::sort(ensureActivated.begin(), ensureActivated.end());
-    auto it = ensureActivated.begin();
-
-    std::vector<ShortId> missingOptionals;
-
-    while ((ait != availableOptionals.end()) && (it != ensureActivated.end())) {
-        if (*ait == *it) {
-            if (!recordValue.tryGetValue(*ait)) {
-                const Field& field = getField(*ait);
-                const Type& fieldType = field.m_type.resolve(typeSystem);
-                recordValue.setValue(*ait, fieldType.createValue(typeSystem));
-            }
-            ++ait;
-            ++it;
-        } else if (*ait < *it) {
-            if (recordValue.tryGetValue(*ait)) {
-                recordValue.removeValue(*ait);
-            }
-            ++ait;
-        } else {
-            missingOptionals.emplace_back(*it);
-            ++it;
+    for (const ShortId& fieldId : availableOptionals) {
+        const Field& field = getField(fieldId);
+        const bool inActivated = (std::find(activatedOptionals.begin(), activatedOptionals.end(), fieldId) != activatedOptionals.end());
+        const bool inDeactivated = (std::find(deactivatedOptionals.begin(), deactivatedOptionals.end(), fieldId) != deactivatedOptionals.end());
+        if (inActivated || inDeactivated) {
+            ++count;
+        }
+        assert(!(inActivated && inDeactivated) && "Field cannot be both activated and deactivated");
+        const bool shouldBeActive = inActivated || (!inDeactivated && field.m_optionality == Optionality::optionalDefaultActive);
+        const bool shouldBeInactive = inDeactivated || (!inActivated && field.m_optionality == Optionality::optionalDefaultInactive);
+        if (shouldBeActive && !isActivated(temp, fieldId)) {
+            const Type& fieldType = field.m_type.resolve(typeSystem);
+            recordValue.setValue(fieldId, fieldType.createValue(typeSystem));
+        } else if (shouldBeInactive && isActivated(temp, fieldId)) {
+            recordValue.removeValue(fieldId);
         }
     }
-    while (ait != availableOptionals.end()) {
-        if (recordValue.tryGetValue(*ait)) {
-            recordValue.removeValue(*ait);
-        }
-        ++ait;
-    }
-    while (it != ensureActivated.end()) {
-        missingOptionals.emplace_back(*it);
-        ++it;
-    }
-    if (!missingOptionals.empty()) {
-        throw ModelException() << "Not all of the optionals could be activated";
+    if (count < activatedOptionals.size() + deactivatedOptionals.size()) {
+        throw ModelException() << "Trying to set the state of an optional field which is not present in the record";
     }
     value = temp;
 }

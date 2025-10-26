@@ -55,8 +55,17 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
 
     if (const Modifier* modifier = nodeToModify->getEdits().findModifier(m_pathToRecord)) {
         const auto& modifierData = modifier->getModifierData();
-        if (modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
-            m_wasModifier = true;
+        if (const auto* activateOptionalsModifierData = modifier->getModifierData().as<ActivateOptionalsModifierData>()) {
+            auto activatedOptionals = activateOptionalsModifierData->getOptionalActivationData();
+            auto ait = activatedOptionals.find(m_optional);
+            if (ait != activatedOptionals.end()) {
+                if (ait->second) {
+                    m_wasActivated = true;
+                } else {
+                    // Already deactivated.
+                    return false;
+                }
+            }
         }
     }
 
@@ -68,17 +77,21 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
         return false;
     }
 
-    project.deactivateOptional(m_nodeId, m_pathToRecord, m_optional, true);
+    project.setOptionalActivation(m_nodeId, m_pathToRecord, m_optional, false);
 
     return true;
 }
 
 void babelwires::DeactivateOptionalCommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    project.deactivateOptional(m_nodeId, m_pathToRecord, m_optional, true);
+    project.setOptionalActivation(m_nodeId, m_pathToRecord, m_optional, false);
 }
 
 void babelwires::DeactivateOptionalCommand::undo(Project& project) const {
-    project.activateOptional(m_nodeId, m_pathToRecord, m_optional, m_wasModifier);
+    if (m_wasActivated) {
+        project.setOptionalActivation(m_nodeId, m_pathToRecord, m_optional, true);
+    } else {
+        project.resetOptionalActivation(m_nodeId, m_pathToRecord, m_optional);
+    }
     CompoundCommand::undo(project);
 }

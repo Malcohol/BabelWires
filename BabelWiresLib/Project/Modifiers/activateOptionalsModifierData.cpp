@@ -16,17 +16,36 @@
 
 void babelwires::ActivateOptionalsModifierData::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("path", m_targetPath);
-    serializer.serializeValueArray("optionals", m_selectedOptionals, "activate");
+    serializer.serializeValueArray("activateOptionals", m_activatedOptionals, "activate");
+    serializer.serializeValueArray("deactivateOptionals", m_deactivatedOptionals, "deactivate");
 }
 
 void babelwires::ActivateOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("path", m_targetPath);
     for (auto it =
-             deserializer.deserializeValueArray<ShortId>("optionals", Deserializer::IsOptional::Optional, "activate");
+             deserializer.deserializeValueArray<ShortId>("activateOptionals", Deserializer::IsOptional::Optional, "activate");
          it.isValid(); ++it) {
-        ShortId temp("__TEMP");
-        m_selectedOptionals.emplace_back(it.deserializeValue(temp));
-        assert((m_selectedOptionals.back() != "__TEMP") && "Problem deserializing optional fields");
+        const ShortId temp("__TEMP");
+        const ShortId deserializedValue = it.deserializeValue(temp);
+        if (deserializedValue == "__TEMP") {
+            throw ModelException() << "Problem deserializing activated field";
+        }
+        m_activatedOptionals.emplace_back(deserializedValue);
+    }
+    for (auto it =
+             deserializer.deserializeValueArray<ShortId>("deactivateOptionals", Deserializer::IsOptional::Optional, "deactivate");
+         it.isValid(); ++it) {
+        const ShortId temp("__TEMP");
+        const ShortId deserializedValue = it.deserializeValue(temp);
+        if (deserializedValue == "__TEMP") {
+            throw ModelException() << "Problem deserializing deactivated field";
+        }
+        const auto ait = std::find(m_activatedOptionals.begin(), m_activatedOptionals.end(), deserializedValue);
+        if (ait != m_activatedOptionals.end()) {
+            m_activatedOptionals.erase(ait);
+        } else {
+            m_deactivatedOptionals.emplace_back(deserializedValue);
+        }
     }
 }
 
@@ -34,7 +53,7 @@ void babelwires::ActivateOptionalsModifierData::apply(ValueTreeNode* target) con
     if (auto recordType = target->getType().as<RecordType>()) {
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
-        recordType->ensureActivated(typeSystem, newValue, m_selectedOptionals);
+        recordType->selectOptionals(typeSystem, newValue, m_activatedOptionals, m_deactivatedOptionals);
         target->setValue(newValue);
         return;
     }
@@ -43,7 +62,60 @@ void babelwires::ActivateOptionalsModifierData::apply(ValueTreeNode* target) con
 
 void babelwires::ActivateOptionalsModifierData::visitIdentifiers(IdentifierVisitor& visitor) {
     ModifierData::visitIdentifiers(visitor);
-    for (auto& f : m_selectedOptionals) {
+    for (auto& f : m_activatedOptionals) {
         visitor(f);
     }
+}
+
+void babelwires::ActivateOptionalsModifierData::setOptionalActivation(ShortId optional, bool isActivate) {
+    const auto add = [](auto& vec, ShortId val) {
+        if (std::find(vec.begin(), vec.end(), val) == vec.end()) {
+            vec.emplace_back(val);
+        }
+    };
+    const auto remove = [](auto& vec, ShortId val) {
+        const auto it = std::find(vec.begin(), vec.end(), val);
+        if (it != vec.end()) {
+            vec.erase(it);
+        }
+    };
+
+    if (isActivate) {
+        add(m_activatedOptionals, optional);
+        remove(m_deactivatedOptionals, optional);
+    } else {
+        add(m_deactivatedOptionals, optional);
+        remove(m_activatedOptionals, optional);
+    }
+} 
+
+void babelwires::ActivateOptionalsModifierData::resetOptionalActivation(ShortId optional) {
+    const auto remove = [](auto& vec, ShortId val) {
+        const auto it = std::find(vec.begin(), vec.end(), val);
+        if (it != vec.end()) {
+            vec.erase(it);
+            return true;
+        }
+        return false;
+    };
+
+    if (!remove(m_activatedOptionals, optional)) {
+        const bool wasRemoved = remove(m_deactivatedOptionals, optional);
+        assert(wasRemoved && "Optional was not in either list");
+    }
+}
+
+bool babelwires::ActivateOptionalsModifierData::isDefaultState() const {
+    return getOptionalActivationData().empty();
+}
+
+std::map<babelwires::ShortId, bool> babelwires::ActivateOptionalsModifierData::getOptionalActivationData() const {
+    std::map<ShortId, bool> result;
+    for (const auto& opt : m_activatedOptionals) {
+        result[opt] = true;
+    }
+    for (const auto& opt : m_deactivatedOptionals) {
+        result[opt] = false;
+    }
+    return result;
 }
