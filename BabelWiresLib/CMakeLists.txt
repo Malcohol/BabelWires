@@ -53,6 +53,8 @@ SET( BABELWIRESLIB_SRCS
 	Types/Map/Commands/setMapTargetTypeCommand.cpp
 	Types/Map/Commands/changeEntryKindCommand.cpp
 	Types/Map/Commands/setMapCommand.cpp
+	Types/List/listType.cpp
+	Types/List/listValue.cpp
 	Types/Map/mapValue.cpp
 	Types/Map/MapEntries/mapEntryData.cpp
 	Types/Map/MapEntries/oneToOneMapEntryData.cpp
