@@ -1,5 +1,5 @@
 /**
- * A MapProjectDataLocation identifies some data within a MapProject.
+ * A ListProjectDataLocation identifies some data within a ListProject.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -10,22 +10,16 @@
 #include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
 
 namespace babelwires {
-    /// A MapProjectDataLocation identifies some data within a MapProject.
-    class MapProjectDataLocation : public DataLocation {
+    /// A ListProjectDataLocation identifies some data within a ListProject.
+    class ListProjectDataLocation : public DataLocation {
       public:
-        CLONEABLE(MapProjectDataLocation);
-        SERIALIZABLE(MapProjectDataLocation, "mapProjectLocation", void, 1);
+        CLONEABLE(ListProjectDataLocation);
+        SERIALIZABLE(ListProjectDataLocation, "listProjectLocation", void, 1);
 
-        enum class Side {
-            source,
-            target
-        };
-
-        MapProjectDataLocation(unsigned int entryIndex, Side side, Path pathToValue);
-        MapProjectDataLocation(const MapProjectDataLocation& other) = default;
+        ListProjectDataLocation(unsigned int entryIndex, Path pathToValue);
+        ListProjectDataLocation(const ListProjectDataLocation& other) = default;
 
         unsigned int getEntryIndex() const;
-        Side getSide() const;
 
       public:
         // Non-virtual methods which give identity to the data just in terms of elementId and pathToValue.
@@ -42,12 +36,9 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
 
       private:
-        MapProjectDataLocation() = default;
+        ListProjectDataLocation() = default;
 
       private:
         unsigned int m_entryIndex;
-        Side m_side;
-        // TODO
-        //Path m_pathInValue;
     };
 }
