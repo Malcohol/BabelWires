@@ -9,6 +9,12 @@
 
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
-const babelwires::EditableValue* babelwires::Value::asEditableValue() const {
-    return as<EditableValue>();
+const babelwires::EditableValue* babelwires::Value::tryGetAsEditableValue() const {
+    return nullptr;
+}
+
+const babelwires::EditableValue& babelwires::Value::getAsEditableValue() const {
+    const EditableValue* editable = tryGetAsEditableValue();
+    assert(editable && "This value is not EditableValue");
+    return *editable;
 }

@@ -15,7 +15,7 @@
 namespace babelwires {
 
     template<typename IDENTIFIER>
-    class IdentifierValueBase : public EditableValue {
+    class IdentifierValueBase : public AlwaysEditableValue {
       public:
         CLONEABLE_ABSTRACT(IdentifierValueBase);
         SERIALIZABLE_ABSTRACT(IdentifierValueBase, EditableValue);

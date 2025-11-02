@@ -15,7 +15,7 @@
 #include <vector>
 
 namespace babelwires {
-    class TupleValue : public EditableValue {
+    class TupleValue : public AlwaysEditableValue {
       public:
         CLONEABLE(TupleValue);
         SERIALIZABLE(TupleValue, "tuple", EditableValue, 1);

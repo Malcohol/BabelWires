@@ -19,12 +19,12 @@ babelwires::ValueAssignmentData::ValueAssignmentData() = default;
 
 babelwires::ValueAssignmentData::ValueAssignmentData(std::unique_ptr<EditableValue> value)
     : m_value(std::move(value)) {
-    assert(m_value->asEditableValue());
+    assert(m_value->tryGetAsEditableValue());
 }
 
 babelwires::ValueAssignmentData::ValueAssignmentData(EditableValueHolder value)
     : m_value(std::move(value)) {
-    assert(m_value->asEditableValue());
+    assert(m_value->tryGetAsEditableValue());
 }
 
 void babelwires::ValueAssignmentData::apply(ValueTreeNode* target) const {

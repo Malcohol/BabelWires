@@ -24,15 +24,16 @@ namespace babelwires {
         virtual std::size_t getHash() const = 0;
         virtual bool operator==(const Value& other) const = 0;
 
-        /// Convenience method for checking whether the value is an editable value.
-        const EditableValue* asEditableValue() const;
+        /// Is this value an editable value?
+        /// The default implementation returns nullptr.
+        virtual const EditableValue* tryGetAsEditableValue() const;
+
+        /// Assert that this is an EditableValue and return a reference to it.
+        const EditableValue& getAsEditableValue() const;
 
         bool operator!=(const Value& other) const { return !(*this == other); }
     };
 
-    class SimpleValue : Value {
-        public:
-    };
 } // namespace babelwires
 
 namespace std {

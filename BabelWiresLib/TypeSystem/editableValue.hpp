@@ -38,4 +38,13 @@ namespace babelwires {
         virtual std::string toString() const = 0;
     };
 
+    /// A base class for Values that are always editable.
+    class AlwaysEditableValue : public EditableValue {
+      public:
+        SERIALIZABLE_ABSTRACT(AlwaysEditableValue, EditableValue);
+        CLONEABLE_ABSTRACT(AlwaysEditableValue);
+
+        const EditableValue* tryGetAsEditableValue() const override;
+    };
+
 } // namespace babelwires

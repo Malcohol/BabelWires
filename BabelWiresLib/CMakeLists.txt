@@ -130,6 +130,7 @@ SET( BABELWIRESLIB_SRCS
 	Instance/instanceUtils.cpp
 	TypeSystem/compoundType.cpp
 	TypeSystem/Detail/typeNameFormatter.cpp
+	TypeSystem/editableValue.cpp
 	TypeSystem/type.cpp
 	TypeSystem/typeRef.cpp
 	TypeSystem/typeConstructorArguments.cpp
