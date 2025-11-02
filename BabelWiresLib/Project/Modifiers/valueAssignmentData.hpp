@@ -21,8 +21,8 @@ namespace babelwires {
         
         //TODO These should take the target path.
         ValueAssignmentData();
-        ValueAssignmentData(std::unique_ptr<EditableValue> value);
-        ValueAssignmentData(EditableValueHolder value);
+        ValueAssignmentData(std::unique_ptr<Value> value);
+        ValueAssignmentData(ValueHolder value);
 
         virtual void apply(ValueTreeNode* target) const override;
         void serializeContents(Serializer& serializer) const override;
@@ -30,10 +30,10 @@ namespace babelwires {
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 
-        EditableValueHolder getValue() const;
+        ValueHolder getValue() const;
 
       private:
-        EditableValueHolder m_value;
+        ValueHolder m_value;
     };
 
 } // namespace babelwires

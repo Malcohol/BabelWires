@@ -17,12 +17,12 @@
 
 babelwires::ValueAssignmentData::ValueAssignmentData() = default;
 
-babelwires::ValueAssignmentData::ValueAssignmentData(std::unique_ptr<EditableValue> value)
+babelwires::ValueAssignmentData::ValueAssignmentData(std::unique_ptr<Value> value)
     : m_value(std::move(value)) {
     assert(m_value->tryGetAsEditableValue());
 }
 
-babelwires::ValueAssignmentData::ValueAssignmentData(EditableValueHolder value)
+babelwires::ValueAssignmentData::ValueAssignmentData(ValueHolder value)
     : m_value(std::move(value)) {
     assert(m_value->tryGetAsEditableValue());
 }
@@ -33,12 +33,13 @@ void babelwires::ValueAssignmentData::apply(ValueTreeNode* target) const {
 
 void babelwires::ValueAssignmentData::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("path", m_targetPath);
-    serializer.serializeObject(m_value->is<EditableValue>(), "value");
+    serializer.serializeObject(m_value->getAsEditableValue(), "value");
 }
 
 void babelwires::ValueAssignmentData::deserializeContents(Deserializer& deserializer) {
     deserializer.deserializeValue("path", m_targetPath);
-    m_value = deserializer.deserializeObject<EditableValue>("value");
+    // The uniquePtrCast is needed to disambiguate the assignment operator.
+    m_value = uniquePtrCast<Value>(deserializer.deserializeObject<EditableValue>("value"));
 }
 
 void babelwires::ValueAssignmentData::visitIdentifiers(IdentifierVisitor& visitor) {
@@ -51,6 +52,6 @@ void babelwires::ValueAssignmentData::visitFilePaths(FilePathVisitor& visitor) {
     m_value.visitFilePaths(visitor);
 }
 
-babelwires::EditableValueHolder babelwires::ValueAssignmentData::getValue() const {
+babelwires::ValueHolder babelwires::ValueAssignmentData::getValue() const {
     return m_value;
 }

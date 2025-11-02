@@ -16,7 +16,7 @@
 TEST(ValueNodeTest, simpleType) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::ValueAssignmentData assignmentData(babelwires::EditableValueHolder::makeValue<babelwires::IntValue>(-4));
+    babelwires::ValueAssignmentData assignmentData(babelwires::ValueHolder::makeValue<babelwires::IntValue>(-4));
 
     babelwires::ValueNodeData data(babelwires::DefaultIntType::getThisType());
     data.m_modifiers.emplace_back(assignmentData.clone());
@@ -56,7 +56,7 @@ TEST(ValueNodeTest, valueNodeDataSerialization) {
         data.m_id = 2;
         data.m_uiData.m_uiSize.m_width = 300;
         data.m_modifiers.emplace_back(std::make_unique<babelwires::ValueAssignmentData>(
-            babelwires::EditableValueHolder::makeValue<babelwires::IntValue>(12)));
+            babelwires::ValueHolder::makeValue<babelwires::IntValue>(12)));
 
         // Note: We want to be able to serialize when entries do not match the types, as in this case.
         babelwires::XmlSerializer serializer;
