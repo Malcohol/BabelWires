@@ -129,10 +129,3 @@ template <typename VALUE> void babelwires::ValueHolderTemplate<VALUE>::visitFile
 template <typename VALUE> const VALUE* babelwires::ValueHolderTemplate<VALUE>::getUnsafe() const {
     return &m_pointerToValue->is<VALUE>();
 }
-
-template <typename VALUE>
-template <typename OTHER>
-babelwires::ValueHolderTemplate<VALUE>::operator const ValueHolderTemplate<OTHER>&() const {
-    assert(m_pointerToValue->as<OTHER>());
-    return *reinterpret_cast<const ValueHolderTemplate<OTHER>*>(this);
-}

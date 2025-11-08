@@ -82,11 +82,6 @@ namespace babelwires {
         /// Use by ValueHolder to visit the value only if necessary.
         void visitFilePaths(FilePathVisitor& visitor);
 
-        /// Allows implicit assignment to related const ValueHolders, asserting that the type matches.
-        /// The implementation reinterprets this, which is safe because the storage does not
-        /// depend on the template argument.
-        template <typename OTHER> operator const ValueHolderTemplate<OTHER>&() const;
-
         /// Not recommended, but can be used to get a pointer to the contained value.
         /// This is unsafe only in the sense that a caller might be tempted to keep the pointer.
         /// This is highly likely to dangle if the value is modified, so DO NOT KEEP IT.
