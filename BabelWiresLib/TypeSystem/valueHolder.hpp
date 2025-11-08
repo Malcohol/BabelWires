@@ -37,7 +37,6 @@ namespace babelwires {
         ValueHolder& operator=(const Value& value);
         ValueHolder& operator=(Value&& value);
         ValueHolder& operator=(std::unique_ptr<Value> ptr);
-        ValueHolder& operator=(std::shared_ptr<const Value> ptr);
 
         /// Construct a value of Value subclass T. The returned NewValueHolder can be used as a
         /// ValueHolder, but carries a non-const reference to the new value. The non-const reference

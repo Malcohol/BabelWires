@@ -118,18 +118,6 @@ TEST(ValueHolderTest, assignmentFromLValue) {
     EXPECT_EQ(valueInHolder->m_x, 5);
 }
 
-TEST(ValueHolderTest, assignmentFromSharedPtr) {
-    auto sharedPtr = std::make_shared<TestableValue>(5);
-    babelwires::ValueHolder valueHolder;
-    valueHolder = sharedPtr;
-    const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
-    ASSERT_NE(valueInHolder, nullptr);
-
-    EXPECT_FALSE(valueInHolder->m_wasCopied);
-    EXPECT_FALSE(valueInHolder->m_wasMoved);
-    EXPECT_EQ(valueInHolder->m_x, 5);
-}
-
 TEST(ValueHolderTest, assignmentFromUniquePtr) {
     std::unique_ptr<babelwires::Value> uniquePtr(new TestableValue(5));
     babelwires::ValueHolder valueHolder;

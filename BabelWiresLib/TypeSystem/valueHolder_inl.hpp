@@ -47,11 +47,6 @@ namespace babelwires {
         return *this;
     }
 
-    inline ValueHolder& ValueHolder::operator=(std::shared_ptr<const Value> ptr) {
-        m_pointerToValue = std::move(ptr);
-        return *this;
-    }
-
     inline ValueHolder& ValueHolder::operator=(std::unique_ptr<Value> ptr) {
         m_pointerToValue = std::shared_ptr<const Value>(ptr.release());
         return *this;
