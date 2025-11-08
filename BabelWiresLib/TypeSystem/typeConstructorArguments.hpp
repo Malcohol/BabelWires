@@ -32,8 +32,10 @@ namespace babelwires {
         }
         ~TypeConstructorArguments();
 
-        std::vector<TypeRef> m_typeArguments;
-        std::vector<ValueHolder> m_valueArguments;
+        const std::vector<TypeRef>& getTypeArguments() const { return m_typeArguments; }
+        std::vector<TypeRef>& getTypeArguments() { return m_typeArguments; }
+        const std::vector<ValueHolder>& getValueArguments() const { return m_valueArguments; }
+        std::vector<ValueHolder>& getValueArguments() { return m_valueArguments; }
 
         friend bool operator==(const TypeConstructorArguments& a, const TypeConstructorArguments& b) {
             return equals(a, b);
@@ -48,6 +50,10 @@ namespace babelwires {
       private:
         /// The friend operators need to call an out-of-line implementation to avoid an include cycle.
         static bool equals(const TypeConstructorArguments& a, const TypeConstructorArguments& b);
+
+      private:
+        std::vector<TypeRef> m_typeArguments;
+        std::vector<ValueHolder> m_valueArguments;
     };
 } // namespace babelwires
 

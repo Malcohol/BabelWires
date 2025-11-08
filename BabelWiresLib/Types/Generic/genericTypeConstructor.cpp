@@ -15,8 +15,7 @@ babelwires::TypeRef babelwires::GenericTypeConstructor::makeTypeRef(TypeRef wrap
     return TypeRef(GenericTypeConstructor::getThisIdentifier(), {{wrappedType}, {IntValue(numVariables)}});
 }
 
-unsigned int
-babelwires::GenericTypeConstructor::extractValueArguments(const std::vector<ValueHolder>& valueArguments) {
+unsigned int babelwires::GenericTypeConstructor::extractValueArguments(const std::vector<ValueHolder>& valueArguments) {
     if (valueArguments.size() > 1) {
         throw TypeSystemException() << "GenericTypeConstructor expects 0 or 1 value arguments but got "
                                     << valueArguments.size();
@@ -40,13 +39,13 @@ babelwires::TypeConstructor::TypeConstructorResult
 babelwires::GenericTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                   const TypeConstructorArguments& arguments,
                                                   const std::vector<const Type*>& resolvedTypeArguments) const {
-    unsigned int numVariables = extractValueArguments(arguments.m_valueArguments);
+    unsigned int numVariables = extractValueArguments(arguments.getValueArguments());
 
-    if (arguments.m_typeArguments.size() != 1) {
+    if (arguments.getTypeArguments().size() != 1) {
         throw TypeSystemException() << "GenericTypeConstructor expects 1 type argument but got "
-                                    << arguments.m_typeArguments.size();
+                                    << arguments.getTypeArguments().size();
     }
-    const TypeRef& wrappedType = arguments.m_typeArguments[0];
+    const TypeRef& wrappedType = arguments.getTypeArguments()[0];
 
     return std::make_unique<ConstructedType<GenericType>>(std::move(newTypeRef), wrappedType, numVariables);
 }

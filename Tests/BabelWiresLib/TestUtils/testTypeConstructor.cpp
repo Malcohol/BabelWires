@@ -33,11 +33,11 @@ babelwires::TypeConstructor::TypeConstructorResult testUtils::TestMixedTypeConst
     const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef,
     const babelwires::TypeConstructorArguments& arguments,
     const std::vector<const babelwires::Type*>& resolvedTypeArguments) const {
-    assert(arguments.m_typeArguments.size() == 1);
-    assert(arguments.m_valueArguments.size() == 1);
+    assert(arguments.getTypeArguments().size() == 1);
+    assert(arguments.getValueArguments().size() == 1);
 
     const TestType* const testType = resolvedTypeArguments[0]->as<TestType>();
-    const babelwires::StringValue* const stringValue = arguments.m_valueArguments[0]->as<babelwires::StringValue>();
+    const babelwires::StringValue* const stringValue = arguments.getValueArguments()[0]->as<babelwires::StringValue>();
 
     assert(testType != nullptr);
     assert(stringValue != nullptr);

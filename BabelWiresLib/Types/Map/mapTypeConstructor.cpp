@@ -34,13 +34,13 @@ babelwires::TypeConstructor::TypeConstructorResult
 babelwires::MapTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                               const TypeConstructorArguments& arguments,
                                               const std::vector<const Type*>& resolvedTypeArguments) const {
-    if (arguments.m_typeArguments.size() != 2) {
+    if (arguments.getTypeArguments().size() != 2) {
         throw TypeSystemException() << "MapTypeConstructor expects 2 type arguments but got "
-                                    << arguments.m_typeArguments.size();
+                                    << arguments.getTypeArguments().size();
     }
-    babelwires::MapEntryData::Kind kind = extractValueArguments(typeSystem, arguments.m_valueArguments);
-    return std::make_unique<ConstructedType<MapType>>(std::move(newTypeRef), arguments.m_typeArguments[0],
-                                                      arguments.m_typeArguments[1], kind);
+    babelwires::MapEntryData::Kind kind = extractValueArguments(typeSystem, arguments.getValueArguments());
+    return std::make_unique<ConstructedType<MapType>>(std::move(newTypeRef), arguments.getTypeArguments()[0],
+                                                      arguments.getTypeArguments()[1], kind);
 }
 
 babelwires::TypeRef babelwires::MapTypeConstructor::makeTypeRef(TypeRef sourceTypeRef, TypeRef targetTypeRef,

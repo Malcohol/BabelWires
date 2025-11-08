@@ -12,21 +12,20 @@
 
 #include <Common/Utilities/unicodeUtils.hpp>
 
-#include <sstream>
 #include <cassert>
+#include <sstream>
 
 std::optional<babelwires::TypeVariableData> babelwires::TypeVariableData::isTypeVariable(const TypeRef& typeRef) {
     struct Visitor {
-        std::optional<TypeVariableData> operator()(std::monostate) {
-            return {};
-        }
-        std::optional<TypeVariableData> operator()(const RegisteredTypeId& typeId) { 
+        std::optional<TypeVariableData> operator()(std::monostate) { return {}; }
+        std::optional<TypeVariableData> operator()(const RegisteredTypeId& typeId) {
             // Reasonable assumption: no one would register a type variable type.
             return {};
         }
-        std::optional<TypeVariableData> operator()(const TypeConstructorId& constructorId, const TypeConstructorArguments& constructorArguments) {
+        std::optional<TypeVariableData> operator()(const TypeConstructorId& constructorId,
+                                                   const TypeConstructorArguments& constructorArguments) {
             if (constructorId == TypeVariableTypeConstructor::getThisIdentifier()) {
-                return TypeVariableTypeConstructor::extractValueArguments(constructorArguments.m_valueArguments);
+                return TypeVariableTypeConstructor::extractValueArguments(constructorArguments.getValueArguments());
             } else {
                 return {};
             }
@@ -37,7 +36,8 @@ std::optional<babelwires::TypeVariableData> babelwires::TypeVariableData::isType
 
 std::string babelwires::TypeVariableData::toString() const {
     std::ostringstream os;
-    assert(m_typeVariableIndex < c_maxNumTypeVariables && "VariableIndex is larger than the maximum allowed number of type variables");
+    assert(m_typeVariableIndex < c_maxNumTypeVariables &&
+           "VariableIndex is larger than the maximum allowed number of type variables");
     const char letter = (('T' - 'A' + m_typeVariableIndex) % 26) + 'A';
     os.put(letter);
     if (m_numGenericTypeLevels > 0) {

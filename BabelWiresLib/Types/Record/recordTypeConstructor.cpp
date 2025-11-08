@@ -14,16 +14,17 @@ babelwires::TypeConstructor::TypeConstructorResult
 babelwires::RecordTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                  const TypeConstructorArguments& arguments,
                                                  const std::vector<const Type*>& resolvedTypeArguments) const {
-    if (arguments.m_typeArguments.size() != arguments.m_valueArguments.size()) {
+    if (arguments.getTypeArguments().size() != arguments.getValueArguments().size()) {
         throw TypeSystemException() << "RecordTypeConstructor requires the same number of types and values, but got "
-                                    << arguments.m_typeArguments.size() << " and " << arguments.m_valueArguments.size()
-                                    << " respectively";
+                                    << arguments.getTypeArguments().size() << " and "
+                                    << arguments.getValueArguments().size() << " respectively";
     }
 
     std::vector<RecordType::Field> fields;
-    for (unsigned int i = 0; i < arguments.m_valueArguments.size(); ++i) {
-        if (const FieldIdValue* fieldId = arguments.m_valueArguments[i]->as<FieldIdValue>()) {
-            fields.emplace_back(RecordType::Field{fieldId->get(), arguments.m_typeArguments[i], fieldId->getOptionality()});
+    for (unsigned int i = 0; i < arguments.getValueArguments().size(); ++i) {
+        if (const FieldIdValue* fieldId = arguments.getValueArguments()[i]->as<FieldIdValue>()) {
+            fields.emplace_back(
+                RecordType::Field{fieldId->get(), arguments.getTypeArguments()[i], fieldId->getOptionality()});
         } else {
             throw TypeSystemException() << "RecordTypeConstructor value argument " << i << " was not a FieldIdValue";
         }

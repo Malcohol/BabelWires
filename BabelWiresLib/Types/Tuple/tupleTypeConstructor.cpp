@@ -15,12 +15,12 @@ babelwires::TypeConstructor::TypeConstructorResult
 babelwires::TupleTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                 const TypeConstructorArguments& arguments,
                                                 const std::vector<const Type*>& resolvedTypeArguments) const {
-    if (arguments.m_valueArguments.size() > 0) {
+    if (arguments.getValueArguments().size() > 0) {
         throw TypeSystemException() << "TupleTypeConstructor does not expect value arguments but got "
-                                    << arguments.m_valueArguments.size();
+                                    << arguments.getValueArguments().size();
     }
 
-    return std::make_unique<ConstructedType<TupleType>>(std::move(newTypeRef), arguments.m_typeArguments);
+    return std::make_unique<ConstructedType<TupleType>>(std::move(newTypeRef), arguments.getTypeArguments());
 }
 
 babelwires::TypeRef babelwires::TupleTypeConstructor::makeTypeRef(std::vector<TypeRef> types) {

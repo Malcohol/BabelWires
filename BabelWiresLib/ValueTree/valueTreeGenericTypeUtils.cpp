@@ -50,8 +50,8 @@ const babelwires::ValueTreeNode* babelwires::tryGetGenericTypeFromVariable(const
 namespace {
     int getMaximumPossibleHeightOfUnassignedGenericType(const babelwires::ValueTreeNode& valueTreeNode) {
         int height = -1;
-        // If the top of the tree has generic types with all variables assigned, then they don't count towards the height.
-        // This variable is used to count exclude those.
+        // If the top of the tree has generic types with all variables assigned, then they don't count towards the
+        // height. This variable is used to count exclude those.
         int consecutiveAssigned = 0;
         const babelwires::ValueTreeNode* current = &valueTreeNode;
         const babelwires::ValueTreeNode* parent = current->getOwner();
@@ -84,12 +84,13 @@ namespace {
                     ++genericTypeDepth;
                 } else if (constructorId == babelwires::TypeVariableTypeConstructor::getThisIdentifier()) {
                     const auto typeVarData =
-                        babelwires::TypeVariableTypeConstructor::extractValueArguments(arguments.m_valueArguments);
-                    if ((typeVarData.m_numGenericTypeLevels >= genericTypeDepth) && arguments.m_typeArguments.empty()) {
+                        babelwires::TypeVariableTypeConstructor::extractValueArguments(arguments.getValueArguments());
+                    if ((typeVarData.m_numGenericTypeLevels >= genericTypeDepth) &&
+                        arguments.getTypeArguments().empty()) {
                         return true;
                     }
                 }
-                for (const auto& arg : arguments.m_typeArguments) {
+                for (const auto& arg : arguments.getTypeArguments()) {
                     Visitor argVisitor{genericTypeDepth};
                     if (arg.visit<Visitor, bool>(argVisitor)) {
                         return true;

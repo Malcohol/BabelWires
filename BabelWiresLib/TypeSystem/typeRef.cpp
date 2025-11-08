@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/Detail/typeNameFormatter.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Hash/hash.hpp>
 #include <Common/Serialization/deserializer.hpp>
@@ -26,13 +26,14 @@ babelwires::TypeRef::TypeRef(RegisteredTypeId typeId)
     : m_storage(typeId) {}
 
 babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments)
-    : m_storage(ConstructedTypeData{typeConstructorId, std::move(arguments)}) {
-}
+    : m_storage(ConstructedTypeData{typeConstructorId, std::move(arguments)}) {}
 
 const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSystem) const {
     struct VisitorMethods {
         const babelwires::Type* operator()(std::monostate) { return nullptr; }
-        const babelwires::Type* operator()(RegisteredTypeId typeId) { return m_typeSystem.tryGetRegisteredType(typeId); }
+        const babelwires::Type* operator()(RegisteredTypeId typeId) {
+            return m_typeSystem.tryGetRegisteredType(typeId);
+        }
         const babelwires::Type* operator()(const ConstructedTypeData& higherOrderData) {
             try {
                 const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
@@ -87,16 +88,19 @@ std::string babelwires::TypeRef::toStringHelper(babelwires::IdentifierRegistry::
             std::string formatString = m_identifierRegistry->getName(std::get<0>(constructedTypeData));
             // TODO The VisitorMethods object should own these.
             std::vector<std::string> typeArgumentsStr;
-            const auto& typeArguments = std::get<1>(constructedTypeData).m_typeArguments;
-            std::for_each(typeArguments.begin(), typeArguments.end(), [this, &typeArgumentsStr](const TypeRef& typeRef) {
-                // TODO Call visit, not toStringHelper.
-                typeArgumentsStr.emplace_back(typeRef.toStringHelper(m_identifierRegistry));
-            });
+            const auto& typeArguments = std::get<1>(constructedTypeData).getTypeArguments();
+            std::for_each(typeArguments.begin(), typeArguments.end(),
+                          [this, &typeArgumentsStr](const TypeRef& typeRef) {
+                              // TODO Call visit, not toStringHelper.
+                              typeArgumentsStr.emplace_back(typeRef.toStringHelper(m_identifierRegistry));
+                          });
             std::vector<std::string> valueArgumentsStr;
-            const auto& valueArguments = std::get<1>(constructedTypeData).m_valueArguments;
+            const auto& valueArguments = std::get<1>(constructedTypeData).getValueArguments();
             std::for_each(valueArguments.begin(), valueArguments.end(),
-                            // TODO: value::toString should take the identifierRegistry as an argument.
-                          [&valueArgumentsStr](const ValueHolder& value) { valueArgumentsStr.emplace_back(value->getAsEditableValue().toString()); });
+                          // TODO: value::toString should take the identifierRegistry as an argument.
+                          [&valueArgumentsStr](const ValueHolder& value) {
+                              valueArgumentsStr.emplace_back(value->getAsEditableValue().toString());
+                          });
             return typeNameFormatter(formatString, typeArgumentsStr, valueArgumentsStr);
         }
         babelwires::IdentifierRegistry::ReadAccess& m_identifierRegistry;
@@ -120,10 +124,10 @@ void babelwires::TypeRef::serializeContents(Serializer& serializer) const {
         void operator()(const RegisteredTypeId& typeId) { m_serializer.serializeValue("typeId", typeId); }
         void operator()(const ConstructedTypeData& constructedTypeData) {
             m_serializer.serializeValue("typeConstructorId", std::get<0>(constructedTypeData));
-            m_serializer.serializeArray("typeArguments", std::get<1>(constructedTypeData).m_typeArguments);
+            m_serializer.serializeArray("typeArguments", std::get<1>(constructedTypeData).getTypeArguments());
             std::vector<const EditableValue*> tmpValueArray;
-            std::for_each(std::get<1>(constructedTypeData).m_valueArguments.begin(),
-                          std::get<1>(constructedTypeData).m_valueArguments.end(),
+            std::for_each(std::get<1>(constructedTypeData).getValueArguments().begin(),
+                          std::get<1>(constructedTypeData).getValueArguments().end(),
                           [&tmpValueArray](const ValueHolder& valueHolder) {
                               tmpValueArray.emplace_back(&valueHolder->getAsEditableValue());
                           });
@@ -136,26 +140,26 @@ void babelwires::TypeRef::serializeContents(Serializer& serializer) const {
 
 void babelwires::TypeRef::deserializeContents(Deserializer& deserializer) {
     RegisteredTypeId typeId;
-    if (deserializer.deserializeValue("typeId", typeId,
-                                      babelwires::Deserializer::IsOptional::Optional)) {
+    if (deserializer.deserializeValue("typeId", typeId, babelwires::Deserializer::IsOptional::Optional)) {
         m_storage = typeId;
     } else {
         TypeConstructorId typeConstructorId;
         if (deserializer.deserializeValue("typeConstructorId", typeConstructorId,
                                           babelwires::Deserializer::IsOptional::Optional)) {
-            TypeConstructorArguments arguments;
+            std::vector<TypeRef> typeArguments;
+            std::vector<ValueHolder> valueArguments;
             auto typeIt = deserializer.deserializeArray<TypeRef>("typeArguments", Deserializer::IsOptional::Optional);
             while (typeIt.isValid()) {
-                arguments.m_typeArguments.emplace_back(std::move(*typeIt.getObject()));
+                typeArguments.emplace_back(std::move(*typeIt.getObject()));
                 ++typeIt;
             }
             auto valueIt =
                 deserializer.deserializeArray<EditableValue>("valueArguments", Deserializer::IsOptional::Optional);
             while (valueIt.isValid()) {
-                arguments.m_valueArguments.emplace_back(uniquePtrCast<Value>(valueIt.getObject()));
+                valueArguments.emplace_back(uniquePtrCast<Value>(valueIt.getObject()));
                 ++valueIt;
             }
-            m_storage = ConstructedTypeData{typeConstructorId, std::move(arguments)};
+            m_storage = ConstructedTypeData{typeConstructorId, {std::move(typeArguments), std::move(valueArguments)}};
         } else {
             m_storage = {};
         }
@@ -169,7 +173,7 @@ void babelwires::TypeRef::visitIdentifiers(IdentifierVisitor& visitor) {
         void operator()(RegisteredTypeId& typeId) { m_visitor(typeId); }
         void operator()(ConstructedTypeData& higherOrderData) {
             m_visitor(std::get<0>(higherOrderData));
-            auto& arguments = std::get<1>(higherOrderData).m_typeArguments;
+            auto& arguments = std::get<1>(higherOrderData).getTypeArguments();
             std::for_each(arguments.begin(), arguments.end(),
                           [this](TypeRef& arg) { arg.visitIdentifiers(m_visitor); });
         }

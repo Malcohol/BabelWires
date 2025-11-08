@@ -17,13 +17,13 @@ babelwires::TypeConstructor::TypeConstructorResult
 babelwires::EnumUnionTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                     const TypeConstructorArguments& arguments,
                                                     const std::vector<const Type*>& resolvedTypeArguments) const {
-    if (arguments.m_typeArguments.size() < 2) {
+    if (arguments.getTypeArguments().size() < 2) {
         throw TypeSystemException() << "EnumUnionTypeConstructor expects two or more types as arguments, but got "
-                                    << arguments.m_typeArguments.size();
+                                    << arguments.getTypeArguments().size();
     }
-    if (arguments.m_valueArguments.size() != 0) {
+    if (arguments.getValueArguments().size() != 0) {
         throw TypeSystemException() << "EnumUnionTypeConstructor does not expect value arguments, but got "
-                                    << arguments.m_typeArguments.size();
+                                    << arguments.getTypeArguments().size();
     }
     // We build the unionOfValues in order, skipping duplicates when encountered.
     EnumType::ValueSet unionOfValues;
@@ -33,7 +33,7 @@ babelwires::EnumUnionTypeConstructor::constructType(const TypeSystem& typeSystem
         if (!enumType) {
             throw TypeSystemException() << "Argument number " << i
                                         << " passed to EnumTypeConstructor was not an enum type ("
-                                        << arguments.m_typeArguments[i] << ")";
+                                        << arguments.getTypeArguments()[i] << ")";
         }
         for (auto v : enumType->getValueSet()) {
             const auto [_, wasInserted] = setOfValuesSeen.insert(v);

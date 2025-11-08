@@ -14,17 +14,17 @@ babelwires::TypeConstructor::TypeConstructorResult
 babelwires::FileTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                const TypeConstructorArguments& arguments,
                                                const std::vector<const Type*>& resolvedTypeArguments) const {
-    if (arguments.m_typeArguments.size() != 1) {
+    if (arguments.getTypeArguments().size() != 1) {
         throw TypeSystemException() << "FileTypeConstructor expects a single type argument but got "
-                                    << arguments.m_typeArguments.size();
+                                    << arguments.getTypeArguments().size();
     }
 
-    if (arguments.m_valueArguments.size() != 0) {
+    if (arguments.getValueArguments().size() != 0) {
         throw TypeSystemException() << "IntTypeConstructor does not expect any value arguments but got "
-                                    << arguments.m_valueArguments.size();
+                                    << arguments.getValueArguments().size();
     }
 
-    return std::make_unique<ConstructedType<FileType>>(std::move(newTypeRef), arguments.m_typeArguments[0]);
+    return std::make_unique<ConstructedType<FileType>>(std::move(newTypeRef), arguments.getTypeArguments()[0]);
 }
 
 babelwires::TypeRef babelwires::FileTypeConstructor::makeTypeRef(TypeRef typeOfContents) {
