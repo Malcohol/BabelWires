@@ -46,7 +46,7 @@ void babelwires::SumValueModel::setEditorData(QWidget* editor) const {
     return summandValueModel->setEditorData(editor);
 }
 
-babelwires::EditableValueHolder babelwires::SumValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
+babelwires::ValueHolder babelwires::SumValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
     ValueModelDispatcher summandValueModel;
     initializeValueModelDispatcherForSummand(summandValueModel);
     return summandValueModel->createValueFromEditorIfDifferent(editor);

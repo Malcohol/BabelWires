@@ -43,7 +43,7 @@ namespace babelwires {
         struct PerComponentData {
             ValueModelDispatcher m_valueModel;
             QWidget* m_valueEditor;
-            EditableValueHolder m_value;
+            ValueHolder m_value;
         };
         std::vector<PerComponentData> m_perComponentData;
     };

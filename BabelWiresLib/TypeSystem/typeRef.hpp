@@ -40,10 +40,10 @@ namespace babelwires {
         // Convenience constructors
         TypeRef(TypeConstructorId typeConstructorId, TypeRef typeRef0);
         TypeRef(TypeConstructorId typeConstructorId, TypeRef typeRef0, TypeRef typeRef1);
-        TypeRef(TypeConstructorId typeConstructorId, EditableValueHolder value0);
-        TypeRef(TypeConstructorId typeConstructorId, EditableValueHolder value0, EditableValueHolder value1);
-        TypeRef(TypeConstructorId typeConstructorId, EditableValueHolder value0, EditableValueHolder value1,
-                EditableValueHolder value2);
+        TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0);
+        TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1);
+        TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1,
+                ValueHolder value2);
 
         /// Attempt to find the type in the TypeSystem that this TypeRef describes.
         /// Returns null if this TypeRef does not resolve.

@@ -238,7 +238,7 @@ TEST(ValueHolderTest, visitIdentifiers) {
 
     {
         bool hasIdentifiers = false;
-        babelwires::EditableValueHolder valueHolder{TestableValue(5, hasIdentifiers)};
+        babelwires::ValueHolder valueHolder{TestableValue(5, hasIdentifiers)};
         IdentifierVisitor visitor;
         valueHolder.visitIdentifiers(visitor);
         EXPECT_EQ(visitor.m_ids.size(), 0);
@@ -248,7 +248,7 @@ TEST(ValueHolderTest, visitIdentifiers) {
     }
     {
         bool hasIdentifiers = true;
-        babelwires::EditableValueHolder valueHolder{TestableValue(5, hasIdentifiers)};
+        babelwires::ValueHolder valueHolder{TestableValue(5, hasIdentifiers)};
         IdentifierVisitor visitor;
         valueHolder.visitIdentifiers(visitor);
         EXPECT_EQ(visitor.m_ids.size(), 1);
@@ -269,7 +269,7 @@ TEST(ValueHolderTest, visitFilePaths) {
 
     {
         bool hasFilePaths = false;
-        babelwires::EditableValueHolder valueHolder{TestableValue(5, false, hasFilePaths)};
+        babelwires::ValueHolder valueHolder{TestableValue(5, false, hasFilePaths)};
         valueHolder.visitFilePaths(filePathVisitor);
         EXPECT_EQ(filePaths.size(), 0);
         const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
@@ -278,7 +278,7 @@ TEST(ValueHolderTest, visitFilePaths) {
     }
     {
         bool hasFilePaths = true;
-        babelwires::EditableValueHolder valueHolder{TestableValue(5, false, hasFilePaths)};
+        babelwires::ValueHolder valueHolder{TestableValue(5, false, hasFilePaths)};
         valueHolder.visitFilePaths(filePathVisitor);
         EXPECT_EQ(filePaths.size(), 1);
         EXPECT_EQ(filePaths[0], babelwires::FilePath(std::filesystem::path("Bar")));

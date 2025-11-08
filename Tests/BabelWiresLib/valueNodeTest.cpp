@@ -79,7 +79,7 @@ TEST(ValueNodeTest, valueNodeDataSerialization) {
     const babelwires::ValueAssignmentData* const assignmentData =
         dataPtr->m_modifiers[0]->as<babelwires::ValueAssignmentData>();
     ASSERT_NE(assignmentData, nullptr);
-    const babelwires::EditableValueHolder value = assignmentData->getValue();
+    const babelwires::ValueHolder value = assignmentData->getValue();
     const babelwires::IntValue* intValue = value->as<babelwires::IntValue>();
     ASSERT_NE(intValue, nullptr);
     EXPECT_EQ(intValue->get(), 12);

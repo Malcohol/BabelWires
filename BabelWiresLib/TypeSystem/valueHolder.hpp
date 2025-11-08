@@ -75,12 +75,12 @@ namespace babelwires {
         friend bool operator!=(const ValueHolderTemplate& a, const Value* b) { return !(a == b); }
         friend bool operator!=(const Value* a, const ValueHolderTemplate& b) { return !(a == b); }
 
-        /// Use by EditableValueHolder to visit the value only if necessary.
-        // TODO Having this here is ugly (same for filePaths). ValueHolder and EditableValueHolder probably 
+        /// Use by ValueHolder to visit the value only if necessary.
+        // TODO Having this here is ugly (same for filePaths). ValueHolder and ValueHolder probably 
         // need a better implementation.
         void visitIdentifiers(IdentifierVisitor& visitor);
 
-        /// Use by EditableValueHolder to visit the value only if necessary.
+        /// Use by ValueHolder to visit the value only if necessary.
         void visitFilePaths(FilePathVisitor& visitor);
 
         /// Allows implicit assignment to related const ValueHolders, asserting that the type matches.
@@ -126,7 +126,6 @@ namespace babelwires {
 
     using ValueHolder = ValueHolderTemplate<Value>;
     using NewValueHolder = NewValueHolderTemplate<Value>;
-    using EditableValueHolder = ValueHolder;
 } // namespace babelwires
 
 namespace std {

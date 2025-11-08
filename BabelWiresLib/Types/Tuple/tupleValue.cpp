@@ -17,17 +17,17 @@ unsigned int babelwires::TupleValue::getSize() const {
     return m_componentValues.size();
 }
 
-babelwires::EditableValueHolder& babelwires::TupleValue::getValue(unsigned int index) {
+babelwires::ValueHolder& babelwires::TupleValue::getValue(unsigned int index) {
     assert((index < m_componentValues.size()) && "index out of range");
     return m_componentValues[index];
 }
 
-const babelwires::EditableValueHolder& babelwires::TupleValue::getValue(unsigned int index) const {
+const babelwires::ValueHolder& babelwires::TupleValue::getValue(unsigned int index) const {
     assert((index < m_componentValues.size()) && "index out of range");
     return m_componentValues[index];
 }
 
-void babelwires::TupleValue::setValue(unsigned int index, EditableValueHolder newValue) {
+void babelwires::TupleValue::setValue(unsigned int index, ValueHolder newValue) {
     assert((index < m_componentValues.size()) && "index out of range");
     m_componentValues[index] = newValue;
 }

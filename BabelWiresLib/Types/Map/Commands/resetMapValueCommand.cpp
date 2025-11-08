@@ -29,7 +29,7 @@ bool babelwires::ResetMapValueCommand::initialize(const MapProject& map) {
     const MapProjectEntry& mapEntry = map.getMapEntry(m_location.getEntryIndex());
     const MapEntryData& entryData = mapEntry.getData();
 
-    const EditableValueHolder* entryHolder;
+    const ValueHolder* entryHolder;
     const Type* typeInMap;
     if (m_location.getSide() == MapProjectDataLocation::Side::source) {
         entryHolder = entryData.tryGetSourceValue();
@@ -69,7 +69,7 @@ void babelwires::ResetMapValueCommand::execute(MapProject& map) const {
 
     /*
 
-    const EditableValueHolder* entryHolder;
+    const ValueHolder* entryHolder;
     const Type* typeInMap;
     if (m_location.getSide() == MapProjectDataLocation::Side::source) {
         entryHolder = &entryData->getSourceValue();
@@ -112,7 +112,7 @@ void babelwires::ResetMapValueCommand::undo(MapProject& map) const {
     const TypeSystem& typeSystem = map.getProjectContext().m_typeSystem;
 
     /*
-    const EditableValueHolder* entryHolder;
+    const ValueHolder* entryHolder;
     const Type* typeInMap;
     if (m_location.getSide() == MapProjectDataLocation::Side::source) {
         entryHolder = &entryData->getSourceValue();
