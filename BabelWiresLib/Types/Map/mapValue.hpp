@@ -11,6 +11,7 @@
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
+#include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Utilities/result.hpp>

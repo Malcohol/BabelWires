@@ -8,6 +8,7 @@
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>

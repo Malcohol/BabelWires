@@ -7,6 +7,7 @@
  **/
 #include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
 
+#include <BabelWiresLib/TypeSystem/editableValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Serialization/serializer.hpp>

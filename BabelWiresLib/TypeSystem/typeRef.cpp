@@ -9,6 +9,7 @@
 
 #include <BabelWiresLib/TypeSystem/Detail/typeNameFormatter.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
 #include <Common/Hash/hash.hpp>
 #include <Common/Serialization/deserializer.hpp>

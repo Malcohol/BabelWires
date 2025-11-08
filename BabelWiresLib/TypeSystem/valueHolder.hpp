@@ -7,11 +7,12 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/editableValue.hpp>
+#include <Common/DataContext/filePathVisitor.hpp>
+#include <Common/Identifiers/identifierVisitor.hpp>
+
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
 #include <memory>
-#include <variant>
 
 namespace babelwires {
     /// Forward declare NewValueHolder used by ValueHolder::makeValue

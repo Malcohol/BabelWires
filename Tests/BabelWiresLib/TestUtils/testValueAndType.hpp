@@ -1,6 +1,7 @@
 #include <BabelWiresLib/TypeSystem/registeredType.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
+#include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
 #include <Tests/TestUtils/testIdentifiers.hpp>
 

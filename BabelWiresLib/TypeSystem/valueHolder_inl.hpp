@@ -77,35 +77,6 @@ namespace babelwires {
         m_pointerToValue.swap(other.m_pointerToValue);
     }
 
-    inline Value& ValueHolder::copyContentsAndGetNonConst() {
-        std::shared_ptr<Value> clone = m_pointerToValue->is<Value>().cloneShared();
-        Value* ptrToClone = clone.get();
-        m_pointerToValue = clone;
-        return *ptrToClone;
-    }
-
-    inline void ValueHolder::visitIdentifiers(IdentifierVisitor& visitor) {
-        if (const EditableValue* editableValue =
-                m_pointerToValue ? m_pointerToValue->tryGetAsEditableValue() : nullptr) {
-            if (editableValue->canContainIdentifiers()) {
-                copyContentsAndGetNonConst().getAsEditableValue().visitIdentifiers(visitor);
-            }
-        }
-    }
-
-    inline void ValueHolder::visitFilePaths(FilePathVisitor& visitor) {
-        if (const EditableValue* editableValue =
-                m_pointerToValue ? m_pointerToValue->tryGetAsEditableValue() : nullptr) {
-            if (editableValue->canContainFilePaths()) {
-                copyContentsAndGetNonConst().getAsEditableValue().visitFilePaths(visitor);
-            }
-        }
-    }
-
-    inline const Value* ValueHolder::getUnsafe() const {
-        return &m_pointerToValue->is<Value>();
-    }
-
     template <typename T, typename... ARGS> NewValueHolder ValueHolder::makeValue(ARGS&&... args) {
         auto sharedPtr = std::make_shared<T>(std::forward<ARGS>(args)...);
         T& ref = *sharedPtr;
