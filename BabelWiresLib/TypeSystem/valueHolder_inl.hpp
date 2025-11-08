@@ -6,126 +6,110 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
-template <typename VALUE>
-babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(const ValueHolderTemplate& other)
-    : m_pointerToValue(other.m_pointerToValue) {}
+namespace babelwires {
 
-template <typename VALUE>
-babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(ValueHolderTemplate&& other)
-    : m_pointerToValue(std::move(other.m_pointerToValue)) {}
+    // Implementations for concrete ValueHolder
+    inline ValueHolder::ValueHolder(const ValueHolder& other)
+        : m_pointerToValue(other.m_pointerToValue) {}
 
-template <typename VALUE>
-template <typename OTHER>
-babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(const ValueHolderTemplate<OTHER>& other)
-    : m_pointerToValue(other->template is<VALUE>().cloneShared()) {}
+    inline ValueHolder::ValueHolder(ValueHolder&& other)
+        : m_pointerToValue(std::move(other.m_pointerToValue)) {}
 
-template <typename VALUE>
-template <typename OTHER>
-babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(ValueHolderTemplate<OTHER>&& other)
-    : m_pointerToValue(std::static_pointer_cast<const VALUE>(std::move(other.m_pointerToValue))) {
-    assert(m_pointerToValue->as<VALUE>());
-}
+    inline ValueHolder::ValueHolder(const Value& value)
+        : m_pointerToValue(value.cloneShared()) {}
 
-template <typename VALUE>
-babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(const VALUE& value)
-    : m_pointerToValue(value.cloneShared()) {}
+    inline ValueHolder::ValueHolder(Value&& value)
+        : m_pointerToValue(std::move(value).cloneShared()) {}
 
-template <typename VALUE>
-babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(VALUE&& value)
-    // R-value cloning uses the move contructor.
-    : m_pointerToValue(std::move(value).cloneShared()) {}
+    inline ValueHolder::ValueHolder(std::unique_ptr<Value> ptr)
+        : m_pointerToValue(ptr.release()) {}
 
-template <typename VALUE>
-babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(std::unique_ptr<VALUE> ptr)
-    : m_pointerToValue(ptr.release()) {}
+    inline ValueHolder::ValueHolder(std::shared_ptr<const Value> ptr)
+        : m_pointerToValue(std::move(ptr)) {}
 
-template <typename VALUE>
-babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(std::shared_ptr<const VALUE> ptr)
-    : m_pointerToValue(std::move(ptr)) {}
+    inline ValueHolder& ValueHolder::operator=(const ValueHolder& other) {
+        m_pointerToValue = other.m_pointerToValue;
+        return *this;
+    }
 
-template <typename VALUE>
-babelwires::ValueHolderTemplate<VALUE>&
-babelwires::ValueHolderTemplate<VALUE>::operator=(const ValueHolderTemplate& other) {
-    m_pointerToValue = other.m_pointerToValue;
-    return *this;
-}
+    inline ValueHolder& ValueHolder::operator=(ValueHolder&& other) {
+        m_pointerToValue = std::move(other.m_pointerToValue);
+        return *this;
+    }
 
-template <typename VALUE>
-babelwires::ValueHolderTemplate<VALUE>& babelwires::ValueHolderTemplate<VALUE>::operator=(ValueHolderTemplate&& other) {
-    m_pointerToValue = std::move(other.m_pointerToValue);
-    return *this;
-}
+    inline ValueHolder& ValueHolder::operator=(const Value& value) {
+        m_pointerToValue = value.cloneShared();
+        return *this;
+    }
 
-template <typename VALUE>
-babelwires::ValueHolderTemplate<VALUE>& babelwires::ValueHolderTemplate<VALUE>::operator=(const VALUE& value) {
-    m_pointerToValue = value.cloneShared();
-    return *this;
-}
+    inline ValueHolder& ValueHolder::operator=(Value&& value) {
+        m_pointerToValue = std::move(value).cloneShared();
+        return *this;
+    }
 
-template <typename VALUE>
-babelwires::ValueHolderTemplate<VALUE>& babelwires::ValueHolderTemplate<VALUE>::operator=(VALUE&& value) {
-    // R-value cloning uses the move contructor.
-    m_pointerToValue = std::move(value).cloneShared();
-    return *this;
-}
+    inline ValueHolder& ValueHolder::operator=(std::shared_ptr<const Value> ptr) {
+        m_pointerToValue = std::move(ptr);
+        return *this;
+    }
 
-template <typename VALUE>
-babelwires::ValueHolderTemplate<VALUE>&
-babelwires::ValueHolderTemplate<VALUE>::operator=(std::shared_ptr<const VALUE> ptr) {
-    m_pointerToValue = std::move(ptr);
-    return *this;
-}
+    inline ValueHolder& ValueHolder::operator=(std::unique_ptr<Value> ptr) {
+        m_pointerToValue = std::shared_ptr<const Value>(ptr.release());
+        return *this;
+    }
 
-template <typename VALUE>
-babelwires::ValueHolderTemplate<VALUE>& babelwires::ValueHolderTemplate<VALUE>::operator=(std::unique_ptr<VALUE> ptr) {
-    m_pointerToValue = std::shared_ptr<const VALUE>(ptr.release());
-    return *this;
-}
+    inline ValueHolder::operator bool() const {
+        return m_pointerToValue.get();
+    }
 
-template <typename VALUE> babelwires::ValueHolderTemplate<VALUE>::operator bool() const {
-    return m_pointerToValue.get();
-}
+    inline void ValueHolder::clear() {
+        m_pointerToValue = nullptr;
+    }
 
-template <typename VALUE> void babelwires::ValueHolderTemplate<VALUE>::clear() {
-    m_pointerToValue = nullptr;
-}
+    inline const Value& ValueHolder::operator*() const {
+        return m_pointerToValue->is<Value>();
+    }
 
-template <typename VALUE> const VALUE& babelwires::ValueHolderTemplate<VALUE>::operator*() const {
-    return m_pointerToValue->is<VALUE>();
-}
+    inline const Value* ValueHolder::operator->() const {
+        return &m_pointerToValue->is<Value>();
+    }
 
-template <typename VALUE> const VALUE* babelwires::ValueHolderTemplate<VALUE>::operator->() const {
-    return &m_pointerToValue->is<VALUE>();
-}
+    inline void ValueHolder::swap(ValueHolder& other) {
+        m_pointerToValue.swap(other.m_pointerToValue);
+    }
 
-template <typename VALUE> void babelwires::ValueHolderTemplate<VALUE>::swap(ValueHolderTemplate& other) {
-    m_pointerToValue.swap(other.m_pointerToValue);
-}
+    inline Value& ValueHolder::copyContentsAndGetNonConst() {
+        std::shared_ptr<Value> clone = m_pointerToValue->is<Value>().cloneShared();
+        Value* ptrToClone = clone.get();
+        m_pointerToValue = clone;
+        return *ptrToClone;
+    }
 
-template <typename VALUE> VALUE& babelwires::ValueHolderTemplate<VALUE>::copyContentsAndGetNonConst() {
-    // TODO Is there an optimization when we _know_ it isn't shared? See the non-const FeaturePath::follow
-    std::shared_ptr<VALUE> clone = m_pointerToValue->is<VALUE>().cloneShared();
-    VALUE* ptrToClone = clone.get();
-    m_pointerToValue = clone;
-    return *ptrToClone;
-}
-
-template <typename VALUE> void babelwires::ValueHolderTemplate<VALUE>::visitIdentifiers(IdentifierVisitor& visitor) {
-    if (const EditableValue* editableValue = m_pointerToValue ? m_pointerToValue->tryGetAsEditableValue() : nullptr) {
-        if (editableValue->canContainIdentifiers()) {
-            copyContentsAndGetNonConst().getAsEditableValue().visitIdentifiers(visitor);
+    inline void ValueHolder::visitIdentifiers(IdentifierVisitor& visitor) {
+        if (const EditableValue* editableValue =
+                m_pointerToValue ? m_pointerToValue->tryGetAsEditableValue() : nullptr) {
+            if (editableValue->canContainIdentifiers()) {
+                copyContentsAndGetNonConst().getAsEditableValue().visitIdentifiers(visitor);
+            }
         }
     }
-}
 
-template <typename VALUE> void babelwires::ValueHolderTemplate<VALUE>::visitFilePaths(FilePathVisitor& visitor) {
-    if (const EditableValue* editableValue = m_pointerToValue ? m_pointerToValue->tryGetAsEditableValue() : nullptr) {
-        if (editableValue->canContainFilePaths()) {
-            copyContentsAndGetNonConst().getAsEditableValue().visitFilePaths(visitor);
+    inline void ValueHolder::visitFilePaths(FilePathVisitor& visitor) {
+        if (const EditableValue* editableValue =
+                m_pointerToValue ? m_pointerToValue->tryGetAsEditableValue() : nullptr) {
+            if (editableValue->canContainFilePaths()) {
+                copyContentsAndGetNonConst().getAsEditableValue().visitFilePaths(visitor);
+            }
         }
     }
-}
 
-template <typename VALUE> const VALUE* babelwires::ValueHolderTemplate<VALUE>::getUnsafe() const {
-    return &m_pointerToValue->is<VALUE>();
-}
+    inline const Value* ValueHolder::getUnsafe() const {
+        return &m_pointerToValue->is<Value>();
+    }
+
+    template <typename T, typename... ARGS> NewValueHolder ValueHolder::makeValue(ARGS&&... args) {
+        auto sharedPtr = std::make_shared<T>(std::forward<ARGS>(args)...);
+        T& ref = *sharedPtr;
+        return NewValueHolder{ValueHolder(std::shared_ptr<const T>(std::move(sharedPtr))), ref};
+    }
+
+} // namespace babelwires
