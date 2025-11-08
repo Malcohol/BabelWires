@@ -18,6 +18,18 @@ namespace babelwires {
 
     class TypeConstructorArguments {
       public:
+        TypeConstructorArguments() = default;
+        TypeConstructorArguments(std::vector<TypeRef> typeArguments)
+            : m_typeArguments(std::move(typeArguments)) {}
+        TypeConstructorArguments(std::vector<TypeRef> typeArguments, std::vector<ValueHolder> valueArguments)
+            : m_typeArguments(std::move(typeArguments))
+            , m_valueArguments(std::move(valueArguments)) {
+#ifndef NDEBUG
+            for (const auto& v : valueArguments) {
+                assert(v->tryGetAsEditableValue() && "Values stored by TypeConstructors must be editable");
+            }
+#endif
+        }
         ~TypeConstructorArguments();
 
         std::vector<TypeRef> m_typeArguments;
