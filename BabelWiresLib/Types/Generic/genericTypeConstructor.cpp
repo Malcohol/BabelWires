@@ -16,7 +16,7 @@ babelwires::TypeRef babelwires::GenericTypeConstructor::makeTypeRef(TypeRef wrap
 }
 
 unsigned int
-babelwires::GenericTypeConstructor::extractValueArguments(const std::vector<EditableValueHolder>& valueArguments) {
+babelwires::GenericTypeConstructor::extractValueArguments(const std::vector<ValueHolder>& valueArguments) {
     if (valueArguments.size() > 1) {
         throw TypeSystemException() << "GenericTypeConstructor expects 0 or 1 value arguments but got "
                                     << valueArguments.size();

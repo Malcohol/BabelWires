@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Types/Int/intType.hpp>
 
 std::tuple<babelwires::Range<babelwires::IntValue::NativeType>, babelwires::IntValue::NativeType>
-babelwires::IntTypeConstructor::extractValueArguments(const std::vector<EditableValueHolder>& valueArguments) {
+babelwires::IntTypeConstructor::extractValueArguments(const std::vector<ValueHolder>& valueArguments) {
     if (valueArguments.size() != 3) {
         throw TypeSystemException() << "IntTypeConstructor expects 3 value arguments but got " << valueArguments.size();
     }

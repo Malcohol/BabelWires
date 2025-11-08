@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
 std::tuple<unsigned int, unsigned int, unsigned int>
-babelwires::ArrayTypeConstructor::extractValueArguments(const std::vector<EditableValueHolder>& valueArguments) {
+babelwires::ArrayTypeConstructor::extractValueArguments(const std::vector<ValueHolder>& valueArguments) {
     // TODO default size should be optional.
     if (valueArguments.size() != 3) {
         throw TypeSystemException() << "ArrayTypeConstructor expects 3 value arguments but got " << valueArguments.size();

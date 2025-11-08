@@ -96,7 +96,7 @@ std::string babelwires::TypeRef::toStringHelper(babelwires::IdentifierRegistry::
             const auto& valueArguments = std::get<1>(constructedTypeData).m_valueArguments;
             std::for_each(valueArguments.begin(), valueArguments.end(),
                             // TODO: value::toString should take the identifierRegistry as an argument.
-                          [&valueArgumentsStr](const EditableValueHolder& value) { valueArgumentsStr.emplace_back(value->toString()); });
+                          [&valueArgumentsStr](const ValueHolder& value) { valueArgumentsStr.emplace_back(value->getAsEditableValue().toString()); });
             return typeNameFormatter(formatString, typeArgumentsStr, valueArgumentsStr);
         }
         babelwires::IdentifierRegistry::ReadAccess& m_identifierRegistry;
@@ -124,8 +124,8 @@ void babelwires::TypeRef::serializeContents(Serializer& serializer) const {
             std::vector<const EditableValue*> tmpValueArray;
             std::for_each(std::get<1>(constructedTypeData).m_valueArguments.begin(),
                           std::get<1>(constructedTypeData).m_valueArguments.end(),
-                          [&tmpValueArray](const EditableValueHolder& valueHolder) {
-                              tmpValueArray.emplace_back(valueHolder.getUnsafe());
+                          [&tmpValueArray](const ValueHolder& valueHolder) {
+                              tmpValueArray.emplace_back(&valueHolder->getAsEditableValue());
                           });
             m_serializer.serializeArray("valueArguments", tmpValueArray);
         }
@@ -152,7 +152,7 @@ void babelwires::TypeRef::deserializeContents(Deserializer& deserializer) {
             auto valueIt =
                 deserializer.deserializeArray<EditableValue>("valueArguments", Deserializer::IsOptional::Optional);
             while (valueIt.isValid()) {
-                arguments.m_valueArguments.emplace_back(valueIt.getObject());
+                arguments.m_valueArguments.emplace_back(uniquePtrCast<Value>(valueIt.getObject()));
                 ++valueIt;
             }
             m_storage = ConstructedTypeData{typeConstructorId, std::move(arguments)};

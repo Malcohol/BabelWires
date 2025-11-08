@@ -14,7 +14,7 @@
 
 babelwires::MapEntryData::Kind
 babelwires::MapTypeConstructor::extractValueArguments(const TypeSystem& typeSystem,
-                                                      const std::vector<EditableValueHolder>& valueArguments) {
+                                                      const std::vector<ValueHolder>& valueArguments) {
     if (valueArguments.size() > 1) {
         throw TypeSystemException() << "MapTypeConstructor expects at most 1 value argument but got "
                                     << valueArguments.size();

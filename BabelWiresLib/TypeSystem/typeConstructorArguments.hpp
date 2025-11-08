@@ -21,7 +21,7 @@ namespace babelwires {
         ~TypeConstructorArguments();
 
         std::vector<TypeRef> m_typeArguments;
-        std::vector<EditableValueHolder> m_valueArguments;
+        std::vector<ValueHolder> m_valueArguments;
 
         friend bool operator==(const TypeConstructorArguments& a, const TypeConstructorArguments& b) {
             return equals(a, b);

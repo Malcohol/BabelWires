@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
 
 std::tuple<babelwires::Range<babelwires::Rational>, babelwires::Rational>
-babelwires::RationalTypeConstructor::extractValueArguments(const std::vector<EditableValueHolder>& valueArguments) {
+babelwires::RationalTypeConstructor::extractValueArguments(const std::vector<ValueHolder>& valueArguments) {
     if (valueArguments.size() != 3) {
         throw TypeSystemException() << "RationalTypeConstructor expects 3 value arguments but got "
                                     << valueArguments.size();

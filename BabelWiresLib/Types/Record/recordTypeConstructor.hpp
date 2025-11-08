@@ -36,10 +36,10 @@ namespace babelwires {
         struct Detail {
             /// Construct a TypeRef for a record type with the given field names and types.
             /// The field names are given as ShortIds, and the types as TypeRefs.
-            static void addToArrays(std::vector<EditableValueHolder>& fieldNames, std::vector<TypeRef>& fieldTypes) {}
+            static void addToArrays(std::vector<ValueHolder>& fieldNames, std::vector<TypeRef>& fieldTypes) {}
 
             template<typename... ARGS>
-            static void addToArrays(std::vector<EditableValueHolder>& fieldNames, std::vector<TypeRef>& fieldTypes, ShortId fieldA, TypeRef typeRefA,
+            static void addToArrays(std::vector<ValueHolder>& fieldNames, std::vector<TypeRef>& fieldTypes, ShortId fieldA, TypeRef typeRefA,
                                        ARGS&&... args) {
                 fieldNames.emplace_back(FieldIdValue(fieldA));
                 fieldTypes.emplace_back(typeRefA);

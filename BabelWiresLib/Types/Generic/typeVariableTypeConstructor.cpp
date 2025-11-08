@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
 babelwires::TypeVariableData
-babelwires::TypeVariableTypeConstructor::extractValueArguments(const std::vector<EditableValueHolder>& valueArguments) {
+babelwires::TypeVariableTypeConstructor::extractValueArguments(const std::vector<ValueHolder>& valueArguments) {
     // TODO make optional
     if (valueArguments.size() != 2) {
         throw TypeSystemException() << "TypeVariableTypeConstructor expects 2 value arguments but got "
