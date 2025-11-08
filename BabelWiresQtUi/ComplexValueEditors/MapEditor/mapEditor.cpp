@@ -232,11 +232,11 @@ babelwires::MapEditor::tryGetMapValueAssignmentData(const AccessModelScope& scop
     return modifier->getModifierData().as<ValueAssignmentData>();
 }
 
-babelwires::ValueHolderTemplate<babelwires::MapValue>
+babelwires::ValueHolder
 babelwires::MapEditor::tryGetMapValueFromProject(const AccessModelScope& scope) const {
     if (const ValueAssignmentData* const modifier = tryGetMapValueAssignmentData(scope)) {
-        if (ValueHolderTemplate<MapValue> mapValue = modifier->getValue().asValueHolder<MapValue>()) {
-            return mapValue;
+        if (modifier->getValue()->as<MapValue>()) {
+            return modifier->getValue();
         }
     }
 
@@ -245,12 +245,12 @@ babelwires::MapEditor::tryGetMapValueFromProject(const AccessModelScope& scope) 
         return {};
     }
 
-    return babelwires::ValueHolderTemplate<babelwires::MapValue>(mapTreeNode->getValue());
+    return babelwires::ValueHolder(mapTreeNode->getValue());
 }
 
 void babelwires::MapEditor::updateMapFromProject() {
     AccessModelScope scope(getProjectGraphModel());
-    ValueHolderTemplate<MapValue> mapValueFromProject = tryGetMapValueFromProject(scope);
+    ValueHolder mapValueFromProject = tryGetMapValueFromProject(scope);
     if (mapValueFromProject) {
         getUserLogger().logInfo() << "Refreshing the map from the project";
         executeCommand(std::make_unique<SetMapCommand>("Refresh the map from the project", mapValueFromProject));
@@ -427,7 +427,7 @@ void babelwires::MapEditor::onUndoStateChanged() {
 void babelwires::MapEditor::setToDefault() {
     const TypeSystem& typeSystem = getProjectGraphModel().getContext().m_typeSystem;
     const MapType& mapType = m_typeRef.resolve(typeSystem).is<MapType>();
-    ValueHolderTemplate<MapValue> defaultMapValue = mapType.createValue(typeSystem).m_valueHolder;
+    ValueHolder defaultMapValue = mapType.createValue(typeSystem).m_valueHolder;
     executeCommand(std::make_unique<SetMapCommand>("Restore default map", std::move(defaultMapValue)));
 }
 

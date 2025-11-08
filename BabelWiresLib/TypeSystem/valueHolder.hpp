@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
+#include <BabelWiresLib/TypeSystem/value.hpp>
 
 #include <variant>
 
@@ -30,7 +30,6 @@ namespace babelwires {
         ValueHolderTemplate(const VALUE& value);
         ValueHolderTemplate(VALUE&& value);
         ValueHolderTemplate(std::unique_ptr<VALUE> ptr);
-        ValueHolderTemplate(std::shared_ptr<const VALUE> ptr);
 
         ValueHolderTemplate& operator=(const ValueHolderTemplate& other);
         ValueHolderTemplate& operator=(ValueHolderTemplate&& other);
@@ -76,7 +75,7 @@ namespace babelwires {
         friend bool operator!=(const Value* a, const ValueHolderTemplate& b) { return !(a == b); }
 
         /// Use by ValueHolder to visit the value only if necessary.
-        // TODO Having this here is ugly (same for filePaths). ValueHolder and ValueHolder probably 
+        // TODO Having this here is ugly (same for filePaths). ValueHolder and ValueHolder probably
         // need a better implementation.
         void visitIdentifiers(IdentifierVisitor& visitor);
 
@@ -86,19 +85,17 @@ namespace babelwires {
         /// Allows implicit assignment to related const ValueHolders, asserting that the type matches.
         /// The implementation reinterprets this, which is safe because the storage does not
         /// depend on the template argument.
-        template<typename OTHER>
-        operator const ValueHolderTemplate<OTHER>&() const;
-
-        /// Perform a checked downcast, and create an template ValueHolderTemplate if the check fails.
-        template<typename DERIVED>
-        ValueHolderTemplate<DERIVED> asValueHolder() const;
+        template <typename OTHER> operator const ValueHolderTemplate<OTHER>&() const;
 
         /// Not recommended, but can be used to get a pointer to the contained value.
         /// This is unsafe only in the sense that a caller might be tempted to keep the pointer.
         /// This is highly likely to dangle if the value is modified, so DO NOT KEEP IT.
         const VALUE* getUnsafe() const;
 
-        template <typename OTHER> friend class ValueHolderTemplate;
+      private:
+        /// The object is not cloned. Since a caller could easily have kept a non-const shared pointer to the object, we
+        /// make this constructor private.
+        ValueHolderTemplate(std::shared_ptr<const VALUE> ptr);
 
       private:
         using PointerToValue = std::shared_ptr<const Value>;
@@ -109,19 +106,22 @@ namespace babelwires {
     /// also provides non-const access to the new value.
     template <typename VALUE> class NewValueHolderTemplate {
       public:
-        ValueHolderTemplate<VALUE> m_valueHolder;
+        ValueHolderTemplate<Value> m_valueHolder;
         VALUE& m_nonConstReference;
-        operator ValueHolderTemplate<VALUE>&&() && { return std::move(m_valueHolder); }
+        operator ValueHolderTemplate<Value>&&() && { return std::move(m_valueHolder); }
         template <typename DERIVED> NewValueHolderTemplate<DERIVED> is() && {
-            return NewValueHolderTemplate<DERIVED>{ std::move(m_valueHolder), m_nonConstReference.template is<DERIVED>()};
+            return NewValueHolderTemplate<DERIVED>{std::move(m_valueHolder),
+                                                   m_nonConstReference.template is<DERIVED>()};
         }
     };
 
-    template<typename VALUE>
-    template <typename T, typename... ARGS> NewValueHolderTemplate<VALUE> ValueHolderTemplate<VALUE>::makeValue(ARGS&&... args) {
+    template <typename VALUE>
+    template <typename T, typename... ARGS>
+    NewValueHolderTemplate<VALUE> ValueHolderTemplate<VALUE>::makeValue(ARGS&&... args) {
         auto sharedPtr = std::make_shared<T>(std::forward<ARGS>(args)...);
         T& ref = *sharedPtr;
-        return NewValueHolderTemplate<VALUE>{ValueHolderTemplate<VALUE>(std::shared_ptr<const T>(std::move(sharedPtr))), ref};
+        return NewValueHolderTemplate<Value>{ValueHolderTemplate<Value>(std::shared_ptr<const T>(std::move(sharedPtr))),
+                                             ref};
     }
 
     using ValueHolder = ValueHolderTemplate<Value>;

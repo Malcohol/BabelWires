@@ -47,7 +47,7 @@ TEST_P(AddNodeForInputTreeValueCommandTest, executeAndUndo) {
     auto checkNodeHasIntModifier = [](const babelwires::Node* node, const babelwires::Path& path) {
         if (const babelwires::Modifier* const modifier = node->findModifier(path)) {
             if (auto data = modifier->getModifierData().as<babelwires::ValueAssignmentData>()) {
-                if (data->getValue().asValueHolder<babelwires::IntValue>()) {
+                if (data->getValue()->as<babelwires::IntValue>()) {
                     return true;
                 }
             }

@@ -63,7 +63,7 @@ TEST(SetMapCommandTest, executeAndUndo) {
     mapValue2.emplaceBack(oneToOne2.clone());
     mapValue2.emplaceBack(allToOne.clone());
 
-    babelwires::SetMapCommand testCopyConstructor("Set map", mapValue2.clone());
+    babelwires::SetMapCommand testCopyConstructor("Set map", babelwires::uniquePtrCast<babelwires::Value>(mapValue2.clone()));
     babelwires::SetMapCommand command = testCopyConstructor;
 
     EXPECT_TRUE(command.initialize(mapProject));
@@ -133,7 +133,7 @@ TEST(SetMapCommandTest, invalidOldMap) {
     mapValue2.emplaceBack(oneToOne2.clone());
     mapValue2.emplaceBack(allToOne.clone());
 
-    babelwires::SetMapCommand command("Set map", mapValue2.clone());
+    babelwires::SetMapCommand command("Set map", babelwires::uniquePtrCast<babelwires::Value>(mapValue2.clone()));
 
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);
@@ -205,7 +205,7 @@ TEST(SetMapCommandTest, invalidNewMap) {
     mapValue2.emplaceBack(allToOne.clone());
     mapValue2.emplaceBack(allToOne.clone());
 
-    babelwires::SetMapCommand command("Set map", mapValue2.clone());
+    babelwires::SetMapCommand command("Set map", babelwires::uniquePtrCast<babelwires::Value>(mapValue2.clone()));
 
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);

@@ -136,9 +136,3 @@ babelwires::ValueHolderTemplate<VALUE>::operator const ValueHolderTemplate<OTHER
     assert(m_pointerToValue->as<OTHER>());
     return *reinterpret_cast<const ValueHolderTemplate<OTHER>*>(this);
 }
-
-template <typename VALUE>
-template <typename DERIVED>
-babelwires::ValueHolderTemplate<DERIVED> babelwires::ValueHolderTemplate<VALUE>::asValueHolder() const {
-    return ValueHolderTemplate<DERIVED>(*m_pointerToValue->template as<DERIVED>());
-}
