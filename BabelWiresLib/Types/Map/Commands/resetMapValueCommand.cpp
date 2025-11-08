@@ -94,7 +94,7 @@ void babelwires::ResetMapValueCommand::execute(MapProject& map) const {
     */   
 
     const Type& type = m_type.assertResolve(typeSystem);
-    EditableValueHolder newValue = type.createValue(typeSystem).is<EditableValue>();
+    ValueHolder newValue = type.createValue(typeSystem);
 
     if (m_location.getSide() == MapProjectDataLocation::Side::source) {
         entryData->setSourceValue(newValue);

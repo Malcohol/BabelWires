@@ -13,8 +13,18 @@ const babelwires::EditableValue* babelwires::Value::tryGetAsEditableValue() cons
     return nullptr;
 }
 
+babelwires::EditableValue* babelwires::Value::tryGetAsEditableValue() {
+    return nullptr;
+}
+
 const babelwires::EditableValue& babelwires::Value::getAsEditableValue() const {
     const EditableValue* editable = tryGetAsEditableValue();
-    assert(editable && "This value is not EditableValue");
+    assert(editable && "This value is not an EditableValue");
+    return *editable;
+}
+
+babelwires::EditableValue& babelwires::Value::getAsEditableValue() {
+    EditableValue* editable = tryGetAsEditableValue();
+    assert(editable && "This value is not an EditableValue");
     return *editable;
 }

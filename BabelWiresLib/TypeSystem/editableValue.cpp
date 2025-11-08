@@ -10,3 +10,7 @@
 const babelwires::EditableValue* babelwires::AlwaysEditableValue::tryGetAsEditableValue() const {
     return this;
 }
+
+babelwires::EditableValue* babelwires::AlwaysEditableValue::tryGetAsEditableValue() {
+    return this;
+}

@@ -126,7 +126,7 @@ namespace babelwires {
 
     using ValueHolder = ValueHolderTemplate<Value>;
     using NewValueHolder = NewValueHolderTemplate<Value>;
-    using EditableValueHolder = ValueHolderTemplate<EditableValue>;
+    using EditableValueHolder = ValueHolder;
 } // namespace babelwires
 
 namespace std {

@@ -45,6 +45,7 @@ namespace babelwires {
         CLONEABLE_ABSTRACT(AlwaysEditableValue);
 
         const EditableValue* tryGetAsEditableValue() const override;
+        EditableValue* tryGetAsEditableValue() override;
     };
 
 } // namespace babelwires

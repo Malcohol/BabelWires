@@ -19,13 +19,12 @@ template <typename OTHER>
 babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(const ValueHolderTemplate<OTHER>& other)
     : m_pointerToValue(other->template is<VALUE>().cloneShared()) {}
 
-
 template <typename VALUE>
 template <typename OTHER>
 babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(ValueHolderTemplate<OTHER>&& other)
     : m_pointerToValue(std::static_pointer_cast<const VALUE>(std::move(other.m_pointerToValue))) {
-        assert(m_pointerToValue->as<VALUE>());
-    }
+    assert(m_pointerToValue->as<VALUE>());
+}
 
 template <typename VALUE>
 babelwires::ValueHolderTemplate<VALUE>::ValueHolderTemplate(const VALUE& value)
@@ -112,17 +111,17 @@ template <typename VALUE> VALUE& babelwires::ValueHolderTemplate<VALUE>::copyCon
 }
 
 template <typename VALUE> void babelwires::ValueHolderTemplate<VALUE>::visitIdentifiers(IdentifierVisitor& visitor) {
-    if constexpr (std::is_base_of_v<EditableValue, VALUE>) {
-        if (m_pointerToValue && m_pointerToValue->is<VALUE>().canContainIdentifiers()) {
-            copyContentsAndGetNonConst().visitIdentifiers(visitor);
+    if (const EditableValue* editableValue = m_pointerToValue ? m_pointerToValue->tryGetAsEditableValue() : nullptr) {
+        if (editableValue->canContainIdentifiers()) {
+            copyContentsAndGetNonConst().getAsEditableValue().visitIdentifiers(visitor);
         }
     }
 }
 
 template <typename VALUE> void babelwires::ValueHolderTemplate<VALUE>::visitFilePaths(FilePathVisitor& visitor) {
-    if constexpr (std::is_base_of_v<EditableValue, VALUE>) {
-        if (m_pointerToValue && m_pointerToValue->is<VALUE>().canContainFilePaths()) {
-            copyContentsAndGetNonConst().visitFilePaths(visitor);
+    if (const EditableValue* editableValue = m_pointerToValue ? m_pointerToValue->tryGetAsEditableValue() : nullptr) {
+        if (editableValue->canContainFilePaths()) {
+            copyContentsAndGetNonConst().getAsEditableValue().visitFilePaths(visitor);
         }
     }
 }
@@ -143,4 +142,3 @@ template <typename DERIVED>
 babelwires::ValueHolderTemplate<DERIVED> babelwires::ValueHolderTemplate<VALUE>::asValueHolder() const {
     return ValueHolderTemplate<DERIVED>(*m_pointerToValue->template as<DERIVED>());
 }
-

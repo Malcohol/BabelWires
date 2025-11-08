@@ -59,7 +59,7 @@ bool babelwires::TupleValue::operator==(const Value& other) const {
 void babelwires::TupleValue::serializeContents(Serializer& serializer) const {
     std::vector<const EditableValue*> arrayToSerialize;
     for (const auto& v : m_componentValues) {
-        arrayToSerialize.emplace_back(&*v);
+        arrayToSerialize.emplace_back(&v->getAsEditableValue());
     }
     serializer.serializeArray("componentValues", arrayToSerialize);
 }
@@ -67,7 +67,7 @@ void babelwires::TupleValue::serializeContents(Serializer& serializer) const {
 void babelwires::TupleValue::deserializeContents(Deserializer& deserializer) {
     auto typeIt = deserializer.deserializeArray<EditableValue>("componentValues", Deserializer::IsOptional::Optional);
     while (typeIt.isValid()) {
-        m_componentValues.emplace_back(std::move(*typeIt.getObject()));
+        m_componentValues.emplace_back(uniquePtrCast<Value>(typeIt.getObject()));
         ++typeIt;
     }
 }
@@ -86,7 +86,7 @@ void babelwires::TupleValue::visitFilePaths(FilePathVisitor& visitor) {
 
 bool babelwires::TupleValue::canContainIdentifiers() const {
     for (const auto& v : m_componentValues) {
-        if (v->canContainIdentifiers()) {
+        if (v->getAsEditableValue().canContainIdentifiers()) {
             return true;
         }
     }
@@ -95,7 +95,7 @@ bool babelwires::TupleValue::canContainIdentifiers() const {
 
 bool babelwires::TupleValue::canContainFilePaths() const {
     for (const auto& v : m_componentValues) {
-        if (v->canContainFilePaths()) {
+        if (v->getAsEditableValue().canContainFilePaths()) {
             return true;
         }
     }
@@ -109,7 +109,7 @@ std::string babelwires::TupleValue::toString() const {
     for (const auto& v : m_componentValues) {
         os << sep;
         sep = ", ";
-        os << v->toString();
+        os << v->getAsEditableValue().toString();
     }
     os << ")";
     return os.str();

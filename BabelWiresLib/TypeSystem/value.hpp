@@ -28,8 +28,15 @@ namespace babelwires {
         /// The default implementation returns nullptr.
         virtual const EditableValue* tryGetAsEditableValue() const;
 
-        /// Assert that this is an EditableValue and return a reference to it.
+        /// Is this value an editable value?
+        /// The default implementation returns nullptr.
+        virtual EditableValue* tryGetAsEditableValue();
+
+        /// Assert that this is an EditableValue and return a const reference to it.
         const EditableValue& getAsEditableValue() const;
+
+        /// Assert that this is an EditableValue and return a reference to it.
+        EditableValue& getAsEditableValue();
 
         bool operator!=(const Value& other) const { return !(*this == other); }
     };
