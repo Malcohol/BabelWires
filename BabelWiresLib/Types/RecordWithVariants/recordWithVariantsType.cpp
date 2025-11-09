@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
@@ -161,10 +161,9 @@ babelwires::NewValueHolder babelwires::RecordWithVariantsType::createValue(const
     auto newValue = babelwires::ValueHolder::makeValue<RecordWithVariantsValue>(m_defaultTag);
     for (const auto* f : m_tagToVariantCache.find(m_defaultTag)->second) {
         const Type& fieldType = f->m_type.resolve(typeSystem);
-        newValue.m_nonConstReference.is<RecordWithVariantsValue>().setValue(f->m_identifier,
-                                                                            fieldType.createValue(typeSystem));
+        newValue.m_nonConstReference.setValue(f->m_identifier, fieldType.createValue(typeSystem));
     }
-    return newValue;
+    return std::move(newValue);
 }
 
 bool babelwires::RecordWithVariantsType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {

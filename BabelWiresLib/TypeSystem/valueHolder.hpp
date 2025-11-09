@@ -106,7 +106,7 @@ namespace babelwires {
       public:
         ValueHolder m_valueHolder;
         T& m_nonConstReference;
-        operator ValueHolder&&() && { return std::move(m_valueHolder); }
+        operator ValueHolder() && { return std::move(m_valueHolder); }
         operator NewValueHolderTemplate<Value>() && { return {std::move(m_valueHolder), m_nonConstReference}; }
     };
 

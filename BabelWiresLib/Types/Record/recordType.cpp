@@ -153,7 +153,7 @@ babelwires::NewValueHolder babelwires::RecordType::createValue(const TypeSystem&
             newValue.m_nonConstReference.setValue(f.m_identifier, fieldType.createValue(typeSystem));
         }
     }
-    return newValue;
+    return std::move(newValue);
 }
 
 bool babelwires::RecordType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
