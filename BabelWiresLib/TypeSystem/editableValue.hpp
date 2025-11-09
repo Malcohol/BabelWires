@@ -14,7 +14,7 @@
 
 namespace babelwires {
 
-    /// An editable value can be created within a BabelWires application.
+    /// An editable value can be created directly within BabelWires.
     /// This is in contrast with values that can only be loaded, manipulated using processors and saved.
     /// Since EditableValues can be created directly, BabelWires must be able to serialize them.
     class EditableValue : public Value, public Serializable, public ProjectVisitable {

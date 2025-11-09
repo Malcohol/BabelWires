@@ -29,8 +29,8 @@ namespace babelwires {
         ValueHolder(Value&& value);
         template <typename VALUE> ValueHolder(std::unique_ptr<VALUE> ptr);
 
-        /// It's too easy to call this by accident, triggering unnecessary clones.
-        /// When required, the caller should clone or move the object.
+        /// It's too easy to call this by accident, triggering an unnecessary clone.
+        /// When required, the caller can clone or move the value.
         ValueHolder(const Value&) = delete;
 
         ValueHolder& operator=(const ValueHolder& other);
@@ -38,8 +38,8 @@ namespace babelwires {
         ValueHolder& operator=(Value&& value);
         template <typename VALUE> ValueHolder& operator=(std::unique_ptr<VALUE> ptr);
 
-        /// It's too easy to call this by accident, triggering unnecessary clones.
-        /// When required, the caller should clone or move the object.
+        /// Deleted to ensure the caller makes a choice between cloning the value
+        /// or moving it.
         ValueHolder& operator=(const Value& value) = delete;
 
         /// Construct a value of Value subclass T. The returned NewValueHolder can be used as a
@@ -59,8 +59,8 @@ namespace babelwires {
 
         void swap(ValueHolder& other);
 
-        /// Clone the contents to ensure they are not shared and return a non-const pointer.
-        /// Any manipulations must be performed before the ValueHolder is shared.
+        /// Shallow clone the contents to ensure they are not shared and return a non-const pointer.
+        /// Any manipulations must be performed before the ValueHolder is further shared.
         Value& copyContentsAndGetNonConst();
 
         friend bool operator==(const ValueHolder& a, const ValueHolder& b) {
