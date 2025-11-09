@@ -95,20 +95,8 @@ TEST(ValueHolderTest, assignmentFromRValue) {
     EXPECT_EQ(valueInHolder->m_x, 5);
 }
 
-TEST(ValueHolderTest, assignmentFromLValue) {
-    TestableValue lvalue(5);
-    babelwires::ValueHolder valueHolder;
-    valueHolder = lvalue;
-    const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
-    ASSERT_NE(valueInHolder, nullptr);
-
-    EXPECT_TRUE(valueInHolder->m_wasCopied);
-    EXPECT_FALSE(valueInHolder->m_wasMoved);
-    EXPECT_EQ(valueInHolder->m_x, 5);
-}
-
 TEST(ValueHolderTest, assignmentFromUniquePtr) {
-    std::unique_ptr<babelwires::Value> uniquePtr(new TestableValue(5));
+    auto uniquePtr = std::make_unique<TestableValue>(5);
     babelwires::ValueHolder valueHolder;
     valueHolder = std::move(uniquePtr);
     const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();

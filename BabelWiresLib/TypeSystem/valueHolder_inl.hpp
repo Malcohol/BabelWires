@@ -35,11 +35,6 @@ namespace babelwires {
         return *this;
     }
 
-    inline ValueHolder& ValueHolder::operator=(const Value& value) {
-        m_pointerToValue = value.cloneShared();
-        return *this;
-    }
-
     inline ValueHolder& ValueHolder::operator=(Value&& value) {
         m_pointerToValue = std::move(value).cloneShared();
         return *this;

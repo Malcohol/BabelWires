@@ -26,20 +26,21 @@ namespace babelwires {
         ValueHolder() = default;
         ValueHolder(const ValueHolder& other);
         ValueHolder(ValueHolder&& other);
-
         ValueHolder(Value&& value);
+        template <typename VALUE> ValueHolder(std::unique_ptr<VALUE> ptr);
 
-        template<typename VALUE>
-        ValueHolder(std::unique_ptr<VALUE> ptr);
+        /// It's too easy to call this by accident, triggering unnecessary clones.
+        /// When required, the caller should clone or move the object.
+        ValueHolder(const Value&) = delete;
 
         ValueHolder& operator=(const ValueHolder& other);
         ValueHolder& operator=(ValueHolder&& other);
-
-        ValueHolder& operator=(const Value& value);
         ValueHolder& operator=(Value&& value);
+        template <typename VALUE> ValueHolder& operator=(std::unique_ptr<VALUE> ptr);
 
-        template<typename VALUE>
-        ValueHolder& operator=(std::unique_ptr<VALUE> ptr);
+        /// It's too easy to call this by accident, triggering unnecessary clones.
+        /// When required, the caller should clone or move the object.
+        ValueHolder& operator=(const Value& value) = delete;
 
         /// Construct a value of Value subclass T. The returned NewValueHolder can be used as a
         /// ValueHolder, but carries a non-const reference to the new value. The non-const reference
