@@ -269,9 +269,7 @@ TEST(MapValueTest, serializationTest) {
 
         // Note: We want to be able to serialize when entries do not match the types, as in this case.
         auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, babelwires::StringType::getThisType(), babelwires::StringType::getThisType());
-        babelwires::StringValue entrySourceValue;
-        entrySourceValue.set("test mapValue serialization");
-        entryData->setSourceValue(entrySourceValue);
+        entryData->setSourceValue(babelwires::StringValue("test mapValue serialization"));
         mapValue.emplaceBack(std::move(entryData));
         mapValue.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 
@@ -313,9 +311,7 @@ TEST(MapValueTest, cloneTest) {
     // Note: We want to be able to clone when entries do not match the types, as in this case.
     auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, babelwires::StringType::getThisType(), babelwires::StringType::getThisType());
     auto entryDataPtr = entryData.get();
-    babelwires::StringValue entrySourceValue;
-    entrySourceValue.set("test mapValue serialization");
-    entryData->setSourceValue(entrySourceValue);
+    entryData->setSourceValue(babelwires::StringValue("test mapValue serialization"));
     mapValue.emplaceBack(std::move(entryData));
     mapValue.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 

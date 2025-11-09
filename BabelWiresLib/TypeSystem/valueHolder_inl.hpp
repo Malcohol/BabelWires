@@ -15,13 +15,11 @@ namespace babelwires {
     inline ValueHolder::ValueHolder(ValueHolder&& other)
         : m_pointerToValue(std::move(other.m_pointerToValue)) {}
 
-    inline ValueHolder::ValueHolder(const Value& value)
-        : m_pointerToValue(value.cloneShared()) {}
-
     inline ValueHolder::ValueHolder(Value&& value)
         : m_pointerToValue(std::move(value).cloneShared()) {}
 
-    inline ValueHolder::ValueHolder(std::unique_ptr<Value> ptr)
+    template <typename VALUE>
+    ValueHolder::ValueHolder(std::unique_ptr<VALUE> ptr)
         : m_pointerToValue(ptr.release()) {}
 
     inline ValueHolder::ValueHolder(std::shared_ptr<const Value> ptr)
@@ -47,7 +45,8 @@ namespace babelwires {
         return *this;
     }
 
-    inline ValueHolder& ValueHolder::operator=(std::unique_ptr<Value> ptr) {
+    template <typename VALUE>
+    ValueHolder& ValueHolder::operator=(std::unique_ptr<VALUE> ptr) {
         m_pointerToValue = std::shared_ptr<const Value>(ptr.release());
         return *this;
     }

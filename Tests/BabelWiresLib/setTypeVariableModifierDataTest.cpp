@@ -32,8 +32,8 @@ TEST(SetTypeVariableModifierDataTest, setSingleTypeVariable) {
     ASSERT_EQ(type->getNumVariables(), 2);
 
     // Initially, the type variable should be unassigned.
-    EXPECT_FALSE(type->getTypeAssignment(*genericValue, 0));
-    EXPECT_FALSE(type->getTypeAssignment(*genericValue, 1));
+    EXPECT_FALSE(type->getTypeAssignment(value, 0));
+    EXPECT_FALSE(type->getTypeAssignment(value, 1));
 
     babelwires::SetTypeVariableModifierData data;
     data.m_typeAssignments.resize(2);
@@ -44,8 +44,8 @@ TEST(SetTypeVariableModifierDataTest, setSingleTypeVariable) {
     const auto& valueAfterFirstApplication = valueTree.getValue();
     const auto* const genericValueAfterFirstApplication = valueAfterFirstApplication->as<babelwires::GenericValue>();
     ASSERT_NE(genericValueAfterFirstApplication, nullptr);
-    EXPECT_EQ(type->getTypeAssignment(*genericValueAfterFirstApplication, 0), babelwires::StringType::getThisType());
-    EXPECT_FALSE(type->getTypeAssignment(*genericValueAfterFirstApplication, 1));
+    EXPECT_EQ(type->getTypeAssignment(valueAfterFirstApplication, 0), babelwires::StringType::getThisType());
+    EXPECT_FALSE(type->getTypeAssignment(valueAfterFirstApplication, 1));
 
     data.m_typeAssignments[1] = babelwires::StringType::getThisType();
 
@@ -54,8 +54,8 @@ TEST(SetTypeVariableModifierDataTest, setSingleTypeVariable) {
     const auto& valueAfterSecondApplication = valueTree.getValue();
     const auto* const genericValueAfterSecondApplication = valueAfterSecondApplication->as<babelwires::GenericValue>();
     ASSERT_NE(genericValueAfterSecondApplication, nullptr);
-    EXPECT_EQ(type->getTypeAssignment(*genericValueAfterSecondApplication, 0), babelwires::StringType::getThisType());
-    EXPECT_EQ(type->getTypeAssignment(*genericValueAfterSecondApplication, 1), babelwires::StringType::getThisType());
+    EXPECT_EQ(type->getTypeAssignment(valueAfterSecondApplication, 0), babelwires::StringType::getThisType());
+    EXPECT_EQ(type->getTypeAssignment(valueAfterSecondApplication, 1), babelwires::StringType::getThisType());
 
     data.m_typeAssignments[0] = babelwires::TypeRef();
 
@@ -64,8 +64,8 @@ TEST(SetTypeVariableModifierDataTest, setSingleTypeVariable) {
     const auto& valueAfterThirdApplication = valueTree.getValue();
     const auto* const genericValueAfterThirdApplication = valueAfterThirdApplication->as<babelwires::GenericValue>();
     ASSERT_NE(genericValueAfterThirdApplication, nullptr);
-    EXPECT_FALSE(type->getTypeAssignment(*genericValueAfterThirdApplication, 0));
-    EXPECT_EQ(type->getTypeAssignment(*genericValueAfterThirdApplication, 1), babelwires::StringType::getThisType());
+    EXPECT_FALSE(type->getTypeAssignment(valueAfterThirdApplication, 0));
+    EXPECT_EQ(type->getTypeAssignment(valueAfterThirdApplication, 1), babelwires::StringType::getThisType());
 }
 
 TEST(SetTypeVariableModifierDataTest, failureNotAGenericType) {

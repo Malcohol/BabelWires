@@ -29,8 +29,8 @@ TEST(AddEntryToMapCommandTest, executeAndUndo) {
                                               babelwires::StringType::getThisType());
 
     babelwires::StringValue nonDefaultValue("non-default");
-    oneToOne.setSourceValue(nonDefaultValue);
-    oneToOne.setTargetValue(nonDefaultValue);
+    oneToOne.setSourceValue(nonDefaultValue.clone());
+    oneToOne.setTargetValue(nonDefaultValue.clone());
 
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, babelwires::StringType::getThisType());
 
@@ -44,14 +44,14 @@ TEST(AddEntryToMapCommandTest, executeAndUndo) {
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);
     EXPECT_EQ(mapProject.getNumMapEntries(), 3);
-    EXPECT_EQ(mapProject.getMapEntry(0).getData().getSourceValue(), nonDefaultValue);
-    EXPECT_EQ(mapProject.getMapEntry(0).getData().getTargetValue(), nonDefaultValue);
-    EXPECT_EQ(mapProject.getMapEntry(1).getData().getSourceValue(), babelwires::StringValue());
-    EXPECT_EQ(mapProject.getMapEntry(1).getData().getTargetValue(), babelwires::StringValue());
+    EXPECT_EQ(*mapProject.getMapEntry(0).getData().getSourceValue(), nonDefaultValue);
+    EXPECT_EQ(*mapProject.getMapEntry(0).getData().getTargetValue(), nonDefaultValue);
+    EXPECT_EQ(*mapProject.getMapEntry(1).getData().getSourceValue(), babelwires::StringValue());
+    EXPECT_EQ(*mapProject.getMapEntry(1).getData().getTargetValue(), babelwires::StringValue());
     command.undo(mapProject);
     EXPECT_EQ(mapProject.getNumMapEntries(), 2);
-    EXPECT_EQ(mapProject.getMapEntry(0).getData().getSourceValue(), nonDefaultValue);
-    EXPECT_EQ(mapProject.getMapEntry(0).getData().getTargetValue(), nonDefaultValue);
+    EXPECT_EQ(*mapProject.getMapEntry(0).getData().getSourceValue(), nonDefaultValue);
+    EXPECT_EQ(*mapProject.getMapEntry(0).getData().getTargetValue(), nonDefaultValue);
 }
 
 TEST(AddEntryToMapCommandTest, failAtEnd) {

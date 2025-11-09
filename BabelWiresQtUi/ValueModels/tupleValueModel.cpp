@@ -35,7 +35,7 @@ babelwires::ValueHolder babelwires::TupleValueModel::createValueFromEditorIfDiff
     const auto& editorValue = tupleEditor->getEditorData();
 
     if (editorValue != currentValue) {
-        return editorValue;
+        return uniquePtrCast<Value>(editorValue.clone());
     }
     return {};
 }

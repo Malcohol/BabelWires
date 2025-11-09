@@ -37,7 +37,7 @@ TEST(ArrayTypeTest, simpleArrayTypeCreateValue) {
     for (int i = 0; i < newArrayValue->getSize(); ++i) {
         EXPECT_TRUE(entryType.isValidValue(testEnvironment.m_typeSystem, *newArrayValue->getValue(i)));
         // New entries start in default state
-        EXPECT_EQ(defaultEntryValue, *newArrayValue->getValue(i));
+        EXPECT_EQ(defaultEntryValue, newArrayValue->getValue(i));
     }
 }
 
@@ -64,7 +64,7 @@ TEST(ArrayTypeTest, compoundArrayTypeCreateValue) {
     for (int i = 0; i < newArrayValue->getSize(); ++i) {
         EXPECT_TRUE(entryType.isValidValue(testEnvironment.m_typeSystem, *newArrayValue->getValue(i)));
         // New entries start in default state
-        EXPECT_EQ(defaultEntryValue, *newArrayValue->getValue(i));
+        EXPECT_EQ(defaultEntryValue, newArrayValue->getValue(i));
     }
 }
 
@@ -200,11 +200,14 @@ TEST(ArrayTypeTest, insertEntries) {
     const babelwires::Type& entryType =
         testDomain::TestSimpleArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
 
-    babelwires::ArrayValue initialArray(testEnvironment.m_typeSystem, entryType, 4);
-    for (unsigned int i = 0; i < 4; ++i) {
-        initialArray.setValue(i, babelwires::IntValue(i + 1));
+    babelwires::ValueHolder valueHolder;
+    {
+        babelwires::ArrayValue initialArray(testEnvironment.m_typeSystem, entryType, 4);
+        for (unsigned int i = 0; i < 4; ++i) {
+            initialArray.setValue(i, babelwires::IntValue(i + 1));
+        }
+        valueHolder = std::move(initialArray);
     }
-    babelwires::ValueHolder valueHolder(initialArray);
 
     EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 4);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
@@ -225,7 +228,7 @@ TEST(ArrayTypeTest, insertEntries) {
     {
         const std::vector<unsigned int> expectedValues{0, 1, 0, 0, 2, 3, 4, 0, 0, 0};
         for (unsigned int i = 0; i < expectedValues.size(); ++i) {
-            EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getValue(i), babelwires::IntValue(expectedValues[i]));
+            EXPECT_EQ(*valueHolder->is<babelwires::ArrayValue>().getValue(i), babelwires::IntValue(expectedValues[i]));
         }
     }
 
@@ -243,11 +246,14 @@ TEST(ArrayTypeTest, removeEntriesArrayCanBeEmpty) {
     const babelwires::Type& entryType =
         testDomain::TestSimpleArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
 
-    babelwires::ArrayValue initialArray(testEnvironment.m_typeSystem, entryType, 8);
-    for (unsigned int i = 0; i < 8; ++i) {
-        initialArray.setValue(i, babelwires::IntValue(i + 1));
+    babelwires::ValueHolder valueHolder;
+    {
+        babelwires::ArrayValue initialArray(testEnvironment.m_typeSystem, entryType, 8);
+        for (unsigned int i = 0; i < 8; ++i) {
+            initialArray.setValue(i, babelwires::IntValue(i + 1));
+        }
+        valueHolder = std::move(initialArray);
     }
-    babelwires::ValueHolder valueHolder(initialArray);
 
     EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 8);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
@@ -266,7 +272,7 @@ TEST(ArrayTypeTest, removeEntriesArrayCanBeEmpty) {
     {
         const std::vector<unsigned int> expectedValues{2, 3, 6};
         for (unsigned int i = 0; i < expectedValues.size(); ++i) {
-            EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getValue(i), babelwires::IntValue(expectedValues[i]));
+            EXPECT_EQ(*valueHolder->is<babelwires::ArrayValue>().getValue(i), babelwires::IntValue(expectedValues[i]));
         }
     }
 
@@ -291,8 +297,7 @@ TEST(ArrayTypeTest, removeEntriesArrayCannotBeEmpty) {
     const babelwires::Type& entryType =
         testDomain::TestCompoundArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
 
-    babelwires::ArrayValue initialArray(testEnvironment.m_typeSystem, entryType, 4);
-    babelwires::ValueHolder valueHolder(initialArray);
+    babelwires::ValueHolder valueHolder(babelwires::ArrayValue(testEnvironment.m_typeSystem, entryType, 4));
 
     EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 4);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));

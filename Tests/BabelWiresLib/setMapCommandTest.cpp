@@ -33,12 +33,8 @@ TEST(SetMapCommandTest, executeAndUndo) {
 
     mapValue.emplaceBack(oneToOne.clone());
 
-    babelwires::StringValue newSourceValue;
-    newSourceValue.set("Source");
-    babelwires::StringValue newTargetValue;
-    newTargetValue.set("Target");
-    oneToOne.setSourceValue(newSourceValue);
-    oneToOne.setTargetValue(newTargetValue);
+    oneToOne.setSourceValue(babelwires::StringValue("Source"));
+    oneToOne.setTargetValue(babelwires::StringValue("Target"));
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
@@ -56,10 +52,8 @@ TEST(SetMapCommandTest, executeAndUndo) {
     babelwires::MapValue mapValue2;
     mapValue2.setSourceTypeRef(babelwires::StringType::getThisType());
     mapValue2.setTargetTypeRef(babelwires::StringType::getThisType());
-    newSourceValue.set("Source2");
-    newTargetValue.set("Target2");
-    oneToOne2.setSourceValue(newSourceValue);
-    oneToOne2.setTargetValue(newTargetValue);
+    oneToOne2.setSourceValue(babelwires::StringValue("Source2"));
+    oneToOne2.setTargetValue(babelwires::StringValue("Target2"));
     mapValue2.emplaceBack(oneToOne2.clone());
     mapValue2.emplaceBack(allToOne.clone());
 
@@ -99,12 +93,8 @@ TEST(SetMapCommandTest, invalidOldMap) {
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
                                                        babelwires::StringType::getThisType());
 
-    babelwires::StringValue newSourceValue;
-    newSourceValue.set("Source");
-    babelwires::StringValue newTargetValue;
-    newTargetValue.set("Target");
-    oneToOne.setSourceValue(newSourceValue);
-    oneToOne.setTargetValue(newTargetValue);
+    oneToOne.setSourceValue(babelwires::StringValue("Source"));
+    oneToOne.setTargetValue(babelwires::StringValue("Target"));
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
@@ -126,10 +116,8 @@ TEST(SetMapCommandTest, invalidOldMap) {
     babelwires::MapValue mapValue2;
     mapValue2.setSourceTypeRef(babelwires::StringType::getThisType());
     mapValue2.setTargetTypeRef(babelwires::StringType::getThisType());
-    newSourceValue.set("Source2");
-    newTargetValue.set("Target2");
-    oneToOne2.setSourceValue(newSourceValue);
-    oneToOne2.setTargetValue(newTargetValue);
+    oneToOne2.setSourceValue(babelwires::StringValue("Source2"));
+    oneToOne2.setTargetValue(babelwires::StringValue("Target2"));
     mapValue2.emplaceBack(oneToOne2.clone());
     mapValue2.emplaceBack(allToOne.clone());
 
@@ -173,12 +161,8 @@ TEST(SetMapCommandTest, invalidNewMap) {
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
                                                        babelwires::StringType::getThisType());
 
-    babelwires::StringValue newSourceValue;
-    newSourceValue.set("Source");
-    babelwires::StringValue newTargetValue;
-    newTargetValue.set("Target");
-    oneToOne.setSourceValue(newSourceValue);
-    oneToOne.setTargetValue(newTargetValue);
+    oneToOne.setSourceValue(babelwires::StringValue("Source"));
+    oneToOne.setTargetValue(babelwires::StringValue("Target"));
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
@@ -197,10 +181,8 @@ TEST(SetMapCommandTest, invalidNewMap) {
     babelwires::MapValue mapValue2;
     mapValue2.setSourceTypeRef(babelwires::StringType::getThisType());
     mapValue2.setTargetTypeRef(babelwires::StringType::getThisType());
-    newSourceValue.set("Source2");
-    newTargetValue.set("Target2");
-    oneToOne2.setSourceValue(newSourceValue);
-    oneToOne2.setTargetValue(newTargetValue);
+    oneToOne2.setSourceValue(babelwires::StringValue("Source2"));
+    oneToOne2.setTargetValue(babelwires::StringValue("Target2"));
     mapValue2.emplaceBack(oneToOne2.clone());
     mapValue2.emplaceBack(allToOne.clone());
     mapValue2.emplaceBack(allToOne.clone());

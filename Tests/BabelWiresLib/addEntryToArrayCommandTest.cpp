@@ -243,9 +243,9 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
         testEnvironment.m_project.process();
 
         EXPECT_EQ(element->getInput()->getNumChildren(), testDomain::TestSimpleArrayType::s_defaultSize);
-        EXPECT_EQ(element->getInput()->getChild(1)->getValue(),
+        EXPECT_EQ(*element->getInput()->getChild(1)->getValue(),
                   babelwires::IntValue(3));
-        EXPECT_EQ(element->getInput()->getChild(2)->getValue(),
+        EXPECT_EQ(*element->getInput()->getChild(2)->getValue(),
                   babelwires::IntValue(-18));
 
         EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
@@ -253,9 +253,9 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
         testEnvironment.m_project.process();
 
         EXPECT_EQ(element->getInput()->getNumChildren(), testDomain::TestSimpleArrayType::s_defaultSize + 1);
-        EXPECT_EQ(element->getInput()->getChild(offsetForValues + 1)->getValue(),
+        EXPECT_EQ(*element->getInput()->getChild(offsetForValues + 1)->getValue(),
                   babelwires::IntValue(3));
-        EXPECT_EQ(element->getInput()->getChild(offsetForValues + 2)->getValue(),
+        EXPECT_EQ(*element->getInput()->getChild(offsetForValues + 2)->getValue(),
                   babelwires::IntValue(-18));
 
         command.undo(testEnvironment.m_project);
@@ -263,9 +263,9 @@ TEST(AddEntryToArrayCommandTest, executeAndUndoWithValues) {
 
         EXPECT_EQ(element->getInput()->getNumChildren(), testDomain::TestSimpleArrayType::s_defaultSize);
 
-        EXPECT_EQ(element->getInput()->getChild(1)->getValue(),
+        EXPECT_EQ(*element->getInput()->getChild(1)->getValue(),
                   babelwires::IntValue(3));
-        EXPECT_EQ(element->getInput()->getChild(2)->getValue(),
+        EXPECT_EQ(*element->getInput()->getChild(2)->getValue(),
                   babelwires::IntValue(-18));
     }
 }

@@ -19,6 +19,7 @@ namespace babelwires {
     class NewValueHolder;
 
     /// A ValueHolder is a container which holds a single Value.
+    /// The held value will be immutable throughout its lifetime.
     /// TODO in-place storage for small values.
     class ValueHolder {
       public:
@@ -26,17 +27,19 @@ namespace babelwires {
         ValueHolder(const ValueHolder& other);
         ValueHolder(ValueHolder&& other);
 
-        // TODO Remove this constructor: It makes it far too easy to do a shallow clone.
-        ValueHolder(const Value& value);
         ValueHolder(Value&& value);
-        ValueHolder(std::unique_ptr<Value> ptr);
+
+        template<typename VALUE>
+        ValueHolder(std::unique_ptr<VALUE> ptr);
 
         ValueHolder& operator=(const ValueHolder& other);
         ValueHolder& operator=(ValueHolder&& other);
 
         ValueHolder& operator=(const Value& value);
         ValueHolder& operator=(Value&& value);
-        ValueHolder& operator=(std::unique_ptr<Value> ptr);
+
+        template<typename VALUE>
+        ValueHolder& operator=(std::unique_ptr<VALUE> ptr);
 
         /// Construct a value of Value subclass T. The returned NewValueHolder can be used as a
         /// ValueHolder, but carries a non-const reference to the new value. The non-const reference
