@@ -22,7 +22,8 @@ namespace babelwires {
     ValueHolder::ValueHolder(std::unique_ptr<VALUE> ptr)
         : m_pointerToValue(ptr.release()) {}
 
-    inline ValueHolder::ValueHolder(std::shared_ptr<const Value> ptr)
+    template <typename VALUE>
+    ValueHolder::ValueHolder(std::shared_ptr<VALUE> ptr)
         : m_pointerToValue(std::move(ptr)) {}
 
     inline ValueHolder& ValueHolder::operator=(const ValueHolder& other) {
@@ -40,8 +41,7 @@ namespace babelwires {
         return *this;
     }
 
-    template <typename VALUE>
-    ValueHolder& ValueHolder::operator=(std::unique_ptr<VALUE> ptr) {
+    template <typename VALUE> ValueHolder& ValueHolder::operator=(std::unique_ptr<VALUE> ptr) {
         m_pointerToValue = std::shared_ptr<const Value>(ptr.release());
         return *this;
     }
@@ -66,10 +66,10 @@ namespace babelwires {
         m_pointerToValue.swap(other.m_pointerToValue);
     }
 
-    template <typename T, typename... ARGS> NewValueHolder ValueHolder::makeValue(ARGS&&... args) {
+    template <typename T, typename... ARGS> NewValueHolderTemplate<T> ValueHolder::makeValue(ARGS&&... args) {
         auto sharedPtr = std::make_shared<T>(std::forward<ARGS>(args)...);
         T& ref = *sharedPtr;
-        return NewValueHolder{ValueHolder(std::shared_ptr<const T>(std::move(sharedPtr))), ref};
+        return NewValueHolderTemplate<T>{std::move(sharedPtr), ref};
     }
 
 } // namespace babelwires

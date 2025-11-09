@@ -108,12 +108,10 @@ TEST(ValueHolderTest, assignmentFromUniquePtr) {
 }
 
 TEST(ValueHolderTest, makeValue) {
-    babelwires::NewValueHolder newValueHolder = babelwires::ValueHolder::makeValue<TestableValue>(15);
+    auto newValueHolder = babelwires::ValueHolder::makeValue<TestableValue>(15);
 
-    TestableValue* const nonConstValue = newValueHolder.m_nonConstReference.as<TestableValue>();
-    EXPECT_NE(nonConstValue, nullptr);
-    EXPECT_EQ(nonConstValue->m_x, 15);
-    nonConstValue->m_x = -3;
+    EXPECT_EQ(newValueHolder.m_nonConstReference.m_x, 15);
+    newValueHolder.m_nonConstReference.m_x = -3;
 
     babelwires::ValueHolder valueHolder = std::move(newValueHolder);
     const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();

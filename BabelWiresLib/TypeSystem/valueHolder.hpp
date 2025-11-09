@@ -16,7 +16,7 @@
 
 namespace babelwires {
     /// Forward declare NewValueHolder used by ValueHolder::makeValue
-    class NewValueHolder;
+    template <typename T> class NewValueHolderTemplate;
 
     /// A ValueHolder is a container which holds a single Value.
     /// The held value will be immutable throughout its lifetime.
@@ -46,7 +46,7 @@ namespace babelwires {
         /// ValueHolder, but carries a non-const reference to the new value. The non-const reference
         /// can be used to mutate the new value but that must be done before the ValueHolder is
         /// made available outside the current context.
-        template <typename T, typename... ARGS> static NewValueHolder makeValue(ARGS&&... args);
+        template <typename T, typename... ARGS> static NewValueHolderTemplate<T> makeValue(ARGS&&... args);
 
         /// Is this currently holding anything?
         operator bool() const;
@@ -91,9 +91,9 @@ namespace babelwires {
         const Value* getUnsafe() const;
 
       private:
-        /// The object is not cloned. Since a caller could easily have kept a non-const shared pointer to the object, we
-        /// make this constructor private.
-        ValueHolder(std::shared_ptr<const Value> ptr);
+        /// Internal constructor called by makeValue.
+        template<typename VALUE>
+        ValueHolder(std::shared_ptr<VALUE> ptr);
 
       private:
         using PointerToValue = std::shared_ptr<const Value>;
@@ -102,14 +102,15 @@ namespace babelwires {
 
     /// The return value of ValueHolder::makeValue which can be treated as a ValueHolder&& but
     /// also provides non-const access to the new value.
-    class NewValueHolder {
+    template <typename T> class NewValueHolderTemplate {
       public:
         ValueHolder m_valueHolder;
-        Value& m_nonConstReference;
+        T& m_nonConstReference;
         operator ValueHolder&&() && { return std::move(m_valueHolder); }
+        operator NewValueHolderTemplate<Value>() && { return {std::move(m_valueHolder), m_nonConstReference}; }
     };
 
-    using NewValueHolderAlias = NewValueHolder;
+    using NewValueHolder = NewValueHolderTemplate<Value>;
 } // namespace babelwires
 
 namespace std {
