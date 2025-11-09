@@ -25,6 +25,6 @@ namespace babelwires {
 
       private:
         /// Throws a TypeSystem exception if the arguments are not of the expected type.
-        static MapEntryData::Kind extractValueArguments(const TypeSystem& typeSystem, const std::vector<EditableValueHolder>& valueArguments);
+        static MapEntryData::Kind extractValueArguments(const TypeSystem& typeSystem, const std::vector<ValueHolder>& valueArguments);
     };
 } // namespace babelwires

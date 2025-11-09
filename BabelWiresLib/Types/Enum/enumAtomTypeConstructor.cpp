@@ -12,19 +12,21 @@
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 
 babelwires::TypeConstructor::TypeConstructorResult
-babelwires::EnumAtomTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
-                                            const std::vector<const Type*>& resolvedTypeArguments) const {
-    if (arguments.m_typeArguments.size() != 0) {
+babelwires::EnumAtomTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+                                                   const TypeConstructorArguments& arguments,
+                                                   const std::vector<const Type*>& resolvedTypeArguments) const {
+    if (arguments.getTypeArguments().size() != 0) {
         throw TypeSystemException() << "EnumAtomTypeConstructor does not expect any type arguments but got "
-                                    << arguments.m_typeArguments.size();
+                                    << arguments.getTypeArguments().size();
     }
-    if (arguments.m_valueArguments.size() != 1) {
+    if (arguments.getValueArguments().size() != 1) {
         throw TypeSystemException() << "EnumAtomTypeConstructor expects a single value argument but got "
-                                    << arguments.m_valueArguments.size();
+                                    << arguments.getValueArguments().size();
     }
-    const EnumValue* const enumValue = arguments.m_valueArguments[0]->as<EnumValue>();
+    const EnumValue* const enumValue = arguments.getValueArguments()[0]->as<EnumValue>();
     if (!enumValue) {
-        throw TypeSystemException() << "Non-EnumValue argument << " << arguments.m_valueArguments[0] << " provided to EnumAtomTypeConstructor";
+        throw TypeSystemException() << "Non-EnumValue argument << " << arguments.getValueArguments()[0]
+                                    << " provided to EnumAtomTypeConstructor";
     }
     return std::make_unique<ConstructedType<EnumType>>(std::move(newTypeRef), EnumType::ValueSet{enumValue->get()}, 0);
 }

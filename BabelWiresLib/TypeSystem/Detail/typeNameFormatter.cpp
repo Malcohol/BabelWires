@@ -8,6 +8,7 @@
 #include <BabelWiresLib/TypeSystem/Detail/typeNameFormatter.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeConstructorArguments.hpp>
+#include <BabelWiresLib/TypeSystem/typeRef.hpp>
 
 #include <sstream>
 

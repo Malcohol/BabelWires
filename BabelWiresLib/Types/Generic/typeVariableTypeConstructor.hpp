@@ -29,6 +29,6 @@ namespace babelwires {
         static TypeRef makeTypeRef(unsigned int typeVariableIndex = 0, unsigned int numGenericTypeLevels = 0);
 
         /// Throws a TypeSystem exception if the arguments are not of the expected type.
-        static TypeVariableData extractValueArguments(const std::vector<EditableValueHolder>& valueArguments);
+        static TypeVariableData extractValueArguments(const std::vector<ValueHolder>& valueArguments);
     };
 } // namespace babelwires

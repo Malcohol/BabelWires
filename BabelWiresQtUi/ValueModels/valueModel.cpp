@@ -33,7 +33,7 @@ void babelwires::ValueModel::setEditorData(QWidget* editor) const {
     assert(false && "This method must be overridden in subclasses");
 }
 
-babelwires::EditableValueHolder babelwires::ValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
+babelwires::ValueHolder babelwires::ValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
     assert(false && "This method must be overridden in subclasses");
     return {};
 }

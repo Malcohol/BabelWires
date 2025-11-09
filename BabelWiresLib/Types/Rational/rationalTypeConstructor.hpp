@@ -28,6 +28,6 @@ namespace babelwires {
       private:
         /// Throws a TypeSystem exception if the arguments are not of the expect type.
         static std::tuple<Range<Rational>, Rational>
-        extractValueArguments(const std::vector<EditableValueHolder>& valueArguments);
+        extractValueArguments(const std::vector<ValueHolder>& valueArguments);
     };
 } // namespace babelwires

@@ -15,7 +15,7 @@ namespace babelwires {
       public:
         QWidget* createEditor(QWidget* parent) const override;
         void setEditorData(QWidget* editor) const override;
-        EditableValueHolder createValueFromEditorIfDifferent(QWidget* editor) const override;
+        ValueHolder createValueFromEditorIfDifferent(QWidget* editor) const override;
         bool isItemEditable() const override;
         bool validateEditor(QWidget* editor) const override;
     };

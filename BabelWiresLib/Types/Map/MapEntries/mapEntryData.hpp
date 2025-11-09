@@ -61,18 +61,18 @@ namespace babelwires {
                                                     const TypeRef& targetTypeRef, Kind kind);
         
         /// Return the sourceValue or nullptr if this entry doesn't have one.
-        virtual const EditableValueHolder* tryGetSourceValue() const;
+        virtual const ValueHolder* tryGetSourceValue() const;
         /// Return the sourceValue or assert if this entry doesn't have one.        
-        const EditableValueHolder& getSourceValue() const;
+        const ValueHolder& getSourceValue() const;
         /// The default implementation asserts.
-        virtual void setSourceValue(EditableValueHolder value);
+        virtual void setSourceValue(ValueHolder value);
 
         /// Return the targetValue or nullptr if this entry doesn't have one.
-        virtual const EditableValueHolder* tryGetTargetValue() const;
+        virtual const ValueHolder* tryGetTargetValue() const;
         /// Return the targetValue or assert if this entry doesn't have one.
-        const EditableValueHolder& getTargetValue() const;
+        const ValueHolder& getTargetValue() const;
         /// The default implementation asserts.
-        virtual void setTargetValue(EditableValueHolder value);
+        virtual void setTargetValue(ValueHolder value);
 
 
 

@@ -68,30 +68,30 @@ std::string babelwires::MapEntryData::getKindName(Kind kind) {
     return {};
 }
 
-const babelwires::EditableValueHolder& babelwires::MapEntryData::getSourceValue() const {
+const babelwires::ValueHolder& babelwires::MapEntryData::getSourceValue() const {
     const auto* sourceValue = tryGetSourceValue();
     assert(sourceValue && "Source value expected"); 
     return *sourceValue;
 }
 
-const babelwires::EditableValueHolder* babelwires::MapEntryData::tryGetSourceValue() const {
+const babelwires::ValueHolder* babelwires::MapEntryData::tryGetSourceValue() const {
     return nullptr;
 }
 
-void babelwires::MapEntryData::setSourceValue(EditableValueHolder value) {
+void babelwires::MapEntryData::setSourceValue(ValueHolder value) {
     assert(false && "No source value or not overridden");
 }
 
-const babelwires::EditableValueHolder& babelwires::MapEntryData::getTargetValue() const {
+const babelwires::ValueHolder& babelwires::MapEntryData::getTargetValue() const {
     const auto* targetValue = tryGetTargetValue();
     assert(targetValue && "Target value expected"); 
     return *targetValue;
 }
 
-const babelwires::EditableValueHolder* babelwires::MapEntryData::tryGetTargetValue() const {
+const babelwires::ValueHolder* babelwires::MapEntryData::tryGetTargetValue() const {
     return nullptr;
 }
 
-void babelwires::MapEntryData::setTargetValue(EditableValueHolder value) {
+void babelwires::MapEntryData::setTargetValue(ValueHolder value) {
     assert(false && "No target value or not overridden");
 }

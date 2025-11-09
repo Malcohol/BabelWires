@@ -19,7 +19,10 @@ babelwires::TypeConstructor::tryGetOrConstructType(const TypeSystem& typeSystem,
                                                    const TypeConstructorArguments& arguments) const {
     const auto& storage = getOrConstructTypeInternal(typeSystem, arguments);
     struct VisitorMethods {
-        const babelwires::Type* operator()(std::monostate) { assert(false && "Attempt to construct a null type"); return nullptr; }
+        const babelwires::Type* operator()(std::monostate) {
+            assert(false && "Attempt to construct a null type");
+            return nullptr;
+        }
         const babelwires::Type* operator()(const std::unique_ptr<Type>& type) { return type.get(); }
         const babelwires::Type* operator()(const Type* type) { return type; }
         const babelwires::Type* operator()(const std::string& error) { return nullptr; }
@@ -32,7 +35,10 @@ babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
                                                 const TypeConstructorArguments& arguments) const {
     const auto& storage = getOrConstructTypeInternal(typeSystem, arguments);
     struct VisitorMethods {
-        const babelwires::Type& operator()(std::monostate) { assert(false && "Attempt to construct a null type"); return *(const babelwires::Type*)0; }
+        const babelwires::Type& operator()(std::monostate) {
+            assert(false && "Attempt to construct a null type");
+            return *(const babelwires::Type*)0;
+        }
         const babelwires::Type& operator()(const std::unique_ptr<Type>& type) { return *type; }
         const babelwires::Type& operator()(const Type* type) { return *type; }
         const babelwires::Type& operator()(const std::string& error) { throw TypeSystemException() << error; }
@@ -55,9 +61,9 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
 
     // Phase 2: Resolve the arguments.
     std::vector<const Type*> resolvedArguments;
-    resolvedArguments.reserve(arguments.m_typeArguments.size());
+    resolvedArguments.reserve(arguments.getTypeArguments().size());
     std::vector<std::string> unresolvedTypesString;
-    for (auto arg : arguments.m_typeArguments) {
+    for (auto arg : arguments.getTypeArguments()) {
         if (const Type* const argAsType = arg.tryResolve(typeSystem)) {
             resolvedArguments.emplace_back(argAsType);
         } else {
@@ -75,16 +81,17 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
         if (it.second) {
             // Still not found.
             // Only construct the type if the arity is correct.
-            if (resolvedArguments.size() == arguments.m_typeArguments.size()) {
+            if (resolvedArguments.size() == arguments.getTypeArguments().size()) {
                 try {
-                    TypeConstructorResult result = constructType(typeSystem, std::move(newTypeRef), arguments, resolvedArguments);
+                    TypeConstructorResult result =
+                        constructType(typeSystem, std::move(newTypeRef), arguments, resolvedArguments);
                     if (std::holds_alternative<std::unique_ptr<Type>>(result)) {
                         assert(std::get<std::unique_ptr<Type>>(result) &&
-                            "Returning a null unique pointer from a TypeConstructor is not permitted");
+                               "Returning a null unique pointer from a TypeConstructor is not permitted");
                         it.first->second = std::move(std::get<std::unique_ptr<Type>>(result));
                     } else {
                         assert(std::get<const Type*>(result) &&
-                            "Returning a null const pointer from a TypeConstructor is not permitted");
+                               "Returning a null const pointer from a TypeConstructor is not permitted");
                         it.first->second = std::get<const Type*>(result);
                     }
                 } catch (TypeSystemException& e) {

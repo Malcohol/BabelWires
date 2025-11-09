@@ -25,9 +25,9 @@ namespace {
 
     babelwires::MapValue
     setUpTestMapValue(const babelwires::TypeSystem& typeSystem, const babelwires::TypeRef& sourceTypeId,
-                      const babelwires::TypeRef& targetTypeId, const babelwires::EditableValue& sourceValue1,
-                      const babelwires::EditableValue& sourceValue2, const babelwires::EditableValue& targetValue1,
-                      const babelwires::EditableValue& targetValue2, const babelwires::EditableValue& targetValue3,
+                      const babelwires::TypeRef& targetTypeId, const babelwires::Value& sourceValue1,
+                      const babelwires::Value& sourceValue2, const babelwires::Value& targetValue1,
+                      const babelwires::Value& targetValue2, const babelwires::Value& targetValue3,
                       bool allToOneFallback) {
 
         auto oneToOne1 = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, sourceTypeId, targetTypeId);

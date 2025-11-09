@@ -8,6 +8,7 @@
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
@@ -33,8 +34,10 @@ babelwires::OneToOneMapEntryData::OneToOneMapEntryData(const TypeSystem& typeSys
     const Type* targetType = targetTypeRef.tryResolve(typeSystem);
     assert(targetType && "You cannot construct a OneToOneMapEntryData entry with an unknown target type");
 
-    m_sourceValue = sourceType->createValue(typeSystem).is<EditableValue>();
-    m_targetValue = targetType->createValue(typeSystem).is<EditableValue>();
+    m_sourceValue = sourceType->createValue(typeSystem);
+    assert(m_sourceValue->tryGetAsEditableValue() && "MapEntries must contain editable data");
+    m_targetValue = targetType->createValue(typeSystem);
+    assert(m_targetValue->tryGetAsEditableValue() && "MapEntries must contain editable data");
 }
 
 std::size_t babelwires::OneToOneMapEntryData::getHash() const {
@@ -54,31 +57,33 @@ bool babelwires::OneToOneMapEntryData::operator==(const MapEntryData& other) con
     return (*m_sourceValue == *otherData->m_sourceValue) && (*m_targetValue == *otherData->m_targetValue);
 }
 
-const babelwires::EditableValueHolder* babelwires::OneToOneMapEntryData::tryGetSourceValue() const {
+const babelwires::ValueHolder* babelwires::OneToOneMapEntryData::tryGetSourceValue() const {
     return &m_sourceValue;
 }
 
-void babelwires::OneToOneMapEntryData::setSourceValue(EditableValueHolder value) {
+void babelwires::OneToOneMapEntryData::setSourceValue(ValueHolder value) {
+    assert(value->tryGetAsEditableValue() && "MapEntries must contain editable data");
     m_sourceValue = std::move(value);
 }
 
-const babelwires::EditableValueHolder* babelwires::OneToOneMapEntryData::tryGetTargetValue() const {
+const babelwires::ValueHolder* babelwires::OneToOneMapEntryData::tryGetTargetValue() const {
     return &m_targetValue;
 }
 
-void babelwires::OneToOneMapEntryData::setTargetValue(EditableValueHolder value) {
+void babelwires::OneToOneMapEntryData::setTargetValue(ValueHolder value) {
+    assert(value->tryGetAsEditableValue() && "MapEntries must contain editable data");
     m_targetValue = std::move(value);
 }
 
 void babelwires::OneToOneMapEntryData::serializeContents(Serializer& serializer) const {
-    serializer.serializeObject(*m_sourceValue, "source");
-    serializer.serializeObject(*m_targetValue, "target");
+    serializer.serializeObject(m_sourceValue->getAsEditableValue(), "source");
+    serializer.serializeObject(m_targetValue->getAsEditableValue(), "target");
 }
 
 void babelwires::OneToOneMapEntryData::deserializeContents(Deserializer& deserializer) {
     // TODO: If refactoring to a constructor, can remove the null handling in == and clone.
-    m_sourceValue = deserializer.deserializeObject<EditableValue>("source");
-    m_targetValue = deserializer.deserializeObject<EditableValue>("target");
+    m_sourceValue = uniquePtrCast<Value>(deserializer.deserializeObject<EditableValue>("source"));
+    m_targetValue = uniquePtrCast<Value>(deserializer.deserializeObject<EditableValue>("target"));
 }
 
 void babelwires::OneToOneMapEntryData::visitIdentifiers(IdentifierVisitor& visitor) {

@@ -71,12 +71,12 @@ babelwires::TypeRef babelwires::GenericValue::buildInstantiatedType(const TypeRe
                            const TypeConstructorArguments& constructorArguments) {
             if (constructorId == TypeVariableTypeConstructor::getThisIdentifier()) {
                 const TypeVariableData variableData =
-                    TypeVariableTypeConstructor::extractValueArguments(constructorArguments.m_valueArguments);
+                    TypeVariableTypeConstructor::extractValueArguments(constructorArguments.getValueArguments());
                 if (variableData.m_numGenericTypeLevels == m_level) {
                     const auto& typeAssignments = m_genericValue.m_typeVariableAssignments;
                     assert(variableData.m_typeVariableIndex <= typeAssignments.size());
                     if (const TypeRef& assignment = typeAssignments[variableData.m_typeVariableIndex]) {
-                        return TypeRef(constructorId, {{assignment}, constructorArguments.m_valueArguments});
+                        return TypeRef(constructorId, {{assignment}, constructorArguments.getValueArguments()});
                     } else {
                         return TypeRef(constructorId, constructorArguments);
                     }
@@ -89,12 +89,12 @@ babelwires::TypeRef babelwires::GenericValue::buildInstantiatedType(const TypeRe
                 ++level;
             }
             std::vector<TypeRef> children;
-            children.reserve(constructorArguments.m_typeArguments.size());
-            for (const auto& c : constructorArguments.m_typeArguments) {
+            children.reserve(constructorArguments.getTypeArguments().size());
+            for (const auto& c : constructorArguments.getTypeArguments()) {
                 Visitor childVisitor(m_genericValue, level);
                 children.emplace_back(c.visit<Visitor, TypeRef>(childVisitor));
             }
-            return TypeRef(constructorId, TypeConstructorArguments{children, constructorArguments.m_valueArguments});
+            return TypeRef(constructorId, TypeConstructorArguments{children, constructorArguments.getValueArguments()});
         }
         const GenericValue& m_genericValue;
         unsigned int m_level;
@@ -130,9 +130,9 @@ bool babelwires::GenericValue::isActualVersionOf(const TypeRef& wrappedType) con
             }
             if (constructorIdRef == TypeVariableTypeConstructor::getThisIdentifier()) {
                 const TypeVariableData variableDataRef =
-                    TypeVariableTypeConstructor::extractValueArguments(constructorArgumentsRef.m_valueArguments);
+                    TypeVariableTypeConstructor::extractValueArguments(constructorArgumentsRef.getValueArguments());
                 const TypeVariableData variableDataAct =
-                    TypeVariableTypeConstructor::extractValueArguments(constructorArgumentsAct.m_valueArguments);
+                    TypeVariableTypeConstructor::extractValueArguments(constructorArgumentsAct.getValueArguments());
                 if ((variableDataRef.m_typeVariableIndex != variableDataAct.m_typeVariableIndex) ||
                     (variableDataRef.m_numGenericTypeLevels != variableDataAct.m_numGenericTypeLevels)) {
                     return false;
@@ -140,10 +140,10 @@ bool babelwires::GenericValue::isActualVersionOf(const TypeRef& wrappedType) con
                 if (variableDataAct.m_numGenericTypeLevels == m_level) {
                     assert(variableDataAct.m_typeVariableIndex <= m_genericValue.m_typeVariableAssignments.size());
                     assert(!m_genericValue.m_typeVariableAssignments[variableDataAct.m_typeVariableIndex] ||
-                           (constructorArgumentsAct.m_typeArguments.size() == 1));
+                           (constructorArgumentsAct.getTypeArguments().size() == 1));
                     assert(!m_genericValue.m_typeVariableAssignments[variableDataAct.m_typeVariableIndex] ||
                            (m_genericValue.m_typeVariableAssignments[variableDataAct.m_typeVariableIndex] ==
-                            constructorArgumentsAct.m_typeArguments[0]));
+                            constructorArgumentsAct.getTypeArguments()[0]));
                     // Allowed to differ here.
                     return true;
                 }
@@ -155,19 +155,21 @@ bool babelwires::GenericValue::isActualVersionOf(const TypeRef& wrappedType) con
                 ++level;
             }
             // Compare the type and value arguments.
-            if ((constructorArgumentsRef.m_typeArguments.size() != constructorArgumentsAct.m_typeArguments.size()) ||
-                (constructorArgumentsRef.m_valueArguments.size() != constructorArgumentsAct.m_valueArguments.size())) {
+            if ((constructorArgumentsRef.getTypeArguments().size() !=
+                 constructorArgumentsAct.getTypeArguments().size()) ||
+                (constructorArgumentsRef.getValueArguments().size() !=
+                 constructorArgumentsAct.getValueArguments().size())) {
                 return false;
             }
-            for (unsigned int i = 0; i < constructorArgumentsAct.m_valueArguments.size(); ++i) {
-                if (constructorArgumentsRef.m_valueArguments[i] != constructorArgumentsAct.m_valueArguments[i]) {
+            for (unsigned int i = 0; i < constructorArgumentsAct.getValueArguments().size(); ++i) {
+                if (constructorArgumentsRef.getValueArguments()[i] != constructorArgumentsAct.getValueArguments()[i]) {
                     return false;
                 }
             }
-            for (unsigned int i = 0; i < constructorArgumentsAct.m_typeArguments.size(); ++i) {
+            for (unsigned int i = 0; i < constructorArgumentsAct.getTypeArguments().size(); ++i) {
                 Visitor childVisitor(m_genericValue, level);
-                if (!TypeRef::visit<Visitor, bool>(childVisitor, constructorArgumentsRef.m_typeArguments[i],
-                                                   constructorArgumentsAct.m_typeArguments[i])) {
+                if (!TypeRef::visit<Visitor, bool>(childVisitor, constructorArgumentsRef.getTypeArguments()[i],
+                                                   constructorArgumentsAct.getTypeArguments()[i])) {
                     return false;
                 }
             }

@@ -18,10 +18,24 @@ namespace babelwires {
 
     class TypeConstructorArguments {
       public:
+        TypeConstructorArguments() = default;
+        TypeConstructorArguments(std::vector<TypeRef> typeArguments)
+            : m_typeArguments(std::move(typeArguments)) {}
+        TypeConstructorArguments(std::vector<TypeRef> typeArguments, std::vector<ValueHolder> valueArguments)
+            : m_typeArguments(std::move(typeArguments))
+            , m_valueArguments(std::move(valueArguments)) {
+#ifndef NDEBUG
+            for (const auto& v : valueArguments) {
+                assert(v->tryGetAsEditableValue() && "Values stored by TypeConstructors must be editable");
+            }
+#endif
+        }
         ~TypeConstructorArguments();
 
-        std::vector<TypeRef> m_typeArguments;
-        std::vector<EditableValueHolder> m_valueArguments;
+        const std::vector<TypeRef>& getTypeArguments() const { return m_typeArguments; }
+        std::vector<TypeRef>& getTypeArguments() { return m_typeArguments; }
+        const std::vector<ValueHolder>& getValueArguments() const { return m_valueArguments; }
+        std::vector<ValueHolder>& getValueArguments() { return m_valueArguments; }
 
         friend bool operator==(const TypeConstructorArguments& a, const TypeConstructorArguments& b) {
             return equals(a, b);
@@ -36,6 +50,10 @@ namespace babelwires {
       private:
         /// The friend operators need to call an out-of-line implementation to avoid an include cycle.
         static bool equals(const TypeConstructorArguments& a, const TypeConstructorArguments& b);
+
+      private:
+        std::vector<TypeRef> m_typeArguments;
+        std::vector<ValueHolder> m_valueArguments;
     };
 } // namespace babelwires
 

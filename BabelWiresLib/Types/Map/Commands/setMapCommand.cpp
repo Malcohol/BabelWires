@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 
-babelwires::SetMapCommand::SetMapCommand(std::string commandName, ValueHolderTemplate<MapValue> newData)
+babelwires::SetMapCommand::SetMapCommand(std::string commandName, ValueHolder newData)
     : SimpleCommand(commandName)
     , m_newContents(std::move(newData)) {
     assert(m_newContents->as<MapValue>() && "SetMapCommand given non-map value");

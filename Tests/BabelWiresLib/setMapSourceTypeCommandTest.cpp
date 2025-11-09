@@ -33,17 +33,13 @@ TEST(SetMapSourceTypeCommandTest, executeAndUndo) {
 
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, babelwires::StringType::getThisType());
 
-    babelwires::EnumValue newSourceValue;
-    newSourceValue.set("Erm");
-    oneToOne.setSourceValue(newSourceValue);
+    oneToOne.setSourceValue(babelwires::EnumValue("Erm"));
     mapValue.emplaceBack(oneToOne.clone());
 
-    newSourceValue.set("Bar");
-    oneToOne.setSourceValue(newSourceValue);
+    oneToOne.setSourceValue(babelwires::EnumValue("Bar"));
     mapValue.emplaceBack(oneToOne.clone());
 
-    newSourceValue.set("Oom");
-    oneToOne.setSourceValue(newSourceValue);
+    oneToOne.setSourceValue(babelwires::EnumValue("Oom"));
     mapValue.emplaceBack(oneToOne.clone());
 
     mapValue.emplaceBack(allToOne.clone());

@@ -15,19 +15,19 @@
 #include <vector>
 
 namespace babelwires {
-    class TupleValue : public EditableValue {
+    class TupleValue : public AlwaysEditableValue {
       public:
         CLONEABLE(TupleValue);
         SERIALIZABLE(TupleValue, "tuple", EditableValue, 1);
 
-        using Tuple = std::vector<EditableValueHolder>;
+        using Tuple = std::vector<ValueHolder>;
 
         TupleValue(Tuple values);
 
         unsigned int getSize() const;
-        EditableValueHolder& getValue(unsigned int index);
-        const EditableValueHolder& getValue(unsigned int index) const;
-        void setValue(unsigned int index, EditableValueHolder newValue);
+        ValueHolder& getValue(unsigned int index);
+        const ValueHolder& getValue(unsigned int index) const;
+        void setValue(unsigned int index, ValueHolder newValue);
 
         std::size_t getHash() const override;
         bool operator==(const Value& other) const override;
@@ -44,7 +44,7 @@ namespace babelwires {
         TupleValue() = default;
 
       private:
-        std::vector<EditableValueHolder> m_componentValues;
+        std::vector<ValueHolder> m_componentValues;
     };
 
 } // namespace babelwires

@@ -21,11 +21,11 @@ TEST(EnumAtomTypeConstructorTest, construct) {
     babelwires::EnumAtomTypeConstructor constructor;
 
     const babelwires::Type* const newType = constructor.tryGetOrConstructType(
-        testEnvironment.m_typeSystem, babelwires::TypeConstructorArguments{{}, {enumValue}});
+        testEnvironment.m_typeSystem, babelwires::TypeConstructorArguments{{}, {enumValue.clone()}});
 
     ASSERT_NE(newType, nullptr);
     EXPECT_EQ(newType->getTypeRef(),
-              babelwires::TypeRef(babelwires::EnumAtomTypeConstructor::getThisIdentifier(), enumValue));
+              babelwires::TypeRef(babelwires::EnumAtomTypeConstructor::getThisIdentifier(), enumValue.clone()));
 
     const babelwires::EnumType* const enumType = newType->as<babelwires::EnumType>();
     ASSERT_NE(enumType, nullptr);
@@ -39,15 +39,14 @@ TEST(EnumAtomTypeConstructorTest, makeTypeRef) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ShortId foo = testUtils::getTestRegisteredIdentifier("foo");
-    babelwires::EnumValue enumValue(foo);
 
-    babelwires::TypeRef typeRef = babelwires::EnumAtomTypeConstructor::makeTypeRef(enumValue);
+    babelwires::TypeRef typeRef = babelwires::EnumAtomTypeConstructor::makeTypeRef(babelwires::EnumValue(foo));
 
     const babelwires::Type* const newType = typeRef.tryResolve(testEnvironment.m_typeSystem);
 
     ASSERT_NE(newType, nullptr);
     EXPECT_EQ(newType->getTypeRef(),
-              babelwires::TypeRef(babelwires::EnumAtomTypeConstructor::getThisIdentifier(), enumValue));
+              babelwires::TypeRef(babelwires::EnumAtomTypeConstructor::getThisIdentifier(), babelwires::EnumValue(foo)));
 
     const babelwires::EnumType* const enumType = newType->as<babelwires::EnumType>();
     ASSERT_NE(enumType, nullptr);

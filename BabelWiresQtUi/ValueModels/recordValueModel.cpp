@@ -24,12 +24,11 @@ void babelwires::RecordValueModel::getContextMenuActions(const DataLocation& loc
         const RecordType& recordType = m_type->is<RecordType>();
         if (recordType.getOptionalFieldIds().size() > 0) {
             if (const auto& projectDataLocation = location.as<ProjectDataLocation>()) {
-                const RecordValue& recordValue = getValue()->is<RecordValue>();
                 auto group = std::make_unique<ContextMenuGroup>("Optional fields", QActionGroup::ExclusionPolicy::None);
                 for (auto opId : recordType.getOptionalFieldIds()) {
                     const std::string fieldName = IdentifierRegistry::read()->getName(opId).c_str();
                     std::unique_ptr<ContextMenuAction> action;
-                    const bool isActivated = recordType.isActivated(recordValue, opId);
+                    const bool isActivated = recordType.isActivated(getValue(), opId);
                     if (!isActivated) {
                         action = std::make_unique<ProjectCommandContextMenuAction>(
                             fieldName.c_str(), std::make_unique<ActivateOptionalCommand>(

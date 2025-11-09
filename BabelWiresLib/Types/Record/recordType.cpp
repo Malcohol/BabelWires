@@ -150,10 +150,10 @@ babelwires::NewValueHolder babelwires::RecordType::createValue(const TypeSystem&
     for (const auto& f : m_fields) {
         if (f.m_optionality != Optionality::optionalDefaultInactive) {
             const Type& fieldType = f.m_type.resolve(typeSystem);
-            newValue.m_nonConstReference.is<RecordValue>().setValue(f.m_identifier, fieldType.createValue(typeSystem));
+            newValue.m_nonConstReference.setValue(f.m_identifier, fieldType.createValue(typeSystem));
         }
     }
-    return newValue;
+    return std::move(newValue);
 }
 
 bool babelwires::RecordType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
