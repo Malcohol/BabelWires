@@ -239,6 +239,8 @@ QVariant babelwires::ProjectGraphModel::nodeData(QtNodes::NodeId nodeId, QtNodes
         }
         case QtNodes::NodeRole::Style: {
             auto style = QtNodes::StyleCollection::nodeStyle();
+            // Workaround for QTBUG-77400. (See also nodeeditor Issue 121.)
+            style.ShadowEnabled = false;
             return style.toJson().toVariantMap();
         }
 

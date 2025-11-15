@@ -42,14 +42,14 @@ if(NOT EXISTS "${PROJECT_SOURCE_DIR}/extern/tinyxml2/CMakeLists.txt")
     message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
 endif()
 
-FIND_PACKAGE( Qt5 REQUIRED COMPONENTS Core Widgets Gui OpenGL )
-IF( Qt5_FOUND )
-    ADD_DEFINITIONS(${Qt5Widgets_DEFINITIONS})
+FIND_PACKAGE( Qt6 REQUIRED COMPONENTS Core Widgets Gui OpenGL )
+IF( Qt6_FOUND )
+    ADD_DEFINITIONS(${Qt6Widgets_DEFINITIONS})
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
-    include_directories(${Qt5Widgets_INCLUDE_DIRS})
+    include_directories(${Qt6Widgets_INCLUDE_DIRS})
     set(CMAKE_AUTOMOC ON)
-    MESSAGE(${Qt5Widgets_INCLUDE_DIRS})
-ENDIF( Qt5_FOUND )
+    MESSAGE(${Qt6Widgets_INCLUDE_DIRS})
+ENDIF( Qt6_FOUND )
 
 ADD_SUBDIRECTORY( BabelWiresQtUi )
 
@@ -57,9 +57,11 @@ add_subdirectory(extern/tinyxml2)
 INCLUDE_DIRECTORIES(${tinyxml2_INCLUDE_DIRS})
 
 add_subdirectory(extern/googletest)
+# Workaround for a build system issue in libsndfile test.
+set(BUILD_TESTING OFF)
 add_subdirectory(extern/libsndfile)
+set(BUILD_TESTING ON)
 
-SET(USE_QT6 OFF CACHE INTERNAL "Tell nodeeditor to use Qt5")
 add_subdirectory(extern/nodeeditor)
 
 add_subdirectory(Tests/TestUtils)
