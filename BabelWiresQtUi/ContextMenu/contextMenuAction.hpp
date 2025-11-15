@@ -13,6 +13,8 @@
 
 #include <variant>
 
+#include <QActionGroup>
+
 namespace babelwires {
 
     /// Base class of context menu items in the context menu.
