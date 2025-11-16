@@ -52,10 +52,10 @@ babelwires::ProjectGraphModel::ProjectGraphModel(Project& project, CommandManage
         m_projectObserver.m_nodeWasRemoved.subscribe([this](NodeId nodeId) { removeNodeFromFlowScene(nodeId); }));
 
     m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_nodeWasMoved.subscribe(
-        [this](NodeId nodeId, const UiPosition& uiPosition) { Q_EMIT nodePositionUpdated(nodeId); }));
+        [this](NodeId nodeId, const UiPosition& uiPosition) { moveNodeInFlowScene(nodeId, uiPosition); }));
 
     m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_nodeWasResized.subscribe(
-        [this](NodeId nodeId, const UiSize& newSize) { Q_EMIT nodeUpdated(nodeId); }));
+        [this](NodeId nodeId, const UiSize& newSize) { updateNodeInFlowScene(nodeId); }));
 
     m_projectObserverSubscriptions.emplace_back(m_projectObserver.m_connectionWasAdded.subscribe(
         [this](const ConnectionDescription& connection) { addConnectionToFlowScene(connection); }));
@@ -126,7 +126,7 @@ void babelwires::ProjectGraphModel::addNodeToFlowScene(const Node* node) {
 #ifndef NDEBUG
     const auto resultPair =
 #endif
-        m_nodeModels.insert(std::make_pair(nodeId, std::make_unique<NodeNodeModel>(*this, nodeId)));
+        m_nodeModels.insert(std::make_pair(nodeId, std::make_unique<NodeNodeModel>(*this, nodeId, *node)));
     assert(resultPair.second && "There's already a nodeModel for that nodeId");
     Q_EMIT nodeCreated(nodeId);
     // We don't need to add connections here: The project observer will fire signals about them.
@@ -138,6 +138,19 @@ void babelwires::ProjectGraphModel::removeNodeFromFlowScene(NodeId nodeId) {
     assert((it != m_nodeModels.end()) && "Trying to remove unrecognized node");
     m_nodeModels.erase(it);
     Q_EMIT nodeDeleted(nodeId);
+}
+
+void babelwires::ProjectGraphModel::moveNodeInFlowScene(NodeId nodeId, const UiPosition& newPosition) {
+    assert(m_state == State::ProcessingModelChanges);
+    auto it = m_nodeModels.find(nodeId);
+    assert((it != m_nodeModels.end()) && "Trying to move unrecognized node");
+    it->second->setCachedPosition(QPointF{static_cast<qreal>(newPosition.m_x), static_cast<qreal>(newPosition.m_y)});
+    Q_EMIT nodePositionUpdated(nodeId);
+}
+
+void babelwires::ProjectGraphModel::updateNodeInFlowScene(NodeId nodeId) {
+    assert(m_state == State::ProcessingModelChanges);
+    Q_EMIT nodeUpdated(nodeId);
 }
 
 std::unordered_set<QtNodes::NodeId> babelwires::ProjectGraphModel::allNodeIds() const {
@@ -211,10 +224,14 @@ QVariant babelwires::ProjectGraphModel::nodeData(QtNodes::NodeId nodeId, QtNodes
             // TODO This should maybe be something like processor / value / source / target.
             return "TODO type";
         case QtNodes::NodeRole::Position: {
-            AccessModelScope scope(*this);
-            const Node* const node = scope.getProject().getNode(nodeId);
-            const UiPosition position = node->getUiPosition();
-            return QPointF{static_cast<qreal>(position.m_x), static_cast<qreal>(position.m_y)};
+            if (m_state == State::ProcessingModelChanges) {
+                AccessModelScope scope(*this);
+                const Node* const node = scope.getProject().getNode(nodeId);
+                const UiPosition position = node->getUiPosition();
+                return QPointF{static_cast<qreal>(position.m_x), static_cast<qreal>(position.m_y)};
+            } else {
+                return nodeModel.getCachedPosition();
+            }
         }
         case QtNodes::NodeRole::Size:
             return nodeModel.getCachedSize();
@@ -239,6 +256,8 @@ QVariant babelwires::ProjectGraphModel::nodeData(QtNodes::NodeId nodeId, QtNodes
         }
         case QtNodes::NodeRole::Style: {
             auto style = QtNodes::StyleCollection::nodeStyle();
+            // Workaround for QTBUG-77400. (See also nodeeditor Issue 121.)
+            style.ShadowEnabled = false;
             return style.toJson().toVariantMap();
         }
 
@@ -300,16 +319,15 @@ void babelwires::ProjectGraphModel::nodeMoved(QtNodes::NodeId nodeId, const QPoi
     const auto it = m_nodeModels.find(nodeId);
     assert(it != m_nodeModels.end());
     NodeNodeModel& nodeNodeModel = *it->second;
-
-    AccessModelScope scope(*this);
-    const Node* node = scope.getProject().getNode(nodeId);
-    assert(node && "The node should already be in the project");
-    const UiPosition& uiPosition = node->getNodeData().m_uiData.m_uiPosition;
-    UiPosition newPosition{static_cast<UiCoord>(newLocation.x()), static_cast<UiCoord>(newLocation.y())};
-    if (uiPosition != newPosition) {
-        std::string commandName = "Move " + nodeNodeModel.getCaption(scope).toStdString();
-        scheduleCommand(std::make_unique<MoveNodeCommand>(commandName, nodeId, newPosition));
+    QPointF cachedPosition = nodeNodeModel.getCachedPosition();
+    if (cachedPosition == newLocation) {
+        return;
     }
+    nodeNodeModel.setCachedPosition(newLocation);
+    AccessModelScope scope(*this);
+    UiPosition newPosition{static_cast<UiCoord>(newLocation.x()), static_cast<UiCoord>(newLocation.y())};
+    std::string commandName = "Move " + nodeNodeModel.getCaption(scope).toStdString();
+    scheduleCommand(std::make_unique<MoveNodeCommand>(commandName, nodeId, newPosition));
 }
 
 void babelwires::ProjectGraphModel::nodeResized(QtNodes::NodeId nodeId, const QSize& newSize) {

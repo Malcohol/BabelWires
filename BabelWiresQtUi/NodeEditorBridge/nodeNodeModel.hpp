@@ -13,6 +13,7 @@
 #include <QtNodes/NodeData>
 
 #include <QSize>
+#include <QPointF>
 
 #include <vector>
 #include <unordered_set>
@@ -39,7 +40,7 @@ namespace babelwires {
         Q_OBJECT
 
       public:
-        NodeNodeModel(ProjectGraphModel& project, NodeId nodeId);
+        NodeNodeModel(ProjectGraphModel& project, NodeId nodeId, const Node& node);
         ~NodeNodeModel();
 
         unsigned int getNumberOfPorts(const AccessModelScope& scope, QtNodes::PortType portType) const;
@@ -57,6 +58,9 @@ namespace babelwires {
                                          QtNodes::PortIndex portIndex) const;
         QtNodes::PortIndex getPortAtPath(const AccessModelScope& scope, QtNodes::PortType portType,
                                          const Path& path) const;
+
+        QPointF getCachedPosition() const;
+        void setCachedPosition(QPointF newPos);
 
         QSize getCachedSize() const;
         void setCachedSize(QSize newSize);
@@ -95,6 +99,9 @@ namespace babelwires {
         NodeContentsView* m_view;
         NodeContentsModel* m_model;
         RowModelDelegate* m_delegate;
+
+        /// The model is expected to cache the position.
+        QPointF m_cachedPosition;
 
         /// The model is expected to cache the size.
         QSize m_cachedSize;
