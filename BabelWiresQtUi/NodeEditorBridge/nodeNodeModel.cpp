@@ -25,7 +25,7 @@
 
 #include <QMenu>
 
-babelwires::NodeNodeModel::NodeNodeModel(ProjectGraphModel& projectGraphModel, NodeId nodeId)
+babelwires::NodeNodeModel::NodeNodeModel(ProjectGraphModel& projectGraphModel, NodeId nodeId, const Node& node)
     : m_nodeId(nodeId)
     , m_view(new NodeContentsView(nodeId, projectGraphModel)) {
     auto delegate = new RowModelDelegate(this, projectGraphModel);
@@ -35,6 +35,8 @@ babelwires::NodeNodeModel::NodeNodeModel(ProjectGraphModel& projectGraphModel, N
     m_model = new NodeContentsModel(m_view, nodeId, projectGraphModel);
     m_view->setModel(m_model);
     connect(m_view, SIGNAL(clicked(const QModelIndex&)), m_model, SLOT(onClicked(const QModelIndex&)));
+    m_cachedPosition =
+        QPointF{static_cast<qreal>(node.getUiPosition().m_x), static_cast<qreal>(node.getUiPosition().m_y)};
 }
 
 babelwires::NodeNodeModel::~NodeNodeModel() = default;
@@ -151,6 +153,14 @@ void babelwires::NodeNodeModel::customContextMenuRequested(const QPoint& pos) {
         }
         menu->popup(m_view->mapToGlobalCorrect(pos));
     }
+}
+
+QPointF babelwires::NodeNodeModel::getCachedPosition() const {
+    return m_cachedPosition;
+}
+
+void babelwires::NodeNodeModel::setCachedPosition(QPointF newPos) {
+    m_cachedPosition = newPos;
 }
 
 QSize babelwires::NodeNodeModel::getCachedSize() const {

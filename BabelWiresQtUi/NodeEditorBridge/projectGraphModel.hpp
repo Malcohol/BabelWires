@@ -125,6 +125,12 @@ namespace babelwires {
         /// Remove the node from the flow scene.
         void removeNodeFromFlowScene(NodeId elementId);
 
+        /// Move the node in the flow scene.
+        void moveNodeInFlowScene(NodeId nodeId, const UiPosition& newPosition);
+
+        /// Update the node in the flow scene.
+        void updateNodeInFlowScene(NodeId nodeId);
+
       private:
         // Callback that can be fired when Qt is idle.
         void onIdle();
