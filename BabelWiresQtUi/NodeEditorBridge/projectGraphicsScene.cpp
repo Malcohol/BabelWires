@@ -43,6 +43,10 @@ void babelwires::ProjectGraphicsScene::setWidgetForDialogs(QWidget* widgetForDia
 QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos) {
     QMenu* modelMenu = new QMenu();
 
+    // Note: There are two codeflows that ensure the menu is deleted safely:
+    // 1. If manu closes with no item selected, the logic in aboutToHide calls deleteLater.
+    // 2. If the user selects an item, the selection processing code calls deleteLater.
+
     // Add filterbox to the context menu
     auto* txtBox = new QLineEdit(modelMenu);
     txtBox->setPlaceholderText(QStringLiteral("Filter"));
@@ -78,7 +82,7 @@ QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos)
 
     connect(modelMenu, &QMenu::aboutToHide, [modelMenu, treeView]() {
         if (treeView->selectedItems().isEmpty()) {
-            // Delete the menu here only if it is cancelled.
+            // Delete the menu when a selection is not made.
             modelMenu->deleteLater();
         }
     });
@@ -87,9 +91,9 @@ QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos)
         if (!(item->flags() & (Qt::ItemIsSelectable))) {
             return;
         }
+        modelMenu->close();
         // Delete menu when a selection is made.
         modelMenu->deleteLater();
-        modelMenu->close();
 
         QTreeWidgetItem* parent = item->parent();
         assert(parent && "non-parents should be selectable");
