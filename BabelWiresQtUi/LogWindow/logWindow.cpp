@@ -12,6 +12,7 @@
 #include <QPlainTextEdit>
 #include <QStyle>
 #include <QToolButton>
+#include <QApplication>
 
 #include <ctime>
 #include <iomanip>
@@ -100,12 +101,14 @@ void babelwires::LogWindow::onNewMessage(const Log::Message& message) {
         text = os.str().c_str();
     }
 
-    // TODO Use Qt styles.
+    // This uses standard palette colors which should adapt acceptably to light/dark mode.
+    // The choices should guarantee the colors are distinct.
+    // Error messages are the exception, where we adopt the standard colour red.
     QColor color;
     switch (message.m_type) {
         case Log::MessageType::infoMessage:
             text += "Info: ";
-            color = Qt::black;
+            color = QApplication::palette().color(QPalette::Text);
             break;
         case Log::MessageType::errorMessage:
             text += "Error: ";
@@ -113,11 +116,11 @@ void babelwires::LogWindow::onNewMessage(const Log::Message& message) {
             break;
         case Log::MessageType::warningMessage:
             text += "Warning: ";
-            color = Qt::yellow;
+            color = QApplication::palette().color(QPalette::Link);
             break;
         case Log::MessageType::debugMessage:
             text += "Debug: ";
-            color = Qt::blue;
+            color = QApplication::palette().color(QPalette::LinkVisited);
             break;
     }
     text += message.m_contents.c_str();
