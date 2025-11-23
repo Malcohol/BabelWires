@@ -76,10 +76,20 @@ QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos)
 
     treeView->expandAll();
 
+    connect(modelMenu, &QMenu::aboutToHide, [modelMenu, treeView]() {
+        if (treeView->selectedItems().isEmpty()) {
+            // Delete the menu here only if it is cancelled.
+            modelMenu->deleteLater();
+        }
+    });
+
     connect(treeView, &QTreeWidget::itemClicked, [this, modelMenu, scenePos](QTreeWidgetItem* item, int) {
         if (!(item->flags() & (Qt::ItemIsSelectable))) {
             return;
         }
+        // Delete menu when a selection is made.
+        modelMenu->deleteLater();
+        modelMenu->close();
 
         QTreeWidgetItem* parent = item->parent();
         assert(parent && "non-parents should be selectable");
@@ -93,8 +103,6 @@ QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos)
         ProjectGraphModel* projectGraphModel = qobject_cast<ProjectGraphModel*>(&graphModel());
 
         (*factoryIt)->createNode(*projectGraphModel, item->text(0), scenePos);
-
-        modelMenu->close();
     });
 
     // Setup filtering
@@ -120,9 +128,6 @@ QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos)
 
     // make sure the text box gets focus so the user doesn't have to click on it
     txtBox->setFocus();
-
-    // QMenu's instance auto-destruction
-    modelMenu->setAttribute(Qt::WA_DeleteOnClose);
 
     return modelMenu;
 }
