@@ -20,7 +20,6 @@ namespace babelwires {
         Q_OBJECT
       public:
         ContextMenu(QAbstractItemModel& model, const QModelIndex& index);
-        void leaveEvent(QEvent* event);
 
         void addContextMenuEntry(ContextMenuEntry entry);
 
