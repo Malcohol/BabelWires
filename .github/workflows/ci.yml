@@ -47,17 +47,19 @@ jobs:
       if: startsWith(matrix.config.name, 'Ubuntu_GCC')
       run: |
         sudo apt-get update
-        sudo apt-get install cmake ${{ matrix.config.cc }} ${{ matrix.config.cxx }} libasound2-dev
+        sudo apt-get install cmake ${{ matrix.config.cc }} ${{ matrix.config.cxx }} qt6-base-dev libasound2-dev
         cmake --version
         gcc --version
         g++ --version
       #qtchooser -print-env
 
-    - name: Install Qt6
+    - name: Install Qt on Windows
+      if: startsWith(matrix.config.os, 'windows')
       uses: jurplel/install-qt-action@v4
       with:
         version: '6.8.3'
-      
+        host: 'windows'
+
     - name: Configure CMake
       run: |
         cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }}
