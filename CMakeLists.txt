@@ -6,10 +6,6 @@ CMAKE_MINIMUM_REQUIRED( VERSION 3.15 )
 
 PROJECT( BabelWires )
 
-#SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
-
-SET( CMAKE_EDIT_COMMAND /usr/bin/cmake -i )
-SET( CMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT TRUE )
 SET(CMAKE_CXX_STANDARD 20)
 
 # Lots of work will be required to support shared libs. Waiting to see whether C++ Modules will help.
