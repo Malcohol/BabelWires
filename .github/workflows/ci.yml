@@ -37,6 +37,15 @@ jobs:
             cxx: "cl",
             generators: "Visual Studio 16 2019"
           }
+        - {
+            name: "macOS Latest Clang",
+            os: macos-latest,
+            build_type: "Debug",
+            targetFolder: "",
+            exeExtension: "",
+            cc: "clang",
+            cxx: "clang++"
+          }
 
     steps:
     - uses: actions/checkout@v4
@@ -51,6 +60,13 @@ jobs:
         cmake --version
         gcc --version
         g++ --version
+
+    - name: Install dependencies on macOS
+      if: startsWith(matrix.config.os, 'macos')
+      run: |
+        brew install cmake qt6
+        cmake --version
+        clang --version
 
     - name: Install Qt on Windows
       if: startsWith(matrix.config.os, 'windows')
