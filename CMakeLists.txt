@@ -6,14 +6,13 @@ CMAKE_MINIMUM_REQUIRED( VERSION 3.15 )
 
 PROJECT( BabelWires )
 
-#SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
-
-SET( CMAKE_EDIT_COMMAND /usr/bin/cmake -i )
-SET( CMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT TRUE )
 SET(CMAKE_CXX_STANDARD 20)
 
 # Lots of work will be required to support shared libs. Waiting to see whether C++ Modules will help.
 set(BUILD_SHARED_LIBS OFF)
+# Ensure that submodules (e.g. nodeeditor) respect the BUILD_SHARED_LIBS setting.
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+
 SET(gtest_force_shared_crt ON)
 
 #SET(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreadedDebug)
@@ -42,14 +41,14 @@ if(NOT EXISTS "${PROJECT_SOURCE_DIR}/extern/tinyxml2/CMakeLists.txt")
     message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
 endif()
 
-FIND_PACKAGE( Qt5 REQUIRED COMPONENTS Core Widgets Gui OpenGL )
-IF( Qt5_FOUND )
-    ADD_DEFINITIONS(${Qt5Widgets_DEFINITIONS})
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
-    include_directories(${Qt5Widgets_INCLUDE_DIRS})
+FIND_PACKAGE( Qt6 REQUIRED COMPONENTS Core Widgets Gui OpenGL )
+IF( Qt6_FOUND )
+    ADD_DEFINITIONS(${Qt6Widgets_DEFINITIONS})
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt6Widgets_EXECUTABLE_COMPILE_FLAGS}")
+    include_directories(${Qt6Widgets_INCLUDE_DIRS})
     set(CMAKE_AUTOMOC ON)
-    MESSAGE(${Qt5Widgets_INCLUDE_DIRS})
-ENDIF( Qt5_FOUND )
+    MESSAGE(${Qt6Widgets_INCLUDE_DIRS})
+ENDIF( Qt6_FOUND )
 
 ADD_SUBDIRECTORY( BabelWiresQtUi )
 
@@ -57,9 +56,11 @@ add_subdirectory(extern/tinyxml2)
 INCLUDE_DIRECTORIES(${tinyxml2_INCLUDE_DIRS})
 
 add_subdirectory(extern/googletest)
+# Workaround for a build system issue in libsndfile test.
+set(BUILD_TESTING OFF)
 add_subdirectory(extern/libsndfile)
+set(BUILD_TESTING ON)
 
-SET(USE_QT6 OFF CACHE INTERNAL "Tell nodeeditor to use Qt5")
 add_subdirectory(extern/nodeeditor)
 
 add_subdirectory(Tests/TestUtils)

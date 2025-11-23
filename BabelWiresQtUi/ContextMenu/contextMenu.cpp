@@ -15,10 +15,6 @@ babelwires::ContextMenu::ContextMenu(QAbstractItemModel& model, const QModelInde
     : m_model(model)
     , m_index(index) {}
 
-void babelwires::ContextMenu::leaveEvent(QEvent* event) {
-    close();
-}
-
 QAbstractItemModel& babelwires::ContextMenu::getModel() {
     return m_model;
 }
