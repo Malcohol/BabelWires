@@ -123,7 +123,7 @@ bool babelwires::XmlDeserializer::deserializeValue(std::string_view key, bool& v
             }
             return false;
         case tinyxml2::XML_SUCCESS:
-            throw babelwires::ParseException() << "Required attribute \"" << key << "\" not found";
+            break;
         default:
             throw babelwires::ParseException() << "Unhandled XML error";
     }
