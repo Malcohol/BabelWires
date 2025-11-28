@@ -11,6 +11,7 @@ inline babelwires::TypeConstructorArguments::TypeConstructorArguments(std::vecto
 #endif
 }
 
+inline babelwires::TypeConstructorArguments::~TypeConstructorArguments() = default;
 
 inline babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeRef typeRef0) 
     : TypeRef(typeConstructorId, TypeConstructorArguments{{std::move(typeRef0)}}) {}

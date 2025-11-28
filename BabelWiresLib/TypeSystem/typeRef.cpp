@@ -21,8 +21,6 @@ namespace {
     constexpr char defaultStateString[] = "[]";
 } // namespace
 
-babelwires::TypeConstructorArguments::~TypeConstructorArguments() = default;
-
 std::size_t babelwires::TypeConstructorArguments::getHash() const {
     // Arbitrary value.
     std::size_t hash = 0x80235AA2;
