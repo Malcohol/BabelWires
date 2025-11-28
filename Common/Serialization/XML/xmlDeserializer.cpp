@@ -48,6 +48,8 @@ bool babelwires::XmlDeserializer::getIntValue(const tinyxml2::XMLElement& elemen
             return false;
         case tinyxml2::XML_SUCCESS:
             break;
+        default:
+            throw babelwires::ParseException() << "Unhandled XML error";
     }
     if ((bigValue < std::numeric_limits<INT_TYPE>::min()) || (bigValue > std::numeric_limits<INT_TYPE>::max())) {
         throw babelwires::ParseException() << "Attribute \"" << key << "\" was out of range";
@@ -121,7 +123,9 @@ bool babelwires::XmlDeserializer::deserializeValue(std::string_view key, bool& v
             }
             return false;
         case tinyxml2::XML_SUCCESS:
-            break;
+            throw babelwires::ParseException() << "Required attribute \"" << key << "\" not found";
+        default:
+            throw babelwires::ParseException() << "Unhandled XML error";
     }
     return true;
 }
