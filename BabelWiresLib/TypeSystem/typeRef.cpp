@@ -21,6 +21,24 @@ namespace {
     constexpr char defaultStateString[] = "[]";
 } // namespace
 
+babelwires::TypeConstructorArguments::~TypeConstructorArguments() = default;
+
+std::size_t babelwires::TypeConstructorArguments::getHash() const {
+    // Arbitrary value.
+    std::size_t hash = 0x80235AA2;
+    for (const auto& targ : m_typeArguments) {
+        hash::mixInto(hash, targ);
+    }
+    for (const auto& varg : m_valueArguments) {
+        hash::mixInto(hash, varg);
+    }
+    return hash;
+}
+
+bool babelwires::TypeConstructorArguments::equals(const TypeConstructorArguments& a, const TypeConstructorArguments& b) {
+    return (a.m_typeArguments == b.m_typeArguments) && (a.m_valueArguments == b.m_valueArguments);
+}
+
 babelwires::TypeRef::TypeRef() = default;
 
 babelwires::TypeRef::TypeRef(RegisteredTypeId typeId)

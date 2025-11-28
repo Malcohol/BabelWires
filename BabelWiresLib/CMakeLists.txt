@@ -133,7 +133,6 @@ SET( BABELWIRESLIB_SRCS
 	TypeSystem/editableValue.cpp
 	TypeSystem/type.cpp
 	TypeSystem/typeRef.cpp
-	TypeSystem/typeConstructorArguments.cpp
 	TypeSystem/typeConstructor.cpp
 	TypeSystem/typeSystem.cpp
 	TypeSystem/value.cpp
