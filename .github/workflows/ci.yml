@@ -37,15 +37,15 @@ jobs:
             cxx: "cl",
             generators: "Visual Studio 16 2019"
           }
-        #- {
-        #    name: "macOS Latest Clang",
-        #    os: macos-latest,
-        #    build_type: "Debug",
-        #    targetFolder: "",
-        #    exeExtension: "",
-        #    cc: "clang",
-        #    cxx: "clang++"
-        #  }
+        - {
+            name: "macOS Latest Clang",
+            os: macos-latest,
+            build_type: "Debug",
+            targetFolder: "",
+            exeExtension: "",
+            cc: "clang",
+            cxx: "clang++"
+          }
 
     steps:
     - uses: actions/checkout@v4

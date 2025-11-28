@@ -46,6 +46,8 @@ std::unique_ptr<babelwires::MapEntryData> babelwires::MapEntryData::create(const
             return std::make_unique<AllToOneFallbackMapEntryData>(typeSystem, targetTypeRef);
         case Kind::All2Sm:
             return std::make_unique<AllToSameFallbackMapEntryData>();
+        default:
+            assert(false && "Invalid kind");
     }
     assert(false && "Invalid kind");
     return {};
@@ -63,6 +65,8 @@ std::string babelwires::MapEntryData::getKindName(Kind kind) {
             return "All to One";
         case Kind::All2Sm:
             return "All to Same";
+        default:
+            assert(false && "Invalid kind");
     }
     assert(false && "Invalid kind");
     return {};

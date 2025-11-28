@@ -6,7 +6,8 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 template <typename BLOCKSTREAM, typename EVENT>
-struct babelwires::BlockStream::Iterator : std::bidirectional_iterator_tag {
+struct babelwires::BlockStream::Iterator {
+    using iterator_category = std::bidirectional_iterator_tag;
     using value_type = EVENT;
     using difference_type = std::ptrdiff_t;
 
