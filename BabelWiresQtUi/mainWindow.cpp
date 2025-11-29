@@ -296,9 +296,14 @@ void babelwires::MainWindow::openProject() {
                 } catch (FileIoException& e) {
                     m_userLogger.logError() << "The project could not be opened: " << e.what();
                     QString message = e.what();
-                    if (QMessageBox::warning(this, tr("The project could not be opened."), message,
-                                             QMessageBox::Retry | QMessageBox::Cancel,
-                                             QMessageBox::Retry) == QMessageBox::Cancel) {
+                    QMessageBox msgBox;
+                    msgBox.setWindowTitle(tr("Error opening project"));
+                    msgBox.setIcon(QMessageBox::Warning);
+                    msgBox.setText(tr("The project could not be opened."));
+                    msgBox.setInformativeText(message);
+                    msgBox.setStandardButtons(QMessageBox::Retry | QMessageBox::Cancel);
+                    msgBox.setDefaultButton(QMessageBox::Retry);
+                    if (msgBox.exec() == QMessageBox::Cancel) {
                         return;
                     }
                 }
@@ -319,9 +324,14 @@ bool babelwires::MainWindow::trySaveProject(const QString& filePath) {
         } catch (FileIoException& e) {
             m_userLogger.logError() << "The project could not be saved: " << e.what();
             QString message = e.what();
-            if (QMessageBox::warning(this, tr("The project could not be saved."), message,
-                                     QMessageBox::Retry | QMessageBox::Cancel,
-                                     QMessageBox::Retry) == QMessageBox::Cancel) {
+            QMessageBox msgBox;
+            msgBox.setWindowTitle(tr("Error saving project"));
+            msgBox.setIcon(QMessageBox::Warning);
+            msgBox.setText(tr("The project could not be saved."));
+            msgBox.setInformativeText(message);
+            msgBox.setStandardButtons(QMessageBox::Retry | QMessageBox::Cancel);
+            msgBox.setDefaultButton(QMessageBox::Retry);
+            if (msgBox.exec() == QMessageBox::Cancel) {
                 return false;
             }
         }
@@ -469,9 +479,14 @@ bool babelwires::MainWindow::maybeSave() {
     AccessModelScope scope(m_projectGraphModel);
     if (!scope.getCommandManager().isAtCursor()) {
         while (1) {
-            switch (QMessageBox::warning(
-                this, tr("The project has unsaved changes."), tr("Do you want to save them now?"),
-                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save)) {
+            QMessageBox msgBox;
+            msgBox.setWindowTitle(tr("Unsaved changes"));
+            msgBox.setIcon(QMessageBox::Warning);
+            msgBox.setText(tr("The project has unsaved changes."));
+            msgBox.setInformativeText(tr("Do you want to save them now?"));
+            msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+            msgBox.setDefaultButton(QMessageBox::Save);
+            switch (msgBox.exec()) {
                 case QMessageBox::Save:
                     if (trySaveProject(getFullFilePath())) {
                         return true;

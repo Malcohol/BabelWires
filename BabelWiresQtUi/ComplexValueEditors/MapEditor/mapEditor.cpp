@@ -304,9 +304,14 @@ bool babelwires::MapEditor::trySaveMapToFile(const QString& filePath) {
         } catch (FileIoException& e) {
             getUserLogger().logError() << "The map could not be saved: " << e.what();
             QString message = e.what();
-            if (QMessageBox::warning(this, tr("The map could not be saved."), message,
-                                     QMessageBox::Retry | QMessageBox::Cancel,
-                                     QMessageBox::Retry) == QMessageBox::Cancel) {
+            QMessageBox msgBox;
+            msgBox.setWindowTitle(tr("Error saving map"));
+            msgBox.setIcon(QMessageBox::Warning);
+            msgBox.setText(tr("The map could not be saved."));
+            msgBox.setInformativeText(message);
+            msgBox.setStandardButtons(QMessageBox::Retry | QMessageBox::Cancel);
+            msgBox.setDefaultButton(QMessageBox::Retry);
+            if (msgBox.exec() == QMessageBox::Cancel) {
                 return false;
             }
         }
@@ -314,6 +319,9 @@ bool babelwires::MapEditor::trySaveMapToFile(const QString& filePath) {
 }
 
 void babelwires::MapEditor::loadMapFromFile() {
+    if (!maybeApplyToProject()) {
+        return;
+    }
     QString dialogCaption = tr("Load map from file");
     QString dialogFormats = tr(MAP_FORMAT_STRING);
     QString filePath = QFileDialog::getOpenFileName(this, dialogCaption, m_lastSaveFilePath, dialogFormats);
@@ -330,9 +338,14 @@ void babelwires::MapEditor::loadMapFromFile() {
             } catch (FileIoException& e) {
                 getUserLogger().logError() << "The map could not be loaded: " << e.what();
                 QString message = e.what();
-                if (QMessageBox::warning(this, tr("The map could not be loaded."), message,
-                                         QMessageBox::Retry | QMessageBox::Cancel,
-                                         QMessageBox::Retry) == QMessageBox::Cancel) {
+                QMessageBox msgBox;
+                msgBox.setWindowTitle(tr("Error loading map"));
+                msgBox.setIcon(QMessageBox::Warning);
+                msgBox.setText(tr("The map could not be loaded."));
+                msgBox.setInformativeText(message);
+                msgBox.setStandardButtons(QMessageBox::Retry | QMessageBox::Cancel);
+                msgBox.setDefaultButton(QMessageBox::Retry);
+                if (msgBox.exec() == QMessageBox::Cancel) {
                     return;
                 }
             }
@@ -349,7 +362,12 @@ QString babelwires::MapEditor::getTitle() const {
 void babelwires::MapEditor::warnThatMapNoLongerInProject(const std::string& operationDescription) {
     std::ostringstream contents;
     contents << "The map " << getDataLocation() << " is no longer in the project.\n" << operationDescription;
-    QMessageBox::warning(this, "Map no longer in project", QString(contents.str().c_str()));
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(tr("Map no longer in project"));
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.setText(tr("The map is no longer in the project."));
+    msgBox.setInformativeText(tr(operationDescription.c_str()));
+    msgBox.exec();
 }
 
 void babelwires::MapEditor::onCustomContextMenuRequested(const QPoint& pos) {
@@ -378,9 +396,14 @@ void babelwires::MapEditor::executeCommand(std::unique_ptr<Command<MapProject>> 
 bool babelwires::MapEditor::maybeApplyToProject() {
     if (!m_commandManager.isAtCursor()) {
         while (1) {
-            switch (QMessageBox::warning(
-                this, tr("The map editor has unapplied changes."), tr("Do you want to apply them now?"),
-                QMessageBox::Apply | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Apply)) {
+            QMessageBox msgBox;
+            msgBox.setWindowTitle(tr("Unapplied changes"));
+            msgBox.setIcon(QMessageBox::Warning);
+            msgBox.setText(tr("The map editor has unapplied changes."));
+            msgBox.setInformativeText(tr("Do you want to apply them now?"));
+            msgBox.setStandardButtons(QMessageBox::Apply | QMessageBox::Discard | QMessageBox::Cancel);
+            msgBox.setDefaultButton(QMessageBox::Apply);
+            switch (msgBox.exec()) {
                 case QMessageBox::Apply:
                     applyMapToProject();
                     return true;
