@@ -9,10 +9,11 @@
 
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModelDelegate.hpp>
-#include <BabelWiresQtUi/ValueEditors/typeWidget.hpp>
 #include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
+#include <BabelWiresQtUi/Dialogs/messageBox.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
+#include <BabelWiresQtUi/ValueEditors/typeWidget.hpp>
 #include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
@@ -232,8 +233,7 @@ babelwires::MapEditor::tryGetMapValueAssignmentData(const AccessModelScope& scop
     return modifier->getModifierData().as<ValueAssignmentData>();
 }
 
-babelwires::ValueHolder
-babelwires::MapEditor::tryGetMapValueFromProject(const AccessModelScope& scope) const {
+babelwires::ValueHolder babelwires::MapEditor::tryGetMapValueFromProject(const AccessModelScope& scope) const {
     if (const ValueAssignmentData* const modifier = tryGetMapValueAssignmentData(scope)) {
         if (modifier->getValue()->as<MapValue>()) {
             return modifier->getValue();
@@ -303,15 +303,9 @@ bool babelwires::MapEditor::trySaveMapToFile(const QString& filePath) {
             return true;
         } catch (FileIoException& e) {
             getUserLogger().logError() << "The map could not be saved: " << e.what();
-            QString message = e.what();
-            QMessageBox msgBox;
-            msgBox.setWindowTitle(tr("Error saving map"));
-            msgBox.setIcon(QMessageBox::Warning);
-            msgBox.setText(tr("The map could not be saved."));
-            msgBox.setInformativeText(message);
-            msgBox.setStandardButtons(QMessageBox::Retry | QMessageBox::Cancel);
-            msgBox.setDefaultButton(QMessageBox::Retry);
-            if (msgBox.exec() == QMessageBox::Cancel) {
+            if (showErrorMessageBox(tr("The map could not be saved."), e.what(),
+                                    QMessageBox::Retry | QMessageBox::Cancel,
+                                    QMessageBox::Retry) == QMessageBox::Cancel) {
                 return false;
             }
         }
@@ -337,15 +331,9 @@ void babelwires::MapEditor::loadMapFromFile() {
                 return;
             } catch (FileIoException& e) {
                 getUserLogger().logError() << "The map could not be loaded: " << e.what();
-                QString message = e.what();
-                QMessageBox msgBox;
-                msgBox.setWindowTitle(tr("Error loading map"));
-                msgBox.setIcon(QMessageBox::Warning);
-                msgBox.setText(tr("The map could not be loaded."));
-                msgBox.setInformativeText(message);
-                msgBox.setStandardButtons(QMessageBox::Retry | QMessageBox::Cancel);
-                msgBox.setDefaultButton(QMessageBox::Retry);
-                if (msgBox.exec() == QMessageBox::Cancel) {
+                if (showErrorMessageBox(tr("The map could not be loaded."), e.what(),
+                                        QMessageBox::Retry | QMessageBox::Cancel,
+                                        QMessageBox::Retry) == QMessageBox::Cancel) {
                     return;
                 }
             }
@@ -362,12 +350,8 @@ QString babelwires::MapEditor::getTitle() const {
 void babelwires::MapEditor::warnThatMapNoLongerInProject(const std::string& operationDescription) {
     std::ostringstream contents;
     contents << "The map " << getDataLocation() << " is no longer in the project.\n" << operationDescription;
-    QMessageBox msgBox;
-    msgBox.setWindowTitle(tr("Map no longer in project"));
-    msgBox.setIcon(QMessageBox::Warning);
-    msgBox.setText(tr("The map is no longer in the project."));
-    msgBox.setInformativeText(tr(operationDescription.c_str()));
-    msgBox.exec();
+    showWarningMessageBox(tr("The map is no longer in the project"), operationDescription.c_str(), QMessageBox::Ok,
+                          QMessageBox::Ok);
 }
 
 void babelwires::MapEditor::onCustomContextMenuRequested(const QPoint& pos) {
@@ -396,14 +380,9 @@ void babelwires::MapEditor::executeCommand(std::unique_ptr<Command<MapProject>> 
 bool babelwires::MapEditor::maybeApplyToProject() {
     if (!m_commandManager.isAtCursor()) {
         while (1) {
-            QMessageBox msgBox;
-            msgBox.setWindowTitle(tr("Unapplied changes"));
-            msgBox.setIcon(QMessageBox::Warning);
-            msgBox.setText(tr("The map editor has unapplied changes."));
-            msgBox.setInformativeText(tr("Do you want to apply them now?"));
-            msgBox.setStandardButtons(QMessageBox::Apply | QMessageBox::Discard | QMessageBox::Cancel);
-            msgBox.setDefaultButton(QMessageBox::Apply);
-            switch (msgBox.exec()) {
+            switch (showWarningMessageBox(
+                tr("The map editor has unapplied changes."), tr("Do you want to apply them now?"),
+                QMessageBox::Apply | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Apply)) {
                 case QMessageBox::Apply:
                     applyMapToProject();
                     return true;
