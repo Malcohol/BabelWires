@@ -303,7 +303,7 @@ bool babelwires::MapEditor::trySaveMapToFile(const QString& filePath) {
             return true;
         } catch (FileIoException& e) {
             getUserLogger().logError() << "The map could not be saved: " << e.what();
-            if (showErrorMessageBox(tr("The map could not be saved."), e.what(),
+            if (showErrorMessageBox(this, tr("The map could not be saved."), e.what(),
                                     QMessageBox::Retry | QMessageBox::Cancel,
                                     QMessageBox::Retry) == QMessageBox::Cancel) {
                 return false;
@@ -331,7 +331,7 @@ void babelwires::MapEditor::loadMapFromFile() {
                 return;
             } catch (FileIoException& e) {
                 getUserLogger().logError() << "The map could not be loaded: " << e.what();
-                if (showErrorMessageBox(tr("The map could not be loaded."), e.what(),
+                if (showErrorMessageBox(this, tr("The map could not be loaded."), e.what(),
                                         QMessageBox::Retry | QMessageBox::Cancel,
                                         QMessageBox::Retry) == QMessageBox::Cancel) {
                     return;
@@ -350,8 +350,8 @@ QString babelwires::MapEditor::getTitle() const {
 void babelwires::MapEditor::warnThatMapNoLongerInProject(const std::string& operationDescription) {
     std::ostringstream contents;
     contents << "The map " << getDataLocation() << " is no longer in the project.\n" << operationDescription;
-    showWarningMessageBox(tr("The map is no longer in the project"), operationDescription.c_str(), QMessageBox::Ok,
-                          QMessageBox::Ok);
+    showWarningMessageBox(this, tr("The map is no longer in the project"), operationDescription.c_str(),
+                          QMessageBox::Ok, QMessageBox::Ok);
 }
 
 void babelwires::MapEditor::onCustomContextMenuRequested(const QPoint& pos) {
@@ -381,7 +381,7 @@ bool babelwires::MapEditor::maybeApplyToProject() {
     if (!m_commandManager.isAtCursor()) {
         while (1) {
             switch (showWarningMessageBox(
-                tr("The map editor has unapplied changes."), tr("Do you want to apply them now?"),
+                this, tr("The map editor has unapplied changes."), tr("Do you want to apply them now?"),
                 QMessageBox::Apply | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Apply)) {
                 case QMessageBox::Apply:
                     applyMapToProject();

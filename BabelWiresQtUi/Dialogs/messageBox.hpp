@@ -13,12 +13,12 @@ namespace babelwires {
 
     /// Show a message box titled "Warning" with the given parameters.
     /// On MacOs, the title will not be shown, so the text should include that information.
-    int showWarningMessageBox(const QString& text, const QString& informativeText, QMessageBox::StandardButtons buttons,
+    int showWarningMessageBox(QWidget* parent, const QString& text, const QString& informativeText, QMessageBox::StandardButtons buttons,
                        QMessageBox::StandardButton defaultButton);
 
     /// Show a message box titled "Error" with the given parameters.
     /// On MacOs, the title will not be shown, so the text should include that information.
-    int showErrorMessageBox(const QString& text, const QString& informativeText, QMessageBox::StandardButtons buttons,
+    int showErrorMessageBox(QWidget* parent, const QString& text, const QString& informativeText, QMessageBox::StandardButtons buttons,
                        QMessageBox::StandardButton defaultButton);
     
 } // namespace babelwires

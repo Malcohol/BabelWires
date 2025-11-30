@@ -295,7 +295,7 @@ void babelwires::MainWindow::openProject() {
                     return;
                 } catch (FileIoException& e) {
                     m_userLogger.logError() << "The project could not be opened: " << e.what();
-                    if (showErrorMessageBox(tr("The project could not be opened."), e.what(),
+                    if (showErrorMessageBox(this, tr("The project could not be opened."), e.what(),
                                             (QMessageBox::Retry | QMessageBox::Cancel),
                                             QMessageBox::Retry) == QMessageBox::Cancel) {
                         return;
@@ -317,7 +317,7 @@ bool babelwires::MainWindow::trySaveProject(const QString& filePath) {
             return true;
         } catch (FileIoException& e) {
             m_userLogger.logError() << "The project could not be saved: " << e.what();
-            if (showErrorMessageBox(tr("The project could not be saved."), e.what(),
+            if (showErrorMessageBox(this, tr("The project could not be saved."), e.what(),
                                     (QMessageBox::Retry | QMessageBox::Cancel),
                                     QMessageBox::Retry) == QMessageBox::Cancel) {
                 return false;
@@ -470,7 +470,7 @@ bool babelwires::MainWindow::maybeSave() {
     AccessModelScope scope(m_projectGraphModel);
     if (!scope.getCommandManager().isAtCursor()) {
         while (1) {
-            switch (showWarningMessageBox(tr("The project has unsaved changes."), tr("Do you want to save them now?"),
+            switch (showWarningMessageBox(this, tr("The project has unsaved changes."), tr("Do you want to save them now?"),
                                           (QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel),
                                           QMessageBox::Save)) {
                 case QMessageBox::Save:

@@ -7,9 +7,9 @@
  **/
 #include <BabelWiresQtUi/Dialogs/messageBox.hpp>
 
-int babelwires::showWarningMessageBox(const QString& text, const QString& informativeText, QMessageBox::StandardButtons buttons,
+int babelwires::showWarningMessageBox(QWidget* parent, const QString& text, const QString& informativeText, QMessageBox::StandardButtons buttons,
                                QMessageBox::StandardButton defaultButton) {
-    QMessageBox msgBox;
+    QMessageBox msgBox(parent);
     msgBox.setWindowTitle(QObject::tr("Warning"));
     msgBox.setIcon(QMessageBox::Warning);
     msgBox.setText(text);
@@ -19,9 +19,9 @@ int babelwires::showWarningMessageBox(const QString& text, const QString& inform
     return msgBox.exec();
 }
 
-int babelwires::showErrorMessageBox(const QString& text, const QString& informativeText, QMessageBox::StandardButtons buttons,
+int babelwires::showErrorMessageBox(QWidget* parent, const QString& text, const QString& informativeText, QMessageBox::StandardButtons buttons,
                              QMessageBox::StandardButton defaultButton) {
-    QMessageBox msgBox;
+    QMessageBox msgBox(parent);
     msgBox.setWindowTitle(QObject::tr("Error"));
     // The icon could also be Critical, but that sounds too severe for what is usually a local user operation failing.
     msgBox.setIcon(QMessageBox::Warning);
