@@ -1,5 +1,5 @@
 /**
- *
+ * A dialog for selecting a type from the TypeSystem.
  *
  * (C) 2025 Malcolm Tyrrell
  *
@@ -14,6 +14,7 @@
 namespace babelwires {
     class TypeWidget;
 
+    /// A dialog for selecting a type from the TypeSystem.
     class TypeInputDialog : public QDialog {
         Q_OBJECT
       public:
