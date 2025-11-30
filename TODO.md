@@ -1,5 +1,4 @@
 Bugs:
-* Node dragging behavoiur is wrong after Ubuntu update (qt upgrade?)
 * Moving compound connections targets between nodes does not work properly.
   e.g. Three test record values. 
   1. Wire two together. 
@@ -42,7 +41,6 @@ Model
 * Consider a coercion system so numeric types can always be assigned.
 * Implement RecordType Optionality::optionalDefaultActive
 * Bool and float types
-* Generics - e.g. ports that can accept non-specific types, which cause the types of other ports to adapt (or something like that)
 * RationalType granularity
 * StringType length
 

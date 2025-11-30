@@ -7,6 +7,7 @@
  **/
 #include <BabelWiresQtUi/mainWindow.hpp>
 
+#include <BabelWiresQtUi/Dialogs/messageBox.hpp>
 #include <BabelWiresQtUi/LogWindow/logWindow.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
@@ -31,15 +32,14 @@
 #include <Common/Log/unifiedLog.hpp>
 #include <Common/exceptions.hpp>
 
-#include <QtNodes/GraphicsView>
 #include <QtNodes/ConnectionStyle>
+#include <QtNodes/GraphicsView>
 
 #include <QApplication>
 #include <QClipboard>
 #include <QCloseEvent>
 #include <QFileInfo>
 #include <QMenuBar>
-#include <QMessageBox>
 #include <QMimeData>
 #include <QStyle>
 #include <QToolBar>
@@ -141,7 +141,7 @@ void babelwires::MainWindow::createActions() {
     connect(m_copyAction.get(), &QAction::triggered, this, &MainWindow::copy);
 
     connect(m_graphicsScene, &QGraphicsScene::selectionChanged, this, &MainWindow::onNodeSelectionChanged);
-    
+
     m_pasteAction = std::make_unique<QAction>(QIcon::fromTheme("edit-paste"), tr("&Paste"), this);
     m_pasteAction->setShortcuts(QKeySequence::Paste);
     onClipboardChanged();
@@ -295,10 +295,9 @@ void babelwires::MainWindow::openProject() {
                     return;
                 } catch (FileIoException& e) {
                     m_userLogger.logError() << "The project could not be opened: " << e.what();
-                    QString message = e.what();
-                    if (QMessageBox::warning(this, tr("The project could not be opened."), message,
-                                             QMessageBox::Retry | QMessageBox::Cancel,
-                                             QMessageBox::Retry) == QMessageBox::Cancel) {
+                    if (showErrorMessageBox(this, tr("The project could not be opened."), e.what(),
+                                            (QMessageBox::Retry | QMessageBox::Cancel),
+                                            QMessageBox::Retry) == QMessageBox::Cancel) {
                         return;
                     }
                 }
@@ -318,10 +317,9 @@ bool babelwires::MainWindow::trySaveProject(const QString& filePath) {
             return true;
         } catch (FileIoException& e) {
             m_userLogger.logError() << "The project could not be saved: " << e.what();
-            QString message = e.what();
-            if (QMessageBox::warning(this, tr("The project could not be saved."), message,
-                                     QMessageBox::Retry | QMessageBox::Cancel,
-                                     QMessageBox::Retry) == QMessageBox::Cancel) {
+            if (showErrorMessageBox(this, tr("The project could not be saved."), e.what(),
+                                    (QMessageBox::Retry | QMessageBox::Cancel),
+                                    QMessageBox::Retry) == QMessageBox::Cancel) {
                 return false;
             }
         }
@@ -382,13 +380,13 @@ babelwires::ProjectData babelwires::MainWindow::getProjectDataFromSelection() {
     assert(m_graphicsScene->areNodesSelected());
     ProjectGraphicsScene::SelectedObjects selectedObjects = m_graphicsScene->getSelectedObjects();
     ProjectData projectData = m_projectGraphModel.getDataFromSelectedNodes(selectedObjects.m_nodeIds);
-    
+
     auto* flowView = dynamic_cast<QtNodes::GraphicsView*>(centralWidget());
     assert(flowView && "Unexpected central widget");
     const QPointF centre = flowView->sceneRect().center();
     UiPosition offset{static_cast<UiCoord>(-centre.x()), static_cast<UiCoord>(-centre.y())};
     projectUtilities::translate(offset, projectData);
-    
+
     return projectData;
 }
 
@@ -410,16 +408,18 @@ void babelwires::MainWindow::del() {
     {
         AccessModelScope scope(m_projectGraphModel);
         for (auto connectionId : selectedObjects.m_connectionIds) {
-            connectionDescriptions.emplace_back(m_projectGraphModel.createConnectionDescriptionFromConnectionId(scope, connectionId));
+            connectionDescriptions.emplace_back(
+                m_projectGraphModel.createConnectionDescriptionFromConnectionId(scope, connectionId));
         }
     }
-    auto command = std::make_unique<RemoveNodeCommand>("Delete objects", std::move(selectedObjects.m_nodeIds), std::move(connectionDescriptions));
+    auto command = std::make_unique<RemoveNodeCommand>("Delete objects", std::move(selectedObjects.m_nodeIds),
+                                                       std::move(connectionDescriptions));
     m_projectGraphModel.scheduleCommand(std::move(command));
 }
 
 void babelwires::MainWindow::cut() {
     assert(m_graphicsScene->areNodesSelected());
-    
+
     auto projectData = getProjectDataFromSelection();
 
     auto command = std::make_unique<RemoveNodeCommand>("Cut elements");
@@ -461,7 +461,8 @@ void babelwires::MainWindow::paste() {
         m_userLogger.logWarning() << "Failed to paste from clipboard";
     }
     m_graphicsScene->clearSelection();
-    QMetaObject::Connection connection = connect(&m_projectGraphModel, &ProjectGraphModel::nodeCreated, this, &MainWindow::onNodeCreatedSetSelected);
+    QMetaObject::Connection connection =
+        connect(&m_projectGraphModel, &ProjectGraphModel::nodeCreated, this, &MainWindow::onNodeCreatedSetSelected);
     m_projectGraphModel.disconnectAfterProcessing(std::move(connection));
 }
 
@@ -469,9 +470,9 @@ bool babelwires::MainWindow::maybeSave() {
     AccessModelScope scope(m_projectGraphModel);
     if (!scope.getCommandManager().isAtCursor()) {
         while (1) {
-            switch (QMessageBox::warning(
-                this, tr("The project has unsaved changes."), tr("Do you want to save them now?"),
-                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save)) {
+            switch (showWarningMessageBox(this, tr("The project has unsaved changes."), tr("Do you want to save them now?"),
+                                          (QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel),
+                                          QMessageBox::Save)) {
                 case QMessageBox::Save:
                     if (trySaveProject(getFullFilePath())) {
                         return true;
