@@ -5,10 +5,13 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+    # Stop actions on draft PRs
+    types: [opened, reopened, synchronize, ready_for_review]
   workflow_dispatch:
 
 jobs:
   build-and-test:
+    if: github.event.pull_request.draft == false
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
     strategy:
@@ -34,6 +37,15 @@ jobs:
             cxx: "cl",
             generators: "Visual Studio 16 2019"
           }
+        - {
+            name: "macOS Latest Clang",
+            os: macos-latest,
+            build_type: "Debug",
+            targetFolder: "",
+            exeExtension: "",
+            cc: "clang",
+            cxx: "clang++"
+          }
 
     steps:
     - uses: actions/checkout@v4
@@ -44,17 +56,23 @@ jobs:
       if: startsWith(matrix.config.name, 'Ubuntu_GCC')
       run: |
         sudo apt-get update
-        sudo apt-get install cmake ${{ matrix.config.cc }} ${{ matrix.config.cxx }} qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libasound2-dev
+        sudo apt-get install cmake ${{ matrix.config.cc }} ${{ matrix.config.cxx }} qt6-base-dev libasound2-dev
         cmake --version
         gcc --version
         g++ --version
-        qtchooser -print-env
+
+    - name: Install dependencies on macOS
+      if: startsWith(matrix.config.os, 'macos')
+      run: |
+        brew install cmake qt6
+        cmake --version
+        clang --version
 
     - name: Install Qt on Windows
       if: startsWith(matrix.config.os, 'windows')
       uses: jurplel/install-qt-action@v4
       with:
-        version: '5.15.2'
+        version: '6.8.3'
         host: 'windows'
 
     - name: Configure CMake

@@ -252,21 +252,21 @@ TEST(TypeRefTest, toStringSuccessValues) {
     babelwires::TypeConstructorId unary0 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Unary0", "UNARY[[[0]]]", "8b3068ee-c604-4fa1-895f-c85dffeceda4",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeRef(unary0, foo).toString(), "UNARY[foo]");
+    EXPECT_EQ(babelwires::TypeRef(unary0, foo.clone()).toString(), "UNARY[foo]");
 
     // Too many arguments is allowed.
-    EXPECT_EQ(babelwires::TypeRef(unary0, foo, foo).toString(), "UNARY[foo]");
+    EXPECT_EQ(babelwires::TypeRef(unary0, foo.clone(), foo.clone()).toString(), "UNARY[foo]");
 
     babelwires::TypeConstructorId binary0 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Binary0", "[0] + [1]", "48aaeb2e-6baf-427a-abf6-490e17da0978",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeRef(binary0, foo, bar).toString(), "foo + bar");
+    EXPECT_EQ(babelwires::TypeRef(binary0, foo.clone(), bar.clone()).toString(), "foo + bar");
 
     // With some escaped brackets.
     babelwires::TypeConstructorId binary1 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Binary1", "}}[1]{{]][0]{{", "51aa321f-6066-40c1-ad5e-a1d6c2f4fd00",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeRef(binary1, foo, bar).toString(), "}bar{]foo{");
+    EXPECT_EQ(babelwires::TypeRef(binary1, foo.clone(), bar.clone()).toString(), "}bar{]foo{");
 
     babelwires::TypeConstructorId withOptional = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "WithOp", "TC([0?])", "971f582f-c6f9-4e46-9499-20f5d1d44cfd",
@@ -277,16 +277,16 @@ TEST(TypeRefTest, toStringSuccessValues) {
     babelwires::TypeConstructorId withOp0 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "WithOp", "([0|,])", "896144d4-9972-4162-81c8-336869bb9cfc",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeRef(withOp0, foo).toString(), "(foo)");
-    EXPECT_EQ(babelwires::TypeRef(withOp0, {{}, {foo, bar}}).toString(), "(foo,bar)");
-    EXPECT_EQ(babelwires::TypeRef(withOp0, {{}, {foo, bar, foo}}).toString(), "(foo,bar,foo)");
+    EXPECT_EQ(babelwires::TypeRef(withOp0, foo.clone()).toString(), "(foo)");
+    EXPECT_EQ(babelwires::TypeRef(withOp0, {{}, {foo.clone(), bar.clone()}}).toString(), "(foo,bar)");
+    EXPECT_EQ(babelwires::TypeRef(withOp0, {{}, {foo.clone(), bar.clone(), foo.clone()}}).toString(), "(foo,bar,foo)");
 
     babelwires::TypeConstructorId withOp1 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "WithOp", "[0|<\\]>]", "393cda51-e0a1-4610-85e6-2dbffa971225",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeRef(withOp1, foo).toString(), "foo");
-    EXPECT_EQ(babelwires::TypeRef(withOp1, {{}, {foo, bar}}).toString(), "foo<]>bar");
-    EXPECT_EQ(babelwires::TypeRef(withOp1, {{}, {foo, bar, foo}}).toString(), "foo<]>bar<]>foo");
+    EXPECT_EQ(babelwires::TypeRef(withOp1, foo.clone()).toString(), "foo");
+    EXPECT_EQ(babelwires::TypeRef(withOp1, {{}, {foo.clone(), bar.clone()}}).toString(), "foo<]>bar");
+    EXPECT_EQ(babelwires::TypeRef(withOp1, {{}, {foo.clone(), bar.clone(), foo.clone()}}).toString(), "foo<]>bar<]>foo");
 }
 
 TEST(TypeRefTest, toStringSuccessMixed) {
@@ -302,7 +302,7 @@ TEST(TypeRefTest, toStringSuccessMixed) {
     babelwires::TypeConstructorId mixed = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "WithOp", "{0}+[0|<\\]>]+{1}", "258495b5-a88e-45c0-83ca-762817c27fb1",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeRef(mixed, {{foo, foo}, {bar, boo, bar}}).toString(), "Foofoo+bar<]>boo<]>bar+Foofoo");
+    EXPECT_EQ(babelwires::TypeRef(mixed, {{foo, foo}, {bar.clone(), boo.clone(), bar.clone()}}).toString(), "Foofoo+bar<]>boo<]>bar+Foofoo");
 }
 
 TEST(TypeRefTest, toStringMalformed) {

@@ -82,7 +82,7 @@ void babelwires::TupleValueEditor::setIsModified(bool isModified) {
 void babelwires::TupleValueEditor::updateValueFromComponentEditor(unsigned int i) {
     assert(i < m_perComponentData.size());
     auto& perComponentData = m_perComponentData[i];
-    if (EditableValueHolder newValue = perComponentData.m_valueModel->createValueFromEditorIfDifferent(perComponentData.m_valueEditor)) {
+    if (ValueHolder newValue = perComponentData.m_valueModel->createValueFromEditorIfDifferent(perComponentData.m_valueEditor)) {
         perComponentData.m_value = newValue;
         emit m_signals->editorHasChanged(this);
     }

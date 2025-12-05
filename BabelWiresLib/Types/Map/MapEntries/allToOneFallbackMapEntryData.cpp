@@ -7,6 +7,7 @@
  **/
 #include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
 
+#include <BabelWiresLib/TypeSystem/editableValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Serialization/serializer.hpp>
@@ -17,8 +18,8 @@ babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData() = defau
 babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(const TypeSystem& typeSystem, const TypeRef& targetTypeRef) {
     const Type *const targetType = targetTypeRef.tryResolve(typeSystem);
     assert(targetType && "You cannot construct a OneToOneMapEntryData entry with an unknown target type");
-
-    m_targetValue = targetType->createValue(typeSystem).is<EditableValue>();
+    m_targetValue = targetType->createValue(typeSystem);
+    assert(m_targetValue->tryGetAsEditableValue() && "MapEntries must contain editable data");
 }
 
 babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(const AllToOneFallbackMapEntryData& other) {
@@ -30,11 +31,12 @@ babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData(AllToOneF
     m_targetValue = std::move(other.m_targetValue);
 }
 
-const babelwires::EditableValueHolder* babelwires::AllToOneFallbackMapEntryData::tryGetTargetValue() const {
+const babelwires::ValueHolder* babelwires::AllToOneFallbackMapEntryData::tryGetTargetValue() const {
     return &m_targetValue;
 }
 
-void babelwires::AllToOneFallbackMapEntryData::setTargetValue(EditableValueHolder value) {
+void babelwires::AllToOneFallbackMapEntryData::setTargetValue(ValueHolder value) {
+    assert(value->tryGetAsEditableValue() && "MapEntries must contain editable data");
     m_targetValue = std::move(value);
 }
 
@@ -54,11 +56,11 @@ bool babelwires::AllToOneFallbackMapEntryData::operator==(const MapEntryData& ot
 }
 
 void babelwires::AllToOneFallbackMapEntryData::serializeContents(Serializer& serializer) const {
-    serializer.serializeObject(*m_targetValue, "target");
+    serializer.serializeObject(m_targetValue->getAsEditableValue(), "target");
 }
 
 void babelwires::AllToOneFallbackMapEntryData::deserializeContents(Deserializer& deserializer) {
-    m_targetValue = deserializer.deserializeObject<EditableValue>("target");
+    m_targetValue = uniquePtrCast<Value>(deserializer.deserializeObject<EditableValue>("target"));
 }
 
 void babelwires::AllToOneFallbackMapEntryData::visitIdentifiers(IdentifierVisitor& visitor) {

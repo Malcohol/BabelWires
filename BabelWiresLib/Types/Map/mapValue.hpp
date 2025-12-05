@@ -11,6 +11,7 @@
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
+#include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Utilities/result.hpp>
@@ -26,7 +27,7 @@ namespace babelwires {
     /// To support scenarios such as deserialization after an awkward versioning step, or copy and
     /// paste from similar but non-identical types, entries are not presumed to be valid.
     /// However, an assignment of MapValue will fail if there are invalid entries.
-    class MapValue : public EditableValue {
+    class MapValue : public AlwaysEditableValue {
       public:
         SERIALIZABLE(MapValue, "mapValue", EditableValue, 1);
         CLONEABLE(MapValue);

@@ -8,19 +8,52 @@
 #pragma once
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
-#include <BabelWiresLib/TypeSystem/typeConstructorArguments.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
+#include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
 #include <Common/Serialization/serializable.hpp>
 
-#include <array>
 #include <variant>
+#include <vector>
 
 namespace babelwires {
     class Type;
+    class TypeRef;
     class TypeSystem;
+
+    /// Holds the arguments to a TypeConstructor.
+    class TypeConstructorArguments {
+      public:
+        TypeConstructorArguments() = default;
+        TypeConstructorArguments(std::vector<TypeRef> typeArguments);
+        TypeConstructorArguments(std::vector<TypeRef> typeArguments, std::vector<ValueHolder> valueArguments);
+        ~TypeConstructorArguments();
+
+        const std::vector<TypeRef>& getTypeArguments() const { return m_typeArguments; }
+        std::vector<TypeRef>& getTypeArguments() { return m_typeArguments; }
+        const std::vector<ValueHolder>& getValueArguments() const { return m_valueArguments; }
+        std::vector<ValueHolder>& getValueArguments() { return m_valueArguments; }
+
+        friend bool operator==(const TypeConstructorArguments& a, const TypeConstructorArguments& b) {
+            return equals(a, b);
+        }
+        friend bool operator!=(const TypeConstructorArguments& a, const TypeConstructorArguments& b) {
+            return !equals(a, b);
+        }
+
+        /// Get a hash which can be used with std::hash.
+        std::size_t getHash() const;
+
+      private:
+        /// The friend operators need to call an out-of-line implementation to avoid an include cycle.
+        static bool equals(const TypeConstructorArguments& a, const TypeConstructorArguments& b);
+
+      private:
+        std::vector<TypeRef> m_typeArguments;
+        std::vector<ValueHolder> m_valueArguments;
+    };
 
     /// A TypeRef describes a type by storing an Id if it is a primitive type,
     /// or storing the id of its constructor and its arguments.
@@ -40,10 +73,10 @@ namespace babelwires {
         // Convenience constructors
         TypeRef(TypeConstructorId typeConstructorId, TypeRef typeRef0);
         TypeRef(TypeConstructorId typeConstructorId, TypeRef typeRef0, TypeRef typeRef1);
-        TypeRef(TypeConstructorId typeConstructorId, EditableValueHolder value0);
-        TypeRef(TypeConstructorId typeConstructorId, EditableValueHolder value0, EditableValueHolder value1);
-        TypeRef(TypeConstructorId typeConstructorId, EditableValueHolder value0, EditableValueHolder value1,
-                EditableValueHolder value2);
+        TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0);
+        TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1);
+        TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1,
+                ValueHolder value2);
 
         /// Attempt to find the type in the TypeSystem that this TypeRef describes.
         /// Returns null if this TypeRef does not resolve.
@@ -107,6 +140,12 @@ namespace babelwires {
 namespace std {
     template <> struct hash<babelwires::TypeRef> {
         inline std::size_t operator()(const babelwires::TypeRef& typeRef) const { return typeRef.getHash(); }
+    };
+
+    template <> struct hash<babelwires::TypeConstructorArguments> {
+        inline std::size_t operator()(const babelwires::TypeConstructorArguments& arguments) const {
+            return arguments.getHash();
+        }
     };
 } // namespace std
 

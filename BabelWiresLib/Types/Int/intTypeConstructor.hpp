@@ -25,6 +25,6 @@ namespace babelwires {
       private:
         /// Throws a TypeSystem exception if the arguments are not of the expected type.
         static std::tuple<Range<IntValue::NativeType>, IntValue::NativeType>
-        extractValueArguments(const std::vector<EditableValueHolder>& valueArguments);
+        extractValueArguments(const std::vector<ValueHolder>& valueArguments);
     };
 } // namespace babelwires

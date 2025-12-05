@@ -141,5 +141,5 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
     for (EntryData& data : entriesToProcess) {
         newOutput.setValue(data.m_index, data.m_outputEntry->getValue());
     }
-    arrayOutput.setValue(newOutput);
+    arrayOutput.setValue(std::move(newOutput));
 }

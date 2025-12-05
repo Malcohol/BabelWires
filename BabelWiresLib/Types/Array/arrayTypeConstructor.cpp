@@ -12,10 +12,11 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
 std::tuple<unsigned int, unsigned int, unsigned int>
-babelwires::ArrayTypeConstructor::extractValueArguments(const std::vector<EditableValueHolder>& valueArguments) {
+babelwires::ArrayTypeConstructor::extractValueArguments(const std::vector<ValueHolder>& valueArguments) {
     // TODO default size should be optional.
     if (valueArguments.size() != 3) {
-        throw TypeSystemException() << "ArrayTypeConstructor expects 3 value arguments but got " << valueArguments.size();
+        throw TypeSystemException() << "ArrayTypeConstructor expects 3 value arguments but got "
+                                    << valueArguments.size();
     }
 
     IntValue::NativeType args[3];
@@ -39,8 +40,7 @@ babelwires::ArrayTypeConstructor::extractValueArguments(const std::vector<Editab
         throw TypeSystemException() << "Trying to construct an array with a maximum size smaller than its minimum size";
     }
 
-    if ((args[2] < args[0]) || (args[2] > args[1]))
-    {
+    if ((args[2] < args[0]) || (args[2] > args[1])) {
         throw TypeSystemException()
             << "Trying to construct an array with a default size outside its allowed size range";
     }
@@ -49,24 +49,28 @@ babelwires::ArrayTypeConstructor::extractValueArguments(const std::vector<Editab
 }
 
 babelwires::TypeConstructor::TypeConstructorResult
-babelwires::ArrayTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
-                                            const std::vector<const Type*>& resolvedTypeArguments) const {
-    if (arguments.m_typeArguments.size() != 1) {
+babelwires::ArrayTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+                                                const TypeConstructorArguments& arguments,
+                                                const std::vector<const Type*>& resolvedTypeArguments) const {
+    if (arguments.getTypeArguments().size() != 1) {
         throw TypeSystemException() << "ArrayTypeConstructor expects a single type arguments but got "
-                                    << arguments.m_typeArguments.size();
+                                    << arguments.getTypeArguments().size();
     }
-    auto [minimumSize, maximumSize, defaultSize] = extractValueArguments(arguments.m_valueArguments);
+    auto [minimumSize, maximumSize, defaultSize] = extractValueArguments(arguments.getValueArguments());
 
-    return std::make_unique<ConstructedType<ArrayType>>(std::move(newTypeRef), arguments.m_typeArguments[0], minimumSize, maximumSize, defaultSize);
+    return std::make_unique<ConstructedType<ArrayType>>(std::move(newTypeRef), arguments.getTypeArguments()[0],
+                                                        minimumSize, maximumSize, defaultSize);
 }
 
-babelwires::TypeRef babelwires::ArrayTypeConstructor::makeTypeRef(TypeRef entryType, unsigned int minSize, unsigned int maxSize, unsigned int defaultSize) {
+babelwires::TypeRef babelwires::ArrayTypeConstructor::makeTypeRef(TypeRef entryType, unsigned int minSize,
+                                                                  unsigned int maxSize, unsigned int defaultSize) {
     assert(minSize <= maxSize);
     assert(defaultSize <= maxSize);
     if (defaultSize < minSize) {
         defaultSize = minSize;
     }
-    return babelwires::TypeRef{getThisIdentifier(),
-                                {{std::move(entryType)},
-                                 {babelwires::IntValue(minSize), babelwires::IntValue(maxSize), babelwires::IntValue(defaultSize)}}};
+    return babelwires::TypeRef{
+        getThisIdentifier(),
+        {{std::move(entryType)},
+         {babelwires::IntValue(minSize), babelwires::IntValue(maxSize), babelwires::IntValue(defaultSize)}}};
 }

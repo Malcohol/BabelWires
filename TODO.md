@@ -16,6 +16,7 @@ Bugs:
 * RecordWithOptionalsFeatureTest::changes test only works if the values are default. Deactivating a non-default optional should not set the value changed flag.
 * Save with changes but no project file should offer "Save As", not "Save".
 * SpinBoxes do not work properly in value editor of the TestTupleType. (Open a TestTupleType in BabelWires)
+* Tuples not editable in project (see TestTupleType): Only working in map editor.
 
 Things to check:
 * Check that elements get sorted by ID when saved in projectData.
@@ -40,7 +41,6 @@ Model
 * Consider a coercion system so numeric types can always be assigned.
 * Implement RecordType Optionality::optionalDefaultActive
 * Bool and float types
-* Generics - e.g. ports that can accept non-specific types, which cause the types of other ports to adapt (or something like that)
 * RationalType granularity
 * StringType length
 
@@ -53,9 +53,6 @@ Refactor:
   - The current design means that tree algorithms call copyContentsAndGetNonConst repeatedly for the same container.
   - See applyToSubvalues.
   - getChild should probably be adjusted to match, although that's more painful.
-* Abandon EditableValue and EditableValueHolder (and ValueHolder template).
-  - Will have to live with unimplemented asserts.
-  - A tuple shouldn't have to be editable, but right now I have to choose.
 * TypeRef could be a value:
   - Among other things, type constructors could just take a single array of values.
   - Additionally, I would expect to need a value containing a type at some point.

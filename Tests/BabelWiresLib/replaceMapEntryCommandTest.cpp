@@ -34,12 +34,8 @@ TEST(ReplaceMapEntryCommandTest, executeAndUndo) {
 
     mapValue.emplaceBack(oneToOne.clone());
 
-    babelwires::StringValue newSourceValue;
-    newSourceValue.set("Source");
-    babelwires::StringValue newTargetValue;
-    newTargetValue.set("Target");
-    oneToOne.setSourceValue(newSourceValue);
-    oneToOne.setTargetValue(newTargetValue);
+    oneToOne.setSourceValue(babelwires::StringValue("Source"));
+    oneToOne.setTargetValue(babelwires::StringValue("Target"));
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
@@ -47,10 +43,8 @@ TEST(ReplaceMapEntryCommandTest, executeAndUndo) {
 
     babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, babelwires::StringType::getThisType(),
                                               babelwires::StringType::getThisType());
-    newSourceValue.set("Source2");
-    newTargetValue.set("Target2");
-    oneToOne2.setSourceValue(newSourceValue);
-    oneToOne2.setTargetValue(newTargetValue);
+    oneToOne2.setSourceValue(babelwires::StringValue("Source2"));
+    oneToOne2.setTargetValue(babelwires::StringValue("Target2"));
 
     babelwires::ReplaceMapEntryCommand testCopyConstructor("Replace", oneToOne2.clone(), 1);
     babelwires::ReplaceMapEntryCommand command = testCopyConstructor;
@@ -124,13 +118,10 @@ TEST(ReplaceMapEntryCommandTest, replaceInvalid) {
 
     babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, babelwires::StringType::getThisType(),
                                               babelwires::StringType::getThisType());
-    babelwires::StringValue newSourceValue;
-    babelwires::StringValue newTargetValue;
-    newSourceValue.set("Source2");
-    newTargetValue.set("Target2");
-    oneToOne2.setSourceValue(newSourceValue);
-    oneToOne2.setTargetValue(newTargetValue);
     
+    oneToOne2.setSourceValue(babelwires::StringValue("Source"));
+    oneToOne2.setTargetValue(babelwires::StringValue("Target"));
+
     babelwires::ReplaceMapEntryCommand command("Replace", oneToOne2.clone(), 1);
     
     EXPECT_TRUE(command.initialize(mapProject));

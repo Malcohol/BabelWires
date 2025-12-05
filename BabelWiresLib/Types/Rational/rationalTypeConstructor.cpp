@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
 
 std::tuple<babelwires::Range<babelwires::Rational>, babelwires::Rational>
-babelwires::RationalTypeConstructor::extractValueArguments(const std::vector<EditableValueHolder>& valueArguments) {
+babelwires::RationalTypeConstructor::extractValueArguments(const std::vector<ValueHolder>& valueArguments) {
     if (valueArguments.size() != 3) {
         throw TypeSystemException() << "RationalTypeConstructor expects 3 value arguments but got "
                                     << valueArguments.size();
@@ -35,11 +35,11 @@ babelwires::TypeConstructor::TypeConstructorResult
 babelwires::RationalTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                    const TypeConstructorArguments& arguments,
                                                    const std::vector<const Type*>& resolvedTypeArguments) const {
-    if (arguments.m_typeArguments.size() != 0) {
+    if (arguments.getTypeArguments().size() != 0) {
         throw TypeSystemException() << "RationalTypeConstructor does not expect type arguments but got "
-                                    << arguments.m_typeArguments.size();
+                                    << arguments.getTypeArguments().size();
     }
-    auto [range, defaultValue] = extractValueArguments(arguments.m_valueArguments);
+    auto [range, defaultValue] = extractValueArguments(arguments.getValueArguments());
     return std::make_unique<ConstructedType<RationalType>>(std::move(newTypeRef), range, defaultValue);
 }
 

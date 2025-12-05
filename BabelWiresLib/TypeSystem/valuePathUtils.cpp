@@ -20,7 +20,7 @@ namespace {
               const babelwires::ValueHolder& valueHolder, const babelwires::Path& p, int& index) {
         if (index < p.getNumSteps()) {
             if (const auto* compoundType = type.as<babelwires::CompoundType>()) {
-                const int childIndex = compoundType->getChildIndexFromStep(*valueHolder, p.getStep(index));
+                const int childIndex = compoundType->getChildIndexFromStep(valueHolder, p.getStep(index));
                 if (childIndex >= 0) {
                     auto [childValue, _, childType] = compoundType->getChild(valueHolder, childIndex);
                     ++index;
@@ -41,7 +41,7 @@ namespace {
                    babelwires::ValueHolder& valueHolder, const babelwires::Path& p, int& index) {
         if (index < p.getNumSteps()) {
             if (auto* compoundType = type.as<babelwires::CompoundType>()) {
-                const int childIndex = compoundType->getChildIndexFromStep(*valueHolder, p.getStep(index));
+                const int childIndex = compoundType->getChildIndexFromStep(valueHolder, p.getStep(index));
                 if (childIndex >= 0) {
                     auto [childValue, _, childType] = compoundType->getChildNonConst(valueHolder, childIndex);
                     ++index;

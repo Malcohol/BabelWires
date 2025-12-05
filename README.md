@@ -33,13 +33,8 @@ This means that compound data can be moved around and modified without significa
 
 [![Build and test pipeline](https://github.com/Malcohol/BabelWires/actions/workflows/ci.yml/badge.svg)](https://github.com/Malcohol/BabelWires/actions/workflows/ci.yml)
 
-BabelWires is intended to be cross platform but given the limited time I have available, quality is inconsistent:
-
-| Platform | Build | Unit Tests | UI |
-| -------- | --- | --- | --- | 
-| GNU/Linux | Verified by CI | Verified by CI | Functional |
-| Windows | Verified by CI | Verified by CI | Needs work |
-| Mac OS | Manual | Manual | Needs work |
+BabelWires is intended to be cross platform and is officially supported on GNU/Linux, Windows and Mac OS. Automation compiles and runs unit tests but, as yet, there is no automated UI testing. 
+Since GNU/Linux is my primary development platform, UI issues may be present on the other platforms.
 
 BabelWires is under active development, but please do not expect development to be rapid.
 My focus is on fundamentals.

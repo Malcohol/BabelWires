@@ -51,6 +51,7 @@ SET( BABELWIRESQTUI_SRCS
     ComplexValueEditors/MapEditor/MapContextMenuActions/mapCommandContextMenuAction.cpp
     ContextMenu/contextMenu.cpp
     ContextMenu/contextMenuAction.cpp
+    Dialogs/messageBox.cpp
     Dialogs/typeInputDialog.cpp
     ValueModels/arrayValueModel.cpp
     ValueModels/enumValueModel.cpp
@@ -73,4 +74,4 @@ ADD_LIBRARY( BabelWiresQtUi ${BABELWIRESQTUI_SRCS} )
 
 TARGET_COMPILE_DEFINITIONS(BabelWiresQtUi PRIVATE NODE_EDITOR_STATIC)
 TARGET_INCLUDE_DIRECTORIES(BabelWiresQtUi PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
-TARGET_LINK_LIBRARIES( BabelWiresQtUi BabelWiresLib Common QtNodes Qt5::Core Qt5::Widgets Qt5::Gui Qt5::OpenGL)
+TARGET_LINK_LIBRARIES( BabelWiresQtUi BabelWiresLib Common QtNodes Qt6::Core Qt6::Widgets Qt6::Gui Qt6::OpenGL)

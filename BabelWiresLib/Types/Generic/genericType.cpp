@@ -27,7 +27,7 @@ namespace {
             unsigned int operator()(const babelwires::TypeConstructorId& constructorId,
                                     const babelwires::TypeConstructorArguments& constructorArguments) {
                 unsigned int height = 0;
-                for (const auto& arg : constructorArguments.m_typeArguments) {
+                for (const auto& arg : constructorArguments.getTypeArguments()) {
                     height = std::max(height, calculateGenericTypeHeight(arg));
                 }
                 if (constructorId == babelwires::GenericTypeConstructor::getThisIdentifier()) {

@@ -43,6 +43,10 @@ void babelwires::ProjectGraphicsScene::setWidgetForDialogs(QWidget* widgetForDia
 QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos) {
     QMenu* modelMenu = new QMenu();
 
+    // Note: There are two codeflows that ensure the menu is deleted safely:
+    // 1. If manu closes with no item selected, the logic in aboutToHide calls deleteLater.
+    // 2. If the user selects an item, the selection processing code calls deleteLater.
+
     // Add filterbox to the context menu
     auto* txtBox = new QLineEdit(modelMenu);
     txtBox->setPlaceholderText(QStringLiteral("Filter"));
@@ -76,10 +80,20 @@ QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos)
 
     treeView->expandAll();
 
+    connect(modelMenu, &QMenu::aboutToHide, [modelMenu, treeView]() {
+        if (treeView->selectedItems().isEmpty()) {
+            // Delete the menu when a selection is not made.
+            modelMenu->deleteLater();
+        }
+    });
+
     connect(treeView, &QTreeWidget::itemClicked, [this, modelMenu, scenePos](QTreeWidgetItem* item, int) {
         if (!(item->flags() & (Qt::ItemIsSelectable))) {
             return;
         }
+        modelMenu->close();
+        // Delete menu when a selection is made.
+        modelMenu->deleteLater();
 
         QTreeWidgetItem* parent = item->parent();
         assert(parent && "non-parents should be selectable");
@@ -93,8 +107,6 @@ QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos)
         ProjectGraphModel* projectGraphModel = qobject_cast<ProjectGraphModel*>(&graphModel());
 
         (*factoryIt)->createNode(*projectGraphModel, item->text(0), scenePos);
-
-        modelMenu->close();
     });
 
     // Setup filtering
@@ -120,9 +132,6 @@ QMenu* babelwires::ProjectGraphicsScene::createSceneMenu(QPointF const scenePos)
 
     // make sure the text box gets focus so the user doesn't have to click on it
     txtBox->setFocus();
-
-    // QMenu's instance auto-destruction
-    modelMenu->setAttribute(Qt::WA_DeleteOnClose);
 
     return modelMenu;
 }

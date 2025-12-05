@@ -13,6 +13,7 @@
 #include <BabelWiresLib/ValueNames/valueNames.hpp>
 
 #include <QLineEdit>
+#include <QRegularExpression>
 
 
 namespace {
@@ -29,13 +30,14 @@ namespace {
         } else if (valueNames.getValueForName(str.toStdString(), newValue)) {
             return true;
         } else {
-            const QRegExp re("^([0-9]*)\\s*\\((.*)\\)$");
-            if (re.indexIn(str) != -1) {
+            const QRegularExpression re("^([0-9]*)\\s*\\((.*)\\)$");
+            const QRegularExpressionMatch match = re.match(str);
+            if (match.hasMatch()) {
                 bool intPartSuccess = false;
-                const int intPart = re.cap(1).toInt(&intPartSuccess);
+                const int intPart = match.captured(1).toInt(&intPartSuccess);
                 if (intPartSuccess) {
                     int namePart;
-                    if (valueNames.getValueForName(re.cap(2).toStdString(), namePart)) {
+                    if (valueNames.getValueForName(match.captured(2).toStdString(), namePart)) {
                         if (intPart == namePart) {
                             newValue = intPart;
                             return true;

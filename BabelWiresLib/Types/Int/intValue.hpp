@@ -11,7 +11,7 @@
 
 namespace babelwires {
 
-    class IntValue : public EditableValue {
+    class IntValue : public AlwaysEditableValue {
       public:
         CLONEABLE(IntValue);
         SERIALIZABLE(IntValue, "int", EditableValue, 1);

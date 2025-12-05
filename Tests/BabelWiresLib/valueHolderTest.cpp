@@ -8,7 +8,7 @@
 #include <Common/DataContext/filePath.hpp>
 
 namespace {
-    struct TestableValue : babelwires::EditableValue {
+    struct TestableValue : babelwires::AlwaysEditableValue {
         SERIALIZABLE(TestableValue, "TestableValue", Value, 1);
         CLONEABLE(TestableValue);
 
@@ -73,30 +73,8 @@ TEST(ValueHolderTest, constructionFromRValue) {
     EXPECT_EQ(valueInHolder->m_x, 5);
 }
 
-TEST(ValueHolderTest, constructionFromLValue) {
-    TestableValue lvalue(5);
-    babelwires::ValueHolder valueHolder{lvalue};
-    const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
-    ASSERT_NE(valueInHolder, nullptr);
-
-    EXPECT_TRUE(valueInHolder->m_wasCopied);
-    EXPECT_FALSE(valueInHolder->m_wasMoved);
-    EXPECT_EQ(valueInHolder->m_x, 5);
-}
-
-TEST(ValueHolderTest, constructionFromSharedPtr) {
-    auto sharedPtr = std::make_shared<TestableValue>(5);
-    babelwires::ValueHolder valueHolder{sharedPtr};
-    const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
-    ASSERT_NE(valueInHolder, nullptr);
-
-    EXPECT_FALSE(valueInHolder->m_wasCopied);
-    EXPECT_FALSE(valueInHolder->m_wasMoved);
-    EXPECT_EQ(valueInHolder->m_x, 5);
-}
-
 TEST(ValueHolderTest, constructionFromUniquePtr) {
-    std::unique_ptr<babelwires::Value> uniquePtr(new TestableValue(5));
+    auto uniquePtr = std::make_unique<TestableValue>(5);
     babelwires::ValueHolder valueHolder{std::move(uniquePtr)};
     const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
     ASSERT_NE(valueInHolder, nullptr);
@@ -117,32 +95,8 @@ TEST(ValueHolderTest, assignmentFromRValue) {
     EXPECT_EQ(valueInHolder->m_x, 5);
 }
 
-TEST(ValueHolderTest, assignmentFromLValue) {
-    TestableValue lvalue(5);
-    babelwires::ValueHolder valueHolder;
-    valueHolder = lvalue;
-    const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
-    ASSERT_NE(valueInHolder, nullptr);
-
-    EXPECT_TRUE(valueInHolder->m_wasCopied);
-    EXPECT_FALSE(valueInHolder->m_wasMoved);
-    EXPECT_EQ(valueInHolder->m_x, 5);
-}
-
-TEST(ValueHolderTest, assignmentFromSharedPtr) {
-    auto sharedPtr = std::make_shared<TestableValue>(5);
-    babelwires::ValueHolder valueHolder;
-    valueHolder = sharedPtr;
-    const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
-    ASSERT_NE(valueInHolder, nullptr);
-
-    EXPECT_FALSE(valueInHolder->m_wasCopied);
-    EXPECT_FALSE(valueInHolder->m_wasMoved);
-    EXPECT_EQ(valueInHolder->m_x, 5);
-}
-
 TEST(ValueHolderTest, assignmentFromUniquePtr) {
-    std::unique_ptr<babelwires::Value> uniquePtr(new TestableValue(5));
+    auto uniquePtr = std::make_unique<TestableValue>(5);
     babelwires::ValueHolder valueHolder;
     valueHolder = std::move(uniquePtr);
     const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
@@ -154,12 +108,10 @@ TEST(ValueHolderTest, assignmentFromUniquePtr) {
 }
 
 TEST(ValueHolderTest, makeValue) {
-    babelwires::NewValueHolder newValueHolder = babelwires::ValueHolder::makeValue<TestableValue>(15);
+    auto newValueHolder = babelwires::ValueHolder::makeValue<TestableValue>(15);
 
-    TestableValue* const nonConstValue = newValueHolder.m_nonConstReference.as<TestableValue>();
-    EXPECT_NE(nonConstValue, nullptr);
-    EXPECT_EQ(nonConstValue->m_x, 15);
-    nonConstValue->m_x = -3;
+    EXPECT_EQ(newValueHolder.m_nonConstReference.m_x, 15);
+    newValueHolder.m_nonConstReference.m_x = -3;
 
     babelwires::ValueHolder valueHolder = std::move(newValueHolder);
     const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
@@ -238,7 +190,7 @@ TEST(ValueHolderTest, visitIdentifiers) {
 
     {
         bool hasIdentifiers = false;
-        babelwires::EditableValueHolder valueHolder{TestableValue(5, hasIdentifiers)};
+        babelwires::ValueHolder valueHolder{TestableValue(5, hasIdentifiers)};
         IdentifierVisitor visitor;
         valueHolder.visitIdentifiers(visitor);
         EXPECT_EQ(visitor.m_ids.size(), 0);
@@ -248,7 +200,7 @@ TEST(ValueHolderTest, visitIdentifiers) {
     }
     {
         bool hasIdentifiers = true;
-        babelwires::EditableValueHolder valueHolder{TestableValue(5, hasIdentifiers)};
+        babelwires::ValueHolder valueHolder{TestableValue(5, hasIdentifiers)};
         IdentifierVisitor visitor;
         valueHolder.visitIdentifiers(visitor);
         EXPECT_EQ(visitor.m_ids.size(), 1);
@@ -269,7 +221,7 @@ TEST(ValueHolderTest, visitFilePaths) {
 
     {
         bool hasFilePaths = false;
-        babelwires::EditableValueHolder valueHolder{TestableValue(5, false, hasFilePaths)};
+        babelwires::ValueHolder valueHolder{TestableValue(5, false, hasFilePaths)};
         valueHolder.visitFilePaths(filePathVisitor);
         EXPECT_EQ(filePaths.size(), 0);
         const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
@@ -278,7 +230,7 @@ TEST(ValueHolderTest, visitFilePaths) {
     }
     {
         bool hasFilePaths = true;
-        babelwires::EditableValueHolder valueHolder{TestableValue(5, false, hasFilePaths)};
+        babelwires::ValueHolder valueHolder{TestableValue(5, false, hasFilePaths)};
         valueHolder.visitFilePaths(filePathVisitor);
         EXPECT_EQ(filePaths.size(), 1);
         EXPECT_EQ(filePaths[0], babelwires::FilePath(std::filesystem::path("Bar")));

@@ -14,7 +14,7 @@
 
 namespace babelwires {
 
-    /// An editable value can be created within a BabelWires application.
+    /// An editable value can be created directly within BabelWires.
     /// This is in contrast with values that can only be loaded, manipulated using processors and saved.
     /// Since EditableValues can be created directly, BabelWires must be able to serialize them.
     class EditableValue : public Value, public Serializable, public ProjectVisitable {
@@ -36,6 +36,16 @@ namespace babelwires {
         /// a specific type's preferred representation. Used by TypeRef::toString().
         /// It does not have to be parsable or even comprehensive.
         virtual std::string toString() const = 0;
+    };
+
+    /// A base class for Values that are always editable.
+    class AlwaysEditableValue : public EditableValue {
+      public:
+        SERIALIZABLE_ABSTRACT(AlwaysEditableValue, EditableValue);
+        CLONEABLE_ABSTRACT(AlwaysEditableValue);
+
+        const EditableValue* tryGetAsEditableValue() const override;
+        EditableValue* tryGetAsEditableValue() override;
     };
 
 } // namespace babelwires

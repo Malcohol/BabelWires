@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
 babelwires::TypeVariableData
-babelwires::TypeVariableTypeConstructor::extractValueArguments(const std::vector<EditableValueHolder>& valueArguments) {
+babelwires::TypeVariableTypeConstructor::extractValueArguments(const std::vector<ValueHolder>& valueArguments) {
     // TODO make optional
     if (valueArguments.size() != 2) {
         throw TypeSystemException() << "TypeVariableTypeConstructor expects 2 value arguments but got "
@@ -41,17 +41,18 @@ babelwires::TypeVariableTypeConstructor::extractValueArguments(const std::vector
 }
 
 babelwires::TypeConstructor::TypeConstructorResult
-babelwires::TypeVariableTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
-                                            const std::vector<const Type*>& resolvedTypeArguments) const {
+babelwires::TypeVariableTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+                                                       const TypeConstructorArguments& arguments,
+                                                       const std::vector<const Type*>& resolvedTypeArguments) const {
     // Verify the arguments are valid, but actually they don't need to be passed to the resulting types.
-    /*VariableData variableData =*/ extractValueArguments(arguments.m_valueArguments);
+    /*VariableData variableData =*/extractValueArguments(arguments.getValueArguments());
 
-    assert(resolvedTypeArguments.size() == arguments.m_typeArguments.size());
-    if (arguments.m_typeArguments.size() > 1) {
+    assert(resolvedTypeArguments.size() == arguments.getTypeArguments().size());
+    if (arguments.getTypeArguments().size() > 1) {
         throw TypeSystemException() << "TypeVariableTypeConstructor expects 0 or 1 type arguments but got "
-                                    << arguments.m_typeArguments.size();
+                                    << arguments.getTypeArguments().size();
     }
-    if (arguments.m_typeArguments.size() == 1) {
+    if (arguments.getTypeArguments().size() == 1) {
         return resolvedTypeArguments[0];
     } else {
         return std::make_unique<ConstructedType<TypeVariableType>>(std::move(newTypeRef));

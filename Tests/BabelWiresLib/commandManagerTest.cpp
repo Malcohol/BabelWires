@@ -40,7 +40,7 @@ namespace {
             return (newCommand && newCommand->m_isSubsumable);
         }
 
-        void subsume(std::unique_ptr<Command> subsequentCommand) {
+        void subsume(std::unique_ptr<Command> subsequentCommand) override {
             m_subsumedCommands.emplace_back(std::move(subsequentCommand));
         }
 

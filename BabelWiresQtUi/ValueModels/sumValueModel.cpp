@@ -46,7 +46,7 @@ void babelwires::SumValueModel::setEditorData(QWidget* editor) const {
     return summandValueModel->setEditorData(editor);
 }
 
-babelwires::EditableValueHolder babelwires::SumValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
+babelwires::ValueHolder babelwires::SumValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
     ValueModelDispatcher summandValueModel;
     initializeValueModelDispatcherForSummand(summandValueModel);
     return summandValueModel->createValueFromEditorIfDifferent(editor);
@@ -82,7 +82,7 @@ void babelwires::SumValueModel::getContextMenuActions(
                 const auto* projectLocation  = location.as<ProjectDataLocation>();
                 assert(projectLocation);
                 const Type& summandType = summandRef.resolve(*m_typeSystem);
-                auto assignmentData = std::make_unique<ValueAssignmentData>(summandType.createValue(*m_typeSystem).is<EditableValue>());
+                auto assignmentData = std::make_unique<ValueAssignmentData>(summandType.createValue(*m_typeSystem));
                 assignmentData->m_targetPath = projectLocation->getPathToValue();
                 action = std::make_unique<ProjectCommandContextMenuAction>(
                     std::make_unique<AddModifierCommand>(summandRef.toString(), projectLocation->getNodeId(), std::move(assignmentData))

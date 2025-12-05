@@ -76,7 +76,7 @@ bool babelwires::RecordValue::operator==(const Value& other) const {
         if (!otherField) {
             return false;
         }
-        if (*f.second != *otherField) {
+        if (f.second != *otherField) {
             return false;
         }
     }

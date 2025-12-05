@@ -19,18 +19,18 @@ namespace babelwires {
     class SetMapCommand : public SimpleCommand<MapProject> {
       public:
         CLONEABLE(SetMapCommand);
-        SetMapCommand(std::string commandName, ValueHolderTemplate<MapValue> newData);
+        SetMapCommand(std::string commandName, ValueHolder newData);
 
         virtual bool initialize(const MapProject& map) override;
         virtual void execute(MapProject& map) const override;
         virtual void undo(MapProject& map) const override;
 
       private:
-        ValueHolderTemplate<MapValue> m_newContents;
+        ValueHolder m_newContents;
 
         // Post initialization data
 
-        ValueHolderTemplate<MapValue> m_oldContents;
+        ValueHolder m_oldContents;
     };
 
 } // namespace babelwires
