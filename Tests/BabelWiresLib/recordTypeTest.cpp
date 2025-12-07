@@ -88,7 +88,7 @@ namespace {
         EXPECT_TRUE(testUtils::areEqualSets(recordType.getOptionalFieldIds(),
                                             {testDomain::TestComplexRecordType::getOpIntId(),
                                              testDomain::TestComplexRecordType::getOpRecId(),
-                                             testDomain::TestComplexRecordType::getOpIntOnId()}));
+                                             testDomain::TestComplexRecordType::getOnOptId()}));
 
         EXPECT_NE(recordValue->getValue(testDomain::TestComplexRecordType::getInt0Id())->as<babelwires::IntValue>(),
                   nullptr);
@@ -113,7 +113,7 @@ namespace {
         }
         if (isOpIntOnActive) {
             EXPECT_NE(
-                recordValue->getValue(testDomain::TestComplexRecordType::getOpIntOnId())->as<babelwires::IntValue>(),
+                recordValue->getValue(testDomain::TestComplexRecordType::getOnOptId())->as<babelwires::IntValue>(),
                 nullptr);
             ++numOptionals;
         }
@@ -201,7 +201,7 @@ TEST(RecordTypeTest, activateOptional) {
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false, true);
 
-    recordType.deactivateField(newValue, testDomain::TestComplexRecordType::getOpIntOnId());
+    recordType.deactivateField(newValue, testDomain::TestComplexRecordType::getOnOptId());
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false, false);
 }
@@ -223,7 +223,7 @@ TEST(RecordTypeTest, selectOptionals) {
     recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
                                {{testDomain::TestComplexRecordType::getOpIntId(), true},
                                 {testDomain::TestComplexRecordType::getOpRecId(), true},
-                                {testDomain::TestComplexRecordType::getOpIntOnId(), false}});
+                                {testDomain::TestComplexRecordType::getOnOptId(), false}});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, true, false);
 
@@ -239,13 +239,13 @@ TEST(RecordTypeTest, selectOptionals) {
     recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
                                {{testDomain::TestComplexRecordType::getOpIntId(), true},
                                 {testDomain::TestComplexRecordType::getOpRecId(), true},
-                                {testDomain::TestComplexRecordType::getOpIntOnId(), true}});
+                                {testDomain::TestComplexRecordType::getOnOptId(), true}});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, true, true);
 
     recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
                                {{testDomain::TestComplexRecordType::getOpRecId(), false},
-                                {testDomain::TestComplexRecordType::getOpIntOnId(), false}});
+                                {testDomain::TestComplexRecordType::getOnOptId(), false}});
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false, false);
 }

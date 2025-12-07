@@ -51,7 +51,7 @@ namespace testDomain {
         static constexpr char s_opRecIdInitializer[] = "opRec";
         static constexpr char s_stringIdInitializer[] = "string";
         static constexpr char s_arrayIdInitializer[] = "array";
-        static constexpr char s_opIntOnIdInitializer[] = "onOpt";
+        static constexpr char s_onOptIdInitializer[] = "onOpt";
 
         static constexpr char s_intFieldName[] = "Int0";
         static constexpr char s_opIntFieldName[] = "OptionalInt";
@@ -61,7 +61,7 @@ namespace testDomain {
         static constexpr char s_stringFieldName[] = "String";
         static constexpr char s_arrayFieldName[] = "Array";
         // Default activated optional
-        static constexpr char s_opIntOnFieldName[] = "OptionalIntOn";
+        static constexpr char s_onOptFieldName[] = "OptionalIntOn";
 
         static babelwires::ShortId getInt0Id();
         static babelwires::ShortId getOpIntId();
@@ -71,7 +71,7 @@ namespace testDomain {
         static babelwires::ShortId getOpRecId();
         static babelwires::ShortId getStringId();
         static babelwires::ShortId getArrayId();
-        static babelwires::ShortId getOpIntOnId();
+        static babelwires::ShortId getOnOptId();
 
         static constexpr unsigned int s_numNonOptionalFields = 5;
 
@@ -83,7 +83,7 @@ namespace testDomain {
         DECLARE_INSTANCE_FIELD(opRec, TestSimpleRecordType)
         DECLARE_INSTANCE_FIELD(string, babelwires::StringType)
         DECLARE_INSTANCE_ARRAY_FIELD(array, babelwires::IntType)
-        DECLARE_INSTANCE_FIELD_OPTIONAL(opIntOn, babelwires::IntType)
+        DECLARE_INSTANCE_FIELD_OPTIONAL(onOpt, babelwires::IntType)
         DECLARE_INSTANCE_END()
     };
 
