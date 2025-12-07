@@ -1,5 +1,9 @@
 /**
- *
+ * Apply a function to all appropriate subvalues of a given value.
+ * 
+ * (C) 2025 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
  */
 #pragma once
 

@@ -1,5 +1,9 @@
 /**
- *
+ * Apply a function to all appropriate subvalues of a given value.
+ * 
+ * (C) 2025 Malcolm Tyrrell
+ * 
+ * Licensed under the GPLv3.0. See LICENSE file.
  */
 #include <BabelWiresLib/Utilities/applyToSubvalues.hpp>
 
@@ -23,8 +27,8 @@ namespace {
 
         // If the predicate does not match, check if the value is a compound type.
         if (const auto* compoundType = type.as<babelwires::CompoundType>()) {
+            // Assigned only if some value within it needs to be modified.
             babelwires::ValueHolder result;
-            bool hasModifiedChild = false;
 
             // Iterate over the children of the compound value.
             unsigned int numChildren = compoundType->getNumChildren(sourceValue);
@@ -32,13 +36,17 @@ namespace {
                 auto [childValue, step, childTypeRef] = compoundType->getChild(sourceValue, i);
                 if (auto childResult = applyToSubvaluesInternal(typeSystem, childTypeRef.resolve(typeSystem),
                                                                 *childValue, predicate, function)) {
+                    if (!result) {
+                        result = sourceValue;
+                        result.copyContentsAndGetNonConst();
+                    }
+                    // MAYBEDO I think there's may be unnecessary clones happening here if there are intermediate compound types.
                     auto [childNonConstValue, step2, childTypeRef2] = compoundType->getChildNonConst(result, i);
                     *childNonConstValue = std::move(childResult);
-                    hasModifiedChild = true;
                 }
             }
 
-            if (hasModifiedChild) {
+            if (result) {
                 return result; // Return the modified compound value.
             }
         }
