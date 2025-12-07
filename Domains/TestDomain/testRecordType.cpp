@@ -27,7 +27,7 @@ testDomain::TestComplexRecordType::TestComplexRecordType()
                   {getOpRecId(), TestSimpleRecordType::getThisType(), Optionality::optionalDefaultInactive},
                   {getStringId(), babelwires::StringType::getThisType()},
                   {getArrayId(), testDomain::TestSimpleArrayType::getThisType()},
-                  {getOpIntOnId(), babelwires::DefaultIntType::getThisType(), Optionality::optionalDefaultActive }}) {}
+                  {getOnOptId(), babelwires::DefaultIntType::getThisType(), Optionality::optionalDefaultActive }}) {}
 
 babelwires::ShortId testDomain::TestComplexRecordType::getInt0Id() {
     return BW_SHORT_ID(s_intIdInitializer, s_intFieldName, "1aafde9a-fb39-4a2d-8a29-55fc9d6d093b");
@@ -57,8 +57,8 @@ babelwires::ShortId testDomain::TestComplexRecordType::getArrayId() {
     return BW_SHORT_ID(s_arrayIdInitializer, s_arrayFieldName, "5da653f4-44d5-4030-a956-771fc06fb769");
 }
 
-babelwires::ShortId testDomain::TestComplexRecordType::getOpIntOnId() {
-    return BW_SHORT_ID(s_opIntOnIdInitializer, s_opIntOnFieldName, "cb4e25af-9107-405a-bf02-18a95f56eae4");
+babelwires::ShortId testDomain::TestComplexRecordType::getOnOptId() {
+    return BW_SHORT_ID(s_onOptIdInitializer, s_onOptFieldName, "cb4e25af-9107-405a-bf02-18a95f56eae4");
 }
 
 testDomain::TestSimpleRecordElementData::TestSimpleRecordElementData()
@@ -149,7 +149,7 @@ babelwires::Path testDomain::TestComplexRecordElementData::getPathToRecordArrayE
 
 babelwires::Path testDomain::TestComplexRecordElementData::getPathToRecordOpIntOn() {
     babelwires::Path path = getPathToRecord();
-    path.pushStep(TestComplexRecordType::getOpIntOnId());
+    path.pushStep(TestComplexRecordType::getOnOptId());
     return path;
 }
 
