@@ -22,8 +22,6 @@ namespace babelwires {
         /// Construct a rooted ValueTreeNode which carries values of the given type.
         ValueTreeRoot(const TypeSystem& typeSystem, TypeRef typeRef);
 
-        class ModificationScope;
-
         /// Set the value at the path to the new value.
         void setDescendentValue(const Path& path, const ValueHolder& newValue);
 
