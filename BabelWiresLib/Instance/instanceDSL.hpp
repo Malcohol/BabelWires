@@ -87,7 +87,7 @@
     }
 
 /// Declare a (non-optional) field whose value type is not expected to have an instance specialization.
-#define DECLARE_INSTANCE_GENERIC_FIELD(FIELD_NAME)                                                                     \
+#define DECLARE_INSTANCE_NON_INSTANCE_FIELD(FIELD_NAME)                                                                     \
     babelwires::InstanceUntypedBase<const babelwires::ValueTreeNode> get##FIELD_NAME() const {                         \
         return babelwires::InstanceUtils::getChild(this->m_valueTreeNode, #FIELD_NAME);                                \
     }                                                                                                                  \
