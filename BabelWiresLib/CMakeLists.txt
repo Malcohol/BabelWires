@@ -36,6 +36,9 @@ SET( BABELWIRESLIB_SRCS
 	Types/Array/arrayType.cpp
 	Types/Array/arrayTypeConstructor.cpp
 	Types/Array/arrayValue.cpp
+	Types/Failure/failureType.cpp
+	Types/Failure/failureTypeConstructor.cpp
+	Types/Failure/failureValue.cpp
 	Types/File/fileType.cpp
 	Types/File/fileTypeConstructor.cpp
 	Types/Generic/genericType.cpp

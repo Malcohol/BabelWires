@@ -19,7 +19,7 @@ babelwires::ValueNode::ValueNode(const ProjectContext& context, UserLogger& user
     setFactoryName(data.getTypeRef().toString());
     TypeRef typeRefForConstruction = data.getTypeRef();
     if (!typeRefForConstruction.tryResolve(context.m_typeSystem)) {
-        typeRefForConstruction = FailureType::getThisType();
+        typeRefForConstruction = DefaultFailureType::getThisType();
         std::ostringstream message;
         message << "Type Reference " << data.getTypeRef().toString() << " could not be resolved";
         setInternalFailure(message.str());
@@ -50,7 +50,7 @@ const babelwires::ValueTreeNode* babelwires::ValueNode::getOutput() const {
 }
 
 std::string babelwires::ValueNode::getRootLabel() const {
-    if (m_valueTreeRoot->getTypeRef() == FailureType::getThisType()) {
+    if (m_valueTreeRoot->getTypeRef() == DefaultFailureType::getThisType()) {
         return "Failed";
     } else {
         return "Value";
