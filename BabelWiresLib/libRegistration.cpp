@@ -13,6 +13,7 @@
 #include <BabelWiresLib/Types/Enum/enumAtomTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Enum/enumUnionTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
+#include <BabelWiresLib/Types/Failure/failureTypeConstructor.hpp>
 #include <BabelWiresLib/Types/File/fileTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Generic/genericTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
@@ -36,9 +37,10 @@ void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<StringType>();
     context.m_typeSystem.addEntry<DefaultRationalType>();
     context.m_typeSystem.addEntry<MapEntryFallbackKind>();
-    context.m_typeSystem.addEntry<FailureType>();
+    context.m_typeSystem.addEntry<DefaultFailureType>();
     context.m_typeSystem.addTypeConstructor<EnumAtomTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<EnumUnionTypeConstructor>();
+    context.m_typeSystem.addTypeConstructor<FailureTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<IntTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<RationalTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<SumTypeConstructor>();
