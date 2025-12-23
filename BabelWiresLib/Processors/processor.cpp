@@ -47,5 +47,14 @@ const babelwires::ValueTreeRoot& babelwires::Processor::getOutput() const {
 }
 
 void babelwires::Processor::process(UserLogger& userLogger) {
-    processValue(userLogger, *m_inputValueTreeRoot, *m_outputValueTreeRoot);
+    try {
+        processValue(userLogger, *m_inputValueTreeRoot, *m_outputValueTreeRoot);
+    } catch (...) {
+        onFailure();
+        throw;
+    }
+}
+
+void babelwires::Processor::onFailure() const {
+    m_outputValueTreeRoot->setToDefault();
 }

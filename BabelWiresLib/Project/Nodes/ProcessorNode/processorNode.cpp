@@ -104,8 +104,6 @@ void babelwires::ProcessorNode::doProcess(UserLogger& userLogger) {
                 userLogger.logError() << "Processor id=" << getNodeId()
                                       << " failed to process correctly: " << e.what();
                 setInternalFailure(e.what());
-                // TODO: Is this definitely the desired outcome?
-                m_processor->getOutput().setToDefault();
             }
         }
         if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {
