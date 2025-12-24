@@ -119,16 +119,10 @@ bool babelwires::AddConnectionCommand::initializeAndExecute(Project& project) {
 
 void babelwires::AddConnectionCommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    if (m_typeAssignmentModifier) {
-        project.addModifier(m_targetNodeId, *m_typeAssignmentModifier);
-    }
     project.addModifier(m_targetNodeId, *m_modifierToAdd);
 }
 
 void babelwires::AddConnectionCommand::undo(Project& project) const {
     project.removeModifier(m_targetNodeId, m_modifierToAdd->m_targetPath);
-    if (m_typeAssignmentModifier) {
-        project.removeModifier(m_targetNodeId, m_typeAssignmentModifier->m_targetPath);
-    }
     CompoundCommand::undo(project);
 }
