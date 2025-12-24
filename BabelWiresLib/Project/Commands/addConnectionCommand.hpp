@@ -15,7 +15,6 @@
 namespace babelwires {
     class Project;
     struct ConnectionModifierData;
-    class SetTypeVariableModifierData;
 
     /// Add a modifier to a Node.
     class AddConnectionCommand : public CompoundCommand<Project> {
