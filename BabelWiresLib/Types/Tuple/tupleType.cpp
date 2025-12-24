@@ -25,7 +25,7 @@ babelwires::NewValueHolder babelwires::TupleType::createValue(const TypeSystem& 
     return babelwires::ValueHolder::makeValue<TupleValue>(std::move(newTuple));
 }
 
-bool babelwires::TupleType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
+bool babelwires::TupleType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
     const TupleValue* tuple = v.as<TupleValue>();
     if (!tuple) {
         return false;
@@ -35,7 +35,7 @@ bool babelwires::TupleType::isValidValue(const TypeSystem& typeSystem, const Val
     }
     for (unsigned int i = 0; i < m_componentTypes.size(); ++i) {
         const Type& type = m_componentTypes[i].resolve(typeSystem);
-        if (!type.isValidValue(typeSystem, *tuple->getValue(i))) {
+        if (!visitor(typeSystem, m_componentTypes[i], *tuple->getValue(i), i)) {
             return false;
         }
     }

@@ -44,7 +44,7 @@ namespace babelwires {
 
       public:
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
-        bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
+        bool visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const override;
 
         unsigned int getNumChildren(const ValueHolder& compoundValue) const override;
         std::tuple<const ValueHolder*, PathStep, const TypeRef&> getChild(const ValueHolder& compoundValue,

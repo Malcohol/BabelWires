@@ -28,7 +28,7 @@ namespace babelwires {
         /// Returns -1 if the value is not valid.
         int getIndexOfValue(const TypeSystem& typeSystem, const Value& v) const;
 
-        bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
+        bool visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const override;
 
         std::string getFlavour() const override;
 

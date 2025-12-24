@@ -172,3 +172,47 @@ int babelwires::getMaximumHeightOfUnassignedGenericType(const ValueTreeNode& val
     explorer.containsUnassignedTypeVariableImpl(valueTreeNode, 0);
     return explorer.m_maximumHeightFound;
 }
+
+// Algorithm for matching a compound type containing a type variables against a source type and value.
+// It might be sufficient to match any type variable and allow the type system to accept or reject
+// the assignment using its usual rules.
+
+// Let's imagine that isValidValue was reimplemented using visitValue:
+//
+// using ChildValueVisitor = std::function<bool(const TypeSystem& typeSystem, const TypeRef& childTypeRef, const PathStep& pathStep, const
+// const ValueHolder& v)>;
+//
+// Type::visitValue(const TypeSystem& typeSystem, const ValueHolder& v, ChildValueVisitor& visitor) const
+//
+// bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override {
+//     ValueVisitor visitor = [&](const TypeRef& childTypeRef, const ValueHolder& v) {
+//         const Type& childType = childTypeRef.resolve(typeSystem);
+//         return childType.isValidValue(typeSystem, v);
+//     };
+//     return this->visitValue(typeSystem, v, visitor);
+
+// bool babelwires::matchTypeWithTypeVariables(const TypeSystem& typeSystem, const TypeRef& genericTypeRef, const TypeRef& inTypeRef,
+//                                          const ValueHolder& inValue,
+//   std::map<unsigned int, TypeRef>& outTypeVariableAssignments) {
+//      ValueVisitor visitor = [&](const TypeSystem& typeSystem, const TypeRef& childTypeRef, const PathStep& pathStep, const
+// const ValueHolder& v) {
+//      const Type& childType = childTypeRef.resolve(typeSystem);
+//      if (const auto* typeVariableType = childType.as<TypeVariableType>()) {
+//          const auto typeVarData = typeVariableType->getTypeVariableData();
+//          // Handle the type variable assignment
+//      else {
+//          const unsigned int childIndexInSourceType = inType.getChildIndexFromStep(typeSystem, pathStep);
+//          const auto [sourceChildValuePtr, , sourceChildTypeRef] = inType.getChild(inValue, childIndexInSourceType);
+//          if (!sourceChildValuePtr) {
+//              return false;
+//          }
+//          return matchTypeWithTypeVariables(typeSystem, childTypeRef, sourceChildTypeRef, *sourceChildValuePtr, outTypeVariableAssignments);
+//      }
+//      const Type& genericType = genericTypeRef.resolve(typeSystem);
+//      if (!genericType.visitValue(typeSystem, genericValue, visitor)) {
+//          return false;
+//      }
+//      return true;
+//}
+
+

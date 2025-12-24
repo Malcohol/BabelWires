@@ -22,8 +22,8 @@ babelwires::NewValueHolder babelwires::TypeVariableType::createValue(const TypeS
     return babelwires::ValueHolder::makeValue<TypeVariableValue>();
 }
 
-bool babelwires::TypeVariableType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
-    return v.as<TypeVariableValue>();
+bool babelwires::TypeVariableType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
+    return v.as<TypeVariableValue>() != nullptr;
 }
 
 std::optional<babelwires::SubtypeOrder> babelwires::TypeVariableType::compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const {

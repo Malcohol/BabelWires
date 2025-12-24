@@ -82,7 +82,7 @@ babelwires::NewValueHolder babelwires::GenericType::createValue(const TypeSystem
     return babelwires::ValueHolder::makeValue<GenericValue>(typeSystem, m_wrappedType, m_numVariables);
 }
 
-bool babelwires::GenericType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
+bool babelwires::GenericType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
     const GenericValue* const genericValue = v.as<GenericValue>();
     if (!genericValue) {
         return false;

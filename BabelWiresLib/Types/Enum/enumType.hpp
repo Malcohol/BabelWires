@@ -9,8 +9,8 @@
 
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 namespace babelwires {
     /// A type offering a choice from a set of named values.
@@ -52,13 +52,15 @@ namespace babelwires {
 
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 
-        bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
+        bool visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const override;
 
         std::string getFlavour() const override;
 
-        std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
+        std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem,
+                                                         const Type& other) const override;
 
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
+
       private:
         /// The enum values in their intended order.
         ValueSet m_values;

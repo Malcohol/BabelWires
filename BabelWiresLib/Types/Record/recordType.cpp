@@ -156,7 +156,7 @@ babelwires::NewValueHolder babelwires::RecordType::createValue(const TypeSystem&
     return std::move(newValue);
 }
 
-bool babelwires::RecordType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
+bool babelwires::RecordType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
     const RecordValue* const recordValue = v.as<RecordValue>();
     if (!recordValue) {
         return false;
@@ -168,8 +168,7 @@ bool babelwires::RecordType::isValidValue(const TypeSystem& typeSystem, const Va
                 return false;
             }
         } else {
-            const Type& fieldType = f.m_type.resolve(typeSystem);
-            if (!fieldType.isValidValue(typeSystem, **value)) {
+            if (!visitor(typeSystem, f.m_type, **value, PathStep{f.m_identifier})) {
                 return false;
             }
         }

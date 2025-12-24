@@ -22,7 +22,7 @@ babelwires::NewValueHolder babelwires::RationalType::createValue(const TypeSyste
     return ValueHolder::makeValue<RationalValue>(m_defaultValue);
 }
 
-bool babelwires::RationalType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
+bool babelwires::RationalType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
     if (const RationalValue* const ratValue = v.as<RationalValue>()) {
         return m_range.contains(ratValue->get());
     }

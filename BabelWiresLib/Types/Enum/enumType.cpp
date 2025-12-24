@@ -61,7 +61,8 @@ bool babelwires::EnumType::isAValue(const babelwires::ShortId& id) const {
     return true;
 }
 
-bool babelwires::EnumType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
+bool babelwires::EnumType::visitValue(const TypeSystem& typeSystem, const Value& v,
+                                ChildValueVisitor& visitor) const {
     if (const auto* enumValue = v.as<EnumValue>()) {
         return isAValue(enumValue->get());
     }

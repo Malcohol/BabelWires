@@ -21,7 +21,7 @@ babelwires::NewValueHolder babelwires::MapType::createValue(const TypeSystem& ty
     return ValueHolder::makeValue<MapValue>(typeSystem, m_sourceTypeRef, m_targetTypeRef, m_defaultFallbackKind);
 }
 
-bool babelwires::MapType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
+bool babelwires::MapType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
     if (const MapValue* const map = v.as<MapValue>()) {
         // Because of the fallback entry, we don't need contravariance here.
         return typeSystem.isRelatedType(map->getSourceTypeRef(), m_sourceTypeRef) &&

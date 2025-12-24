@@ -35,7 +35,8 @@ namespace testUtils {
         TestType(unsigned int maximumLength = 0, std::string defaultValue = "Default value");
 
         babelwires::NewValueHolder createValue(const babelwires::TypeSystem& typeSystem) const override;
-        bool isValidValue(const babelwires::TypeSystem& typeSystem, const babelwires::Value& value) const override;
+        bool visitValue(const babelwires::TypeSystem& typeSystem, const babelwires::Value& value,
+                                ChildValueVisitor& visitor) const override;
         std::string getFlavour() const override;
 
         std::optional<babelwires::SubtypeOrder> compareSubtypeHelper(const babelwires::TypeSystem& typeSystem, const babelwires::Type& other) const override;
