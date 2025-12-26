@@ -188,7 +188,7 @@ namespace {
                              const babelwires::TypeRef& sourceTypeRef, const babelwires::ValueHolder& sourceValue,
                              const babelwires::Path& pathToCurrentNode) {
             if (auto typeVariableData = babelwires::TypeVariableData::isTypeVariable(targetTypeRef)) {
-                return handleAssignment(*typeVariableData, targetTypeRef, pathToCurrentNode);
+                return handleAssignment(*typeVariableData, sourceTypeRef, pathToCurrentNode);
             }
             babelwires::Type::ChildValueVisitor childValueVisitor = [&](const babelwires::TypeSystem& typeSystem,
                                                                         const babelwires::TypeRef& childTypeRef,
@@ -277,16 +277,15 @@ babelwires::getTypeVariableAssignments(const ValueTreeNode& sourceValueTreeNode,
     assert(containsUnassignedTypeVariable(targetValueTreeNode) &&
             "Target ValueTreeNode has no unassigned type variables");
     const TypeSystem& typeSystem = sourceValueTreeNode.getTypeSystem();
-    std::map<std::tuple<Path, unsigned int>, TypeRef> assignments;
     const TypeRef& targetTypeRef = targetValueTreeNode.getTypeRef();
     const TypeRef& sourceTypeRef = sourceValueTreeNode.getTypeRef();
     const ValueHolder& sourceValue = sourceValueTreeNode.getValue();
     const RootAndPath<const ValueTreeRoot> rootAndPath = getRootAndPathTo(targetValueTreeNode);
 
-    TypeVariableAssignmentFinder finder{typeSystem, rootAndPath.m_root, assignments};
+    TypeVariableAssignmentFinder finder{typeSystem, rootAndPath.m_root};
     // The source value is passed in twice here. See the comment on findAssignments.
     if (!finder.findAssignments(targetTypeRef, *sourceValue, sourceTypeRef, sourceValue, rootAndPath.m_pathFromRoot)) {
         return std::nullopt;
     }
-    return assignments;
+    return finder.m_assignments;
 }
