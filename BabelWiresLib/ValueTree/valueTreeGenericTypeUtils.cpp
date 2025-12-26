@@ -13,7 +13,9 @@
 #include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+#include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 const babelwires::ValueTreeNode* babelwires::tryGetGenericTypeFromVariable(const ValueTreeNode& valueTreeNode) {
     auto variableData = TypeVariableData::isTypeVariable(valueTreeNode.getTypeRef());
@@ -173,46 +175,101 @@ int babelwires::getMaximumHeightOfUnassignedGenericType(const ValueTreeNode& val
     return explorer.m_maximumHeightFound;
 }
 
-// Algorithm for matching a compound type containing a type variables against a source type and value.
-// It might be sufficient to match any type variable and allow the type system to accept or reject
-// the assignment using its usual rules.
+namespace {
+    struct TypeVariableAssignementFinder {
+        const babelwires::TypeSystem& m_typeSystem;
+        const babelwires::ValueTreeNode& m_targetValueTreeRoot;
+        std::map<std::tuple<babelwires::Path, unsigned int>, babelwires::TypeRef> m_assignments;
 
-// Let's imagine that isValidValue was reimplemented using visitValue:
-//
-// using ChildValueVisitor = std::function<bool(const TypeSystem& typeSystem, const TypeRef& childTypeRef, const PathStep& pathStep, const
-// const ValueHolder& v)>;
-//
-// Type::visitValue(const TypeSystem& typeSystem, const ValueHolder& v, ChildValueVisitor& visitor) const
-//
-// bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override {
-//     ValueVisitor visitor = [&](const TypeRef& childTypeRef, const ValueHolder& v) {
-//         const Type& childType = childTypeRef.resolve(typeSystem);
-//         return childType.isValidValue(typeSystem, v);
-//     };
-//     return this->visitValue(typeSystem, v, visitor);
+        /// Explore the source value _as if_ it was an element of the target type and simultaneously explore the source
+        /// value in a normal way using the source type.
+        // TODO: I shouldn't need to pass the source value twice here. Probably the API of visitValue should take a ValueHolder.
+        bool findAssignments(const babelwires::TypeRef& targetTypeRef, const babelwires::Value& sourceAsTargetValue,
+                             const babelwires::TypeRef& sourceTypeRef, const babelwires::ValueHolder& sourceValue,
+                             const babelwires::Path& pathToCurrentNode) {
+            if (auto typeVariableData = babelwires::TypeVariableData::isTypeVariable(targetTypeRef)) {
+                return handleAssignment(*typeVariableData, targetTypeRef, pathToCurrentNode);
+            }
+            babelwires::Type::ChildValueVisitor childValueVisitor = [&](const babelwires::TypeSystem& typeSystem,
+                                                                        const babelwires::TypeRef& childTypeRef,
+                                                                        const babelwires::Value& childValue,
+                                                                        const babelwires::PathStep& pathStep) {
+                const babelwires::CompoundType* sourceCompound =
+                    sourceTypeRef.resolve(typeSystem).as<babelwires::CompoundType>();
+                if (!sourceCompound) {
+                    return false;
+                }
+                const unsigned int childIndexInSourceType =
+                    sourceCompound->getChildIndexFromStep(sourceValue, pathStep);
+                const auto [sourceChildValuePtr, _, sourceChildTypeRef] =
+                    sourceCompound->getChild(sourceValue, childIndexInSourceType);
+                if (!sourceChildValuePtr) {
+                    return false;
+                }
+                babelwires::Path pathToChild = pathToCurrentNode;
+                pathToChild.pushStep(pathStep);
+                return findAssignments(childTypeRef, childValue, sourceChildTypeRef, *sourceChildValuePtr, pathToChild);
+            };
+            const babelwires::Type& targetType = targetTypeRef.resolve(m_typeSystem);
+            if (!targetType.visitValue(m_typeSystem, sourceAsTargetValue, childValueVisitor)) {
+                return false;
+            }
+            return true;
+        }
 
-// bool babelwires::matchTypeWithTypeVariables(const TypeSystem& typeSystem, const TypeRef& genericTypeRef, const TypeRef& inTypeRef,
-//                                          const ValueHolder& inValue,
-//   std::map<unsigned int, TypeRef>& outTypeVariableAssignments) {
-//      ValueVisitor visitor = [&](const TypeSystem& typeSystem, const TypeRef& childTypeRef, const PathStep& pathStep, const
-// const ValueHolder& v) {
-//      const Type& childType = childTypeRef.resolve(typeSystem);
-//      if (const auto* typeVariableType = childType.as<TypeVariableType>()) {
-//          const auto typeVarData = typeVariableType->getTypeVariableData();
-//          // Handle the type variable assignment
-//      else {
-//          const unsigned int childIndexInSourceType = inType.getChildIndexFromStep(typeSystem, pathStep);
-//          const auto [sourceChildValuePtr, , sourceChildTypeRef] = inType.getChild(inValue, childIndexInSourceType);
-//          if (!sourceChildValuePtr) {
-//              return false;
-//          }
-//          return matchTypeWithTypeVariables(typeSystem, childTypeRef, sourceChildTypeRef, *sourceChildValuePtr, outTypeVariableAssignments);
-//      }
-//      const Type& genericType = genericTypeRef.resolve(typeSystem);
-//      if (!genericType.visitValue(typeSystem, genericValue, visitor)) {
-//          return false;
-//      }
-//      return true;
-//}
+        bool handleAssignment(const babelwires::TypeVariableData& typeVariableData,
+                              const babelwires::TypeRef& sourceTypeRef, const babelwires::Path& pathToCurrentNode) {
+            // This should always succeed.
+            const babelwires::ValueTreeNode& typeVariableNode = followPath(pathToCurrentNode, m_targetValueTreeRoot);
+            // This may not, if the type is badly formed.
+            const babelwires::ValueTreeNode* const genericTypeNodePtr = tryGetGenericTypeFromVariable(typeVariableNode);
+            if (!genericTypeNodePtr) {
+                // Don't assert when the type is badly formed.
+                return false;
+            }
+            const babelwires::Path pathToGenericType = getPathTo(genericTypeNodePtr);
+            const std::tuple<babelwires::Path, unsigned int> key{pathToGenericType,
+                                                                   typeVariableData.m_typeVariableIndex};
+            auto [it, inserted] = m_assignments.insert_or_assign(key, sourceTypeRef);
+            if (inserted) {
+                return true;
+            } else {
+                switch (m_typeSystem.compareSubtype(sourceTypeRef, it->second)) {
+                    case babelwires::SubtypeOrder::IsEquivalent:
+                        return true;
+                    case babelwires::SubtypeOrder::IsSubtype:
+                        // Existing assignment is more general than or equal to the new one: keep existing.
+                        return true;
+                    case babelwires::SubtypeOrder::IsSupertype:
+                        // New assignment is more general than existing: update to new.
+                        it->second = sourceTypeRef;
+                        return true;
+                    case babelwires::SubtypeOrder::IsIntersecting:
+                    case babelwires::SubtypeOrder::IsDisjoint:
+                    default:
+                        // Treat as conflicting assignment.
+                        return false;
+                }
+            }
+        }
+    };
 
+} // namespace
 
+std::optional<std::map<std::tuple<babelwires::Path, unsigned int>, babelwires::TypeRef>>
+babelwires::getTypeVariableAssignments(const ValueTreeNode& sourceValueTreeNode,
+                                       const ValueTreeNode& targetValueTreeNode) {
+    const TypeSystem& typeSystem = sourceValueTreeNode.getTypeSystem();
+    std::map<std::tuple<Path, unsigned int>, TypeRef> assignments;
+    const TypeRef& targetTypeRef = targetValueTreeNode.getTypeRef();
+    const TypeRef& sourceTypeRef = sourceValueTreeNode.getTypeRef();
+    const ValueHolder& sourceValue = sourceValueTreeNode.getValue();
+    const RootAndPath<const ValueTreeRoot> rootAndPath = getRootAndPathTo(targetValueTreeNode);
+
+    TypeVariableAssignementFinder finder{typeSystem, rootAndPath.m_root, assignments};
+    // The source value is passed in twice here. See the comment on findAssignments.
+    if (!finder.findAssignments(targetTypeRef, *sourceValue, sourceTypeRef, sourceValue, rootAndPath.m_pathFromRoot)) {
+        return std::nullopt;
+    }
+    return assignments;
+}
