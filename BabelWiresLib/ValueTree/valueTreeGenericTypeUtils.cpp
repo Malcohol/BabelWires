@@ -176,7 +176,7 @@ int babelwires::getMaximumHeightOfUnassignedGenericType(const ValueTreeNode& val
 }
 
 namespace {
-    struct TypeVariableAssignementFinder {
+    struct TypeVariableAssignmentFinder {
         const babelwires::TypeSystem& m_typeSystem;
         const babelwires::ValueTreeNode& m_targetValueTreeRoot;
         std::map<std::tuple<babelwires::Path, unsigned int>, babelwires::TypeRef> m_assignments;
@@ -227,6 +227,20 @@ namespace {
                 // Don't assert when the type is badly formed.
                 return false;
             }
+            // Check whether this variable already had an assignment in the target tree.
+            if (const babelwires::TypeRef& existingAssignment = genericTypeNodePtr->getType().is<babelwires::GenericType>().getTypeAssignment(
+                genericTypeNodePtr->getValue(), typeVariableData.m_typeVariableIndex)) {
+                switch (m_typeSystem.compareSubtype(sourceTypeRef, existingAssignment)) {
+                    case babelwires::SubtypeOrder::IsEquivalent:
+                    case babelwires::SubtypeOrder::IsSubtype:
+                        // Existing assignment is more general than or equal to the new one: keep existing.
+                        return true;
+                    default:
+                        // Never overwrite the existing assignment, so treat as a conflicting assignment.
+                        return false;
+                }
+            }
+
             const babelwires::Path pathToGenericType = getPathTo(genericTypeNodePtr);
             const std::tuple<babelwires::Path, unsigned int> key{pathToGenericType,
                                                                    typeVariableData.m_typeVariableIndex};
@@ -234,6 +248,7 @@ namespace {
             if (inserted) {
                 return true;
             } else {
+                // An instance of this type variable may already be assigned by the exploration algorithm, so check for consistency.
                 switch (m_typeSystem.compareSubtype(sourceTypeRef, it->second)) {
                     case babelwires::SubtypeOrder::IsEquivalent:
                         return true;
@@ -259,6 +274,8 @@ namespace {
 std::optional<std::map<std::tuple<babelwires::Path, unsigned int>, babelwires::TypeRef>>
 babelwires::getTypeVariableAssignments(const ValueTreeNode& sourceValueTreeNode,
                                        const ValueTreeNode& targetValueTreeNode) {
+    assert(containsUnassignedTypeVariable(targetValueTreeNode) &&
+            "Target ValueTreeNode has no unassigned type variables");
     const TypeSystem& typeSystem = sourceValueTreeNode.getTypeSystem();
     std::map<std::tuple<Path, unsigned int>, TypeRef> assignments;
     const TypeRef& targetTypeRef = targetValueTreeNode.getTypeRef();
@@ -266,7 +283,7 @@ babelwires::getTypeVariableAssignments(const ValueTreeNode& sourceValueTreeNode,
     const ValueHolder& sourceValue = sourceValueTreeNode.getValue();
     const RootAndPath<const ValueTreeRoot> rootAndPath = getRootAndPathTo(targetValueTreeNode);
 
-    TypeVariableAssignementFinder finder{typeSystem, rootAndPath.m_root, assignments};
+    TypeVariableAssignmentFinder finder{typeSystem, rootAndPath.m_root, assignments};
     // The source value is passed in twice here. See the comment on findAssignments.
     if (!finder.findAssignments(targetTypeRef, *sourceValue, sourceTypeRef, sourceValue, rootAndPath.m_pathFromRoot)) {
         return std::nullopt;
