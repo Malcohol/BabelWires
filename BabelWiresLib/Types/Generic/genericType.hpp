@@ -10,7 +10,6 @@
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
 namespace babelwires {
-    struct TypeVariableAssignment;
 
     /// Generic type (aka Parameterized Polymorphic Type, aka Template in C++) are types that wrap another type
     /// containing type variables that can be instantiated in different ways.
