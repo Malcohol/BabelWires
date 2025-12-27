@@ -30,9 +30,10 @@
 #include <Common/Serialization/deserializationRegistry.hpp>
 
 // "plugins"
-#include <Domains/Music/Plugins/Smf/Plugin/libRegistration.hpp>
 #include <Domains/Music/MusicLib/libRegistration.hpp>
 #include <Domains/Music/MusicLibUi/libRegistration.hpp>
+#include <Domains/Music/Plugins/Smf/Plugin/libRegistration.hpp>
+#include <Domains/Music/Plugins/TestPlugin/libRegistration.hpp>
 #include <Domains/TestDomain/libRegistration.hpp>
 
 #include <cassert>
@@ -90,7 +91,8 @@ int main(int argc, char* argv[]) {
         bw_musicUi::registerLib(context);
         smf::registerLib(context);
 
-        // Comment / Uncomment to enable a domain of testing data.
+        // Uncomment to enable a domain of testing data.
+        //bw_music_testplugin::registerLib(context);
         //testDomain::registerLib(context);
 
         if (options.m_mode == ProgramOptions::MODE_RUN_PROJECT) {

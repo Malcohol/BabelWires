@@ -10,13 +10,12 @@ Bugs:
   * When the array size modifier removed, it removes those modifiers even though the new connection might set the array to a sufficiently large size.
 * Moving a target connection from a valid record target to a record target of a different type does not cause the modifier to fail.
 * The "*" suffix of a target feature label is not always removed directly after saving.
-* Array element modifications can be wrongly removed when an array value of non-default size is set from another array of equivalent size.
-  - Probably the removal of the array size modifier triggers the removal of any modifier which applies to entries greater than non-default size.
 * The UI does not update a row directly after a failed modifier is removed, so the row stays red.
 * RecordWithOptionalsFeatureTest::changes test only works if the values are default. Deactivating a non-default optional should not set the value changed flag.
 * Save with changes but no project file should offer "Save As", not "Save".
 * SpinBoxes do not work properly in value editor of the TestTupleType. (Open a TestTupleType in BabelWires)
 * Tuples not editable in project (see TestTupleType): Only working in map editor.
+* It should not be possible to drag and connect from collapsed nodes.
 
 Things to check:
 * Check that elements get sorted by ID when saved in projectData.
@@ -73,8 +72,9 @@ Refactor:
 * Command::initialize could return an enum which allows a subcommand to declare that it's not needed rather than failed.
 * Can any classes be simplified using operator <=>?
 * Rename TypeRef to something like TypeExpression or TypoExpr.
-* Should Types be memory managed using shared_ptr, to allow purely constructed types to be collected?
+* Types should memory managed using shared_ptr, to allow purely constructed types to be collected?
 * Rational should use the new Unicode utils and not require UI specialization.
+* Processors should have a register method, to reduce boilerplate (see libRegistration for MusicLib)
 
 UI:
 * ComplexValueEditors should work for DataLocations other than just ProjectDataLocations.
