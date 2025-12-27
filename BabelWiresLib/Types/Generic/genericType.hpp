@@ -10,7 +10,6 @@
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
 namespace babelwires {
-    struct TypeVariableAssignment;
 
     /// Generic type (aka Parameterized Polymorphic Type, aka Template in C++) are types that wrap another type
     /// containing type variables that can be instantiated in different ways.
@@ -44,7 +43,7 @@ namespace babelwires {
 
       public:
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
-        bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
+        bool visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const override;
 
         unsigned int getNumChildren(const ValueHolder& compoundValue) const override;
         std::tuple<const ValueHolder*, PathStep, const TypeRef&> getChild(const ValueHolder& compoundValue,

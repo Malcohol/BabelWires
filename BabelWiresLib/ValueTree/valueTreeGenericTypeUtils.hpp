@@ -7,8 +7,14 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/Path/path.hpp>
+
+#include <optional>
+#include <map>
+
 namespace babelwires {
     class ValueTreeNode;
+    class TypeRef;
 
     /// Given a node at a type variable, search up the tree for the GenericType that contains it.
     const ValueTreeNode* tryGetGenericTypeFromVariable(const ValueTreeNode& valueTreeNode);
@@ -23,4 +29,10 @@ namespace babelwires {
     /// To emphasize: If the valueTreeNode holds a GenericType itself, that isn't counted for the result (and shouldn't be
     /// counted in the provided maximumPossible).
     int getMaximumHeightOfUnassignedGenericType(const ValueTreeNode& valueTreeNode, int maximumPossible);
+
+    /// If the target has type variables, determine what types they would get assigned if the source were used to
+    /// instantiate them.
+    std::optional<std::map<std::tuple<Path, unsigned int>, TypeRef>> getTypeVariableAssignments(const ValueTreeNode& sourceValueTreeNode, const ValueTreeNode& targetValueTreeNode);
+
+
 } // namespace babelwires

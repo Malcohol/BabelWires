@@ -11,6 +11,7 @@
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
+#include <BabelWiresLib/Path/pathStep.hpp>
 
 #include <optional>
 
@@ -31,11 +32,21 @@ namespace babelwires {
         virtual NewValueHolder createValue(const TypeSystem& typeSystem) const = 0;
 
         /// Is the value v an element of this type.
-        virtual bool isValidValue(const TypeSystem& typeSystem, const Value& v) const = 0;
+        bool isValidValue(const TypeSystem& typeSystem, const Value& v) const;
+
+        /// Called by visitValue when a type contains children.
+        /// Returning false aborts the visit and visitValue will return false.
+        using ChildValueVisitor = std::function<bool(const TypeSystem& typeSystem, const TypeRef& childTypeRef,
+                                                     const Value& childValue, const PathStep& stepToChild)>;
+
+        /// Verify that the outer structure of the value conforms to this type, calling the visitor on each child value.
+        /// This returns false if the value does not conform to this type, or if the visitor returns false.
+        virtual bool visitValue(const TypeSystem& typeSystem, const Value& v,
+                                ChildValueVisitor& visitor) const = 0;
 
         /// Get a TypeRef that describes this type.
-        /// Primitive types get an implementation of this method from the REGISTERED_TYPE macro.
-        /// Complex types constructed by TypeConstructors must provide their own implementation.
+        /// Registered types get an implementation of this method from the REGISTERED_TYPE macro.
+        /// Types constructed by TypeConstructors must provide their own implementation.
         virtual TypeRef getTypeRef() const = 0;
 
         /// Return a short string which can be used in the UI to give a sense of the data this type handles.

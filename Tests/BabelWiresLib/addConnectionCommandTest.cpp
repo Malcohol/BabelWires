@@ -163,6 +163,34 @@ namespace {
             EXPECT_EQ(genericNode->findModifier(babelwires::Path()), nullptr);
         }
     };
+
+    void checkInstantiationOfNestedType(const babelwires::Project& project, babelwires::NodeId genericNodeId, bool varInstantiated, bool expectedModifier) {
+        const babelwires::Node *const genericNode = project.getNode(genericNodeId);
+        ASSERT_NE(genericNode, nullptr);
+
+        const babelwires::ValueTreeNode *const input = genericNode->getInput();
+        ASSERT_NE(input, nullptr);
+
+        const babelwires::ValueTreeNode *const nestedGenericNodeTree = babelwires::tryFollowPath(testDomain::TestGenericType::getPathToNestedGenericType(), *input);
+        ASSERT_NE(nestedGenericNodeTree, nullptr);
+
+        const babelwires::GenericType *const genericType = nestedGenericNodeTree->getType().as<babelwires::GenericType>();
+        ASSERT_NE(genericType, nullptr);
+
+        const babelwires::TypeRef& typeAssignment0 = genericType->getTypeAssignment(nestedGenericNodeTree->getValue(), 0);
+        if (varInstantiated) {
+            EXPECT_EQ(typeAssignment0, babelwires::StringType::getThisType());
+        } else {
+            EXPECT_EQ(typeAssignment0, babelwires::TypeRef());
+        }
+
+        if (expectedModifier) {
+            EXPECT_NE(genericNode->findModifier(testDomain::TestGenericType::getPathToNestedGenericType()), nullptr);
+        } else {
+            EXPECT_EQ(genericNode->findModifier(testDomain::TestGenericType::getPathToNestedGenericType()), nullptr);
+        }
+    };
+
 }
 
 TEST(AddConnectionCommandTest, connectToTypeVariable) {
@@ -175,7 +203,7 @@ TEST(AddConnectionCommandTest, connectToTypeVariable) {
     babelwires::ConnectionModifierData connectionData;
     connectionData.m_targetPath = testDomain::TestGenericType::getPathToNestedX();
     connectionData.m_sourcePath = testDomain::TestSimpleRecordElementData().getPathToRecordInt0();
-    connectionData.m_sourceId = sourceNodeId, babelwires::Path();
+    connectionData.m_sourceId = sourceNodeId;
     babelwires::AddConnectionCommand testCopyConstructor("Test command", genericNodeId, connectionData.clone());
     babelwires::AddConnectionCommand command = testCopyConstructor;
     EXPECT_EQ(command.getName(), "Test command");
@@ -211,7 +239,7 @@ TEST(AddConnectionCommandTest, connectToAnotherTypeVariable) {
     babelwires::ConnectionModifierData connectionData;
     connectionData.m_targetPath = testDomain::TestGenericType::getPathToY();
     connectionData.m_sourcePath = babelwires::Path();
-    connectionData.m_sourceId = sourceNodeId, babelwires::Path();
+    connectionData.m_sourceId = sourceNodeId;
     babelwires::AddConnectionCommand command("Test command", genericNodeId, connectionData.clone());
 
     testEnvironment.m_project.process();
@@ -225,4 +253,34 @@ TEST(AddConnectionCommandTest, connectToAnotherTypeVariable) {
 
     command.execute(testEnvironment.m_project);
     checkInstantiation(testEnvironment.m_project, genericNodeId, true, true, true);
+}
+
+TEST(AddConnectionCommandTest, compoundConnectionToGenericType) {
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::TypeSystem& typeSystem = testEnvironment.m_typeSystem;
+
+    const babelwires::NodeId genericNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestGenericType::getThisType()));
+    const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleCompoundType::getThisType()));
+    testEnvironment.m_project.process();
+
+    babelwires::ConnectionModifierData connectionData;
+    connectionData.m_targetPath = testDomain::TestGenericType::getPathToNestedWrappedType();
+    connectionData.m_sourcePath = babelwires::Path();
+    connectionData.m_sourceId = sourceNodeId;
+    babelwires::AddConnectionCommand command("Test command", genericNodeId, connectionData.clone());
+
+    checkInstantiation(testEnvironment.m_project, genericNodeId, false, false, false);   
+    checkInstantiationOfNestedType(testEnvironment.m_project, genericNodeId, false, false);
+
+    EXPECT_TRUE(command.initializeAndExecute(testEnvironment.m_project));
+    checkInstantiation(testEnvironment.m_project, genericNodeId, true, false, true);   
+    checkInstantiationOfNestedType(testEnvironment.m_project, genericNodeId, true, true);
+
+    command.undo(testEnvironment.m_project);
+    checkInstantiation(testEnvironment.m_project, genericNodeId, false, false, false);   
+    checkInstantiationOfNestedType(testEnvironment.m_project, genericNodeId, false, false);
+
+    command.execute(testEnvironment.m_project);
+    checkInstantiation(testEnvironment.m_project, genericNodeId, true, false, true);   
+    checkInstantiationOfNestedType(testEnvironment.m_project, genericNodeId, true, true);
 }

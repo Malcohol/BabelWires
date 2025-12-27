@@ -4,6 +4,7 @@
 #include <BabelWiresLib/Types/Generic/genericTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 
 testDomain::TestGenericType::TestGenericType()
@@ -105,3 +106,6 @@ babelwires::Path testDomain::TestGenericType::getPathToArray0() {
     return path;
 }
 
+testDomain::TestSimpleCompoundType::TestSimpleCompoundType()
+    : RecordType({{TestGenericType::getIdOfNestedX(), babelwires::DefaultIntType::getThisType()},
+                   {TestGenericType::getIdOfNestedZ(), babelwires::StringType::getThisType()}}) {}

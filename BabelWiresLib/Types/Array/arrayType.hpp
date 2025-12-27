@@ -28,19 +28,24 @@ namespace babelwires {
         std::string getFlavour() const override;
 
         void setSize(const TypeSystem& typeSystem, ValueHolder& value, unsigned int newSize) const;
-        void insertEntries(const TypeSystem& typeSystem, ValueHolder& value, unsigned int indexOfNewElement, unsigned int numEntriesToAdd) const;
-        void removeEntries(ValueHolder& value, unsigned int indexOfElementToRemove, unsigned int numEntriesToRemove) const;
+        void insertEntries(const TypeSystem& typeSystem, ValueHolder& value, unsigned int indexOfNewElement,
+                           unsigned int numEntriesToAdd) const;
+        void removeEntries(ValueHolder& value, unsigned int indexOfElementToRemove,
+                           unsigned int numEntriesToRemove) const;
 
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 
-        bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
+        bool visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const override;
 
-        std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
+        std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem,
+                                                         const Type& other) const override;
 
       public:
         unsigned int getNumChildren(const ValueHolder& compoundValue) const override;
-        std::tuple<const ValueHolder*, PathStep, const TypeRef&> getChild(const ValueHolder& compoundValue, unsigned int i) const override;
-        std::tuple<ValueHolder*, PathStep, const TypeRef&> getChildNonConst(ValueHolder& compoundValue, unsigned int i) const override;
+        std::tuple<const ValueHolder*, PathStep, const TypeRef&> getChild(const ValueHolder& compoundValue,
+                                                                          unsigned int i) const override;
+        std::tuple<ValueHolder*, PathStep, const TypeRef&> getChildNonConst(ValueHolder& compoundValue,
+                                                                            unsigned int i) const override;
         int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const override;
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
 

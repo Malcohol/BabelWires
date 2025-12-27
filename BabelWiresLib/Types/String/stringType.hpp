@@ -19,7 +19,7 @@ namespace babelwires {
 
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 
-        bool isValidValue(const TypeSystem& typeSystem, const Value& v) const override;
+        bool visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const override;
 
         std::string getFlavour() const override;
 

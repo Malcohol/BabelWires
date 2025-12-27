@@ -8,20 +8,20 @@
 
 #include <BabelWiresLib/Project/Commands/addConnectionCommand.hpp>
 
-#include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
+#include <BabelWiresLib/Project/Commands/removeModifierCommand.hpp>
 #include <BabelWiresLib/Project/Commands/setTypeVariableCommand.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/Modifiers/setTypeVariableModifierData.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+#include <BabelWiresLib/Types/Generic/genericType.hpp>
+#include <BabelWiresLib/Types/Generic/typeVariableData.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeGenericTypeUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
-#include <BabelWiresLib/Types/Generic/typeVariableData.hpp>
-#include <BabelWiresLib/Types/Generic/genericType.hpp>
-#include <BabelWiresLib/Project/Modifiers/setTypeVariableModifierData.hpp>
 
 babelwires::AddConnectionCommand::~AddConnectionCommand() = default;
 
@@ -67,20 +67,21 @@ bool babelwires::AddConnectionCommand::initializeAndExecute(Project& project) {
         return false;
     }
 
-    const TypeRef& type = inputTreeNode->getTypeRef();
-    if (auto variableData = TypeVariableData::isTypeVariable(type)) {
-        if (auto genericNode = tryGetGenericTypeFromVariable(*inputTreeNode)) {
-            const GenericType& genericType = genericNode->getType().is<GenericType>();
-            assert (variableData->m_typeVariableIndex < genericType.getNumVariables());
-            // Consciously skip any wrappers here by getting the TypeRef of the output type object,
-            // rather than the TypeRef at the output node.
-            const TypeRef& currentAssignment = genericType.getTypeAssignment(genericNode->getValue(), variableData->m_typeVariableIndex);
-            if (!currentAssignment) {
-                auto subCommand = std::make_unique<SetTypeVariableCommand>(
-                    "Set type variable", m_targetNodeId, getPathTo(genericNode), variableData->m_typeVariableIndex,
-                    outputTreeNode->getType().getTypeRef());
-                addSubCommand(std::move(subCommand));
+    if (containsUnassignedTypeVariable(*inputTreeNode)) {
+        std::optional<std::map<std::tuple<Path, unsigned int>, TypeRef>> typeAssignment =
+            getTypeVariableAssignments(*outputTreeNode, *inputTreeNode);
+        if (typeAssignment) {
+            for (const auto& [key, assignedType] : *typeAssignment) {
+                const Path& pathToGenericType = std::get<0>(key);
+                const unsigned int typeVariableIndex = std::get<1>(key);
+                addSubCommand(std::make_unique<SetTypeVariableCommand>(
+                    "Set type variable", m_targetNodeId, pathToGenericType, typeVariableIndex, assignedType));
             }
+        } else {
+            // Could not determine consistent type variable assignments. We could return false here, but that's less
+            // informative for the user. So instead, the connection will be added, but the assignment modifier will
+            // fail, because the variables are not assigned. 
+            // TODO: This is still not that informative.
         }
     }
 
@@ -119,16 +120,10 @@ bool babelwires::AddConnectionCommand::initializeAndExecute(Project& project) {
 
 void babelwires::AddConnectionCommand::execute(Project& project) const {
     CompoundCommand::execute(project);
-    if (m_typeAssignmentModifier) {
-        project.addModifier(m_targetNodeId, *m_typeAssignmentModifier);
-    }
     project.addModifier(m_targetNodeId, *m_modifierToAdd);
 }
 
 void babelwires::AddConnectionCommand::undo(Project& project) const {
     project.removeModifier(m_targetNodeId, m_modifierToAdd->m_targetPath);
-    if (m_typeAssignmentModifier) {
-        project.removeModifier(m_targetNodeId, m_typeAssignmentModifier->m_targetPath);
-    }
     CompoundCommand::undo(project);
 }

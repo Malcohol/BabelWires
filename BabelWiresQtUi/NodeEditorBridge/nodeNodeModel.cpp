@@ -81,10 +81,8 @@ const babelwires::Type* babelwires::NodeNodeModel::getOutputType(const AccessMod
 std::tuple<const babelwires::ValueTreeNode*, bool> babelwires::NodeNodeModel::getInputInfo(const AccessModelScope& scope,
                                                                      int portIndex) const {
     if (const babelwires::ContentsCacheEntry* entry = m_model->getEntry(scope, portIndex)) {
-        // We don't allow connections to compounds containing an unassigned type variable.
-        // However, a type variable itself can be the input to a connection, since we can
-        // use the type of the input as the assignment to the type variable.
-        return {entry->getInput(), entry->hasUnassignedInputTypeVariable()};
+        // We allow input connections to compounds containing an unassigned type variable.
+        return {entry->getInput(), false};
     } else {
         return {nullptr, false};
     }

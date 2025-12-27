@@ -85,7 +85,8 @@ babelwires::NewValueHolder babelwires::ArrayType::createValue(const TypeSystem& 
     return babelwires::ValueHolder::makeValue<ArrayValue>(typeSystem, entryType, m_initialSize);
 }
 
-bool babelwires::ArrayType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
+bool babelwires::ArrayType::visitValue(const TypeSystem& typeSystem, const Value& v,
+                                ChildValueVisitor& visitor) const {
     const ArrayValue* const arrayValue = v.as<ArrayValue>();
     if (!arrayValue) {
         return false;
@@ -94,9 +95,8 @@ bool babelwires::ArrayType::isValidValue(const TypeSystem& typeSystem, const Val
     if ((size < m_minimumSize) || (size > m_maximumSize)) {
         return false;
     }
-    const Type& entryType = m_entryType.resolve(typeSystem);
     for (unsigned int i = 0; i < size; ++i) {
-        if (!entryType.isValidValue(typeSystem, *arrayValue->getValue(i))) {
+        if (!visitor(typeSystem, m_entryType, *arrayValue->getValue(i), i)) {
             return false;
         }
     }

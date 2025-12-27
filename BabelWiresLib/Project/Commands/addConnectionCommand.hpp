@@ -15,7 +15,6 @@
 namespace babelwires {
     class Project;
     struct ConnectionModifierData;
-    class SetTypeVariableModifierData;
 
     /// Add a modifier to a Node.
     class AddConnectionCommand : public CompoundCommand<Project> {
@@ -35,9 +34,6 @@ namespace babelwires {
 
         /// Describes the modifier which will be added.
         std::unique_ptr<ConnectionModifierData> m_modifierToAdd;
-
-        /// 
-        std::unique_ptr<SetTypeVariableModifierData> m_typeAssignmentModifier;
     };
 
 } // namespace babelwires

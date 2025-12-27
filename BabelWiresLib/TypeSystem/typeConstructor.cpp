@@ -91,7 +91,7 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
                         it.first->second = std::move(std::get<std::unique_ptr<Type>>(result));
                     } else {
                         assert(std::get<const Type*>(result) &&
-                               "Returning a null const pointer from a TypeConstructor is not permitted");
+                               "Returning a null Type pointer from a TypeConstructor is not permitted");
                         it.first->second = std::get<const Type*>(result);
                     }
                 } catch (TypeSystemException& e) {

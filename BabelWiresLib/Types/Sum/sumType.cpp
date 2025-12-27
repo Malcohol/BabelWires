@@ -27,9 +27,14 @@ int babelwires::SumType::getIndexOfValue(const TypeSystem& typeSystem, const Val
     return (it != m_summands.cend()) ? std::distance(m_summands.cbegin(), it) : -1;
 }
 
-bool babelwires::SumType::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
-    return getIndexOfValue(typeSystem, v) != -1;
-};
+bool babelwires::SumType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
+    const int index = getIndexOfValue(typeSystem, v);
+    if (index == -1) {
+        return false;
+    }
+    const TypeRef& summandTypeRef = m_summands[static_cast<unsigned int>(index)];
+    return visitor(typeSystem, summandTypeRef, v, PathStep{});
+}
 
 std::string babelwires::SumType::getFlavour() const {
     // TODO Maybe better to concatenate the summand kinds?
