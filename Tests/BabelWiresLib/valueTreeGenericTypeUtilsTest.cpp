@@ -4,9 +4,11 @@
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Project/Modifiers/setTypeVariableModifierData.hpp>
 
 #include <Domains/TestDomain/testGenericType.hpp>
+#include <Domains/TestDomain/testRecordType.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
@@ -223,4 +225,49 @@ TEST(ValueTreeGenericTypeUtilsTest, getMaximumHeightOfUnassignedGenericType) {
     EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedWrappedType(), 0), 0);
     EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedX(), 0), -1);
     EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToNestedZ(), 0), 0);
+}
+
+TEST(ValueTreeGenericTypeUtilsTest, getTypeVariableAssignments) {
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::ValueTreeRoot targetTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisType());
+    targetTree.setToDefault();   
+
+    babelwires::ValueTreeRoot sourceTree(testEnvironment.m_typeSystem, testDomain::TestSimpleCompoundType::getThisType());
+    sourceTree.setToDefault();
+
+    babelwires::ValueTreeNode& targetNode =
+        babelwires::followPath(testDomain::TestGenericType::getPathToNestedWrappedType(), targetTree);
+
+    const auto assignments =
+        babelwires::getTypeVariableAssignments(sourceTree, targetNode);
+    
+    ASSERT_TRUE(assignments.has_value());
+    ASSERT_EQ(assignments->size(), 2);
+    {
+        const auto it = assignments->find({babelwires::Path(), 0});
+        ASSERT_NE(it, assignments->end());
+        EXPECT_EQ(it->second, babelwires::DefaultIntType::getThisType());
+    }
+    {
+        const auto it = assignments->find({testDomain::TestGenericType::getPathToNestedGenericType(), 0});
+        ASSERT_NE(it, assignments->end());
+        EXPECT_EQ(it->second, babelwires::StringType::getThisType());
+    }
+}
+
+TEST(ValueTreeGenericTypeUtilsTest, getTypeVariableAssignmentsFail) {
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::ValueTreeRoot targetTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisType());
+    targetTree.setToDefault();   
+
+    babelwires::ValueTreeRoot sourceTree(testEnvironment.m_typeSystem, testDomain::TestSimpleRecordType::getThisType());
+    sourceTree.setToDefault();
+
+    babelwires::ValueTreeNode& targetNode =
+        babelwires::followPath(testDomain::TestGenericType::getPathToNestedWrappedType(), targetTree);
+
+    const auto assignments =
+        babelwires::getTypeVariableAssignments(sourceTree, targetNode);
+    
+    ASSERT_FALSE(assignments.has_value());
 }
