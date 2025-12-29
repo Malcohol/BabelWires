@@ -80,4 +80,6 @@ namespace babelwires {
         /// The tags associated with this type.
         std::vector<Tag> m_tags;
     };
+
+    using TypePtr = std::shared_ptr<Type>;
 } // namespace babelwires

@@ -25,7 +25,7 @@ namespace babelwires {
         template <typename TYPE, typename... ARGS,
                   std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
         TYPE* addEntry(ARGS&&... args) {
-            Type* newType = addRegisteredType(TYPE::getThisIdentifier(), TYPE::getVersion(), std::make_unique<TYPE>(std::forward<ARGS>(args)...));
+            Type* newType = addRegisteredType(TYPE::getThisIdentifier(), TYPE::getVersion(), std::make_shared<TYPE>(std::forward<ARGS>(args)...));
             return &newType->is<TYPE>();
         }
 
@@ -69,11 +69,11 @@ namespace babelwires {
         TypeIdSet getTaggedRegisteredTypes(Type::Tag tag) const;
 
       protected:
-        Type* addRegisteredType(LongId typeId, VersionNumber version, std::unique_ptr<Type> newType);
+        Type* addRegisteredType(LongId typeId, VersionNumber version, TypePtr newType);
         TypeConstructor* addTypeConstructorInternal(TypeConstructorId typeConstructorId, VersionNumber version, std::unique_ptr<TypeConstructor> newTypeConstructor);
 
       protected:
-        using RegisteredTypeInfo = std::tuple<std::unique_ptr<Type>, VersionNumber>;
+        using RegisteredTypeInfo = std::tuple<TypePtr, VersionNumber>;
         std::unordered_map<RegisteredTypeId, RegisteredTypeInfo> m_registeredTypeRegistry;
 
         using TypeConstructorInfo = std::tuple<std::unique_ptr<TypeConstructor>, VersionNumber>;

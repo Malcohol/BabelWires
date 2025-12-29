@@ -35,7 +35,7 @@ const babelwires::Type& babelwires::TypeSystem::getRegisteredType(RegisteredType
 }
 
 babelwires::Type* babelwires::TypeSystem::addRegisteredType(LongId typeId, VersionNumber version,
-                                                           std::unique_ptr<Type> newType) {
+                                                           TypePtr newType) {
     auto addResult = m_registeredTypeRegistry.emplace(
         std::pair<LongId, RegisteredTypeInfo>{typeId, RegisteredTypeInfo{std::move(newType), version}});
     assert(addResult.second && "Type with that identifier already registered");
