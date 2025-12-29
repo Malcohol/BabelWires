@@ -56,9 +56,9 @@ TEST(RationalTypeTest, defaultRationalTypeGetKind) {
 TEST(RationalTypeTest, defaultRationalTypeIsRegistered) {
     testUtils::TestEnvironment testEnvironment;
 
-    const auto* const foundType =
+    const babelwires::TypePtr foundType =
         testEnvironment.m_typeSystem.tryGetRegisteredType(babelwires::DefaultRationalType::getThisIdentifier());
-    EXPECT_NE(foundType, nullptr);
+    EXPECT_TRUE(foundType);
     EXPECT_NE(foundType->as<babelwires::DefaultRationalType>(), nullptr);
 }
 

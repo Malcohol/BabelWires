@@ -34,7 +34,7 @@ namespace babelwires {
             return getRegisteredType(TYPE::getThisIdentifier()).template is<TYPE>();
         }
 
-        const Type* tryGetRegisteredType(RegisteredTypeId id) const;
+        TypePtr tryGetRegisteredType(RegisteredTypeId id) const;
         const Type& getRegisteredType(RegisteredTypeId id) const;
 
         template <typename TYPE_CONSTRUCTOR, typename... ARGS,

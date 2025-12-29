@@ -49,7 +49,7 @@ const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSy
     struct VisitorMethods {
         const babelwires::Type* operator()(std::monostate) { return nullptr; }
         const babelwires::Type* operator()(RegisteredTypeId typeId) {
-            return m_typeSystem.tryGetRegisteredType(typeId);
+            return m_typeSystem.tryGetRegisteredType(typeId).get();
         }
         const babelwires::Type* operator()(const ConstructedTypeData& higherOrderData) {
             try {

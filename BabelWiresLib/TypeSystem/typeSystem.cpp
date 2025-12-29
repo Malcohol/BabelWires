@@ -20,10 +20,10 @@ namespace {
 babelwires::TypeSystem::TypeSystem() = default;
 babelwires::TypeSystem::~TypeSystem() = default;
 
-const babelwires::Type* babelwires::TypeSystem::tryGetRegisteredType(RegisteredTypeId id) const {
+babelwires::TypePtr babelwires::TypeSystem::tryGetRegisteredType(RegisteredTypeId id) const {
     auto it = m_registeredTypeRegistry.find(id);
     if (it != m_registeredTypeRegistry.end()) {
-        return std::get<0>(it->second).get();
+        return std::get<0>(it->second);
     }
     return nullptr;
 }
