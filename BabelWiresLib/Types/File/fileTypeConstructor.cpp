@@ -24,7 +24,7 @@ babelwires::FileTypeConstructor::constructType(const TypeSystem& typeSystem, Typ
                                     << arguments.getValueArguments().size();
     }
 
-    return std::make_unique<ConstructedType<FileType>>(std::move(newTypeRef), arguments.getTypeArguments()[0]);
+    return makeType<ConstructedType<FileType>>(std::move(newTypeRef), arguments.getTypeArguments()[0]);
 }
 
 babelwires::TypeRef babelwires::FileTypeConstructor::makeTypeRef(TypeRef typeOfContents) {

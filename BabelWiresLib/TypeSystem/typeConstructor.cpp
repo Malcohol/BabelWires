@@ -23,7 +23,7 @@ babelwires::TypeConstructor::tryGetOrConstructType(const TypeSystem& typeSystem,
             assert(false && "Attempt to construct a null type");
             return nullptr;
         }
-        const babelwires::Type* operator()(const std::unique_ptr<Type>& type) { return type.get(); }
+        const babelwires::Type* operator()(const TypePtr& type) { return type.get(); }
         const babelwires::Type* operator()(const Type* type) { return type; }
         const babelwires::Type* operator()(const std::string& error) { return nullptr; }
     };
@@ -39,7 +39,7 @@ babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
             assert(false && "Attempt to construct a null type");
             return *(const babelwires::Type*)0;
         }
-        const babelwires::Type& operator()(const std::unique_ptr<Type>& type) { return *type; }
+        const babelwires::Type& operator()(const TypePtr& type) { return *type; }
         const babelwires::Type& operator()(const Type* type) { return *type; }
         const babelwires::Type& operator()(const std::string& error) { throw TypeSystemException() << error; }
     };
@@ -85,10 +85,10 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
                 try {
                     TypeConstructorResult result =
                         constructType(typeSystem, std::move(newTypeRef), arguments, resolvedArguments);
-                    if (std::holds_alternative<std::unique_ptr<Type>>(result)) {
-                        assert(std::get<std::unique_ptr<Type>>(result) &&
+                    if (std::holds_alternative<TypePtr>(result)) {
+                        assert(std::get<TypePtr>(result) &&
                                "Returning a null unique pointer from a TypeConstructor is not permitted");
-                        it.first->second = std::move(std::get<std::unique_ptr<Type>>(result));
+                        it.first->second = std::move(std::get<TypePtr>(result));
                     } else {
                         assert(std::get<const Type*>(result) &&
                                "Returning a null Type pointer from a TypeConstructor is not permitted");

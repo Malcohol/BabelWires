@@ -30,5 +30,5 @@ babelwires::RecordTypeConstructor::constructType(const TypeSystem& typeSystem, T
         }
     }
 
-    return std::make_unique<ConstructedType<RecordType>>(std::move(newTypeRef), std::move(fields));
+    return makeType<ConstructedType<RecordType>>(std::move(newTypeRef), std::move(fields));
 }

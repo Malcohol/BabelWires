@@ -39,7 +39,7 @@ babelwires::MapTypeConstructor::constructType(const TypeSystem& typeSystem, Type
                                     << arguments.getTypeArguments().size();
     }
     babelwires::MapEntryData::Kind kind = extractValueArguments(typeSystem, arguments.getValueArguments());
-    return std::make_unique<ConstructedType<MapType>>(std::move(newTypeRef), arguments.getTypeArguments()[0],
+    return makeType<ConstructedType<MapType>>(std::move(newTypeRef), arguments.getTypeArguments()[0],
                                                       arguments.getTypeArguments()[1], kind);
 }
 

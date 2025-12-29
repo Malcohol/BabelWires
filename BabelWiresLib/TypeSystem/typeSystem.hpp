@@ -25,7 +25,7 @@ namespace babelwires {
         template <typename TYPE, typename... ARGS,
                   std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
         TYPE* addEntry(ARGS&&... args) {
-            Type* newType = addRegisteredType(TYPE::getThisIdentifier(), TYPE::getVersion(), std::make_shared<TYPE>(std::forward<ARGS>(args)...));
+            Type* newType = addRegisteredType(TYPE::getThisIdentifier(), TYPE::getVersion(), makeType<TYPE>(std::forward<ARGS>(args)...));
             return &newType->is<TYPE>();
         }
 

@@ -42,7 +42,7 @@ babelwires::EnumUnionTypeConstructor::constructType(const TypeSystem& typeSystem
             }
         }
     }
-    return std::make_unique<ConstructedType<EnumType>>(std::move(newTypeRef), std::move(unionOfValues), 0);
+    return makeType<ConstructedType<EnumType>>(std::move(newTypeRef), std::move(unionOfValues), 0);
 }
 
 babelwires::TypeRef babelwires::EnumUnionTypeConstructor::makeTypeRef(TypeRef enumA, TypeRef enumB) {

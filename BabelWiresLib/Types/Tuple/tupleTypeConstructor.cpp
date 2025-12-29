@@ -20,7 +20,7 @@ babelwires::TupleTypeConstructor::constructType(const TypeSystem& typeSystem, Ty
                                     << arguments.getValueArguments().size();
     }
 
-    return std::make_unique<ConstructedType<TupleType>>(std::move(newTypeRef), arguments.getTypeArguments());
+    return makeType<ConstructedType<TupleType>>(std::move(newTypeRef), arguments.getTypeArguments());
 }
 
 babelwires::TypeRef babelwires::TupleTypeConstructor::makeTypeRef(std::vector<TypeRef> types) {

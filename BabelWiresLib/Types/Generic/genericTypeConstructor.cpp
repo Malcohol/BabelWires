@@ -47,5 +47,5 @@ babelwires::GenericTypeConstructor::constructType(const TypeSystem& typeSystem, 
     }
     const TypeRef& wrappedType = arguments.getTypeArguments()[0];
 
-    return std::make_unique<ConstructedType<GenericType>>(std::move(newTypeRef), wrappedType, numVariables);
+    return makeType<ConstructedType<GenericType>>(std::move(newTypeRef), wrappedType, numVariables);
 }

@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/typeRef.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 
@@ -39,7 +40,7 @@ namespace babelwires {
         virtual TypeConstructorId getTypeConstructorId() const = 0;
 
       protected:
-        using TypeConstructorResult = std::variant<std::unique_ptr<Type>, const Type*>;
+        using TypeConstructorResult = std::variant<TypePtr, const Type*>;
 
         /// Construct the new type, return an existing type (if the constructor is just a pure wrapper)
         /// or throw a TypeSystemException if it cannot be constructed.
@@ -52,7 +53,7 @@ namespace babelwires {
                                                     const std::vector<const Type*>& resolvedTypeArguments) const = 0;
 
       private:
-        using PerTypeStorage = std::variant<std::monostate, std::unique_ptr<Type>, const Type*, std::string>;
+        using PerTypeStorage = std::variant<std::monostate, TypePtr, const Type*, std::string>;
 
         const PerTypeStorage& getOrConstructTypeInternal(const TypeSystem& typeSystem,
                                                          const TypeConstructorArguments& arguments) const;

@@ -35,7 +35,7 @@ babelwires::SumTypeConstructor::constructType(const TypeSystem& typeSystem, Type
         }
     }
 
-    return std::make_unique<ConstructedType<SumType>>(std::move(newTypeRef), arguments.getTypeArguments(),
+    return makeType<ConstructedType<SumType>>(std::move(newTypeRef), arguments.getTypeArguments(),
                                                       defaultIndex);
 }
 

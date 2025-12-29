@@ -14,6 +14,7 @@
 #include <BabelWiresLib/Path/pathStep.hpp>
 
 #include <optional>
+#include <memory>
 
 namespace babelwires {
 
@@ -82,4 +83,10 @@ namespace babelwires {
     };
 
     using TypePtr = std::shared_ptr<Type>;
+
+    template<typename TYPE, typename... ARGS>
+    TypePtr makeType(ARGS&&... args) {
+      return std::make_shared<TYPE>(std::forward<ARGS>(args)...);
+    }
+
 } // namespace babelwires
