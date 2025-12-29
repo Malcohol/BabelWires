@@ -34,12 +34,12 @@ const babelwires::Type& babelwires::TypeSystem::getRegisteredType(RegisteredType
     return *std::get<0>(it->second);
 }
 
-babelwires::Type* babelwires::TypeSystem::addRegisteredType(LongId typeId, VersionNumber version,
+const babelwires::Type* babelwires::TypeSystem::addRegisteredType(LongId typeId, VersionNumber version,
                                                            TypePtr newType) {
     auto addResult = m_registeredTypeRegistry.emplace(
         std::pair<LongId, RegisteredTypeInfo>{typeId, RegisteredTypeInfo{std::move(newType), version}});
     assert(addResult.second && "Type with that identifier already registered");
-    babelwires::Type* const newTypeRaw = std::get<0>(addResult.first->second).get();
+    const babelwires::Type* const newTypeRaw = std::get<0>(addResult.first->second).get();
     for (auto it : newTypeRaw->getTags()) {
         m_taggedRegisteredTypes[it].emplace_back(typeId);
     }

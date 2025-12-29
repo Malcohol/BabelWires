@@ -82,7 +82,7 @@ namespace babelwires {
         std::vector<Tag> m_tags;
     };
 
-    using TypePtr = std::shared_ptr<Type>;
+    using TypePtr = std::shared_ptr<const Type>;
 
     template<typename TYPE, typename... ARGS>
     TypePtr makeType(ARGS&&... args) {
