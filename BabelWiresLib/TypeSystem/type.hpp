@@ -82,16 +82,4 @@ namespace babelwires {
         std::vector<Tag> m_tags;
     };
 
-    /// A pointer to a memory managed type.
-    using TypePtr = std::shared_ptr<const Type>;
-
-    /// Construct a type in the correct way.
-    template<typename TYPE, typename... ARGS>
-    TypePtr makeType(ARGS&&... args) {
-      return std::make_shared<TYPE>(std::forward<ARGS>(args)...);
-    }
-
-    /// A pointer to a specific-class of memory managed type.
-    template<typename TYPE = Type>
-    using TypePtrT = std::shared_ptr<const TYPE>;
 } // namespace babelwires
