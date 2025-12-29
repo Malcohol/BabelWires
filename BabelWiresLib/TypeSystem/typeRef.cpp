@@ -73,7 +73,7 @@ const babelwires::Type& babelwires::TypeRef::resolve(const TypeSystem& typeSyste
         const babelwires::Type& operator()(std::monostate) {
             throw TypeSystemException() << "A null type cannot be resolved.";
         }
-        const babelwires::Type& operator()(RegisteredTypeId typeId) { return m_typeSystem.getRegisteredType(typeId); }
+        const babelwires::Type& operator()(RegisteredTypeId typeId) { return *m_typeSystem.getRegisteredType(typeId); }
         const babelwires::Type& operator()(const ConstructedTypeData& higherOrderData) {
             const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
             const TypeConstructor& typeConstructor = m_typeSystem.getTypeConstructor(typeConstructorId);

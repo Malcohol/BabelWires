@@ -28,10 +28,10 @@ babelwires::TypePtr babelwires::TypeSystem::tryGetRegisteredType(RegisteredTypeI
     return nullptr;
 }
 
-const babelwires::Type& babelwires::TypeSystem::getRegisteredType(RegisteredTypeId id) const {
+babelwires::TypePtr babelwires::TypeSystem::getRegisteredType(RegisteredTypeId id) const {
     auto it = m_registeredTypeRegistry.find(id);
     assert((it != m_registeredTypeRegistry.end()) && "Primitive Type not registered in type system");
-    return *std::get<0>(it->second);
+    return std::get<0>(it->second);
 }
 
 const babelwires::Type* babelwires::TypeSystem::addRegisteredType(LongId typeId, VersionNumber version,

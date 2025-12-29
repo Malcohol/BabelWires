@@ -31,8 +31,8 @@ TEST(SumTypeTest, sumTypeDefault0) {
     EXPECT_NE(newValue->as<babelwires::IntValue>(), nullptr);
 
     babelwires::ValueHolder rationalValue =
-        testEnvironment.m_typeSystem.getRegisteredType(babelwires::DefaultRationalType::getThisIdentifier())
-            .createValue(testEnvironment.m_typeSystem);
+        testEnvironment.m_typeSystem.getEntryByType<babelwires::DefaultRationalType>()->createValue(
+            testEnvironment.m_typeSystem);
 
     EXPECT_EQ(sumType.getIndexOfValue(testEnvironment.m_typeSystem, *rationalValue), 1);
     EXPECT_TRUE(sumType.isValidValue(testEnvironment.m_typeSystem, *rationalValue));
@@ -56,8 +56,8 @@ TEST(SumTypeTest, sumTypeDefault1) {
     EXPECT_NE(newValue->as<babelwires::RationalValue>(), nullptr);
 
     babelwires::ValueHolder intValue =
-        testEnvironment.m_typeSystem.getRegisteredType(babelwires::DefaultIntType::getThisIdentifier())
-            .createValue(testEnvironment.m_typeSystem);
+        testEnvironment.m_typeSystem.getEntryByType<babelwires::DefaultIntType>()->createValue(
+            testEnvironment.m_typeSystem);
 
     EXPECT_EQ(sumType.getIndexOfValue(testEnvironment.m_typeSystem, *intValue), 0);
     EXPECT_TRUE(sumType.isValidValue(testEnvironment.m_typeSystem, *intValue));

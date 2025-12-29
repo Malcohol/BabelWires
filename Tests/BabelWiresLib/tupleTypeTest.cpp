@@ -32,8 +32,8 @@ TEST(TupleTypeTest, createValue) {
     const auto* newTuple = newValue->as<babelwires::TupleValue>();
     ASSERT_NE(newTuple, nullptr);
     ASSERT_EQ(newTuple->getSize(), 2);
-    EXPECT_TRUE(intType.isValidValue(testEnvironment.m_typeSystem, *newTuple->getValue(0)));
-    EXPECT_TRUE(rationalType.isValidValue(testEnvironment.m_typeSystem, *newTuple->getValue(1)));
+    EXPECT_TRUE(intType->isValidValue(testEnvironment.m_typeSystem, *newTuple->getValue(0)));
+    EXPECT_TRUE(rationalType->isValidValue(testEnvironment.m_typeSystem, *newTuple->getValue(1)));
 }
 
 TEST(TupleTypeTest, valueToString) {

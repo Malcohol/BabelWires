@@ -30,12 +30,12 @@ namespace babelwires {
         }
 
         template <typename TYPE, std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
-        const TYPE& getEntryByType() const {
-            return getRegisteredType(TYPE::getThisIdentifier()).template is<TYPE>();
+        TypePtrT<TYPE> getEntryByType() const {
+            return std::static_pointer_cast<const TYPE>(getRegisteredType(TYPE::getThisIdentifier()));
         }
 
         TypePtr tryGetRegisteredType(RegisteredTypeId id) const;
-        const Type& getRegisteredType(RegisteredTypeId id) const;
+        TypePtr getRegisteredType(RegisteredTypeId id) const;
 
         template <typename TYPE_CONSTRUCTOR, typename... ARGS,
                   std::enable_if_t<std::is_base_of_v<TypeConstructor, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
