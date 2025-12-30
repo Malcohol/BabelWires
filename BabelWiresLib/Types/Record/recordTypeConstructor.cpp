@@ -10,10 +10,10 @@
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
-babelwires::TypeConstructor::TypeConstructorResult
+babelwires::TypePtr
 babelwires::RecordTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                  const TypeConstructorArguments& arguments,
-                                                 const std::vector<const Type*>& resolvedTypeArguments) const {
+                                                 const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != arguments.getValueArguments().size()) {
         throw TypeSystemException() << "RecordTypeConstructor requires the same number of types and values, but got "
                                     << arguments.getTypeArguments().size() << " and "

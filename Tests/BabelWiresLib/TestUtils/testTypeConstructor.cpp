@@ -2,10 +2,10 @@
 
 #include <BabelWiresLib/Types/String/stringValue.hpp>
 
-babelwires::TypeConstructor::TypeConstructorResult testUtils::TestUnaryTypeConstructor::constructType(
+babelwires::TypePtr testUtils::TestUnaryTypeConstructor::constructType(
     const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef,
     const babelwires::TypeConstructorArguments& arguments,
-    const std::vector<const babelwires::Type*>& resolvedTypeArguments) const {
+    const std::vector<babelwires::TypePtr>& resolvedTypeArguments) const {
     // Remember the typeRef, since there's no way to reconstruct it.
     const TestType* const sourceType = resolvedTypeArguments[0]->as<TestType>();
     if (!sourceType) {
@@ -15,10 +15,10 @@ babelwires::TypeConstructor::TypeConstructorResult testUtils::TestUnaryTypeConst
                                                                    sourceType->m_maximumLength + 1);
 }
 
-babelwires::TypeConstructor::TypeConstructorResult testUtils::TestBinaryTypeConstructor::constructType(
+babelwires::TypePtr testUtils::TestBinaryTypeConstructor::constructType(
     const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef,
     const babelwires::TypeConstructorArguments& arguments,
-    const std::vector<const babelwires::Type*>& resolvedTypeArguments) const {
+    const std::vector<babelwires::TypePtr>& resolvedTypeArguments) const {
     // Remember the typeRef, since there's no way to reconstruct it.
     const TestType* const sourceType0 = resolvedTypeArguments[0]->as<TestType>();
     const TestType* const sourceType1 = resolvedTypeArguments[1]->as<TestType>();
@@ -29,10 +29,10 @@ babelwires::TypeConstructor::TypeConstructorResult testUtils::TestBinaryTypeCons
         std::move(newTypeRef), sourceType0->m_maximumLength + sourceType1->m_maximumLength);
 }
 
-babelwires::TypeConstructor::TypeConstructorResult testUtils::TestMixedTypeConstructor::constructType(
+babelwires::TypePtr testUtils::TestMixedTypeConstructor::constructType(
     const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef,
     const babelwires::TypeConstructorArguments& arguments,
-    const std::vector<const babelwires::Type*>& resolvedTypeArguments) const {
+    const std::vector<babelwires::TypePtr>& resolvedTypeArguments) const {
     assert(arguments.getTypeArguments().size() == 1);
     assert(arguments.getValueArguments().size() == 1);
 

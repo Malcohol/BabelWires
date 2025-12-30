@@ -40,10 +40,10 @@ babelwires::TypeVariableTypeConstructor::extractValueArguments(const std::vector
     return {static_cast<unsigned int>(args[0]), static_cast<unsigned int>(args[1])};
 }
 
-babelwires::TypeConstructor::TypeConstructorResult
+babelwires::TypePtr
 babelwires::TypeVariableTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                        const TypeConstructorArguments& arguments,
-                                                       const std::vector<const Type*>& resolvedTypeArguments) const {
+                                                       const std::vector<TypePtr>& resolvedTypeArguments) const {
     // Verify the arguments are valid, but actually they don't need to be passed to the resulting types.
     /*VariableData variableData =*/extractValueArguments(arguments.getValueArguments());
 

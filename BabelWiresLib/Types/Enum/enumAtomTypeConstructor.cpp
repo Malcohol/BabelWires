@@ -11,10 +11,10 @@
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 
-babelwires::TypeConstructor::TypeConstructorResult
+babelwires::TypePtr
 babelwires::EnumAtomTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                    const TypeConstructorArguments& arguments,
-                                                   const std::vector<const Type*>& resolvedTypeArguments) const {
+                                                   const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 0) {
         throw TypeSystemException() << "EnumAtomTypeConstructor does not expect any type arguments but got "
                                     << arguments.getTypeArguments().size();

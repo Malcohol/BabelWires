@@ -31,10 +31,10 @@ babelwires::RationalTypeConstructor::extractValueArguments(const std::vector<Val
     return {{args[0], args[1]}, args[2]};
 }
 
-babelwires::TypeConstructor::TypeConstructorResult
+babelwires::TypePtr
 babelwires::RationalTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                    const TypeConstructorArguments& arguments,
-                                                   const std::vector<const Type*>& resolvedTypeArguments) const {
+                                                   const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 0) {
         throw TypeSystemException() << "RationalTypeConstructor does not expect type arguments but got "
                                     << arguments.getTypeArguments().size();

@@ -48,10 +48,10 @@ babelwires::ArrayTypeConstructor::extractValueArguments(const std::vector<ValueH
     return {static_cast<unsigned int>(args[0]), static_cast<unsigned int>(args[1]), static_cast<unsigned int>(args[2])};
 }
 
-babelwires::TypeConstructor::TypeConstructorResult
+babelwires::TypePtr
 babelwires::ArrayTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                 const TypeConstructorArguments& arguments,
-                                                const std::vector<const Type*>& resolvedTypeArguments) const {
+                                                const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 1) {
         throw TypeSystemException() << "ArrayTypeConstructor expects a single type arguments but got "
                                     << arguments.getTypeArguments().size();

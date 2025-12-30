@@ -24,15 +24,13 @@ babelwires::TypeConstructor::tryGetOrConstructType(const TypeSystem& typeSystem,
             return {};
         }
         babelwires::TypePtr operator()(const TypePtr& type) { return type; }
-        babelwires::TypePtr operator()(const Type* type) { return /*TODO*/ TypePtr(type); }
         babelwires::TypePtr operator()(const std::string& error) { return nullptr; }
     };
     return std::visit(VisitorMethods(), storage);
 }
 
-babelwires::TypePtr
-babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
-                                                const TypeConstructorArguments& arguments) const {
+babelwires::TypePtr babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
+                                                                    const TypeConstructorArguments& arguments) const {
     const auto& storage = getOrConstructTypeInternal(typeSystem, arguments);
     struct VisitorMethods {
         babelwires::TypePtr operator()(std::monostate) {
@@ -40,7 +38,6 @@ babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
             return {};
         }
         babelwires::TypePtr operator()(const TypePtr& type) { return type; }
-        babelwires::TypePtr operator()(const Type* type) { return /*TODO*/ TypePtr(type); }
         babelwires::TypePtr operator()(const std::string& error) { throw TypeSystemException() << error; }
     };
     return std::visit(VisitorMethods(), storage);
@@ -60,7 +57,7 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
     }
 
     // Phase 2: Resolve the arguments.
-    std::vector<const Type*> resolvedArguments;
+    std::vector<TypePtr> resolvedArguments;
     resolvedArguments.reserve(arguments.getTypeArguments().size());
     std::vector<std::string> unresolvedTypesString;
     for (auto arg : arguments.getTypeArguments()) {
@@ -83,17 +80,9 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
             // Only construct the type if the arity is correct.
             if (resolvedArguments.size() == arguments.getTypeArguments().size()) {
                 try {
-                    TypeConstructorResult result =
-                        constructType(typeSystem, std::move(newTypeRef), arguments, resolvedArguments);
-                    if (std::holds_alternative<TypePtr>(result)) {
-                        assert(std::get<TypePtr>(result) &&
-                               "Returning a null unique pointer from a TypeConstructor is not permitted");
-                        it.first->second = std::move(std::get<TypePtr>(result));
-                    } else {
-                        assert(std::get<const Type*>(result) &&
-                               "Returning a null Type pointer from a TypeConstructor is not permitted");
-                        it.first->second = std::get<const Type*>(result);
-                    }
+                    TypePtr result = constructType(typeSystem, std::move(newTypeRef), arguments, resolvedArguments);
+                    assert(result && "Returning a null pointer from a TypeConstructor is not permitted");
+                    it.first->second = std::move(result);
                 } catch (TypeSystemException& e) {
                     it.first->second = e.what();
                 }

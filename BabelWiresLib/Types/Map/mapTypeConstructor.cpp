@@ -30,10 +30,10 @@ babelwires::MapTypeConstructor::extractValueArguments(const TypeSystem& typeSyst
     }
 }
 
-babelwires::TypeConstructor::TypeConstructorResult
+babelwires::TypePtr
 babelwires::MapTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                               const TypeConstructorArguments& arguments,
-                                              const std::vector<const Type*>& resolvedTypeArguments) const {
+                                              const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 2) {
         throw TypeSystemException() << "MapTypeConstructor expects 2 type arguments but got "
                                     << arguments.getTypeArguments().size();

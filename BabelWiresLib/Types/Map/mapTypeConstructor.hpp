@@ -17,8 +17,8 @@ namespace babelwires {
         /// Note that the we don't represent the default in the name.
         TYPE_CONSTRUCTOR("Map", "{0}\u21C9{1}", "7b45de96-b355-4d87-a1b1-a6305b660716", 1);
 
-        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
-                                            const std::vector<const Type*>& resolvedTypeArguments) const override;
+        TypePtr constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
+                                            const std::vector<TypePtr>& resolvedTypeArguments) const override;
 
         /// Convenience method.
         static TypeRef makeTypeRef(TypeRef sourceTypeRef, TypeRef targetTypeRef, MapEntryData::Kind fallbackKind = MapEntryData::Kind::All21);

@@ -10,10 +10,10 @@
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
 
-babelwires::TypeConstructor::TypeConstructorResult
+babelwires::TypePtr
 babelwires::FileTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                const TypeConstructorArguments& arguments,
-                                               const std::vector<const Type*>& resolvedTypeArguments) const {
+                                               const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 1) {
         throw TypeSystemException() << "FileTypeConstructor expects a single type argument but got "
                                     << arguments.getTypeArguments().size();

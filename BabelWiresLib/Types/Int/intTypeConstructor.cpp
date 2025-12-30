@@ -28,10 +28,10 @@ babelwires::IntTypeConstructor::extractValueArguments(const std::vector<ValueHol
     return {{args[0], args[1]}, args[2]};
 }
 
-babelwires::TypeConstructor::TypeConstructorResult
+babelwires::TypePtr
 babelwires::IntTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                               const TypeConstructorArguments& arguments,
-                                              const std::vector<const Type*>& resolvedTypeArguments) const {
+                                              const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 0) {
         throw TypeSystemException() << "IntTypeConstructor does not expect type arguments but got "
                                     << arguments.getTypeArguments().size();

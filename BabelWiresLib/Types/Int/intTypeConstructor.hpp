@@ -17,8 +17,8 @@ namespace babelwires {
         /// Note that the we don't represent the default in the name.
         TYPE_CONSTRUCTOR("Int", "Integer{{[0]..[1]}}", "96dc61c3-5940-47c4-9d98-9f06d5f01157", 1);
 
-        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
-                                            const std::vector<const Type*>& resolvedTypeArguments) const override;
+        TypePtr constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
+                                            const std::vector<TypePtr>& resolvedTypeArguments) const override;
 
         /// Convenience method.
         static TypeRef makeTypeRef(IntValue::NativeType min, IntValue::NativeType max, IntValue::NativeType defaultValue = 0);

@@ -35,10 +35,10 @@ unsigned int babelwires::GenericTypeConstructor::extractValueArguments(const std
     }
 }
 
-babelwires::TypeConstructor::TypeConstructorResult
+babelwires::TypePtr
 babelwires::GenericTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                   const TypeConstructorArguments& arguments,
-                                                  const std::vector<const Type*>& resolvedTypeArguments) const {
+                                                  const std::vector<TypePtr>& resolvedTypeArguments) const {
     unsigned int numVariables = extractValueArguments(arguments.getValueArguments());
 
     if (arguments.getTypeArguments().size() != 1) {

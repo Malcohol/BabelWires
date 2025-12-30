@@ -13,10 +13,10 @@
 
 #include <unordered_set>
 
-babelwires::TypeConstructor::TypeConstructorResult
+babelwires::TypePtr
 babelwires::EnumUnionTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                     const TypeConstructorArguments& arguments,
-                                                    const std::vector<const Type*>& resolvedTypeArguments) const {
+                                                    const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() < 2) {
         throw TypeSystemException() << "EnumUnionTypeConstructor expects two or more types as arguments, but got "
                                     << arguments.getTypeArguments().size();

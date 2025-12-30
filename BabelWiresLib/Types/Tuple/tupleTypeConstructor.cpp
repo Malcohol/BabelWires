@@ -11,10 +11,10 @@
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleType.hpp>
 
-babelwires::TypeConstructor::TypeConstructorResult
+babelwires::TypePtr
 babelwires::TupleTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                                 const TypeConstructorArguments& arguments,
-                                                const std::vector<const Type*>& resolvedTypeArguments) const {
+                                                const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getValueArguments().size() > 0) {
         throw TypeSystemException() << "TupleTypeConstructor does not expect value arguments but got "
                                     << arguments.getValueArguments().size();

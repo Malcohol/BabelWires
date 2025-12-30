@@ -12,10 +12,10 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/Sum/sumType.hpp>
 
-babelwires::TypeConstructor::TypeConstructorResult
+babelwires::TypePtr
 babelwires::SumTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
                                               const TypeConstructorArguments& arguments,
-                                              const std::vector<const Type*>& resolvedTypeArguments) const {
+                                              const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() < 2) {
         throw TypeSystemException() << "SumTypeConstructor expects at least 2 type arguments but got "
                                     << arguments.getTypeArguments().size();
