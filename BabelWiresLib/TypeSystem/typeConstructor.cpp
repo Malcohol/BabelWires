@@ -14,34 +14,34 @@
 
 babelwires::TypeConstructor::~TypeConstructor() = default;
 
-const babelwires::Type*
+babelwires::TypePtr
 babelwires::TypeConstructor::tryGetOrConstructType(const TypeSystem& typeSystem,
                                                    const TypeConstructorArguments& arguments) const {
     const auto& storage = getOrConstructTypeInternal(typeSystem, arguments);
     struct VisitorMethods {
-        const babelwires::Type* operator()(std::monostate) {
+        babelwires::TypePtr operator()(std::monostate) {
             assert(false && "Attempt to construct a null type");
-            return nullptr;
+            return {};
         }
-        const babelwires::Type* operator()(const TypePtr& type) { return type.get(); }
-        const babelwires::Type* operator()(const Type* type) { return type; }
-        const babelwires::Type* operator()(const std::string& error) { return nullptr; }
+        babelwires::TypePtr operator()(const TypePtr& type) { return type; }
+        babelwires::TypePtr operator()(const Type* type) { return /*TODO*/ TypePtr(type); }
+        babelwires::TypePtr operator()(const std::string& error) { return nullptr; }
     };
     return std::visit(VisitorMethods(), storage);
 }
 
-const babelwires::Type&
+babelwires::TypePtr
 babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
                                                 const TypeConstructorArguments& arguments) const {
     const auto& storage = getOrConstructTypeInternal(typeSystem, arguments);
     struct VisitorMethods {
-        const babelwires::Type& operator()(std::monostate) {
+        babelwires::TypePtr operator()(std::monostate) {
             assert(false && "Attempt to construct a null type");
-            return *(const babelwires::Type*)0;
+            return {};
         }
-        const babelwires::Type& operator()(const TypePtr& type) { return *type; }
-        const babelwires::Type& operator()(const Type* type) { return *type; }
-        const babelwires::Type& operator()(const std::string& error) { throw TypeSystemException() << error; }
+        babelwires::TypePtr operator()(const TypePtr& type) { return type; }
+        babelwires::TypePtr operator()(const Type* type) { return /*TODO*/ TypePtr(type); }
+        babelwires::TypePtr operator()(const std::string& error) { throw TypeSystemException() << error; }
     };
     return std::visit(VisitorMethods(), storage);
 }

@@ -20,7 +20,7 @@ TEST(EnumUnionTypeConstructorTest, construct) {
 
     babelwires::EnumUnionTypeConstructor constructor;
 
-    const babelwires::Type* const newType = constructor.tryGetOrConstructType(
+    const babelwires::TypePtr newType = constructor.tryGetOrConstructType(
         testEnvironment.m_typeSystem,
         babelwires::TypeConstructorArguments{
             {testDomain::TestSubSubEnum1::getThisIdentifier(), testDomain::TestSubSubEnum2::getThisIdentifier()}});

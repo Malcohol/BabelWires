@@ -56,7 +56,7 @@ const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSy
                 const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
                 if (const TypeConstructor* const typeConstructor =
                         m_typeSystem.tryGetTypeConstructor(typeConstructorId)) {
-                    return typeConstructor->tryGetOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
+                    return typeConstructor->tryGetOrConstructType(m_typeSystem, std::get<1>(higherOrderData)).get() /*TODO*/;
                 }
                 return nullptr;
             } catch (babelwires::TypeSystemException&) {
@@ -77,7 +77,7 @@ const babelwires::Type& babelwires::TypeRef::resolve(const TypeSystem& typeSyste
         const babelwires::Type& operator()(const ConstructedTypeData& higherOrderData) {
             const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
             const TypeConstructor& typeConstructor = m_typeSystem.getTypeConstructor(typeConstructorId);
-            return typeConstructor.getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
+            return /*TODO*/ *typeConstructor.getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
         }
         const TypeSystem& m_typeSystem;
     } visitorMethods{typeSystem};

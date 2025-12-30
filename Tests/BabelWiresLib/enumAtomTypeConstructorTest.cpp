@@ -20,7 +20,7 @@ TEST(EnumAtomTypeConstructorTest, construct) {
 
     babelwires::EnumAtomTypeConstructor constructor;
 
-    const babelwires::Type* const newType = constructor.tryGetOrConstructType(
+    const babelwires::TypePtr newType = constructor.tryGetOrConstructType(
         testEnvironment.m_typeSystem, babelwires::TypeConstructorArguments{{}, {enumValue.clone()}});
 
     ASSERT_NE(newType, nullptr);

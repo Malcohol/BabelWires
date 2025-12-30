@@ -29,12 +29,12 @@ namespace babelwires {
 
         /// Get the constructed type from the cache, or construct a new one.
         /// Returns null if the type cannot be constructed.
-        const Type* tryGetOrConstructType(const TypeSystem& typeSystem,
+        TypePtr tryGetOrConstructType(const TypeSystem& typeSystem,
                                           const TypeConstructorArguments& arguments) const;
 
         /// Get the constructed type from the cache, or construct a new one.
         /// Throws a TypeSystemException if the type cannot be constructed.
-        const Type& getOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
+        TypePtr getOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
 
         /// This is supplied by the TYPE_CONSTRUCTOR macro.
         virtual TypeConstructorId getTypeConstructorId() const = 0;
