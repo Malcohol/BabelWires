@@ -13,9 +13,6 @@ namespace babelwires {
     using RegisteredTypeId = MediumId;
     using TypeConstructorId = MediumId;
 
-    /// The maximum supported number of type arguments for a type constructor.
-    static constexpr unsigned int c_maxNumTypeConstructorArguments = 2;
-
     /// The SubTypeOrder describes the relationship between two types.
     enum class SubtypeOrder {
         /// Both types have the same set of values.
