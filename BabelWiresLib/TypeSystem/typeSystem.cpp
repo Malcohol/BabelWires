@@ -25,7 +25,7 @@ babelwires::TypePtr babelwires::TypeSystem::tryGetRegisteredType(RegisteredTypeI
     if (it != m_registeredTypeRegistry.end()) {
         return std::get<0>(it->second);
     }
-    return nullptr;
+    return {};
 }
 
 babelwires::TypePtr babelwires::TypeSystem::getRegisteredType(RegisteredTypeId id) const {
@@ -75,8 +75,8 @@ babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeRef& t
     if (typeRefA == typeRefB) {
         return SubtypeOrder::IsEquivalent;
     }
-    if (const Type* typeA = typeRefA.tryResolve(*this)) {
-        if (const Type* typeB = typeRefB.tryResolve(*this)) {
+    if (const TypePtr typeA = typeRefA.tryResolve(*this)) {
+        if (const TypePtr typeB = typeRefB.tryResolve(*this)) {
             if (const auto resultFromA = typeA->compareSubtypeHelper(*this, *typeB)) {
                 return *resultFromA;
             } else if (const auto resultFromB = typeB->compareSubtypeHelper(*this, *typeA)) {

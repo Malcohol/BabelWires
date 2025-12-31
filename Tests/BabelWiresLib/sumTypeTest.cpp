@@ -70,7 +70,7 @@ TEST(SumTypeTest, sumTypeConstructorNoDefaultIndex) {
                                    babelwires::DefaultIntType::getThisType(),
                                    babelwires::DefaultRationalType::getThisType());
 
-    const babelwires::Type* const type = sumTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& type = sumTypeRef.tryResolve(testEnvironment.m_typeSystem);
 
     EXPECT_NE(type, nullptr);
     ASSERT_NE(type->as<babelwires::SumType>(), nullptr);
@@ -90,7 +90,7 @@ TEST(SumTypeTest, sumTypeConstructorDefault1) {
         {{babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()},
          {babelwires::IntValue(1)}});
 
-    const babelwires::Type* const type = sumTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& type = sumTypeRef.tryResolve(testEnvironment.m_typeSystem);
 
     EXPECT_NE(type, nullptr);
     ASSERT_NE(type->as<babelwires::SumType>(), nullptr);

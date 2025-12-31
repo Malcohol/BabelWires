@@ -38,7 +38,7 @@ void babelwires::ArrayType::setSize(const TypeSystem& typeSystem, ValueHolder& v
         throw ModelException() << "The new array size " << newSize << " is above the maximum " << m_maximumSize;
     }
     ArrayValue& arrayValue = value.copyContentsAndGetNonConst().is<ArrayValue>();
-    arrayValue.setSize(typeSystem, m_entryType.resolve(typeSystem), newSize);
+    arrayValue.setSize(typeSystem, *m_entryType.resolve(typeSystem), newSize);
 }
 
 void babelwires::ArrayType::insertEntries(const TypeSystem& typeSystem, ValueHolder& value, unsigned int indexOfNewElement, unsigned int numEntriesToAdd) const {
@@ -52,10 +52,10 @@ void babelwires::ArrayType::insertEntries(const TypeSystem& typeSystem, ValueHol
         throw ModelException() << "The index " << indexOfNewElement << " at which to add is not currently in the array";
     }
     ArrayValue& arrayValue = value.copyContentsAndGetNonConst().is<ArrayValue>();
-    const Type& entryType = m_entryType.resolve(typeSystem);
+    const TypePtr entryType = m_entryType.resolve(typeSystem);
     for (unsigned int i = 0; i < numEntriesToAdd; ++i )
     {
-        arrayValue.insertValue(typeSystem, entryType, indexOfNewElement + i);
+        arrayValue.insertValue(typeSystem, *entryType, indexOfNewElement + i);
     }
 }
 
@@ -81,8 +81,8 @@ const babelwires::TypeRef& babelwires::ArrayType::getEntryType() const {
 }
 
 babelwires::NewValueHolder babelwires::ArrayType::createValue(const TypeSystem& typeSystem) const {
-    const Type& entryType = m_entryType.resolve(typeSystem);
-    return babelwires::ValueHolder::makeValue<ArrayValue>(typeSystem, entryType, m_initialSize);
+    const TypePtr entryType = m_entryType.resolve(typeSystem);
+    return babelwires::ValueHolder::makeValue<ArrayValue>(typeSystem, *entryType, m_initialSize);
 }
 
 bool babelwires::ArrayType::visitValue(const TypeSystem& typeSystem, const Value& v,

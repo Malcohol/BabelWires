@@ -18,7 +18,7 @@
 babelwires::GenericValue::GenericValue(const TypeSystem& typeSystem, TypeRef wrappedType, unsigned int numVariables)
     : m_actualWrappedType(wrappedType)
     , m_typeVariableAssignments(numVariables)
-    , m_wrappedValue(m_actualWrappedType.resolve(typeSystem).createValue(typeSystem)) {}
+    , m_wrappedValue(m_actualWrappedType.resolve(typeSystem)->createValue(typeSystem)) {}
 
 const babelwires::TypeRef& babelwires::GenericValue::getActualWrappedType() const {
     return m_actualWrappedType;
@@ -107,7 +107,7 @@ void babelwires::GenericValue::instantiate(const TypeSystem& typeSystem, const T
     // Updating the existing wrapped value by exploring it doesn't account for the fact that values may carry types in
     // non-obvious ways. In particular, GenericValue carries the m_actualWrappedType and typeAssignments, neither of
     // which would be updated if we encountered a nested generic type using exploration.
-    m_wrappedValue = m_actualWrappedType.resolve(typeSystem).createValue(typeSystem);
+    m_wrappedValue = m_actualWrappedType.resolve(typeSystem)->createValue(typeSystem);
 }
 
 bool babelwires::GenericValue::isActualVersionOf(const TypeRef& wrappedType) const {

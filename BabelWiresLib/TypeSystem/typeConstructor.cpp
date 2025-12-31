@@ -24,7 +24,7 @@ babelwires::TypeConstructor::tryGetOrConstructType(const TypeSystem& typeSystem,
             return {};
         }
         babelwires::TypePtr operator()(const TypePtr& type) { return type; }
-        babelwires::TypePtr operator()(const std::string& error) { return nullptr; }
+        babelwires::TypePtr operator()(const std::string& error) { return {}; }
     };
     return std::visit(VisitorMethods(), storage);
 }
@@ -61,7 +61,7 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
     resolvedArguments.reserve(arguments.getTypeArguments().size());
     std::vector<std::string> unresolvedTypesString;
     for (auto arg : arguments.getTypeArguments()) {
-        if (const Type* const argAsType = arg.tryResolve(typeSystem)) {
+        if (const TypePtr argAsType = arg.tryResolve(typeSystem)) {
             resolvedArguments.emplace_back(argAsType);
         } else {
             unresolvedTypesString.emplace_back(arg.toString());

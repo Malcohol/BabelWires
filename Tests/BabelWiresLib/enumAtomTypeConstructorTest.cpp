@@ -42,7 +42,7 @@ TEST(EnumAtomTypeConstructorTest, makeTypeRef) {
 
     babelwires::TypeRef typeRef = babelwires::EnumAtomTypeConstructor::makeTypeRef(babelwires::EnumValue(foo));
 
-    const babelwires::Type* const newType = typeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& newType = typeRef.tryResolve(testEnvironment.m_typeSystem);
 
     ASSERT_NE(newType, nullptr);
     EXPECT_EQ(newType->getTypeRef(),

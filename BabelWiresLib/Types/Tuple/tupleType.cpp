@@ -19,8 +19,8 @@ babelwires::NewValueHolder babelwires::TupleType::createValue(const TypeSystem& 
     TupleValue::Tuple newTuple;
     newTuple.reserve(m_componentTypes.size());
     for (const auto& t : m_componentTypes) {
-        const Type& type = t.resolve(typeSystem);
-        newTuple.emplace_back(type.createValue(typeSystem));
+        const TypePtr& type = t.resolve(typeSystem);
+        newTuple.emplace_back(type->createValue(typeSystem));
     }
     return babelwires::ValueHolder::makeValue<TupleValue>(std::move(newTuple));
 }
@@ -34,7 +34,7 @@ bool babelwires::TupleType::visitValue(const TypeSystem& typeSystem, const Value
         return false;
     }
     for (unsigned int i = 0; i < m_componentTypes.size(); ++i) {
-        const Type& type = m_componentTypes[i].resolve(typeSystem);
+        const TypePtr& type = m_componentTypes[i].resolve(typeSystem);
         if (!visitor(typeSystem, m_componentTypes[i], *tuple->getValue(i), i)) {
             return false;
         }
@@ -80,8 +80,8 @@ std::string babelwires::TupleType::valueToString(const TypeSystem& typeSystem, c
     for (int i = 0; i < m_componentTypes.size(); ++i) {
         os << sep;
         sep = ", ";
-        const Type& type = m_componentTypes[i].resolve(typeSystem);
-        os << type.valueToString(typeSystem, tuple.getValue(i));
+        const TypePtr& type = m_componentTypes[i].resolve(typeSystem);
+        os << type->valueToString(typeSystem, tuple.getValue(i));
     }
     os << ")";
     return os.str();

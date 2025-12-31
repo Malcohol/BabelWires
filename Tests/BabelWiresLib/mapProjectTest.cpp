@@ -82,9 +82,9 @@ TEST(MapProjectTest, types) {
     EXPECT_EQ(mapProject.getCurrentSourceTypeRef(), babelwires::StringType::getThisType());
     EXPECT_EQ(mapProject.getCurrentTargetTypeRef(), testDomain::TestEnum::getThisType());
 
-    EXPECT_EQ(mapProject.getCurrentSourceType(),
+    EXPECT_EQ(mapProject.getCurrentSourceType().get(),
               environment.m_typeSystem.getEntryByType<babelwires::StringType>().get());
-    EXPECT_EQ(mapProject.getCurrentTargetType(),
+    EXPECT_EQ(mapProject.getCurrentTargetType().get(),
               environment.m_typeSystem.getEntryByType<testDomain::TestEnum>().get());
 }
 

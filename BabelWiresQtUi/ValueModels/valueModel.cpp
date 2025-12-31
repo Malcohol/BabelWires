@@ -21,7 +21,7 @@ const babelwires::ValueHolder& babelwires::ValueModel::getValue() const {
 }
 
 const babelwires::Type* babelwires::ValueModel::getType() const {
-    return m_type;
+    return m_type.get();
 }
 
 QWidget* babelwires::ValueModel::createEditor(QWidget* parent) const {

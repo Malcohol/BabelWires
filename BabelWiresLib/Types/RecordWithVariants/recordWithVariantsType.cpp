@@ -72,8 +72,8 @@ void babelwires::RecordWithVariantsType::selectTag(const TypeSystem& typeSystem,
         recordValue.removeValue(m_fields[i].m_identifier);
     }
     for (auto i : changes.m_fieldsAdded) {
-        const Type& fieldType = m_fields[i].m_type.resolve(typeSystem);
-        recordValue.setValue(m_fields[i].m_identifier, fieldType.createValue(typeSystem));
+        const TypePtr& fieldType = m_fields[i].m_type.resolve(typeSystem);
+        recordValue.setValue(m_fields[i].m_identifier, fieldType->createValue(typeSystem));
     }
     recordValue.setTag(tag);
 }
@@ -160,8 +160,8 @@ int babelwires::RecordWithVariantsType::getChildIndexFromStep(const ValueHolder&
 babelwires::NewValueHolder babelwires::RecordWithVariantsType::createValue(const TypeSystem& typeSystem) const {
     auto newValue = babelwires::ValueHolder::makeValue<RecordWithVariantsValue>(m_defaultTag);
     for (const auto* f : m_tagToVariantCache.find(m_defaultTag)->second) {
-        const Type& fieldType = f->m_type.resolve(typeSystem);
-        newValue.m_nonConstReference.setValue(f->m_identifier, fieldType.createValue(typeSystem));
+        const TypePtr& fieldType = f->m_type.resolve(typeSystem);
+        newValue.m_nonConstReference.setValue(f->m_identifier, fieldType->createValue(typeSystem));
     }
     return std::move(newValue);
 }

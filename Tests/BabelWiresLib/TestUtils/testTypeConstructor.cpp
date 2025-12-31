@@ -11,7 +11,7 @@ babelwires::TypePtr testUtils::TestUnaryTypeConstructor::constructType(
     if (!sourceType) {
         throw new babelwires::TypeSystemException();
     }
-    return std::make_unique<babelwires::ConstructedType<TestType>>(std::move(newTypeRef),
+    return babelwires::makeType<babelwires::ConstructedType<TestType>>(std::move(newTypeRef),
                                                                    sourceType->m_maximumLength + 1);
 }
 
@@ -25,7 +25,7 @@ babelwires::TypePtr testUtils::TestBinaryTypeConstructor::constructType(
     if (!sourceType0 || !sourceType1) {
         throw new babelwires::TypeSystemException();
     }
-    return std::make_unique<babelwires::ConstructedType<TestType>>(
+    return babelwires::makeType<babelwires::ConstructedType<TestType>>(
         std::move(newTypeRef), sourceType0->m_maximumLength + sourceType1->m_maximumLength);
 }
 
@@ -43,7 +43,7 @@ babelwires::TypePtr testUtils::TestMixedTypeConstructor::constructType(
     assert(stringValue != nullptr);
 
     // Remember the typeRef, since there's no way to reconstruct it.
-    return std::make_unique<babelwires::ConstructedType<TestType>>(
+    return babelwires::makeType<babelwires::ConstructedType<TestType>>(
         std::move(newTypeRef), testType->m_maximumLength + stringValue->get().size(),
         testType->m_defaultValue + stringValue->get());
 }

@@ -45,22 +45,22 @@ babelwires::TypeRef::TypeRef(RegisteredTypeId typeId)
 babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments)
     : m_storage(ConstructedTypeData{typeConstructorId, std::move(arguments)}) {}
 
-const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSystem) const {
+babelwires::TypePtr babelwires::TypeRef::tryResolve(const TypeSystem& typeSystem) const {
     struct VisitorMethods {
-        const babelwires::Type* operator()(std::monostate) { return nullptr; }
-        const babelwires::Type* operator()(RegisteredTypeId typeId) {
-            return m_typeSystem.tryGetRegisteredType(typeId).get();
+        TypePtr operator()(std::monostate) { return {}; }
+        TypePtr operator()(RegisteredTypeId typeId) {
+            return m_typeSystem.tryGetRegisteredType(typeId);
         }
-        const babelwires::Type* operator()(const ConstructedTypeData& higherOrderData) {
+        TypePtr operator()(const ConstructedTypeData& higherOrderData) {
             try {
                 const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
                 if (const TypeConstructor* const typeConstructor =
                         m_typeSystem.tryGetTypeConstructor(typeConstructorId)) {
-                    return typeConstructor->tryGetOrConstructType(m_typeSystem, std::get<1>(higherOrderData)).get() /*TODO*/;
+                    return typeConstructor->tryGetOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
                 }
-                return nullptr;
+                return {};
             } catch (babelwires::TypeSystemException&) {
-                return nullptr;
+                return {};
             }
         }
         const TypeSystem& m_typeSystem;
@@ -68,23 +68,23 @@ const babelwires::Type* babelwires::TypeRef::tryResolve(const TypeSystem& typeSy
     return std::visit(visitorMethods, m_storage);
 }
 
-const babelwires::Type& babelwires::TypeRef::resolve(const TypeSystem& typeSystem) const {
+babelwires::TypePtr babelwires::TypeRef::resolve(const TypeSystem& typeSystem) const {
     struct VisitorMethods {
-        const babelwires::Type& operator()(std::monostate) {
+        TypePtr operator()(std::monostate) {
             throw TypeSystemException() << "A null type cannot be resolved.";
         }
-        const babelwires::Type& operator()(RegisteredTypeId typeId) { return *m_typeSystem.getRegisteredType(typeId); }
-        const babelwires::Type& operator()(const ConstructedTypeData& higherOrderData) {
+        TypePtr operator()(RegisteredTypeId typeId) { return m_typeSystem.getRegisteredType(typeId); }
+        TypePtr operator()(const ConstructedTypeData& higherOrderData) {
             const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
             const TypeConstructor& typeConstructor = m_typeSystem.getTypeConstructor(typeConstructorId);
-            return /*TODO*/ *typeConstructor.getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
+            return typeConstructor.getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
         }
         const TypeSystem& m_typeSystem;
     } visitorMethods{typeSystem};
     return std::visit(visitorMethods, m_storage);
 }
 
-const babelwires::Type& babelwires::TypeRef::assertResolve(const TypeSystem& typeSystem) const {
+babelwires::TypePtr babelwires::TypeRef::assertResolve(const TypeSystem& typeSystem) const {
 #ifndef NDEBUG
     try {
 #endif
@@ -92,7 +92,7 @@ const babelwires::Type& babelwires::TypeRef::assertResolve(const TypeSystem& typ
 #ifndef NDEBUG
     } catch (TypeSystemException&) {
         assert(false && "TypeSystemException thrown when resolving TypeRef");
-        return *static_cast<const babelwires::Type*>(0);
+        return {};
     }
 #endif
 }

@@ -33,50 +33,50 @@
 #include <BabelWiresLib/Types/Tuple/tupleType.hpp>
 
 void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem,
-                                            const Type& type, const ValueHolder& value, bool isReadOnly,
+                                            const TypePtr& type, const ValueHolder& value, bool isReadOnly,
                                             bool isStructureEditable) {
     m_valueModel = &m_valueModelStorage;
     // TODO Allow the UI to register callbacks into the corresponding ValueTypes.
-    if (valueModelRegistry.handleValueTreeNodeOfType(&type, m_valueModel)) {
+    if (valueModelRegistry.handleValueTreeNodeOfType(type.get(), m_valueModel)) {
         // Handled by a registered handler.
-    } else if (type.as<EnumType>()) {
+    } else if (type->as<EnumType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::EnumValueModel));
         new (m_valueModel) babelwires::EnumValueModel();
-    } else if (type.as<IntType>()) {
+    } else if (type->as<IntType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::IntValueModel));
         new (m_valueModel) babelwires::IntValueModel();
-    } else if (type.as<RationalType>()) {
+    } else if (type->as<RationalType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::RationalValueModel));
         new (m_valueModel) babelwires::RationalValueModel();
-    } else if (type.as<StringType>()) {
+    } else if (type->as<StringType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::StringValueModel));
         new (m_valueModel) babelwires::StringValueModel();
-    } else if (type.as<MapType>() || type.as<SumOfMapsType>()) {
+    } else if (type->as<MapType>() || type->as<SumOfMapsType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::MapValueModel));
         new (m_valueModel) babelwires::MapValueModel();
-    } else if (type.as<ArrayType>()) {
+    } else if (type->as<ArrayType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::ArrayValueModel));
         new (m_valueModel) babelwires::ArrayValueModel();
-    } else if (type.as<RecordType>()) {
+    } else if (type->as<RecordType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::RecordValueModel));
         new (m_valueModel) babelwires::RecordValueModel();
-    } else if (type.as<RecordWithVariantsType>()) {
+    } else if (type->as<RecordWithVariantsType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::RecordWithVariantsValueModel));
         new (m_valueModel) babelwires::RecordWithVariantsValueModel();
-    } else if (type.as<TupleType>()) {
+    } else if (type->as<TupleType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::TupleValueModel));
         new (m_valueModel) babelwires::TupleValueModel();
-    } else if (type.as<SumType>()) {
+    } else if (type->as<SumType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::SumValueModel));
         new (m_valueModel) babelwires::SumValueModel();
-    } else if (type.as<GenericType>()) {
+    } else if (type->as<GenericType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::GenericTypeValueModel));
         new (m_valueModel) babelwires::GenericTypeValueModel();
     } else {
         // The base row model is used.
     }
     m_valueModel->m_typeSystem = &typeSystem;
-    m_valueModel->m_type = &type;
+    m_valueModel->m_type = type;
     m_valueModel->m_value = &value;
     m_valueModel->m_valueModelRegistry = &valueModelRegistry;
     m_valueModel->m_isReadOnly = isReadOnly;

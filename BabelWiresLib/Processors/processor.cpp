@@ -18,11 +18,11 @@ babelwires::Processor::Processor(const ProjectContext& projectContext, const Typ
                                  const TypeRef& outputTypeRef)
     : m_inputValueTreeRoot(std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, inputTypeRef))
     , m_outputValueTreeRoot(std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, outputTypeRef)) {
-    const Type* const inputType = inputTypeRef.tryResolve(projectContext.m_typeSystem);
+    const TypePtr inputType = inputTypeRef.tryResolve(projectContext.m_typeSystem);
     if (!inputType) {
         throw ModelException() << "Input type reference " << inputTypeRef << " could not be resolved";
     }
-    const Type* const outputType = outputTypeRef.tryResolve(projectContext.m_typeSystem);
+    const TypePtr outputType = outputTypeRef.tryResolve(projectContext.m_typeSystem);
     if (!outputType) {
         throw ModelException() << "Output type reference " << outputTypeRef << " could not be resolved";
     }

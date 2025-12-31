@@ -31,11 +31,11 @@ TEST(ArrayTypeTest, simpleArrayTypeCreateValue) {
     EXPECT_NE(newArrayValue, nullptr);
     EXPECT_EQ(newArrayValue->getSize(), testDomain::TestSimpleArrayType::s_defaultSize);
 
-    const babelwires::Type& entryType = arrayType.getEntryType().resolve(testEnvironment.m_typeSystem);
-    const babelwires::ValueHolder defaultEntryValue = entryType.createValue(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& entryType = arrayType.getEntryType().resolve(testEnvironment.m_typeSystem);
+    const babelwires::ValueHolder defaultEntryValue = entryType->createValue(testEnvironment.m_typeSystem);
 
     for (int i = 0; i < newArrayValue->getSize(); ++i) {
-        EXPECT_TRUE(entryType.isValidValue(testEnvironment.m_typeSystem, *newArrayValue->getValue(i)));
+        EXPECT_TRUE(entryType->isValidValue(testEnvironment.m_typeSystem, *newArrayValue->getValue(i)));
         // New entries start in default state
         EXPECT_EQ(defaultEntryValue, newArrayValue->getValue(i));
     }
@@ -58,11 +58,11 @@ TEST(ArrayTypeTest, compoundArrayTypeCreateValue) {
     EXPECT_NE(newArrayValue, nullptr);
     EXPECT_EQ(newArrayValue->getSize(), testDomain::TestCompoundArrayType::s_defaultSize);
 
-    const babelwires::Type& entryType = arrayType.getEntryType().resolve(testEnvironment.m_typeSystem);
-    const babelwires::ValueHolder defaultEntryValue = entryType.createValue(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& entryType = arrayType.getEntryType().resolve(testEnvironment.m_typeSystem);
+    const babelwires::ValueHolder defaultEntryValue = entryType->createValue(testEnvironment.m_typeSystem);
 
     for (int i = 0; i < newArrayValue->getSize(); ++i) {
-        EXPECT_TRUE(entryType.isValidValue(testEnvironment.m_typeSystem, *newArrayValue->getValue(i)));
+        EXPECT_TRUE(entryType->isValidValue(testEnvironment.m_typeSystem, *newArrayValue->getValue(i)));
         // New entries start in default state
         EXPECT_EQ(defaultEntryValue, newArrayValue->getValue(i));
     }
@@ -75,20 +75,20 @@ TEST(ArrayTypeTest, isValidValueArrayCanBeEmpty) {
     EXPECT_EQ(testDomain::TestSimpleArrayType::s_minimumSize, 0);
 
     testDomain::TestSimpleArrayType arrayType;
-    const babelwires::Type& entryType =
+    const babelwires::TypePtr& entryType =
         testDomain::TestSimpleArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
 
     for (unsigned int i = testDomain::TestSimpleArrayType::s_minimumSize;
          i <= testDomain::TestSimpleArrayType::s_maximumSize; ++i) {
-        babelwires::ArrayValue emptyValue(testEnvironment.m_typeSystem, entryType, i);
+        babelwires::ArrayValue emptyValue(testEnvironment.m_typeSystem, *entryType, i);
         EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, emptyValue));
     }
 
-    babelwires::ArrayValue overFullValue(testEnvironment.m_typeSystem, entryType,
+    babelwires::ArrayValue overFullValue(testEnvironment.m_typeSystem, *entryType,
                                          testDomain::TestSimpleArrayType::s_maximumSize + 1);
     EXPECT_FALSE(arrayType.isValidValue(testEnvironment.m_typeSystem, overFullValue));
 
-    babelwires::ArrayValue mixedValue(testEnvironment.m_typeSystem, entryType,
+    babelwires::ArrayValue mixedValue(testEnvironment.m_typeSystem, *entryType,
                                       testDomain::TestSimpleArrayType::s_maximumSize);
 
     // Make an entry not an element of the entry type.
@@ -107,19 +107,19 @@ TEST(ArrayTypeTest, isValidValueArrayCannotBeEmpty) {
     EXPECT_GT(testDomain::TestCompoundArrayType::s_minimumSize, 1);
 
     testDomain::TestCompoundArrayType arrayType;
-    const babelwires::Type& entryType =
+    const babelwires::TypePtr& entryType =
         testDomain::TestCompoundArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
 
     for (unsigned int i = testDomain::TestCompoundArrayType::s_minimumSize;
          i <= testDomain::TestCompoundArrayType::s_maximumSize; ++i) {
-        babelwires::ArrayValue emptyValue(testEnvironment.m_typeSystem, entryType, i);
+        babelwires::ArrayValue emptyValue(testEnvironment.m_typeSystem, *entryType, i);
         EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, emptyValue));
     }
 
-    babelwires::ArrayValue emptyArray(testEnvironment.m_typeSystem, entryType, 0);
+    babelwires::ArrayValue emptyArray(testEnvironment.m_typeSystem, *entryType, 0);
     EXPECT_FALSE(arrayType.isValidValue(testEnvironment.m_typeSystem, emptyArray));
 
-    babelwires::ArrayValue arrayTooSmall(testEnvironment.m_typeSystem, entryType,
+    babelwires::ArrayValue arrayTooSmall(testEnvironment.m_typeSystem, *entryType,
                                          testDomain::TestCompoundArrayType::s_minimumSize - 1);
     EXPECT_FALSE(arrayType.isValidValue(testEnvironment.m_typeSystem, arrayTooSmall));
 }
@@ -133,11 +133,11 @@ TEST(ArrayTypeTest, setSizeArrayCanBeEmpty) {
     EXPECT_NE(testDomain::TestSimpleArrayType::s_minimumSize, testDomain::TestSimpleArrayType::s_maximumSize);
 
     testDomain::TestSimpleArrayType arrayType;
-    const babelwires::Type& entryType =
+    const babelwires::TypePtr& entryType =
         testDomain::TestSimpleArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder valueHolder =
-        babelwires::ValueHolder::makeValue<babelwires::ArrayValue>(testEnvironment.m_typeSystem, entryType, 0);
+        babelwires::ValueHolder::makeValue<babelwires::ArrayValue>(testEnvironment.m_typeSystem, *entryType, 0);
 
     // Careful: Mutating a valueHolder cause its held value to be replaced, so don't try to keep a reference to the
     // contained value.
@@ -165,11 +165,11 @@ TEST(ArrayTypeTest, setSizeArrayCannotBeEmpty) {
     EXPECT_NE(testDomain::TestCompoundArrayType::s_minimumSize, testDomain::TestCompoundArrayType::s_maximumSize);
 
     testDomain::TestCompoundArrayType arrayType;
-    const babelwires::Type& entryType =
+    const babelwires::TypePtr& entryType =
         testDomain::TestCompoundArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder valueHolder = babelwires::ValueHolder::makeValue<babelwires::ArrayValue>(
-        testEnvironment.m_typeSystem, entryType, testDomain::TestCompoundArrayType::s_maximumSize);
+        testEnvironment.m_typeSystem, *entryType, testDomain::TestCompoundArrayType::s_maximumSize);
 
     // Careful: Mutating a valueHolder cause its held value to be replaced, so don't try to keep a reference to the
     // contained value.
@@ -197,12 +197,12 @@ TEST(ArrayTypeTest, insertEntries) {
     EXPECT_EQ(testDomain::TestSimpleArrayType::s_maximumSize, 10);
 
     testDomain::TestSimpleArrayType arrayType;
-    const babelwires::Type& entryType =
+    const babelwires::TypePtr& entryType =
         testDomain::TestSimpleArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder valueHolder;
     {
-        babelwires::ArrayValue initialArray(testEnvironment.m_typeSystem, entryType, 4);
+        babelwires::ArrayValue initialArray(testEnvironment.m_typeSystem, *entryType, 4);
         for (unsigned int i = 0; i < 4; ++i) {
             initialArray.setValue(i, babelwires::IntValue(i + 1));
         }
@@ -243,12 +243,12 @@ TEST(ArrayTypeTest, removeEntriesArrayCanBeEmpty) {
     EXPECT_EQ(testDomain::TestSimpleArrayType::s_maximumSize, 10);
 
     testDomain::TestSimpleArrayType arrayType;
-    const babelwires::Type& entryType =
+    const babelwires::TypePtr& entryType =
         testDomain::TestSimpleArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder valueHolder;
     {
-        babelwires::ArrayValue initialArray(testEnvironment.m_typeSystem, entryType, 8);
+        babelwires::ArrayValue initialArray(testEnvironment.m_typeSystem, *entryType, 8);
         for (unsigned int i = 0; i < 8; ++i) {
             initialArray.setValue(i, babelwires::IntValue(i + 1));
         }
@@ -294,10 +294,10 @@ TEST(ArrayTypeTest, removeEntriesArrayCannotBeEmpty) {
     EXPECT_EQ(testDomain::TestCompoundArrayType::s_maximumSize, 4);
 
     testDomain::TestCompoundArrayType arrayType;
-    const babelwires::Type& entryType =
+    const babelwires::TypePtr& entryType =
         testDomain::TestCompoundArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
 
-    babelwires::ValueHolder valueHolder(babelwires::ArrayValue(testEnvironment.m_typeSystem, entryType, 4));
+    babelwires::ValueHolder valueHolder(babelwires::ArrayValue(testEnvironment.m_typeSystem, *entryType, 4));
 
     EXPECT_EQ(valueHolder->is<babelwires::ArrayValue>().getSize(), 4);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
@@ -327,7 +327,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorSucceed) {
 
     EXPECT_STREQ(arrayTypeRef.toString().c_str(), "Array<String>[1..5]");
 
-    const babelwires::Type* const newType = arrayTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& newType = arrayTypeRef.tryResolve(testEnvironment.m_typeSystem);
     ASSERT_NE(newType, nullptr);
 
     const babelwires::ArrayType* const arrayType = newType->as<babelwires::ArrayType>();
@@ -345,7 +345,7 @@ TEST(ArrayTypeTest, makeTypeRef) {
     babelwires::TypeRef arrayTypeRef =
         babelwires::ArrayTypeConstructor::makeTypeRef(babelwires::StringType::getThisType(), 1, 5, 3);
 
-    const babelwires::Type* const newType = arrayTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& newType = arrayTypeRef.tryResolve(testEnvironment.m_typeSystem);
     ASSERT_NE(newType, nullptr);
 
     const babelwires::ArrayType* const arrayType = newType->as<babelwires::ArrayType>();
@@ -363,7 +363,7 @@ TEST(ArrayTypeTest, makeTypeRefUnspecifiedDefault) {
     babelwires::TypeRef arrayTypeRef =
         babelwires::ArrayTypeConstructor::makeTypeRef(babelwires::StringType::getThisType(), 1, 5);
 
-    const babelwires::Type* const newType = arrayTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& newType = arrayTypeRef.tryResolve(testEnvironment.m_typeSystem);
     ASSERT_NE(newType, nullptr);
 
     const babelwires::ArrayType* const arrayType = newType->as<babelwires::ArrayType>();

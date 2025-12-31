@@ -10,6 +10,8 @@
 #include <QVariant>
 
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
+#include <BabelWiresLib/TypeSystem/typePtr.hpp>
+
 #include <BabelWiresQtUi/ContextMenu/contextMenu.hpp>
 
 class QWidget;
@@ -50,7 +52,7 @@ namespace babelwires {
 
       public:
         const TypeSystem* m_typeSystem;
-        const Type* m_type;
+        TypePtr m_type;
         const ValueHolder* m_value;
         /// Used by value editors that allow the editing of subvalues, such as tuple.
         const ValueModelRegistry* m_valueModelRegistry;

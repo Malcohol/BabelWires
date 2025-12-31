@@ -24,7 +24,7 @@ void babelwires::SumValueModel::initializeValueModelDispatcherForSummand(ValueMo
     const unsigned int currentIndex = sumType.getIndexOfValue(*m_typeSystem, *getValue());
     assert((currentIndex >= 0) && "Value not a valid instance of any summand of a SumType");
     const TypeRef& summandRef = sumType.getSummands()[currentIndex];
-    const Type& summandType = summandRef.resolve(*m_typeSystem);
+    const TypePtr& summandType = summandRef.resolve(*m_typeSystem);
     valueModel.init(*m_valueModelRegistry, *m_typeSystem, summandType, getValue(), m_isReadOnly, m_isStructureEditable);
 }
 
@@ -81,8 +81,8 @@ void babelwires::SumValueModel::getContextMenuActions(
                 // TODO This seems to work but is very awkward.
                 const auto* projectLocation  = location.as<ProjectDataLocation>();
                 assert(projectLocation);
-                const Type& summandType = summandRef.resolve(*m_typeSystem);
-                auto assignmentData = std::make_unique<ValueAssignmentData>(summandType.createValue(*m_typeSystem));
+                const TypePtr& summandType = summandRef.resolve(*m_typeSystem);
+                auto assignmentData = std::make_unique<ValueAssignmentData>(summandType->createValue(*m_typeSystem));
                 assignmentData->m_targetPath = projectLocation->getPathToValue();
                 action = std::make_unique<ProjectCommandContextMenuAction>(
                     std::make_unique<AddModifierCommand>(summandRef.toString(), projectLocation->getNodeId(), std::move(assignmentData))

@@ -21,11 +21,11 @@ babelwires::MapEntryData::~MapEntryData() = default;
 
 babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef,
                                                       const TypeRef& targetTypeRef, bool isLastEntry) const {
-    const Type* const sourceType = sourceTypeRef.tryResolve(typeSystem);
+    const TypePtr sourceType = sourceTypeRef.tryResolve(typeSystem);
     if (!sourceType) {
         return "The source type is not recognized";
     }
-    const Type* const targetType = targetTypeRef.tryResolve(typeSystem);
+    const TypePtr targetType = targetTypeRef.tryResolve(typeSystem);
     if (!targetType) {
         return "The target type is not recognized";
     }

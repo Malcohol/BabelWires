@@ -17,12 +17,12 @@ babelwires::SumType::SumType(Summands summands, unsigned int indexOfDefaultSumma
 }
 
 babelwires::NewValueHolder babelwires::SumType::createValue(const TypeSystem& typeSystem) const {
-    return m_summands[m_indexOfDefaultSummand].resolve(typeSystem).createValue(typeSystem);
+    return m_summands[m_indexOfDefaultSummand].resolve(typeSystem)->createValue(typeSystem);
 }
 
 int babelwires::SumType::getIndexOfValue(const TypeSystem& typeSystem, const Value& v) const {
     const auto it = std::find_if(m_summands.cbegin(), m_summands.cend(), [&typeSystem, &v](const TypeRef& summand) {
-        return summand.resolve(typeSystem).isValidValue(typeSystem, v);
+        return summand.resolve(typeSystem)->isValidValue(typeSystem, v);
     });
     return (it != m_summands.cend()) ? std::distance(m_summands.cbegin(), it) : -1;
 }
@@ -94,7 +94,7 @@ namespace {
         unsigned int i = 0;
         while (i < summands.size()) {
             babelwires::TypeRef& summand = summands[i];
-            if (const babelwires::Type* summandType = summand.tryResolve(typeSystem)) {
+            if (const babelwires::TypePtr summandType = summand.tryResolve(typeSystem)) {
                 if (const babelwires::SumType* const subSumType = summandType->as<babelwires::SumType>()) {
                     const std::vector<babelwires::TypeRef>& subSummands = subSumType->getSummands();
                     summand = subSummands[0];
@@ -158,6 +158,6 @@ std::optional<babelwires::SubtypeOrder> babelwires::SumType::compareSubtypeHelpe
 
 std::string babelwires::SumType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const {
     const int summandIndex = getIndexOfValue(typeSystem, *v);
-    const Type& type = m_summands[summandIndex].assertResolve(typeSystem);
-    return type.valueToString(typeSystem, v);
+    const TypePtr& type = m_summands[summandIndex].assertResolve(typeSystem);
+    return type->valueToString(typeSystem, v);
 }

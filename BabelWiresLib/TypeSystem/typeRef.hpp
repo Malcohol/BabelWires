@@ -10,6 +10,7 @@
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
+#include <BabelWiresLib/TypeSystem/typePtr.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -80,15 +81,20 @@ namespace babelwires {
 
         /// Attempt to find the type in the TypeSystem that this TypeRef describes.
         /// Returns null if this TypeRef does not resolve.
-        const Type* tryResolve(const TypeSystem& typeSystem) const;
+        TypePtr tryResolve(const TypeSystem& typeSystem) const;
 
         /// Find the type in the TypeSystem that this TypeRef describes.
         /// Throws an exception if this TypeRef does not resolve.
-        const Type& resolve(const TypeSystem& typeSystem) const;
+        TypePtr resolve(const TypeSystem& typeSystem) const;
 
         /// Find the type in the TypeSystem that this TypeRef describes.
         /// Asserts that this TypeRef resolves.
-        const Type& assertResolve(const TypeSystem& typeSystem) const;
+        TypePtr assertResolve(const TypeSystem& typeSystem) const;
+
+        template<typename TYPE>
+        TypePtrT<TYPE> resolveAs(const TypeSystem& typeSystem) const {
+          return typeAs<TYPE>(resolve(typeSystem));
+        }
 
         /// Return a human-readable version of the TypeRef.
         std::string toString() const;

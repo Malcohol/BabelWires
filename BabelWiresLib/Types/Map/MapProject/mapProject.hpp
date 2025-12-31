@@ -49,8 +49,8 @@ namespace babelwires {
         void setCurrentSourceTypeRef(const TypeRef& sourceId);
         void setCurrentTargetTypeRef(const TypeRef& targetId);
 
-        const Type* getCurrentSourceType() const;
-        const Type* getCurrentTargetType() const;
+        TypePtr getCurrentSourceType() const;
+        TypePtr getCurrentTargetType() const;
 
         MapValue extractMapValue() const;
         void setMapValue(const MapValue& data);

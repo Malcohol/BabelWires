@@ -73,7 +73,7 @@ TEST(GenericTypeTest, createValue) {
     testUtils::TestEnvironment env;
     babelwires::TypeSystem& typeSystem = env.m_typeSystem;
 
-    const babelwires::Type* const type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
+    const babelwires::TypePtr& type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
     ASSERT_NE(type, nullptr);
 
     const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
@@ -95,7 +95,7 @@ TEST(GenericTypeTest, instantiateTypeVariables) {
     testUtils::TestEnvironment env;
     babelwires::TypeSystem& typeSystem = env.m_typeSystem;
 
-    const babelwires::Type* const type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
+    const babelwires::TypePtr& type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
     ASSERT_NE(type, nullptr);
 
     const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
@@ -152,7 +152,7 @@ TEST(GenericTypeTest, instantiateNestedTypeVariable) {
     testUtils::TestEnvironment env;
     babelwires::TypeSystem& typeSystem = env.m_typeSystem;
 
-    const babelwires::Type* const type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
+    const babelwires::TypePtr& type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
     ASSERT_NE(type, nullptr);
 
     const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
@@ -196,7 +196,7 @@ TEST(GenericTypeTest, childTypeAndTypeNames) {
     testUtils::TestEnvironment env;
     babelwires::TypeSystem& typeSystem = env.m_typeSystem;
 
-    const babelwires::Type* const type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
+    const babelwires::TypePtr& type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
     ASSERT_NE(type, nullptr);
 
     const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
@@ -209,7 +209,7 @@ TEST(GenericTypeTest, childTypeAndTypeNames) {
 
     auto checkNames = [&](bool var0Assigned, bool var1Assigned)  {
         auto [childValue, step, childTypeRef] = genericType->getChild(valueHolder, 0);
-        const babelwires::Type* const childType = childTypeRef.tryResolve(typeSystem);
+        const babelwires::TypePtr& childType = childTypeRef.tryResolve(typeSystem);
         EXPECT_NE(childType, nullptr);
         EXPECT_EQ(step, babelwires::GenericType::getStepToValue());
 

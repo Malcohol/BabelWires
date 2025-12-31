@@ -84,12 +84,12 @@ TEST(TypeRefTest, resolve) {
 
     babelwires::TypeRef typeRef(testUtils::TestType::getThisType());
 
-    EXPECT_EQ(testType, &typeRef.resolve(typeSystem));
+    EXPECT_EQ(testType, typeRef.resolve(typeSystem).get());
     babelwires::TypeRef constructedTypeRef(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
                                            testUtils::TestType::getThisType());
-    const babelwires::Type& newType = constructedTypeRef.resolve(typeSystem);
-    EXPECT_EQ(newType.getTypeRef(), constructedTypeRef);
-    EXPECT_EQ(&constructedTypeRef.resolve(typeSystem), &constructedTypeRef.resolve(typeSystem));
+    const babelwires::TypePtr& newType = constructedTypeRef.resolve(typeSystem);
+    EXPECT_EQ(newType->getTypeRef(), constructedTypeRef);
+    EXPECT_EQ(constructedTypeRef.resolve(typeSystem).get(), constructedTypeRef.resolve(typeSystem).get());
 }
 
 TEST(TypeRefTest, tryResolveSuccess) {
@@ -101,14 +101,14 @@ TEST(TypeRefTest, tryResolveSuccess) {
         typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
     babelwires::TypeRef typeRef(testUtils::TestType::getThisType());
-    EXPECT_EQ(testType, typeRef.tryResolve(typeSystem));
+    EXPECT_EQ(testType, typeRef.tryResolve(typeSystem).get());
 
     babelwires::TypeRef constructedTypeRef(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
                                            testUtils::TestType::getThisType());
-    const babelwires::Type* newType = constructedTypeRef.tryResolve(typeSystem);
+    const babelwires::TypePtr& newType = constructedTypeRef.tryResolve(typeSystem);
     EXPECT_NE(newType, nullptr);
     EXPECT_EQ(newType->getTypeRef(), constructedTypeRef);
-    EXPECT_EQ(constructedTypeRef.tryResolve(typeSystem), constructedTypeRef.tryResolve(typeSystem));
+    EXPECT_EQ(constructedTypeRef.tryResolve(typeSystem).get(), constructedTypeRef.tryResolve(typeSystem).get());
 }
 
 TEST(TypeRefTest, tryResolveFailure) {
@@ -133,7 +133,7 @@ TEST(TypeRefTest, tryResolveParallel) {
                             babelwires::TypeRef(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
                                                 testUtils::TestType::getThisType())));
 
-    std::vector<std::tuple<babelwires::TypeRef, const babelwires::Type*>> vectorOfResolutions;
+    std::vector<std::tuple<babelwires::TypeRef, babelwires::TypePtr>> vectorOfResolutions;
     for (int i = 0; i < 1000; ++i) {
         vectorOfResolutions.emplace_back(std::tuple{constructedTypeRef, nullptr});
     }
@@ -144,7 +144,7 @@ TEST(TypeRefTest, tryResolveParallel) {
         vectorOfResolutions.begin(), vectorOfResolutions.end(),
         [&typeSystem](auto& tuple) { std::get<1>(tuple) = std::get<0>(tuple).tryResolve(typeSystem); });
     for (int i = 0; i < 1000; ++i) {
-        const babelwires::Type* const resolvedType = std::get<1>(vectorOfResolutions[i]);
+        const babelwires::TypePtr& resolvedType = std::get<1>(vectorOfResolutions[i]);
         EXPECT_NE(resolvedType, nullptr);
         EXPECT_EQ(resolvedType->getTypeRef(), constructedTypeRef);
         EXPECT_EQ(resolvedType, std::get<1>(vectorOfResolutions[0]));
@@ -167,8 +167,8 @@ TEST(TypeRefTest, tryResolveMixed) {
                               testUtils::TestType::getThisType())},
          {babelwires::StringValue(" is this string")}});
 
-    const babelwires::Type& constructedTestType = constructedTestTypeRef.resolve(typeSystem);
-    const testUtils::TestType* const newTestType = constructedTestType.as<testUtils::TestType>();
+    const babelwires::TypePtr& constructedTestType = constructedTestTypeRef.resolve(typeSystem);
+    const testUtils::TestType* const newTestType = constructedTestType->as<testUtils::TestType>();
     ASSERT_NE(newTestType, nullptr);
     EXPECT_EQ(newTestType->m_defaultValue, "Default value is this string");
 }

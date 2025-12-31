@@ -48,9 +48,9 @@ babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectCo
                                                  const TypeRef& parallelOutput)
     : Processor(projectContext, parallelInput, parallelOutput) {
 #ifndef NDEBUG
-    const auto* inputType = parallelInput.resolve(projectContext.m_typeSystem).as<ParallelProcessorInputBase>();
+    const auto& inputType = parallelInput.resolveAs<ParallelProcessorInputBase>(projectContext.m_typeSystem);
     assert(inputType && "The ParallelProcessor input type should be a ParallelProcessorInputBase");
-    const auto* outputType = parallelOutput.resolve(projectContext.m_typeSystem).as<ParallelProcessorOutputBase>();
+    const auto& outputType = parallelOutput.resolveAs<ParallelProcessorOutputBase>(projectContext.m_typeSystem);
     assert(outputType && "The ParallelProcessor output type should be a ParallelProcessorOutputBase");
     assert(inputType->getFields().size() >= 1);
     assert(outputType->getFields().size() == 1);

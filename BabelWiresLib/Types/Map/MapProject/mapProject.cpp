@@ -50,7 +50,7 @@ const babelwires::TypeRef& babelwires::MapProject::getCurrentTargetTypeRef() con
 
 void babelwires::MapProject::setCurrentSourceTypeRef(const TypeRef& sourceId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
-    const Type *const type = sourceId.tryResolve(typeSystem);
+    const TypePtr& type = sourceId.tryResolve(typeSystem);
     if (!type) {
         // TODO Add type name.
         m_sourceTypeValidity = "The source type is not recognized.";
@@ -70,7 +70,7 @@ void babelwires::MapProject::setCurrentSourceTypeRef(const TypeRef& sourceId) {
 
 void babelwires::MapProject::setCurrentTargetTypeRef(const TypeRef& targetId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
-    const Type *const type = targetId.tryResolve(typeSystem);
+    const TypePtr& type = targetId.tryResolve(typeSystem);
     if (!type) {
         // TODO Add type name.
         m_targetTypeValidity = "The target type is not recognized.";
@@ -81,19 +81,19 @@ void babelwires::MapProject::setCurrentTargetTypeRef(const TypeRef& targetId) {
         m_targetTypeValidity = Result::Success();
     }
 
-    m_currentTargetTypeRef = targetId; 
+    m_currentTargetTypeRef = targetId;
 
     for (std::size_t i = 0; i < m_mapEntries.size(); ++i) {
         m_mapEntries[i]->validate(typeSystem, m_currentSourceTypeRef, m_currentTargetTypeRef, (i == m_mapEntries.size() - 1));
     }
 }
 
-const babelwires::Type* babelwires::MapProject::getCurrentSourceType() const {
+babelwires::TypePtr babelwires::MapProject::getCurrentSourceType() const {
     // TODO Could this fail to resolve?
     return m_currentSourceTypeRef.tryResolve(m_projectContext.m_typeSystem);
 }
 
-const babelwires::Type* babelwires::MapProject::getCurrentTargetType() const {
+babelwires::TypePtr babelwires::MapProject::getCurrentTargetType() const {
     // TODO Could this fail to resolve?
     return m_currentTargetTypeRef.tryResolve(m_projectContext.m_typeSystem);
 }

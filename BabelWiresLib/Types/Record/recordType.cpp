@@ -64,9 +64,9 @@ void babelwires::RecordType::activateField(const TypeSystem& typeSystem, ValueHo
     }
 
     RecordValue& recordValue = value.copyContentsAndGetNonConst().is<RecordValue>();
-    const Type& fieldType = field.m_type.resolve(typeSystem);
+    const TypePtr& fieldType = field.m_type.resolve(typeSystem);
     // If the value happens to be already there, it gets overridden.
-    recordValue.setValue(field.m_identifier, fieldType.createValue(typeSystem));
+    recordValue.setValue(field.m_identifier, fieldType->createValue(typeSystem));
 }
 
 void babelwires::RecordType::deactivateField(ValueHolder& value, ShortId fieldId) const {
@@ -105,8 +105,8 @@ void babelwires::RecordType::selectOptionals(const TypeSystem& typeSystem, Value
         const bool shouldBeActive = isSetActivated || (!isSetDeactivated && field.m_optionality == Optionality::optionalDefaultActive);
         const bool shouldBeInactive = isSetDeactivated || (!isSetActivated && field.m_optionality == Optionality::optionalDefaultInactive);
         if (shouldBeActive && !isActivated(temp, fieldId)) {
-            const Type& fieldType = field.m_type.resolve(typeSystem);
-            recordValue.setValue(fieldId, fieldType.createValue(typeSystem));
+            const TypePtr& fieldType = field.m_type.resolve(typeSystem);
+            recordValue.setValue(fieldId, fieldType->createValue(typeSystem));
         } else if (shouldBeInactive && isActivated(temp, fieldId)) {
             recordValue.removeValue(fieldId);
         }
@@ -149,8 +149,8 @@ babelwires::NewValueHolder babelwires::RecordType::createValue(const TypeSystem&
     auto newValue = babelwires::ValueHolder::makeValue<RecordValue>();
     for (const auto& f : m_fields) {
         if (f.m_optionality != Optionality::optionalDefaultInactive) {
-            const Type& fieldType = f.m_type.resolve(typeSystem);
-            newValue.m_nonConstReference.setValue(f.m_identifier, fieldType.createValue(typeSystem));
+            const TypePtr& fieldType = f.m_type.resolve(typeSystem);
+            newValue.m_nonConstReference.setValue(f.m_identifier, fieldType->createValue(typeSystem));
         }
     }
     return std::move(newValue);

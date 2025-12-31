@@ -34,7 +34,7 @@ namespace {
             unsigned int numChildren = compoundType->getNumChildren(sourceValue);
             for (unsigned int i = 0; i < numChildren; ++i) {
                 auto [childValue, step, childTypeRef] = compoundType->getChild(sourceValue, i);
-                if (auto childResult = applyToSubvaluesInternal(typeSystem, childTypeRef.resolve(typeSystem),
+                if (auto childResult = applyToSubvaluesInternal(typeSystem, *childTypeRef.resolve(typeSystem),
                                                                 *childValue, predicate, function)) {
                     if (!result) {
                         result = sourceValue;

@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/typePtr.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
@@ -31,7 +32,7 @@ namespace babelwires {
 
         template <typename TYPE, std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
         TypePtrT<TYPE> getEntryByType() const {
-            return std::static_pointer_cast<const TYPE>(getRegisteredType(TYPE::getThisIdentifier()));
+            return typeAs<TYPE>(getRegisteredType(TYPE::getThisIdentifier()));
         }
 
         TypePtr tryGetRegisteredType(RegisteredTypeId id) const;

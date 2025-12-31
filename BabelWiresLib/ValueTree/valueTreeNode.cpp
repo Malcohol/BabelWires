@@ -169,7 +169,8 @@ const babelwires::TypeSystem& babelwires::ValueTreeNode::getTypeSystem() const {
 
 const babelwires::Type& babelwires::ValueTreeNode::getType() const {
     const TypeSystem& typeSystem = getTypeSystem();
-    return m_typeRef.resolve(typeSystem);
+    // TODO This assumes the ValueTreeNode will be changed store TypePtr instead of TypeRef.
+    return *m_typeRef.resolve(typeSystem);
 }
 
 int babelwires::ValueTreeNode::getNumChildren() const {

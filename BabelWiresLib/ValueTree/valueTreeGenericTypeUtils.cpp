@@ -177,8 +177,8 @@ namespace {
                                                                         const babelwires::TypeRef& childTypeRef,
                                                                         const babelwires::Value& childValue,
                                                                         const babelwires::PathStep& pathStep) {
-                const babelwires::CompoundType* sourceCompound =
-                    sourceTypeRef.resolve(typeSystem).as<babelwires::CompoundType>();
+                const auto& sourceCompound =
+                    sourceTypeRef.resolveAs<babelwires::CompoundType>(typeSystem);
                 if (!sourceCompound) {
                     return false;
                 }
@@ -189,14 +189,14 @@ namespace {
                 if (!sourceChildValuePtr) {
                     return false;
                 }
-                const babelwires::Type& childType = childTypeRef.resolve(typeSystem);
-                if (childType.as<babelwires::GenericType>()) {
+                const babelwires::TypePtr& childType = childTypeRef.resolve(typeSystem);
+                if (childType->as<babelwires::GenericType>()) {
                     ++extraGenericTypeDepth;
                 }
                 return findAssignments(childTypeRef, sourceChildTypeRef, *sourceChildValuePtr, extraGenericTypeDepth);
             };
-            const babelwires::Type& targetType = targetTypeRef.resolve(m_typeSystem);
-            if (!targetType.visitValue(m_typeSystem, *sourceValue, childValueVisitor)) {
+            const babelwires::TypePtr& targetType = targetTypeRef.resolve(m_typeSystem);
+            if (!targetType->visitValue(m_typeSystem, *sourceValue, childValueVisitor)) {
                 return false;
             }
             return true;

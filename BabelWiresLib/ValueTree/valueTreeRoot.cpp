@@ -18,8 +18,8 @@ struct babelwires::ValueTreeRoot::ComplexConstructorArguments {
         : m_typeSystem(typeSystem)
         , m_typeRef(std::move(typeRef)) {
         // TODO Do we need to handle failure here? Use tryResolve and possibly fall back to FailureType?
-        const Type& type = m_typeRef.resolve(typeSystem);
-        auto [newValue, _] = type.createValue(typeSystem);
+        const TypePtr& type = m_typeRef.resolve(typeSystem);
+        auto [newValue, _] = type->createValue(typeSystem);
         m_value = newValue;
     }
     const TypeSystem& m_typeSystem;

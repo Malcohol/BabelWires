@@ -38,7 +38,7 @@ void babelwires::MapEntryModel::getContextMenuActions(std::vector<ContextMenuEnt
 
     auto resetEntry = std::make_unique<MapCommandContextMenuAction>(
         std::make_unique<ChangeEntryKindCommand>("Reset entry", currentKind, m_row));
-    if ((m_sourceType == nullptr) || (m_targetType == nullptr)) {
+    if (!m_sourceType || !m_targetType) {
         addEntryAbove->setDisabled(true);
         addEntryBelow->setDisabled(true);
         resetEntry->setDisabled(true);
@@ -60,7 +60,7 @@ void babelwires::MapEntryModel::getContextMenuActions(std::vector<ContextMenuEnt
         if (kind == currentKind) {
             action->setChecked(true);
         }
-        if ((m_isLastRow != MapEntryData::isFallback(kind)) || (m_sourceType == nullptr) || (m_targetType == nullptr)) {
+        if ((m_isLastRow != MapEntryData::isFallback(kind)) || !m_sourceType || !m_targetType) {
             action->setDisabled(true);
         }
         entryTypeGroup->addContextMenuAction(std::move(action));

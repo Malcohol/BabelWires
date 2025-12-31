@@ -59,11 +59,11 @@ TEST(RecordTypeTest, simpleRecordTypeValue) {
     EXPECT_EQ(*step0.asField(), testDomain::TestSimpleRecordType::getInt0Id());
     EXPECT_EQ(*step1.asField(), testDomain::TestSimpleRecordType::getInt1Id());
 
-    const babelwires::Type& type0 = typeRef0.resolve(testEnvironment.m_typeSystem);
-    const babelwires::Type& type1 = typeRef1.resolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& type0 = typeRef0.resolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& type1 = typeRef1.resolve(testEnvironment.m_typeSystem);
 
-    EXPECT_NE(type0.as<babelwires::IntType>(), nullptr);
-    EXPECT_NE(type1.as<babelwires::IntType>(), nullptr);
+    EXPECT_NE(type0->as<babelwires::IntType>(), nullptr);
+    EXPECT_NE(type1->as<babelwires::IntType>(), nullptr);
 
     EXPECT_EQ(recordType.getChildIndexFromStep(newValue, step0), 0);
     EXPECT_EQ(recordType.getChildIndexFromStep(newValue, step1), 1);
@@ -129,7 +129,7 @@ namespace {
 
         for (unsigned int i = 0; i < testDomain::TestComplexRecordType::s_numNonOptionalFields + numOptionals; ++i) {
             childInfos.emplace_back(recordType.getChild(value, i));
-            types.emplace_back(&std::get<2>(childInfos.back()).resolve(typeSystem));
+            types.emplace_back(std::get<2>(childInfos.back()).resolve(typeSystem).get());
         }
 
         unsigned int int0Index = 0;
@@ -308,11 +308,11 @@ TEST(RecordTypeTest, getChildNonConstOptionalField) {
     EXPECT_EQ(step0, step1);
     EXPECT_EQ(type0, type1);
 
-    const babelwires::RecordType& opRecType = type0.resolve(testEnvironment.m_typeSystem).is<babelwires::RecordType>();
+    const auto& opRecType = type0.resolveAs<babelwires::RecordType>(testEnvironment.m_typeSystem);
 
     // Test modification by modifying a field within the field.
 
-    auto [subvalue0, substep0, subtype0] = opRecType.getChildNonConst(*value1, 0);
+    auto [subvalue0, substep0, subtype0] = opRecType->getChildNonConst(*value1, 0);
 
     babelwires::ValueHolder valueHolder1 = *value1;
 
@@ -321,7 +321,7 @@ TEST(RecordTypeTest, getChildNonConstOptionalField) {
     auto [value2, step2, type2] = recordType.getChild(value, opRecIndex);
     EXPECT_EQ(*value2, valueHolder1);
 
-    auto [subvalue2, substep2, subtype2] = opRecType.getChild(*value2, 0);
+    auto [subvalue2, substep2, subtype2] = opRecType->getChild(*value2, 0);
     EXPECT_EQ(*subvalue2, *subvalue0);
 }
 
@@ -424,10 +424,10 @@ TEST(RecordTypeTest, subtype) {
 TEST(RecordTypeTest, subtypeConstructor) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::RecordType& abOptChild =
-        testDomain::RecordABOptChild::getThisType().resolve(testEnvironment.m_typeSystem).is<babelwires::RecordType>();
+    const auto& abOptChild =
+        testDomain::RecordABOptChild::getThisType().resolveAs<babelwires::RecordType>(testEnvironment.m_typeSystem);
 
-    const std::vector<babelwires::RecordType::Field> fields = abOptChild.getFields();
+    const std::vector<babelwires::RecordType::Field> fields = abOptChild->getFields();
     EXPECT_EQ(fields.size(), 5);
     EXPECT_EQ(fields[0].m_identifier, "A");
     EXPECT_EQ(fields[1].m_identifier, "B");
@@ -435,7 +435,7 @@ TEST(RecordTypeTest, subtypeConstructor) {
     EXPECT_EQ(fields[3].m_identifier, "C");
     EXPECT_EQ(fields[4].m_identifier, "Opt2");
 
-    const std::vector<babelwires::ShortId> optionals = abOptChild.getOptionalFieldIds();
+    const std::vector<babelwires::ShortId> optionals = abOptChild->getOptionalFieldIds();
     EXPECT_EQ(optionals.size(), 2);
     EXPECT_EQ(optionals[0], "Opt");
     EXPECT_EQ(optionals[1], "Opt2");
@@ -577,9 +577,9 @@ TEST(RecordTypeTest, constructorBasics) {
             {babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("int0")),
              babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("str0"))}});
 
-    const babelwires::Type& type = recordTypeRef.resolve(testEnvironment.m_typeSystem);
-    ASSERT_TRUE(type.as<babelwires::RecordType>());
-    const babelwires::RecordType& recordType = type.is<babelwires::RecordType>();
+    const babelwires::TypePtr& type = recordTypeRef.resolve(testEnvironment.m_typeSystem);
+    ASSERT_TRUE(type->as<babelwires::RecordType>());
+    const babelwires::RecordType& recordType = type->is<babelwires::RecordType>();
     EXPECT_EQ(recordType.getFields().size(), 2);
     EXPECT_EQ(recordType.getFields()[0].m_identifier, "int0");
     EXPECT_EQ(recordType.getFields()[0].m_type, babelwires::DefaultIntType::getThisType());
@@ -598,9 +598,9 @@ TEST(RecordTypeTest, constructorWithOptionals) {
              babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("str0"),
                                       babelwires::RecordType::Optionality::optionalDefaultInactive)}});
 
-    const babelwires::Type& type = recordTypeRef.resolve(testEnvironment.m_typeSystem);
-    ASSERT_TRUE(type.as<babelwires::RecordType>());
-    const babelwires::RecordType& recordType = type.is<babelwires::RecordType>();
+    const babelwires::TypePtr& type = recordTypeRef.resolve(testEnvironment.m_typeSystem);
+    ASSERT_TRUE(type->as<babelwires::RecordType>());
+    const babelwires::RecordType& recordType = type->is<babelwires::RecordType>();
     EXPECT_EQ(recordType.getFields().size(), 2);
     EXPECT_EQ(recordType.getOptionalFieldIds().size(), 1);
     EXPECT_EQ(recordType.getFields()[0].m_identifier, "int0");
@@ -637,9 +637,9 @@ TEST(RecordTypeTest, constructorMakeRef) {
         testUtils::getTestRegisteredIdentifier("int0"), babelwires::DefaultIntType::getThisType(),
         testUtils::getTestRegisteredIdentifier("str0"), babelwires::StringType::getThisType());
 
-    const babelwires::Type& type = recordTypeRef.resolve(testEnvironment.m_typeSystem);
-    ASSERT_TRUE(type.as<babelwires::RecordType>());
-    const babelwires::RecordType& recordType = type.is<babelwires::RecordType>();
+    const babelwires::TypePtr& type = recordTypeRef.resolve(testEnvironment.m_typeSystem);
+    ASSERT_TRUE(type->as<babelwires::RecordType>());
+    const babelwires::RecordType& recordType = type->is<babelwires::RecordType>();
     EXPECT_EQ(recordType.getFields().size(), 2);
     EXPECT_EQ(recordType.getFields()[0].m_identifier, "int0");
     EXPECT_EQ(recordType.getFields()[0].m_type, babelwires::DefaultIntType::getThisType());

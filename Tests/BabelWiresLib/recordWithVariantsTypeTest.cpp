@@ -189,7 +189,7 @@ namespace {
 
         for (unsigned int i = 0; i < numChildren; ++i) {
             childInfos.emplace_back(recordType.getChild(value, i));
-            types.emplace_back(&std::get<2>(childInfos.back()).resolve(typeSystem));
+            types.emplace_back(std::get<2>(childInfos.back()).resolve(typeSystem).get());
         }
 
         const unsigned int fieldA0Index = 0;

@@ -187,7 +187,7 @@ TEST(MapHelperTest, unorderedMapApplicator_differentTypes) {
 
     // Also test the EnumToIndexValueAdapter
     babelwires::UnorderedMapApplicator<std::string, unsigned int> mapApplicator(
-        mapValue, &testValueAdapter, babelwires::EnumToIndexValueAdapter{*testEnum});
+        mapValue, &testValueAdapter, babelwires::EnumToIndexValueAdapter{testEnum});
 
     EXPECT_EQ(mapApplicator["aaa"], 3);
     EXPECT_EQ(mapApplicator["bbb"], 4);
