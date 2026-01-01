@@ -20,7 +20,7 @@
 #include <map>
 
 babelwires::ValueTreeNode::ValueTreeNode(TypeExp typeExp, ValueHolder value)
-    : m_typeRef(std::move(typeExp))
+    : m_typeExp(std::move(typeExp))
     , m_value(std::move(value)) {}
 
 babelwires::ValueTreeNode::~ValueTreeNode() = default;
@@ -64,7 +64,7 @@ void babelwires::ValueTreeNode::setToDefault() {
 }
 
 std::size_t babelwires::ValueTreeNode::getHash() const {
-    return hash::mixtureOf(m_typeRef, m_value);
+    return hash::mixtureOf(m_typeExp, m_value);
 }
 
 namespace {
@@ -134,7 +134,7 @@ const babelwires::ValueTreeNode& babelwires::ValueTreeNode::getChildFromStep(con
 }
 
 const babelwires::TypeExp& babelwires::ValueTreeNode::getTypeExp() const {
-    return m_typeRef;
+    return m_typeExp;
 }
 
 const babelwires::ValueHolder& babelwires::ValueTreeNode::getValue() const {
@@ -170,7 +170,7 @@ const babelwires::TypeSystem& babelwires::ValueTreeNode::getTypeSystem() const {
 const babelwires::Type& babelwires::ValueTreeNode::getType() const {
     const TypeSystem& typeSystem = getTypeSystem();
     // TODO This assumes the ValueTreeNode will be changed store TypePtr instead of TypeExp.
-    return *m_typeRef.resolve(typeSystem);
+    return *m_typeExp.resolve(typeSystem);
 }
 
 int babelwires::ValueTreeNode::getNumChildren() const {
@@ -228,7 +228,7 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
 
         struct NewChildInfo {
             const ValueHolder* m_value;
-            const TypeExp& m_typeRef;
+            const TypeExp& m_typeExp;
             unsigned int m_index;
         };
 
@@ -246,7 +246,7 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
         // TODO newChildMap.reserve(newNumChildren);
 
         auto addNewChild = [this, &typeSystem, &newChildMap](const auto& otherIt) {
-            auto child = std::make_unique<ValueTreeChild>(otherIt->second.m_typeRef, *otherIt->second.m_value, this);
+            auto child = std::make_unique<ValueTreeChild>(otherIt->second.m_typeExp, *otherIt->second.m_value, this);
             child->initializeChildren(typeSystem);
             newChildMap.insert_or_assign(otherIt->first, otherIt->second.m_index, std::move(child));
         };
@@ -264,8 +264,8 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
                 std::unique_ptr<ValueTreeChild> temp;
                 temp.swap(*currentIt->second);
                 // Types may change, e.g. when a type variable is assigned.
-                if (temp->m_typeRef != otherIt->second.m_typeRef) {
-                    temp->m_typeRef = otherIt->second.m_typeRef;
+                if (temp->m_typeExp != otherIt->second.m_typeExp) {
+                    temp->m_typeExp = otherIt->second.m_typeExp;
                     // This ensures the UI updates the connectivity of the node, since a type variable may have been
                     // assigned, allowing connections at compound nodes, or reset, disallowing them.
                     // This is more blunt than it needs to be, but type changes are probably rare.

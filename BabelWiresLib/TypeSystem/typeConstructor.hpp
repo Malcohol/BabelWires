@@ -75,12 +75,12 @@ namespace babelwires {
         template <typename... ARGS>
         ConstructedType(TypeExp typeExp, ARGS&&... args)
             : T(std::forward<ARGS>(args)...)
-            , m_typeRef(std::move(typeExp)) {}
+            , m_typeExp(std::move(typeExp)) {}
 
-        TypeExp getTypeExp() const override { return m_typeRef; }
+        TypeExp getTypeExp() const override { return m_typeExp; }
 
       private:
-        TypeExp m_typeRef;
+        TypeExp m_typeExp;
     };
 } // namespace babelwires
 

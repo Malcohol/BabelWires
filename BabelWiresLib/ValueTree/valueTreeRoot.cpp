@@ -16,19 +16,19 @@
 struct babelwires::ValueTreeRoot::ComplexConstructorArguments {
     ComplexConstructorArguments(const TypeSystem& typeSystem, TypeExp typeExp)
         : m_typeSystem(typeSystem)
-        , m_typeRef(std::move(typeExp)) {
+        , m_typeExp(std::move(typeExp)) {
         // TODO Do we need to handle failure here? Use tryResolve and possibly fall back to FailureType?
-        const TypePtr& type = m_typeRef.resolve(typeSystem);
+        const TypePtr& type = m_typeExp.resolve(typeSystem);
         auto [newValue, _] = type->createValue(typeSystem);
         m_value = newValue;
     }
     const TypeSystem& m_typeSystem;
-    TypeExp m_typeRef;
+    TypeExp m_typeExp;
     ValueHolder m_value;
 };
 
 babelwires::ValueTreeRoot::ValueTreeRoot(ComplexConstructorArguments&& arguments)
-    : ValueTreeNode(std::move(arguments.m_typeRef), std::move(arguments.m_value))
+    : ValueTreeNode(std::move(arguments.m_typeExp), std::move(arguments.m_value))
     , m_typeSystem(arguments.m_typeSystem) {
         initializeChildren(arguments.m_typeSystem);
     }

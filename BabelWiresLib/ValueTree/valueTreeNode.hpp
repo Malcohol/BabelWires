@@ -139,7 +139,7 @@ namespace babelwires {
 
       private:
         /// The type of the value at this ValueTreeNode.
-        TypeExp m_typeRef;
+        TypeExp m_typeExp;
 
         /// The value at this ValueTreeNode. 
         /// Note: This should not be modified directly: all modifications should be managed via the ValueTreeRoot.

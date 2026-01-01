@@ -35,6 +35,6 @@ namespace babelwires {
                                                                NodeId newId) const override;
 
       private:
-        TypeExp m_typeRef;
+        TypeExp m_typeExp;
     };
 }

@@ -56,8 +56,8 @@ TEST(MapProjectTest, allowedTypes) {
     mapProject.setAllowedSourceTypeRefs({{babelwires::StringType::getThisType()}});
     mapProject.setAllowedTargetTypeRefs({{testDomain::TestEnum::getThisType()}});
 
-    EXPECT_TRUE(testUtils::unorderedAreEqualSets(mapProject.getAllowedSourceTypeRefs().m_typeRefs, {babelwires::StringType::getThisType()}));
-    EXPECT_TRUE(testUtils::unorderedAreEqualSets(mapProject.getAllowedTargetTypeRefs().m_typeRefs, {testDomain::TestEnum::getThisType()}));
+    EXPECT_TRUE(testUtils::unorderedAreEqualSets(mapProject.getAllowedSourceTypeRefs().m_typeExps, {babelwires::StringType::getThisType()}));
+    EXPECT_TRUE(testUtils::unorderedAreEqualSets(mapProject.getAllowedTargetTypeRefs().m_typeExps, {testDomain::TestEnum::getThisType()}));
 }
 
 TEST(MapProjectTest, getProjectContext) {

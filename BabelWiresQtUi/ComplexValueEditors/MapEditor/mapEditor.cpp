@@ -90,7 +90,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectGraphModel& projectGrap
             const UiProjectContext& context = projectGraphModel.getContext();
             const TypeSystem& typeSystem = context.m_typeSystem;
             const ValueTreeNode& mapTreeNode = getMapTreeNode(scope);
-            m_typeRef = mapTreeNode.getTypeExp();
+            m_typeExp = mapTreeNode.getTypeExp();
             const MapValue& mapValue = getMapValueFromProject(scope);
             if (mapTreeNode.getType().as<MapType>()) {
                 m_map.setAllowedSourceTypeRefs(
@@ -108,13 +108,13 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectGraphModel& projectGrap
             m_map.setMapValue(mapValue);
             {
                 typeBarLayout->addWidget(new QLabel("Source type: ", typeBar));
-                m_sourceTypeWidget = new TypeWidget(typeBar, m_map.getAllowedSourceTypeRefs().m_typeRefs);
+                m_sourceTypeWidget = new TypeWidget(typeBar, m_map.getAllowedSourceTypeRefs().m_typeExps);
                 m_sourceTypeWidget->setTypeRef(m_map.getCurrentSourceTypeRef());
                 typeBarLayout->addWidget(m_sourceTypeWidget);
             }
             {
                 typeBarLayout->addWidget(new QLabel("Target type: ", typeBar));
-                m_targetTypeWidget = new TypeWidget(typeBar, m_map.getAllowedTargetTypeRefs().m_typeRefs);
+                m_targetTypeWidget = new TypeWidget(typeBar, m_map.getAllowedTargetTypeRefs().m_typeExps);
                 m_targetTypeWidget->setTypeRef(m_map.getCurrentTargetTypeRef());
                 typeBarLayout->addWidget(m_targetTypeWidget);
             }
@@ -428,7 +428,7 @@ void babelwires::MapEditor::onUndoStateChanged() {
 
 void babelwires::MapEditor::setToDefault() {
     const TypeSystem& typeSystem = getProjectGraphModel().getContext().m_typeSystem;
-    const auto& mapType = m_typeRef.resolveAs<MapType>(typeSystem);
+    const auto& mapType = m_typeExp.resolveAs<MapType>(typeSystem);
     ValueHolder defaultMapValue = mapType->createValue(typeSystem).m_valueHolder;
     executeCommand(std::make_unique<SetMapCommand>("Restore default map", std::move(defaultMapValue)));
 }

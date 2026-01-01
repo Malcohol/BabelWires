@@ -170,13 +170,13 @@ const babelwires::Result& babelwires::MapProject::getTargetTypeValidity() const 
 
 
 bool babelwires::MapProject::AllowedTypes::isRelatedToSome(const TypeSystem& typeSystem, const TypeExp& typeExp) const {
-    return std::any_of(m_typeRefs.begin(), m_typeRefs.end(), [typeExp, &typeSystem](const TypeExp& id) {
+    return std::any_of(m_typeExps.begin(), m_typeExps.end(), [typeExp, &typeSystem](const TypeExp& id) {
         return typeSystem.isRelatedType(id, typeExp);
     });
 }
 
 bool babelwires::MapProject::AllowedTypes::isSubtypeOfSome(const TypeSystem& typeSystem, const TypeExp& typeExp) const {
-    return std::any_of(m_typeRefs.begin(), m_typeRefs.end(),
+    return std::any_of(m_typeExps.begin(), m_typeExps.end(),
                                         [typeExp, &typeSystem](const TypeExp& id) {
                                             return typeSystem.isSubType(typeExp, id);
                                         });

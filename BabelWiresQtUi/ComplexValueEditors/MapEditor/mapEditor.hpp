@@ -97,7 +97,7 @@ namespace babelwires {
         MapProject m_map;
 
         /// Stores the default type.
-        TypeExp m_typeRef;
+        TypeExp m_typeExp;
 
         /// Manages changes to the map.
         CommandManager<MapProject> m_commandManager;

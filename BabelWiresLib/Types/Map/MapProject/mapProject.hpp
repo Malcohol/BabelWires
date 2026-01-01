@@ -29,12 +29,12 @@ namespace babelwires {
         virtual ~MapProject();
 
         struct AllowedTypes {
-            std::vector<TypeExp> m_typeRefs;
+            std::vector<TypeExp> m_typeExps;
             unsigned int m_indexOfDefault = 0;
 
             bool isRelatedToSome(const TypeSystem& typeSystem, const TypeExp& type) const;
             bool isSubtypeOfSome(const TypeSystem& typeSystem, const TypeExp& type) const;
-            const TypeExp& getDefaultTypeRef() const { return m_typeRefs[m_indexOfDefault]; }
+            const TypeExp& getDefaultTypeRef() const { return m_typeExps[m_indexOfDefault]; }
         };
 
         void setAllowedSourceTypeRefs(const AllowedTypes& allowedTypes);

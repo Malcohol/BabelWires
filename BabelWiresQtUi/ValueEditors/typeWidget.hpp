@@ -34,7 +34,7 @@ namespace babelwires {
         void onCurrentIndexChanged(int index);
 
       private:
-        std::vector<TypeExp> m_typeRefs;
+        std::vector<TypeExp> m_typeExps;
         bool m_hasBadItem;
         QString m_defaultStyleSheet;
         QString m_badStyleSheet;
