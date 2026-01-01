@@ -41,11 +41,11 @@ namespace babelwires {
         MapValue& operator=(MapValue&& other);
         virtual ~MapValue();
 
-        const TypeExp& getSourceTypeRef() const;
-        const TypeExp& getTargetTypeRef() const;
+        const TypeExp& getSourceTypeExp() const;
+        const TypeExp& getTargetTypeExp() const;
 
-        void setSourceTypeRef(const TypeExp& sourceRef);
-        void setTargetTypeRef(const TypeExp& targetRef);
+        void setSourceTypeExp(const TypeExp& sourceRef);
+        void setTargetTypeExp(const TypeExp& targetRef);
 
         unsigned int getNumMapEntries() const;
         const MapEntryData& getMapEntry(unsigned int index) const;
@@ -71,8 +71,8 @@ namespace babelwires {
         bool isValid(const TypeSystem& typeSystem) const;
 
       public:
-        TypeExp m_sourceTypeRef;
-        TypeExp m_targetTypeRef;
+        TypeExp m_sourceTypeExp;
+        TypeExp m_targetTypeExp;
         /// All non-null.
         std::vector<std::unique_ptr<MapEntryData>> m_mapEntries;
     };

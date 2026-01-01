@@ -14,17 +14,17 @@
 #include <QDialogButtonBox>
 
 babelwires::TypeInputDialog::TypeInputDialog(QWidget* parent, const QString& title, const QString& label,
-                                             const std::vector<TypeExp>& allowedTypeRefs,
-                                             const TypeExp& initialTypeRef, Qt::WindowFlags flags)
+                                             const std::vector<TypeExp>& allowedTypeExps,
+                                             const TypeExp& initialTypeExp, Qt::WindowFlags flags)
     : QDialog(parent) {
     setWindowTitle(title);
     setModal(true);
     setWindowFlags(flags | Qt::WindowType::WindowTitleHint);
 
     QLabel* const labelWidget = new QLabel(label, this);
-    m_typeWidget = new TypeWidget(this, allowedTypeRefs);
-    if (initialTypeRef) {
-        m_typeWidget->setTypeRef(initialTypeRef);
+    m_typeWidget = new TypeWidget(this, allowedTypeExps);
+    if (initialTypeExp) {
+        m_typeWidget->setTypeExp(initialTypeExp);
     }
    
     auto* const buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
@@ -48,10 +48,10 @@ babelwires::TypeExp babelwires::TypeInputDialog::getSelectedType() const {
 }
 
 babelwires::TypeExp babelwires::TypeInputDialog::getType(QWidget* parent, const QString& title, const QString& label,
-                                                          const std::vector<TypeExp>& allowedTypeRefs,
-                                                          const TypeExp& initialTypeRef, bool* ok,
+                                                          const std::vector<TypeExp>& allowedTypeExps,
+                                                          const TypeExp& initialTypeExp, bool* ok,
                                                           Qt::WindowFlags flags) {
-    TypeInputDialog dialog(parent, title, label, allowedTypeRefs, initialTypeRef, flags);
+    TypeInputDialog dialog(parent, title, label, allowedTypeExps, initialTypeExp, flags);
     if (dialog.exec() == QDialog::Accepted) {
         if (ok) {
             *ok = true;

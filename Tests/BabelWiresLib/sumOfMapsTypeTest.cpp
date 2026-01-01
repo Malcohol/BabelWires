@@ -56,8 +56,8 @@ TEST(SumOfMapsTypeTest, sumOfMapsTypeCreateValue) {
     const auto* mapValue = newValue->as<babelwires::MapValue>();
     EXPECT_NE(mapValue, nullptr);
 
-    EXPECT_EQ(mapValue->getSourceTypeRef(), babelwires::DefaultRationalType::getThisType());
-    EXPECT_EQ(mapValue->getTargetTypeRef(), babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(mapValue->getSourceTypeExp(), babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(mapValue->getTargetTypeExp(), babelwires::DefaultIntType::getThisType());
 }
 
 TEST(SumOfMapsTypeTest, validValues) {

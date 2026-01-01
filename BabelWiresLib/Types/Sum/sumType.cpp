@@ -32,8 +32,8 @@ bool babelwires::SumType::visitValue(const TypeSystem& typeSystem, const Value& 
     if (index == -1) {
         return false;
     }
-    const TypeExp& summandTypeRef = m_summands[static_cast<unsigned int>(index)];
-    return visitor(typeSystem, summandTypeRef, v, PathStep{});
+    const TypeExp& summandTypeExp = m_summands[static_cast<unsigned int>(index)];
+    return visitor(typeSystem, summandTypeExp, v, PathStep{});
 }
 
 std::string babelwires::SumType::getFlavour() const {

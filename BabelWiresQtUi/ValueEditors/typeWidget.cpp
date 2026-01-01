@@ -17,7 +17,7 @@
 #include <cassert>
 #include <unordered_set>
 
-babelwires::TypeWidget::TypeWidget(QWidget* parent, const std::vector<TypeExp>& allowedTypeRefs)
+babelwires::TypeWidget::TypeWidget(QWidget* parent, const std::vector<TypeExp>& allowedTypeExps)
     : QComboBox(parent)
     , m_hasBadItem(false) {
     m_defaultStyleSheet = styleSheet();
@@ -27,15 +27,15 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const std::vector<TypeExp>& 
     m_badStyleSheet.append("\nQComboBox { background: red; }");
 
     // Ensure uniqueness.
-    std::unordered_set<TypeExp> typeRefSet;
-    for (const auto& typeExp : allowedTypeRefs) {
-        typeRefSet.insert(typeExp);
+    std::unordered_set<TypeExp> typeExpSet;
+    for (const auto& typeExp : allowedTypeExps) {
+        typeExpSet.insert(typeExp);
     }
 
     std::vector<std::tuple<std::string, TypeExp>> sortedNames;
-    sortedNames.reserve(typeRefSet.size());
+    sortedNames.reserve(typeExpSet.size());
 
-    for (const auto& typeExp : typeRefSet) {
+    for (const auto& typeExp : typeExpSet) {
         sortedNames.emplace_back(std::tuple{typeExp.toString(), typeExp});
     }
     
@@ -45,7 +45,7 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const std::vector<TypeExp>& 
                 (std::get<1>(a).toString() < std::get<1>(b).toString()));
     });
 
-    m_typeExps.reserve(typeRefSet.size());
+    m_typeExps.reserve(typeExpSet.size());
     m_typeExps.clear();
     for (const auto& name : sortedNames) {
         addItem(std::get<0>(name).c_str());
@@ -60,7 +60,7 @@ const babelwires::TypeExp& babelwires::TypeWidget::getTypeExp() const {
     return m_typeExps[currentIndex()];
 }
 
-void babelwires::TypeWidget::setTypeRef(const TypeExp& id) {
+void babelwires::TypeWidget::setTypeExp(const TypeExp& id) {
     auto it = std::find(m_typeExps.begin(), m_typeExps.end(), id);
     assert(it != m_typeExps.end());
     const int newIndex = it - m_typeExps.begin();

@@ -20,7 +20,7 @@ namespace babelwires {
         /// Convenience method.
         static TypeExp makeTypeExp(TypeExp typeOfContents);
 
-        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeRef, const TypeConstructorArguments& arguments,
+        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,
                                             const std::vector<TypePtr>& resolvedTypeArguments) const override;
     };
 } // namespace babelwires

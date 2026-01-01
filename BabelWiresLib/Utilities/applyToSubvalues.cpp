@@ -33,15 +33,15 @@ namespace {
             // Iterate over the children of the compound value.
             unsigned int numChildren = compoundType->getNumChildren(sourceValue);
             for (unsigned int i = 0; i < numChildren; ++i) {
-                auto [childValue, step, childTypeRef] = compoundType->getChild(sourceValue, i);
-                if (auto childResult = applyToSubvaluesInternal(typeSystem, *childTypeRef.resolve(typeSystem),
+                auto [childValue, step, childTypeExp] = compoundType->getChild(sourceValue, i);
+                if (auto childResult = applyToSubvaluesInternal(typeSystem, *childTypeExp.resolve(typeSystem),
                                                                 *childValue, predicate, function)) {
                     if (!result) {
                         result = sourceValue;
                         result.copyContentsAndGetNonConst();
                     }
                     // MAYBEDO I think there's may be unnecessary clones happening here if there are intermediate compound types.
-                    auto [childNonConstValue, step2, childTypeRef2] = compoundType->getChildNonConst(result, i);
+                    auto [childNonConstValue, step2, childTypeExp2] = compoundType->getChildNonConst(result, i);
                     *childNonConstValue = std::move(childResult);
                 }
             }

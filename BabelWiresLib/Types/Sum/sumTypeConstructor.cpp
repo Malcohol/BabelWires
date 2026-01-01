@@ -13,7 +13,7 @@
 #include <BabelWiresLib/Types/Sum/sumType.hpp>
 
 babelwires::TypePtr
-babelwires::SumTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeRef,
+babelwires::SumTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                               const TypeConstructorArguments& arguments,
                                               const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() < 2) {
@@ -35,7 +35,7 @@ babelwires::SumTypeConstructor::constructType(const TypeSystem& typeSystem, Type
         }
     }
 
-    return makeType<ConstructedType<SumType>>(std::move(newTypeRef), arguments.getTypeArguments(),
+    return makeType<ConstructedType<SumType>>(std::move(newTypeExp), arguments.getTypeArguments(),
                                                       defaultIndex);
 }
 

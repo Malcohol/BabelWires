@@ -20,7 +20,7 @@ namespace babelwires {
     /// This should not store any state.
     class Processor {
       public:
-        Processor(const ProjectContext& projectContext, const TypeExp& inputTypeRef, const TypeExp& outputTypeRef);
+        Processor(const ProjectContext& projectContext, const TypeExp& inputTypeExp, const TypeExp& outputTypeExp);
         virtual ~Processor();
 
         /// Set values in the output based on values in the input.

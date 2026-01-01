@@ -18,7 +18,7 @@ namespace babelwires {
         // Example: Record{a, b, c : String, Integer, String}
         TYPE_CONSTRUCTOR("Record", "Record{{[0|, ] : {0|, }}}", "295459cc-9485-4526-86ac-e8f27e4e7667", 1);
 
-        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeRef,
+        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                             const TypeConstructorArguments& arguments,
                                             const std::vector<TypePtr>& resolvedTypeArguments) const override;
 
@@ -34,14 +34,14 @@ namespace babelwires {
 
         struct Detail {
             /// Construct a TypeExp for a record type with the given field names and types.
-            /// The field names are given as ShortIds, and the types as TypeRefs.
+            /// The field names are given as ShortIds, and the types as TypeExps.
             static void addToArrays(std::vector<ValueHolder>& fieldNames, std::vector<TypeExp>& fieldTypes) {}
 
             template <typename... ARGS>
             static void addToArrays(std::vector<ValueHolder>& fieldNames, std::vector<TypeExp>& fieldTypes,
-                                    ShortId fieldA, TypeExp typeRefA, ARGS&&... args) {
+                                    ShortId fieldA, TypeExp typeExpA, ARGS&&... args) {
                 fieldNames.emplace_back(FieldIdValue(fieldA));
-                fieldTypes.emplace_back(typeRefA);
+                fieldTypes.emplace_back(typeExpA);
                 addToArrays(fieldNames, fieldTypes, std::forward<ARGS>(args)...);
             };
         };

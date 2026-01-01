@@ -16,10 +16,10 @@ namespace babelwires {
     class TypeWidget : public QComboBox {
         Q_OBJECT
       public:
-        TypeWidget(QWidget* parent, const std::vector<TypeExp>& allowedTypeRefs);
+        TypeWidget(QWidget* parent, const std::vector<TypeExp>& allowedTypeExps);
 
         const TypeExp& getTypeExp() const;
-        void setTypeRef(const TypeExp& id);
+        void setTypeExp(const TypeExp& id);
 
         /// Add an item for a type which should not be allowed.
         void addBadItemIfNotPresent(const TypeExp& id);

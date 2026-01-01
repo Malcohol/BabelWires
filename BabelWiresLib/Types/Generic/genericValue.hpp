@@ -26,7 +26,7 @@ namespace babelwires {
         std::vector<TypeExp>& getTypeAssignments();
 
         /// Update the typeVariableAssignments
-        void instantiate(const TypeSystem& typeSystem, const TypeExp& wrappedTypeRef);
+        void instantiate(const TypeSystem& typeSystem, const TypeExp& wrappedTypeExp);
 
         const ValueHolder& getValue() const;
         ValueHolder& getValue();

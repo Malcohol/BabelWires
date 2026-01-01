@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
 babelwires::TypePtr
-babelwires::RecordTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeRef,
+babelwires::RecordTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                  const TypeConstructorArguments& arguments,
                                                  const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != arguments.getValueArguments().size()) {
@@ -30,5 +30,5 @@ babelwires::RecordTypeConstructor::constructType(const TypeSystem& typeSystem, T
         }
     }
 
-    return makeType<ConstructedType<RecordType>>(std::move(newTypeRef), std::move(fields));
+    return makeType<ConstructedType<RecordType>>(std::move(newTypeExp), std::move(fields));
 }

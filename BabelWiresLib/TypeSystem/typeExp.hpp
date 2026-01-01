@@ -72,8 +72,8 @@ namespace babelwires {
         TypeExp(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments);
 
         // Convenience constructors
-        TypeExp(TypeConstructorId typeConstructorId, TypeExp typeRef0);
-        TypeExp(TypeConstructorId typeConstructorId, TypeExp typeRef0, TypeExp typeRef1);
+        TypeExp(TypeConstructorId typeConstructorId, TypeExp typeExp0);
+        TypeExp(TypeConstructorId typeConstructorId, TypeExp typeExp0, TypeExp typeExp1);
         TypeExp(TypeConstructorId typeConstructorId, ValueHolder value0);
         TypeExp(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1);
         TypeExp(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1,
@@ -128,7 +128,7 @@ namespace babelwires {
         template <typename Visitor, typename R = decltype(Visitor::operator()(std::monostate()))>
         R visit(Visitor& visitor) const;
 
-        /// Binary exploration of two typeRefs. The typeRefs are expected to be structurally similar, or else the
+        /// Binary exploration of two typeExps. The typeExps are expected to be structurally similar, or else the
         /// no argument operator of the visitor will be called.
         template <typename Visitor, typename R = decltype(Visitor::operator()(std::monostate(), std::monostate()))>
         static R visit(Visitor& visitor, const TypeExp& a, const TypeExp& b);

@@ -15,7 +15,7 @@ namespace testUtils {
         TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("Unary"), 1);
 
         babelwires::TypePtr
-        constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeExp newTypeRef,
+        constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeExp newTypeExp,
                       const babelwires::TypeConstructorArguments& arguments,
                       const std::vector<babelwires::TypePtr>& resolvedTypeArguments) const override;
     };
@@ -25,7 +25,7 @@ namespace testUtils {
         TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("Binary"), 1);
 
         babelwires::TypePtr
-        constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeExp newTypeRef,
+        constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeExp newTypeExp,
                       const babelwires::TypeConstructorArguments& arguments,
                       const std::vector<babelwires::TypePtr>& resolvedTypeArguments) const override;
     };
@@ -36,7 +36,7 @@ namespace testUtils {
         TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("Mixed"), 1);
 
         babelwires::TypePtr
-        constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeExp newTypeRef,
+        constructType(const babelwires::TypeSystem& typeSystem, babelwires::TypeExp newTypeExp,
                       const babelwires::TypeConstructorArguments& arguments,
                       const std::vector<babelwires::TypePtr>& resolvedTypeArguments) const override;
     };

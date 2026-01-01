@@ -42,11 +42,11 @@ namespace babelwires {
       protected:
         /// Construct the new type, return an existing type (if the constructor is just a pure wrapper)
         /// or throw a TypeSystemException if it cannot be constructed.
-        /// The newTypeRef is provided to allow implementations to move it into a newly constructed type.
+        /// The newTypeExp is provided to allow implementations to move it into a newly constructed type.
         /// Resolved types corresponding to the type arguments are provided. However, newly constructed
-        /// types should be passed TypeRefs from the arguments rather than using the TypeRefs of the 
+        /// types should be passed TypeExps from the arguments rather than using the TypeExps of the 
         /// resolved types.
-        virtual TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeRef,
+        virtual TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                     const TypeConstructorArguments& arguments,
                                                     const std::vector<TypePtr>& resolvedTypeArguments) const = 0;
 

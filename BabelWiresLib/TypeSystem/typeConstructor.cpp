@@ -67,7 +67,7 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
             unresolvedTypesString.emplace_back(arg.toString());
         }
     }
-    TypeExp newTypeRef(getTypeConstructorId(), arguments);
+    TypeExp newTypeExp(getTypeConstructorId(), arguments);
 
     {
         // Phase 3: Try the cache again with a write lock.
@@ -80,7 +80,7 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
             // Only construct the type if the arity is correct.
             if (resolvedArguments.size() == arguments.getTypeArguments().size()) {
                 try {
-                    TypePtr result = constructType(typeSystem, std::move(newTypeRef), arguments, resolvedArguments);
+                    TypePtr result = constructType(typeSystem, std::move(newTypeExp), arguments, resolvedArguments);
                     assert(result && "Returning a null pointer from a TypeConstructor is not permitted");
                     it.first->second = std::move(result);
                 } catch (TypeSystemException& e) {

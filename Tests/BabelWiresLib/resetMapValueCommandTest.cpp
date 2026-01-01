@@ -21,12 +21,12 @@ TEST(ResetMapValueCommandTest, executeAndUndoSource) {
     testUtils::TestEnvironment environment;
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testDomain::TestSumType::getThisType()}});
-    mapProject.setAllowedTargetTypeRefs({{testDomain::TestSumType::getThisType()}});
+    mapProject.setAllowedSourceTypeExps({{testDomain::TestSumType::getThisType()}});
+    mapProject.setAllowedTargetTypeExps({{testDomain::TestSumType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(testDomain::TestSumType::getThisType());
-    mapValue.setTargetTypeRef(testDomain::TestSumType::getThisType());
+    mapValue.setSourceTypeExp(testDomain::TestSumType::getThisType());
+    mapValue.setTargetTypeExp(testDomain::TestSumType::getThisType());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testDomain::TestSumType::getThisType(),
                                               testDomain::TestSumType::getThisType());
@@ -65,12 +65,12 @@ TEST(ResetMapValueCommandTest, executeAndUndoTarget) {
     testUtils::TestEnvironment environment;
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testDomain::TestSumType::getThisType()}});
-    mapProject.setAllowedTargetTypeRefs({{testDomain::TestSumType::getThisType()}});
+    mapProject.setAllowedSourceTypeExps({{testDomain::TestSumType::getThisType()}});
+    mapProject.setAllowedTargetTypeExps({{testDomain::TestSumType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(testDomain::TestSumType::getThisType());
-    mapValue.setTargetTypeRef(testDomain::TestSumType::getThisType());
+    mapValue.setSourceTypeExp(testDomain::TestSumType::getThisType());
+    mapValue.setTargetTypeExp(testDomain::TestSumType::getThisType());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testDomain::TestSumType::getThisType(),
                                               testDomain::TestSumType::getThisType());
@@ -112,12 +112,12 @@ TEST(ResetMapValueCommandTest, failBeyondEnd) {
     testUtils::TestEnvironment environment;
     
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testDomain::TestSumType::getThisType()}});
-    mapProject.setAllowedTargetTypeRefs({{testDomain::TestSumType::getThisType()}});
+    mapProject.setAllowedSourceTypeExps({{testDomain::TestSumType::getThisType()}});
+    mapProject.setAllowedTargetTypeExps({{testDomain::TestSumType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(testDomain::TestSumType::getThisType());
-    mapValue.setTargetTypeRef(testDomain::TestSumType::getThisType());
+    mapValue.setSourceTypeExp(testDomain::TestSumType::getThisType());
+    mapValue.setTargetTypeExp(testDomain::TestSumType::getThisType());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testDomain::TestSumType::getThisType(),
                                               testDomain::TestSumType::getThisType());

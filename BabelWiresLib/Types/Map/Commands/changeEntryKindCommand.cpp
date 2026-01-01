@@ -41,8 +41,8 @@ bool babelwires::ChangeEntryKindCommand::initialize(const MapProject& map) {
 
     m_replacedEntry = map.getMapEntry(m_indexOfEntry).getData().clone();
 
-    m_newEntry = MapEntryData::create(map.getProjectContext().m_typeSystem, map.getCurrentSourceTypeRef(),
-                                      map.getCurrentTargetTypeRef(), m_kind);
+    m_newEntry = MapEntryData::create(map.getProjectContext().m_typeSystem, map.getCurrentSourceTypeExp(),
+                                      map.getCurrentTargetTypeExp(), m_kind);
 
     return true;
 }

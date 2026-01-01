@@ -19,7 +19,7 @@ namespace babelwires {
         // alright because type names are not used for anything other than display.
         TYPE_CONSTRUCTOR("Rational", "Rational{{[0]..[1]}}", "dc2b335e-9336-471e-bc71-466bb65229d2", 1);
 
-        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeRef, const TypeConstructorArguments& arguments,
+        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,
                                             const std::vector<TypePtr>& resolvedTypeArguments) const override;
 
         /// Convenience method.

@@ -37,7 +37,7 @@ namespace babelwires {
 
         /// Called by visitValue when a type contains children.
         /// Returning false aborts the visit and visitValue will return false.
-        using ChildValueVisitor = std::function<bool(const TypeSystem& typeSystem, const TypeExp& childTypeRef,
+        using ChildValueVisitor = std::function<bool(const TypeSystem& typeSystem, const TypeExp& childTypeExp,
                                                      const Value& childValue, const PathStep& stepToChild)>;
 
         /// Verify that the outer structure of the value conforms to this type, calling the visitor on each child value.

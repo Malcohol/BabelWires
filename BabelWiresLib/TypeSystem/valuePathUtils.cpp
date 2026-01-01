@@ -75,8 +75,8 @@ namespace {
                     const std::span<const babelwires::Path*> childSpan(left, next);
                     const int childIndex = compoundType->getChildIndexFromStep(valueHolder, currentStep);
                     assert((childIndex >= 0) && "Path could not be followed");
-                    auto [childValue, _, childTypeRef] = compoundType->getChildNonConst(valueHolder, childIndex);
-                    const babelwires::TypePtr& childType = childTypeRef.resolve(typeSystem);
+                    auto [childValue, _, childTypeExp] = compoundType->getChildNonConst(valueHolder, childIndex);
+                    const babelwires::TypePtr& childType = childTypeExp.resolve(typeSystem);
                     visitNonConst(typeSystem, *childType, *childValue, childSpan, visitor, depth + 1);
                     left = next;
                 }

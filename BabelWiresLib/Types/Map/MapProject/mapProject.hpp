@@ -34,20 +34,20 @@ namespace babelwires {
 
             bool isRelatedToSome(const TypeSystem& typeSystem, const TypeExp& type) const;
             bool isSubtypeOfSome(const TypeSystem& typeSystem, const TypeExp& type) const;
-            const TypeExp& getDefaultTypeRef() const { return m_typeExps[m_indexOfDefault]; }
+            const TypeExp& getDefaultTypeExp() const { return m_typeExps[m_indexOfDefault]; }
         };
 
-        void setAllowedSourceTypeRefs(const AllowedTypes& allowedTypes);
-        void setAllowedTargetTypeRefs(const AllowedTypes& allowedTypes);
+        void setAllowedSourceTypeExps(const AllowedTypes& allowedTypes);
+        void setAllowedTargetTypeExps(const AllowedTypes& allowedTypes);
 
-        const AllowedTypes& getAllowedSourceTypeRefs() const;
-        const AllowedTypes& getAllowedTargetTypeRefs() const;
+        const AllowedTypes& getAllowedSourceTypeExps() const;
+        const AllowedTypes& getAllowedTargetTypeExps() const;
        
-        const TypeExp& getCurrentSourceTypeRef() const;
-        const TypeExp& getCurrentTargetTypeRef() const;
+        const TypeExp& getCurrentSourceTypeExp() const;
+        const TypeExp& getCurrentTargetTypeExp() const;
 
-        void setCurrentSourceTypeRef(const TypeExp& sourceId);
-        void setCurrentTargetTypeRef(const TypeExp& targetId);
+        void setCurrentSourceTypeExp(const TypeExp& sourceId);
+        void setCurrentTargetTypeExp(const TypeExp& targetId);
 
         TypePtr getCurrentSourceType() const;
         TypePtr getCurrentTargetType() const;
@@ -74,11 +74,11 @@ namespace babelwires {
 
       private:
         const ProjectContext& m_projectContext;
-        AllowedTypes m_allowedSourceTypeRefs;
-        AllowedTypes m_allowedTargetTypeRefs;
+        AllowedTypes m_allowedSourceTypeExps;
+        AllowedTypes m_allowedTargetTypeExps;
 
-        TypeExp m_currentSourceTypeRef;
-        TypeExp m_currentTargetTypeRef;
+        TypeExp m_currentSourceTypeExp;
+        TypeExp m_currentTargetTypeExp;
 
         Result m_sourceTypeValidity;
         Result m_targetTypeValidity;

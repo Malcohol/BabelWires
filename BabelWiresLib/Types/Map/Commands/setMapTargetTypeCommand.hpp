@@ -21,18 +21,18 @@ namespace babelwires {
     class SetMapTargetTypeCommand : public SimpleCommand<MapProject> {
       public:
         CLONEABLE(SetMapTargetTypeCommand);
-        SetMapTargetTypeCommand(std::string commandName, TypeExp newTargetTypeRef);
+        SetMapTargetTypeCommand(std::string commandName, TypeExp newTargetTypeExp);
 
         virtual bool initialize(const MapProject& map) override;
         virtual void execute(MapProject& map) const override;
         virtual void undo(MapProject& map) const override;
 
       private:
-        TypeExp m_newTargetTypeRef;
+        TypeExp m_newTargetTypeExp;
 
         // Post initialization data
 
-        TypeExp m_oldTargetTypeRef;
+        TypeExp m_oldTargetTypeExp;
     };
 
 } // namespace babelwires

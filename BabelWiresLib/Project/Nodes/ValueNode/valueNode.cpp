@@ -17,14 +17,14 @@ babelwires::ValueNode::ValueNode(const ProjectContext& context, UserLogger& user
                                        const ValueNodeData& data, NodeId newId)
     : Node(data, newId) {
     setFactoryName(data.getTypeExp().toString());
-    TypeExp typeRefForConstruction = data.getTypeExp();
-    if (!typeRefForConstruction.tryResolve(context.m_typeSystem)) {
-        typeRefForConstruction = FailureType::getThisType();
+    TypeExp typeExpForConstruction = data.getTypeExp();
+    if (!typeExpForConstruction.tryResolve(context.m_typeSystem)) {
+        typeExpForConstruction = FailureType::getThisType();
         std::ostringstream message;
         message << "Type Reference " << data.getTypeExp().toString() << " could not be resolved";
         setInternalFailure(message.str());
     }
-    m_valueTreeRoot = std::make_unique<ValueTreeRoot>(context.m_typeSystem, typeRefForConstruction);
+    m_valueTreeRoot = std::make_unique<ValueTreeRoot>(context.m_typeSystem, typeExpForConstruction);
 }
 
 babelwires::ValueNode::~ValueNode() = default;

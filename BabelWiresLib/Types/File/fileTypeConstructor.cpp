@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Types/File/fileType.hpp>
 
 babelwires::TypePtr
-babelwires::FileTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeRef,
+babelwires::FileTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                const TypeConstructorArguments& arguments,
                                                const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 1) {
@@ -24,7 +24,7 @@ babelwires::FileTypeConstructor::constructType(const TypeSystem& typeSystem, Typ
                                     << arguments.getValueArguments().size();
     }
 
-    return makeType<ConstructedType<FileType>>(std::move(newTypeRef), arguments.getTypeArguments()[0]);
+    return makeType<ConstructedType<FileType>>(std::move(newTypeExp), arguments.getTypeArguments()[0]);
 }
 
 babelwires::TypeExp babelwires::FileTypeConstructor::makeTypeExp(TypeExp typeOfContents) {

@@ -19,12 +19,12 @@ TEST(RemoveEntryFromMapCommandTest, executeAndUndo) {
     testUtils::TestEnvironment environment;
     
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{babelwires::StringType::getThisType()}});
-    mapProject.setAllowedTargetTypeRefs({{babelwires::StringType::getThisType()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisType()}});
+    mapProject.setAllowedTargetTypeExps({{babelwires::StringType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(babelwires::StringType::getThisType());
-    mapValue.setTargetTypeRef(babelwires::StringType::getThisType());
+    mapValue.setSourceTypeExp(babelwires::StringType::getThisType());
+    mapValue.setTargetTypeExp(babelwires::StringType::getThisType());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, babelwires::StringType::getThisType(),
                                               babelwires::StringType::getThisType());
@@ -64,12 +64,12 @@ TEST(RemoveEntryFromMapCommandTest, removeInvalid) {
     testUtils::TestEnvironment environment;
     
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{babelwires::StringType::getThisType()}});
-    mapProject.setAllowedTargetTypeRefs({{babelwires::StringType::getThisType()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisType()}});
+    mapProject.setAllowedTargetTypeExps({{babelwires::StringType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(babelwires::StringType::getThisType());
-    mapValue.setTargetTypeRef(babelwires::StringType::getThisType());
+    mapValue.setSourceTypeExp(babelwires::StringType::getThisType());
+    mapValue.setTargetTypeExp(babelwires::StringType::getThisType());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, babelwires::StringType::getThisType(),
                                               babelwires::StringType::getThisType());
@@ -111,12 +111,12 @@ TEST(RemoveEntryFromMapCommandTest, failAtEnd) {
     testUtils::TestEnvironment environment;
     
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{babelwires::StringType::getThisType()}});
-    mapProject.setAllowedTargetTypeRefs({{babelwires::StringType::getThisType()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisType()}});
+    mapProject.setAllowedTargetTypeExps({{babelwires::StringType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(babelwires::StringType::getThisType());
-    mapValue.setTargetTypeRef(babelwires::StringType::getThisType());
+    mapValue.setSourceTypeExp(babelwires::StringType::getThisType());
+    mapValue.setTargetTypeExp(babelwires::StringType::getThisType());
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, babelwires::StringType::getThisType(),
                                               babelwires::StringType::getThisType());

@@ -18,13 +18,13 @@ namespace babelwires {
     class TypeInputDialog : public QDialog {
         Q_OBJECT
       public:
-        TypeInputDialog(QWidget* parent, const QString& title, const QString& label, const std::vector<TypeExp>& allowedTypeRefs, const TypeExp& initialTypeRef, Qt::WindowFlags flags);
+        TypeInputDialog(QWidget* parent, const QString& title, const QString& label, const std::vector<TypeExp>& allowedTypeExps, const TypeExp& initialTypeExp, Qt::WindowFlags flags);
 
         /// Get the selected type.
         TypeExp getSelectedType() const;
 
         static TypeExp getType(QWidget* parent, const QString& title, const QString& label,
-                                 const std::vector<TypeExp>& allowedTypeRefs, const TypeExp& initialTypeRef, bool* ok = nullptr,
+                                 const std::vector<TypeExp>& allowedTypeExps, const TypeExp& initialTypeExp, bool* ok = nullptr,
                                  Qt::WindowFlags flags = Qt::WindowFlags());
 
       private:

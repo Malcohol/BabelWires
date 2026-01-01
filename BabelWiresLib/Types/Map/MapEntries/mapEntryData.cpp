@@ -19,13 +19,13 @@ babelwires::MapEntryFallbackKind::MapEntryFallbackKind()
 
 babelwires::MapEntryData::~MapEntryData() = default;
 
-babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSystem, const TypeExp& sourceTypeRef,
-                                                      const TypeExp& targetTypeRef, bool isLastEntry) const {
-    const TypePtr sourceType = sourceTypeRef.tryResolve(typeSystem);
+babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSystem, const TypeExp& sourceTypeExp,
+                                                      const TypeExp& targetTypeExp, bool isLastEntry) const {
+    const TypePtr sourceType = sourceTypeExp.tryResolve(typeSystem);
     if (!sourceType) {
         return "The source type is not recognized";
     }
-    const TypePtr targetType = targetTypeRef.tryResolve(typeSystem);
+    const TypePtr targetType = targetTypeExp.tryResolve(typeSystem);
     if (!targetType) {
         return "The target type is not recognized";
     }
@@ -37,13 +37,13 @@ babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSyst
 }
 
 std::unique_ptr<babelwires::MapEntryData> babelwires::MapEntryData::create(const TypeSystem& typeSystem,
-                                                                           const TypeExp& sourceTypeRef,
-                                                                           const TypeExp& targetTypeRef, Kind kind) {
+                                                                           const TypeExp& sourceTypeExp,
+                                                                           const TypeExp& targetTypeExp, Kind kind) {
     switch (kind) {
         case Kind::One21:
-            return std::make_unique<OneToOneMapEntryData>(typeSystem, sourceTypeRef, targetTypeRef);
+            return std::make_unique<OneToOneMapEntryData>(typeSystem, sourceTypeExp, targetTypeExp);
         case Kind::All21:
-            return std::make_unique<AllToOneFallbackMapEntryData>(typeSystem, targetTypeRef);
+            return std::make_unique<AllToOneFallbackMapEntryData>(typeSystem, targetTypeExp);
         case Kind::All2Sm:
             return std::make_unique<AllToSameFallbackMapEntryData>();
         default:

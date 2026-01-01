@@ -31,7 +31,7 @@ babelwires::MapTypeConstructor::extractValueArguments(const TypeSystem& typeSyst
 }
 
 babelwires::TypePtr
-babelwires::MapTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeRef,
+babelwires::MapTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                               const TypeConstructorArguments& arguments,
                                               const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 2) {
@@ -39,13 +39,13 @@ babelwires::MapTypeConstructor::constructType(const TypeSystem& typeSystem, Type
                                     << arguments.getTypeArguments().size();
     }
     babelwires::MapEntryData::Kind kind = extractValueArguments(typeSystem, arguments.getValueArguments());
-    return makeType<ConstructedType<MapType>>(std::move(newTypeRef), arguments.getTypeArguments()[0],
+    return makeType<ConstructedType<MapType>>(std::move(newTypeExp), arguments.getTypeArguments()[0],
                                                       arguments.getTypeArguments()[1], kind);
 }
 
-babelwires::TypeExp babelwires::MapTypeConstructor::makeTypeExp(TypeExp sourceTypeRef, TypeExp targetTypeRef,
+babelwires::TypeExp babelwires::MapTypeConstructor::makeTypeExp(TypeExp sourceTypeExp, TypeExp targetTypeExp,
                                                                 MapEntryData::Kind fallbackKind) {
     return TypeExp{getThisIdentifier(),
-                   TypeConstructorArguments{{std::move(sourceTypeRef), std::move(targetTypeRef)},
+                   TypeConstructorArguments{{std::move(sourceTypeExp), std::move(targetTypeExp)},
                                             {EnumValue(MapEntryFallbackKind::getIdentifierFromValue(fallbackKind))}}};
 }

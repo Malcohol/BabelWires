@@ -41,7 +41,7 @@ babelwires::TypeVariableTypeConstructor::extractValueArguments(const std::vector
 }
 
 babelwires::TypePtr
-babelwires::TypeVariableTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeRef,
+babelwires::TypeVariableTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                        const TypeConstructorArguments& arguments,
                                                        const std::vector<TypePtr>& resolvedTypeArguments) const {
     // Verify the arguments are valid, but actually they don't need to be passed to the resulting types.
@@ -55,7 +55,7 @@ babelwires::TypeVariableTypeConstructor::constructType(const TypeSystem& typeSys
     if (arguments.getTypeArguments().size() == 1) {
         return resolvedTypeArguments[0];
     } else {
-        return makeType<ConstructedType<TypeVariableType>>(std::move(newTypeRef));
+        return makeType<ConstructedType<TypeVariableType>>(std::move(newTypeExp));
     }
 }
 

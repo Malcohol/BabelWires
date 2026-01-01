@@ -66,11 +66,11 @@ TEST(SumTypeTest, sumTypeDefault1) {
 TEST(SumTypeTest, sumTypeConstructorNoDefaultIndex) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeExp sumTypeRef(babelwires::SumTypeConstructor::getThisIdentifier(),
+    babelwires::TypeExp sumTypeExp(babelwires::SumTypeConstructor::getThisIdentifier(),
                                    babelwires::DefaultIntType::getThisType(),
                                    babelwires::DefaultRationalType::getThisType());
 
-    const babelwires::TypePtr& type = sumTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& type = sumTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     EXPECT_NE(type, nullptr);
     ASSERT_NE(type->as<babelwires::SumType>(), nullptr);
@@ -85,12 +85,12 @@ TEST(SumTypeTest, sumTypeConstructorNoDefaultIndex) {
 TEST(SumTypeTest, sumTypeConstructorDefault1) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeExp sumTypeRef(
+    babelwires::TypeExp sumTypeExp(
         babelwires::SumTypeConstructor::getThisIdentifier(),
         {{babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()},
          {babelwires::IntValue(1)}});
 
-    const babelwires::TypePtr& type = sumTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& type = sumTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     EXPECT_NE(type, nullptr);
     ASSERT_NE(type->as<babelwires::SumType>(), nullptr);

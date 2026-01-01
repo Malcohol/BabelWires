@@ -17,64 +17,64 @@
 
 #include <execution>
 
-TEST(TypeRefTest, equality) {
-    babelwires::TypeExp nullTypeRef;
-    babelwires::TypeExp registeredTypeRef1(babelwires::RegisteredTypeId("Foo"));
-    babelwires::TypeExp registeredTypeRef2(babelwires::RegisteredTypeId("Bar"));
-    babelwires::TypeExp constructedTypeRef1(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"));
-    babelwires::TypeExp constructedTypeRef2(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
+TEST(TypeExpTest, equality) {
+    babelwires::TypeExp nullTypeExp;
+    babelwires::TypeExp registeredTypeExp1(babelwires::RegisteredTypeId("Foo"));
+    babelwires::TypeExp registeredTypeExp2(babelwires::RegisteredTypeId("Bar"));
+    babelwires::TypeExp constructedTypeExp1(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"));
+    babelwires::TypeExp constructedTypeExp2(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
                                             babelwires::RegisteredTypeId("Flerm"));
-    babelwires::TypeExp constructedTypeRef3(
+    babelwires::TypeExp constructedTypeExp3(
         babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
         babelwires::TypeExp(babelwires::TypeConstructorId("Flerm"), babelwires::RegisteredTypeId("Erm")));
-    babelwires::TypeExp constructedTypeRefValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Bar"));
-    babelwires::TypeExp constructedTypeRefMixed1(
+    babelwires::TypeExp constructedTypeExpValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Bar"));
+    babelwires::TypeExp constructedTypeExpMixed1(
         babelwires::TypeConstructorId("Foo"),
         babelwires::TypeConstructorArguments{{babelwires::RegisteredTypeId("Bar")}, {babelwires::IntValue(16)}});
 
-    EXPECT_EQ(nullTypeRef, nullTypeRef);
-    EXPECT_EQ(registeredTypeRef1, registeredTypeRef1);
-    EXPECT_EQ(registeredTypeRef2, registeredTypeRef2);
-    EXPECT_EQ(constructedTypeRef1, constructedTypeRef1);
-    EXPECT_EQ(constructedTypeRef2, constructedTypeRef2);
-    EXPECT_EQ(constructedTypeRef3, constructedTypeRef3);
-    EXPECT_EQ(constructedTypeRefValue1, constructedTypeRefValue1);
-    EXPECT_EQ(constructedTypeRefMixed1, constructedTypeRefMixed1);
+    EXPECT_EQ(nullTypeExp, nullTypeExp);
+    EXPECT_EQ(registeredTypeExp1, registeredTypeExp1);
+    EXPECT_EQ(registeredTypeExp2, registeredTypeExp2);
+    EXPECT_EQ(constructedTypeExp1, constructedTypeExp1);
+    EXPECT_EQ(constructedTypeExp2, constructedTypeExp2);
+    EXPECT_EQ(constructedTypeExp3, constructedTypeExp3);
+    EXPECT_EQ(constructedTypeExpValue1, constructedTypeExpValue1);
+    EXPECT_EQ(constructedTypeExpMixed1, constructedTypeExpMixed1);
 
-    EXPECT_NE(nullTypeRef, registeredTypeRef1);
-    EXPECT_NE(nullTypeRef, registeredTypeRef2);
-    EXPECT_NE(nullTypeRef, constructedTypeRef1);
-    EXPECT_NE(nullTypeRef, constructedTypeRef2);
-    EXPECT_NE(nullTypeRef, constructedTypeRef3);
-    EXPECT_NE(nullTypeRef, constructedTypeRefValue1);
-    EXPECT_NE(nullTypeRef, constructedTypeRefMixed1);
+    EXPECT_NE(nullTypeExp, registeredTypeExp1);
+    EXPECT_NE(nullTypeExp, registeredTypeExp2);
+    EXPECT_NE(nullTypeExp, constructedTypeExp1);
+    EXPECT_NE(nullTypeExp, constructedTypeExp2);
+    EXPECT_NE(nullTypeExp, constructedTypeExp3);
+    EXPECT_NE(nullTypeExp, constructedTypeExpValue1);
+    EXPECT_NE(nullTypeExp, constructedTypeExpMixed1);
 
-    EXPECT_NE(registeredTypeRef1, registeredTypeRef2);
-    EXPECT_NE(registeredTypeRef1, constructedTypeRef1);
-    EXPECT_NE(registeredTypeRef1, constructedTypeRef2);
-    EXPECT_NE(registeredTypeRef1, constructedTypeRef3);
-    EXPECT_NE(registeredTypeRef1, constructedTypeRefValue1);
-    EXPECT_NE(registeredTypeRef1, constructedTypeRefMixed1);
+    EXPECT_NE(registeredTypeExp1, registeredTypeExp2);
+    EXPECT_NE(registeredTypeExp1, constructedTypeExp1);
+    EXPECT_NE(registeredTypeExp1, constructedTypeExp2);
+    EXPECT_NE(registeredTypeExp1, constructedTypeExp3);
+    EXPECT_NE(registeredTypeExp1, constructedTypeExpValue1);
+    EXPECT_NE(registeredTypeExp1, constructedTypeExpMixed1);
 
-    EXPECT_NE(registeredTypeRef2, constructedTypeRef1);
-    EXPECT_NE(registeredTypeRef2, constructedTypeRef2);
-    EXPECT_NE(registeredTypeRef2, constructedTypeRef3);
-    EXPECT_NE(registeredTypeRef2, constructedTypeRefValue1);
-    EXPECT_NE(registeredTypeRef2, constructedTypeRefMixed1);
+    EXPECT_NE(registeredTypeExp2, constructedTypeExp1);
+    EXPECT_NE(registeredTypeExp2, constructedTypeExp2);
+    EXPECT_NE(registeredTypeExp2, constructedTypeExp3);
+    EXPECT_NE(registeredTypeExp2, constructedTypeExpValue1);
+    EXPECT_NE(registeredTypeExp2, constructedTypeExpMixed1);
 
-    EXPECT_NE(constructedTypeRef1, constructedTypeRef2);
-    EXPECT_NE(constructedTypeRef1, constructedTypeRef3);
-    EXPECT_NE(constructedTypeRef1, constructedTypeRefValue1);
-    EXPECT_NE(constructedTypeRef1, constructedTypeRefMixed1);
+    EXPECT_NE(constructedTypeExp1, constructedTypeExp2);
+    EXPECT_NE(constructedTypeExp1, constructedTypeExp3);
+    EXPECT_NE(constructedTypeExp1, constructedTypeExpValue1);
+    EXPECT_NE(constructedTypeExp1, constructedTypeExpMixed1);
 
-    EXPECT_NE(constructedTypeRef2, constructedTypeRef3);
-    EXPECT_NE(constructedTypeRef2, constructedTypeRefValue1);
-    EXPECT_NE(constructedTypeRef2, constructedTypeRefMixed1);
+    EXPECT_NE(constructedTypeExp2, constructedTypeExp3);
+    EXPECT_NE(constructedTypeExp2, constructedTypeExpValue1);
+    EXPECT_NE(constructedTypeExp2, constructedTypeExpMixed1);
 
-    EXPECT_NE(constructedTypeRefValue1, constructedTypeRefMixed1);
+    EXPECT_NE(constructedTypeExpValue1, constructedTypeExpMixed1);
 }
 
-TEST(TypeRefTest, resolve) {
+TEST(TypeExpTest, resolve) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
@@ -85,14 +85,14 @@ TEST(TypeRefTest, resolve) {
     babelwires::TypeExp typeExp(testUtils::TestType::getThisType());
 
     EXPECT_EQ(testType, typeExp.resolve(typeSystem).get());
-    babelwires::TypeExp constructedTypeRef(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
+    babelwires::TypeExp constructedTypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
                                            testUtils::TestType::getThisType());
-    const babelwires::TypePtr& newType = constructedTypeRef.resolve(typeSystem);
-    EXPECT_EQ(newType->getTypeExp(), constructedTypeRef);
-    EXPECT_EQ(constructedTypeRef.resolve(typeSystem).get(), constructedTypeRef.resolve(typeSystem).get());
+    const babelwires::TypePtr& newType = constructedTypeExp.resolve(typeSystem);
+    EXPECT_EQ(newType->getTypeExp(), constructedTypeExp);
+    EXPECT_EQ(constructedTypeExp.resolve(typeSystem).get(), constructedTypeExp.resolve(typeSystem).get());
 }
 
-TEST(TypeRefTest, tryResolveSuccess) {
+TEST(TypeExpTest, tryResolveSuccess) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
@@ -103,15 +103,15 @@ TEST(TypeRefTest, tryResolveSuccess) {
     babelwires::TypeExp typeExp(testUtils::TestType::getThisType());
     EXPECT_EQ(testType, typeExp.tryResolve(typeSystem).get());
 
-    babelwires::TypeExp constructedTypeRef(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
+    babelwires::TypeExp constructedTypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
                                            testUtils::TestType::getThisType());
-    const babelwires::TypePtr& newType = constructedTypeRef.tryResolve(typeSystem);
+    const babelwires::TypePtr& newType = constructedTypeExp.tryResolve(typeSystem);
     EXPECT_NE(newType, nullptr);
-    EXPECT_EQ(newType->getTypeExp(), constructedTypeRef);
-    EXPECT_EQ(constructedTypeRef.tryResolve(typeSystem).get(), constructedTypeRef.tryResolve(typeSystem).get());
+    EXPECT_EQ(newType->getTypeExp(), constructedTypeExp);
+    EXPECT_EQ(constructedTypeExp.tryResolve(typeSystem).get(), constructedTypeExp.tryResolve(typeSystem).get());
 }
 
-TEST(TypeRefTest, tryResolveFailure) {
+TEST(TypeExpTest, tryResolveFailure) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
@@ -119,7 +119,7 @@ TEST(TypeRefTest, tryResolveFailure) {
     EXPECT_EQ(nullptr, babelwires::TypeExp(babelwires::RegisteredTypeId("Foo")).tryResolve(typeSystem));
 }
 
-TEST(TypeRefTest, tryResolveParallel) {
+TEST(TypeExpTest, tryResolveParallel) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
@@ -127,7 +127,7 @@ TEST(TypeRefTest, tryResolveParallel) {
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
         typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
-    babelwires::TypeExp constructedTypeRef(
+    babelwires::TypeExp constructedTypeExp(
         testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
         babelwires::TypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
                             babelwires::TypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
@@ -135,7 +135,7 @@ TEST(TypeRefTest, tryResolveParallel) {
 
     std::vector<std::tuple<babelwires::TypeExp, babelwires::TypePtr>> vectorOfResolutions;
     for (int i = 0; i < 1000; ++i) {
-        vectorOfResolutions.emplace_back(std::tuple{constructedTypeRef, nullptr});
+        vectorOfResolutions.emplace_back(std::tuple{constructedTypeExp, nullptr});
     }
     std::for_each(
 #ifndef __APPLE__
@@ -146,12 +146,12 @@ TEST(TypeRefTest, tryResolveParallel) {
     for (int i = 0; i < 1000; ++i) {
         const babelwires::TypePtr& resolvedType = std::get<1>(vectorOfResolutions[i]);
         EXPECT_NE(resolvedType, nullptr);
-        EXPECT_EQ(resolvedType->getTypeExp(), constructedTypeRef);
+        EXPECT_EQ(resolvedType->getTypeExp(), constructedTypeExp);
         EXPECT_EQ(resolvedType, std::get<1>(vectorOfResolutions[0]));
     }
 }
 
-TEST(TypeRefTest, tryResolveMixed) {
+TEST(TypeExpTest, tryResolveMixed) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
@@ -161,19 +161,19 @@ TEST(TypeRefTest, tryResolveMixed) {
     const testUtils::TestMixedTypeConstructor* mixedConstructor =
         typeSystem.addTypeConstructor<testUtils::TestMixedTypeConstructor>();
 
-    babelwires::TypeExp constructedTestTypeRef(
+    babelwires::TypeExp constructedTestTypeExp(
         testUtils::TestMixedTypeConstructor::getThisIdentifier(),
         {{babelwires::TypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
                               testUtils::TestType::getThisType())},
          {babelwires::StringValue(" is this string")}});
 
-    const babelwires::TypePtr& constructedTestType = constructedTestTypeRef.resolve(typeSystem);
+    const babelwires::TypePtr& constructedTestType = constructedTestTypeExp.resolve(typeSystem);
     const testUtils::TestType* const newTestType = constructedTestType->as<testUtils::TestType>();
     ASSERT_NE(newTestType, nullptr);
     EXPECT_EQ(newTestType->m_defaultValue, "Default value is this string");
 }
 
-TEST(TypeRefTest, toStringSuccessTypes) {
+TEST(TypeExpTest, toStringSuccessTypes) {
     testUtils::TestLog log;
     babelwires::IdentifierRegistryScope identifierRegistry;
 
@@ -242,7 +242,7 @@ TEST(TypeRefTest, toStringSuccessTypes) {
 
 }
 
-TEST(TypeRefTest, toStringSuccessValues) {
+TEST(TypeExpTest, toStringSuccessValues) {
     testUtils::TestLog log;
     babelwires::IdentifierRegistryScope identifierRegistry;
 
@@ -289,7 +289,7 @@ TEST(TypeRefTest, toStringSuccessValues) {
     EXPECT_EQ(babelwires::TypeExp(withOp1, {{}, {foo.clone(), bar.clone(), foo.clone()}}).toString(), "foo<]>bar<]>foo");
 }
 
-TEST(TypeRefTest, toStringSuccessMixed) {
+TEST(TypeExpTest, toStringSuccessMixed) {
     testUtils::TestLog log;
     babelwires::IdentifierRegistryScope identifierRegistry;
 
@@ -305,7 +305,7 @@ TEST(TypeRefTest, toStringSuccessMixed) {
     EXPECT_EQ(babelwires::TypeExp(mixed, {{foo, foo}, {bar.clone(), boo.clone(), bar.clone()}}).toString(), "Foofoo+bar<]>boo<]>bar+Foofoo");
 }
 
-TEST(TypeRefTest, toStringMalformed) {
+TEST(TypeExpTest, toStringMalformed) {
     // The format string can be read from data.
     // ToString should not assert or throw since it might be used in displaying log or error messages.
     testUtils::TestLog log;
@@ -318,44 +318,44 @@ TEST(TypeRefTest, toStringMalformed) {
     babelwires::TypeConstructorId unary0 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Unary0", "{", "11111111-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeExp(unary0, foo).toString(), "MalformedTypeRef");
+    EXPECT_EQ(babelwires::TypeExp(unary0, foo).toString(), "MalformedTypeExp");
 
     babelwires::TypeConstructorId unary1 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Unary1", "oo{", "22222222-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeExp(unary1, foo).toString(), "MalformedTypeRef");
+    EXPECT_EQ(babelwires::TypeExp(unary1, foo).toString(), "MalformedTypeExp");
 
     // This type of format string is not supported.
     babelwires::TypeConstructorId unary2 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Unary2", "oo{}pp", "33333333-2222-3333-4444-555566667777",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeExp(unary2, foo).toString(), "MalformedTypeRef");
+    EXPECT_EQ(babelwires::TypeExp(unary2, foo).toString(), "MalformedTypeExp");
 
     // This type of format string is not supported.
     babelwires::TypeConstructorId valueBroken = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "ValueBroken", "oo[pp", "18d028cb-de11-4974-86bf-068be2a509fd",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeExp(valueBroken, foo).toString(), "MalformedTypeRef");
+    EXPECT_EQ(babelwires::TypeExp(valueBroken, foo).toString(), "MalformedTypeExp");
 }
 
-TEST(TypeRefTest, serialization) {
-    babelwires::TypeExp nullTypeRef;
-    babelwires::TypeExp registeredTypeRef1(babelwires::RegisteredTypeId("Foo"));
-    babelwires::TypeExp registeredTypeRef2(babelwires::RegisteredTypeId("Bar"));
-    babelwires::TypeExp constructedTypeRef1(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"));
-    babelwires::TypeExp constructedTypeRef2(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
+TEST(TypeExpTest, serialization) {
+    babelwires::TypeExp nullTypeExp;
+    babelwires::TypeExp registeredTypeExp1(babelwires::RegisteredTypeId("Foo"));
+    babelwires::TypeExp registeredTypeExp2(babelwires::RegisteredTypeId("Bar"));
+    babelwires::TypeExp constructedTypeExp1(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"));
+    babelwires::TypeExp constructedTypeExp2(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
                                             babelwires::RegisteredTypeId("Flerm"));
-    babelwires::TypeExp constructedTypeRef3(
+    babelwires::TypeExp constructedTypeExp3(
         babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
         babelwires::TypeExp(babelwires::TypeConstructorId("Flerm"), babelwires::RegisteredTypeId("Erm")));
-    babelwires::TypeExp constructedTypeRefValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Bar"));
-    babelwires::TypeExp constructedTypeRefMixed1(
+    babelwires::TypeExp constructedTypeExpValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Bar"));
+    babelwires::TypeExp constructedTypeExpMixed1(
         babelwires::TypeConstructorId("Foo"),
         babelwires::TypeConstructorArguments{{babelwires::RegisteredTypeId("Bar")}, {babelwires::IntValue(16)}});
 
     std::vector<babelwires::TypeExp> testRefs = {
-        nullTypeRef,         registeredTypeRef1,   registeredTypeRef2,        constructedTypeRef1,
-        constructedTypeRef2, constructedTypeRef3, constructedTypeRefValue1, constructedTypeRefMixed1};
+        nullTypeExp,         registeredTypeExp1,   registeredTypeExp2,        constructedTypeExp1,
+        constructedTypeExp2, constructedTypeExp3, constructedTypeExpValue1, constructedTypeExpMixed1};
 
     for (auto typeExp : testRefs) {
         std::string serializedContents;
@@ -369,15 +369,15 @@ TEST(TypeRefTest, serialization) {
         testUtils::TestLog log;
         babelwires::AutomaticDeserializationRegistry deserializationReg;
         babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-        auto typeRefPtr = deserializer.deserializeObject<babelwires::TypeExp>();
+        auto typeExpPtr = deserializer.deserializeObject<babelwires::TypeExp>();
         deserializer.finalize();
 
-        ASSERT_NE(typeRefPtr, nullptr);
-        EXPECT_EQ(*typeRefPtr, typeExp);
+        ASSERT_NE(typeExpPtr, nullptr);
+        EXPECT_EQ(*typeExpPtr, typeExp);
     }
 }
 
-TEST(TypeRefTest, visitIdentifiers) {
+TEST(TypeExpTest, visitIdentifiers) {
     babelwires::TypeExp typeExp(testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
                                 testUtils::getTestRegisteredMediumIdentifier("Bar", 4),
                                 babelwires::TypeExp(testUtils::getTestRegisteredMediumIdentifier("Flerm", 1),
@@ -422,45 +422,45 @@ TEST(TypeRefTest, visitIdentifiers) {
     }
 }
 
-TEST(TypeRefTest, hash) {
-    babelwires::TypeExp nullTypeRef;
-    babelwires::TypeExp registeredTypeRef1(babelwires::RegisteredTypeId("Foo"));
-    babelwires::TypeExp registeredTypeRef2(babelwires::RegisteredTypeId("Bar"));
-    babelwires::TypeExp constructedTypeRef1(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"));
-    babelwires::TypeExp constructedTypeRef2(
+TEST(TypeExpTest, hash) {
+    babelwires::TypeExp nullTypeExp;
+    babelwires::TypeExp registeredTypeExp1(babelwires::RegisteredTypeId("Foo"));
+    babelwires::TypeExp registeredTypeExp2(babelwires::RegisteredTypeId("Bar"));
+    babelwires::TypeExp constructedTypeExp1(babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"));
+    babelwires::TypeExp constructedTypeExp2(
         babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
         babelwires::TypeExp(babelwires::TypeConstructorId("Flerm"), babelwires::RegisteredTypeId("Erm")));
-    babelwires::TypeExp constructedTypeRef3(
+    babelwires::TypeExp constructedTypeExp3(
         babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
         babelwires::TypeExp(babelwires::TypeConstructorId("Oom"), babelwires::RegisteredTypeId("Erm")));
-    babelwires::TypeExp constructedTypeRefValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Bar"));
-    babelwires::TypeExp constructedTypeRefValue2(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Erm"));
-    babelwires::TypeExp constructedTypeRefMixed1(
+    babelwires::TypeExp constructedTypeExpValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Bar"));
+    babelwires::TypeExp constructedTypeExpValue2(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Erm"));
+    babelwires::TypeExp constructedTypeExpMixed1(
         babelwires::TypeConstructorId("Foo"),
         babelwires::TypeConstructorArguments{{babelwires::RegisteredTypeId("Bar")}, {babelwires::IntValue(16)}});
 
     std::hash<babelwires::TypeExp> hasher;
 
     // In theory, some of these could fail due to a hash collision.
-    EXPECT_NE(hasher(nullTypeRef), hasher(registeredTypeRef1));
-    EXPECT_NE(hasher(registeredTypeRef1), hasher(registeredTypeRef2));
-    EXPECT_NE(hasher(registeredTypeRef1), hasher(constructedTypeRef1));
-    EXPECT_NE(hasher(registeredTypeRef1), hasher(constructedTypeRef2));
-    EXPECT_NE(hasher(registeredTypeRef1), hasher(constructedTypeRef3));
-    EXPECT_NE(hasher(registeredTypeRef1), hasher(constructedTypeRefValue1));
-    EXPECT_NE(hasher(registeredTypeRef1), hasher(constructedTypeRefValue2));
-    EXPECT_NE(hasher(registeredTypeRef1), hasher(constructedTypeRefMixed1));
-    EXPECT_NE(hasher(constructedTypeRef1), hasher(constructedTypeRef2));
-    EXPECT_NE(hasher(constructedTypeRef1), hasher(constructedTypeRef3));
-    EXPECT_NE(hasher(constructedTypeRef1), hasher(constructedTypeRefValue1));
-    EXPECT_NE(hasher(constructedTypeRef1), hasher(constructedTypeRefValue2));
-    EXPECT_NE(hasher(constructedTypeRef1), hasher(constructedTypeRefMixed1));
-    EXPECT_NE(hasher(constructedTypeRef2), hasher(constructedTypeRef3));
-    EXPECT_NE(hasher(constructedTypeRef2), hasher(constructedTypeRef3));
-    EXPECT_NE(hasher(constructedTypeRef2), hasher(constructedTypeRefValue1));
-    EXPECT_NE(hasher(constructedTypeRef2), hasher(constructedTypeRefValue2));
-    EXPECT_NE(hasher(constructedTypeRef2), hasher(constructedTypeRefMixed1));
-    EXPECT_NE(hasher(constructedTypeRefValue1), hasher(constructedTypeRefValue2));
-    EXPECT_NE(hasher(constructedTypeRefValue1), hasher(constructedTypeRefMixed1));
-    EXPECT_NE(hasher(constructedTypeRefValue2), hasher(constructedTypeRefMixed1));
+    EXPECT_NE(hasher(nullTypeExp), hasher(registeredTypeExp1));
+    EXPECT_NE(hasher(registeredTypeExp1), hasher(registeredTypeExp2));
+    EXPECT_NE(hasher(registeredTypeExp1), hasher(constructedTypeExp1));
+    EXPECT_NE(hasher(registeredTypeExp1), hasher(constructedTypeExp2));
+    EXPECT_NE(hasher(registeredTypeExp1), hasher(constructedTypeExp3));
+    EXPECT_NE(hasher(registeredTypeExp1), hasher(constructedTypeExpValue1));
+    EXPECT_NE(hasher(registeredTypeExp1), hasher(constructedTypeExpValue2));
+    EXPECT_NE(hasher(registeredTypeExp1), hasher(constructedTypeExpMixed1));
+    EXPECT_NE(hasher(constructedTypeExp1), hasher(constructedTypeExp2));
+    EXPECT_NE(hasher(constructedTypeExp1), hasher(constructedTypeExp3));
+    EXPECT_NE(hasher(constructedTypeExp1), hasher(constructedTypeExpValue1));
+    EXPECT_NE(hasher(constructedTypeExp1), hasher(constructedTypeExpValue2));
+    EXPECT_NE(hasher(constructedTypeExp1), hasher(constructedTypeExpMixed1));
+    EXPECT_NE(hasher(constructedTypeExp2), hasher(constructedTypeExp3));
+    EXPECT_NE(hasher(constructedTypeExp2), hasher(constructedTypeExp3));
+    EXPECT_NE(hasher(constructedTypeExp2), hasher(constructedTypeExpValue1));
+    EXPECT_NE(hasher(constructedTypeExp2), hasher(constructedTypeExpValue2));
+    EXPECT_NE(hasher(constructedTypeExp2), hasher(constructedTypeExpMixed1));
+    EXPECT_NE(hasher(constructedTypeExpValue1), hasher(constructedTypeExpValue2));
+    EXPECT_NE(hasher(constructedTypeExpValue1), hasher(constructedTypeExpMixed1));
+    EXPECT_NE(hasher(constructedTypeExpValue2), hasher(constructedTypeExpMixed1));
 }

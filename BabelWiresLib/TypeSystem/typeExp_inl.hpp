@@ -13,11 +13,11 @@ inline babelwires::TypeConstructorArguments::TypeConstructorArguments(std::vecto
 
 inline babelwires::TypeConstructorArguments::~TypeConstructorArguments() = default;
 
-inline babelwires::TypeExp::TypeExp(TypeConstructorId typeConstructorId, TypeExp typeRef0) 
-    : TypeExp(typeConstructorId, TypeConstructorArguments{{std::move(typeRef0)}}) {}
+inline babelwires::TypeExp::TypeExp(TypeConstructorId typeConstructorId, TypeExp typeExp0) 
+    : TypeExp(typeConstructorId, TypeConstructorArguments{{std::move(typeExp0)}}) {}
 
-inline babelwires::TypeExp::TypeExp(TypeConstructorId typeConstructorId, TypeExp typeRef0, TypeExp typeRef1)
-    : TypeExp(typeConstructorId, TypeConstructorArguments{{std::move(typeRef0), std::move(typeRef1)}}) {}
+inline babelwires::TypeExp::TypeExp(TypeConstructorId typeConstructorId, TypeExp typeExp0, TypeExp typeExp1)
+    : TypeExp(typeConstructorId, TypeConstructorArguments{{std::move(typeExp0), std::move(typeExp1)}}) {}
 
 inline babelwires::TypeExp::TypeExp(TypeConstructorId typeConstructorId, ValueHolder value0)
     : TypeExp(typeConstructorId, TypeConstructorArguments{{}, {std::move(value0)}}) {}

@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 
 babelwires::TypePtr
-babelwires::EnumAtomTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeRef,
+babelwires::EnumAtomTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                    const TypeConstructorArguments& arguments,
                                                    const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 0) {
@@ -28,7 +28,7 @@ babelwires::EnumAtomTypeConstructor::constructType(const TypeSystem& typeSystem,
         throw TypeSystemException() << "Non-EnumValue argument << " << arguments.getValueArguments()[0]
                                     << " provided to EnumAtomTypeConstructor";
     }
-    return makeType<ConstructedType<EnumType>>(std::move(newTypeRef), EnumType::ValueSet{enumValue->get()}, 0);
+    return makeType<ConstructedType<EnumType>>(std::move(newTypeExp), EnumType::ValueSet{enumValue->get()}, 0);
 }
 
 babelwires::TypeExp babelwires::EnumAtomTypeConstructor::makeTypeExp(EnumValue enumValue) {

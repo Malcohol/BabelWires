@@ -126,7 +126,7 @@ std::string babelwires::TypeExp::toStringHelper(babelwires::IdentifierRegistry::
     if (!str.empty()) {
         return str;
     } else {
-        return "MalformedTypeRef";
+        return "MalformedTypeExp";
     }
 }
 

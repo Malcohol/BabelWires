@@ -48,8 +48,8 @@ namespace {
         }
 
         babelwires::MapValue mapValue;
-        mapValue.setSourceTypeRef(sourceTypeId);
-        mapValue.setTargetTypeRef(targetTypeId);
+        mapValue.setSourceTypeExp(sourceTypeId);
+        mapValue.setTargetTypeExp(targetTypeId);
         mapValue.emplaceBack(std::move(oneToOne1));
         mapValue.emplaceBack(std::move(oneToOne2));
         mapValue.emplaceBack(std::move(fallback));

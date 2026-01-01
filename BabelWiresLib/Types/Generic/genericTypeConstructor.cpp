@@ -36,7 +36,7 @@ unsigned int babelwires::GenericTypeConstructor::extractValueArguments(const std
 }
 
 babelwires::TypePtr
-babelwires::GenericTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeRef,
+babelwires::GenericTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                   const TypeConstructorArguments& arguments,
                                                   const std::vector<TypePtr>& resolvedTypeArguments) const {
     unsigned int numVariables = extractValueArguments(arguments.getValueArguments());
@@ -47,5 +47,5 @@ babelwires::GenericTypeConstructor::constructType(const TypeSystem& typeSystem, 
     }
     const TypeExp& wrappedType = arguments.getTypeArguments()[0];
 
-    return makeType<ConstructedType<GenericType>>(std::move(newTypeRef), wrappedType, numVariables);
+    return makeType<ConstructedType<GenericType>>(std::move(newTypeExp), wrappedType, numVariables);
 }

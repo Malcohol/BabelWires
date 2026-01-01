@@ -69,14 +69,14 @@ babelwires::TypeSystem::addTypeConstructorInternal(TypeConstructorId typeId, Ver
     return std::get<0>(addResult.first->second).get();
 }
 
-babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeExp& typeRefA,
-                                                                const TypeExp& typeRefB) const {
+babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeExp& typeExpA,
+                                                                const TypeExp& typeExpB) const {
     // TODO Thread-safe cache here.
-    if (typeRefA == typeRefB) {
+    if (typeExpA == typeExpB) {
         return SubtypeOrder::IsEquivalent;
     }
-    if (const TypePtr typeA = typeRefA.tryResolve(*this)) {
-        if (const TypePtr typeB = typeRefB.tryResolve(*this)) {
+    if (const TypePtr typeA = typeExpA.tryResolve(*this)) {
+        if (const TypePtr typeB = typeExpB.tryResolve(*this)) {
             if (const auto resultFromA = typeA->compareSubtypeHelper(*this, *typeB)) {
                 return *resultFromA;
             } else if (const auto resultFromB = typeB->compareSubtypeHelper(*this, *typeA)) {
@@ -87,13 +87,13 @@ babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeExp& t
     return SubtypeOrder::IsDisjoint;
 }
 
-bool babelwires::TypeSystem::isSubType(const TypeExp& typeRefA, const TypeExp& typeRefB) const {
-    SubtypeOrder order = compareSubtype(typeRefA, typeRefB);
+bool babelwires::TypeSystem::isSubType(const TypeExp& typeExpA, const TypeExp& typeExpB) const {
+    SubtypeOrder order = compareSubtype(typeExpA, typeExpB);
     return (order == SubtypeOrder::IsEquivalent) || (order == SubtypeOrder::IsSubtype);
 }
 
-bool babelwires::TypeSystem::isRelatedType(const TypeExp& typeRefA, const TypeExp& typeRefB) const {
-    return compareSubtype(typeRefA, typeRefB) != SubtypeOrder::IsDisjoint;
+bool babelwires::TypeSystem::isRelatedType(const TypeExp& typeExpA, const TypeExp& typeExpB) const {
+    return compareSubtype(typeExpA, typeExpB) != SubtypeOrder::IsDisjoint;
 }
 
 babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getTaggedRegisteredTypes(Type::Tag tag) const {

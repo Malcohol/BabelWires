@@ -16,7 +16,7 @@ namespace babelwires {
       public:
         TYPE_CONSTRUCTOR("EnumAtom", "[0]", "cb88eeac-92e6-4a77-aa73-04db08c0d628", 1);
 
-        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeRef, const TypeConstructorArguments& arguments,
+        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,
                                             const std::vector<TypePtr>& resolvedTypeArguments) const override;
 
         /// Convenience method.
