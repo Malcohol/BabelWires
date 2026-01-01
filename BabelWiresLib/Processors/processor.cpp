@@ -8,14 +8,14 @@
 #include <BabelWiresLib/Processors/processor.hpp>
 
 #include <BabelWiresLib/Project/projectContext.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-babelwires::Processor::Processor(const ProjectContext& projectContext, const TypeRef& inputTypeRef,
-                                 const TypeRef& outputTypeRef)
+babelwires::Processor::Processor(const ProjectContext& projectContext, const TypeExp& inputTypeRef,
+                                 const TypeExp& outputTypeRef)
     : m_inputValueTreeRoot(std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, inputTypeRef))
     , m_outputValueTreeRoot(std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, outputTypeRef)) {
     const TypePtr inputType = inputTypeRef.tryResolve(projectContext.m_typeSystem);

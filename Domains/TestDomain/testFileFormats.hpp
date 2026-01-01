@@ -1,13 +1,13 @@
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 
 #include <filesystem>
 
 namespace testDomain {
     /// A file type which wraps a TestSimpleRecordType.
-    babelwires::TypeRef getTestFileType();
+    babelwires::TypeExp getTestFileType();
 
     /// Get the path in a FileNode to Int0 in TestSimpleRecordType.
     babelwires::Path getTestFileElementPathToInt0();

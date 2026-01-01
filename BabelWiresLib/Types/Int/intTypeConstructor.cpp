@@ -29,7 +29,7 @@ babelwires::IntTypeConstructor::extractValueArguments(const std::vector<ValueHol
 }
 
 babelwires::TypePtr
-babelwires::IntTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+babelwires::IntTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeRef,
                                               const TypeConstructorArguments& arguments,
                                               const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 0) {
@@ -40,7 +40,7 @@ babelwires::IntTypeConstructor::constructType(const TypeSystem& typeSystem, Type
     return makeType<ConstructedType<IntType>>(std::move(newTypeRef), range, defaultValue);
 }
 
-babelwires::TypeRef babelwires::IntTypeConstructor::makeTypeRef(IntValue::NativeType min, IntValue::NativeType max,
+babelwires::TypeExp babelwires::IntTypeConstructor::makeTypeExp(IntValue::NativeType min, IntValue::NativeType max,
                                                                 IntValue::NativeType defaultValue) {
-    return TypeRef(getThisIdentifier(), IntValue(min), IntValue(max), IntValue(defaultValue));
+    return TypeExp(getThisIdentifier(), IntValue(min), IntValue(max), IntValue(defaultValue));
 }

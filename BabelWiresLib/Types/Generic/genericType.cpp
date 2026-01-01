@@ -17,7 +17,7 @@
 
 namespace {
     /// Calculate how many generic type levels this type has.
-    unsigned int calculateGenericTypeHeight(const babelwires::TypeRef& wrappedType) {
+    unsigned int calculateGenericTypeHeight(const babelwires::TypeExp& wrappedType) {
         struct Visitor {
             unsigned int operator()(std::monostate) { return 0; }
             unsigned int operator()(const babelwires::RegisteredTypeId& typeId) {
@@ -41,7 +41,7 @@ namespace {
     }
 } // namespace
 
-babelwires::GenericType::GenericType(TypeRef wrappedType, unsigned int numVariables)
+babelwires::GenericType::GenericType(TypeExp wrappedType, unsigned int numVariables)
     : m_wrappedType(std::move(wrappedType))
     , m_numVariables(numVariables) {
     assert(m_numVariables > 0 && "GenericType must have at least one type variable");
@@ -51,7 +51,7 @@ babelwires::GenericType::GenericType(TypeRef wrappedType, unsigned int numVariab
     m_genericTypeHeight = calculateGenericTypeHeight(m_wrappedType);
 }
 
-const babelwires::TypeRef& babelwires::GenericType::getTypeAssignment(const ValueHolder& genericValue,
+const babelwires::TypeExp& babelwires::GenericType::getTypeAssignment(const ValueHolder& genericValue,
                                                                       unsigned int variableIndex) const {
     const GenericValue& value = genericValue->is<GenericValue>();
     const auto& typeAssignments = value.getTypeAssignments();
@@ -98,7 +98,7 @@ unsigned int babelwires::GenericType::getNumChildren(const ValueHolder& compound
     return c_numChildren;
 }
 
-std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&>
+std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeExp&>
 babelwires::GenericType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
     assert(i == 0 && "GenericType only has one child");
     const GenericValue& genericValue = compoundValue->is<GenericValue>();
@@ -106,7 +106,7 @@ babelwires::GenericType::getChild(const ValueHolder& compoundValue, unsigned int
     return {&genericValue.getValue(), getStepToValue(), genericValue.getActualWrappedType()};
 }
 
-std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&>
+std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeExp&>
 babelwires::GenericType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
     assert(i == 0 && "GenericType only has one child");
     GenericValue& genericValue = compoundValue.copyContentsAndGetNonConst().is<GenericValue>();
@@ -140,7 +140,7 @@ std::string babelwires::GenericType::valueToString(const TypeSystem& typeSystem,
     std::ostringstream os;
     os << "<";
     for (unsigned int i = 0; i < typeAssignments.size(); ++i) {
-        const TypeRef& assignment = typeAssignments[i];
+        const TypeExp& assignment = typeAssignments[i];
         os << sep;
         if (assignment) {
             os << assignment.toString();
@@ -159,7 +159,7 @@ babelwires::ShortId babelwires::GenericType::getStepToValue() {
 
 void babelwires::GenericType::setTypeVariableAssignmentAndInstantiate(
     const TypeSystem& typeSystem, ValueHolder& genericValue,
-    const std::vector<TypeRef>& typeVariableAssignments) const {
+    const std::vector<TypeExp>& typeVariableAssignments) const {
     if (typeVariableAssignments.size() > m_numVariables) {
         throw ModelException() << "Too many type variable assignments for GenericType";
     }

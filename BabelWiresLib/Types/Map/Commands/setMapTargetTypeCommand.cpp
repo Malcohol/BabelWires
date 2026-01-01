@@ -14,7 +14,7 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-babelwires::SetMapTargetTypeCommand::SetMapTargetTypeCommand(std::string commandName, TypeRef newTargetTypeRef)
+babelwires::SetMapTargetTypeCommand::SetMapTargetTypeCommand(std::string commandName, TypeExp newTargetTypeRef)
     : SimpleCommand(commandName)
     , m_newTargetTypeRef(std::move(newTargetTypeRef)) {}
 

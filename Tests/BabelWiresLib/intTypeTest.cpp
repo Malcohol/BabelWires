@@ -65,7 +65,7 @@ TEST(IntTypeTest, defaultIntTypeIsRegistered) {
 TEST(IntTypeTest, constructedIntTypeCreateValue) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef intTypeRef(babelwires::IntTypeConstructor::getThisIdentifier(), babelwires::IntValue(-12),
+    babelwires::TypeExp intTypeRef(babelwires::IntTypeConstructor::getThisIdentifier(), babelwires::IntValue(-12),
                                    babelwires::IntValue(14), babelwires::IntValue(-3));
 
     const babelwires::TypePtr& intType = intTypeRef.tryResolve(testEnvironment.m_typeSystem);
@@ -81,7 +81,7 @@ TEST(IntTypeTest, constructedIntTypeCreateValue) {
 TEST(IntTypeTest, constructedIntTypeRange) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef intTypeRef(babelwires::IntTypeConstructor::getThisIdentifier(), babelwires::IntValue(-12),
+    babelwires::TypeExp intTypeRef(babelwires::IntTypeConstructor::getThisIdentifier(), babelwires::IntValue(-12),
                                    babelwires::IntValue(14), babelwires::IntValue(-3));
 
     const babelwires::TypePtr& type = intTypeRef.tryResolve(testEnvironment.m_typeSystem);
@@ -97,7 +97,7 @@ TEST(IntTypeTest, constructedIntTypeRange) {
 TEST(IntTypeTest, constructedIntTypeIsValidValue) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef intTypeRef(babelwires::IntTypeConstructor::getThisIdentifier(), babelwires::IntValue(-12),
+    babelwires::TypeExp intTypeRef(babelwires::IntTypeConstructor::getThisIdentifier(), babelwires::IntValue(-12),
                                    babelwires::IntValue(14), babelwires::IntValue(-3));
 
     const babelwires::TypePtr& type = intTypeRef.tryResolve(testEnvironment.m_typeSystem);
@@ -111,10 +111,10 @@ TEST(IntTypeTest, constructedIntTypeIsValidValue) {
     EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::RationalValue(3)));
 }
 
-TEST(IntTypeTest, makeTypeRef) {
+TEST(IntTypeTest, makeTypeExp) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef intTypeRef = babelwires::IntTypeConstructor::makeTypeRef(-120, 140, -30);
+    babelwires::TypeExp intTypeRef = babelwires::IntTypeConstructor::makeTypeExp(-120, 140, -30);
 
     const babelwires::TypePtr& type = intTypeRef.tryResolve(testEnvironment.m_typeSystem);
 
@@ -136,7 +136,7 @@ TEST(IntTypeTest, makeTypeRef) {
 TEST(IntTypeTest, sameKind) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef intTypeRef(babelwires::IntTypeConstructor::getThisIdentifier(), babelwires::IntValue(-12),
+    babelwires::TypeExp intTypeRef(babelwires::IntTypeConstructor::getThisIdentifier(), babelwires::IntValue(-12),
                                    babelwires::IntValue(14), babelwires::IntValue(-3));
 
     const babelwires::TypePtr& type = intTypeRef.tryResolve(testEnvironment.m_typeSystem);
@@ -149,7 +149,7 @@ TEST(IntTypeTest, sameKind) {
 TEST(IntTypeTest, typeName) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef intTypeRef(babelwires::IntTypeConstructor::getThisIdentifier(), babelwires::IntValue(-12),
+    babelwires::TypeExp intTypeRef(babelwires::IntTypeConstructor::getThisIdentifier(), babelwires::IntValue(-12),
                                    babelwires::IntValue(14), babelwires::IntValue(-3));
 
     EXPECT_EQ(intTypeRef.toString(), "Integer{-12..14}");

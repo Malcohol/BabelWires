@@ -18,9 +18,9 @@ namespace babelwires {
         TYPE_CONSTRUCTOR("File", "{{{0}}}", "a1fb6071-1a75-4568-b0fa-dce4e1d26610", 1);
 
         /// Convenience method.
-        static TypeRef makeTypeRef(TypeRef typeOfContents);
+        static TypeExp makeTypeExp(TypeExp typeOfContents);
 
-        TypePtr constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
+        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeRef, const TypeConstructorArguments& arguments,
                                             const std::vector<TypePtr>& resolvedTypeArguments) const override;
     };
 } // namespace babelwires

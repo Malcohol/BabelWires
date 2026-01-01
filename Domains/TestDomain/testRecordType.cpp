@@ -23,7 +23,7 @@ testDomain::TestComplexRecordType::TestComplexRecordType()
     : RecordType({{getInt0Id(), babelwires::DefaultIntType::getThisType()},
                   {getOpIntId(), babelwires::DefaultIntType::getThisType(), Optionality::optionalDefaultInactive},
                   {getSubrecordId(), TestSimpleRecordType::getThisType()},
-                  {getInt1Id(), babelwires::IntTypeConstructor::makeTypeRef(c_int1min, c_int1max, c_int1default)},
+                  {getInt1Id(), babelwires::IntTypeConstructor::makeTypeExp(c_int1min, c_int1max, c_int1default)},
                   {getOpRecId(), TestSimpleRecordType::getThisType(), Optionality::optionalDefaultInactive},
                   {getStringId(), babelwires::StringType::getThisType()},
                   {getArrayId(), testDomain::TestSimpleArrayType::getThisType()},

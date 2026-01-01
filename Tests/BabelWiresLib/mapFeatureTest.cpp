@@ -24,8 +24,8 @@
 
 namespace {
     // Describes an IntType -> IntType map.
-    template <typename SOURCE_TYPE, typename TARGET_TYPE> babelwires::TypeRef getTestMapTypeRef() {
-        return babelwires::MapTypeConstructor::makeTypeRef(SOURCE_TYPE::getThisType(), TARGET_TYPE::getThisType());
+    template <typename SOURCE_TYPE, typename TARGET_TYPE> babelwires::TypeExp getTestMapTypeRef() {
+        return babelwires::MapTypeConstructor::makeTypeExp(SOURCE_TYPE::getThisType(), TARGET_TYPE::getThisType());
     }
 } // namespace
 

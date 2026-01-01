@@ -13,8 +13,8 @@
 #include <Common/Serialization/deserializer.hpp>
 #include <Common/Serialization/serializer.hpp>
 
-babelwires::ValueNodeData::ValueNodeData(TypeRef typeRef)
-    : m_typeRef(std::move(typeRef)) {}
+babelwires::ValueNodeData::ValueNodeData(TypeExp typeExp)
+    : m_typeRef(std::move(typeExp)) {}
 
 babelwires::ValueNodeData::ValueNodeData(const ValueNodeData& other, ShallowCloneContext shallowCloneContext)
     : NodeData(other, shallowCloneContext)
@@ -22,7 +22,7 @@ babelwires::ValueNodeData::ValueNodeData(const ValueNodeData& other, ShallowClon
 
 bool babelwires::ValueNodeData::checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) {
     // For now, assume types do not need to be versioned.
-    // In theory, a type might change the way that it is represented in a typeRef.
+    // In theory, a type might change the way that it is represented in a typeExp.
     // Not sure if that should be handled here.
     return true;
 }
@@ -36,7 +36,7 @@ void babelwires::ValueNodeData::serializeContents(Serializer& serializer) const 
 
 void babelwires::ValueNodeData::deserializeContents(Deserializer& deserializer) {
     getCommonKeyValuePairs(deserializer);
-    m_typeRef = std::move(*deserializer.deserializeObject<TypeRef>());
+    m_typeRef = std::move(*deserializer.deserializeObject<TypeExp>());
     deserializeModifiers(deserializer);
     deserializeUiData(deserializer);
 }
@@ -47,6 +47,6 @@ babelwires::ValueNodeData::doCreateNode(const ProjectContext& context, UserLogge
     return std::make_unique<ValueNode>(context, userLogger, *this, newId);
 }
 
-const babelwires::TypeRef& babelwires::ValueNodeData::getTypeRef() const {
+const babelwires::TypeExp& babelwires::ValueNodeData::getTypeExp() const {
     return m_typeRef;
 }

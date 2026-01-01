@@ -16,7 +16,7 @@
 #include <Common/Identifiers/identifier.hpp>
 
 namespace babelwires {
-    class TypeRef;
+    class TypeExp;
 
     class TypeSystem {
       public:
@@ -56,13 +56,13 @@ namespace babelwires {
         using TypeIdSet = std::vector<RegisteredTypeId>;
 
         /// Determine how typeA and typeB are related by the subtype order.
-        SubtypeOrder compareSubtype(const TypeRef& typeRefA, const TypeRef& typeRefB) const;
+        SubtypeOrder compareSubtype(const TypeExp& typeRefA, const TypeExp& typeRefB) const;
 
         /// Confirm whether typeRefA is a subtype of typeRefB (equality is allowed).
-        bool isSubType(const TypeRef& typeRefA, const TypeRef& typeRefB) const;
+        bool isSubType(const TypeExp& typeRefA, const TypeExp& typeRefB) const;
 
         /// Do the two types have some values in common?
-        bool isRelatedType(const TypeRef& typeRefA, const TypeRef& typeRefB) const;
+        bool isRelatedType(const TypeExp& typeRefA, const TypeExp& typeRefB) const;
 
         TypeIdSet getAllRegisteredTypes() const;
 

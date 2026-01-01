@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/TypeSystem/typePtr.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
@@ -46,7 +46,7 @@ namespace babelwires {
         /// Resolved types corresponding to the type arguments are provided. However, newly constructed
         /// types should be passed TypeRefs from the arguments rather than using the TypeRefs of the 
         /// resolved types.
-        virtual TypePtr constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+        virtual TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeRef,
                                                     const TypeConstructorArguments& arguments,
                                                     const std::vector<TypePtr>& resolvedTypeArguments) const = 0;
 
@@ -60,7 +60,7 @@ namespace babelwires {
       private:
         /// A mutex which ensures thread-safe access to the cache.
         /// Use a shared-only lock on the assumption that the majority of simultaneous queries are not for the
-        // same TypeRef.
+        // same TypeExp.
         mutable std::shared_mutex m_mutexForCache;
 
         /// A cache which stops the system ending up with multiple copies of the same constructed type.
@@ -68,19 +68,19 @@ namespace babelwires {
     };
 
     /// A convenience class which can used by type constructors for the type they want to construct.
-    /// It provides an implementation of getTypeRef.
+    /// It provides an implementation of getTypeExp.
     /// Type constructors are not obliged to use this template.
     template <typename T> class ConstructedType : public T {
       public:
         template <typename... ARGS>
-        ConstructedType(TypeRef typeRef, ARGS&&... args)
+        ConstructedType(TypeExp typeExp, ARGS&&... args)
             : T(std::forward<ARGS>(args)...)
-            , m_typeRef(std::move(typeRef)) {}
+            , m_typeRef(std::move(typeExp)) {}
 
-        TypeRef getTypeRef() const override { return m_typeRef; }
+        TypeExp getTypeExp() const override { return m_typeRef; }
 
       private:
-        TypeRef m_typeRef;
+        TypeExp m_typeRef;
     };
 } // namespace babelwires
 

@@ -14,7 +14,7 @@
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
@@ -55,7 +55,7 @@ void babelwires::AddNodeForInputTreeValueCommand::execute(Project& project) cons
     assert(nodeInput);
     const ValueTreeNode& originalValue = followPath(m_pathToValue, *nodeInput);
 
-    ValueNodeData newNodeData(originalValue.getTypeRef());
+    ValueNodeData newNodeData(originalValue.getTypeExp());
     newNodeData.m_id = m_newNodeId;
     newNodeData.m_uiData.m_uiPosition = m_positionForNewNode;
 

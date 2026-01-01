@@ -57,8 +57,8 @@ std::optional<babelwires::SubtypeOrder> babelwires::TupleType::compareSubtypeHel
     if (!otherTupleType) {
         return {};
     }
-    const std::vector<TypeRef>& componentsA = getComponentTypes();
-    const std::vector<TypeRef>& componentsB = otherTupleType->getComponentTypes();
+    const std::vector<TypeExp>& componentsA = getComponentTypes();
+    const std::vector<TypeExp>& componentsB = otherTupleType->getComponentTypes();
   
     if (componentsA.size() != componentsB.size()) {
         return SubtypeOrder::IsDisjoint;

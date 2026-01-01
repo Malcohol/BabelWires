@@ -17,7 +17,7 @@ namespace babelwires {
     /// UI cannot know which type is intended and editing won't work properly.
     class SumType : public Type {
       public:
-        using Summands = std::vector<TypeRef>;
+        using Summands = std::vector<TypeExp>;
 
         SumType(Summands summands, unsigned int indexOfDefaultSummand = 0);
 

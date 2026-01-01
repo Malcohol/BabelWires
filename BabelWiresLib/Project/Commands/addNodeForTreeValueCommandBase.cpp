@@ -15,7 +15,7 @@
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 babelwires::AddNodeForTreeValueCommandBase::AddNodeForTreeValueCommandBase(std::string commandName,

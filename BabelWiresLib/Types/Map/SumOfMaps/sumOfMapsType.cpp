@@ -15,7 +15,7 @@ namespace {
         combinations.reserve(sourceTypes.size() * targetTypes.size());
         for (const auto& s : sourceTypes) {
             for (const auto& t : targetTypes) {
-                combinations.emplace_back(babelwires::TypeRef(babelwires::MapTypeConstructor::getThisIdentifier(), s, t));
+                combinations.emplace_back(babelwires::TypeExp(babelwires::MapTypeConstructor::getThisIdentifier(), s, t));
             }
         }
         return combinations;

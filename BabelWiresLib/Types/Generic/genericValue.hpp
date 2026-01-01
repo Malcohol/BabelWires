@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 
 namespace babelwires {
@@ -17,16 +17,16 @@ namespace babelwires {
       public:
         CLONEABLE(GenericValue);
 
-        GenericValue(const TypeSystem& typeSystem, TypeRef wrappedType, unsigned int numVariables);
+        GenericValue(const TypeSystem& typeSystem, TypeExp wrappedType, unsigned int numVariables);
 
         /// This may have instantiations
-        const TypeRef& getActualWrappedType() const;
+        const TypeExp& getActualWrappedType() const;
 
-        const std::vector<TypeRef>& getTypeAssignments() const;
-        std::vector<TypeRef>& getTypeAssignments();
+        const std::vector<TypeExp>& getTypeAssignments() const;
+        std::vector<TypeExp>& getTypeAssignments();
 
         /// Update the typeVariableAssignments
-        void instantiate(const TypeSystem& typeSystem, const TypeRef& wrappedTypeRef);
+        void instantiate(const TypeSystem& typeSystem, const TypeExp& wrappedTypeRef);
 
         const ValueHolder& getValue() const;
         ValueHolder& getValue();
@@ -35,19 +35,19 @@ namespace babelwires {
         bool operator==(const Value& other) const override;
 
         /// Check whether the actual wrapped type is a version of the given type with
-        bool isActualVersionOf(const TypeRef& wrappedType) const;
+        bool isActualVersionOf(const TypeExp& wrappedType) const;
 
       private:
         /// Build a version of wrappedType where type variables are substituted according to the
         /// type assignment.
-        TypeRef buildInstantiatedType(const TypeRef& wrappedType) const;
+        TypeExp buildInstantiatedType(const TypeExp& wrappedType) const;
         
       private:
         /// The actual type may differ from the GenericType's wrapped type
         /// because variables will have been substituted.
-        TypeRef m_actualWrappedType;
-        /// When unassigned, these hold a default constructed TypeRef.
-        std::vector<TypeRef> m_typeVariableAssignments;
+        TypeExp m_actualWrappedType;
+        /// When unassigned, these hold a default constructed TypeExp.
+        std::vector<TypeExp> m_typeVariableAssignments;
         /// The current value of the actualWrappedType.
         ValueHolder m_wrappedValue;
     };

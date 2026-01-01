@@ -16,7 +16,7 @@
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 
 babelwires::ResetMapValueCommand::ResetMapValueCommand(std::string commandName, MapProjectDataLocation loc,
-                                                       TypeRef type)
+                                                       TypeExp type)
     : SimpleCommand(commandName)
     , m_location(std::move(loc))
     , m_type(std::move(type)) {}

@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 namespace babelwires {
@@ -20,7 +20,7 @@ namespace babelwires {
     class ValueTreeRoot : public ValueTreeNode {
       public:
         /// Construct a rooted ValueTreeNode which carries values of the given type.
-        ValueTreeRoot(const TypeSystem& typeSystem, TypeRef typeRef);
+        ValueTreeRoot(const TypeSystem& typeSystem, TypeExp typeExp);
 
         /// Set the value at the path to the new value.
         void setDescendentValue(const Path& path, const ValueHolder& newValue);

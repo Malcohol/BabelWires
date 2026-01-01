@@ -14,16 +14,16 @@
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 struct babelwires::ValueTreeRoot::ComplexConstructorArguments {
-    ComplexConstructorArguments(const TypeSystem& typeSystem, TypeRef typeRef)
+    ComplexConstructorArguments(const TypeSystem& typeSystem, TypeExp typeExp)
         : m_typeSystem(typeSystem)
-        , m_typeRef(std::move(typeRef)) {
+        , m_typeRef(std::move(typeExp)) {
         // TODO Do we need to handle failure here? Use tryResolve and possibly fall back to FailureType?
         const TypePtr& type = m_typeRef.resolve(typeSystem);
         auto [newValue, _] = type->createValue(typeSystem);
         m_value = newValue;
     }
     const TypeSystem& m_typeSystem;
-    TypeRef m_typeRef;
+    TypeExp m_typeRef;
     ValueHolder m_value;
 };
 
@@ -33,8 +33,8 @@ babelwires::ValueTreeRoot::ValueTreeRoot(ComplexConstructorArguments&& arguments
         initializeChildren(arguments.m_typeSystem);
     }
 
-babelwires::ValueTreeRoot::ValueTreeRoot(const TypeSystem& typeSystem, TypeRef typeRef)
-    : ValueTreeRoot(ComplexConstructorArguments(typeSystem, std::move(typeRef))) {}
+babelwires::ValueTreeRoot::ValueTreeRoot(const TypeSystem& typeSystem, TypeExp typeExp)
+    : ValueTreeRoot(ComplexConstructorArguments(typeSystem, std::move(typeExp))) {}
 
 void babelwires::ValueTreeRoot::doSetValue(const ValueHolder& newValue) {
     if (getValue() != newValue) {
@@ -43,13 +43,13 @@ void babelwires::ValueTreeRoot::doSetValue(const ValueHolder& newValue) {
         if (type.isValidValue(typeSystem, *newValue)) {
             reconcileChangesAndSynchronizeChildren(m_typeSystem, newValue);
         } else {
-            throw ModelException() << "The new value is not a valid instance of " << getTypeRef().toString();
+            throw ModelException() << "The new value is not a valid instance of " << getTypeExp().toString();
         }
     }
 }
 
 void babelwires::ValueTreeRoot::doSetToDefault() {
-    assert(getTypeRef() && "The type must be set to something non-trivial before doSetToDefault is called");
+    assert(getTypeExp() && "The type must be set to something non-trivial before doSetToDefault is called");
     const TypeSystem& typeSystem = getTypeSystem();
     const Type& type = getType();
     auto [newValue, _] = type.createValue(typeSystem);

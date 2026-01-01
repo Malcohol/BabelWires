@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
@@ -19,8 +19,8 @@
 
 #include <map>
 
-babelwires::ValueTreeNode::ValueTreeNode(TypeRef typeRef, ValueHolder value)
-    : m_typeRef(std::move(typeRef))
+babelwires::ValueTreeNode::ValueTreeNode(TypeExp typeExp, ValueHolder value)
+    : m_typeRef(std::move(typeExp))
     , m_value(std::move(value)) {}
 
 babelwires::ValueTreeNode::~ValueTreeNode() = default;
@@ -133,7 +133,7 @@ const babelwires::ValueTreeNode& babelwires::ValueTreeNode::getChildFromStep(con
     }
 }
 
-const babelwires::TypeRef& babelwires::ValueTreeNode::getTypeRef() const {
+const babelwires::TypeExp& babelwires::ValueTreeNode::getTypeExp() const {
     return m_typeRef;
 }
 
@@ -169,7 +169,7 @@ const babelwires::TypeSystem& babelwires::ValueTreeNode::getTypeSystem() const {
 
 const babelwires::Type& babelwires::ValueTreeNode::getType() const {
     const TypeSystem& typeSystem = getTypeSystem();
-    // TODO This assumes the ValueTreeNode will be changed store TypePtr instead of TypeRef.
+    // TODO This assumes the ValueTreeNode will be changed store TypePtr instead of TypeExp.
     return *m_typeRef.resolve(typeSystem);
 }
 
@@ -228,7 +228,7 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
 
         struct NewChildInfo {
             const ValueHolder* m_value;
-            const TypeRef& m_typeRef;
+            const TypeExp& m_typeRef;
             unsigned int m_index;
         };
 

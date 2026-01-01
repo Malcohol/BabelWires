@@ -32,7 +32,7 @@ babelwires::RationalTypeConstructor::extractValueArguments(const std::vector<Val
 }
 
 babelwires::TypePtr
-babelwires::RationalTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+babelwires::RationalTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeRef,
                                                    const TypeConstructorArguments& arguments,
                                                    const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 0) {
@@ -43,9 +43,9 @@ babelwires::RationalTypeConstructor::constructType(const TypeSystem& typeSystem,
     return makeType<ConstructedType<RationalType>>(std::move(newTypeRef), range, defaultValue);
 }
 
-babelwires::TypeRef babelwires::RationalTypeConstructor::makeTypeRef(Rational min, Rational max,
+babelwires::TypeExp babelwires::RationalTypeConstructor::makeTypeExp(Rational min, Rational max,
                                                                      Rational defaultValue) {
     assert(min <= defaultValue);
     assert(defaultValue <= max);
-    return TypeRef(getThisIdentifier(), RationalValue(min), RationalValue(max), RationalValue(defaultValue));
+    return TypeExp(getThisIdentifier(), RationalValue(min), RationalValue(max), RationalValue(defaultValue));
 }

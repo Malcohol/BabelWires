@@ -23,7 +23,7 @@ void babelwires::SumValueModel::initializeValueModelDispatcherForSummand(ValueMo
     const SumType& sumType = getType()->is<SumType>();
     const unsigned int currentIndex = sumType.getIndexOfValue(*m_typeSystem, *getValue());
     assert((currentIndex >= 0) && "Value not a valid instance of any summand of a SumType");
-    const TypeRef& summandRef = sumType.getSummands()[currentIndex];
+    const TypeExp& summandRef = sumType.getSummands()[currentIndex];
     const TypePtr& summandType = summandRef.resolve(*m_typeSystem);
     valueModel.init(*m_valueModelRegistry, *m_typeSystem, summandType, getValue(), m_isReadOnly, m_isStructureEditable);
 }
@@ -67,9 +67,9 @@ void babelwires::SumValueModel::getContextMenuActions(
         const SumType& sumType = getType()->is<SumType>();
         const unsigned int currentIndex = sumType.getIndexOfValue(*m_typeSystem, *getValue());
         assert((currentIndex >= 0) && "Value not a valid instance of any summand of a SumType");
-        const TypeRef& currentSummandRef = sumType.getSummands()[currentIndex];
+        const TypeExp& currentSummandRef = sumType.getSummands()[currentIndex];
         for (int i = 0; i < sumType.getSummands().size(); ++i) {
-            const TypeRef& summandRef = sumType.getSummands()[i];
+            const TypeExp& summandRef = sumType.getSummands()[i];
             std::unique_ptr<ContextMenuAction> action;
             // TODO Need some form of generalization here.
             if (const auto* mapLocation = location.as<MapProjectDataLocation>()) {

@@ -26,7 +26,7 @@ babelwires::Result babelwires::MapProjectEntry::getValidity() const {
     return m_validityOfEntry;
 }
 
-void babelwires::MapProjectEntry::validate(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef,
-                                           const TypeRef& targetTypeRef, bool isLastEntry) {
+void babelwires::MapProjectEntry::validate(const TypeSystem& typeSystem, const TypeExp& sourceTypeRef,
+                                           const TypeExp& targetTypeRef, bool isLastEntry) {
     m_validityOfEntry = getData().validate(typeSystem, sourceTypeRef, targetTypeRef, isLastEntry);
 }

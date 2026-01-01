@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
@@ -35,17 +35,17 @@ namespace babelwires {
         MapValue();
         MapValue(const MapValue& other);
         MapValue(MapValue&& other);
-        MapValue(const TypeSystem& typeSystem, TypeRef sourceRef, TypeRef targetRef, MapEntryData::Kind fallbackKind);
+        MapValue(const TypeSystem& typeSystem, TypeExp sourceRef, TypeExp targetRef, MapEntryData::Kind fallbackKind);
 
         MapValue& operator=(const MapValue& other);
         MapValue& operator=(MapValue&& other);
         virtual ~MapValue();
 
-        const TypeRef& getSourceTypeRef() const;
-        const TypeRef& getTargetTypeRef() const;
+        const TypeExp& getSourceTypeRef() const;
+        const TypeExp& getTargetTypeRef() const;
 
-        void setSourceTypeRef(const TypeRef& sourceRef);
-        void setTargetTypeRef(const TypeRef& targetRef);
+        void setSourceTypeRef(const TypeExp& sourceRef);
+        void setTargetTypeRef(const TypeExp& targetRef);
 
         unsigned int getNumMapEntries() const;
         const MapEntryData& getMapEntry(unsigned int index) const;
@@ -71,8 +71,8 @@ namespace babelwires {
         bool isValid(const TypeSystem& typeSystem) const;
 
       public:
-        TypeRef m_sourceTypeRef;
-        TypeRef m_targetTypeRef;
+        TypeExp m_sourceTypeRef;
+        TypeExp m_targetTypeRef;
         /// All non-null.
         std::vector<std::unique_ptr<MapEntryData>> m_mapEntries;
     };

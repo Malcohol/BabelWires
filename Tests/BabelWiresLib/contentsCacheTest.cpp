@@ -824,14 +824,14 @@ TEST(ContentsCacheTest, unassignedTypeVariables_noAssignments) {
             {
                 babelwires::SetTypeVariableModifierData data;
                 data.m_typeAssignments.resize(2);
-                data.m_typeAssignments[0] = tAssigned ? babelwires::StringType::getThisType() : babelwires::TypeRef();
-                data.m_typeAssignments[1] = uAssigned ? babelwires::StringType::getThisType() : babelwires::TypeRef();
+                data.m_typeAssignments[0] = tAssigned ? babelwires::StringType::getThisType() : babelwires::TypeExp();
+                data.m_typeAssignments[1] = uAssigned ? babelwires::StringType::getThisType() : babelwires::TypeExp();
                 data.apply(&valueTree);
 
                 babelwires::SetTypeVariableModifierData nestedData;
                 nestedData.m_typeAssignments.resize(1);
                 nestedData.m_typeAssignments[0] =
-                    nestedTAssigned ? babelwires::StringType::getThisType() : babelwires::TypeRef();
+                    nestedTAssigned ? babelwires::StringType::getThisType() : babelwires::TypeExp();
                 nestedData.apply(&nestedGenericTypeNode);
             }
 

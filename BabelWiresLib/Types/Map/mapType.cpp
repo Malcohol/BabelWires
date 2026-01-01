@@ -10,7 +10,7 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
 
-babelwires::MapType::MapType(TypeRef sourceTypeRef, TypeRef targetTypeRef, MapEntryData::Kind defaultFallbackKind)
+babelwires::MapType::MapType(TypeExp sourceTypeRef, TypeExp targetTypeRef, MapEntryData::Kind defaultFallbackKind)
     : m_sourceTypeRef(std::move(sourceTypeRef))
     , m_targetTypeRef(std::move(targetTypeRef))
     , m_defaultFallbackKind(defaultFallbackKind) {
@@ -34,10 +34,10 @@ std::string babelwires::MapType::getFlavour() const {
     return MapValue::serializationType;
 }
 
-const babelwires::TypeRef& babelwires::MapType::getSourceTypeRef() const {
+const babelwires::TypeExp& babelwires::MapType::getSourceTypeRef() const {
     return m_sourceTypeRef;
 }
-const babelwires::TypeRef& babelwires::MapType::getTargetTypeRef() const {
+const babelwires::TypeExp& babelwires::MapType::getTargetTypeRef() const {
     return m_targetTypeRef;
 }
 

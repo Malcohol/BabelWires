@@ -23,7 +23,7 @@ testDomain::TestProcessorInputOutputType::TestProcessorInputOutputType()
     : RecordType({{getIntId(), babelwires::DefaultIntType::getThisType()},
                   {getOptIntId(), babelwires::DefaultIntType::getThisType(), Optionality::optionalDefaultInactive},
                   {getArrayId(),
-                   babelwires::ArrayTypeConstructor::makeTypeRef(babelwires::DefaultIntType::getThisType(), 2, 8)},
+                   babelwires::ArrayTypeConstructor::makeTypeExp(babelwires::DefaultIntType::getThisType(), 2, 8)},
                   {getRecordId(), TestSimpleRecordType::getThisType()}}) {}
 
 const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToInt =

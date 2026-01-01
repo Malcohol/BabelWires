@@ -69,8 +69,8 @@ babelwires::TypeSystem::addTypeConstructorInternal(TypeConstructorId typeId, Ver
     return std::get<0>(addResult.first->second).get();
 }
 
-babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeRef& typeRefA,
-                                                                const TypeRef& typeRefB) const {
+babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeExp& typeRefA,
+                                                                const TypeExp& typeRefB) const {
     // TODO Thread-safe cache here.
     if (typeRefA == typeRefB) {
         return SubtypeOrder::IsEquivalent;
@@ -87,12 +87,12 @@ babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeRef& t
     return SubtypeOrder::IsDisjoint;
 }
 
-bool babelwires::TypeSystem::isSubType(const TypeRef& typeRefA, const TypeRef& typeRefB) const {
+bool babelwires::TypeSystem::isSubType(const TypeExp& typeRefA, const TypeExp& typeRefB) const {
     SubtypeOrder order = compareSubtype(typeRefA, typeRefB);
     return (order == SubtypeOrder::IsEquivalent) || (order == SubtypeOrder::IsSubtype);
 }
 
-bool babelwires::TypeSystem::isRelatedType(const TypeRef& typeRefA, const TypeRef& typeRefB) const {
+bool babelwires::TypeSystem::isRelatedType(const TypeExp& typeRefA, const TypeExp& typeRefB) const {
     return compareSubtype(typeRefA, typeRefB) != SubtypeOrder::IsDisjoint;
 }
 

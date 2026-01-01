@@ -123,7 +123,7 @@ namespace {
         EXPECT_EQ(recordType.getNumChildren(value),
                   testDomain::TestComplexRecordType::s_numNonOptionalFields + numOptionals);
 
-        std::vector<std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&>>
+        std::vector<std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeExp&>>
             childInfos;
         std::vector<const babelwires::Type*> types;
 
@@ -570,7 +570,7 @@ TEST(RecordTypeTest, exceptions) {
 TEST(RecordTypeTest, constructorBasics) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef recordTypeRef(
+    babelwires::TypeExp recordTypeRef(
         babelwires::RecordTypeConstructor::getThisIdentifier(),
         babelwires::TypeConstructorArguments{
             {babelwires::DefaultIntType::getThisType(), babelwires::StringType::getThisType()},
@@ -590,7 +590,7 @@ TEST(RecordTypeTest, constructorBasics) {
 TEST(RecordTypeTest, constructorWithOptionals) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef recordTypeRef(
+    babelwires::TypeExp recordTypeRef(
         babelwires::RecordTypeConstructor::getThisIdentifier(),
         babelwires::TypeConstructorArguments{
             {babelwires::DefaultIntType::getThisType(), babelwires::StringType::getThisType()},
@@ -615,13 +615,13 @@ TEST(RecordTypeTest, constructorBadArgs) {
     testUtils::TestEnvironment testEnvironment;
 
     {
-        babelwires::TypeRef recordTypeRef(
+        babelwires::TypeExp recordTypeRef(
             babelwires::RecordTypeConstructor::getThisIdentifier(),
             babelwires::TypeConstructorArguments{{babelwires::DefaultIntType::getThisType()}, {/* No value */}});
         EXPECT_THROW(recordTypeRef.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
     }
     {
-        babelwires::TypeRef recordTypeRef(
+        babelwires::TypeExp recordTypeRef(
             babelwires::RecordTypeConstructor::getThisIdentifier(),
             babelwires::TypeConstructorArguments{
                 {babelwires::DefaultIntType::getThisType(), babelwires::StringType::getThisType()},
@@ -633,7 +633,7 @@ TEST(RecordTypeTest, constructorBadArgs) {
 TEST(RecordTypeTest, constructorMakeRef) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef recordTypeRef = babelwires::RecordTypeConstructor::makeTypeRef(
+    babelwires::TypeExp recordTypeRef = babelwires::RecordTypeConstructor::makeTypeExp(
         testUtils::getTestRegisteredIdentifier("int0"), babelwires::DefaultIntType::getThisType(),
         testUtils::getTestRegisteredIdentifier("str0"), babelwires::StringType::getThisType());
 
@@ -650,7 +650,7 @@ TEST(RecordTypeTest, constructorMakeRef) {
 TEST(RecordTypeTest, constructorName) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef recordTypeRef = babelwires::RecordTypeConstructor::makeTypeRef(
+    babelwires::TypeExp recordTypeRef = babelwires::RecordTypeConstructor::makeTypeExp(
         "a", babelwires::StringType::getThisType(), "b", babelwires::DefaultIntType::getThisType(), "c",
         babelwires::StringType::getThisType());
 

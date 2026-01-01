@@ -26,26 +26,26 @@
 #include <numeric>
 
 namespace {
-    babelwires::TypeRef getParallelArray(babelwires::TypeRef&& entryType) {
-        return babelwires::ArrayTypeConstructor::makeTypeRef(std::move(entryType), 1, 16);
+    babelwires::TypeExp getParallelArray(babelwires::TypeExp&& entryType) {
+        return babelwires::ArrayTypeConstructor::makeTypeExp(std::move(entryType), 1, 16);
     }
 
     std::vector<babelwires::RecordType::Field>&& addArray(std::vector<babelwires::RecordType::Field>&& commonData,
-                                                          babelwires::ShortId arrayId, babelwires::TypeRef entryType) {
+                                                          babelwires::ShortId arrayId, babelwires::TypeExp entryType) {
         commonData.emplace_back(babelwires::RecordType::Field{arrayId, getParallelArray(std::move(entryType))});
         return std::move(commonData);
     }
 } // namespace
 
 babelwires::ParallelProcessorInputBase::ParallelProcessorInputBase(std::vector<RecordType::Field> commonData,
-                                                                   ShortId arrayId, TypeRef entryType)
+                                                                   ShortId arrayId, TypeExp entryType)
     : RecordType(addArray(std::move(commonData), arrayId, entryType)) {}
 
-babelwires::ParallelProcessorOutputBase::ParallelProcessorOutputBase(ShortId arrayId, TypeRef entryType)
+babelwires::ParallelProcessorOutputBase::ParallelProcessorOutputBase(ShortId arrayId, TypeExp entryType)
     : RecordType({{arrayId, getParallelArray(std::move(entryType))}}) {}
 
-babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectContext, const TypeRef& parallelInput,
-                                                 const TypeRef& parallelOutput)
+babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectContext, const TypeExp& parallelInput,
+                                                 const TypeExp& parallelOutput)
     : Processor(projectContext, parallelInput, parallelOutput) {
 #ifndef NDEBUG
     const auto& inputType = parallelInput.resolveAs<ParallelProcessorInputBase>(projectContext.m_typeSystem);
@@ -87,7 +87,7 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
                   const ValueTreeNode& outputEntry)
             : m_index(index)
             , m_inputEntry(inputEntry)
-            , m_outputEntry(std::make_unique<ValueTreeRoot>(typeSystem, outputEntry.getTypeRef())) {
+            , m_outputEntry(std::make_unique<ValueTreeRoot>(typeSystem, outputEntry.getTypeExp())) {
             m_outputEntry->setValue(outputEntry.getValue());
         }
 

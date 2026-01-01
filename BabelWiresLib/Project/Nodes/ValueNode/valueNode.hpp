@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 
 namespace babelwires {
     struct UserLogger;

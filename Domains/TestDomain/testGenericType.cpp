@@ -9,17 +9,17 @@
 
 testDomain::TestGenericType::TestGenericType()
     : GenericType(
-          // Note: We assume generic types are made using TypeRef expressions, so this cannot
+          // Note: We assume generic types are made using TypeExp expressions, so this cannot
           // use a registered record type. Similarly, the array cannot be a registered type.
-          babelwires::RecordTypeConstructor::makeTypeRef(
-              getIdOfX(), babelwires::TypeVariableTypeConstructor::makeTypeRef(), getIdOfY(),
-              babelwires::TypeVariableTypeConstructor::makeTypeRef(1), getIdOfInt(),
+          babelwires::RecordTypeConstructor::makeTypeExp(
+              getIdOfX(), babelwires::TypeVariableTypeConstructor::makeTypeExp(), getIdOfY(),
+              babelwires::TypeVariableTypeConstructor::makeTypeExp(1), getIdOfInt(),
               babelwires::DefaultIntType::getThisType(), getIdOfNestedGenericType(),
-              babelwires::GenericTypeConstructor::makeTypeRef(babelwires::RecordTypeConstructor::makeTypeRef(
-                  getIdOfNestedX(), babelwires::TypeVariableTypeConstructor::makeTypeRef(0, 1), getIdOfNestedZ(),
-                  babelwires::TypeVariableTypeConstructor::makeTypeRef())),
+              babelwires::GenericTypeConstructor::makeTypeExp(babelwires::RecordTypeConstructor::makeTypeExp(
+                  getIdOfNestedX(), babelwires::TypeVariableTypeConstructor::makeTypeExp(0, 1), getIdOfNestedZ(),
+                  babelwires::TypeVariableTypeConstructor::makeTypeExp())),
               getIdOfArray(),
-              babelwires::ArrayTypeConstructor::makeTypeRef(babelwires::TypeVariableTypeConstructor::makeTypeRef(), 0,
+              babelwires::ArrayTypeConstructor::makeTypeExp(babelwires::TypeVariableTypeConstructor::makeTypeExp(), 0,
                                                             8, 1)),
           2) {}
 

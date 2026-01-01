@@ -24,8 +24,8 @@ namespace {
     }
 
     babelwires::MapValue
-    setUpTestMapValue(const babelwires::TypeSystem& typeSystem, const babelwires::TypeRef& sourceTypeId,
-                      const babelwires::TypeRef& targetTypeId, const babelwires::Value& sourceValue1,
+    setUpTestMapValue(const babelwires::TypeSystem& typeSystem, const babelwires::TypeExp& sourceTypeId,
+                      const babelwires::TypeExp& targetTypeId, const babelwires::Value& sourceValue1,
                       const babelwires::Value& sourceValue2, const babelwires::Value& targetValue1,
                       const babelwires::Value& targetValue2, const babelwires::Value& targetValue3,
                       bool allToOneFallback) {

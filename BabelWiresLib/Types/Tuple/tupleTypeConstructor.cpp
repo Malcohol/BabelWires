@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Types/Tuple/tupleType.hpp>
 
 babelwires::TypePtr
-babelwires::TupleTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+babelwires::TupleTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeRef,
                                                 const TypeConstructorArguments& arguments,
                                                 const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getValueArguments().size() > 0) {
@@ -23,6 +23,6 @@ babelwires::TupleTypeConstructor::constructType(const TypeSystem& typeSystem, Ty
     return makeType<ConstructedType<TupleType>>(std::move(newTypeRef), arguments.getTypeArguments());
 }
 
-babelwires::TypeRef babelwires::TupleTypeConstructor::makeTypeRef(std::vector<TypeRef> types) {
-    return TypeRef(getThisIdentifier(), {std::move(types), {}});
+babelwires::TypeExp babelwires::TupleTypeConstructor::makeTypeExp(std::vector<TypeExp> types) {
+    return TypeExp(getThisIdentifier(), {std::move(types), {}});
 }

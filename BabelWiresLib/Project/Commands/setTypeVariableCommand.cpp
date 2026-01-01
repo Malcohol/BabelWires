@@ -25,7 +25,7 @@
 
 babelwires::SetTypeVariableCommand::SetTypeVariableCommand(std::string commandName, NodeId nodeId,
                                                            Path pathToGenericType, unsigned int variableIndex,
-                                                           TypeRef newType)
+                                                           TypeExp newType)
     : CompoundCommand(commandName)
     , m_nodeId(nodeId)
     , m_pathToGenericType(std::move(pathToGenericType))

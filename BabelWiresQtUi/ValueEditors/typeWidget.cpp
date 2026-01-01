@@ -17,7 +17,7 @@
 #include <cassert>
 #include <unordered_set>
 
-babelwires::TypeWidget::TypeWidget(QWidget* parent, const std::vector<TypeRef>& allowedTypeRefs)
+babelwires::TypeWidget::TypeWidget(QWidget* parent, const std::vector<TypeExp>& allowedTypeRefs)
     : QComboBox(parent)
     , m_hasBadItem(false) {
     m_defaultStyleSheet = styleSheet();
@@ -27,16 +27,16 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const std::vector<TypeRef>& 
     m_badStyleSheet.append("\nQComboBox { background: red; }");
 
     // Ensure uniqueness.
-    std::unordered_set<TypeRef> typeRefSet;
-    for (const auto& typeRef : allowedTypeRefs) {
-        typeRefSet.insert(typeRef);
+    std::unordered_set<TypeExp> typeRefSet;
+    for (const auto& typeExp : allowedTypeRefs) {
+        typeRefSet.insert(typeExp);
     }
 
-    std::vector<std::tuple<std::string, TypeRef>> sortedNames;
+    std::vector<std::tuple<std::string, TypeExp>> sortedNames;
     sortedNames.reserve(typeRefSet.size());
 
-    for (const auto& typeRef : typeRefSet) {
-        sortedNames.emplace_back(std::tuple{typeRef.toString(), typeRef});
+    for (const auto& typeExp : typeRefSet) {
+        sortedNames.emplace_back(std::tuple{typeExp.toString(), typeExp});
     }
     
     std::sort(sortedNames.begin(), sortedNames.end(), [](const auto& a, const auto& b) {
@@ -55,19 +55,19 @@ babelwires::TypeWidget::TypeWidget(QWidget* parent, const std::vector<TypeRef>& 
     connect(this, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &TypeWidget::onCurrentIndexChanged);
 }
 
-const babelwires::TypeRef& babelwires::TypeWidget::getTypeRef() const {
+const babelwires::TypeExp& babelwires::TypeWidget::getTypeExp() const {
     assert(currentIndex() < m_typeRefs.size());
     return m_typeRefs[currentIndex()];
 }
 
-void babelwires::TypeWidget::setTypeRef(const TypeRef& id) {
+void babelwires::TypeWidget::setTypeRef(const TypeExp& id) {
     auto it = std::find(m_typeRefs.begin(), m_typeRefs.end(), id);
     assert(it != m_typeRefs.end());
     const int newIndex = it - m_typeRefs.begin();
     setCurrentIndex(newIndex);
 }
 
-void babelwires::TypeWidget::addBadItemIfNotPresent(const TypeRef& id) {
+void babelwires::TypeWidget::addBadItemIfNotPresent(const TypeExp& id) {
     if (m_hasBadItem) {
         if (m_typeRefs.back() == id) {
             return;

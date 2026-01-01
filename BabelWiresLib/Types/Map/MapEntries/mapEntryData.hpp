@@ -19,7 +19,7 @@
 
 namespace babelwires {
     class TypeSystem;
-    class TypeRef;
+    class TypeExp;
     class Type;
 
 #define BW_MAP_ENTRY_FALLBACK_KIND(X)                                                                                  \
@@ -47,7 +47,7 @@ namespace babelwires {
         virtual bool operator==(const MapEntryData& other) const = 0;
         bool operator!=(const MapEntryData& other) const { return !(*this == other); }
 
-        Result validate(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef, const TypeRef& targetTypeRef,
+        Result validate(const TypeSystem& typeSystem, const TypeExp& sourceTypeRef, const TypeExp& targetTypeRef,
                         bool isLastEntry) const;
 
         using Kind = MapEntryFallbackKind::Value;
@@ -57,8 +57,8 @@ namespace babelwires {
         static bool isFallback(Kind kind);
 
         /// Create a MapEntryData of the given kind.
-        static std::unique_ptr<MapEntryData> create(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef,
-                                                    const TypeRef& targetTypeRef, Kind kind);
+        static std::unique_ptr<MapEntryData> create(const TypeSystem& typeSystem, const TypeExp& sourceTypeRef,
+                                                    const TypeExp& targetTypeRef, Kind kind);
         
         /// Return the sourceValue or nullptr if this entry doesn't have one.
         virtual const ValueHolder* tryGetSourceValue() const;

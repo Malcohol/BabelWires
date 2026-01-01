@@ -36,7 +36,7 @@ std::string babelwires::TypeVariableType::valueToString(const TypeSystem& typeSy
 }
 
 babelwires::TypeVariableData babelwires::TypeVariableType::getVariableData() const {
-    auto optVariableData = TypeVariableData::isTypeVariable(getTypeRef());
-    assert(optVariableData && "A typeVariable had a typeRef that wasn't using a typeVariableTypeConstructor");
+    auto optVariableData = TypeVariableData::isTypeVariable(getTypeExp());
+    assert(optVariableData && "A typeVariable had a typeExp that wasn't using a typeVariableTypeConstructor");
     return *optVariableData;
 }

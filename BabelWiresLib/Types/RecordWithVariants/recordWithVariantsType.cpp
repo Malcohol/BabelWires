@@ -54,7 +54,7 @@ const babelwires::RecordWithVariantsType::Tags& babelwires::RecordWithVariantsTy
 unsigned int babelwires::RecordWithVariantsType::getIndexOfTag(ShortId tag) const {
     const auto it = std::find(m_tags.begin(), m_tags.end(), tag);
     if (it == m_tags.end()) {
-        throw ModelException() << "The tag " << tag << " is not a tag of the type " << getTypeRef();
+        throw ModelException() << "The tag " << tag << " is not a tag of the type " << getTypeExp();
     }
     return std::distance(m_tags.begin(), it);
 }
@@ -119,7 +119,7 @@ unsigned int babelwires::RecordWithVariantsType::getNumChildren(const ValueHolde
     return it->second.size();
 }
 
-std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&>
+std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeExp&>
 babelwires::RecordWithVariantsType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
     const ShortId tag = getSelectedTag(compoundValue);
     const auto it = m_tagToVariantCache.find(tag);
@@ -129,7 +129,7 @@ babelwires::RecordWithVariantsType::getChild(const ValueHolder& compoundValue, u
     return {&recordValue.getValue(f.m_identifier), PathStep{f.m_identifier}, f.m_type};
 }
 
-std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&>
+std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeExp&>
 babelwires::RecordWithVariantsType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
     const ShortId tag = getSelectedTag(compoundValue);
     const auto it = m_tagToVariantCache.find(tag);

@@ -14,8 +14,8 @@
 #include <QDialogButtonBox>
 
 babelwires::TypeInputDialog::TypeInputDialog(QWidget* parent, const QString& title, const QString& label,
-                                             const std::vector<TypeRef>& allowedTypeRefs,
-                                             const TypeRef& initialTypeRef, Qt::WindowFlags flags)
+                                             const std::vector<TypeExp>& allowedTypeRefs,
+                                             const TypeExp& initialTypeRef, Qt::WindowFlags flags)
     : QDialog(parent) {
     setWindowTitle(title);
     setModal(true);
@@ -43,13 +43,13 @@ babelwires::TypeInputDialog::TypeInputDialog(QWidget* parent, const QString& tit
     setLayout(layout);
 }
 
-babelwires::TypeRef babelwires::TypeInputDialog::getSelectedType() const {
-    return m_typeWidget->getTypeRef();
+babelwires::TypeExp babelwires::TypeInputDialog::getSelectedType() const {
+    return m_typeWidget->getTypeExp();
 }
 
-babelwires::TypeRef babelwires::TypeInputDialog::getType(QWidget* parent, const QString& title, const QString& label,
-                                                          const std::vector<TypeRef>& allowedTypeRefs,
-                                                          const TypeRef& initialTypeRef, bool* ok,
+babelwires::TypeExp babelwires::TypeInputDialog::getType(QWidget* parent, const QString& title, const QString& label,
+                                                          const std::vector<TypeExp>& allowedTypeRefs,
+                                                          const TypeExp& initialTypeRef, bool* ok,
                                                           Qt::WindowFlags flags) {
     TypeInputDialog dialog(parent, title, label, allowedTypeRefs, initialTypeRef, flags);
     if (dialog.exec() == QDialog::Accepted) {
@@ -61,6 +61,6 @@ babelwires::TypeRef babelwires::TypeInputDialog::getType(QWidget* parent, const 
         if (ok) {
             *ok = false;
         }
-        return TypeRef();
+        return TypeExp();
     }
 }

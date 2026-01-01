@@ -9,7 +9,7 @@
  #pragma once
 
  #include <BabelWiresLib/Commands/commands.hpp>
- #include <BabelWiresLib/TypeSystem/typeRef.hpp>
+ #include <BabelWiresLib/TypeSystem/typeExp.hpp>
  #include <BabelWiresLib/Types/Map/MapProject/mapProjectDataLocation.hpp>
  
 #include <Common/Identifiers/identifier.hpp>
@@ -23,7 +23,7 @@
      class ResetMapValueCommand : public SimpleCommand<MapProject> {
        public:
          CLONEABLE(ResetMapValueCommand);
-         ResetMapValueCommand(std::string commandName, MapProjectDataLocation loc, TypeRef type);
+         ResetMapValueCommand(std::string commandName, MapProjectDataLocation loc, TypeExp type);
  
          virtual bool initialize(const MapProject& map) override;
          virtual void execute(MapProject& map) const override;
@@ -31,7 +31,7 @@
  
        private:
          MapProjectDataLocation m_location;
-         TypeRef m_type;
+         TypeExp m_type;
 
          // Post initialization data
  

@@ -13,14 +13,14 @@
 namespace babelwires {
 
     /// The Type used at a type variable that has not been instantiated.
-    /// The information about the type variable is carried by the typeRef.
+    /// The information about the type variable is carried by the typeExp.
     class TypeVariableType : public Type {
       public:
         TypeVariableType();
 
         std::string getFlavour() const override;
 
-        /// Convenience method that extracts the data from this type's TypeRef.
+        /// Convenience method that extracts the data from this type's TypeExp.
         /// The method asserts if this type was not constructed in the expected way.
         TypeVariableData getVariableData() const;
 

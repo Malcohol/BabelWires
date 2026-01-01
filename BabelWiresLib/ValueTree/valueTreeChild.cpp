@@ -13,8 +13,8 @@
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
-babelwires::ValueTreeChild::ValueTreeChild(TypeRef typeRef, const ValueHolder& valueHolder, ValueTreeNode* owner)
-    : ValueTreeNode(std::move(typeRef), valueHolder) {
+babelwires::ValueTreeChild::ValueTreeChild(TypeExp typeExp, const ValueHolder& valueHolder, ValueTreeNode* owner)
+    : ValueTreeNode(std::move(typeExp), valueHolder) {
     assert(owner != nullptr);
     setOwner(owner);
 }
@@ -28,7 +28,7 @@ void babelwires::ValueTreeChild::doSetValue(const ValueHolder& newValue) {
             auto rootAndPath = getRootAndPathTo(*this);
             rootAndPath.m_root.setDescendentValue(rootAndPath.m_pathFromRoot, newValue);
         } else {
-            throw ModelException() << "The new value is not a valid instance of " << getTypeRef().toString();
+            throw ModelException() << "The new value is not a valid instance of " << getTypeExp().toString();
         }
     }
 }

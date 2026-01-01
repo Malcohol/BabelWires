@@ -14,7 +14,7 @@
 #include <unordered_set>
 
 babelwires::TypePtr
-babelwires::EnumUnionTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+babelwires::EnumUnionTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeRef,
                                                     const TypeConstructorArguments& arguments,
                                                     const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() < 2) {
@@ -45,6 +45,6 @@ babelwires::EnumUnionTypeConstructor::constructType(const TypeSystem& typeSystem
     return makeType<ConstructedType<EnumType>>(std::move(newTypeRef), std::move(unionOfValues), 0);
 }
 
-babelwires::TypeRef babelwires::EnumUnionTypeConstructor::makeTypeRef(TypeRef enumA, TypeRef enumB) {
-    return TypeRef{getThisIdentifier(), std::move(enumA), std::move(enumB)};
+babelwires::TypeExp babelwires::EnumUnionTypeConstructor::makeTypeExp(TypeExp enumA, TypeExp enumB) {
+    return TypeExp{getThisIdentifier(), std::move(enumA), std::move(enumB)};
 }

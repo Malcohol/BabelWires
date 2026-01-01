@@ -18,28 +18,28 @@ namespace babelwires {
         // Example: Record{a, b, c : String, Integer, String}
         TYPE_CONSTRUCTOR("Record", "Record{{[0|, ] : {0|, }}}", "295459cc-9485-4526-86ac-e8f27e4e7667", 1);
 
-        TypePtr constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeRef,
                                             const TypeConstructorArguments& arguments,
                                             const std::vector<TypePtr>& resolvedTypeArguments) const override;
 
         /// Convenience method.
-        template <typename... ARGS> static TypeRef makeTypeRef(ARGS&&... args) {
+        template <typename... ARGS> static TypeExp makeTypeExp(ARGS&&... args) {
             std::vector<ValueHolder> valueArguments;
-            std::vector<TypeRef> typeArguments;
+            std::vector<TypeExp> typeArguments;
             valueArguments.reserve(sizeof...(args) / 2);
             typeArguments.reserve(sizeof...(args) / 2);
             Detail::addToArrays(valueArguments, typeArguments, std::forward<ARGS>(args)...);
-            return TypeRef(getThisIdentifier(), {std::move(typeArguments), std::move(valueArguments)});
+            return TypeExp(getThisIdentifier(), {std::move(typeArguments), std::move(valueArguments)});
         }
 
         struct Detail {
-            /// Construct a TypeRef for a record type with the given field names and types.
+            /// Construct a TypeExp for a record type with the given field names and types.
             /// The field names are given as ShortIds, and the types as TypeRefs.
-            static void addToArrays(std::vector<ValueHolder>& fieldNames, std::vector<TypeRef>& fieldTypes) {}
+            static void addToArrays(std::vector<ValueHolder>& fieldNames, std::vector<TypeExp>& fieldTypes) {}
 
             template <typename... ARGS>
-            static void addToArrays(std::vector<ValueHolder>& fieldNames, std::vector<TypeRef>& fieldTypes,
-                                    ShortId fieldA, TypeRef typeRefA, ARGS&&... args) {
+            static void addToArrays(std::vector<ValueHolder>& fieldNames, std::vector<TypeExp>& fieldTypes,
+                                    ShortId fieldA, TypeExp typeRefA, ARGS&&... args) {
                 fieldNames.emplace_back(FieldIdValue(fieldA));
                 fieldTypes.emplace_back(typeRefA);
                 addToArrays(fieldNames, fieldTypes, std::forward<ARGS>(args)...);

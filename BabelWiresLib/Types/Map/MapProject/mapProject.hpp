@@ -29,12 +29,12 @@ namespace babelwires {
         virtual ~MapProject();
 
         struct AllowedTypes {
-            std::vector<TypeRef> m_typeRefs;
+            std::vector<TypeExp> m_typeRefs;
             unsigned int m_indexOfDefault = 0;
 
-            bool isRelatedToSome(const TypeSystem& typeSystem, const TypeRef& type) const;
-            bool isSubtypeOfSome(const TypeSystem& typeSystem, const TypeRef& type) const;
-            const TypeRef& getDefaultTypeRef() const { return m_typeRefs[m_indexOfDefault]; }
+            bool isRelatedToSome(const TypeSystem& typeSystem, const TypeExp& type) const;
+            bool isSubtypeOfSome(const TypeSystem& typeSystem, const TypeExp& type) const;
+            const TypeExp& getDefaultTypeRef() const { return m_typeRefs[m_indexOfDefault]; }
         };
 
         void setAllowedSourceTypeRefs(const AllowedTypes& allowedTypes);
@@ -43,11 +43,11 @@ namespace babelwires {
         const AllowedTypes& getAllowedSourceTypeRefs() const;
         const AllowedTypes& getAllowedTargetTypeRefs() const;
        
-        const TypeRef& getCurrentSourceTypeRef() const;
-        const TypeRef& getCurrentTargetTypeRef() const;
+        const TypeExp& getCurrentSourceTypeRef() const;
+        const TypeExp& getCurrentTargetTypeRef() const;
 
-        void setCurrentSourceTypeRef(const TypeRef& sourceId);
-        void setCurrentTargetTypeRef(const TypeRef& targetId);
+        void setCurrentSourceTypeRef(const TypeExp& sourceId);
+        void setCurrentTargetTypeRef(const TypeExp& targetId);
 
         TypePtr getCurrentSourceType() const;
         TypePtr getCurrentTargetType() const;
@@ -77,8 +77,8 @@ namespace babelwires {
         AllowedTypes m_allowedSourceTypeRefs;
         AllowedTypes m_allowedTargetTypeRefs;
 
-        TypeRef m_currentSourceTypeRef;
-        TypeRef m_currentTargetTypeRef;
+        TypeExp m_currentSourceTypeRef;
+        TypeExp m_currentTargetTypeRef;
 
         Result m_sourceTypeValidity;
         Result m_targetTypeValidity;

@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Types/File/fileType.hpp>
 
-babelwires::FileType::FileType(TypeRef typeOfContents)
+babelwires::FileType::FileType(TypeExp typeOfContents)
     : RecordType({{getStepToContents(), typeOfContents}}) {}
 
 std::string babelwires::FileType::getFlavour() const {

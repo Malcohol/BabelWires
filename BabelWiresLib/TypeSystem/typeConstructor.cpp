@@ -67,7 +67,7 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
             unresolvedTypesString.emplace_back(arg.toString());
         }
     }
-    TypeRef newTypeRef(getTypeConstructorId(), arguments);
+    TypeExp newTypeRef(getTypeConstructorId(), arguments);
 
     {
         // Phase 3: Try the cache again with a write lock.

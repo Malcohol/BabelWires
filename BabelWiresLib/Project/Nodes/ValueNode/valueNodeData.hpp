@@ -9,7 +9,7 @@
 
 
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 
 namespace babelwires {
     /// Describes the construction of a ValueNode.
@@ -19,7 +19,7 @@ namespace babelwires {
         CUSTOM_CLONEABLE(ValueNodeData);
         SERIALIZABLE(ValueNodeData, "value", NodeData, 1);
         ValueNodeData() = default;
-        ValueNodeData(TypeRef typeRef);
+        ValueNodeData(TypeExp typeExp);
         ValueNodeData(const ValueNodeData& other) = default;
         ValueNodeData(const ValueNodeData& other, ShallowCloneContext);
 
@@ -28,13 +28,13 @@ namespace babelwires {
         void serializeContents(Serializer& serializer) const override;
         void deserializeContents(Deserializer& deserializer) override;
 
-        const TypeRef& getTypeRef() const;
+        const TypeExp& getTypeExp() const;
 
       protected:
         std::unique_ptr<Node> doCreateNode(const ProjectContext& context, UserLogger& userLogger,
                                                                NodeId newId) const override;
 
       private:
-        TypeRef m_typeRef;
+        TypeExp m_typeRef;
     };
 }

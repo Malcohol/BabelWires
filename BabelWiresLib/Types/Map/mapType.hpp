@@ -20,7 +20,7 @@ namespace babelwires {
     /// supertype relationship).
     class MapType : public Type {
       public:
-        MapType(TypeRef sourceTypeRef, TypeRef targetTypeRef, MapEntryData::Kind defaultFallbackKind = MapEntryData::Kind::All21);
+        MapType(TypeExp sourceTypeRef, TypeExp targetTypeRef, MapEntryData::Kind defaultFallbackKind = MapEntryData::Kind::All21);
 
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 
@@ -28,15 +28,15 @@ namespace babelwires {
 
         std::string getFlavour() const override;
 
-        const TypeRef& getSourceTypeRef() const;
-        const TypeRef& getTargetTypeRef() const;
+        const TypeExp& getSourceTypeRef() const;
+        const TypeExp& getTargetTypeRef() const;
 
         std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const override;
 
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
       private:
-        TypeRef m_sourceTypeRef;
-        TypeRef m_targetTypeRef;
+        TypeExp m_sourceTypeRef;
+        TypeExp m_targetTypeRef;
         MapEntryData::Kind m_defaultFallbackKind;
     };
 } // namespace babelwires

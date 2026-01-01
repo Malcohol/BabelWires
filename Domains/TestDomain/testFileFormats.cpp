@@ -20,8 +20,8 @@ namespace {
     const char s_product[] = "Test Product";
 } // namespace
 
-babelwires::TypeRef testDomain::getTestFileType() {
-    return babelwires::FileTypeConstructor::makeTypeRef(TestSimpleRecordType::getThisType());
+babelwires::TypeExp testDomain::getTestFileType() {
+    return babelwires::FileTypeConstructor::makeTypeExp(TestSimpleRecordType::getThisType());
 }
 
 babelwires::Path testDomain::getTestFileElementPathToInt0() {

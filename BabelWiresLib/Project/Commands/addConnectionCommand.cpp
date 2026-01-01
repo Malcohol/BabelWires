@@ -68,7 +68,7 @@ bool babelwires::AddConnectionCommand::initializeAndExecute(Project& project) {
     }
 
     if (containsUnassignedTypeVariable(*inputTreeNode)) {
-        std::optional<std::map<std::tuple<Path, unsigned int>, TypeRef>> typeAssignment =
+        std::optional<std::map<std::tuple<Path, unsigned int>, TypeExp>> typeAssignment =
             getTypeVariableAssignments(*outputTreeNode, *inputTreeNode);
         if (typeAssignment) {
             for (const auto& [key, assignedType] : *typeAssignment) {

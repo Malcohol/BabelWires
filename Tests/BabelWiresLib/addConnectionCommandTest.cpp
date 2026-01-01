@@ -143,18 +143,18 @@ namespace {
         const testDomain::TestGenericType *const genericType = input->getType().as<testDomain::TestGenericType>();
         ASSERT_NE(genericType, nullptr);
 
-        const babelwires::TypeRef& typeAssignment0 = genericType->getTypeAssignment(input->getValue(), 0);
+        const babelwires::TypeExp& typeAssignment0 = genericType->getTypeAssignment(input->getValue(), 0);
         if (var0Instantiated) {
             EXPECT_EQ(typeAssignment0, babelwires::DefaultIntType::getThisType());
         } else {
-            EXPECT_EQ(typeAssignment0, babelwires::TypeRef());
+            EXPECT_EQ(typeAssignment0, babelwires::TypeExp());
         }
 
-        const babelwires::TypeRef& typeAssignment1 = genericType->getTypeAssignment(input->getValue(), 1);
+        const babelwires::TypeExp& typeAssignment1 = genericType->getTypeAssignment(input->getValue(), 1);
         if (var1Instantiated) {
             EXPECT_EQ(typeAssignment1, testDomain::TestSimpleRecordType::getThisType());
         } else {
-            EXPECT_EQ(typeAssignment1, babelwires::TypeRef());
+            EXPECT_EQ(typeAssignment1, babelwires::TypeExp());
         }
 
         if (expectedModifier) {
@@ -177,11 +177,11 @@ namespace {
         const babelwires::GenericType *const genericType = nestedGenericNodeTree->getType().as<babelwires::GenericType>();
         ASSERT_NE(genericType, nullptr);
 
-        const babelwires::TypeRef& typeAssignment0 = genericType->getTypeAssignment(nestedGenericNodeTree->getValue(), 0);
+        const babelwires::TypeExp& typeAssignment0 = genericType->getTypeAssignment(nestedGenericNodeTree->getValue(), 0);
         if (varInstantiated) {
             EXPECT_EQ(typeAssignment0, babelwires::StringType::getThisType());
         } else {
-            EXPECT_EQ(typeAssignment0, babelwires::TypeRef());
+            EXPECT_EQ(typeAssignment0, babelwires::TypeExp());
         }
 
         if (expectedModifier) {
@@ -232,7 +232,7 @@ TEST(AddConnectionCommandTest, connectToAnotherTypeVariable) {
     babelwires::SetTypeVariableModifierData setFirstVariableData;
     setFirstVariableData.m_targetPath = babelwires::Path();
     setFirstVariableData.m_typeAssignments.push_back(babelwires::DefaultIntType::getThisType());
-    setFirstVariableData.m_typeAssignments.push_back(babelwires::TypeRef());
+    setFirstVariableData.m_typeAssignments.push_back(babelwires::TypeExp());
     testEnvironment.m_project.addModifier(genericNodeId, setFirstVariableData);
     testEnvironment.m_project.process();
     

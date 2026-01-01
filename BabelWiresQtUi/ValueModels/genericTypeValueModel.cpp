@@ -30,7 +30,7 @@ void babelwires::GenericTypeValueModel::getContextMenuActions(
                 setTypeVariable->setEnabled(m_isStructureEditable);
                 entryGroup->addContextMenuAction(std::move(setTypeVariable));
                 auto resetTypeVariable = std::make_unique<SetTypeVariableAction>(*projectDataLocation, i, false);
-                resetTypeVariable->setEnabled(m_isStructureEditable && (genericType.getTypeAssignment(getValue(), i) != TypeRef()));
+                resetTypeVariable->setEnabled(m_isStructureEditable && (genericType.getTypeAssignment(getValue(), i) != TypeExp()));
                 entryGroup->addContextMenuAction(std::move(resetTypeVariable));
             }
         } else {

@@ -49,7 +49,7 @@ babelwires::ArrayTypeConstructor::extractValueArguments(const std::vector<ValueH
 }
 
 babelwires::TypePtr
-babelwires::ArrayTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+babelwires::ArrayTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeRef,
                                                 const TypeConstructorArguments& arguments,
                                                 const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 1) {
@@ -62,14 +62,14 @@ babelwires::ArrayTypeConstructor::constructType(const TypeSystem& typeSystem, Ty
                                                         minimumSize, maximumSize, defaultSize);
 }
 
-babelwires::TypeRef babelwires::ArrayTypeConstructor::makeTypeRef(TypeRef entryType, unsigned int minSize,
+babelwires::TypeExp babelwires::ArrayTypeConstructor::makeTypeExp(TypeExp entryType, unsigned int minSize,
                                                                   unsigned int maxSize, unsigned int defaultSize) {
     assert(minSize <= maxSize);
     assert(defaultSize <= maxSize);
     if (defaultSize < minSize) {
         defaultSize = minSize;
     }
-    return babelwires::TypeRef{
+    return babelwires::TypeExp{
         getThisIdentifier(),
         {{std::move(entryType)},
          {babelwires::IntValue(minSize), babelwires::IntValue(maxSize), babelwires::IntValue(defaultSize)}}};

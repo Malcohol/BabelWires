@@ -1,5 +1,5 @@
 /**
- * A Type constructor which constructs a GenericType from a TypeRef and a number of type variables.
+ * A Type constructor which constructs a GenericType from a TypeExp and a number of type variables.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -10,16 +10,16 @@
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 
 namespace babelwires {
-    /// Construct a GenericType from a TypeRef and a number of type variables.
+    /// Construct a GenericType from a TypeExp and a number of type variables.
     class GenericTypeConstructor : public TypeConstructor {
       public:
         TYPE_CONSTRUCTOR("Gen", "Gen<[0]>{{{0}}}", "56ff5848-9be4-4288-a893-eec7ef15e675", 1);
 
-        TypePtr constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
+        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeRef, const TypeConstructorArguments& arguments,
                                             const std::vector<TypePtr>& resolvedTypeArguments) const override;
 
         /// Convenience method.
-        static TypeRef makeTypeRef(TypeRef wrappedType, unsigned int numVariables = 1);
+        static TypeExp makeTypeExp(TypeExp wrappedType, unsigned int numVariables = 1);
 
         /// Throws a TypeSystem exception if the arguments are not of the expected type.
         static unsigned int

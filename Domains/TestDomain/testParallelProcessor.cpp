@@ -3,8 +3,8 @@
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 namespace {
-    babelwires::TypeRef getLimitedIntType() {
-        return babelwires::IntTypeConstructor::makeTypeRef(-20, 20, 0);
+    babelwires::TypeExp getLimitedIntType() {
+        return babelwires::IntTypeConstructor::makeTypeExp(-20, 20, 0);
     }
 } // namespace
 

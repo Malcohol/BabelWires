@@ -57,7 +57,7 @@ TEST(SetTypeVariableModifierDataTest, setSingleTypeVariable) {
     EXPECT_EQ(type->getTypeAssignment(valueAfterSecondApplication, 0), babelwires::StringType::getThisType());
     EXPECT_EQ(type->getTypeAssignment(valueAfterSecondApplication, 1), babelwires::StringType::getThisType());
 
-    data.m_typeAssignments[0] = babelwires::TypeRef();
+    data.m_typeAssignments[0] = babelwires::TypeExp();
 
     data.apply(&valueTree);
 

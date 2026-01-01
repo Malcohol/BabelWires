@@ -40,15 +40,15 @@ const babelwires::MapProject::AllowedTypes& babelwires::MapProject::getAllowedTa
     return m_allowedTargetTypeRefs;
 }
 
-const babelwires::TypeRef& babelwires::MapProject::getCurrentSourceTypeRef() const {
+const babelwires::TypeExp& babelwires::MapProject::getCurrentSourceTypeRef() const {
     return m_currentSourceTypeRef;
 }
 
-const babelwires::TypeRef& babelwires::MapProject::getCurrentTargetTypeRef() const {
+const babelwires::TypeExp& babelwires::MapProject::getCurrentTargetTypeRef() const {
     return m_currentTargetTypeRef;
 }
 
-void babelwires::MapProject::setCurrentSourceTypeRef(const TypeRef& sourceId) {
+void babelwires::MapProject::setCurrentSourceTypeRef(const TypeExp& sourceId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
     const TypePtr& type = sourceId.tryResolve(typeSystem);
     if (!type) {
@@ -68,7 +68,7 @@ void babelwires::MapProject::setCurrentSourceTypeRef(const TypeRef& sourceId) {
     }
 }
 
-void babelwires::MapProject::setCurrentTargetTypeRef(const TypeRef& targetId) {
+void babelwires::MapProject::setCurrentTargetTypeRef(const TypeExp& targetId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
     const TypePtr& type = targetId.tryResolve(typeSystem);
     if (!type) {
@@ -169,15 +169,15 @@ const babelwires::Result& babelwires::MapProject::getTargetTypeValidity() const 
 }
 
 
-bool babelwires::MapProject::AllowedTypes::isRelatedToSome(const TypeSystem& typeSystem, const TypeRef& typeRef) const {
-    return std::any_of(m_typeRefs.begin(), m_typeRefs.end(), [typeRef, &typeSystem](const TypeRef& id) {
-        return typeSystem.isRelatedType(id, typeRef);
+bool babelwires::MapProject::AllowedTypes::isRelatedToSome(const TypeSystem& typeSystem, const TypeExp& typeExp) const {
+    return std::any_of(m_typeRefs.begin(), m_typeRefs.end(), [typeExp, &typeSystem](const TypeExp& id) {
+        return typeSystem.isRelatedType(id, typeExp);
     });
 }
 
-bool babelwires::MapProject::AllowedTypes::isSubtypeOfSome(const TypeSystem& typeSystem, const TypeRef& typeRef) const {
+bool babelwires::MapProject::AllowedTypes::isSubtypeOfSome(const TypeSystem& typeSystem, const TypeExp& typeExp) const {
     return std::any_of(m_typeRefs.begin(), m_typeRefs.end(),
-                                        [typeRef, &typeSystem](const TypeRef& id) {
-                                            return typeSystem.isSubType(typeRef, id);
+                                        [typeExp, &typeSystem](const TypeExp& id) {
+                                            return typeSystem.isSubType(typeExp, id);
                                         });
 }

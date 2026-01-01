@@ -30,7 +30,7 @@ namespace babelwires {
         /// Get the validity of the entry.
         Result getValidity() const;
 
-        void validate(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef, const TypeRef& targetTypeRef, bool isLastEntry);
+        void validate(const TypeSystem& typeSystem, const TypeExp& sourceTypeRef, const TypeExp& targetTypeRef, bool isLastEntry);
 
       private:
         std::unique_ptr<MapEntryData> m_data;

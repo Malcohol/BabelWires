@@ -17,8 +17,8 @@ namespace babelwires {
     class GenericType : public CompoundType {
       public:
         /// Create a generic type with the given number of variables.
-        /// A default constructed TypeRef means no restriction.
-        GenericType(TypeRef wrappedType, unsigned int numVariables);
+        /// A default constructed TypeExp means no restriction.
+        GenericType(TypeExp wrappedType, unsigned int numVariables);
 
         std::string getFlavour() const override;
 
@@ -27,13 +27,13 @@ namespace babelwires {
 
         /// Instantiate the type variables using the given type type assignment.
         void setTypeVariableAssignmentAndInstantiate(const TypeSystem& typeSystem, ValueHolder& genericValue,
-                                                     const std::vector<TypeRef>& typeVariableAssignments) const;
+                                                     const std::vector<TypeExp>& typeVariableAssignments) const;
 
         /// Get the number of type variables in this GenericType.
         unsigned int getNumVariables() const;
 
         /// Get the type assigned to the given type variable.
-        const TypeRef& getTypeAssignment(const ValueHolder& genericValue, unsigned int variableIndex) const;
+        const TypeExp& getTypeAssignment(const ValueHolder& genericValue, unsigned int variableIndex) const;
 
         /// Are any of the type variables unassigned?
         bool isAnyTypeVariableUnassigned(const ValueHolder& genericValue) const;
@@ -46,9 +46,9 @@ namespace babelwires {
         bool visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const override;
 
         unsigned int getNumChildren(const ValueHolder& compoundValue) const override;
-        std::tuple<const ValueHolder*, PathStep, const TypeRef&> getChild(const ValueHolder& compoundValue,
+        std::tuple<const ValueHolder*, PathStep, const TypeExp&> getChild(const ValueHolder& compoundValue,
                                                                           unsigned int i) const override;
-        std::tuple<ValueHolder*, PathStep, const TypeRef&> getChildNonConst(ValueHolder& compoundValue,
+        std::tuple<ValueHolder*, PathStep, const TypeExp&> getChildNonConst(ValueHolder& compoundValue,
                                                                             unsigned int i) const override;
         int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const override;
         std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem,
@@ -56,7 +56,7 @@ namespace babelwires {
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
 
       private:
-        TypeRef m_wrappedType;
+        TypeExp m_wrappedType;
         unsigned int m_numVariables;
         // The maximum number of nested generic types in the wrapped type.
         unsigned int m_genericTypeHeight;

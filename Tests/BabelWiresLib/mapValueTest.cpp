@@ -24,8 +24,8 @@ namespace {
 TEST(MapValueTest, types) {
     babelwires::MapValue mapValue;
 
-    EXPECT_EQ(mapValue.getSourceTypeRef(), babelwires::TypeRef());
-    EXPECT_EQ(mapValue.getTargetTypeRef(), babelwires::TypeRef());
+    EXPECT_EQ(mapValue.getSourceTypeRef(), babelwires::TypeExp());
+    EXPECT_EQ(mapValue.getTargetTypeRef(), babelwires::TypeExp());
 
     mapValue.setSourceTypeRef(testTypeId1);
     mapValue.setTargetTypeRef(testTypeId2);

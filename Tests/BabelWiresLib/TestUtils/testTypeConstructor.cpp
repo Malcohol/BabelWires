@@ -3,10 +3,10 @@
 #include <BabelWiresLib/Types/String/stringValue.hpp>
 
 babelwires::TypePtr testUtils::TestUnaryTypeConstructor::constructType(
-    const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef,
+    const babelwires::TypeSystem& typeSystem, babelwires::TypeExp newTypeRef,
     const babelwires::TypeConstructorArguments& arguments,
     const std::vector<babelwires::TypePtr>& resolvedTypeArguments) const {
-    // Remember the typeRef, since there's no way to reconstruct it.
+    // Remember the typeExp, since there's no way to reconstruct it.
     const TestType* const sourceType = resolvedTypeArguments[0]->as<TestType>();
     if (!sourceType) {
         throw new babelwires::TypeSystemException();
@@ -16,10 +16,10 @@ babelwires::TypePtr testUtils::TestUnaryTypeConstructor::constructType(
 }
 
 babelwires::TypePtr testUtils::TestBinaryTypeConstructor::constructType(
-    const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef,
+    const babelwires::TypeSystem& typeSystem, babelwires::TypeExp newTypeRef,
     const babelwires::TypeConstructorArguments& arguments,
     const std::vector<babelwires::TypePtr>& resolvedTypeArguments) const {
-    // Remember the typeRef, since there's no way to reconstruct it.
+    // Remember the typeExp, since there's no way to reconstruct it.
     const TestType* const sourceType0 = resolvedTypeArguments[0]->as<TestType>();
     const TestType* const sourceType1 = resolvedTypeArguments[1]->as<TestType>();
     if (!sourceType0 || !sourceType1) {
@@ -30,7 +30,7 @@ babelwires::TypePtr testUtils::TestBinaryTypeConstructor::constructType(
 }
 
 babelwires::TypePtr testUtils::TestMixedTypeConstructor::constructType(
-    const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef,
+    const babelwires::TypeSystem& typeSystem, babelwires::TypeExp newTypeRef,
     const babelwires::TypeConstructorArguments& arguments,
     const std::vector<babelwires::TypePtr>& resolvedTypeArguments) const {
     assert(arguments.getTypeArguments().size() == 1);
@@ -42,7 +42,7 @@ babelwires::TypePtr testUtils::TestMixedTypeConstructor::constructType(
     assert(testType != nullptr);
     assert(stringValue != nullptr);
 
-    // Remember the typeRef, since there's no way to reconstruct it.
+    // Remember the typeExp, since there's no way to reconstruct it.
     return babelwires::makeType<babelwires::ConstructedType<TestType>>(
         std::move(newTypeRef), testType->m_maximumLength + stringValue->get().size(),
         testType->m_defaultValue + stringValue->get());

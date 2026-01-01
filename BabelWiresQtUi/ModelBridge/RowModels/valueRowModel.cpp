@@ -24,7 +24,7 @@
 
 void babelwires::ValueRowModel::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem) {
     const babelwires::ValueTreeNode& valueTreeNode = getValueTreeNode();
-    m_valueModelDispatcher.init(valueModelRegistry, typeSystem, valueTreeNode.getTypeRef().resolve(typeSystem), valueTreeNode.getValue(),
+    m_valueModelDispatcher.init(valueModelRegistry, typeSystem, valueTreeNode.getTypeExp().resolve(typeSystem), valueTreeNode.getValue(),
                                 (getInput() == nullptr),
                                 m_contentsCacheEntry->isStructureEditable());
 }

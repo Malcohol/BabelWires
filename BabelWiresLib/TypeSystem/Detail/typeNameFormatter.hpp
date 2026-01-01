@@ -1,5 +1,5 @@
 /**
- * A TypeRef describes a type.
+ * A TypeExp describes a type.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -14,7 +14,7 @@
 namespace babelwires {
 
     /// The naming syntax for TypeConstructors allows complex type names to be built without the need for code.
-    /// This means that a deserialized TypeRef can still be given a readable name, even if it uses a TypeConstructor
+    /// This means that a deserialized TypeExp can still be given a readable name, even if it uses a TypeConstructor
     /// whose code is missing (as might be the case with a missing plugin or when code is under development).
     /// The names are intended for users and it is not required that they be parsable.
     /// * Type arguments are referenced using "{n}"

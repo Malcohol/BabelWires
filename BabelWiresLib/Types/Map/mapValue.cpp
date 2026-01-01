@@ -30,7 +30,7 @@ babelwires::MapValue::MapValue(MapValue&& other)
     , m_targetTypeRef(other.m_targetTypeRef)
     , m_mapEntries(std::move(other.m_mapEntries)) {}
 
-babelwires::MapValue::MapValue(const TypeSystem& typeSystem, TypeRef sourceRef, TypeRef targetRef, MapEntryData::Kind fallbackKind) 
+babelwires::MapValue::MapValue(const TypeSystem& typeSystem, TypeExp sourceRef, TypeExp targetRef, MapEntryData::Kind fallbackKind) 
     : m_sourceTypeRef(std::move(sourceRef))
     , m_targetTypeRef(std::move(targetRef))
 {
@@ -55,19 +55,19 @@ babelwires::MapValue& babelwires::MapValue::operator=(MapValue&& other) {
 
 babelwires::MapValue::~MapValue() = default;
 
-const babelwires::TypeRef& babelwires::MapValue::getSourceTypeRef() const {
+const babelwires::TypeExp& babelwires::MapValue::getSourceTypeRef() const {
     return m_sourceTypeRef;
 }
 
-const babelwires::TypeRef& babelwires::MapValue::getTargetTypeRef() const {
+const babelwires::TypeExp& babelwires::MapValue::getTargetTypeRef() const {
     return m_targetTypeRef;
 }
 
-void babelwires::MapValue::setSourceTypeRef(const TypeRef& sourceId) {
+void babelwires::MapValue::setSourceTypeRef(const TypeExp& sourceId) {
     m_sourceTypeRef = sourceId;
 }
 
-void babelwires::MapValue::setTargetTypeRef(const TypeRef& targetId) {
+void babelwires::MapValue::setTargetTypeRef(const TypeExp& targetId) {
     m_targetTypeRef = targetId;
 }
 
@@ -145,8 +145,8 @@ void babelwires::MapValue::serializeContents(Serializer& serializer) const {
 }
 
 void babelwires::MapValue::deserializeContents(Deserializer& deserializer) {
-    m_sourceTypeRef = std::move(*deserializer.deserializeObject<TypeRef>("sourceType"));
-    m_targetTypeRef = std::move(*deserializer.deserializeObject<TypeRef>("targetType"));
+    m_sourceTypeRef = std::move(*deserializer.deserializeObject<TypeExp>("sourceType"));
+    m_targetTypeRef = std::move(*deserializer.deserializeObject<TypeExp>("targetType"));
     auto it = deserializer.deserializeArray<MapEntryData>("entries", Deserializer::IsOptional::Optional);
     while (it.isValid()) {
         std::unique_ptr<MapEntryData> newEntry = it.getObject();

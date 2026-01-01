@@ -1,11 +1,11 @@
 /**
- * A TypeRef identifies a type.
+ * A TypeExp describes a type.
  *
  * (C) 2021 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 
 #include <BabelWiresLib/TypeSystem/Detail/typeNameFormatter.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
@@ -37,15 +37,15 @@ bool babelwires::TypeConstructorArguments::equals(const TypeConstructorArguments
     return (a.m_typeArguments == b.m_typeArguments) && (a.m_valueArguments == b.m_valueArguments);
 }
 
-babelwires::TypeRef::TypeRef() = default;
+babelwires::TypeExp::TypeExp() = default;
 
-babelwires::TypeRef::TypeRef(RegisteredTypeId typeId)
+babelwires::TypeExp::TypeExp(RegisteredTypeId typeId)
     : m_storage(typeId) {}
 
-babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments)
+babelwires::TypeExp::TypeExp(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments)
     : m_storage(ConstructedTypeData{typeConstructorId, std::move(arguments)}) {}
 
-babelwires::TypePtr babelwires::TypeRef::tryResolve(const TypeSystem& typeSystem) const {
+babelwires::TypePtr babelwires::TypeExp::tryResolve(const TypeSystem& typeSystem) const {
     struct VisitorMethods {
         TypePtr operator()(std::monostate) { return {}; }
         TypePtr operator()(RegisteredTypeId typeId) {
@@ -68,7 +68,7 @@ babelwires::TypePtr babelwires::TypeRef::tryResolve(const TypeSystem& typeSystem
     return std::visit(visitorMethods, m_storage);
 }
 
-babelwires::TypePtr babelwires::TypeRef::resolve(const TypeSystem& typeSystem) const {
+babelwires::TypePtr babelwires::TypeExp::resolve(const TypeSystem& typeSystem) const {
     struct VisitorMethods {
         TypePtr operator()(std::monostate) {
             throw TypeSystemException() << "A null type cannot be resolved.";
@@ -84,20 +84,20 @@ babelwires::TypePtr babelwires::TypeRef::resolve(const TypeSystem& typeSystem) c
     return std::visit(visitorMethods, m_storage);
 }
 
-babelwires::TypePtr babelwires::TypeRef::assertResolve(const TypeSystem& typeSystem) const {
+babelwires::TypePtr babelwires::TypeExp::assertResolve(const TypeSystem& typeSystem) const {
 #ifndef NDEBUG
     try {
 #endif
         return resolve(typeSystem);
 #ifndef NDEBUG
     } catch (TypeSystemException&) {
-        assert(false && "TypeSystemException thrown when resolving TypeRef");
+        assert(false && "TypeSystemException thrown when resolving TypeExp");
         return {};
     }
 #endif
 }
 
-std::string babelwires::TypeRef::toStringHelper(babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const {
+std::string babelwires::TypeExp::toStringHelper(babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const {
     struct VisitorMethods {
         std::string operator()(std::monostate) { return defaultStateString; }
         std::string operator()(RegisteredTypeId typeId) { return m_identifierRegistry->getName(typeId); }
@@ -107,9 +107,9 @@ std::string babelwires::TypeRef::toStringHelper(babelwires::IdentifierRegistry::
             std::vector<std::string> typeArgumentsStr;
             const auto& typeArguments = std::get<1>(constructedTypeData).getTypeArguments();
             std::for_each(typeArguments.begin(), typeArguments.end(),
-                          [this, &typeArgumentsStr](const TypeRef& typeRef) {
+                          [this, &typeArgumentsStr](const TypeExp& typeExp) {
                               // TODO Call visit, not toStringHelper.
-                              typeArgumentsStr.emplace_back(typeRef.toStringHelper(m_identifierRegistry));
+                              typeArgumentsStr.emplace_back(typeExp.toStringHelper(m_identifierRegistry));
                           });
             std::vector<std::string> valueArgumentsStr;
             const auto& valueArguments = std::get<1>(constructedTypeData).getValueArguments();
@@ -130,12 +130,12 @@ std::string babelwires::TypeRef::toStringHelper(babelwires::IdentifierRegistry::
     }
 }
 
-std::string babelwires::TypeRef::toString() const {
+std::string babelwires::TypeExp::toString() const {
     auto regScope = IdentifierRegistry::read();
     return toStringHelper(regScope);
 }
 
-void babelwires::TypeRef::serializeContents(Serializer& serializer) const {
+void babelwires::TypeExp::serializeContents(Serializer& serializer) const {
     struct VisitorMethods {
         void operator()(std::monostate) {}
         void operator()(const RegisteredTypeId& typeId) { m_serializer.serializeValue("typeId", typeId); }
@@ -155,7 +155,7 @@ void babelwires::TypeRef::serializeContents(Serializer& serializer) const {
     std::visit(visitorMethods, m_storage);
 }
 
-void babelwires::TypeRef::deserializeContents(Deserializer& deserializer) {
+void babelwires::TypeExp::deserializeContents(Deserializer& deserializer) {
     RegisteredTypeId typeId;
     if (deserializer.deserializeValue("typeId", typeId, babelwires::Deserializer::IsOptional::Optional)) {
         m_storage = typeId;
@@ -163,9 +163,9 @@ void babelwires::TypeRef::deserializeContents(Deserializer& deserializer) {
         TypeConstructorId typeConstructorId;
         if (deserializer.deserializeValue("typeConstructorId", typeConstructorId,
                                           babelwires::Deserializer::IsOptional::Optional)) {
-            std::vector<TypeRef> typeArguments;
+            std::vector<TypeExp> typeArguments;
             std::vector<ValueHolder> valueArguments;
-            auto typeIt = deserializer.deserializeArray<TypeRef>("typeArguments", Deserializer::IsOptional::Optional);
+            auto typeIt = deserializer.deserializeArray<TypeExp>("typeArguments", Deserializer::IsOptional::Optional);
             while (typeIt.isValid()) {
                 typeArguments.emplace_back(std::move(*typeIt.getObject()));
                 ++typeIt;
@@ -183,7 +183,7 @@ void babelwires::TypeRef::deserializeContents(Deserializer& deserializer) {
     }
 }
 
-void babelwires::TypeRef::visitIdentifiers(IdentifierVisitor& visitor) {
+void babelwires::TypeExp::visitIdentifiers(IdentifierVisitor& visitor) {
     // Note: The visitor needs to access the actual stored data, so be careful to avoid copies.
     struct VisitorMethods {
         void operator()(std::monostate) {}
@@ -192,16 +192,16 @@ void babelwires::TypeRef::visitIdentifiers(IdentifierVisitor& visitor) {
             m_visitor(std::get<0>(higherOrderData));
             auto& arguments = std::get<1>(higherOrderData).getTypeArguments();
             std::for_each(arguments.begin(), arguments.end(),
-                          [this](TypeRef& arg) { arg.visitIdentifiers(m_visitor); });
+                          [this](TypeExp& arg) { arg.visitIdentifiers(m_visitor); });
         }
         IdentifierVisitor& m_visitor;
     } visitorMethods{visitor};
     return std::visit(visitorMethods, m_storage);
 }
 
-void babelwires::TypeRef::visitFilePaths(FilePathVisitor& visitor) {}
+void babelwires::TypeExp::visitFilePaths(FilePathVisitor& visitor) {}
 
-std::size_t babelwires::TypeRef::getHash() const {
+std::size_t babelwires::TypeExp::getHash() const {
     std::size_t hash = 0x123456789;
     // I wonder if the construction of std::hash objects creates pointless overhead here?
     struct VisitorMethods {
@@ -216,6 +216,6 @@ std::size_t babelwires::TypeRef::getHash() const {
     return hash;
 }
 
-babelwires::TypeRef::operator bool() const {
+babelwires::TypeExp::operator bool() const {
     return !std::holds_alternative<std::monostate>(m_storage);
 }

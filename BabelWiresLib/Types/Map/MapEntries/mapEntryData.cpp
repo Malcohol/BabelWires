@@ -19,8 +19,8 @@ babelwires::MapEntryFallbackKind::MapEntryFallbackKind()
 
 babelwires::MapEntryData::~MapEntryData() = default;
 
-babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef,
-                                                      const TypeRef& targetTypeRef, bool isLastEntry) const {
+babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSystem, const TypeExp& sourceTypeRef,
+                                                      const TypeExp& targetTypeRef, bool isLastEntry) const {
     const TypePtr sourceType = sourceTypeRef.tryResolve(typeSystem);
     if (!sourceType) {
         return "The source type is not recognized";
@@ -37,8 +37,8 @@ babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSyst
 }
 
 std::unique_ptr<babelwires::MapEntryData> babelwires::MapEntryData::create(const TypeSystem& typeSystem,
-                                                                           const TypeRef& sourceTypeRef,
-                                                                           const TypeRef& targetTypeRef, Kind kind) {
+                                                                           const TypeExp& sourceTypeRef,
+                                                                           const TypeExp& targetTypeRef, Kind kind) {
     switch (kind) {
         case Kind::One21:
             return std::make_unique<OneToOneMapEntryData>(typeSystem, sourceTypeRef, targetTypeRef);

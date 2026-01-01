@@ -33,7 +33,7 @@ namespace babelwires {
         virtual bool canContainFilePaths() const = 0;
 
         /// Provide a standard representation of this object for display to the user, independent of
-        /// a specific type's preferred representation. Used by TypeRef::toString().
+        /// a specific type's preferred representation. Used by TypeExp::toString().
         /// It does not have to be parsable or even comprehensive.
         virtual std::string toString() const = 0;
     };

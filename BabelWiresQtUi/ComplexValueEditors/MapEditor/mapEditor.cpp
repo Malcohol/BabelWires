@@ -90,7 +90,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectGraphModel& projectGrap
             const UiProjectContext& context = projectGraphModel.getContext();
             const TypeSystem& typeSystem = context.m_typeSystem;
             const ValueTreeNode& mapTreeNode = getMapTreeNode(scope);
-            m_typeRef = mapTreeNode.getTypeRef();
+            m_typeRef = mapTreeNode.getTypeExp();
             const MapValue& mapValue = getMapValueFromProject(scope);
             if (mapTreeNode.getType().as<MapType>()) {
                 m_map.setAllowedSourceTypeRefs(
@@ -434,14 +434,14 @@ void babelwires::MapEditor::setToDefault() {
 }
 
 void babelwires::MapEditor::setSourceTypeFromWidget() {
-    const TypeRef& newSourceTypeRef = m_sourceTypeWidget->getTypeRef();
+    const TypeExp& newSourceTypeRef = m_sourceTypeWidget->getTypeExp();
     if (newSourceTypeRef != m_map.getCurrentSourceTypeRef()) {
         executeCommand(std::make_unique<SetMapSourceTypeCommand>("Set map source type", newSourceTypeRef));
     }
 }
 
 void babelwires::MapEditor::setTargetTypeFromWidget() {
-    const TypeRef& newTargetTypeRef = m_targetTypeWidget->getTypeRef();
+    const TypeExp& newTargetTypeRef = m_targetTypeWidget->getTypeExp();
     if (newTargetTypeRef != m_map.getCurrentTargetTypeRef()) {
         executeCommand(std::make_unique<SetMapTargetTypeCommand>("Set map target type", newTargetTypeRef));
     }

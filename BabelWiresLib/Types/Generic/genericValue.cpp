@@ -15,20 +15,20 @@
 #include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 
-babelwires::GenericValue::GenericValue(const TypeSystem& typeSystem, TypeRef wrappedType, unsigned int numVariables)
+babelwires::GenericValue::GenericValue(const TypeSystem& typeSystem, TypeExp wrappedType, unsigned int numVariables)
     : m_actualWrappedType(wrappedType)
     , m_typeVariableAssignments(numVariables)
     , m_wrappedValue(m_actualWrappedType.resolve(typeSystem)->createValue(typeSystem)) {}
 
-const babelwires::TypeRef& babelwires::GenericValue::getActualWrappedType() const {
+const babelwires::TypeExp& babelwires::GenericValue::getActualWrappedType() const {
     return m_actualWrappedType;
 }
 
-const std::vector<babelwires::TypeRef>& babelwires::GenericValue::getTypeAssignments() const {
+const std::vector<babelwires::TypeExp>& babelwires::GenericValue::getTypeAssignments() const {
     return m_typeVariableAssignments;
 }
 
-std::vector<babelwires::TypeRef>& babelwires::GenericValue::getTypeAssignments() {
+std::vector<babelwires::TypeExp>& babelwires::GenericValue::getTypeAssignments() {
     return m_typeVariableAssignments;
 }
 
@@ -57,17 +57,17 @@ bool babelwires::GenericValue::operator==(const Value& other) const {
     }
 }
 
-babelwires::TypeRef babelwires::GenericValue::buildInstantiatedType(const TypeRef& wrappedType) const {
+babelwires::TypeExp babelwires::GenericValue::buildInstantiatedType(const TypeExp& wrappedType) const {
     struct Visitor {
         Visitor(const GenericValue& genericValue, unsigned int level = 0)
             : m_genericValue(genericValue)
             , m_level(level) {}
-        TypeRef operator()(std::monostate) { return TypeRef(); }
-        TypeRef operator()(const RegisteredTypeId& typeId) {
+        TypeExp operator()(std::monostate) { return TypeExp(); }
+        TypeExp operator()(const RegisteredTypeId& typeId) {
             // Simplifying restriction for now: registered types may not contain unbound type variables.
             return typeId;
         }
-        TypeRef operator()(const TypeConstructorId& constructorId,
+        TypeExp operator()(const TypeConstructorId& constructorId,
                            const TypeConstructorArguments& constructorArguments) {
             if (constructorId == TypeVariableTypeConstructor::getThisIdentifier()) {
                 const TypeVariableData variableData =
@@ -75,10 +75,10 @@ babelwires::TypeRef babelwires::GenericValue::buildInstantiatedType(const TypeRe
                 if (variableData.m_numGenericTypeLevels == m_level) {
                     const auto& typeAssignments = m_genericValue.m_typeVariableAssignments;
                     assert(variableData.m_typeVariableIndex <= typeAssignments.size());
-                    if (const TypeRef& assignment = typeAssignments[variableData.m_typeVariableIndex]) {
-                        return TypeRef(constructorId, {{assignment}, constructorArguments.getValueArguments()});
+                    if (const TypeExp& assignment = typeAssignments[variableData.m_typeVariableIndex]) {
+                        return TypeExp(constructorId, {{assignment}, constructorArguments.getValueArguments()});
                     } else {
-                        return TypeRef(constructorId, constructorArguments);
+                        return TypeExp(constructorId, constructorArguments);
                     }
                 }
             }
@@ -88,21 +88,21 @@ babelwires::TypeRef babelwires::GenericValue::buildInstantiatedType(const TypeRe
                 // reach the one were processing.
                 ++level;
             }
-            std::vector<TypeRef> children;
+            std::vector<TypeExp> children;
             children.reserve(constructorArguments.getTypeArguments().size());
             for (const auto& c : constructorArguments.getTypeArguments()) {
                 Visitor childVisitor(m_genericValue, level);
-                children.emplace_back(c.visit<Visitor, TypeRef>(childVisitor));
+                children.emplace_back(c.visit<Visitor, TypeExp>(childVisitor));
             }
-            return TypeRef(constructorId, TypeConstructorArguments{children, constructorArguments.getValueArguments()});
+            return TypeExp(constructorId, TypeConstructorArguments{children, constructorArguments.getValueArguments()});
         }
         const GenericValue& m_genericValue;
         unsigned int m_level;
     } visitor(*this);
-    return wrappedType.visit<Visitor, TypeRef>(visitor);
+    return wrappedType.visit<Visitor, TypeExp>(visitor);
 }
 
-void babelwires::GenericValue::instantiate(const TypeSystem& typeSystem, const TypeRef& wrappedTypeRef) {
+void babelwires::GenericValue::instantiate(const TypeSystem& typeSystem, const TypeExp& wrappedTypeRef) {
     m_actualWrappedType = buildInstantiatedType(wrappedTypeRef);
     // Updating the existing wrapped value by exploring it doesn't account for the fact that values may carry types in
     // non-obvious ways. In particular, GenericValue carries the m_actualWrappedType and typeAssignments, neither of
@@ -110,7 +110,7 @@ void babelwires::GenericValue::instantiate(const TypeSystem& typeSystem, const T
     m_wrappedValue = m_actualWrappedType.resolve(typeSystem)->createValue(typeSystem);
 }
 
-bool babelwires::GenericValue::isActualVersionOf(const TypeRef& wrappedType) const {
+bool babelwires::GenericValue::isActualVersionOf(const TypeExp& wrappedType) const {
     struct Visitor {
         Visitor(const GenericValue& genericValue, unsigned int level = 0)
             : m_genericValue(genericValue)
@@ -168,7 +168,7 @@ bool babelwires::GenericValue::isActualVersionOf(const TypeRef& wrappedType) con
             }
             for (unsigned int i = 0; i < constructorArgumentsAct.getTypeArguments().size(); ++i) {
                 Visitor childVisitor(m_genericValue, level);
-                if (!TypeRef::visit<Visitor, bool>(childVisitor, constructorArgumentsRef.getTypeArguments()[i],
+                if (!TypeExp::visit<Visitor, bool>(childVisitor, constructorArgumentsRef.getTypeArguments()[i],
                                                    constructorArgumentsAct.getTypeArguments()[i])) {
                     return false;
                 }
@@ -178,5 +178,5 @@ bool babelwires::GenericValue::isActualVersionOf(const TypeRef& wrappedType) con
         const GenericValue& m_genericValue;
         unsigned int m_level;
     } visitor(*this);
-    return TypeRef::visit<Visitor, bool>(visitor, wrappedType, m_actualWrappedType);
+    return TypeExp::visit<Visitor, bool>(visitor, wrappedType, m_actualWrappedType);
 }

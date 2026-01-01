@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
-babelwires::ArrayType::ArrayType(TypeRef entryType, unsigned int minimumSize, unsigned int maximumSize, int initialSize)
+babelwires::ArrayType::ArrayType(TypeExp entryType, unsigned int minimumSize, unsigned int maximumSize, int initialSize)
     : m_entryType(std::move(entryType))
     , m_minimumSize(minimumSize)
     , m_maximumSize(maximumSize)
@@ -76,7 +76,7 @@ void babelwires::ArrayType::removeEntries(ValueHolder& value, unsigned int index
     }
 }
 
-const babelwires::TypeRef& babelwires::ArrayType::getEntryType() const {
+const babelwires::TypeExp& babelwires::ArrayType::getEntryType() const {
     return m_entryType;
 }
 
@@ -123,12 +123,12 @@ unsigned int babelwires::ArrayType::getNumChildren(const ValueHolder& compoundVa
     return arrayValue.getSize();
 }
 
-std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&> babelwires::ArrayType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
+std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeExp&> babelwires::ArrayType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
     const ArrayValue& arrayValue = compoundValue->is<ArrayValue>();
     return {&arrayValue.getValue(i), i, m_entryType};
 }
 
-std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&> babelwires::ArrayType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
+std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeExp&> babelwires::ArrayType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
     ArrayValue& arrayValue = compoundValue.copyContentsAndGetNonConst().is<ArrayValue>();
     return {&arrayValue.getValue(i), i, m_entryType};
 }
