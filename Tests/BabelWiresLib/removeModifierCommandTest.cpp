@@ -170,7 +170,7 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
 
     const babelwires::ValueTreeNode* const input = element->getInput();
     ASSERT_NE(input, nullptr);
-    const testDomain::TestComplexRecordType* const type = input->getType().as<testDomain::TestComplexRecordType>();
+    const testDomain::TestComplexRecordType* const type = input->getType()->as<testDomain::TestComplexRecordType>();
 
     babelwires::RemoveModifierCommand command("Test command", elementId, pathToValue);
 

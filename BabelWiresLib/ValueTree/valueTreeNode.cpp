@@ -151,7 +151,7 @@ void babelwires::ValueTreeNode::assign(const ValueTreeNode& other) {
 }
 
 std::string babelwires::ValueTreeNode::getFlavour() const {
-    return getType().getFlavour();
+    return getType()->getFlavour();
 }
 
 const babelwires::TypeSystem& babelwires::ValueTreeNode::getTypeSystem() const {
@@ -167,11 +167,8 @@ const babelwires::TypeSystem& babelwires::ValueTreeNode::getTypeSystem() const {
     }
 }
 
-const babelwires::Type& babelwires::ValueTreeNode::getType() const {
-    //const TypeSystem& typeSystem = getTypeSystem();
-    // TODO This assumes the ValueTreeNode will be changed store TypePtr instead of TypeExp.
-    //return *m_typeExp.resolve(typeSystem);
-    return *m_typePtr;
+const babelwires::TypePtr& babelwires::ValueTreeNode::getType() const {
+    return m_typePtr;
 }
 
 int babelwires::ValueTreeNode::getNumChildren() const {
@@ -199,7 +196,7 @@ int babelwires::ValueTreeNode::getChildIndexFromStep(const PathStep& step) const
 void babelwires::ValueTreeNode::initializeChildren(const TypeSystem& typeSystem) {
     // TODO: Do in constructor?
     const ValueHolder& value = getValue();
-    auto* compound = getType().as<CompoundType>();
+    auto* compound = getType()->as<CompoundType>();
     if (!compound) {
         return;
     }
@@ -219,7 +216,7 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
 
     Changes changes = Changes::NothingChanged;
 
-    if (auto* compound = getType().as<CompoundType>()) {
+    if (auto* compound = getType()->as<CompoundType>()) {
         // Should only be here if the type hasn't changed, so we can use compound with other.
 
         std::map<PathStep, std::unique_ptr<ValueTreeChild>*> currentChildren;
@@ -309,7 +306,7 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
     const PathStep step = path.getStep(pathIndex);
     auto childWithChangesIt = m_children.find0(step);
 
-    auto compoundType = getType().as<CompoundType>();
+    auto compoundType = getType()->as<CompoundType>();
     auto [childValue, step2, childTypeExp] =
         compoundType->getChild(other, compoundType->getChildIndexFromStep(other, step));
     assert(step == step2);

@@ -500,7 +500,7 @@ TEST(ArrayTypeTest, featureChanges) {
                                            testDomain::TestSimpleArrayType::getThisType());
     arrayFeature.setToDefault();
 
-    const testDomain::TestSimpleArrayType* arrayType = arrayFeature.getType().as<testDomain::TestSimpleArrayType>();
+    const testDomain::TestSimpleArrayType* arrayType = arrayFeature.getType()->as<testDomain::TestSimpleArrayType>();
     ASSERT_NE(arrayType, nullptr);
 
     arrayFeature.clearChanges();

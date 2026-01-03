@@ -23,7 +23,7 @@ babelwires::RowModelDispatcher::RowModelDispatcher(const ValueModelRegistry& val
     m_rowModel = &m_rowModelStorage;
     const babelwires::ValueTreeNode* valueTreeNode = &entry->getInputThenOutput()->is<babelwires::ValueTreeNode>();
     if (node->as<FileNode>() && (entry->getDepth() == 0)) {
-        assert((valueTreeNode->is<ValueTreeNode>().getType().as<FileType>()) || (valueTreeNode->is<ValueTreeNode>().getType().as<FailureType>()));
+        assert((valueTreeNode->is<ValueTreeNode>().getType()->as<FileType>()) || (valueTreeNode->is<ValueTreeNode>().getType()->as<FailureType>()));
         static_assert(sizeof(babelwires::RowModel) == sizeof(babelwires::FileRowModel));
         new (m_rowModel) babelwires::FileRowModel();
     } else {

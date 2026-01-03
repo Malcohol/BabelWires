@@ -36,7 +36,7 @@ TEST(SelectRecordVariantCommandTest, executeAndUndo) {
     ASSERT_NE(targetElement, nullptr);
 
     const auto getSelectedTag = [](const babelwires::ValueTreeNode* valueTreeNode) {
-        const auto& type = valueTreeNode->getType().is<testDomain::TestRecordWithVariantsType>();
+        const auto& type = valueTreeNode->getType()->is<testDomain::TestRecordWithVariantsType>();
         return type.getSelectedTag(valueTreeNode->getValue());
     };
 

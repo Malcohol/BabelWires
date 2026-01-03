@@ -411,7 +411,7 @@ TEST(RecordWithVariantsTypeTest, featureChanges) {
     valueFeature.setToDefault();
 
     const testDomain::TestRecordWithVariantsType* recordWithVariantsType =
-        valueFeature.getType().as<testDomain::TestRecordWithVariantsType>();
+        valueFeature.getType()->as<testDomain::TestRecordWithVariantsType>();
     ASSERT_NE(recordWithVariantsType, nullptr);
 
     valueFeature.clearChanges();

@@ -51,10 +51,10 @@ namespace babelwires {
       public:
         InstanceCommonBase(VALUE_TREE_NODE& valueFeature)
             : InstanceUntypedBase<VALUE_TREE_NODE>(valueFeature) {
-            assert(this->m_valueTreeNode.getType().template as<VALUE_TYPE>());
+            assert(this->m_valueTreeNode.getType()->template as<VALUE_TYPE>());
         }
-        /// More specific than this->getType().
-        const VALUE_TYPE& getInstanceType() const { return this->m_valueTreeNode.getType().template is<VALUE_TYPE>(); }
+        /// More specific than this->getType()->
+        const VALUE_TYPE& getInstanceType() const { return this->m_valueTreeNode.getType()->template is<VALUE_TYPE>(); }
     };
 
     /// Can be specialized to make additional methods available for inner-class defined instances of particular types.

@@ -25,7 +25,7 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
 
     const babelwires::ValueTreeNode* const input = element->getInput();
     ASSERT_NE(input, nullptr);
-    const testDomain::TestComplexRecordType* const type = input->getType().as<testDomain::TestComplexRecordType>();
+    const testDomain::TestComplexRecordType* const type = input->getType()->as<testDomain::TestComplexRecordType>();
 
     const babelwires::Path pathToValue;
 

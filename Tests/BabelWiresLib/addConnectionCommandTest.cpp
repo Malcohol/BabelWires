@@ -140,7 +140,7 @@ namespace {
         const babelwires::ValueTreeNode *const input = genericNode->getInput();
         ASSERT_NE(input, nullptr);
 
-        const testDomain::TestGenericType *const genericType = input->getType().as<testDomain::TestGenericType>();
+        const testDomain::TestGenericType *const genericType = input->getType()->as<testDomain::TestGenericType>();
         ASSERT_NE(genericType, nullptr);
 
         const babelwires::TypeExp& typeAssignment0 = genericType->getTypeAssignment(input->getValue(), 0);
@@ -174,7 +174,7 @@ namespace {
         const babelwires::ValueTreeNode *const nestedGenericNodeTree = babelwires::tryFollowPath(testDomain::TestGenericType::getPathToNestedGenericType(), *input);
         ASSERT_NE(nestedGenericNodeTree, nullptr);
 
-        const babelwires::GenericType *const genericType = nestedGenericNodeTree->getType().as<babelwires::GenericType>();
+        const babelwires::GenericType *const genericType = nestedGenericNodeTree->getType()->as<babelwires::GenericType>();
         ASSERT_NE(genericType, nullptr);
 
         const babelwires::TypeExp& typeAssignment0 = genericType->getTypeAssignment(nestedGenericNodeTree->getValue(), 0);

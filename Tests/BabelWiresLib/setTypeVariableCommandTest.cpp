@@ -21,7 +21,7 @@ namespace {
         const babelwires::ValueTreeNode *const input = genericNode->getInput();
         ASSERT_NE(input, nullptr);
 
-        const testDomain::TestGenericType *const genericType = input->getType().as<testDomain::TestGenericType>();
+        const testDomain::TestGenericType *const genericType = input->getType()->as<testDomain::TestGenericType>();
         ASSERT_NE(genericType, nullptr);
 
         const babelwires::TypeExp& typeAssignment0 = genericType->getTypeAssignment(input->getValue(), 0);

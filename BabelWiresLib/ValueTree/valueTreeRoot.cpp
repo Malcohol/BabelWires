@@ -49,7 +49,7 @@ babelwires::ValueTreeRoot::ValueTreeRoot(const TypeSystem& typeSystem, TypeExp t
 void babelwires::ValueTreeRoot::doSetValue(const ValueHolder& newValue) {
     if (getValue() != newValue) {
         const TypeSystem& typeSystem = getTypeSystem();
-        const Type& type = getType();
+        const Type& type = *getType();
         if (type.isValidValue(typeSystem, *newValue)) {
             reconcileChangesAndSynchronizeChildren(m_typeSystem, newValue);
         } else {
@@ -61,7 +61,7 @@ void babelwires::ValueTreeRoot::doSetValue(const ValueHolder& newValue) {
 void babelwires::ValueTreeRoot::doSetToDefault() {
     assert(getTypeExp() && "The type must be set to something non-trivial before doSetToDefault is called");
     const TypeSystem& typeSystem = getTypeSystem();
-    const Type& type = getType();
+    const Type& type = *getType();
     auto [newValue, _] = type.createValue(typeSystem);
     if (getValue() != newValue) {
         reconcileChangesAndSynchronizeChildren(m_typeSystem, newValue);
@@ -70,7 +70,7 @@ void babelwires::ValueTreeRoot::doSetToDefault() {
 
 void babelwires::ValueTreeRoot::setDescendentValue(const Path& path, const ValueHolder& newValue) {
     ValueHolder newRootValue = getValue();
-    auto [_, valueInCopy] = followPathNonConst(m_typeSystem, getType(), path, newRootValue);
+    auto [_, valueInCopy] = followPathNonConst(m_typeSystem, *getType(), path, newRootValue);
     valueInCopy = newValue;
     reconcileChangesAndSynchronizeChildren(m_typeSystem, newRootValue, path);
 }

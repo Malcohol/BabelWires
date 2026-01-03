@@ -790,7 +790,7 @@ TEST(ContentsCacheTest, unassignedTypeVariables_noAssignments) {
     babelwires::ValueTreeNode& nestedGenericTypeNode =
         babelwires::followPath(testDomain::TestGenericType::getPathToNestedGenericType(), valueTree);
     const babelwires::GenericType* const nestedGenericType =
-        nestedGenericTypeNode.getType().as<babelwires::GenericType>();
+        nestedGenericTypeNode.getType()->as<babelwires::GenericType>();
     ASSERT_NE(nestedGenericType, nullptr);
 
     // The algorithms are tricky, so we test all combinations of:

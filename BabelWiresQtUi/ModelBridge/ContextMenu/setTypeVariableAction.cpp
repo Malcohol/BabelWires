@@ -53,7 +53,7 @@ void babelwires::SetTypeVariableAction::actionTriggered(babelwires::NodeContents
         if (!input) {
             return;
         }
-        if (const GenericType* const genericType = input->getType().as<GenericType>()) {
+        if (const GenericType* const genericType = input->getType()->as<GenericType>()) {
             if (m_variableIndex >= genericType->getNumVariables()) {
                 return;
             } else {

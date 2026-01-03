@@ -30,7 +30,7 @@ const babelwires::ValueTreeNode* babelwires::tryGetGenericTypeFromVariable(const
             // This could only happen if the type is badly formed.
             return nullptr;
         } else {
-            if (parent->getType().as<GenericType>()) {
+            if (parent->getType()->as<GenericType>()) {
                 if (level == 0) {
                     current = parent;
                     break;
@@ -41,7 +41,7 @@ const babelwires::ValueTreeNode* babelwires::tryGetGenericTypeFromVariable(const
         }
         current = parent;
     } while (true);
-    if (variableData->m_typeVariableIndex >= current->getType().is<GenericType>().getNumVariables()) {
+    if (variableData->m_typeVariableIndex >= current->getType()->is<GenericType>().getNumVariables()) {
         return nullptr;
     }
 
@@ -57,7 +57,7 @@ namespace {
         const babelwires::ValueTreeNode* current = &valueTreeNode;
         const babelwires::ValueTreeNode* parent = current->getOwner();
         while (parent) {
-            if (const babelwires::GenericType* genericType = parent->getType().as<babelwires::GenericType>()) {
+            if (const babelwires::GenericType* genericType = parent->getType()->as<babelwires::GenericType>()) {
                 ++height;
                 if (genericType->isAnyTypeVariableUnassigned(parent->getValue())) {
                     consecutiveAssigned = 0;
@@ -155,7 +155,7 @@ namespace {
             // Precompute the paths to all generic types between the start node and the root.
             const babelwires::ValueTreeNode* current = targetNode.getOwner();
             while (current) {
-                if (current->getType().as<babelwires::GenericType>()) {
+                if (current->getType()->as<babelwires::GenericType>()) {
                     m_genericNodes.push_back(current);
                 }
                 current = current->getOwner();
@@ -219,7 +219,7 @@ namespace {
             assert(genericTypeNodePtr);
             // Check whether this variable already had an assignment in the target tree.
             if (const babelwires::TypeExp& existingAssignment =
-                    genericTypeNodePtr->getType().is<babelwires::GenericType>().getTypeAssignment(
+                    genericTypeNodePtr->getType()->is<babelwires::GenericType>().getTypeAssignment(
                         genericTypeNodePtr->getValue(), typeVariableData.m_typeVariableIndex)) {
                 switch (m_typeSystem.compareSubtype(sourceTypeExp, existingAssignment)) {
                     case babelwires::SubtypeOrder::IsEquivalent:

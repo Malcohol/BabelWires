@@ -25,7 +25,7 @@ void babelwires::SelectRecordVariantModifierData::deserializeContents(Deserializ
 }
 
 void babelwires::SelectRecordVariantModifierData::apply(ValueTreeNode* target) const {
-    if (auto recordType = target->getType().as<RecordWithVariantsType>()) {
+    if (auto recordType = target->getType()->as<RecordWithVariantsType>()) {
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
         recordType->selectTag(typeSystem, newValue, m_tagToSelect);

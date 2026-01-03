@@ -23,7 +23,7 @@ void babelwires::ValueTreeChild::doSetValue(const ValueHolder& newValue) {
     const ValueHolder& currentValue = getValue();
     if (currentValue != newValue) {
         const TypeSystem& typeSystem = getTypeSystem();
-        const Type& type = getType();
+        const Type& type = *getType();
         if (type.isValidValue(typeSystem, *newValue)) {
             auto rootAndPath = getRootAndPathTo(*this);
             rootAndPath.m_root.setDescendentValue(rootAndPath.m_pathFromRoot, newValue);
@@ -35,7 +35,7 @@ void babelwires::ValueTreeChild::doSetValue(const ValueHolder& newValue) {
 
 void babelwires::ValueTreeChild::doSetToDefault() {
     const TypeSystem& typeSystem = getTypeSystem();
-    const auto [newValue, _] = getType().createValue(typeSystem);
+    const auto [newValue, _] = getType()->createValue(typeSystem);
     const auto rootAndPath = getRootAndPathTo(*this);
     rootAndPath.m_root.setDescendentValue(rootAndPath.m_pathFromRoot, newValue);
 }

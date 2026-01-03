@@ -82,7 +82,7 @@ QString babelwires::ValueRowModel::getTooltip(ColumnType c) const {
     QString columnTooltip;
     if (c == ColumnType::Key) {
         const babelwires::ValueTreeNode& valueTreeNode = getValueTreeNode();
-        columnTooltip = QString("%1 : %2").arg(m_contentsCacheEntry->getLabel().c_str()).arg(valueTreeNode.getType().getName().c_str());
+        columnTooltip = QString("%1 : %2").arg(m_contentsCacheEntry->getLabel().c_str()).arg(valueTreeNode.getType()->getName().c_str());
     } else {
         columnTooltip = m_valueModelDispatcher->getTooltip();
     } 

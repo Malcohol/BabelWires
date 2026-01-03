@@ -49,7 +49,7 @@ bool babelwires::SetTypeVariableCommand::initializeAndExecute(Project& project) 
         return false;
     }
 
-    const GenericType* const genericType = genericTypeNode->getType().as<GenericType>();
+    const GenericType* const genericType = genericTypeNode->getType()->as<GenericType>();
     if (!genericType) {
         return false;
     }

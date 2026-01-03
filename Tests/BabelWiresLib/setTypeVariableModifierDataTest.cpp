@@ -23,7 +23,7 @@ TEST(SetTypeVariableModifierDataTest, setSingleTypeVariable) {
     babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisType());
     valueTree.setToDefault();
 
-    const auto* const type = valueTree.getType().as<testDomain::TestGenericType>();
+    const auto* const type = valueTree.getType()->as<testDomain::TestGenericType>();
     ASSERT_NE(type, nullptr);
 
     const auto& value = valueTree.getValue();

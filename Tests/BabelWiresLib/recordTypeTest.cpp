@@ -456,7 +456,7 @@ TEST(RecordTypeTest, featureChanges) {
     valueFeature.setToDefault();
 
     const testDomain::TestComplexRecordType* recordType =
-        valueFeature.getType().as<testDomain::TestComplexRecordType>();
+        valueFeature.getType()->as<testDomain::TestComplexRecordType>();
     ASSERT_NE(recordType, nullptr);
 
     valueFeature.clearChanges();

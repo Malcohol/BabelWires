@@ -154,7 +154,7 @@ void babelwires::Project::addArrayEntries(NodeId nodeId, const Path& pathToArray
         if (ValueTreeNode* const inputArray = node->getInputNonConst(pathToArray)) {
             ValueTreeNode* valueTreeNode = tryFollowPath(pathToArray, *inputArray);
             assert(valueTreeNode && "Path should resolve");
-            assert(valueTreeNode->getType().as<ArrayType>());
+            assert(valueTreeNode->getType()->as<ArrayType>());
 
             // First, ensure there is an appropriate modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
@@ -196,7 +196,7 @@ void babelwires::Project::removeArrayEntries(NodeId nodeId, const Path& pathToAr
         if (ValueTreeNode* const inputArray = node->getInputNonConst(pathToArray)) {
             ValueTreeNode* valueTreeNode = tryFollowPath(pathToArray, *inputArray);
             assert(valueTreeNode && "Path should resolve");
-            assert(valueTreeNode->getType().as<ArrayType>());
+            assert(valueTreeNode->getType()->as<ArrayType>());
 
             // First, check if there is a modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
