@@ -183,7 +183,7 @@ namespace {
 
         EXPECT_EQ(recordType.getNumChildren(value), numChildren);
 
-        std::vector<std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeExp&>>
+        std::vector<std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp>>
             childInfos;
         std::vector<const babelwires::Type*> types;
 

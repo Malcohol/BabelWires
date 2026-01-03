@@ -226,7 +226,7 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
 
         struct NewChildInfo {
             const ValueHolder* m_value;
-            const TypeExp& m_typeExp;
+            TypeExp m_typeExp;
             unsigned int m_index;
         };
 

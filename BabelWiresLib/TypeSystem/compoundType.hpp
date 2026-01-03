@@ -20,12 +20,12 @@ namespace babelwires {
 
         /// Get the ith child of the given value of this type.
         // TODO Clarify failure behaviour. Probably return reference.
-        virtual std::tuple<const ValueHolder*, PathStep, const TypeExp&> getChild(const ValueHolder& compoundValue,
+        virtual std::tuple<const ValueHolder*, PathStep, TypeExp> getChild(const ValueHolder& compoundValue,
                                                                                   unsigned int i) const = 0;
 
         /// Get a writeable valueHolder to the ith child of the given value of this type.
         /// It is expected this this will shallow clone the given ValueHolder using "copyContentsAndGetNonConst".
-        virtual std::tuple<ValueHolder*, PathStep, const TypeExp&> getChildNonConst(ValueHolder& compoundValue,
+        virtual std::tuple<ValueHolder*, PathStep, TypeExp> getChildNonConst(ValueHolder& compoundValue,
                                                                                     unsigned int i) const = 0;
 
         virtual int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const = 0;

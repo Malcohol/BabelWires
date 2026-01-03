@@ -5,7 +5,7 @@
 namespace testDomain {
     class TestSimpleArrayType : public babelwires::ArrayType {
       public:
-        TestSimpleArrayType();
+        TestSimpleArrayType(const babelwires::TypeSystem& typeSystem);
 
         static constexpr unsigned int s_minimumSize = 0;
         static constexpr unsigned int s_maximumSize = 10;
@@ -19,7 +19,7 @@ namespace testDomain {
 
     class TestCompoundArrayType : public babelwires::ArrayType {
       public:
-        TestCompoundArrayType();
+        TestCompoundArrayType(const babelwires::TypeSystem& typeSystem);
 
         static constexpr unsigned int s_minimumSize = 2;
         static constexpr unsigned int s_maximumSize = 4;

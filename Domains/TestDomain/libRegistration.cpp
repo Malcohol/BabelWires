@@ -30,8 +30,8 @@ void testDomain::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<testDomain::TestSubEnum>();
     context.m_typeSystem.addEntry<testDomain::TestSubSubEnum1>();
     context.m_typeSystem.addEntry<testDomain::TestSubSubEnum2>();
-    context.m_typeSystem.addEntry<testDomain::TestSimpleArrayType>();
-    context.m_typeSystem.addEntry<testDomain::TestCompoundArrayType>();
+    context.m_typeSystem.addEntry<testDomain::TestSimpleArrayType>(context.m_typeSystem);
+    context.m_typeSystem.addEntry<testDomain::TestCompoundArrayType>(context.m_typeSystem);
     context.m_typeSystem.addEntry<testDomain::TestSimpleRecordType>();
     context.m_typeSystem.addEntry<testDomain::TestComplexRecordType>();
     context.m_typeSystem.addEntry<testDomain::TestRecordWithVariantsType>();    

@@ -58,7 +58,7 @@ babelwires::ArrayTypeConstructor::constructType(const TypeSystem& typeSystem, Ty
     }
     auto [minimumSize, maximumSize, defaultSize] = extractValueArguments(arguments.getValueArguments());
 
-    return makeType<ConstructedType<ArrayType>>(std::move(newTypeExp), arguments.getTypeArguments()[0],
+    return makeType<ConstructedType<ArrayType>>(std::move(newTypeExp), resolvedTypeArguments[0],
                                                         minimumSize, maximumSize, defaultSize);
 }
 

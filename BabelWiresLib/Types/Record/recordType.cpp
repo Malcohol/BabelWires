@@ -201,7 +201,7 @@ const babelwires::RecordType::Field& babelwires::RecordType::getFieldFromChildIn
     return *static_cast<babelwires::RecordType::Field*>(0);
 }
 
-std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeExp&>
+std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp>
 babelwires::RecordType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
     const Field& f = getFieldFromChildIndex(compoundValue, i);
     const RecordValue& recordValue = compoundValue->is<RecordValue>();
@@ -209,7 +209,7 @@ babelwires::RecordType::getChild(const ValueHolder& compoundValue, unsigned int 
     return {&value, PathStep{f.m_identifier}, f.m_type};
 }
 
-std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeExp&>
+std::tuple<babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp>
 babelwires::RecordType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
     const Field& f = getFieldFromChildIndex(compoundValue, i);
     RecordValue& recordValue = compoundValue.copyContentsAndGetNonConst().is<RecordValue>();
@@ -332,7 +332,7 @@ std::string babelwires::RecordType::valueToString(const TypeSystem& typeSystem, 
     }
 }
 
-std::tuple<const babelwires::ValueHolder&, const babelwires::TypeExp&> babelwires::RecordType::getChildById(const ValueHolder& compoundValue,
+std::tuple<const babelwires::ValueHolder&, babelwires::TypeExp> babelwires::RecordType::getChildById(const ValueHolder& compoundValue,
     ShortId fieldId) const {
     assert(!isOptional(fieldId) || isActivated(compoundValue, fieldId));
     const RecordValue& recordValue = compoundValue->is<RecordValue>();
@@ -341,7 +341,7 @@ std::tuple<const babelwires::ValueHolder&, const babelwires::TypeExp&> babelwire
     return {fieldValue, field.m_type};   
 }
 
-std::tuple<babelwires::ValueHolder&, const babelwires::TypeExp&> babelwires::RecordType::getChildByIdNonConst(ValueHolder& compoundValue,
+std::tuple<babelwires::ValueHolder&, babelwires::TypeExp> babelwires::RecordType::getChildByIdNonConst(ValueHolder& compoundValue,
                                                                     ShortId fieldId) const {
     assert(!isOptional(fieldId) || isActivated(compoundValue, fieldId));
     RecordValue& recordValue = compoundValue.copyContentsAndGetNonConst().is<RecordValue>();

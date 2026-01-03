@@ -46,9 +46,9 @@ namespace babelwires {
         bool visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const override;
 
         unsigned int getNumChildren(const ValueHolder& compoundValue) const override;
-        std::tuple<const ValueHolder*, PathStep, const TypeExp&> getChild(const ValueHolder& compoundValue,
+        std::tuple<const ValueHolder*, PathStep, TypeExp> getChild(const ValueHolder& compoundValue,
                                                                           unsigned int i) const override;
-        std::tuple<ValueHolder*, PathStep, const TypeExp&> getChildNonConst(ValueHolder& compoundValue,
+        std::tuple<ValueHolder*, PathStep, TypeExp> getChildNonConst(ValueHolder& compoundValue,
                                                                             unsigned int i) const override;
         int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const override;
         std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem,
