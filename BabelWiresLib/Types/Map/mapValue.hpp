@@ -35,7 +35,7 @@ namespace babelwires {
         MapValue();
         MapValue(const MapValue& other);
         MapValue(MapValue&& other);
-        MapValue(const TypeSystem& typeSystem, TypeExp sourceRef, TypeExp targetRef, MapEntryData::Kind fallbackKind);
+        MapValue(const TypeSystem& typeSystem, const TypePtr& sourceType, const TypePtr& targetType, MapEntryData::Kind fallbackKind);
 
         MapValue& operator=(const MapValue& other);
         MapValue& operator=(MapValue&& other);
@@ -71,6 +71,7 @@ namespace babelwires {
         bool isValid(const TypeSystem& typeSystem) const;
 
       public:
+        // Do not store TypePtrs here, since MapValues may exist on the undo stack.
         TypeExp m_sourceTypeExp;
         TypeExp m_targetTypeExp;
         /// All non-null.

@@ -17,7 +17,7 @@ namespace babelwires {
         CLONEABLE(AllToOneFallbackMapEntryData);
         SERIALIZABLE(AllToOneFallbackMapEntryData, "allToOne", FallbackMapEntryData, 1);
 
-        AllToOneFallbackMapEntryData(const TypeSystem& typeSystem, const TypeExp& targetTypeExp);
+        AllToOneFallbackMapEntryData(const TypeSystem& typeSystem, const Type& targetType);
         AllToOneFallbackMapEntryData(const AllToOneFallbackMapEntryData& other);
         AllToOneFallbackMapEntryData(AllToOneFallbackMapEntryData&& other);
 

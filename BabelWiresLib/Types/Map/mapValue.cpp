@@ -30,11 +30,11 @@ babelwires::MapValue::MapValue(MapValue&& other)
     , m_targetTypeExp(other.m_targetTypeExp)
     , m_mapEntries(std::move(other.m_mapEntries)) {}
 
-babelwires::MapValue::MapValue(const TypeSystem& typeSystem, TypeExp sourceRef, TypeExp targetRef, MapEntryData::Kind fallbackKind) 
-    : m_sourceTypeExp(std::move(sourceRef))
-    , m_targetTypeExp(std::move(targetRef))
+babelwires::MapValue::MapValue(const TypeSystem& typeSystem, const TypePtr& sourceRef, const TypePtr& targetRef, MapEntryData::Kind fallbackKind) 
+    : m_sourceTypeExp(sourceRef->getTypeExp())
+    , m_targetTypeExp(targetRef->getTypeExp())
 {
-    m_mapEntries.emplace_back(MapEntryData::create(typeSystem, m_sourceTypeExp, m_targetTypeExp, fallbackKind));
+    m_mapEntries.emplace_back(MapEntryData::create(typeSystem, *sourceRef, *targetRef, fallbackKind));
 }
 
 babelwires::MapValue& babelwires::MapValue::operator=(const MapValue& other) {
@@ -114,7 +114,7 @@ bool babelwires::MapValue::canContainIdentifiers() const {
     return true;
 }
 bool babelwires::MapValue::canContainFilePaths() const {
-    // This is very unlikely, but since it only impacts serialization performance, so let's play it safe.
+    // This is very unlikely, but since it only impacts serialization performance, let's play it safe.
     return true;
 }
 
@@ -124,9 +124,14 @@ const babelwires::MapEntryData& babelwires::MapValue::getMapEntry(unsigned int i
 }
 
 bool babelwires::MapValue::isValid(const TypeSystem& typeSystem) const {
+    const TypePtr& sourceType = m_sourceTypeExp.tryResolve(typeSystem);
+    const TypePtr& targetType = m_targetTypeExp.tryResolve(typeSystem);
+    if (!sourceType || !targetType) {
+        return false;
+    }
     for (unsigned int i = 0; i < m_mapEntries.size(); ++i) {
         const auto& entryData = m_mapEntries[i];
-        if (!entryData->validate(typeSystem, m_sourceTypeExp, m_targetTypeExp, (i == m_mapEntries.size() - 1))) {
+        if (!entryData->validate(typeSystem, *sourceType, *targetType, (i == m_mapEntries.size() - 1))) {
             return false;
         }
     }

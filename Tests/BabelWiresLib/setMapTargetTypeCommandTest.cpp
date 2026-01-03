@@ -28,11 +28,12 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
     mapValue.setSourceTypeExp(babelwires::StringType::getThisType());
     mapValue.setTargetTypeExp(testDomain::TestSubSubEnum1::getThisType());
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, babelwires::StringType::getThisType(),
-                                              testDomain::TestEnum::getThisType());
+    const auto& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& testEnumType = environment.m_typeSystem.getEntryByType<testDomain::TestEnum>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
-                                                       testDomain::TestEnum::getThisType());
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *testEnumType);
+
+    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *testEnumType);
 
     babelwires::EnumValue newTargetValue;
     newTargetValue.set("Erm");
@@ -91,8 +92,9 @@ TEST(SetMapTargetTypeCommandTest, failWithUnallowedType) {
     mapValue.setSourceTypeExp(babelwires::StringType::getThisType());
     mapValue.setTargetTypeExp(babelwires::StringType::getThisType());
 
-    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
-                                                       babelwires::StringType::getThisType());
+    const auto& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
+
+    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *stringType);
     mapValue.emplaceBack(allToOne.clone());
 
     mapProject.setMapValue(mapValue);

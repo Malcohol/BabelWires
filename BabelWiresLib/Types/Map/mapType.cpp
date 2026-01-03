@@ -10,22 +10,23 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
 
-babelwires::MapType::MapType(TypeExp sourceTypeExp, TypeExp targetTypeExp, MapEntryData::Kind defaultFallbackKind)
-    : m_sourceTypeExp(std::move(sourceTypeExp))
-    , m_targetTypeExp(std::move(targetTypeExp))
+babelwires::MapType::MapType(const TypeSystem& typeSystem, TypeExp sourceTypeExp, TypeExp targetTypeExp, MapEntryData::Kind defaultFallbackKind)
+    : m_sourceType(sourceTypeExp.resolve(typeSystem))
+    , m_targetType(targetTypeExp.resolve(typeSystem))
     , m_defaultFallbackKind(defaultFallbackKind) {
     assert(MapEntryData::isFallback(defaultFallbackKind) && "Only a fallback kind is expected here");
 }
 
 babelwires::NewValueHolder babelwires::MapType::createValue(const TypeSystem& typeSystem) const {
-    return ValueHolder::makeValue<MapValue>(typeSystem, m_sourceTypeExp, m_targetTypeExp, m_defaultFallbackKind);
+    return ValueHolder::makeValue<MapValue>(typeSystem, m_sourceType, m_targetType, m_defaultFallbackKind);
 }
 
 bool babelwires::MapType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
+    // Note: Map is not currently treated as a compound, so we don't call the visitor on its entries.
     if (const MapValue* const map = v.as<MapValue>()) {
         // Because of the fallback entry, we don't need contravariance here.
-        return typeSystem.isRelatedType(map->getSourceTypeExp(), m_sourceTypeExp) &&
-               typeSystem.isSubType(map->getTargetTypeExp(), m_targetTypeExp);
+        return typeSystem.isRelatedType(map->getSourceTypeExp(), m_sourceType->getTypeExp()) &&
+               typeSystem.isSubType(map->getTargetTypeExp(), m_targetType->getTypeExp());
     }
     return false;
 }
@@ -34,11 +35,11 @@ std::string babelwires::MapType::getFlavour() const {
     return MapValue::serializationType;
 }
 
-const babelwires::TypeExp& babelwires::MapType::getSourceTypeExp() const {
-    return m_sourceTypeExp;
+babelwires::TypeExp babelwires::MapType::getSourceTypeExp() const {
+    return m_sourceType->getTypeExp();
 }
-const babelwires::TypeExp& babelwires::MapType::getTargetTypeExp() const {
-    return m_targetTypeExp;
+babelwires::TypeExp babelwires::MapType::getTargetTypeExp() const {
+    return m_targetType->getTypeExp();
 }
 
 std::optional<babelwires::SubtypeOrder> babelwires::MapType::compareSubtypeHelper(const TypeSystem& typeSystem,
@@ -48,13 +49,13 @@ std::optional<babelwires::SubtypeOrder> babelwires::MapType::compareSubtypeHelpe
         return {};
     }
     const SubtypeOrder sourceOrder =
-        typeSystem.compareSubtype(m_sourceTypeExp, otherMapType->m_sourceTypeExp);
+        typeSystem.compareSubtype(m_sourceType->getTypeExp(), otherMapType->m_sourceType->getTypeExp());
     if (sourceOrder == SubtypeOrder::IsDisjoint) {
         // Because of the fallback logic, we only exclude disjoint source types here.
         return SubtypeOrder::IsDisjoint;
     }
     const SubtypeOrder targetOrder =
-        typeSystem.compareSubtype(m_targetTypeExp, otherMapType->m_targetTypeExp);
+        typeSystem.compareSubtype(m_targetType->getTypeExp(), otherMapType->m_targetType->getTypeExp());
     return targetOrder;
 }
 

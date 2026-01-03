@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Types/Enum/enumValue.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/allToSameFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
-#include <BabelWiresLib/Types/Enum/enumValue.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
 
@@ -48,28 +48,24 @@ TEST(MapEntryDataTest, create) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto oneToOne = babelwires::MapEntryData::create(typeSystem, babelwires::StringType::getThisType(),
-                                                           testDomain::TestEnum::getThisType(),
-                                                           babelwires::MapEntryData::Kind::One21);
-    const auto allToOne = babelwires::MapEntryData::create(typeSystem, babelwires::StringType::getThisType(),
-                                                           testDomain::TestEnum::getThisType(),
-                                                           babelwires::MapEntryData::Kind::All21);
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+
+    const auto oneToOne =
+        babelwires::MapEntryData::create(typeSystem, *stringType, *testEnumType, babelwires::MapEntryData::Kind::One21);
+    const auto allToOne =
+        babelwires::MapEntryData::create(typeSystem, *stringType, *testEnumType, babelwires::MapEntryData::Kind::All21);
     // source == target for allToSame
-    const auto allToSame = babelwires::MapEntryData::create(typeSystem, babelwires::StringType::getThisType(),
-                                                            babelwires::StringType::getThisType(),
-                                                            babelwires::MapEntryData::Kind::All2Sm);
+    const auto allToSame =
+        babelwires::MapEntryData::create(typeSystem, *stringType, *stringType, babelwires::MapEntryData::Kind::All2Sm);
 
     EXPECT_EQ(oneToOne->getKind(), babelwires::MapEntryData::Kind::One21);
     EXPECT_EQ(allToOne->getKind(), babelwires::MapEntryData::Kind::All21);
     EXPECT_EQ(allToSame->getKind(), babelwires::MapEntryData::Kind::All2Sm);
 
-    EXPECT_TRUE(oneToOne->validate(typeSystem, babelwires::StringType::getThisType(),
-                                   testDomain::TestEnum::getThisType(), false));
-    EXPECT_TRUE(allToOne->validate(typeSystem, babelwires::StringType::getThisType(),
-                                   testDomain::TestEnum::getThisType(), true));
-    EXPECT_TRUE(allToSame->validate(typeSystem, babelwires::StringType::getThisType(),
-                                    babelwires::StringType::getThisType(), true));
-
+    EXPECT_TRUE(oneToOne->validate(typeSystem, *stringType, *testEnumType, false));
+    EXPECT_TRUE(allToOne->validate(typeSystem, *stringType, *testEnumType, true));
+    EXPECT_TRUE(allToSame->validate(typeSystem, *stringType, *stringType, true));
     const auto* const oneToOneEntryData = oneToOne->as<babelwires::OneToOneMapEntryData>();
     const auto* const allToOneEntryData = allToOne->as<babelwires::AllToOneFallbackMapEntryData>();
     const auto* const allToSameEntryData = allToSame->as<babelwires::AllToSameFallbackMapEntryData>();
@@ -88,18 +84,20 @@ TEST(MapEntryDataTest, equalityByKind) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    babelwires::OneToOneMapEntryData oneToOne(typeSystem, babelwires::StringType::getThisType(),
-                                                    testDomain::TestEnum::getThisType());
-    babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, testDomain::TestEnum::getThisType());
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+
+    babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *testEnumType);
+    babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, *testEnumType);
     babelwires::AllToSameFallbackMapEntryData allToSame;
 
     EXPECT_EQ(oneToOne, oneToOne);
     EXPECT_EQ(allToOne, allToOne);
     EXPECT_EQ(allToSame, allToSame);
 
-    //EXPECT_NE(oneToOne, allToOne);
-    //EXPECT_NE(oneToOne, allToSame);
-    //EXPECT_NE(allToOne, allToSame);
+    // EXPECT_NE(oneToOne, allToOne);
+    // EXPECT_NE(oneToOne, allToSame);
+    // EXPECT_NE(allToOne, allToSame);
 }
 
 TEST(MapEntryDataTest, oneToOneEqualitySameTypes) {
@@ -107,12 +105,11 @@ TEST(MapEntryDataTest, oneToOneEqualitySameTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    babelwires::OneToOneMapEntryData oneToOneA(typeSystem, babelwires::StringType::getThisType(),
-                                               babelwires::StringType::getThisType());
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
 
-    babelwires::OneToOneMapEntryData oneToOneB(typeSystem, babelwires::StringType::getThisType(),
-                                               babelwires::StringType::getThisType());
+    babelwires::OneToOneMapEntryData oneToOneA(typeSystem, *stringType, *stringType);
 
+    babelwires::OneToOneMapEntryData oneToOneB(typeSystem, *stringType, *stringType);
     EXPECT_EQ(oneToOneA, oneToOneB);
 
     babelwires::StringValue sourceValue;
@@ -136,17 +133,16 @@ TEST(MapEntryDataTest, oneToOneEqualityDifferentTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    babelwires::OneToOneMapEntryData oneToOneA(typeSystem, babelwires::StringType::getThisType(),
-                                               babelwires::StringType::getThisType());
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
 
-    babelwires::OneToOneMapEntryData oneToOneB(typeSystem, babelwires::StringType::getThisType(),
-                                               testDomain::TestEnum::getThisType());
+    babelwires::OneToOneMapEntryData oneToOneA(typeSystem, *stringType, *stringType);
 
-    babelwires::OneToOneMapEntryData oneToOneC(typeSystem, testDomain::TestEnum::getThisType(),
-                                               babelwires::StringType::getThisType());
+    babelwires::OneToOneMapEntryData oneToOneB(typeSystem, *stringType, *testEnumType);
 
-    babelwires::OneToOneMapEntryData oneToOneD(typeSystem, testDomain::TestEnum::getThisType(),
-                                               testDomain::TestEnum::getThisType());
+    babelwires::OneToOneMapEntryData oneToOneC(typeSystem, *testEnumType, *stringType);
+
+    babelwires::OneToOneMapEntryData oneToOneD(typeSystem, *testEnumType, *testEnumType);
 
     EXPECT_NE(oneToOneA, oneToOneB);
     EXPECT_NE(oneToOneA, oneToOneC);
@@ -168,9 +164,11 @@ TEST(MapEntryDataTest, allToOneEqualitySameTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOneA(typeSystem, babelwires::StringType::getThisType());
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOneB(typeSystem, babelwires::StringType::getThisType());
+    babelwires::AllToOneFallbackMapEntryData allToOneA(typeSystem, *stringType);
+
+    babelwires::AllToOneFallbackMapEntryData allToOneB(typeSystem, *stringType);
 
     EXPECT_EQ(allToOneA, allToOneB);
 
@@ -189,9 +187,12 @@ TEST(MapEntryDataTest, allToOneEqualityDifferentTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOneA(typeSystem, babelwires::StringType::getThisType());
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOneB(typeSystem, testDomain::TestEnum::getThisType());
+    babelwires::AllToOneFallbackMapEntryData allToOneA(typeSystem, *stringType);
+
+    babelwires::AllToOneFallbackMapEntryData allToOneB(typeSystem, *testEnumType);
 
     EXPECT_NE(allToOneA, allToOneB);
     EXPECT_NE(allToOneB, allToOneA);
@@ -202,9 +203,11 @@ TEST(MapEntryDataTest, hashByKind) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const babelwires::OneToOneMapEntryData oneToOne(typeSystem, babelwires::StringType::getThisType(),
-                                                    testDomain::TestEnum::getThisType());
-    babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, testDomain::TestEnum::getThisType());
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+
+    const babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *testEnumType);
+    babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, *testEnumType);
     babelwires::AllToSameFallbackMapEntryData allToSame;
 
     const auto oneToOneHash = oneToOne.getHash();
@@ -221,11 +224,11 @@ TEST(MapEntryDataTest, oneToOneHashSameTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    babelwires::OneToOneMapEntryData oneToOneA(typeSystem, babelwires::StringType::getThisType(),
-                                               babelwires::StringType::getThisType());
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
 
-    babelwires::OneToOneMapEntryData oneToOneB(typeSystem, babelwires::StringType::getThisType(),
-                                               babelwires::StringType::getThisType());
+    babelwires::OneToOneMapEntryData oneToOneA(typeSystem, *stringType, *stringType);
+
+    babelwires::OneToOneMapEntryData oneToOneB(typeSystem, *stringType, *stringType);
 
     EXPECT_EQ(oneToOneA.getHash(), oneToOneB.getHash());
 
@@ -250,17 +253,16 @@ TEST(MapEntryDataTest, oneToOneHashDifferentTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    babelwires::OneToOneMapEntryData oneToOneA(typeSystem, babelwires::StringType::getThisType(),
-                                               babelwires::StringType::getThisType());
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
 
-    babelwires::OneToOneMapEntryData oneToOneB(typeSystem, babelwires::StringType::getThisType(),
-                                               testDomain::TestEnum::getThisType());
+    babelwires::OneToOneMapEntryData oneToOneA(typeSystem, *stringType, *stringType);
 
-    babelwires::OneToOneMapEntryData oneToOneC(typeSystem, testDomain::TestEnum::getThisType(),
-                                               babelwires::StringType::getThisType());
+    babelwires::OneToOneMapEntryData oneToOneB(typeSystem, *stringType, *testEnumType);
 
-    babelwires::OneToOneMapEntryData oneToOneD(typeSystem, testDomain::TestEnum::getThisType(),
-                                               testDomain::TestEnum::getThisType());
+    babelwires::OneToOneMapEntryData oneToOneC(typeSystem, *testEnumType, *stringType);
+
+    babelwires::OneToOneMapEntryData oneToOneD(typeSystem, *testEnumType, *testEnumType);
 
     EXPECT_NE(oneToOneA.getHash(), oneToOneB.getHash());
     EXPECT_NE(oneToOneA.getHash(), oneToOneC.getHash());
@@ -282,10 +284,11 @@ TEST(MapEntryDataTest, allToOneHashSameTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOneA(typeSystem, babelwires::StringType::getThisType());
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOneB(typeSystem, babelwires::StringType::getThisType());
+    babelwires::AllToOneFallbackMapEntryData allToOneA(typeSystem, *stringType);
 
+    babelwires::AllToOneFallbackMapEntryData allToOneB(typeSystem, *stringType);
     EXPECT_EQ(allToOneA.getHash(), allToOneB.getHash());
 
     babelwires::StringValue sourceValue;
@@ -303,9 +306,12 @@ TEST(MapEntryDataTest, allToOneHashDifferentTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOneA(typeSystem, babelwires::StringType::getThisType());
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOneB(typeSystem, testDomain::TestEnum::getThisType());
+    babelwires::AllToOneFallbackMapEntryData allToOneA(typeSystem, *stringType);
+
+    babelwires::AllToOneFallbackMapEntryData allToOneB(typeSystem, *testEnumType);
 
     EXPECT_NE(allToOneA.getHash(), allToOneB.getHash());
     EXPECT_NE(allToOneB.getHash(), allToOneA.getHash());
@@ -316,20 +322,17 @@ TEST(MapEntryDataTest, oneToOneValidate) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    babelwires::OneToOneMapEntryData oneToOne(typeSystem, babelwires::StringType::getThisType(),
-                                              testDomain::TestEnum::getThisType());
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
 
-    EXPECT_FALSE(oneToOne.validate(typeSystem, babelwires::StringType::getThisType(),
-                                  babelwires::StringType::getThisType(), false));
-    EXPECT_TRUE(oneToOne.validate(typeSystem, babelwires::StringType::getThisType(),
-                                   testDomain::TestEnum::getThisType(), false));
-    EXPECT_FALSE(oneToOne.validate(typeSystem, testDomain::TestEnum::getThisType(),
-                                   babelwires::StringType::getThisType(), false));
-    EXPECT_FALSE(oneToOne.validate(typeSystem, testDomain::TestEnum::getThisType(),
-                                   testDomain::TestEnum::getThisType(), false));
+    babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *testEnumType);
 
-    EXPECT_FALSE(oneToOne.validate(typeSystem, babelwires::StringType::getThisType(),
-                                   testDomain::TestEnum::getThisType(), true));
+    EXPECT_FALSE(oneToOne.validate(typeSystem, *stringType, *stringType, false));
+    EXPECT_TRUE(oneToOne.validate(typeSystem, *stringType, *testEnumType, false));
+    EXPECT_FALSE(oneToOne.validate(typeSystem, *testEnumType, *stringType, false));
+    EXPECT_FALSE(oneToOne.validate(typeSystem, *testEnumType, *testEnumType, false));
+
+    EXPECT_FALSE(oneToOne.validate(typeSystem, *stringType, *testEnumType, true));
 }
 
 TEST(MapEntryDataTest, allToOneValidate) {
@@ -337,19 +340,16 @@ TEST(MapEntryDataTest, allToOneValidate) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, babelwires::StringType::getThisType());
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
 
-    EXPECT_TRUE(allToOne.validate(typeSystem, babelwires::StringType::getThisType(),
-                                  babelwires::StringType::getThisType(), true));
-    EXPECT_FALSE(allToOne.validate(typeSystem, babelwires::StringType::getThisType(),
-                                   testDomain::TestEnum::getThisType(), true));
-    EXPECT_TRUE(allToOne.validate(typeSystem, testDomain::TestEnum::getThisType(),
-                                   babelwires::StringType::getThisType(), true));
-    EXPECT_FALSE(allToOne.validate(typeSystem, testDomain::TestEnum::getThisType(),
-                                   testDomain::TestEnum::getThisType(), true));
+    babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, *stringType);
 
-    EXPECT_FALSE(allToOne.validate(typeSystem, babelwires::StringType::getThisType(),
-                                   babelwires::StringType::getThisType(), false));
+    EXPECT_TRUE(allToOne.validate(typeSystem, *stringType, *stringType, true));
+    EXPECT_FALSE(allToOne.validate(typeSystem, *stringType, *testEnumType, true));
+    EXPECT_TRUE(allToOne.validate(typeSystem, *testEnumType, *stringType, true));
+    EXPECT_FALSE(allToOne.validate(typeSystem, *testEnumType, *testEnumType, true));
+    EXPECT_FALSE(allToOne.validate(typeSystem, *stringType, *stringType, false));
 }
 
 TEST(MapEntryDataTest, allToSameValidate) {
@@ -357,19 +357,16 @@ TEST(MapEntryDataTest, allToSameValidate) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+
     babelwires::AllToSameFallbackMapEntryData allToSame;
 
-    EXPECT_TRUE(allToSame.validate(typeSystem, babelwires::StringType::getThisType(),
-                                  babelwires::StringType::getThisType(), true));
-    EXPECT_FALSE(allToSame.validate(typeSystem, babelwires::StringType::getThisType(),
-                                   testDomain::TestEnum::getThisType(), true));
-    EXPECT_FALSE(allToSame.validate(typeSystem, testDomain::TestEnum::getThisType(),
-                                   babelwires::StringType::getThisType(), true));
-    EXPECT_TRUE(allToSame.validate(typeSystem, testDomain::TestEnum::getThisType(),
-                                   testDomain::TestEnum::getThisType(), true));
-
-    EXPECT_FALSE(allToSame.validate(typeSystem, babelwires::StringType::getThisType(),
-                                   babelwires::StringType::getThisType(), false));
+    EXPECT_TRUE(allToSame.validate(typeSystem, *stringType, *stringType, true));
+    EXPECT_FALSE(allToSame.validate(typeSystem, *stringType, *testEnumType, true));
+    EXPECT_FALSE(allToSame.validate(typeSystem, *testEnumType, *stringType, true));
+    EXPECT_TRUE(allToSame.validate(typeSystem, *testEnumType, *testEnumType, true));
+    EXPECT_FALSE(allToSame.validate(typeSystem, *stringType, *stringType, false));
 }
 
 TEST(MapEntryDataTest, oneToOneGetAndSetValues) {
@@ -377,8 +374,10 @@ TEST(MapEntryDataTest, oneToOneGetAndSetValues) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    babelwires::OneToOneMapEntryData oneToOne(typeSystem, babelwires::StringType::getThisType(),
-                                              testDomain::TestEnum::getThisType());
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+
+    babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *testEnumType);
 
     babelwires::StringValue sourceValue;
     sourceValue.set("source");
@@ -401,7 +400,10 @@ TEST(MapEntryDataTest, allToOneGetAndSetValues) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, babelwires::StringType::getThisType());
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+
+    babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, *stringType);
 
     babelwires::StringValue targetValue;
     targetValue.set("source");
@@ -415,13 +417,14 @@ TEST(MapEntryDataTest, allToOneGetAndSetValues) {
 TEST(MapEntryDataTest, oneToOneSerialize) {
     std::string serializedContents;
     {
-            babelwires::TypeSystem typeSystem;
-        typeSystem.addEntry<babelwires::StringType>();  
+        babelwires::TypeSystem typeSystem;
+        typeSystem.addEntry<babelwires::StringType>();
         typeSystem.addEntry<testDomain::TestEnum>();
 
-        babelwires::OneToOneMapEntryData oneToOne(typeSystem, babelwires::StringType::getThisType(),
-                                              testDomain::TestEnum::getThisType());
+        const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+        const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
 
+        babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *testEnumType);
         babelwires::StringValue sourceValue;
         sourceValue.set("test serialization");
 
@@ -449,11 +452,11 @@ TEST(MapEntryDataTest, oneToOneSerialize) {
     ASSERT_NE(sourceValue, nullptr);
     ASSERT_NE(targetValue, nullptr);
 
-    const auto *const sourceValueFromData = sourceValue->as<babelwires::StringValue>();
+    const auto* const sourceValueFromData = sourceValue->as<babelwires::StringValue>();
     ASSERT_NE(sourceValueFromData, nullptr);
     EXPECT_EQ(sourceValueFromData->get(), "test serialization");
 
-    const auto *const targetValueFromData = targetValue->as<babelwires::EnumValue>();
+    const auto* const targetValueFromData = targetValue->as<babelwires::EnumValue>();
     ASSERT_NE(targetValueFromData, nullptr);
     EXPECT_EQ(targetValueFromData->get(), "Foo");
 }
@@ -461,10 +464,12 @@ TEST(MapEntryDataTest, oneToOneSerialize) {
 TEST(MapEntryDataTest, allToOneSerialize) {
     std::string serializedContents;
     {
-            babelwires::TypeSystem typeSystem;
-        typeSystem.addEntry<babelwires::StringType>();  
+        babelwires::TypeSystem typeSystem;
+        typeSystem.addEntry<babelwires::StringType>();
 
-        babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, babelwires::StringType::getThisType());
+        const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+
+        babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, *stringType);
 
         babelwires::StringValue targetValue;
         targetValue.set("test serialization");
@@ -487,7 +492,7 @@ TEST(MapEntryDataTest, allToOneSerialize) {
     const babelwires::ValueHolder& targetValue = dataPtr->getTargetValue();
     ASSERT_NE(targetValue, nullptr);
 
-    const auto *const targetValueFromData = targetValue->as<babelwires::StringValue>();
+    const auto* const targetValueFromData = targetValue->as<babelwires::StringValue>();
     ASSERT_NE(targetValueFromData, nullptr);
     EXPECT_EQ(targetValueFromData->get(), "test serialization");
 }
@@ -495,8 +500,8 @@ TEST(MapEntryDataTest, allToOneSerialize) {
 TEST(MapEntryDataTest, allToSameSerialize) {
     std::string serializedContents;
     {
-            babelwires::TypeSystem typeSystem;
-        typeSystem.addEntry<babelwires::StringType>();  
+        babelwires::TypeSystem typeSystem;
+        typeSystem.addEntry<babelwires::StringType>();
 
         babelwires::AllToSameFallbackMapEntryData allToSame;
 
@@ -515,14 +520,15 @@ TEST(MapEntryDataTest, allToSameSerialize) {
     ASSERT_NE(dataPtr, nullptr);
 }
 
-
 TEST(MapEntryDataTest, oneToOneClone) {
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<babelwires::StringType>();  
+    typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    babelwires::OneToOneMapEntryData oneToOne(typeSystem, babelwires::StringType::getThisType(),
-                                            testDomain::TestEnum::getThisType());
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+
+    babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *testEnumType);
 
     babelwires::StringValue sourceValue;
     sourceValue.set("test serialization");
@@ -541,20 +547,22 @@ TEST(MapEntryDataTest, oneToOneClone) {
     ASSERT_NE(sourceValueInClone, nullptr);
     ASSERT_NE(targetValueInClone, nullptr);
 
-    const auto *const sourceValueFromData = sourceValueInClone->as<babelwires::StringValue>();
+    const auto* const sourceValueFromData = sourceValueInClone->as<babelwires::StringValue>();
     ASSERT_NE(sourceValueFromData, nullptr);
     EXPECT_EQ(sourceValueFromData->get(), "test serialization");
 
-    const auto *const targetValueFromData = targetValueInClone->as<babelwires::EnumValue>();
+    const auto* const targetValueFromData = targetValueInClone->as<babelwires::EnumValue>();
     ASSERT_NE(targetValueFromData, nullptr);
     EXPECT_EQ(targetValueFromData->get(), "Foo");
 }
 
 TEST(MapEntryDataTest, allToOneClone) {
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<babelwires::StringType>();  
+    typeSystem.addEntry<babelwires::StringType>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, babelwires::StringType::getThisType());
+    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+
+    babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, *stringType);
 
     babelwires::StringValue targetValue;
     targetValue.set("test serialization");
@@ -567,14 +575,14 @@ TEST(MapEntryDataTest, allToOneClone) {
     const babelwires::ValueHolder& targetValueInClone = dataPtr->getTargetValue();
     ASSERT_NE(targetValueInClone, nullptr);
 
-    const auto *const targetValueFromData = targetValueInClone->as<babelwires::StringValue>();
+    const auto* const targetValueFromData = targetValueInClone->as<babelwires::StringValue>();
     ASSERT_NE(targetValueFromData, nullptr);
     EXPECT_EQ(targetValueFromData->get(), "test serialization");
 }
 
 TEST(MapEntryDataTest, allToSameClone) {
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<babelwires::StringType>();  
+    typeSystem.addEntry<babelwires::StringType>();
 
     babelwires::AllToSameFallbackMapEntryData allToSame;
 

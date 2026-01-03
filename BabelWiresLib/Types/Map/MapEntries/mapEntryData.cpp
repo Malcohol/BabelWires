@@ -19,31 +19,23 @@ babelwires::MapEntryFallbackKind::MapEntryFallbackKind()
 
 babelwires::MapEntryData::~MapEntryData() = default;
 
-babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSystem, const TypeExp& sourceTypeExp,
-                                                      const TypeExp& targetTypeExp, bool isLastEntry) const {
-    const TypePtr sourceType = sourceTypeExp.tryResolve(typeSystem);
-    if (!sourceType) {
-        return "The source type is not recognized";
-    }
-    const TypePtr targetType = targetTypeExp.tryResolve(typeSystem);
-    if (!targetType) {
-        return "The target type is not recognized";
-    }
+babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSystem, const Type& sourceType,
+                                                      const Type& targetType, bool isLastEntry) const {
     if (isLastEntry != isFallback(getKind())) {
         return isLastEntry ? "The last entry must be a fallback entry"
                            : "A fallback entry can only be at the end of a map";
     }
-    return doValidate(typeSystem, *sourceType, *targetType);
+    return doValidate(typeSystem, sourceType, targetType);
 }
 
 std::unique_ptr<babelwires::MapEntryData> babelwires::MapEntryData::create(const TypeSystem& typeSystem,
-                                                                           const TypeExp& sourceTypeExp,
-                                                                           const TypeExp& targetTypeExp, Kind kind) {
+                                                                           const Type& sourceType,
+                                                                           const Type& targetType, Kind kind) {
     switch (kind) {
         case Kind::One21:
-            return std::make_unique<OneToOneMapEntryData>(typeSystem, sourceTypeExp, targetTypeExp);
+            return std::make_unique<OneToOneMapEntryData>(typeSystem, sourceType, targetType);
         case Kind::All21:
-            return std::make_unique<AllToOneFallbackMapEntryData>(typeSystem, targetTypeExp);
+            return std::make_unique<AllToOneFallbackMapEntryData>(typeSystem, targetType);
         case Kind::All2Sm:
             return std::make_unique<AllToSameFallbackMapEntryData>();
         default:
@@ -74,7 +66,7 @@ std::string babelwires::MapEntryData::getKindName(Kind kind) {
 
 const babelwires::ValueHolder& babelwires::MapEntryData::getSourceValue() const {
     const auto* sourceValue = tryGetSourceValue();
-    assert(sourceValue && "Source value expected"); 
+    assert(sourceValue && "Source value expected");
     return *sourceValue;
 }
 
@@ -88,7 +80,7 @@ void babelwires::MapEntryData::setSourceValue(ValueHolder value) {
 
 const babelwires::ValueHolder& babelwires::MapEntryData::getTargetValue() const {
     const auto* targetValue = tryGetTargetValue();
-    assert(targetValue && "Target value expected"); 
+    assert(targetValue && "Target value expected");
     return *targetValue;
 }
 

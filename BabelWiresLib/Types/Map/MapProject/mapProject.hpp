@@ -46,11 +46,11 @@ namespace babelwires {
         const TypeExp& getCurrentSourceTypeExp() const;
         const TypeExp& getCurrentTargetTypeExp() const;
 
+        const TypePtr& getCurrentSourceType() const;
+        const TypePtr& getCurrentTargetType() const;
+
         void setCurrentSourceTypeExp(const TypeExp& sourceId);
         void setCurrentTargetTypeExp(const TypeExp& targetId);
-
-        TypePtr getCurrentSourceType() const;
-        TypePtr getCurrentTargetType() const;
 
         MapValue extractMapValue() const;
         void setMapValue(const MapValue& data);
@@ -79,6 +79,9 @@ namespace babelwires {
 
         TypeExp m_currentSourceTypeExp;
         TypeExp m_currentTargetTypeExp;
+
+        TypePtr m_currentSourceType;
+        TypePtr m_currentTargetType;
 
         Result m_sourceTypeValidity;
         Result m_targetTypeValidity;

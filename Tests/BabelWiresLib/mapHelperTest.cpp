@@ -30,17 +30,20 @@ namespace {
                       const babelwires::Value& targetValue2, const babelwires::Value& targetValue3,
                       bool allToOneFallback) {
 
-        auto oneToOne1 = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, sourceTypeId, targetTypeId);
+        const auto& sourceType = sourceTypeId.assertResolve(typeSystem);
+        const auto& targetType = targetTypeId.assertResolve(typeSystem);
+
+        auto oneToOne1 = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, *sourceType, *targetType);
         oneToOne1->setSourceValue(sourceValue1.clone());
         oneToOne1->setTargetValue(targetValue1.clone());
 
-        auto oneToOne2 = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, sourceTypeId, targetTypeId);
+        auto oneToOne2 = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, *sourceType, *targetType);
         oneToOne2->setSourceValue(sourceValue2.clone());
         oneToOne2->setTargetValue(targetValue2.clone());
 
         std::unique_ptr<babelwires::FallbackMapEntryData> fallback;
         if (allToOneFallback) {
-            auto allToOne = std::make_unique<babelwires::AllToOneFallbackMapEntryData>(typeSystem, targetTypeId);
+            auto allToOne = std::make_unique<babelwires::AllToOneFallbackMapEntryData>(typeSystem, *targetType);
             allToOne->setTargetValue(targetValue3.clone());
             fallback = std::unique_ptr<babelwires::FallbackMapEntryData>(allToOne.release());
         } else {

@@ -28,8 +28,9 @@ TEST(ResetMapValueCommandTest, executeAndUndoSource) {
     mapValue.setSourceTypeExp(testDomain::TestSumType::getThisType());
     mapValue.setTargetTypeExp(testDomain::TestSumType::getThisType());
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testDomain::TestSumType::getThisType(),
-                                              testDomain::TestSumType::getThisType());
+    const auto& testSumType = environment.m_typeSystem.getEntryByType<testDomain::TestSumType>();
+
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *testSumType, *testSumType);
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(oneToOne.clone());
@@ -72,10 +73,11 @@ TEST(ResetMapValueCommandTest, executeAndUndoTarget) {
     mapValue.setSourceTypeExp(testDomain::TestSumType::getThisType());
     mapValue.setTargetTypeExp(testDomain::TestSumType::getThisType());
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testDomain::TestSumType::getThisType(),
-                                              testDomain::TestSumType::getThisType());
+    const auto& testSumType = environment.m_typeSystem.getEntryByType<testDomain::TestSumType>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, testDomain::TestSumType::getThisType());
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *testSumType, *testSumType);
+
+    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *testSumType);
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(oneToOne.clone());
@@ -119,11 +121,11 @@ TEST(ResetMapValueCommandTest, failBeyondEnd) {
     mapValue.setSourceTypeExp(testDomain::TestSumType::getThisType());
     mapValue.setTargetTypeExp(testDomain::TestSumType::getThisType());
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testDomain::TestSumType::getThisType(),
-                                              testDomain::TestSumType::getThisType());
+    const auto& testSumType = environment.m_typeSystem.getEntryByType<testDomain::TestSumType>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
-                                                       testDomain::TestSumType::getThisType());
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *testSumType, *testSumType);
+
+    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *testSumType);
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
