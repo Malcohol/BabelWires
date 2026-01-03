@@ -17,8 +17,7 @@ namespace babelwires {
     class GenericType : public CompoundType {
       public:
         /// Create a generic type with the given number of variables.
-        /// A default constructed TypeExp means no restriction.
-        GenericType(TypeExp wrappedType, unsigned int numVariables);
+        GenericType(const TypeSystem& typeSystem, const TypeExp& wrappedType, unsigned int numVariables);
 
         std::string getFlavour() const override;
 
@@ -56,7 +55,7 @@ namespace babelwires {
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
 
       private:
-        TypeExp m_wrappedType;
+        TypePtr m_wrappedType;
         unsigned int m_numVariables;
         // The maximum number of nested generic types in the wrapped type.
         unsigned int m_genericTypeHeight;

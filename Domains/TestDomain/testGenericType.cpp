@@ -7,8 +7,8 @@
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 
-testDomain::TestGenericType::TestGenericType()
-    : GenericType(
+testDomain::TestGenericType::TestGenericType(const babelwires::TypeSystem& typeSystem)
+    : GenericType(typeSystem,
           // Note: We assume generic types are made using TypeExp expressions, so this cannot
           // use a registered record type. Similarly, the array cannot be a registered type.
           babelwires::RecordTypeConstructor::makeTypeExp(

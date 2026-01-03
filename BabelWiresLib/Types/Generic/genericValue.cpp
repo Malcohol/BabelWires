@@ -15,12 +15,12 @@
 #include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 
-babelwires::GenericValue::GenericValue(const TypeSystem& typeSystem, TypeExp wrappedType, unsigned int numVariables)
+babelwires::GenericValue::GenericValue(const TypeSystem& typeSystem, const TypePtr& wrappedType, unsigned int numVariables)
     : m_actualWrappedType(wrappedType)
     , m_typeVariableAssignments(numVariables)
-    , m_wrappedValue(m_actualWrappedType.resolve(typeSystem)->createValue(typeSystem)) {}
+    , m_wrappedValue(m_actualWrappedType->createValue(typeSystem)) {}
 
-const babelwires::TypeExp& babelwires::GenericValue::getActualWrappedType() const {
+const babelwires::TypePtr& babelwires::GenericValue::getActualWrappedType() const {
     return m_actualWrappedType;
 }
 
@@ -103,11 +103,11 @@ babelwires::TypeExp babelwires::GenericValue::buildInstantiatedType(const TypeEx
 }
 
 void babelwires::GenericValue::instantiate(const TypeSystem& typeSystem, const TypeExp& wrappedTypeExp) {
-    m_actualWrappedType = buildInstantiatedType(wrappedTypeExp);
+    m_actualWrappedType = buildInstantiatedType(wrappedTypeExp).resolve(typeSystem);
     // Updating the existing wrapped value by exploring it doesn't account for the fact that values may carry types in
     // non-obvious ways. In particular, GenericValue carries the m_actualWrappedType and typeAssignments, neither of
     // which would be updated if we encountered a nested generic type using exploration.
-    m_wrappedValue = m_actualWrappedType.resolve(typeSystem)->createValue(typeSystem);
+    m_wrappedValue = m_actualWrappedType->createValue(typeSystem);
 }
 
 bool babelwires::GenericValue::isActualVersionOf(const TypeExp& wrappedType) const {
@@ -178,5 +178,5 @@ bool babelwires::GenericValue::isActualVersionOf(const TypeExp& wrappedType) con
         const GenericValue& m_genericValue;
         unsigned int m_level;
     } visitor(*this);
-    return TypeExp::visit<Visitor, bool>(visitor, wrappedType, m_actualWrappedType);
+    return TypeExp::visit<Visitor, bool>(visitor, wrappedType, m_actualWrappedType->getTypeExp());
 }

@@ -41,14 +41,14 @@ namespace {
     }
 } // namespace
 
-babelwires::GenericType::GenericType(TypeExp wrappedType, unsigned int numVariables)
-    : m_wrappedType(std::move(wrappedType))
+babelwires::GenericType::GenericType(const TypeSystem& typeSystem, const TypeExp& wrappedType, unsigned int numVariables)
+    : m_wrappedType(wrappedType.resolve(typeSystem))
     , m_numVariables(numVariables) {
     assert(m_numVariables > 0 && "GenericType must have at least one type variable");
     assert(m_numVariables <= TypeVariableData::c_maxNumTypeVariables && "GenericType with too many type variables");
     // Height is used to choose a visualization of type variables.
     // Registered types that are themselves generic types could lead to duplication, but that's not a big problem.
-    m_genericTypeHeight = calculateGenericTypeHeight(m_wrappedType);
+    m_genericTypeHeight = calculateGenericTypeHeight(m_wrappedType->getTypeExp());
 }
 
 const babelwires::TypeExp& babelwires::GenericType::getTypeAssignment(const ValueHolder& genericValue,
@@ -90,7 +90,7 @@ bool babelwires::GenericType::visitValue(const TypeSystem& typeSystem, const Val
     if (m_numVariables != genericValue->getTypeAssignments().size()) {
         return false;
     }
-    return genericValue->isActualVersionOf(m_wrappedType);
+    return genericValue->isActualVersionOf(m_wrappedType->getTypeExp());
 }
 
 unsigned int babelwires::GenericType::getNumChildren(const ValueHolder& compoundValue) const {
@@ -103,7 +103,7 @@ babelwires::GenericType::getChild(const ValueHolder& compoundValue, unsigned int
     assert(i == 0 && "GenericType only has one child");
     const GenericValue& genericValue = compoundValue->is<GenericValue>();
     assert(genericValue.getValue() && "GenericType child value is empty");
-    return {&genericValue.getValue(), getStepToValue(), genericValue.getActualWrappedType()};
+    return {&genericValue.getValue(), getStepToValue(), genericValue.getActualWrappedType()->getTypeExp()};
 }
 
 std::tuple<babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp>
@@ -111,7 +111,7 @@ babelwires::GenericType::getChildNonConst(ValueHolder& compoundValue, unsigned i
     assert(i == 0 && "GenericType only has one child");
     GenericValue& genericValue = compoundValue.copyContentsAndGetNonConst().is<GenericValue>();
     assert(genericValue.getValue() && "GenericType child value is empty");
-    return {&genericValue.getValue(), getStepToValue(), genericValue.getActualWrappedType()};
+    return {&genericValue.getValue(), getStepToValue(), genericValue.getActualWrappedType()->getTypeExp()};
 }
 
 int babelwires::GenericType::getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const {
@@ -179,5 +179,5 @@ void babelwires::GenericType::setTypeVariableAssignmentAndInstantiate(
     }
     GenericValue& mutableGenericValue = genericValue.copyContentsAndGetNonConst().is<GenericValue>();
     mutableGenericValue.getTypeAssignments() = typeVariableAssignments;
-    mutableGenericValue.instantiate(typeSystem, m_wrappedType);
+    mutableGenericValue.instantiate(typeSystem, m_wrappedType->getTypeExp());
 }

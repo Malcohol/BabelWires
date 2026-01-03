@@ -17,10 +17,10 @@ namespace babelwires {
       public:
         CLONEABLE(GenericValue);
 
-        GenericValue(const TypeSystem& typeSystem, TypeExp wrappedType, unsigned int numVariables);
+        GenericValue(const TypeSystem& typeSystem, const TypePtr& wrappedType, unsigned int numVariables);
 
         /// This may have instantiations
-        const TypeExp& getActualWrappedType() const;
+        const TypePtr& getActualWrappedType() const;
 
         const std::vector<TypeExp>& getTypeAssignments() const;
         std::vector<TypeExp>& getTypeAssignments();
@@ -45,7 +45,7 @@ namespace babelwires {
       private:
         /// The actual type may differ from the GenericType's wrapped type
         /// because variables will have been substituted.
-        TypeExp m_actualWrappedType;
+        TypePtr m_actualWrappedType;
         /// When unassigned, these hold a default constructed TypeExp.
         std::vector<TypeExp> m_typeVariableAssignments;
         /// The current value of the actualWrappedType.

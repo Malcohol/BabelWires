@@ -47,5 +47,5 @@ babelwires::GenericTypeConstructor::constructType(const TypeSystem& typeSystem, 
     }
     const TypeExp& wrappedType = arguments.getTypeArguments()[0];
 
-    return makeType<ConstructedType<GenericType>>(std::move(newTypeExp), wrappedType, numVariables);
+    return makeType<ConstructedType<GenericType>>(std::move(newTypeExp), typeSystem, wrappedType, numVariables);
 }
