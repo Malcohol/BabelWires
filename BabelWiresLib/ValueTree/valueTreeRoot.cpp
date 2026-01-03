@@ -14,24 +14,34 @@
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 struct babelwires::ValueTreeRoot::ComplexConstructorArguments {
+    ComplexConstructorArguments(const TypeSystem& typeSystem, TypePtr typePtr)
+        : m_typeSystem(typeSystem)
+        , m_typePtr(std::move(typePtr)) {
+        auto [newValue, _] = m_typePtr->createValue(typeSystem);
+        m_value = newValue;
+    }
+
     ComplexConstructorArguments(const TypeSystem& typeSystem, TypeExp typeExp)
         : m_typeSystem(typeSystem)
-        , m_typeExp(std::move(typeExp)) {
         // TODO Do we need to handle failure here? Use tryResolve and possibly fall back to FailureType?
-        const TypePtr& type = m_typeExp.resolve(typeSystem);
-        auto [newValue, _] = type->createValue(typeSystem);
+        // Perhaps there should be no constructor from TypeExp?
+        , m_typePtr(typeExp.resolve(typeSystem)) {
+        auto [newValue, _] = m_typePtr->createValue(typeSystem);
         m_value = newValue;
     }
     const TypeSystem& m_typeSystem;
-    TypeExp m_typeExp;
+    TypePtr m_typePtr;
     ValueHolder m_value;
 };
 
 babelwires::ValueTreeRoot::ValueTreeRoot(ComplexConstructorArguments&& arguments)
-    : ValueTreeNode(std::move(arguments.m_typeExp), std::move(arguments.m_value))
+    : ValueTreeNode(std::move(arguments.m_typePtr), std::move(arguments.m_value))
     , m_typeSystem(arguments.m_typeSystem) {
         initializeChildren(arguments.m_typeSystem);
     }
+
+babelwires::ValueTreeRoot::ValueTreeRoot(const TypeSystem& typeSystem, TypePtr typePtr)
+    : ValueTreeRoot(ComplexConstructorArguments(typeSystem, std::move(typePtr))) {}
 
 babelwires::ValueTreeRoot::ValueTreeRoot(const TypeSystem& typeSystem, TypeExp typeExp)
     : ValueTreeRoot(ComplexConstructorArguments(typeSystem, std::move(typeExp))) {}

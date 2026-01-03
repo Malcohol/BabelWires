@@ -13,8 +13,8 @@
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
-babelwires::ValueTreeChild::ValueTreeChild(TypeExp typeExp, const ValueHolder& valueHolder, ValueTreeNode* owner)
-    : ValueTreeNode(std::move(typeExp), valueHolder) {
+babelwires::ValueTreeChild::ValueTreeChild(TypePtr typePtr, const ValueHolder& valueHolder, ValueTreeNode* owner)
+    : ValueTreeNode(std::move(typePtr), valueHolder) {
     assert(owner != nullptr);
     setOwner(owner);
 }

@@ -31,7 +31,7 @@ namespace babelwires {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(ValueTreeNode);
 
-        ValueTreeNode(TypeExp typeExp, ValueHolder value);
+        ValueTreeNode(TypePtr typePtr, ValueHolder value);
         virtual ~ValueTreeNode();
 
         const ValueTreeNode* getOwner() const;
@@ -59,7 +59,7 @@ namespace babelwires {
         std::size_t getHash() const;
 
         /// Get the TypeExp which describes the type of the value.
-        const TypeExp& getTypeExp() const;
+        TypeExp getTypeExp() const;
 
         /// Get the value currently held by this node.
         const ValueHolder& getValue() const;
@@ -138,8 +138,8 @@ namespace babelwires {
         ValueTreeNode& operator=(const ValueTreeNode&) = delete;
 
       private:
-        /// The type of the value at this ValueTreeNode.
-        TypeExp m_typeExp;
+        /// The type at this ValueTreeNode.
+        TypePtr m_typePtr;
 
         /// The value at this ValueTreeNode. 
         /// Note: This should not be modified directly: all modifications should be managed via the ValueTreeRoot.

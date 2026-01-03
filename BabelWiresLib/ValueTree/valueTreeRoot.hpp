@@ -7,9 +7,9 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 namespace babelwires {
     class Type;
@@ -19,6 +19,9 @@ namespace babelwires {
     /// A ValueTreeRoot is a ValueTreeNode that owns its value.
     class ValueTreeRoot : public ValueTreeNode {
       public:
+        /// Construct a rooted ValueTreeNode which carries values of the given type.
+        ValueTreeRoot(const TypeSystem& typeSystem, TypePtr typePtr);
+
         /// Construct a rooted ValueTreeNode which carries values of the given type.
         ValueTreeRoot(const TypeSystem& typeSystem, TypeExp typeExp);
 
