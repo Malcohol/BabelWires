@@ -12,7 +12,35 @@
 #include <BabelWiresLib/Types/Record/recordValue.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
-babelwires::RecordType::RecordType(const TypeSystem& typeSystem, std::vector<Field> fields)
+namespace {
+    void addFields(const babelwires::TypeSystem& typeSystem, std::vector<babelwires::RecordType::Field>& fields,
+                   std::vector<babelwires::ShortId>& optionalFieldIds,
+                   const std::vector<babelwires::RecordType::FieldDefinition>& newFields) {
+        for (const auto& f : newFields) {
+            fields.emplace_back(
+                babelwires::RecordType::Field{f.m_identifier, f.m_type.resolve(typeSystem), f.m_optionality});
+            assert(f.m_identifier.getDiscriminator() != 0 && "Field identifiers must be registered");
+            if (f.m_optionality != babelwires::RecordType::Optionality::alwaysActive) {
+                optionalFieldIds.emplace_back(f.m_identifier);
+            }
+        }
+    }
+} // namespace
+
+babelwires::RecordType::RecordType(const TypeSystem& typeSystem, const std::vector<FieldDefinition>& fields) {
+    m_fields.reserve(fields.size());
+    addFields(typeSystem, m_fields, m_optionalFieldIds, fields);
+}
+
+babelwires::RecordType::RecordType(const TypeSystem& typeSystem, const RecordType& parent,
+                                   const std::vector<FieldDefinition>& additionalFields) {
+    m_fields.reserve(parent.getFields().size() + additionalFields.size());
+    m_fields = parent.m_fields;
+    m_optionalFieldIds = parent.m_optionalFieldIds;
+    addFields(typeSystem, m_fields, m_optionalFieldIds, additionalFields);
+}
+
+babelwires::RecordType::RecordType(const TypeSystem& typeSystem, int _, std::vector<Field> fields)
     : m_fields(std::move(fields)) {
     for (const auto& f : m_fields) {
         assert(f.m_identifier.getDiscriminator() != 0 && "Field identifiers must be registered");
@@ -21,24 +49,6 @@ babelwires::RecordType::RecordType(const TypeSystem& typeSystem, std::vector<Fie
         }
     }
 }
-
-namespace {
-    std::vector<babelwires::RecordType::Field>
-    getCombinedFieldSet(const babelwires::RecordType& parent,
-                        std::vector<babelwires::RecordType::Field> additionalFields) {
-        const std::size_t numParentFields = parent.getFields().size();
-        const std::size_t numAdditionalFields = additionalFields.size();
-        const std::size_t combinedSize = numParentFields + numAdditionalFields;
-        additionalFields.resize(combinedSize);
-        std::move_backward(additionalFields.begin(), additionalFields.begin() + numAdditionalFields,
-                           additionalFields.begin() + combinedSize);
-        std::copy(parent.getFields().begin(), parent.getFields().end(), additionalFields.begin());
-        return std::move(additionalFields);
-    }
-} // namespace
-
-babelwires::RecordType::RecordType(const TypeSystem& typeSystem, const RecordType& parent, std::vector<Field> additionalFields)
-    : RecordType(typeSystem, getCombinedFieldSet(parent, std::move(additionalFields))) {}
 
 std::string babelwires::RecordType::getFlavour() const {
     return "record";
@@ -64,9 +74,8 @@ void babelwires::RecordType::activateField(const TypeSystem& typeSystem, ValueHo
     }
 
     RecordValue& recordValue = value.copyContentsAndGetNonConst().is<RecordValue>();
-    const TypePtr& fieldType = field.m_type.resolve(typeSystem);
     // If the value happens to be already there, it gets overridden.
-    recordValue.setValue(field.m_identifier, fieldType->createValue(typeSystem));
+    recordValue.setValue(field.m_identifier, field.m_type->createValue(typeSystem));
 }
 
 void babelwires::RecordType::deactivateField(ValueHolder& value, ShortId fieldId) const {
@@ -102,11 +111,12 @@ void babelwires::RecordType::selectOptionals(const TypeSystem& typeSystem, Value
             ++count;
         }
         assert(!(isSetActivated && isSetDeactivated) && "Field cannot be both activated and deactivated");
-        const bool shouldBeActive = isSetActivated || (!isSetDeactivated && field.m_optionality == Optionality::optionalDefaultActive);
-        const bool shouldBeInactive = isSetDeactivated || (!isSetActivated && field.m_optionality == Optionality::optionalDefaultInactive);
+        const bool shouldBeActive =
+            isSetActivated || (!isSetDeactivated && field.m_optionality == Optionality::optionalDefaultActive);
+        const bool shouldBeInactive =
+            isSetDeactivated || (!isSetActivated && field.m_optionality == Optionality::optionalDefaultInactive);
         if (shouldBeActive && !isActivated(temp, fieldId)) {
-            const TypePtr& fieldType = field.m_type.resolve(typeSystem);
-            recordValue.setValue(fieldId, fieldType->createValue(typeSystem));
+            recordValue.setValue(fieldId, field.m_type->createValue(typeSystem));
         } else if (shouldBeInactive && isActivated(temp, fieldId)) {
             recordValue.removeValue(fieldId);
         }
@@ -149,14 +159,14 @@ babelwires::NewValueHolder babelwires::RecordType::createValue(const TypeSystem&
     auto newValue = babelwires::ValueHolder::makeValue<RecordValue>();
     for (const auto& f : m_fields) {
         if (f.m_optionality != Optionality::optionalDefaultInactive) {
-            const TypePtr& fieldType = f.m_type.resolve(typeSystem);
-            newValue.m_nonConstReference.setValue(f.m_identifier, fieldType->createValue(typeSystem));
+            newValue.m_nonConstReference.setValue(f.m_identifier, f.m_type->createValue(typeSystem));
         }
     }
     return std::move(newValue);
 }
 
-bool babelwires::RecordType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
+bool babelwires::RecordType::visitValue(const TypeSystem& typeSystem, const Value& v,
+                                        ChildValueVisitor& visitor) const {
     const RecordValue* const recordValue = v.as<RecordValue>();
     if (!recordValue) {
         return false;
@@ -168,7 +178,7 @@ bool babelwires::RecordType::visitValue(const TypeSystem& typeSystem, const Valu
                 return false;
             }
         } else {
-            if (!visitor(typeSystem, f.m_type, **value, PathStep{f.m_identifier})) {
+            if (!visitor(typeSystem, f.m_type->getTypeExp(), **value, PathStep{f.m_identifier})) {
                 return false;
             }
         }
@@ -206,7 +216,7 @@ babelwires::RecordType::getChild(const ValueHolder& compoundValue, unsigned int 
     const Field& f = getFieldFromChildIndex(compoundValue, i);
     const RecordValue& recordValue = compoundValue->is<RecordValue>();
     const ValueHolder& value = recordValue.getValue(f.m_identifier);
-    return {&value, PathStep{f.m_identifier}, f.m_type};
+    return {&value, PathStep{f.m_identifier}, f.m_type->getTypeExp()};
 }
 
 std::tuple<babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp>
@@ -214,7 +224,7 @@ babelwires::RecordType::getChildNonConst(ValueHolder& compoundValue, unsigned in
     const Field& f = getFieldFromChildIndex(compoundValue, i);
     RecordValue& recordValue = compoundValue.copyContentsAndGetNonConst().is<RecordValue>();
     ValueHolder& value = recordValue.getValue(f.m_identifier);
-    return {&value, PathStep{f.m_identifier}, f.m_type};
+    return {&value, PathStep{f.m_identifier}, f.m_type->getTypeExp()};
 }
 
 int babelwires::RecordType::getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const {
@@ -264,7 +274,7 @@ std::optional<babelwires::SubtypeOrder> babelwires::RecordType::compareSubtypeHe
     auto otherIt = otherFields.begin();
     while ((thisIt < thisFields.end()) && (otherIt < otherFields.end())) {
         if (thisIt->m_identifier == otherIt->m_identifier) {
-            const SubtypeOrder fieldComparison = typeSystem.compareSubtype(thisIt->m_type, otherIt->m_type);
+            const SubtypeOrder fieldComparison = typeSystem.compareSubtype(thisIt->m_type->getTypeExp(), otherIt->m_type->getTypeExp());
             allFieldTest = subtypeProduct(allFieldTest, fieldComparison);
             if (thisIt->m_optionality == Optionality::alwaysActive) {
                 if (otherIt->m_optionality != Optionality::alwaysActive) {
@@ -311,7 +321,8 @@ std::optional<babelwires::SubtypeOrder> babelwires::RecordType::compareSubtypeHe
     if (allFieldTest != SubtypeOrder::IsDisjoint) {
         return allFieldTest;
     }
-    if ((fixedSubTest && (fixedSubTest != SubtypeOrder::IsDisjoint)) || (fixedSuperTest && (fixedSuperTest != SubtypeOrder::IsDisjoint))) {
+    if ((fixedSubTest && (fixedSubTest != SubtypeOrder::IsDisjoint)) ||
+        (fixedSuperTest && (fixedSuperTest != SubtypeOrder::IsDisjoint))) {
         return SubtypeOrder::IsIntersecting;
     }
     return SubtypeOrder::IsDisjoint;
@@ -332,20 +343,20 @@ std::string babelwires::RecordType::valueToString(const TypeSystem& typeSystem, 
     }
 }
 
-std::tuple<const babelwires::ValueHolder&, babelwires::TypeExp> babelwires::RecordType::getChildById(const ValueHolder& compoundValue,
-    ShortId fieldId) const {
+std::tuple<const babelwires::ValueHolder&, babelwires::TypeExp>
+babelwires::RecordType::getChildById(const ValueHolder& compoundValue, ShortId fieldId) const {
     assert(!isOptional(fieldId) || isActivated(compoundValue, fieldId));
     const RecordValue& recordValue = compoundValue->is<RecordValue>();
     const ValueHolder& fieldValue = recordValue.getValue(fieldId);
     const Field& field = getField(fieldId);
-    return {fieldValue, field.m_type};   
+    return {fieldValue, field.m_type->getTypeExp()};
 }
 
-std::tuple<babelwires::ValueHolder&, babelwires::TypeExp> babelwires::RecordType::getChildByIdNonConst(ValueHolder& compoundValue,
-                                                                    ShortId fieldId) const {
+std::tuple<babelwires::ValueHolder&, babelwires::TypeExp>
+babelwires::RecordType::getChildByIdNonConst(ValueHolder& compoundValue, ShortId fieldId) const {
     assert(!isOptional(fieldId) || isActivated(compoundValue, fieldId));
     RecordValue& recordValue = compoundValue.copyContentsAndGetNonConst().is<RecordValue>();
     ValueHolder& fieldValue = recordValue.getValue(fieldId);
     const Field& field = getField(fieldId);
-    return {fieldValue, field.m_type};
+    return {fieldValue, field.m_type->getTypeExp()};
 }

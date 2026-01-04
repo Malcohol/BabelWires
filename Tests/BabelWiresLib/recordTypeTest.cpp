@@ -582,9 +582,9 @@ TEST(RecordTypeTest, constructorBasics) {
     const babelwires::RecordType& recordType = type->is<babelwires::RecordType>();
     EXPECT_EQ(recordType.getFields().size(), 2);
     EXPECT_EQ(recordType.getFields()[0].m_identifier, "int0");
-    EXPECT_EQ(recordType.getFields()[0].m_type, babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(recordType.getFields()[0].m_type->getTypeExp(), babelwires::DefaultIntType::getThisType());
     EXPECT_EQ(recordType.getFields()[1].m_identifier, "str0");
-    EXPECT_EQ(recordType.getFields()[1].m_type, babelwires::StringType::getThisType());
+    EXPECT_EQ(recordType.getFields()[1].m_type->getTypeExp(), babelwires::StringType::getThisType());
 }
 
 TEST(RecordTypeTest, constructorWithOptionals) {
@@ -604,10 +604,10 @@ TEST(RecordTypeTest, constructorWithOptionals) {
     EXPECT_EQ(recordType.getFields().size(), 2);
     EXPECT_EQ(recordType.getOptionalFieldIds().size(), 1);
     EXPECT_EQ(recordType.getFields()[0].m_identifier, "int0");
-    EXPECT_EQ(recordType.getFields()[0].m_type, babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(recordType.getFields()[0].m_type->getTypeExp(), babelwires::DefaultIntType::getThisType());
     EXPECT_EQ(recordType.getFields()[0].m_optionality, babelwires::RecordType::Optionality::alwaysActive);
     EXPECT_EQ(recordType.getFields()[1].m_identifier, "str0");
-    EXPECT_EQ(recordType.getFields()[1].m_type, babelwires::StringType::getThisType());
+    EXPECT_EQ(recordType.getFields()[1].m_type->getTypeExp(), babelwires::StringType::getThisType());
     EXPECT_EQ(recordType.getFields()[1].m_optionality, babelwires::RecordType::Optionality::optionalDefaultInactive);
 }
 
@@ -642,9 +642,9 @@ TEST(RecordTypeTest, constructorMakeRef) {
     const babelwires::RecordType& recordType = type->is<babelwires::RecordType>();
     EXPECT_EQ(recordType.getFields().size(), 2);
     EXPECT_EQ(recordType.getFields()[0].m_identifier, "int0");
-    EXPECT_EQ(recordType.getFields()[0].m_type, babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(recordType.getFields()[0].m_type->getTypeExp(), babelwires::DefaultIntType::getThisType());
     EXPECT_EQ(recordType.getFields()[1].m_identifier, "str0");
-    EXPECT_EQ(recordType.getFields()[1].m_type, babelwires::StringType::getThisType());
+    EXPECT_EQ(recordType.getFields()[1].m_type->getTypeExp(), babelwires::StringType::getThisType());
 }
 
 TEST(RecordTypeTest, constructorName) {

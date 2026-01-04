@@ -24,11 +24,11 @@ babelwires::RecordTypeConstructor::constructType(const TypeSystem& typeSystem, T
     for (unsigned int i = 0; i < arguments.getValueArguments().size(); ++i) {
         if (const FieldIdValue* fieldId = arguments.getValueArguments()[i]->as<FieldIdValue>()) {
             fields.emplace_back(
-                RecordType::Field{fieldId->get(), arguments.getTypeArguments()[i], fieldId->getOptionality()});
+                RecordType::Field{fieldId->get(), resolvedTypeArguments[i], fieldId->getOptionality()});
         } else {
             throw TypeSystemException() << "RecordTypeConstructor value argument " << i << " was not a FieldIdValue";
         }
     }
 
-    return makeType<ConstructedType<RecordType>>(std::move(newTypeExp), typeSystem, std::move(fields));
+    return makeType<ConstructedType<RecordType>>(std::move(newTypeExp), typeSystem, 0, std::move(fields));
 }

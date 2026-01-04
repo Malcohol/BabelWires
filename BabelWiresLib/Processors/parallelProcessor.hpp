@@ -22,7 +22,7 @@ namespace babelwires {
     /// processor's ProcessEntry call provides direct access.
     class ParallelProcessorInputBase : public RecordType {
       public:
-        ParallelProcessorInputBase(const TypeSystem& typeSystem, std::vector<RecordType::Field> commonInput, ShortId arrayId, TypeExp entryType);
+        ParallelProcessorInputBase(const TypeSystem& typeSystem, std::vector<RecordType::FieldDefinition> commonInput, ShortId arrayId, TypeExp entryType);
     };
 
     /// ParallelProcessors should override this for their output type. The type will contain an array of the right

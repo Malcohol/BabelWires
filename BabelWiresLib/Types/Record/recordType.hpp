@@ -18,13 +18,13 @@ namespace babelwires {
       public:
         enum class Optionality { alwaysActive, optionalDefaultInactive, optionalDefaultActive };
 
-        struct Field {
+        struct FieldDefinition {
             ShortId m_identifier;
             TypeExp m_type;
             Optionality m_optionality = Optionality::alwaysActive;
         };
 
-        RecordType(const TypeSystem& typeSystem, std::vector<Field> fields);
+        RecordType(const TypeSystem& typeSystem, const std::vector<FieldDefinition>& fields);
 
         /// A convenience method for defining a record with all the fields of "parent" plus "additionalFields".
         /// This ensures a subtype relationship between this and parent, and ensures that the relationship is
@@ -32,7 +32,18 @@ namespace babelwires {
         /// Note that you don't have to use this method to establish that relationship, since subtyping is
         /// defined by the sets of fields. This is similar to duck-typing, but since field identifiers are globally
         /// unique, a subtyping relationship should never arise unintentionally.
-        RecordType(const TypeSystem& typeSystem, const RecordType& parent, std::vector<Field> additionalFields);
+        RecordType(const TypeSystem& typeSystem, const RecordType& parent, const std::vector<FieldDefinition>& additionalFields);
+
+        /// The storage type, which has a resolved TypePtr instead of a TypeExp.
+        struct Field {
+            ShortId m_identifier;
+            TypePtr m_type;
+            Optionality m_optionality;
+        };
+
+        /// Construct a record when you have resolved types (e.g. within a type constructor).
+        /// The dummy int is just to disambiguate calls.
+        RecordType(const TypeSystem& typeSystem, int _, std::vector<Field> fields);
 
         std::string getFlavour() const override;
 
@@ -53,14 +64,14 @@ namespace babelwires {
         /// Is the given optional field activated?
         bool isActivated(const ValueHolder& value, ShortId fieldId) const;
 
-        /// Get the field information.
-        const std::vector<Field>& getFields() const;
-
         /// Get the set of optional fields.
         const std::vector<ShortId>& getOptionalFieldIds() const;
 
         /// Get the count of the currently active optional fields.
         unsigned int getNumActiveFields(const ValueHolder& value) const;
+
+        /// Get the field information.
+        const std::vector<Field>& getFields() const;
 
       public:
         /// Get a reference to the child's value using its field identifier.

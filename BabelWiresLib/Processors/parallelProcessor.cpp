@@ -30,14 +30,14 @@ namespace {
         return babelwires::ArrayTypeConstructor::makeTypeExp(std::move(entryType), 1, 16);
     }
 
-    std::vector<babelwires::RecordType::Field>&& addArray(std::vector<babelwires::RecordType::Field>&& commonData,
+    std::vector<babelwires::RecordType::FieldDefinition>&& addArray(std::vector<babelwires::RecordType::FieldDefinition>&& commonData,
                                                           babelwires::ShortId arrayId, babelwires::TypeExp entryType) {
-        commonData.emplace_back(babelwires::RecordType::Field{arrayId, getParallelArray(std::move(entryType))});
+        commonData.emplace_back(babelwires::RecordType::FieldDefinition{arrayId, getParallelArray(std::move(entryType))});
         return std::move(commonData);
     }
 } // namespace
 
-babelwires::ParallelProcessorInputBase::ParallelProcessorInputBase(const TypeSystem& typeSystem, std::vector<RecordType::Field> commonData,
+babelwires::ParallelProcessorInputBase::ParallelProcessorInputBase(const TypeSystem& typeSystem, std::vector<RecordType::FieldDefinition> commonData,
                                                                    ShortId arrayId, TypeExp entryType)
     : RecordType(typeSystem, addArray(std::move(commonData), arrayId, entryType)) {}
 
