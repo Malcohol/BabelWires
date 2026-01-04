@@ -20,7 +20,7 @@ babelwires::TupleTypeConstructor::constructType(const TypeSystem& typeSystem, Ty
                                     << arguments.getValueArguments().size();
     }
 
-    return makeType<ConstructedType<TupleType>>(std::move(newTypeExp), typeSystem, arguments.getTypeArguments());
+    return makeType<ConstructedType<TupleType>>(std::move(newTypeExp), resolvedTypeArguments);
 }
 
 babelwires::TypeExp babelwires::TupleTypeConstructor::makeTypeExp(std::vector<TypeExp> types) {
