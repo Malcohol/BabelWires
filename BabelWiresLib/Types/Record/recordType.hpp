@@ -41,9 +41,8 @@ namespace babelwires {
             Optionality m_optionality;
         };
 
-        /// Construct a record when you have resolved types (e.g. within a type constructor).
-        /// The dummy int is just to disambiguate calls.
-        RecordType(const TypeSystem& typeSystem, int _, std::vector<Field> fields);
+        /// Construct a record when you have TypePtrs
+        RecordType(std::vector<Field> fields);
 
         std::string getFlavour() const override;
 

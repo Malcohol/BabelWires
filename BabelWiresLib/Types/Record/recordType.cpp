@@ -40,7 +40,7 @@ babelwires::RecordType::RecordType(const TypeSystem& typeSystem, const RecordTyp
     addFields(typeSystem, m_fields, m_optionalFieldIds, additionalFields);
 }
 
-babelwires::RecordType::RecordType(const TypeSystem& typeSystem, int _, std::vector<Field> fields)
+babelwires::RecordType::RecordType(std::vector<Field> fields)
     : m_fields(std::move(fields)) {
     for (const auto& f : m_fields) {
         assert(f.m_identifier.getDiscriminator() != 0 && "Field identifiers must be registered");
