@@ -17,15 +17,14 @@ namespace babelwires {
     /// UI cannot know which type is intended and editing won't work properly.
     class SumType : public Type {
       public:
-        using SummandDefinitions = std::vector<TypeExp>;
+        using SummandTypeExps = std::vector<TypeExp>;
 
-        SumType(const TypeSystem& typeSystem, SummandDefinitions summands, unsigned int indexOfDefaultSummand = 0);
+        SumType(const TypeSystem& typeSystem, SummandTypeExps summands, unsigned int indexOfDefaultSummand = 0);
 
         using Summands = std::vector<TypePtr>;
 
         /// Constructor for use when TypePtrs are available.
-        /// The dummy int is just to distinguish the constructor.
-        SumType(const TypeSystem& typeSystem, int _, Summands summands, unsigned int indexOfDefaultSummand = 0);
+        SumType(Summands summands, unsigned int indexOfDefaultSummand = 0);
 
         /// Always creates a value of the first summand.
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;

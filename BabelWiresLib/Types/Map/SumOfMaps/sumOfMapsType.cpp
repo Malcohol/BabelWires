@@ -10,8 +10,8 @@
 #include <BabelWiresLib/Types/Map/mapTypeConstructor.hpp>
 
 namespace {
-    babelwires::SumType::SummandDefinitions getTypeCombinations(const babelwires::SumType::SummandDefinitions& sourceTypes, const babelwires::SumType::SummandDefinitions& targetTypes) {
-        babelwires::SumType::SummandDefinitions combinations;
+    babelwires::SumType::SummandTypeExps getTypeCombinations(const babelwires::SumType::SummandTypeExps& sourceTypes, const babelwires::SumType::SummandTypeExps& targetTypes) {
+        babelwires::SumType::SummandTypeExps combinations;
         combinations.reserve(sourceTypes.size() * targetTypes.size());
         for (const auto& s : sourceTypes) {
             for (const auto& t : targetTypes) {
@@ -22,7 +22,7 @@ namespace {
     }
 }
 
-babelwires::SumOfMapsType::SumOfMapsType(const TypeSystem& typeSystem, SummandDefinitions sourceTypes, SummandDefinitions targetTypes,
+babelwires::SumOfMapsType::SumOfMapsType(const TypeSystem& typeSystem, SummandTypeExps sourceTypes, SummandTypeExps targetTypes,
                                          unsigned int indexOfDefaultSourceType, unsigned int indexOfDefaultTargetType)
     : SumType(typeSystem, getTypeCombinations(sourceTypes, targetTypes),
               (indexOfDefaultSourceType * sourceTypes.size()) + indexOfDefaultTargetType)
@@ -41,10 +41,10 @@ std::tuple<unsigned int, unsigned int> babelwires::SumOfMapsType::getIndexOfSour
     return { indexInSum / numSourceTypes, indexInSum % numSourceTypes};
 }
 
-const babelwires::SumType::SummandDefinitions& babelwires::SumOfMapsType::getSourceTypes() const {
+const babelwires::SumType::SummandTypeExps& babelwires::SumOfMapsType::getSourceTypes() const {
     return m_sourceTypes;
 }
-const babelwires::SumType::SummandDefinitions& babelwires::SumOfMapsType::getTargetTypes() const {
+const babelwires::SumType::SummandTypeExps& babelwires::SumOfMapsType::getTargetTypes() const {
     return m_targetTypes;
 }
 unsigned int babelwires::SumOfMapsType::getIndexOfDefaultSourceType() const {
