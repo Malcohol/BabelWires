@@ -39,8 +39,8 @@ babelwires::MapTypeConstructor::constructType(const TypeSystem& typeSystem, Type
                                     << arguments.getTypeArguments().size();
     }
     babelwires::MapEntryData::Kind kind = extractValueArguments(typeSystem, arguments.getValueArguments());
-    return makeType<ConstructedType<MapType>>(std::move(newTypeExp), typeSystem, arguments.getTypeArguments()[0],
-                                              arguments.getTypeArguments()[1], kind);
+    return makeType<ConstructedType<MapType>>(std::move(newTypeExp), resolvedTypeArguments[0], resolvedTypeArguments[1],
+                                              kind);
 }
 
 babelwires::TypeExp babelwires::MapTypeConstructor::makeTypeExp(TypeExp sourceTypeExp, TypeExp targetTypeExp,

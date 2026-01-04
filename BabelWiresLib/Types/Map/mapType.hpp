@@ -22,6 +22,9 @@ namespace babelwires {
       public:
         MapType(const TypeSystem& typeSystem, TypeExp sourceTypeExp, TypeExp targetTypeExp, MapEntryData::Kind defaultFallbackKind = MapEntryData::Kind::All21);
 
+        /// Constructor when you have TypePtrs.
+        MapType(TypePtr sourceType, TypePtr targetType, MapEntryData::Kind defaultFallbackKind);
+
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 
         bool visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const override;

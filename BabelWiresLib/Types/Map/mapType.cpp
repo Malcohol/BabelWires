@@ -17,6 +17,13 @@ babelwires::MapType::MapType(const TypeSystem& typeSystem, TypeExp sourceTypeExp
     assert(MapEntryData::isFallback(defaultFallbackKind) && "Only a fallback kind is expected here");
 }
 
+babelwires::MapType::MapType(TypePtr sourceType, TypePtr targetType, MapEntryData::Kind defaultFallbackKind)
+    : m_sourceType(std::move(sourceType))
+    , m_targetType(std::move(targetType))
+    , m_defaultFallbackKind(defaultFallbackKind) {
+    assert(MapEntryData::isFallback(defaultFallbackKind) && "Only a fallback kind is expected here");
+}
+
 babelwires::NewValueHolder babelwires::MapType::createValue(const TypeSystem& typeSystem) const {
     return ValueHolder::makeValue<MapValue>(typeSystem, m_sourceType, m_targetType, m_defaultFallbackKind);
 }
