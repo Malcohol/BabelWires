@@ -28,7 +28,6 @@
 #include <BabelWiresLib/Types/Tuple/tupleTypeConstructor.hpp>
 
 #include <BabelWiresLib/Types/Record/recordType.hpp>
-#include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
 void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<DefaultIntType>();
