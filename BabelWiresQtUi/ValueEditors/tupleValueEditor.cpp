@@ -35,11 +35,10 @@ babelwires::TupleValueEditor::TupleValueEditor(QWidget* parent, const ValueModel
         if (i > 0) {
             addSeparator(",");
         }
-        const auto& componentType = componentTypes[i].resolve(typeSystem);
         auto& componentValue = value.getValue(i);
         auto& perComponentData = m_perComponentData[i];
         perComponentData.m_value = componentValue;
-        perComponentData.m_valueModel.init(valueModelRegistry, typeSystem, componentType, perComponentData.m_value, false, false);
+        perComponentData.m_valueModel.init(valueModelRegistry, typeSystem, componentTypes[i], perComponentData.m_value, false, false);
         // TODO Don't like passing in a null parent. createEditor should probably not take a parent parameter.
         perComponentData.m_valueEditor = perComponentData.m_valueModel->createEditor(nullptr);
         perComponentData.m_valueModel->setEditorData(perComponentData.m_valueEditor);

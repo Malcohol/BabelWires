@@ -16,7 +16,11 @@ namespace babelwires {
     /// Also: The parameter types are expected to have EditableValues.
     class TupleType : public Type {
       public:
-        using ComponentTypes = std::vector<TypeExp>;
+        using ComponentTypesExps = std::vector<TypeExp>;
+
+        TupleType(const TypeSystem& typeSystem, ComponentTypesExps components);
+
+        using ComponentTypes = std::vector<TypePtr>;
 
         TupleType(ComponentTypes components);
 

@@ -35,7 +35,7 @@ void testDomain::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<testDomain::TestSimpleRecordType>(context.m_typeSystem);
     context.m_typeSystem.addEntry<testDomain::TestComplexRecordType>(context.m_typeSystem);
     context.m_typeSystem.addEntry<testDomain::TestRecordWithVariantsType>(context.m_typeSystem);    
-    context.m_typeSystem.addEntry<testDomain::TestTupleType>();
+    context.m_typeSystem.addEntry<testDomain::TestTupleType>(context.m_typeSystem);
     context.m_typeSystem.addEntry<testDomain::RecordWithNoFields>(context.m_typeSystem);
     context.m_typeSystem.addEntry<testDomain::TestSumType>(context.m_typeSystem);
     context.m_typeSystem.addEntry<testDomain::TestGenericType>(context.m_typeSystem);

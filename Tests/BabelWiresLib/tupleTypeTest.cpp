@@ -16,11 +16,11 @@
 TEST(TupleTypeTest, createValue) {
     testUtils::TestEnvironment testEnvironment;
 
-    testDomain::TestTupleType tupleType;
+    testDomain::TestTupleType tupleType(testEnvironment.m_typeSystem);
 
     EXPECT_EQ(tupleType.getComponentTypes().size(), 2);
-    EXPECT_EQ(tupleType.getComponentTypes()[0], babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(tupleType.getComponentTypes()[1], babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(tupleType.getComponentTypes()[0]->getTypeExp(), babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(tupleType.getComponentTypes()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisType());
 
     babelwires::ValueHolder newValue = tupleType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
@@ -39,7 +39,7 @@ TEST(TupleTypeTest, createValue) {
 TEST(TupleTypeTest, valueToString) {
     testUtils::TestEnvironment testEnvironment;
 
-    testDomain::TestTupleType tupleType;
+    testDomain::TestTupleType tupleType(testEnvironment.m_typeSystem);
     babelwires::NewValueHolder newValue = tupleType.createValue(testEnvironment.m_typeSystem);
     auto* newTuple = newValue.m_nonConstReference.as<babelwires::TupleValue>();
     ASSERT_NE(newTuple, nullptr);
@@ -66,8 +66,8 @@ TEST(TupleTypeTest, tupleTypeConstructor) {
 
     const babelwires::TupleType& tupleType = type->is<babelwires::TupleType>();
     EXPECT_EQ(tupleType.getComponentTypes().size(), 2);
-    EXPECT_EQ(tupleType.getComponentTypes()[0], babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(tupleType.getComponentTypes()[1], babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(tupleType.getComponentTypes()[0]->getTypeExp(), babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(tupleType.getComponentTypes()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisType());
 }
 
 TEST(TupleTypeTest, makeTypeExp) {
@@ -82,8 +82,8 @@ TEST(TupleTypeTest, makeTypeExp) {
 
     const babelwires::TupleType& tupleType = type->is<babelwires::TupleType>();
     EXPECT_EQ(tupleType.getComponentTypes().size(), 2);
-    EXPECT_EQ(tupleType.getComponentTypes()[0], babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(tupleType.getComponentTypes()[1], babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(tupleType.getComponentTypes()[0]->getTypeExp(), babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(tupleType.getComponentTypes()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisType());
 }
 
 TEST(TupleTypeTest, tupleTypeConstructorMalformed) {

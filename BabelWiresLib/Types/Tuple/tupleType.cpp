@@ -11,6 +11,13 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleValue.hpp>
 
+babelwires::TupleType::TupleType(const TypeSystem& typeSystem, ComponentTypesExps components) {
+    m_componentTypes.reserve(components.size());
+    for (const auto& c : components) {
+        m_componentTypes.emplace_back(c.resolve(typeSystem));
+    }
+}
+
 babelwires::TupleType::TupleType(ComponentTypes components)
     : m_componentTypes(std::move(components)) {
 }
@@ -19,8 +26,7 @@ babelwires::NewValueHolder babelwires::TupleType::createValue(const TypeSystem& 
     TupleValue::Tuple newTuple;
     newTuple.reserve(m_componentTypes.size());
     for (const auto& t : m_componentTypes) {
-        const TypePtr& type = t.resolve(typeSystem);
-        newTuple.emplace_back(type->createValue(typeSystem));
+        newTuple.emplace_back(t->createValue(typeSystem));
     }
     return babelwires::ValueHolder::makeValue<TupleValue>(std::move(newTuple));
 }
@@ -34,8 +40,7 @@ bool babelwires::TupleType::visitValue(const TypeSystem& typeSystem, const Value
         return false;
     }
     for (unsigned int i = 0; i < m_componentTypes.size(); ++i) {
-        const TypePtr& type = m_componentTypes[i].resolve(typeSystem);
-        if (!visitor(typeSystem, m_componentTypes[i], *tuple->getValue(i), i)) {
+        if (!visitor(typeSystem, m_componentTypes[i]->getTypeExp(), *tuple->getValue(i), i)) {
             return false;
         }
     }
@@ -57,8 +62,16 @@ std::optional<babelwires::SubtypeOrder> babelwires::TupleType::compareSubtypeHel
     if (!otherTupleType) {
         return {};
     }
-    const std::vector<TypeExp>& componentsA = getComponentTypes();
-    const std::vector<TypeExp>& componentsB = otherTupleType->getComponentTypes();
+    std::vector<TypeExp> componentsA;
+    componentsA.reserve(m_componentTypes.size());
+    for (const auto& c : m_componentTypes) {
+        componentsA.emplace_back(c->getTypeExp());
+    }
+    std::vector<TypeExp> componentsB;
+    componentsB.reserve(otherTupleType->m_componentTypes.size());
+    for (const auto& c : otherTupleType->m_componentTypes) {
+        componentsB.emplace_back(c->getTypeExp());
+    }
   
     if (componentsA.size() != componentsB.size()) {
         return SubtypeOrder::IsDisjoint;
@@ -80,8 +93,7 @@ std::string babelwires::TupleType::valueToString(const TypeSystem& typeSystem, c
     for (int i = 0; i < m_componentTypes.size(); ++i) {
         os << sep;
         sep = ", ";
-        const TypePtr& type = m_componentTypes[i].resolve(typeSystem);
-        os << type->valueToString(typeSystem, tuple.getValue(i));
+        os << m_componentTypes[i]->valueToString(typeSystem, tuple.getValue(i));
     }
     os << ")";
     return os.str();
