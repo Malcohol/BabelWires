@@ -120,3 +120,6 @@ Speculative ideas:
 Optimizations:
 * Edit tree could offer "getModifiersAbove(path)" for use in some commands. (E.g. hasAncestorConnection)
 * Cache compareSubtype result.
+
+Improvements:
+* TypeConstructor caches could build up excess entries containing stale weakPtrs. These could be cleaned up every N type construction.
