@@ -51,10 +51,9 @@ namespace babelwires {
                                                     const std::vector<TypePtr>& resolvedTypeArguments) const = 0;
 
       private:
-        // TODO This keeps the constructed types alive forever. Consider using weak_ptr.
-        using PerTypeStorage = std::variant<std::monostate, TypePtr, std::string>;
-
-        const PerTypeStorage& getOrConstructTypeInternal(const TypeSystem& typeSystem,
+        using TypeOrError = std::variant<TypePtr, std::string>;
+        
+        TypeOrError getOrConstructTypeInternal(const TypeSystem& typeSystem,
                                                          const TypeConstructorArguments& arguments) const;
 
       private:
@@ -62,6 +61,8 @@ namespace babelwires {
         /// Use a shared-only lock on the assumption that the majority of simultaneous queries are not for the
         // same TypeExp.
         mutable std::shared_mutex m_mutexForCache;
+
+        using PerTypeStorage = std::variant<WeakTypePtr, std::string>;
 
         /// A cache which stops the system ending up with multiple copies of the same constructed type.
         mutable std::unordered_map<TypeConstructorArguments, PerTypeStorage> m_cache;
