@@ -41,8 +41,12 @@ namespace {
     }
 } // namespace
 
-babelwires::GenericType::GenericType(const TypeSystem& typeSystem, const TypeExp& wrappedType, unsigned int numVariables)
-    : m_wrappedType(wrappedType.resolve(typeSystem))
+babelwires::GenericType::GenericType(const TypeSystem& typeSystem, const TypeExp& wrappedType,
+                                     unsigned int numVariables)
+    : GenericType(wrappedType.resolve(typeSystem), numVariables) {}
+
+babelwires::GenericType::GenericType(const TypePtr& wrappedType, unsigned int numVariables)
+    : m_wrappedType(std::move(wrappedType))
     , m_numVariables(numVariables) {
     assert(m_numVariables > 0 && "GenericType must have at least one type variable");
     assert(m_numVariables <= TypeVariableData::c_maxNumTypeVariables && "GenericType with too many type variables");
@@ -82,7 +86,8 @@ babelwires::NewValueHolder babelwires::GenericType::createValue(const TypeSystem
     return babelwires::ValueHolder::makeValue<GenericValue>(typeSystem, m_wrappedType, m_numVariables);
 }
 
-bool babelwires::GenericType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
+bool babelwires::GenericType::visitValue(const TypeSystem& typeSystem, const Value& v,
+                                         ChildValueVisitor& visitor) const {
     const GenericValue* const genericValue = v.as<GenericValue>();
     if (!genericValue) {
         return false;

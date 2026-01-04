@@ -19,6 +19,8 @@ namespace babelwires {
         /// Create a generic type with the given number of variables.
         GenericType(const TypeSystem& typeSystem, const TypeExp& wrappedType, unsigned int numVariables);
 
+        GenericType(const TypePtr& wrappedType, unsigned int numVariables);
+
         std::string getFlavour() const override;
 
         /// The PathStep from the GenericType to the child it wraps.

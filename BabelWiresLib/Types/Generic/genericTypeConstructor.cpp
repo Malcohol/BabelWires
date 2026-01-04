@@ -45,7 +45,5 @@ babelwires::GenericTypeConstructor::constructType(const TypeSystem& typeSystem, 
         throw TypeSystemException() << "GenericTypeConstructor expects 1 type argument but got "
                                     << arguments.getTypeArguments().size();
     }
-    const TypeExp& wrappedType = arguments.getTypeArguments()[0];
-
-    return makeType<ConstructedType<GenericType>>(std::move(newTypeExp), typeSystem, wrappedType, numVariables);
+    return makeType<ConstructedType<GenericType>>(std::move(newTypeExp), resolvedTypeArguments[0], numVariables);
 }
