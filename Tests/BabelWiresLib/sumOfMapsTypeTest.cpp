@@ -17,8 +17,9 @@ namespace {
     class TestSumOfMapsType : public babelwires::SumOfMapsType {
       public:
         REGISTERED_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("TestSumOfMapsType"), 1);
-        TestSumOfMapsType()
+        TestSumOfMapsType(const babelwires::TypeSystem& typeSystem)
             : babelwires::SumOfMapsType(
+                  typeSystem,
                   {babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()},
                   {babelwires::DefaultIntType::getThisType(), babelwires::StringType::getThisType()}, 1, 0) {}
     };
@@ -27,7 +28,7 @@ namespace {
 TEST(SumOfMapsTypeTest, sumOfMapsTypeConstructor) {
     testUtils::TestEnvironment testEnvironment;
 
-    TestSumOfMapsType sumOfMapsType;
+    TestSumOfMapsType sumOfMapsType(testEnvironment.m_typeSystem);
 
     EXPECT_EQ(sumOfMapsType.getSummands().size(), 2 * 2);
 
@@ -44,7 +45,7 @@ TEST(SumOfMapsTypeTest, sumOfMapsTypeConstructor) {
 TEST(SumOfMapsTypeTest, sumOfMapsTypeCreateValue) {
     testUtils::TestEnvironment testEnvironment;
 
-    TestSumOfMapsType sumOfMapsType;
+    TestSumOfMapsType sumOfMapsType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder newValue = sumOfMapsType.createValue(testEnvironment.m_typeSystem);
 
@@ -61,7 +62,7 @@ TEST(SumOfMapsTypeTest, sumOfMapsTypeCreateValue) {
 TEST(SumOfMapsTypeTest, validValues) {
     testUtils::TestEnvironment testEnvironment;
 
-    TestSumOfMapsType sumOfMapsType;
+    TestSumOfMapsType sumOfMapsType(testEnvironment.m_typeSystem);
 
     const auto& intType = testEnvironment.m_typeSystem.getEntryByType<babelwires::DefaultIntType>();
     const auto& stringType = testEnvironment.m_typeSystem.getEntryByType<babelwires::StringType>();

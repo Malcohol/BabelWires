@@ -16,11 +16,11 @@
 TEST(SumTypeTest, sumTypeDefault0) {
     testUtils::TestEnvironment testEnvironment;
 
-    testDomain::TestSumType sumType(0);
+    testDomain::TestSumType sumType(testEnvironment.m_typeSystem, 0);
 
     EXPECT_EQ(sumType.getSummands().size(), 2);
-    EXPECT_EQ(sumType.getSummands()[0], babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(sumType.getSummands()[1], babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(sumType.getSummands()[0]->getTypeExp(), babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(sumType.getSummands()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisType());
     EXPECT_EQ(sumType.getIndexOfDefaultSummand(), 0);
 
     babelwires::ValueHolder newValue = sumType.createValue(testEnvironment.m_typeSystem);
@@ -41,11 +41,11 @@ TEST(SumTypeTest, sumTypeDefault0) {
 TEST(SumTypeTest, sumTypeDefault1) {
     testUtils::TestEnvironment testEnvironment;
 
-    testDomain::TestSumType sumType(1);
+    testDomain::TestSumType sumType(testEnvironment.m_typeSystem, 1);
 
     EXPECT_EQ(sumType.getSummands().size(), 2);
-    EXPECT_EQ(sumType.getSummands()[0], babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(sumType.getSummands()[1], babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(sumType.getSummands()[0]->getTypeExp(), babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(sumType.getSummands()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisType());
     EXPECT_EQ(sumType.getIndexOfDefaultSummand(), 1);
 
     babelwires::ValueHolder newValue = sumType.createValue(testEnvironment.m_typeSystem);
@@ -77,8 +77,8 @@ TEST(SumTypeTest, sumTypeConstructorNoDefaultIndex) {
 
     const babelwires::SumType& sumType = type->is<babelwires::SumType>();
     EXPECT_EQ(sumType.getSummands().size(), 2);
-    EXPECT_EQ(sumType.getSummands()[0], babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(sumType.getSummands()[1], babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(sumType.getSummands()[0]->getTypeExp(), babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(sumType.getSummands()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisType());
     EXPECT_EQ(sumType.getIndexOfDefaultSummand(), 0);
 }
 
@@ -97,8 +97,8 @@ TEST(SumTypeTest, sumTypeConstructorDefault1) {
 
     const babelwires::SumType& sumType = type->is<babelwires::SumType>();
     EXPECT_EQ(sumType.getSummands().size(), 2);
-    EXPECT_EQ(sumType.getSummands()[0], babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(sumType.getSummands()[1], babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(sumType.getSummands()[0]->getTypeExp(), babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(sumType.getSummands()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisType());
     EXPECT_EQ(sumType.getIndexOfDefaultSummand(), 1);
 }
 

@@ -10,8 +10,9 @@ namespace testDomain {
     class TestSumType : public babelwires::SumType {
       public:
         REGISTERED_TYPE("TestSumType", "TestSumType", "19c1e116-5e37-489e-9205-8d0b0a023f13", 1);
-        TestSumType(unsigned int defaultType = 1)
+        TestSumType(const babelwires::TypeSystem& typeSystem, unsigned int defaultType = 1)
             : babelwires::SumType(
+                  typeSystem,
                   {babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()},
                   defaultType) {}
     };

@@ -19,19 +19,19 @@ namespace babelwires {
     /// sure there is a much cleaner way of providing the same functionality, but this will have to do for now.
     class SumOfMapsType : public SumType {
       public:
-        SumOfMapsType(Summands sourceTypes, Summands targetTypes, unsigned int indexOfDefaultSourceType = 0,
-                      unsigned int indexOfDefaultTargetType = 0);
+        SumOfMapsType(const TypeSystem& typeSystem, SummandDefinitions sourceTypes, SummandDefinitions targetTypes,
+                      unsigned int indexOfDefaultSourceType = 0, unsigned int indexOfDefaultTargetType = 0);
 
-        const Summands& getSourceTypes() const;
-        const Summands& getTargetTypes() const;
+        const SummandDefinitions& getSourceTypes() const;
+        const SummandDefinitions& getTargetTypes() const;
         unsigned int getIndexOfDefaultSourceType() const;
         unsigned int getIndexOfDefaultTargetType() const;
 
         std::tuple<unsigned int, unsigned int> getIndexOfSourceAndTarget(unsigned int indexInSum) const;
 
       public:
-        Summands m_sourceTypes;
-        Summands m_targetTypes;
+        SummandDefinitions m_sourceTypes;
+        SummandDefinitions m_targetTypes;
         unsigned int m_indexOfDefaultSourceType;
         unsigned int m_indexOfDefaultTargetType;
     };

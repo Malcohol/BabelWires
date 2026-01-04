@@ -10,8 +10,8 @@
 #include <BabelWiresLib/Types/Map/mapTypeConstructor.hpp>
 
 namespace {
-    babelwires::SumType::Summands getTypeCombinations(const babelwires::SumType::Summands& sourceTypes, const babelwires::SumType::Summands& targetTypes) {
-        babelwires::SumType::Summands combinations;
+    babelwires::SumType::SummandDefinitions getTypeCombinations(const babelwires::SumType::SummandDefinitions& sourceTypes, const babelwires::SumType::SummandDefinitions& targetTypes) {
+        babelwires::SumType::SummandDefinitions combinations;
         combinations.reserve(sourceTypes.size() * targetTypes.size());
         for (const auto& s : sourceTypes) {
             for (const auto& t : targetTypes) {
@@ -22,9 +22,10 @@ namespace {
     }
 }
 
-babelwires::SumOfMapsType::SumOfMapsType(Summands sourceTypes, Summands targetTypes,
+babelwires::SumOfMapsType::SumOfMapsType(const TypeSystem& typeSystem, SummandDefinitions sourceTypes, SummandDefinitions targetTypes,
                                          unsigned int indexOfDefaultSourceType, unsigned int indexOfDefaultTargetType)
-    : SumType(getTypeCombinations(sourceTypes, targetTypes), (indexOfDefaultSourceType * sourceTypes.size()) + indexOfDefaultTargetType)
+    : SumType(typeSystem, getTypeCombinations(sourceTypes, targetTypes),
+              (indexOfDefaultSourceType * sourceTypes.size()) + indexOfDefaultTargetType)
     , m_sourceTypes(std::move(sourceTypes))
     , m_targetTypes(std::move(targetTypes))
     , m_indexOfDefaultSourceType(indexOfDefaultSourceType)
@@ -40,10 +41,10 @@ std::tuple<unsigned int, unsigned int> babelwires::SumOfMapsType::getIndexOfSour
     return { indexInSum / numSourceTypes, indexInSum % numSourceTypes};
 }
 
-const babelwires::SumType::Summands& babelwires::SumOfMapsType::getSourceTypes() const {
+const babelwires::SumType::SummandDefinitions& babelwires::SumOfMapsType::getSourceTypes() const {
     return m_sourceTypes;
 }
-const babelwires::SumType::Summands& babelwires::SumOfMapsType::getTargetTypes() const {
+const babelwires::SumType::SummandDefinitions& babelwires::SumOfMapsType::getTargetTypes() const {
     return m_targetTypes;
 }
 unsigned int babelwires::SumOfMapsType::getIndexOfDefaultSourceType() const {

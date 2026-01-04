@@ -35,8 +35,8 @@ babelwires::SumTypeConstructor::constructType(const TypeSystem& typeSystem, Type
         }
     }
 
-    return makeType<ConstructedType<SumType>>(std::move(newTypeExp), arguments.getTypeArguments(),
-                                                      defaultIndex);
+    return makeType<ConstructedType<SumType>>(std::move(newTypeExp), typeSystem, 0, resolvedTypeArguments,
+                                              defaultIndex);
 }
 
 babelwires::TypeExp babelwires::SumTypeConstructor::makeTypeExp(std::vector<TypeExp> types) {
