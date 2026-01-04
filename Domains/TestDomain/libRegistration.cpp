@@ -32,27 +32,27 @@ void testDomain::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<testDomain::TestSubSubEnum2>();
     context.m_typeSystem.addEntry<testDomain::TestSimpleArrayType>(context.m_typeSystem);
     context.m_typeSystem.addEntry<testDomain::TestCompoundArrayType>(context.m_typeSystem);
-    context.m_typeSystem.addEntry<testDomain::TestSimpleRecordType>();
-    context.m_typeSystem.addEntry<testDomain::TestComplexRecordType>();
+    context.m_typeSystem.addEntry<testDomain::TestSimpleRecordType>(context.m_typeSystem);
+    context.m_typeSystem.addEntry<testDomain::TestComplexRecordType>(context.m_typeSystem);
     context.m_typeSystem.addEntry<testDomain::TestRecordWithVariantsType>();    
     context.m_typeSystem.addEntry<testDomain::TestTupleType>();
-    context.m_typeSystem.addEntry<testDomain::RecordWithNoFields>();
+    context.m_typeSystem.addEntry<testDomain::RecordWithNoFields>(context.m_typeSystem);
     context.m_typeSystem.addEntry<testDomain::TestSumType>();
     context.m_typeSystem.addEntry<testDomain::TestGenericType>(context.m_typeSystem);
-    context.m_typeSystem.addEntry<testDomain::TestSimpleCompoundType>();
+    context.m_typeSystem.addEntry<testDomain::TestSimpleCompoundType>(context.m_typeSystem);
 
-    context.m_typeSystem.addEntry<testDomain::RecordA0>();
-    context.m_typeSystem.addEntry<testDomain::RecordA1>();
-    context.m_typeSystem.addEntry<testDomain::RecordAS>();
-    context.m_typeSystem.addEntry<testDomain::RecordB>();
-    context.m_typeSystem.addEntry<testDomain::RecordAB>();
-    context.m_typeSystem.addEntry<testDomain::RecordAOpt>();
-    context.m_typeSystem.addEntry<testDomain::RecordAOptFixed>();
-    context.m_typeSystem.addEntry<testDomain::RecordABOpt>();
-    context.m_typeSystem.addEntry<testDomain::RecordAOptS>();
+    context.m_typeSystem.addEntry<testDomain::RecordA0>(context.m_typeSystem);
+    context.m_typeSystem.addEntry<testDomain::RecordA1>(context.m_typeSystem);
+    context.m_typeSystem.addEntry<testDomain::RecordAS>(context.m_typeSystem);
+    context.m_typeSystem.addEntry<testDomain::RecordB>(context.m_typeSystem);
+    context.m_typeSystem.addEntry<testDomain::RecordAB>(context.m_typeSystem);
+    context.m_typeSystem.addEntry<testDomain::RecordAOpt>(context.m_typeSystem);
+    context.m_typeSystem.addEntry<testDomain::RecordAOptFixed>(context.m_typeSystem);
+    context.m_typeSystem.addEntry<testDomain::RecordABOpt>(context.m_typeSystem);
+    context.m_typeSystem.addEntry<testDomain::RecordAOptS>(context.m_typeSystem);
     context.m_typeSystem.addEntry<testDomain::RecordABOptChild>(context.m_typeSystem);
-    context.m_typeSystem.addEntry<testDomain::RecordAsub0>();
-    context.m_typeSystem.addEntry<testDomain::RecordAsubBsup>();
+    context.m_typeSystem.addEntry<testDomain::RecordAsub0>(context.m_typeSystem);
+    context.m_typeSystem.addEntry<testDomain::RecordAsubBsup>(context.m_typeSystem);
 
     context.m_typeSystem.addEntry<testDomain::RecordVWithNoFields>();
     context.m_typeSystem.addEntry<testDomain::RecordVA0>();
@@ -66,9 +66,9 @@ void testDomain::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<testDomain::RecordVABV01>();
     context.m_typeSystem.addEntry<testDomain::RecordVAVB>();
 
-    context.m_typeSystem.addEntry<testDomain::TestParallelProcessorInput>();
-    context.m_typeSystem.addEntry<testDomain::TestParallelProcessorOutput>();
-    context.m_typeSystem.addEntry<testDomain::TestProcessorInputOutputType>();
+    context.m_typeSystem.addEntry<testDomain::TestParallelProcessorInput>(context.m_typeSystem);
+    context.m_typeSystem.addEntry<testDomain::TestParallelProcessorOutput>(context.m_typeSystem);
+    context.m_typeSystem.addEntry<testDomain::TestProcessorInputOutputType>(context.m_typeSystem);
 
     context.m_processorReg.addProcessor<TestProcessor>();
     context.m_processorReg.addProcessor<TestParallelProcessor>();

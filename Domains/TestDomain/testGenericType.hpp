@@ -34,7 +34,7 @@ namespace testDomain {
     /// A simple compound type that can be used to instantiate the record in the nested generic type above.
     class TestSimpleCompoundType : public babelwires::RecordType {
       public:
-        TestSimpleCompoundType();
+        TestSimpleCompoundType(const babelwires::TypeSystem& typeSystem);
 
         REGISTERED_TYPE("scompoundT", "SimpleCompound", "a22a400c-66f0-4033-b29a-45af5f334476", 1);
     };

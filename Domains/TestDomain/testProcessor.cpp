@@ -19,8 +19,8 @@ babelwires::ShortId testDomain::TestProcessorInputOutputType::getRecordId() {
     return BW_SHORT_ID(s_recordIdInitializer, s_recordFieldName, s_recordUuid);
 }
 
-testDomain::TestProcessorInputOutputType::TestProcessorInputOutputType()
-    : RecordType({{getIntId(), babelwires::DefaultIntType::getThisType()},
+testDomain::TestProcessorInputOutputType::TestProcessorInputOutputType(const babelwires::TypeSystem& typeSystem)
+    : RecordType(typeSystem, {{getIntId(), babelwires::DefaultIntType::getThisType()},
                   {getOptIntId(), babelwires::DefaultIntType::getThisType(), Optionality::optionalDefaultInactive},
                   {getArrayId(),
                    babelwires::ArrayTypeConstructor::makeTypeExp(babelwires::DefaultIntType::getThisType(), 2, 8)},

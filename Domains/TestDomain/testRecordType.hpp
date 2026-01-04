@@ -10,7 +10,7 @@ namespace testDomain {
 
     class TestSimpleRecordType : public babelwires::RecordType {
       public:
-        TestSimpleRecordType();
+        TestSimpleRecordType(const babelwires::TypeSystem& typeSystem);
 
         REGISTERED_TYPE("srecordT", "SimpleRecord", "ea96a409-6424-4924-aefe-ecbe66139f17", 1);
 
@@ -36,7 +36,7 @@ namespace testDomain {
 
     class TestComplexRecordType : public babelwires::RecordType {
       public:
-        TestComplexRecordType();
+        TestComplexRecordType(const babelwires::TypeSystem& typeSystem);
 
         REGISTERED_TYPE("crecordT", "ComplexRecord", "87291871-677d-41a1-81e7-bf1206b1d396", 1);
 

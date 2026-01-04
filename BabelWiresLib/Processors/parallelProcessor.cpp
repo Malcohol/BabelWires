@@ -37,12 +37,12 @@ namespace {
     }
 } // namespace
 
-babelwires::ParallelProcessorInputBase::ParallelProcessorInputBase(std::vector<RecordType::Field> commonData,
+babelwires::ParallelProcessorInputBase::ParallelProcessorInputBase(const TypeSystem& typeSystem, std::vector<RecordType::Field> commonData,
                                                                    ShortId arrayId, TypeExp entryType)
-    : RecordType(addArray(std::move(commonData), arrayId, entryType)) {}
+    : RecordType(typeSystem, addArray(std::move(commonData), arrayId, entryType)) {}
 
-babelwires::ParallelProcessorOutputBase::ParallelProcessorOutputBase(ShortId arrayId, TypeExp entryType)
-    : RecordType({{arrayId, getParallelArray(std::move(entryType))}}) {}
+babelwires::ParallelProcessorOutputBase::ParallelProcessorOutputBase(const TypeSystem& typeSystem, ShortId arrayId, TypeExp entryType)
+    : RecordType(typeSystem, {{arrayId, getParallelArray(std::move(entryType))}}) {}
 
 babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectContext, const TypeExp& parallelInput,
                                                  const TypeExp& parallelOutput)

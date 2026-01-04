@@ -7,8 +7,8 @@
 
 #include <Domains/TestDomain/testArrayType.hpp>
 
-testDomain::TestSimpleRecordType::TestSimpleRecordType()
-    : RecordType({{getInt0Id(), babelwires::DefaultIntType::getThisType()},
+testDomain::TestSimpleRecordType::TestSimpleRecordType(const babelwires::TypeSystem& typeSystem)
+    : RecordType(typeSystem, {{getInt0Id(), babelwires::DefaultIntType::getThisType()},
                   {getInt1Id(), babelwires::DefaultIntType::getThisType()}}) {}
 
 babelwires::ShortId testDomain::TestSimpleRecordType::getInt0Id() {
@@ -19,8 +19,8 @@ babelwires::ShortId testDomain::TestSimpleRecordType::getInt1Id() {
     return BW_SHORT_ID(s_int1IdInitializer, s_int1FieldName, s_int1Uuid);
 }
 
-testDomain::TestComplexRecordType::TestComplexRecordType()
-    : RecordType({{getInt0Id(), babelwires::DefaultIntType::getThisType()},
+testDomain::TestComplexRecordType::TestComplexRecordType(const babelwires::TypeSystem& typeSystem)
+    : RecordType(typeSystem, {{getInt0Id(), babelwires::DefaultIntType::getThisType()},
                   {getOpIntId(), babelwires::DefaultIntType::getThisType(), Optionality::optionalDefaultInactive},
                   {getSubrecordId(), TestSimpleRecordType::getThisType()},
                   {getInt1Id(), babelwires::IntTypeConstructor::makeTypeExp(c_int1min, c_int1max, c_int1default)},

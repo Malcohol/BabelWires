@@ -21,7 +21,7 @@
 
 TEST(RecordTypeTest, simpleRecordTypeValue) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestSimpleRecordType recordType;
+    testDomain::TestSimpleRecordType recordType(testEnvironment.m_typeSystem);
 
     EXPECT_FALSE(recordType.isOptional(testDomain::TestSimpleRecordType::getInt0Id()));
     EXPECT_FALSE(recordType.isOptional(testDomain::TestSimpleRecordType::getInt1Id()));
@@ -168,7 +168,7 @@ namespace {
 
 TEST(RecordTypeTest, complexRecordTypeValue) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestComplexRecordType recordType;
+    testDomain::TestComplexRecordType recordType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder newValue = recordType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
@@ -178,7 +178,7 @@ TEST(RecordTypeTest, complexRecordTypeValue) {
 
 TEST(RecordTypeTest, activateOptional) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestComplexRecordType recordType;
+    testDomain::TestComplexRecordType recordType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder newValue = recordType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
@@ -208,7 +208,7 @@ TEST(RecordTypeTest, activateOptional) {
 
 TEST(RecordTypeTest, selectOptionals) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestComplexRecordType recordType;
+    testDomain::TestComplexRecordType recordType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder newValue = recordType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
@@ -252,7 +252,7 @@ TEST(RecordTypeTest, selectOptionals) {
 
 TEST(RecordTypeTest, getChildNonConstFixedField) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestComplexRecordType recordType;
+    testDomain::TestComplexRecordType recordType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(value);
@@ -286,7 +286,7 @@ TEST(RecordTypeTest, getChildNonConstFixedField) {
 
 TEST(RecordTypeTest, getChildNonConstOptionalField) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestComplexRecordType recordType;
+    testDomain::TestComplexRecordType recordType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(value);
@@ -491,7 +491,7 @@ TEST(RecordTypeTest, featureChanges) {
 
 TEST(RecordTypeTest, valueEquality) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestComplexRecordType recordType;
+    testDomain::TestComplexRecordType recordType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder value0 = recordType.createValue(testEnvironment.m_typeSystem);
     babelwires::ValueHolder value1 = recordType.createValue(testEnvironment.m_typeSystem);
@@ -517,7 +517,7 @@ TEST(RecordTypeTest, valueEquality) {
 
 TEST(RecordTypeTest, valueHash) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestComplexRecordType recordType;
+    testDomain::TestComplexRecordType recordType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(value);
@@ -552,7 +552,7 @@ TEST(RecordTypeTest, valueHash) {
 
 TEST(RecordTypeTest, exceptions) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestComplexRecordType recordType;
+    testDomain::TestComplexRecordType recordType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(value);

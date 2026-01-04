@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Types/Record/recordValue.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
-babelwires::RecordType::RecordType(std::vector<Field> fields)
+babelwires::RecordType::RecordType(const TypeSystem& typeSystem, std::vector<Field> fields)
     : m_fields(std::move(fields)) {
     for (const auto& f : m_fields) {
         assert(f.m_identifier.getDiscriminator() != 0 && "Field identifiers must be registered");
@@ -37,8 +37,8 @@ namespace {
     }
 } // namespace
 
-babelwires::RecordType::RecordType(const RecordType& parent, std::vector<Field> additionalFields)
-    : RecordType(getCombinedFieldSet(parent, std::move(additionalFields))) {}
+babelwires::RecordType::RecordType(const TypeSystem& typeSystem, const RecordType& parent, std::vector<Field> additionalFields)
+    : RecordType(typeSystem, getCombinedFieldSet(parent, std::move(additionalFields))) {}
 
 std::string babelwires::RecordType::getFlavour() const {
     return "record";

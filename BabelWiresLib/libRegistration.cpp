@@ -36,7 +36,7 @@ void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addEntry<StringType>();
     context.m_typeSystem.addEntry<DefaultRationalType>();
     context.m_typeSystem.addEntry<MapEntryFallbackKind>();
-    context.m_typeSystem.addEntry<FailureType>();
+    context.m_typeSystem.addEntry<FailureType>(context.m_typeSystem);
     context.m_typeSystem.addTypeConstructor<EnumAtomTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<EnumUnionTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<IntTypeConstructor>();

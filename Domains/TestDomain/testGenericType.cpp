@@ -106,6 +106,6 @@ babelwires::Path testDomain::TestGenericType::getPathToArray0() {
     return path;
 }
 
-testDomain::TestSimpleCompoundType::TestSimpleCompoundType()
-    : RecordType({{TestGenericType::getIdOfNestedX(), babelwires::DefaultIntType::getThisType()},
+testDomain::TestSimpleCompoundType::TestSimpleCompoundType(const babelwires::TypeSystem& typeSystem)
+    : RecordType(typeSystem, {{TestGenericType::getIdOfNestedX(), babelwires::DefaultIntType::getThisType()},
                    {TestGenericType::getIdOfNestedZ(), babelwires::StringType::getThisType()}}) {}
