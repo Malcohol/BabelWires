@@ -21,15 +21,16 @@ TEST(ResetMapValueCommandTest, executeAndUndoSource) {
     testUtils::TestEnvironment environment;
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testDomain::TestSumType::getThisType()}});
-    mapProject.setAllowedTargetTypeRefs({{testDomain::TestSumType::getThisType()}});
+    mapProject.setAllowedSourceTypeExps({{testDomain::TestSumType::getThisType()}});
+    mapProject.setAllowedTargetTypeExps({{testDomain::TestSumType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(testDomain::TestSumType::getThisType());
-    mapValue.setTargetTypeRef(testDomain::TestSumType::getThisType());
+    mapValue.setSourceTypeExp(testDomain::TestSumType::getThisType());
+    mapValue.setTargetTypeExp(testDomain::TestSumType::getThisType());
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testDomain::TestSumType::getThisType(),
-                                              testDomain::TestSumType::getThisType());
+    const auto& testSumType = environment.m_typeSystem.getEntryByType<testDomain::TestSumType>();
+
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *testSumType, *testSumType);
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(oneToOne.clone());
@@ -65,17 +66,18 @@ TEST(ResetMapValueCommandTest, executeAndUndoTarget) {
     testUtils::TestEnvironment environment;
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testDomain::TestSumType::getThisType()}});
-    mapProject.setAllowedTargetTypeRefs({{testDomain::TestSumType::getThisType()}});
+    mapProject.setAllowedSourceTypeExps({{testDomain::TestSumType::getThisType()}});
+    mapProject.setAllowedTargetTypeExps({{testDomain::TestSumType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(testDomain::TestSumType::getThisType());
-    mapValue.setTargetTypeRef(testDomain::TestSumType::getThisType());
+    mapValue.setSourceTypeExp(testDomain::TestSumType::getThisType());
+    mapValue.setTargetTypeExp(testDomain::TestSumType::getThisType());
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testDomain::TestSumType::getThisType(),
-                                              testDomain::TestSumType::getThisType());
+    const auto& testSumType = environment.m_typeSystem.getEntryByType<testDomain::TestSumType>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, testDomain::TestSumType::getThisType());
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *testSumType, *testSumType);
+
+    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *testSumType);
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(oneToOne.clone());
@@ -112,18 +114,18 @@ TEST(ResetMapValueCommandTest, failBeyondEnd) {
     testUtils::TestEnvironment environment;
     
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{testDomain::TestSumType::getThisType()}});
-    mapProject.setAllowedTargetTypeRefs({{testDomain::TestSumType::getThisType()}});
+    mapProject.setAllowedSourceTypeExps({{testDomain::TestSumType::getThisType()}});
+    mapProject.setAllowedTargetTypeExps({{testDomain::TestSumType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(testDomain::TestSumType::getThisType());
-    mapValue.setTargetTypeRef(testDomain::TestSumType::getThisType());
+    mapValue.setSourceTypeExp(testDomain::TestSumType::getThisType());
+    mapValue.setTargetTypeExp(testDomain::TestSumType::getThisType());
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, testDomain::TestSumType::getThisType(),
-                                              testDomain::TestSumType::getThisType());
+    const auto& testSumType = environment.m_typeSystem.getEntryByType<testDomain::TestSumType>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
-                                                       testDomain::TestSumType::getThisType());
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *testSumType, *testSumType);
+
+    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *testSumType);
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());

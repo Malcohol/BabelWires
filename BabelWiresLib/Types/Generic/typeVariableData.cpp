@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Types/Generic/typeVariableData.hpp>
 
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 
 #include <Common/Utilities/unicodeUtils.hpp>
@@ -15,7 +15,7 @@
 #include <cassert>
 #include <sstream>
 
-std::optional<babelwires::TypeVariableData> babelwires::TypeVariableData::isTypeVariable(const TypeRef& typeRef) {
+std::optional<babelwires::TypeVariableData> babelwires::TypeVariableData::isTypeVariable(const TypeExp& typeExp) {
     struct Visitor {
         std::optional<TypeVariableData> operator()(std::monostate) { return {}; }
         std::optional<TypeVariableData> operator()(const RegisteredTypeId& typeId) {
@@ -31,7 +31,7 @@ std::optional<babelwires::TypeVariableData> babelwires::TypeVariableData::isType
             }
         }
     } visitor;
-    return typeRef.visit<Visitor, std::optional<TypeVariableData>>(visitor);
+    return typeExp.visit<Visitor, std::optional<TypeVariableData>>(visitor);
 }
 
 std::string babelwires::TypeVariableData::toString() const {

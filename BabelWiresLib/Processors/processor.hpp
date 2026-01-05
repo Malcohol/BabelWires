@@ -13,14 +13,14 @@ namespace babelwires {
     struct UserLogger;
     class ValueTreeNode;
     struct ProjectContext;
-    class TypeRef;
+    class TypeExp;
     class ValueTreeRoot;
 
     /// A Processor defines an operation from an input ValueTree to an output ValueTree.
     /// This should not store any state.
     class Processor {
       public:
-        Processor(const ProjectContext& projectContext, const TypeRef& inputTypeRef, const TypeRef& outputTypeRef);
+        Processor(const ProjectContext& projectContext, const TypeExp& inputTypeExp, const TypeExp& outputTypeExp);
         virtual ~Processor();
 
         /// Set values in the output based on values in the input.

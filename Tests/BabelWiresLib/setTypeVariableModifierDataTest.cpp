@@ -23,7 +23,7 @@ TEST(SetTypeVariableModifierDataTest, setSingleTypeVariable) {
     babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisType());
     valueTree.setToDefault();
 
-    const auto* const type = valueTree.getType().as<testDomain::TestGenericType>();
+    const auto* const type = valueTree.getType()->as<testDomain::TestGenericType>();
     ASSERT_NE(type, nullptr);
 
     const auto& value = valueTree.getValue();
@@ -57,7 +57,7 @@ TEST(SetTypeVariableModifierDataTest, setSingleTypeVariable) {
     EXPECT_EQ(type->getTypeAssignment(valueAfterSecondApplication, 0), babelwires::StringType::getThisType());
     EXPECT_EQ(type->getTypeAssignment(valueAfterSecondApplication, 1), babelwires::StringType::getThisType());
 
-    data.m_typeAssignments[0] = babelwires::TypeRef();
+    data.m_typeAssignments[0] = babelwires::TypeExp();
 
     data.apply(&valueTree);
 

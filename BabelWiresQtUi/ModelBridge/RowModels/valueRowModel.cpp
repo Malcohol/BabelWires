@@ -24,7 +24,7 @@
 
 void babelwires::ValueRowModel::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem) {
     const babelwires::ValueTreeNode& valueTreeNode = getValueTreeNode();
-    m_valueModelDispatcher.init(valueModelRegistry, typeSystem, valueTreeNode.getType(), valueTreeNode.getValue(),
+    m_valueModelDispatcher.init(valueModelRegistry, typeSystem, valueTreeNode.getTypeExp().resolve(typeSystem), valueTreeNode.getValue(),
                                 (getInput() == nullptr),
                                 m_contentsCacheEntry->isStructureEditable());
 }
@@ -82,7 +82,7 @@ QString babelwires::ValueRowModel::getTooltip(ColumnType c) const {
     QString columnTooltip;
     if (c == ColumnType::Key) {
         const babelwires::ValueTreeNode& valueTreeNode = getValueTreeNode();
-        columnTooltip = QString("%1 : %2").arg(m_contentsCacheEntry->getLabel().c_str()).arg(valueTreeNode.getType().getName().c_str());
+        columnTooltip = QString("%1 : %2").arg(m_contentsCacheEntry->getLabel().c_str()).arg(valueTreeNode.getType()->getName().c_str());
     } else {
         columnTooltip = m_valueModelDispatcher->getTooltip();
     } 

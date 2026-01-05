@@ -3,17 +3,17 @@
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 
-testDomain::TestSimpleArrayType::TestSimpleArrayType()
-    : babelwires::ArrayType(getEntryTypeStatic(), s_minimumSize, s_maximumSize, s_defaultSize) {}
+testDomain::TestSimpleArrayType::TestSimpleArrayType(const babelwires::TypeSystem& typeSystem)
+    : babelwires::ArrayType(getEntryTypeStatic().resolve(typeSystem), s_minimumSize, s_maximumSize, s_defaultSize) {}
 
-babelwires::TypeRef testDomain::TestSimpleArrayType::getEntryTypeStatic() {
+babelwires::TypeExp testDomain::TestSimpleArrayType::getEntryTypeStatic() {
     return babelwires::DefaultIntType::getThisType();
 }
 
-testDomain::TestCompoundArrayType::TestCompoundArrayType()
-    : babelwires::ArrayType(getEntryTypeStatic(), s_minimumSize, s_maximumSize, s_defaultSize) {}
+testDomain::TestCompoundArrayType::TestCompoundArrayType(const babelwires::TypeSystem& typeSystem)
+    : babelwires::ArrayType(getEntryTypeStatic().resolve(typeSystem), s_minimumSize, s_maximumSize, s_defaultSize) {}
 
-babelwires::TypeRef testDomain::TestCompoundArrayType::getEntryTypeStatic() {
+babelwires::TypeExp testDomain::TestCompoundArrayType::getEntryTypeStatic() {
     return testDomain::TestSimpleArrayType::getThisType();
 }
 

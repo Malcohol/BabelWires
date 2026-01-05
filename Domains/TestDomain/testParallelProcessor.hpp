@@ -13,14 +13,14 @@ namespace testDomain {
       public:
         REGISTERED_TYPE("TestProcIn", "TestProcIn", "2b414a3b-fe41-41dc-894f-889e8e15f0ff", 1);
 
-        TestParallelProcessorInput();
+        TestParallelProcessorInput(const babelwires::TypeSystem& typeSystem);
     };
 
     class TestParallelProcessorOutput : public babelwires::ParallelProcessorOutputBase {
       public:
         REGISTERED_TYPE("TestProcOut", "TestProcOut", "b61c5cf6-cada-416e-8fca-57f360c346e9", 1);
 
-        TestParallelProcessorOutput();
+        TestParallelProcessorOutput(const babelwires::TypeSystem& typeSystem);
     };
 
     struct TestParallelProcessor : babelwires::ParallelProcessor {

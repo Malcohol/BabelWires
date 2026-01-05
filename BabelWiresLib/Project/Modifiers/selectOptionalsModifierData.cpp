@@ -65,7 +65,7 @@ void babelwires::SelectOptionalsModifierData::deserializeContents(Deserializer& 
 }
 
 void babelwires::SelectOptionalsModifierData::apply(ValueTreeNode* target) const {
-    if (auto recordType = target->getType().as<RecordType>()) {
+    if (auto recordType = target->getType()->as<RecordType>()) {
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
         recordType->selectOptionals(typeSystem, newValue, m_optionalsActivation);

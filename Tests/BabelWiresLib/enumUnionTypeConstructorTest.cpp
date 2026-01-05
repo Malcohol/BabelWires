@@ -20,13 +20,13 @@ TEST(EnumUnionTypeConstructorTest, construct) {
 
     babelwires::EnumUnionTypeConstructor constructor;
 
-    const babelwires::Type* const newType = constructor.tryGetOrConstructType(
+    const babelwires::TypePtr newType = constructor.tryGetOrConstructType(
         testEnvironment.m_typeSystem,
         babelwires::TypeConstructorArguments{
             {testDomain::TestSubSubEnum1::getThisIdentifier(), testDomain::TestSubSubEnum2::getThisIdentifier()}});
 
     ASSERT_NE(newType, nullptr);
-    EXPECT_EQ(newType->getTypeRef(), babelwires::TypeRef(babelwires::EnumUnionTypeConstructor::getThisIdentifier(),
+    EXPECT_EQ(newType->getTypeExp(), babelwires::TypeExp(babelwires::EnumUnionTypeConstructor::getThisIdentifier(),
                                                          testDomain::TestSubSubEnum1::getThisIdentifier(),
                                                          testDomain::TestSubSubEnum2::getThisIdentifier()));
 
@@ -40,16 +40,16 @@ TEST(EnumUnionTypeConstructorTest, construct) {
     EXPECT_EQ(valueSet[2], testDomain::TestEnum::getIdentifierFromValue(testDomain::TestEnum::Value::Oom));
 }
 
-TEST(EnumUnionTypeConstructorTest, makeTypeRef) {
+TEST(EnumUnionTypeConstructorTest, makeTypeExp) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef typeRef = babelwires::EnumUnionTypeConstructor::makeTypeRef(
+    babelwires::TypeExp typeExp = babelwires::EnumUnionTypeConstructor::makeTypeExp(
         testDomain::TestSubSubEnum1::getThisIdentifier(), testDomain::TestSubSubEnum2::getThisIdentifier());
 
-    const babelwires::Type* const newType = typeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& newType = typeExp.tryResolve(testEnvironment.m_typeSystem);
 
     ASSERT_NE(newType, nullptr);
-    EXPECT_EQ(newType->getTypeRef(), babelwires::TypeRef(babelwires::EnumUnionTypeConstructor::getThisIdentifier(),
+    EXPECT_EQ(newType->getTypeExp(), babelwires::TypeExp(babelwires::EnumUnionTypeConstructor::getThisIdentifier(),
                                                          testDomain::TestSubSubEnum1::getThisIdentifier(),
                                                          testDomain::TestSubSubEnum2::getThisIdentifier()));
 

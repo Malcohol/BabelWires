@@ -16,10 +16,10 @@ namespace babelwires {
       public:
         TYPE_CONSTRUCTOR("EnumUnion", "({0| U })", "92eade8a-5315-419f-b3c6-71424ff6ea49", 1);
 
-        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
-                                            const std::vector<const Type*>& resolvedTypeArguments) const override;
+        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,
+                                            const std::vector<TypePtr>& resolvedTypeArguments) const override;
 
         /// Convenience method for binary unions
-        static TypeRef makeTypeRef(TypeRef enumA, TypeRef enumB);
+        static TypeExp makeTypeExp(TypeExp enumA, TypeExp enumB);
     };
 } // namespace babelwires

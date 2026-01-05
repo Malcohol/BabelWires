@@ -22,7 +22,7 @@ namespace babelwires {
     /// processor's ProcessEntry call provides direct access.
     class ParallelProcessorInputBase : public RecordType {
       public:
-        ParallelProcessorInputBase(std::vector<RecordType::Field> commonInput, ShortId arrayId, TypeRef entryType);
+        ParallelProcessorInputBase(const TypeSystem& typeSystem, std::vector<RecordType::FieldDefinition> commonInput, ShortId arrayId, TypeExp entryType);
     };
 
     /// ParallelProcessors should override this for their output type. The type will contain an array of the right
@@ -33,7 +33,7 @@ namespace babelwires {
     /// not be directly addressed in a versioning system. Have a think about whether that matters.
     class ParallelProcessorOutputBase : public RecordType {
       public:
-        ParallelProcessorOutputBase(ShortId arrayId, TypeRef entryType);
+        ParallelProcessorOutputBase(const TypeSystem& typeSystem, ShortId arrayId, TypeExp entryType);
     };
 
     /// A base class for a common shape of processor which performs the same operation on several input features,
@@ -41,8 +41,8 @@ namespace babelwires {
     /// Nodes in the project.
     class ParallelProcessor : public Processor {
       public:
-        ParallelProcessor(const ProjectContext& projectContext, const TypeRef& parallelInput,
-                          const TypeRef& parallelOutput);
+        ParallelProcessor(const ProjectContext& projectContext, const TypeExp& parallelInput,
+                          const TypeExp& parallelOutput);
 
       protected:
         void processValue(UserLogger& userLogger, const ValueTreeNode& input,

@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
@@ -35,17 +35,17 @@ namespace babelwires {
         MapValue();
         MapValue(const MapValue& other);
         MapValue(MapValue&& other);
-        MapValue(const TypeSystem& typeSystem, TypeRef sourceRef, TypeRef targetRef, MapEntryData::Kind fallbackKind);
+        MapValue(const TypeSystem& typeSystem, const TypePtr& sourceType, const TypePtr& targetType, MapEntryData::Kind fallbackKind);
 
         MapValue& operator=(const MapValue& other);
         MapValue& operator=(MapValue&& other);
         virtual ~MapValue();
 
-        const TypeRef& getSourceTypeRef() const;
-        const TypeRef& getTargetTypeRef() const;
+        const TypeExp& getSourceTypeExp() const;
+        const TypeExp& getTargetTypeExp() const;
 
-        void setSourceTypeRef(const TypeRef& sourceRef);
-        void setTargetTypeRef(const TypeRef& targetRef);
+        void setSourceTypeExp(const TypeExp& sourceRef);
+        void setTargetTypeExp(const TypeExp& targetRef);
 
         unsigned int getNumMapEntries() const;
         const MapEntryData& getMapEntry(unsigned int index) const;
@@ -71,8 +71,9 @@ namespace babelwires {
         bool isValid(const TypeSystem& typeSystem) const;
 
       public:
-        TypeRef m_sourceTypeRef;
-        TypeRef m_targetTypeRef;
+        // Do not store TypePtrs here, since MapValues may exist on the undo stack.
+        TypeExp m_sourceTypeExp;
+        TypeExp m_targetTypeExp;
         /// All non-null.
         std::vector<std::unique_ptr<MapEntryData>> m_mapEntries;
     };

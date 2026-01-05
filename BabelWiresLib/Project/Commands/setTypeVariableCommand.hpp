@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 
 namespace babelwires {
     class Project;
@@ -20,7 +20,7 @@ namespace babelwires {
       public:
         CLONEABLE(SetTypeVariableCommand);
         SetTypeVariableCommand(std::string commandName, NodeId nodeId, Path pathToGenericType, unsigned int variableIndex,
-                                    TypeRef newType);
+                                    TypeExp newType);
 
         virtual bool initializeAndExecute(Project& project) override;
 
@@ -28,7 +28,7 @@ namespace babelwires {
         NodeId m_nodeId;
         Path m_pathToGenericType;
         unsigned int m_variableIndex;
-        TypeRef m_newType;
+        TypeExp m_newType;
     };
 
 } // namespace babelwires

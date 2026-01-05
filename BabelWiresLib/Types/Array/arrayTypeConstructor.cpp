@@ -48,28 +48,28 @@ babelwires::ArrayTypeConstructor::extractValueArguments(const std::vector<ValueH
     return {static_cast<unsigned int>(args[0]), static_cast<unsigned int>(args[1]), static_cast<unsigned int>(args[2])};
 }
 
-babelwires::TypeConstructor::TypeConstructorResult
-babelwires::ArrayTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+babelwires::TypePtr
+babelwires::ArrayTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                 const TypeConstructorArguments& arguments,
-                                                const std::vector<const Type*>& resolvedTypeArguments) const {
+                                                const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 1) {
         throw TypeSystemException() << "ArrayTypeConstructor expects a single type arguments but got "
                                     << arguments.getTypeArguments().size();
     }
     auto [minimumSize, maximumSize, defaultSize] = extractValueArguments(arguments.getValueArguments());
 
-    return std::make_unique<ConstructedType<ArrayType>>(std::move(newTypeRef), arguments.getTypeArguments()[0],
+    return makeType<ConstructedType<ArrayType>>(std::move(newTypeExp), resolvedTypeArguments[0],
                                                         minimumSize, maximumSize, defaultSize);
 }
 
-babelwires::TypeRef babelwires::ArrayTypeConstructor::makeTypeRef(TypeRef entryType, unsigned int minSize,
+babelwires::TypeExp babelwires::ArrayTypeConstructor::makeTypeExp(TypeExp entryType, unsigned int minSize,
                                                                   unsigned int maxSize, unsigned int defaultSize) {
     assert(minSize <= maxSize);
     assert(defaultSize <= maxSize);
     if (defaultSize < minSize) {
         defaultSize = minSize;
     }
-    return babelwires::TypeRef{
+    return babelwires::TypeExp{
         getThisIdentifier(),
         {{std::move(entryType)},
          {babelwires::IntValue(minSize), babelwires::IntValue(maxSize), babelwires::IntValue(defaultSize)}}};

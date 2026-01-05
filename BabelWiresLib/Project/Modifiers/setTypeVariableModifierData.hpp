@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 
 namespace babelwires {
     /// SetTypeVariableModifierData is used to assign specific types to type variables.
@@ -20,6 +20,6 @@ namespace babelwires {
         void deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
 
-        std::vector<TypeRef> m_typeAssignments;
+        std::vector<TypeExp> m_typeAssignments;
     };
 }

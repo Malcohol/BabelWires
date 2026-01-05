@@ -20,7 +20,7 @@
 
 TEST(RecordWithVariantsTypeTest, tags) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestRecordWithVariantsType recordType;
+    testDomain::TestRecordWithVariantsType recordType(testEnvironment.m_typeSystem);
 
     EXPECT_TRUE(recordType.isTag(testDomain::TestRecordWithVariantsType::getTagAId()));
     EXPECT_TRUE(recordType.isTag(testDomain::TestRecordWithVariantsType::getTagBId()));
@@ -40,7 +40,7 @@ TEST(RecordWithVariantsTypeTest, tags) {
 
 TEST(RecordWithVariantsTypeTest, value) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestRecordWithVariantsType recordType;
+    testDomain::TestRecordWithVariantsType recordType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder newValue = recordType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
@@ -97,7 +97,7 @@ TEST(RecordWithVariantsTypeTest, value) {
 
 TEST(RecordWithVariantsTypeTest, getFieldsRemovedByChangeOfBranch) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestRecordWithVariantsType recordType;
+    testDomain::TestRecordWithVariantsType recordType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder newValue = recordType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
@@ -119,7 +119,7 @@ TEST(RecordWithVariantsTypeTest, getFieldsRemovedByChangeOfBranch) {
 
 TEST(RecordWithVariantsTypeTest, isValidValue) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestRecordWithVariantsType recordType;
+    testDomain::TestRecordWithVariantsType recordType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder newValue = recordType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
@@ -183,13 +183,13 @@ namespace {
 
         EXPECT_EQ(recordType.getNumChildren(value), numChildren);
 
-        std::vector<std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&>>
+        std::vector<std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp>>
             childInfos;
         std::vector<const babelwires::Type*> types;
 
         for (unsigned int i = 0; i < numChildren; ++i) {
             childInfos.emplace_back(recordType.getChild(value, i));
-            types.emplace_back(&std::get<2>(childInfos.back()).resolve(typeSystem));
+            types.emplace_back(std::get<2>(childInfos.back()).resolve(typeSystem).get());
         }
 
         const unsigned int fieldA0Index = 0;
@@ -235,7 +235,7 @@ namespace {
 
 TEST(RecordWithVariantsTypeTest, traversal) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestRecordWithVariantsType recordType;
+    testDomain::TestRecordWithVariantsType recordType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(value);
@@ -254,7 +254,7 @@ TEST(RecordWithVariantsTypeTest, traversal) {
 
 TEST(RecordWithVariantsTypeTest, getChildNonConstOfFixedField) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestRecordWithVariantsType recordType;
+    testDomain::TestRecordWithVariantsType recordType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(value);
@@ -286,7 +286,7 @@ TEST(RecordWithVariantsTypeTest, getChildNonConstOfFixedField) {
 
 TEST(RecordWithVariantsTypeTest, getChildNonConstOfFieldInBranch) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestRecordWithVariantsType recordType;
+    testDomain::TestRecordWithVariantsType recordType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(value);
@@ -411,7 +411,7 @@ TEST(RecordWithVariantsTypeTest, featureChanges) {
     valueFeature.setToDefault();
 
     const testDomain::TestRecordWithVariantsType* recordWithVariantsType =
-        valueFeature.getType().as<testDomain::TestRecordWithVariantsType>();
+        valueFeature.getType()->as<testDomain::TestRecordWithVariantsType>();
     ASSERT_NE(recordWithVariantsType, nullptr);
 
     valueFeature.clearChanges();
@@ -448,7 +448,7 @@ TEST(RecordWithVariantsTypeTest, featureChanges) {
 
 TEST(RecordWithVariantsTypeTest, valueEquality) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestRecordWithVariantsType recordType;
+    testDomain::TestRecordWithVariantsType recordType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder value0 = recordType.createValue(testEnvironment.m_typeSystem);
     babelwires::ValueHolder value1 = recordType.createValue(testEnvironment.m_typeSystem);
@@ -470,7 +470,7 @@ TEST(RecordWithVariantsTypeTest, valueEquality) {
 
 TEST(RecordWithVariantsTypeTest, valueHash) {
     testUtils::TestEnvironment testEnvironment;
-    testDomain::TestRecordWithVariantsType recordType;
+    testDomain::TestRecordWithVariantsType recordType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder newValue = recordType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);

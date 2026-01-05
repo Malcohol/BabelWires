@@ -90,32 +90,32 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectGraphModel& projectGrap
             const UiProjectContext& context = projectGraphModel.getContext();
             const TypeSystem& typeSystem = context.m_typeSystem;
             const ValueTreeNode& mapTreeNode = getMapTreeNode(scope);
-            m_typeRef = mapTreeNode.getTypeRef();
+            m_typeExp = mapTreeNode.getTypeExp();
             const MapValue& mapValue = getMapValueFromProject(scope);
-            if (mapTreeNode.getType().as<MapType>()) {
-                m_map.setAllowedSourceTypeRefs(
-                    MapProject::AllowedTypes{{mapTreeNode.getType().is<MapType>().getSourceTypeRef()}});
-                m_map.setAllowedTargetTypeRefs(
-                    MapProject::AllowedTypes{{mapTreeNode.getType().is<MapType>().getTargetTypeRef()}});
+            if (mapTreeNode.getType()->as<MapType>()) {
+                m_map.setAllowedSourceTypeExps(
+                    MapProject::AllowedTypes{{mapTreeNode.getType()->is<MapType>().getSourceTypeExp()}});
+                m_map.setAllowedTargetTypeExps(
+                    MapProject::AllowedTypes{{mapTreeNode.getType()->is<MapType>().getTargetTypeExp()}});
             } else {
-                const SumOfMapsType* const sumOfMaps = mapTreeNode.getType().as<SumOfMapsType>();
+                const SumOfMapsType* const sumOfMaps = mapTreeNode.getType()->as<SumOfMapsType>();
                 assert(sumOfMaps && "MapEditor expecting a MapType of SumOfMapsType");
-                m_map.setAllowedSourceTypeRefs(
+                m_map.setAllowedSourceTypeExps(
                     MapProject::AllowedTypes{sumOfMaps->getSourceTypes(), sumOfMaps->getIndexOfDefaultSourceType()});
-                m_map.setAllowedTargetTypeRefs(
+                m_map.setAllowedTargetTypeExps(
                     MapProject::AllowedTypes{sumOfMaps->getTargetTypes(), sumOfMaps->getIndexOfDefaultTargetType()});
             }
             m_map.setMapValue(mapValue);
             {
                 typeBarLayout->addWidget(new QLabel("Source type: ", typeBar));
-                m_sourceTypeWidget = new TypeWidget(typeBar, m_map.getAllowedSourceTypeRefs().m_typeRefs);
-                m_sourceTypeWidget->setTypeRef(m_map.getCurrentSourceTypeRef());
+                m_sourceTypeWidget = new TypeWidget(typeBar, m_map.getAllowedSourceTypeExps().m_typeExps);
+                m_sourceTypeWidget->setTypeExp(m_map.getCurrentSourceTypeExp());
                 typeBarLayout->addWidget(m_sourceTypeWidget);
             }
             {
                 typeBarLayout->addWidget(new QLabel("Target type: ", typeBar));
-                m_targetTypeWidget = new TypeWidget(typeBar, m_map.getAllowedTargetTypeRefs().m_typeRefs);
-                m_targetTypeWidget->setTypeRef(m_map.getCurrentTargetTypeRef());
+                m_targetTypeWidget = new TypeWidget(typeBar, m_map.getAllowedTargetTypeExps().m_typeExps);
+                m_targetTypeWidget->setTypeExp(m_map.getCurrentTargetTypeExp());
                 typeBarLayout->addWidget(m_targetTypeWidget);
             }
             connect(m_sourceTypeWidget, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
@@ -195,7 +195,7 @@ void babelwires::MapEditor::applyMapToProject() {
 
 const babelwires::ValueTreeNode& babelwires::MapEditor::getMapTreeNode(const AccessModelScope& scope) const {
     const ValueTreeNode& mapTreeNode = ComplexValueEditor::getValueTreeNode(scope, getDataLocation());
-    assert(mapTreeNode.getType().as<MapType>() || mapTreeNode.getType().as<SumOfMapsType>());
+    assert(mapTreeNode.getType()->as<MapType>() || mapTreeNode.getType()->as<SumOfMapsType>());
     return mapTreeNode;
 }
 
@@ -210,7 +210,7 @@ const babelwires::MapValue& babelwires::MapEditor::getMapValueFromProject(const 
 
 const babelwires::ValueTreeNode* babelwires::MapEditor::tryGetMapTreeNode(const AccessModelScope& scope) const {
     const ValueTreeNode* mapTreeNode = ComplexValueEditor::tryGetValueTreeNode(scope, getDataLocation());
-    if (mapTreeNode->getType().as<MapType>() || mapTreeNode->getType().as<SumOfMapsType>()) {
+    if (mapTreeNode->getType()->as<MapType>() || mapTreeNode->getType()->as<SumOfMapsType>()) {
         return mapTreeNode;
     }
     return nullptr;
@@ -269,15 +269,15 @@ void babelwires::MapEditor::updateUiAfterChange() const {
     if (m_map.getSourceTypeValidity()) {
         m_sourceTypeWidget->removeBadItemIfPresent();
     } else {
-        m_sourceTypeWidget->addBadItemIfNotPresent(m_map.getCurrentSourceTypeRef());
+        m_sourceTypeWidget->addBadItemIfNotPresent(m_map.getCurrentSourceTypeExp());
     }
     if (m_map.getTargetTypeValidity()) {
         m_targetTypeWidget->removeBadItemIfPresent();
     } else {
-        m_targetTypeWidget->addBadItemIfNotPresent(m_map.getCurrentTargetTypeRef());
+        m_targetTypeWidget->addBadItemIfNotPresent(m_map.getCurrentTargetTypeExp());
     }
-    m_sourceTypeWidget->setTypeRef(m_map.getCurrentSourceTypeRef());
-    m_targetTypeWidget->setTypeRef(m_map.getCurrentTargetTypeRef());
+    m_sourceTypeWidget->setTypeExp(m_map.getCurrentSourceTypeExp());
+    m_targetTypeWidget->setTypeExp(m_map.getCurrentTargetTypeExp());
 }
 
 void babelwires::MapEditor::saveMapToFile() {
@@ -428,21 +428,21 @@ void babelwires::MapEditor::onUndoStateChanged() {
 
 void babelwires::MapEditor::setToDefault() {
     const TypeSystem& typeSystem = getProjectGraphModel().getContext().m_typeSystem;
-    const MapType& mapType = m_typeRef.resolve(typeSystem).is<MapType>();
-    ValueHolder defaultMapValue = mapType.createValue(typeSystem).m_valueHolder;
+    const auto& mapType = m_typeExp.resolveAs<MapType>(typeSystem);
+    ValueHolder defaultMapValue = mapType->createValue(typeSystem).m_valueHolder;
     executeCommand(std::make_unique<SetMapCommand>("Restore default map", std::move(defaultMapValue)));
 }
 
 void babelwires::MapEditor::setSourceTypeFromWidget() {
-    const TypeRef& newSourceTypeRef = m_sourceTypeWidget->getTypeRef();
-    if (newSourceTypeRef != m_map.getCurrentSourceTypeRef()) {
-        executeCommand(std::make_unique<SetMapSourceTypeCommand>("Set map source type", newSourceTypeRef));
+    const TypeExp& newSourceTypeExp = m_sourceTypeWidget->getTypeExp();
+    if (newSourceTypeExp != m_map.getCurrentSourceTypeExp()) {
+        executeCommand(std::make_unique<SetMapSourceTypeCommand>("Set map source type", newSourceTypeExp));
     }
 }
 
 void babelwires::MapEditor::setTargetTypeFromWidget() {
-    const TypeRef& newTargetTypeRef = m_targetTypeWidget->getTypeRef();
-    if (newTargetTypeRef != m_map.getCurrentTargetTypeRef()) {
-        executeCommand(std::make_unique<SetMapTargetTypeCommand>("Set map target type", newTargetTypeRef));
+    const TypeExp& newTargetTypeExp = m_targetTypeWidget->getTypeExp();
+    if (newTargetTypeExp != m_map.getCurrentTargetTypeExp()) {
+        executeCommand(std::make_unique<SetMapTargetTypeCommand>("Set map target type", newTargetTypeExp));
     }
 }

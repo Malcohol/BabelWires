@@ -13,10 +13,10 @@
 
 #include <unordered_set>
 
-babelwires::TypeConstructor::TypeConstructorResult
-babelwires::EnumUnionTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+babelwires::TypePtr
+babelwires::EnumUnionTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                     const TypeConstructorArguments& arguments,
-                                                    const std::vector<const Type*>& resolvedTypeArguments) const {
+                                                    const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() < 2) {
         throw TypeSystemException() << "EnumUnionTypeConstructor expects two or more types as arguments, but got "
                                     << arguments.getTypeArguments().size();
@@ -42,9 +42,9 @@ babelwires::EnumUnionTypeConstructor::constructType(const TypeSystem& typeSystem
             }
         }
     }
-    return std::make_unique<ConstructedType<EnumType>>(std::move(newTypeRef), std::move(unionOfValues), 0);
+    return makeType<ConstructedType<EnumType>>(std::move(newTypeExp), std::move(unionOfValues), 0);
 }
 
-babelwires::TypeRef babelwires::EnumUnionTypeConstructor::makeTypeRef(TypeRef enumA, TypeRef enumB) {
-    return TypeRef{getThisIdentifier(), std::move(enumA), std::move(enumB)};
+babelwires::TypeExp babelwires::EnumUnionTypeConstructor::makeTypeExp(TypeExp enumA, TypeExp enumB) {
+    return TypeExp{getThisIdentifier(), std::move(enumA), std::move(enumB)};
 }

@@ -53,8 +53,8 @@ namespace babelwires {
         */
 
       public:
-        const Type* m_sourceType;
-        const Type* m_targetType; 
+        TypePtr m_sourceType;
+        TypePtr m_targetType; 
         const MapProjectEntry* m_mapProjectEntry;
         unsigned int m_row = 0;
 

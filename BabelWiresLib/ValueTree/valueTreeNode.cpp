@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
@@ -19,8 +19,8 @@
 
 #include <map>
 
-babelwires::ValueTreeNode::ValueTreeNode(TypeRef typeRef, ValueHolder value)
-    : m_typeRef(std::move(typeRef))
+babelwires::ValueTreeNode::ValueTreeNode(TypePtr typePtr, ValueHolder value)
+    : m_typePtr(std::move(typePtr))
     , m_value(std::move(value)) {}
 
 babelwires::ValueTreeNode::~ValueTreeNode() = default;
@@ -64,7 +64,7 @@ void babelwires::ValueTreeNode::setToDefault() {
 }
 
 std::size_t babelwires::ValueTreeNode::getHash() const {
-    return hash::mixtureOf(m_typeRef, m_value);
+    return hash::mixtureOf(m_typePtr, m_value);
 }
 
 namespace {
@@ -133,8 +133,8 @@ const babelwires::ValueTreeNode& babelwires::ValueTreeNode::getChildFromStep(con
     }
 }
 
-const babelwires::TypeRef& babelwires::ValueTreeNode::getTypeRef() const {
-    return m_typeRef;
+babelwires::TypeExp babelwires::ValueTreeNode::getTypeExp() const {
+    return m_typePtr->getTypeExp();
 }
 
 const babelwires::ValueHolder& babelwires::ValueTreeNode::getValue() const {
@@ -151,7 +151,7 @@ void babelwires::ValueTreeNode::assign(const ValueTreeNode& other) {
 }
 
 std::string babelwires::ValueTreeNode::getFlavour() const {
-    return getType().getFlavour();
+    return getType()->getFlavour();
 }
 
 const babelwires::TypeSystem& babelwires::ValueTreeNode::getTypeSystem() const {
@@ -167,9 +167,8 @@ const babelwires::TypeSystem& babelwires::ValueTreeNode::getTypeSystem() const {
     }
 }
 
-const babelwires::Type& babelwires::ValueTreeNode::getType() const {
-    const TypeSystem& typeSystem = getTypeSystem();
-    return m_typeRef.resolve(typeSystem);
+const babelwires::TypePtr& babelwires::ValueTreeNode::getType() const {
+    return m_typePtr;
 }
 
 int babelwires::ValueTreeNode::getNumChildren() const {
@@ -197,15 +196,15 @@ int babelwires::ValueTreeNode::getChildIndexFromStep(const PathStep& step) const
 void babelwires::ValueTreeNode::initializeChildren(const TypeSystem& typeSystem) {
     // TODO: Do in constructor?
     const ValueHolder& value = getValue();
-    auto* compound = getType().as<CompoundType>();
+    auto* compound = getType()->as<CompoundType>();
     if (!compound) {
         return;
     }
 
     const unsigned int numChildrenNow = compound->getNumChildren(value);
     for (unsigned int i = 0; i < numChildrenNow; ++i) {
-        auto [childValue, step, childTypeRef] = compound->getChild(value, i);
-        auto child = std::make_unique<ValueTreeChild>(childTypeRef, *childValue, this);
+        auto [childValue, step, childTypeExp] = compound->getChild(value, i);
+        auto child = std::make_unique<ValueTreeChild>(childTypeExp.resolve(typeSystem), *childValue, this);
         child->initializeChildren(typeSystem);
         m_children.insert_or_assign(step, i, std::move(child));
     }
@@ -217,7 +216,7 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
 
     Changes changes = Changes::NothingChanged;
 
-    if (auto* compound = getType().as<CompoundType>()) {
+    if (auto* compound = getType()->as<CompoundType>()) {
         // Should only be here if the type hasn't changed, so we can use compound with other.
 
         std::map<PathStep, std::unique_ptr<ValueTreeChild>*> currentChildren;
@@ -227,15 +226,15 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
 
         struct NewChildInfo {
             const ValueHolder* m_value;
-            const TypeRef& m_typeRef;
+            TypeExp m_typeExp;
             unsigned int m_index;
         };
 
         std::map<PathStep, NewChildInfo> otherValues;
         unsigned int newNumChildren = compound->getNumChildren(other);
         for (unsigned int i = 0; i < newNumChildren; ++i) {
-            auto [child, step, childTypeRef] = compound->getChild(other, i);
-            otherValues.emplace(std::pair{step, NewChildInfo{child, childTypeRef, i}});
+            auto [child, step, childTypeExp] = compound->getChild(other, i);
+            otherValues.emplace(std::pair{step, NewChildInfo{child, childTypeExp, i}});
         }
 
         auto currentIt = currentChildren.begin();
@@ -245,7 +244,7 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
         // TODO newChildMap.reserve(newNumChildren);
 
         auto addNewChild = [this, &typeSystem, &newChildMap](const auto& otherIt) {
-            auto child = std::make_unique<ValueTreeChild>(otherIt->second.m_typeRef, *otherIt->second.m_value, this);
+            auto child = std::make_unique<ValueTreeChild>(otherIt->second.m_typeExp.resolve(typeSystem), *otherIt->second.m_value, this);
             child->initializeChildren(typeSystem);
             newChildMap.insert_or_assign(otherIt->first, otherIt->second.m_index, std::move(child));
         };
@@ -263,8 +262,8 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
                 std::unique_ptr<ValueTreeChild> temp;
                 temp.swap(*currentIt->second);
                 // Types may change, e.g. when a type variable is assigned.
-                if (temp->m_typeRef != otherIt->second.m_typeRef) {
-                    temp->m_typeRef = otherIt->second.m_typeRef;
+                if (temp->getTypeExp() != otherIt->second.m_typeExp) {
+                    temp->m_typePtr = otherIt->second.m_typeExp.resolve(typeSystem);
                     // This ensures the UI updates the connectivity of the node, since a type variable may have been
                     // assigned, allowing connections at compound nodes, or reset, disallowing them.
                     // This is more blunt than it needs to be, but type changes are probably rare.
@@ -307,8 +306,8 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
     const PathStep step = path.getStep(pathIndex);
     auto childWithChangesIt = m_children.find0(step);
 
-    auto compoundType = getType().as<CompoundType>();
-    auto [childValue, step2, childTypeRef] =
+    auto compoundType = getType()->as<CompoundType>();
+    auto [childValue, step2, childTypeExp] =
         compoundType->getChild(other, compoundType->getChildIndexFromStep(other, step));
     assert(step == step2);
 

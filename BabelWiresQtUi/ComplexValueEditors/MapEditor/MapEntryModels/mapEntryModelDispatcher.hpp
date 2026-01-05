@@ -17,7 +17,7 @@ namespace babelwires {
     /// Neither require destruction, so it should be safe.
     class MapEntryModelDispatcher {
       public:
-        void init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem, const Type& sourceType, const Type& targetType, const MapProjectEntry& entry, unsigned int row, MapEntryModel::Column column, bool isLastRow);
+        void init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem, const TypePtr& sourceType, const TypePtr& targetType, const MapProjectEntry& entry, unsigned int row, MapEntryModel::Column column, bool isLastRow);
 
         const MapEntryModel* operator->() const { return m_rowModel; }
 

@@ -16,13 +16,13 @@ namespace babelwires {
     class TypeWidget : public QComboBox {
         Q_OBJECT
       public:
-        TypeWidget(QWidget* parent, const std::vector<TypeRef>& allowedTypeRefs);
+        TypeWidget(QWidget* parent, const std::vector<TypeExp>& allowedTypeExps);
 
-        const TypeRef& getTypeRef() const;
-        void setTypeRef(const TypeRef& id);
+        const TypeExp& getTypeExp() const;
+        void setTypeExp(const TypeExp& id);
 
         /// Add an item for a type which should not be allowed.
-        void addBadItemIfNotPresent(const TypeRef& id);
+        void addBadItemIfNotPresent(const TypeExp& id);
 
         /// If a badItem was added, remove it.
         void removeBadItemIfPresent();
@@ -34,7 +34,7 @@ namespace babelwires {
         void onCurrentIndexChanged(int index);
 
       private:
-        std::vector<TypeRef> m_typeRefs;
+        std::vector<TypeExp> m_typeExps;
         bool m_hasBadItem;
         QString m_defaultStyleSheet;
         QString m_badStyleSheet;

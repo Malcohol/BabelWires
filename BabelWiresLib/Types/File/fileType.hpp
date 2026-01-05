@@ -17,7 +17,7 @@ namespace babelwires {
     /// The actual file information is stored in the NodeData of the containing FileFeature.
     class FileType : public RecordType {
       public:
-        FileType(TypeRef typeOfContents);
+        FileType(const TypeSystem& typeSystem, TypeExp typeOfContents);
 
         /// Returns the empty string, preventing the file from being connected to or from.
         std::string getFlavour() const override;

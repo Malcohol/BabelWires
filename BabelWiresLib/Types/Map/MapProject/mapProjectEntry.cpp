@@ -26,7 +26,15 @@ babelwires::Result babelwires::MapProjectEntry::getValidity() const {
     return m_validityOfEntry;
 }
 
-void babelwires::MapProjectEntry::validate(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef,
-                                           const TypeRef& targetTypeRef, bool isLastEntry) {
-    m_validityOfEntry = getData().validate(typeSystem, sourceTypeRef, targetTypeRef, isLastEntry);
+void babelwires::MapProjectEntry::validate(const TypeSystem& typeSystem, const TypePtr& sourceType,
+                                           const TypePtr& targetType, bool isLastEntry) {
+    if (!sourceType) {
+        m_validityOfEntry = "Source type is invalid.";
+        return;
+    }
+    if (!targetType) {
+        m_validityOfEntry = "Target type is invalid.";
+        return;
+    }
+    m_validityOfEntry = getData().validate(typeSystem, *sourceType, *targetType, isLastEntry);
 }

@@ -92,18 +92,18 @@ TEST(EnumTest, subEnum) {
     const auto& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
     const auto& testSubEnum = typeSystem.getEntryByType<testDomain::TestSubEnum>();
 
-    auto [valueHolder, value] = testSubEnum.createValue(typeSystem);
+    auto [valueHolder, value] = testSubEnum->createValue(typeSystem);
     EXPECT_TRUE(valueHolder);
     auto enumValue = value.as<babelwires::EnumValue>();
     EXPECT_TRUE(enumValue);
-    EXPECT_TRUE(testEnum.isValidValue(typeSystem, value));
-    EXPECT_TRUE(testSubEnum.isValidValue(typeSystem, value));
+    EXPECT_TRUE(testEnum->isValidValue(typeSystem, value));
+    EXPECT_TRUE(testSubEnum->isValidValue(typeSystem, value));
 
     enumValue->set("Foo");
-    EXPECT_TRUE(testEnum.isValidValue(typeSystem, value));
-    EXPECT_FALSE(testSubEnum.isValidValue(typeSystem, value));
+    EXPECT_TRUE(testEnum->isValidValue(typeSystem, value));
+    EXPECT_FALSE(testSubEnum->isValidValue(typeSystem, value));
 
     enumValue->set("Flerm");
-    EXPECT_FALSE(testEnum.isValidValue(typeSystem, value));
-    EXPECT_FALSE(testSubEnum.isValidValue(typeSystem, value));
+    EXPECT_FALSE(testEnum->isValidValue(typeSystem, value));
+    EXPECT_FALSE(testSubEnum->isValidValue(typeSystem, value));
 }

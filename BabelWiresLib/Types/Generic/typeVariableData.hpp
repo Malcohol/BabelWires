@@ -11,7 +11,7 @@
 #include <optional>
 
 namespace babelwires {
-    class TypeRef;
+    class TypeExp;
 
     /// TypeVariableData carries the data that identifies an instance of a type variable.
     struct TypeVariableData {
@@ -22,7 +22,7 @@ namespace babelwires {
         unsigned int m_numGenericTypeLevels  = 0;
 
         /// Convenience method
-        static std::optional<TypeVariableData> isTypeVariable(const TypeRef& typeRef);
+        static std::optional<TypeVariableData> isTypeVariable(const TypeExp& typeExp);
 
         static constexpr unsigned int c_maxNumTypeVariables = 26;
 

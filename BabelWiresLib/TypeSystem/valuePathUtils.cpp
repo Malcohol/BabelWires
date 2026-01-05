@@ -24,7 +24,7 @@ namespace {
                 if (childIndex >= 0) {
                     auto [childValue, _, childType] = compoundType->getChild(valueHolder, childIndex);
                     ++index;
-                    return tryFollow(typeSystem, childType.resolve(typeSystem), *childValue, p, index);
+                    return tryFollow(typeSystem, *childType.resolve(typeSystem), *childValue, p, index);
                 } else {
                     return {};
                 }
@@ -45,7 +45,7 @@ namespace {
                 if (childIndex >= 0) {
                     auto [childValue, _, childType] = compoundType->getChildNonConst(valueHolder, childIndex);
                     ++index;
-                    return followNonConst(typeSystem, childType.resolve(typeSystem), *childValue, p, index);
+                    return followNonConst(typeSystem, *childType.resolve(typeSystem), *childValue, p, index);
                 } else {
                     throw babelwires::ModelException() << "No such child";
                 }
@@ -75,9 +75,9 @@ namespace {
                     const std::span<const babelwires::Path*> childSpan(left, next);
                     const int childIndex = compoundType->getChildIndexFromStep(valueHolder, currentStep);
                     assert((childIndex >= 0) && "Path could not be followed");
-                    auto [childValue, _, childTypeRef] = compoundType->getChildNonConst(valueHolder, childIndex);
-                    const babelwires::Type& childType = childTypeRef.resolve(typeSystem);
-                    visitNonConst(typeSystem, childType, *childValue, childSpan, visitor, depth + 1);
+                    auto [childValue, _, childTypeExp] = compoundType->getChildNonConst(valueHolder, childIndex);
+                    const babelwires::TypePtr& childType = childTypeExp.resolve(typeSystem);
+                    visitNonConst(typeSystem, *childType, *childValue, childSpan, visitor, depth + 1);
                     left = next;
                 }
             } while (left != paths.end());

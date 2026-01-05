@@ -21,7 +21,7 @@ TEST(SelectOptionalsModifierDataTest, apply) {
     babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                 testDomain::TestComplexRecordType::getThisType());
     valueFeature.setToDefault();
-    const auto* type = valueFeature.getType().as<testDomain::TestComplexRecordType>();
+    const auto* type = valueFeature.getType()->as<testDomain::TestComplexRecordType>();
 
     EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testDomain::TestComplexRecordType::getOpIntId()));
     EXPECT_FALSE(type->isActivated(valueFeature.getValue(), testDomain::TestComplexRecordType::getOpRecId()));
@@ -48,7 +48,7 @@ TEST(SelectOptionalsModifierDataTest, failureNotOptionals) {
     babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
                                                 testDomain::TestComplexRecordType::getThisType());
     valueFeature.setToDefault();
-    const auto* type = valueFeature.getType().as<testDomain::TestComplexRecordType>();
+    const auto* type = valueFeature.getType()->as<testDomain::TestComplexRecordType>();
 
     babelwires::ValueHolder before = valueFeature.getValue();
 

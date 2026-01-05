@@ -10,21 +10,22 @@
 #include <BabelWiresLib/Types/Map/mapTypeConstructor.hpp>
 
 namespace {
-    babelwires::SumType::Summands getTypeCombinations(const babelwires::SumType::Summands& sourceTypes, const babelwires::SumType::Summands& targetTypes) {
-        babelwires::SumType::Summands combinations;
+    babelwires::SumType::SummandTypeExps getTypeCombinations(const babelwires::SumType::SummandTypeExps& sourceTypes, const babelwires::SumType::SummandTypeExps& targetTypes) {
+        babelwires::SumType::SummandTypeExps combinations;
         combinations.reserve(sourceTypes.size() * targetTypes.size());
         for (const auto& s : sourceTypes) {
             for (const auto& t : targetTypes) {
-                combinations.emplace_back(babelwires::TypeRef(babelwires::MapTypeConstructor::getThisIdentifier(), s, t));
+                combinations.emplace_back(babelwires::TypeExp(babelwires::MapTypeConstructor::getThisIdentifier(), s, t));
             }
         }
         return combinations;
     }
 }
 
-babelwires::SumOfMapsType::SumOfMapsType(Summands sourceTypes, Summands targetTypes,
+babelwires::SumOfMapsType::SumOfMapsType(const TypeSystem& typeSystem, SummandTypeExps sourceTypes, SummandTypeExps targetTypes,
                                          unsigned int indexOfDefaultSourceType, unsigned int indexOfDefaultTargetType)
-    : SumType(getTypeCombinations(sourceTypes, targetTypes), (indexOfDefaultSourceType * sourceTypes.size()) + indexOfDefaultTargetType)
+    : SumType(typeSystem, getTypeCombinations(sourceTypes, targetTypes),
+              (indexOfDefaultSourceType * sourceTypes.size()) + indexOfDefaultTargetType)
     , m_sourceTypes(std::move(sourceTypes))
     , m_targetTypes(std::move(targetTypes))
     , m_indexOfDefaultSourceType(indexOfDefaultSourceType)
@@ -40,10 +41,10 @@ std::tuple<unsigned int, unsigned int> babelwires::SumOfMapsType::getIndexOfSour
     return { indexInSum / numSourceTypes, indexInSum % numSourceTypes};
 }
 
-const babelwires::SumType::Summands& babelwires::SumOfMapsType::getSourceTypes() const {
+const babelwires::SumType::SummandTypeExps& babelwires::SumOfMapsType::getSourceTypes() const {
     return m_sourceTypes;
 }
-const babelwires::SumType::Summands& babelwires::SumOfMapsType::getTargetTypes() const {
+const babelwires::SumType::SummandTypeExps& babelwires::SumOfMapsType::getTargetTypes() const {
     return m_targetTypes;
 }
 unsigned int babelwires::SumOfMapsType::getIndexOfDefaultSourceType() const {

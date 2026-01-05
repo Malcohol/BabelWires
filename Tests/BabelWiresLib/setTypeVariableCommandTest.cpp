@@ -21,21 +21,21 @@ namespace {
         const babelwires::ValueTreeNode *const input = genericNode->getInput();
         ASSERT_NE(input, nullptr);
 
-        const testDomain::TestGenericType *const genericType = input->getType().as<testDomain::TestGenericType>();
+        const testDomain::TestGenericType *const genericType = input->getType()->as<testDomain::TestGenericType>();
         ASSERT_NE(genericType, nullptr);
 
-        const babelwires::TypeRef& typeAssignment0 = genericType->getTypeAssignment(input->getValue(), 0);
+        const babelwires::TypeExp& typeAssignment0 = genericType->getTypeAssignment(input->getValue(), 0);
         if (var0Instantiated) {
             EXPECT_EQ(typeAssignment0, babelwires::StringType::getThisType());
         } else {
-            EXPECT_EQ(typeAssignment0, babelwires::TypeRef());
+            EXPECT_EQ(typeAssignment0, babelwires::TypeExp());
         }
 
-        const babelwires::TypeRef& typeAssignment1 = genericType->getTypeAssignment(input->getValue(), 1);
+        const babelwires::TypeExp& typeAssignment1 = genericType->getTypeAssignment(input->getValue(), 1);
         if (var1Instantiated) {
             EXPECT_EQ(typeAssignment1, babelwires::StringType::getThisType());
         } else {
-            EXPECT_EQ(typeAssignment1, babelwires::TypeRef());
+            EXPECT_EQ(typeAssignment1, babelwires::TypeExp());
         }
     };
 }

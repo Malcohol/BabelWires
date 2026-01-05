@@ -10,6 +10,15 @@
 #include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
+babelwires::SumType::SumType(const TypeSystem& typeSystem, SummandTypeExps summands, unsigned int indexOfDefaultSummand)
+    : m_indexOfDefaultSummand(indexOfDefaultSummand) {
+    m_summands.reserve(summands.size());
+    for (const auto& s : summands) {
+        m_summands.emplace_back(s.resolve(typeSystem));
+    }
+    assert(indexOfDefaultSummand < m_summands.size());
+}
+
 babelwires::SumType::SumType(Summands summands, unsigned int indexOfDefaultSummand)
     : m_summands(std::move(summands))
     , m_indexOfDefaultSummand(indexOfDefaultSummand) {
@@ -17,12 +26,12 @@ babelwires::SumType::SumType(Summands summands, unsigned int indexOfDefaultSumma
 }
 
 babelwires::NewValueHolder babelwires::SumType::createValue(const TypeSystem& typeSystem) const {
-    return m_summands[m_indexOfDefaultSummand].resolve(typeSystem).createValue(typeSystem);
+    return m_summands[m_indexOfDefaultSummand]->createValue(typeSystem);
 }
 
 int babelwires::SumType::getIndexOfValue(const TypeSystem& typeSystem, const Value& v) const {
-    const auto it = std::find_if(m_summands.cbegin(), m_summands.cend(), [&typeSystem, &v](const TypeRef& summand) {
-        return summand.resolve(typeSystem).isValidValue(typeSystem, v);
+    const auto it = std::find_if(m_summands.cbegin(), m_summands.cend(), [&typeSystem, &v](const TypePtr& summand) {
+        return summand->isValidValue(typeSystem, v);
     });
     return (it != m_summands.cend()) ? std::distance(m_summands.cbegin(), it) : -1;
 }
@@ -32,8 +41,8 @@ bool babelwires::SumType::visitValue(const TypeSystem& typeSystem, const Value& 
     if (index == -1) {
         return false;
     }
-    const TypeRef& summandTypeRef = m_summands[static_cast<unsigned int>(index)];
-    return visitor(typeSystem, summandTypeRef, v, PathStep{});
+    const TypeExp& summandTypeExp = m_summands[static_cast<unsigned int>(index)]->getTypeExp();
+    return visitor(typeSystem, summandTypeExp, v, PathStep{});
 }
 
 std::string babelwires::SumType::getFlavour() const {
@@ -90,45 +99,41 @@ babelwires::SubtypeOrder babelwires::SumType::opCombine(SubtypeOrder subTest, Su
 namespace {
     /// Flatten any upper structure of sumtypes into the summand vector
     /// Return false if a subtype did not resolve
-    bool flattenSubSumtypes(const babelwires::TypeSystem& typeSystem, std::vector<babelwires::TypeRef>& summands) {
+    void flattenSubSumtypes(const babelwires::TypeSystem& typeSystem, std::vector<const babelwires::Type*>& summands) {
         unsigned int i = 0;
         while (i < summands.size()) {
-            babelwires::TypeRef& summand = summands[i];
-            if (const babelwires::Type* summandType = summand.tryResolve(typeSystem)) {
-                if (const babelwires::SumType* const subSumType = summandType->as<babelwires::SumType>()) {
-                    const std::vector<babelwires::TypeRef>& subSummands = subSumType->getSummands();
-                    summand = subSummands[0];
-                    summands.insert(summands.end(), subSummands.begin() + 1, subSummands.end());
-                } else {
-                    ++i;
+            const babelwires::Type* summand = summands[i];
+            if (const babelwires::SumType* const subSumType = summand->as<babelwires::SumType>()) {
+                const std::vector<babelwires::TypePtr>& subSummands = subSumType->getSummands();
+                summands[i] = subSummands[0].get();
+                summands.reserve(summands.size() + subSummands.size() - 1);
+                for (unsigned int i = 1; i < subSummands.size(); ++i) {
+                    summands.emplace_back(subSummands[i].get());
                 }
             } else {
-                // Unresolved subtype
-                return false;
+                ++i;
             }
         }
-        return true;
     }
 } // namespace
 
 std::optional<babelwires::SubtypeOrder> babelwires::SumType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                                   const Type& other) const {
-    std::vector<TypeRef> summandsA = getSummands();
-    std::vector<TypeRef> summandsB;
-    summandsB.emplace_back(other.getTypeRef());
+    std::vector<const Type*> summandsA;
+    std::vector<const Type*> summandsB;
+    summandsA.emplace_back(this);
+    summandsB.emplace_back(&other);
     // Flatten sumtypes into the vector to ensure sumtypes are associative.
-    if (!flattenSubSumtypes(typeSystem, summandsA) || !flattenSubSumtypes(typeSystem, summandsB)) {
-        // Unresolved subtype
-        return SubtypeOrder::IsDisjoint;
-    }
-
+    flattenSubSumtypes(typeSystem, summandsA);
+    flattenSubSumtypes(typeSystem, summandsB);
+    
     // Using optionals here as a pseudo-identity for the operators.
     std::optional<SubtypeOrder> subTest;
     std::vector<std::optional<SubtypeOrder>> superTestForBs(summandsB.size());
     for (int i = 0; i < summandsA.size(); ++i) {
         std::optional<SubtypeOrder> subTestForA;
         for (int j = 0; j < summandsB.size(); ++j) {
-            const SubtypeOrder ab = typeSystem.compareSubtype(summandsA[i], summandsB[j]);
+            const SubtypeOrder ab = typeSystem.compareSubtype(summandsA[i]->getTypeExp(), summandsB[j]->getTypeExp());
             auto& superTestForB = superTestForBs[j];
             subTestForA = subTestForA ? opUnionRight(ab, *subTestForA) : ab;
             superTestForB = superTestForB ? opUnionLeft(ab, *superTestForB) : ab;
@@ -158,6 +163,5 @@ std::optional<babelwires::SubtypeOrder> babelwires::SumType::compareSubtypeHelpe
 
 std::string babelwires::SumType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const {
     const int summandIndex = getIndexOfValue(typeSystem, *v);
-    const Type& type = m_summands[summandIndex].assertResolve(typeSystem);
-    return type.valueToString(typeSystem, v);
+    return m_summands[summandIndex]->valueToString(typeSystem, v);
 }

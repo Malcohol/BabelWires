@@ -2,37 +2,37 @@
 
 #include <BabelWiresLib/Types/String/stringValue.hpp>
 
-babelwires::TypeConstructor::TypeConstructorResult testUtils::TestUnaryTypeConstructor::constructType(
-    const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef,
+babelwires::TypePtr testUtils::TestUnaryTypeConstructor::constructType(
+    const babelwires::TypeSystem& typeSystem, babelwires::TypeExp newTypeExp,
     const babelwires::TypeConstructorArguments& arguments,
-    const std::vector<const babelwires::Type*>& resolvedTypeArguments) const {
-    // Remember the typeRef, since there's no way to reconstruct it.
+    const std::vector<babelwires::TypePtr>& resolvedTypeArguments) const {
+    // Remember the typeExp, since there's no way to reconstruct it.
     const TestType* const sourceType = resolvedTypeArguments[0]->as<TestType>();
     if (!sourceType) {
         throw new babelwires::TypeSystemException();
     }
-    return std::make_unique<babelwires::ConstructedType<TestType>>(std::move(newTypeRef),
+    return babelwires::makeType<babelwires::ConstructedType<TestType>>(std::move(newTypeExp),
                                                                    sourceType->m_maximumLength + 1);
 }
 
-babelwires::TypeConstructor::TypeConstructorResult testUtils::TestBinaryTypeConstructor::constructType(
-    const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef,
+babelwires::TypePtr testUtils::TestBinaryTypeConstructor::constructType(
+    const babelwires::TypeSystem& typeSystem, babelwires::TypeExp newTypeExp,
     const babelwires::TypeConstructorArguments& arguments,
-    const std::vector<const babelwires::Type*>& resolvedTypeArguments) const {
-    // Remember the typeRef, since there's no way to reconstruct it.
+    const std::vector<babelwires::TypePtr>& resolvedTypeArguments) const {
+    // Remember the typeExp, since there's no way to reconstruct it.
     const TestType* const sourceType0 = resolvedTypeArguments[0]->as<TestType>();
     const TestType* const sourceType1 = resolvedTypeArguments[1]->as<TestType>();
     if (!sourceType0 || !sourceType1) {
         throw new babelwires::TypeSystemException();
     }
-    return std::make_unique<babelwires::ConstructedType<TestType>>(
-        std::move(newTypeRef), sourceType0->m_maximumLength + sourceType1->m_maximumLength);
+    return babelwires::makeType<babelwires::ConstructedType<TestType>>(
+        std::move(newTypeExp), sourceType0->m_maximumLength + sourceType1->m_maximumLength);
 }
 
-babelwires::TypeConstructor::TypeConstructorResult testUtils::TestMixedTypeConstructor::constructType(
-    const babelwires::TypeSystem& typeSystem, babelwires::TypeRef newTypeRef,
+babelwires::TypePtr testUtils::TestMixedTypeConstructor::constructType(
+    const babelwires::TypeSystem& typeSystem, babelwires::TypeExp newTypeExp,
     const babelwires::TypeConstructorArguments& arguments,
-    const std::vector<const babelwires::Type*>& resolvedTypeArguments) const {
+    const std::vector<babelwires::TypePtr>& resolvedTypeArguments) const {
     assert(arguments.getTypeArguments().size() == 1);
     assert(arguments.getValueArguments().size() == 1);
 
@@ -42,8 +42,8 @@ babelwires::TypeConstructor::TypeConstructorResult testUtils::TestMixedTypeConst
     assert(testType != nullptr);
     assert(stringValue != nullptr);
 
-    // Remember the typeRef, since there's no way to reconstruct it.
-    return std::make_unique<babelwires::ConstructedType<TestType>>(
-        std::move(newTypeRef), testType->m_maximumLength + stringValue->get().size(),
+    // Remember the typeExp, since there's no way to reconstruct it.
+    return babelwires::makeType<babelwires::ConstructedType<TestType>>(
+        std::move(newTypeExp), testType->m_maximumLength + stringValue->get().size(),
         testType->m_defaultValue + stringValue->get());
 }

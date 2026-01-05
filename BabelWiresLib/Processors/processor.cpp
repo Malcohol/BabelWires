@@ -8,23 +8,23 @@
 #include <BabelWiresLib/Processors/processor.hpp>
 
 #include <BabelWiresLib/Project/projectContext.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-babelwires::Processor::Processor(const ProjectContext& projectContext, const TypeRef& inputTypeRef,
-                                 const TypeRef& outputTypeRef)
-    : m_inputValueTreeRoot(std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, inputTypeRef))
-    , m_outputValueTreeRoot(std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, outputTypeRef)) {
-    const Type* const inputType = inputTypeRef.tryResolve(projectContext.m_typeSystem);
+babelwires::Processor::Processor(const ProjectContext& projectContext, const TypeExp& inputTypeExp,
+                                 const TypeExp& outputTypeExp)
+    : m_inputValueTreeRoot(std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, inputTypeExp))
+    , m_outputValueTreeRoot(std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, outputTypeExp)) {
+    const TypePtr inputType = inputTypeExp.tryResolve(projectContext.m_typeSystem);
     if (!inputType) {
-        throw ModelException() << "Input type reference " << inputTypeRef << " could not be resolved";
+        throw ModelException() << "Input type reference " << inputTypeExp << " could not be resolved";
     }
-    const Type* const outputType = outputTypeRef.tryResolve(projectContext.m_typeSystem);
+    const TypePtr outputType = outputTypeExp.tryResolve(projectContext.m_typeSystem);
     if (!outputType) {
-        throw ModelException() << "Output type reference " << outputTypeRef << " could not be resolved";
+        throw ModelException() << "Output type reference " << outputTypeExp << " could not be resolved";
     }
 }
 

@@ -65,7 +65,7 @@ QtNodes::NodeDataType babelwires::NodeNodeModel::getDataType(const AccessModelSc
 const babelwires::Type* babelwires::NodeNodeModel::getInputType(const AccessModelScope& scope,
                                                                 QtNodes::PortIndex portIndex) const {
     if (const ValueTreeNode* const input = std::get<0>(getInputInfo(scope, portIndex))) {
-        return &input->getType();
+        return input->getType().get();
     }
     return nullptr;
 }
@@ -73,7 +73,7 @@ const babelwires::Type* babelwires::NodeNodeModel::getInputType(const AccessMode
 const babelwires::Type* babelwires::NodeNodeModel::getOutputType(const AccessModelScope& scope,
                                                                  QtNodes::PortIndex portIndex) const {
     if (const ValueTreeNode* const output = std::get<0>(getOutputInfo(scope, portIndex))) {
-        return &output->getType();
+        return output->getType().get();
     }
     return nullptr;
 }

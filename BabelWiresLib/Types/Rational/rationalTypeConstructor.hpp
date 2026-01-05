@@ -19,11 +19,11 @@ namespace babelwires {
         // alright because type names are not used for anything other than display.
         TYPE_CONSTRUCTOR("Rational", "Rational{{[0]..[1]}}", "dc2b335e-9336-471e-bc71-466bb65229d2", 1);
 
-        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
-                                            const std::vector<const Type*>& resolvedTypeArguments) const override;
+        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,
+                                            const std::vector<TypePtr>& resolvedTypeArguments) const override;
 
         /// Convenience method.
-        static TypeRef makeTypeRef(Rational min, Rational max, Rational defaultValue = 0);
+        static TypeExp makeTypeExp(Rational min, Rational max, Rational defaultValue = 0);
 
       private:
         /// Throws a TypeSystem exception if the arguments are not of the expect type.

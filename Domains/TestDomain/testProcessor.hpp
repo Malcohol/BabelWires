@@ -17,7 +17,7 @@ namespace testDomain {
 
     class TestProcessorInputOutputType : public babelwires::RecordType {
       public:
-        TestProcessorInputOutputType();
+        TestProcessorInputOutputType(const babelwires::TypeSystem& typeSystem);
 
         REGISTERED_TYPE("TestProcInOut", "TestProcInputOutput", "a6dd948b-e9f4-4f03-bd5d-ecf2d608f026", 1);
 

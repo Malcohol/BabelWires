@@ -24,23 +24,26 @@ namespace {
     }
 
     babelwires::MapValue
-    setUpTestMapValue(const babelwires::TypeSystem& typeSystem, const babelwires::TypeRef& sourceTypeId,
-                      const babelwires::TypeRef& targetTypeId, const babelwires::Value& sourceValue1,
+    setUpTestMapValue(const babelwires::TypeSystem& typeSystem, const babelwires::TypeExp& sourceTypeId,
+                      const babelwires::TypeExp& targetTypeId, const babelwires::Value& sourceValue1,
                       const babelwires::Value& sourceValue2, const babelwires::Value& targetValue1,
                       const babelwires::Value& targetValue2, const babelwires::Value& targetValue3,
                       bool allToOneFallback) {
 
-        auto oneToOne1 = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, sourceTypeId, targetTypeId);
+        const auto& sourceType = sourceTypeId.assertResolve(typeSystem);
+        const auto& targetType = targetTypeId.assertResolve(typeSystem);
+
+        auto oneToOne1 = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, *sourceType, *targetType);
         oneToOne1->setSourceValue(sourceValue1.clone());
         oneToOne1->setTargetValue(targetValue1.clone());
 
-        auto oneToOne2 = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, sourceTypeId, targetTypeId);
+        auto oneToOne2 = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, *sourceType, *targetType);
         oneToOne2->setSourceValue(sourceValue2.clone());
         oneToOne2->setTargetValue(targetValue2.clone());
 
         std::unique_ptr<babelwires::FallbackMapEntryData> fallback;
         if (allToOneFallback) {
-            auto allToOne = std::make_unique<babelwires::AllToOneFallbackMapEntryData>(typeSystem, targetTypeId);
+            auto allToOne = std::make_unique<babelwires::AllToOneFallbackMapEntryData>(typeSystem, *targetType);
             allToOne->setTargetValue(targetValue3.clone());
             fallback = std::unique_ptr<babelwires::FallbackMapEntryData>(allToOne.release());
         } else {
@@ -48,8 +51,8 @@ namespace {
         }
 
         babelwires::MapValue mapValue;
-        mapValue.setSourceTypeRef(sourceTypeId);
-        mapValue.setTargetTypeRef(targetTypeId);
+        mapValue.setSourceTypeExp(sourceTypeId);
+        mapValue.setTargetTypeExp(targetTypeId);
         mapValue.emplaceBack(std::move(oneToOne1));
         mapValue.emplaceBack(std::move(oneToOne2));
         mapValue.emplaceBack(std::move(fallback));
@@ -181,7 +184,7 @@ TEST(MapHelperTest, unorderedMapApplicator_differentTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const testDomain::TestEnum& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
 
     babelwires::MapValue mapValue = setUpTestTypeTestEnumMapValue(typeSystem, mapValue);
 
@@ -200,12 +203,12 @@ TEST(MapHelperTest, enumSourceMapApplicator_allToOneFallback) {
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const testDomain::TestEnum& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
 
     babelwires::MapValue mapValue = setUpTestEnumMapValue(typeSystem, mapValue, true);
 
     babelwires::EnumSourceMapApplicator<testDomain::TestEnum, testDomain::TestEnum::Value> mapApplicator(
-        mapValue, testEnum, babelwires::EnumToValueValueAdapter<testDomain::TestEnum>{testEnum});
+        mapValue, *testEnum, babelwires::EnumToValueValueAdapter<testDomain::TestEnum>{*testEnum});
 
     EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Foo], testDomain::TestEnum::Value::Oom);
     EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Bar], testDomain::TestEnum::Value::Boo);
@@ -219,12 +222,12 @@ TEST(MapHelperTest, enumSourceMapApplicator_allToSameFallback) {
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const testDomain::TestEnum& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
 
     babelwires::MapValue mapValue = setUpTestEnumMapValue(typeSystem, mapValue, false);
 
     babelwires::EnumSourceMapApplicator<testDomain::TestEnum, testDomain::TestEnum::Value> mapApplicator(
-        mapValue, testEnum, babelwires::EnumToValueValueAdapter<testDomain::TestEnum>{testEnum});
+        mapValue, *testEnum, babelwires::EnumToValueValueAdapter<testDomain::TestEnum>{*testEnum});
 
     EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Foo], testDomain::TestEnum::Value::Oom);
     EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Bar], testDomain::TestEnum::Value::Boo);
@@ -238,11 +241,11 @@ TEST(MapHelperTest, enumSourceMapApplicator_differentTypes) {
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const testDomain::TestEnum& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
 
     babelwires::MapValue mapValue = setUpTestEnumTestTypeMapValue(typeSystem, mapValue);
 
-    babelwires::EnumSourceMapApplicator<testDomain::TestEnum, std::string> mapApplicator(mapValue, testEnum,
+    babelwires::EnumSourceMapApplicator<testDomain::TestEnum, std::string> mapApplicator(mapValue, *testEnum,
                                                                                          &testValueAdapter);
 
     EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Foo], "xxx");

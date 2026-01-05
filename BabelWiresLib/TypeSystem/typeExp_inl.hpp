@@ -1,7 +1,7 @@
-inline babelwires::TypeConstructorArguments::TypeConstructorArguments(std::vector<TypeRef> typeArguments)
+inline babelwires::TypeConstructorArguments::TypeConstructorArguments(std::vector<TypeExp> typeArguments)
     : m_typeArguments(std::move(typeArguments)) {}
 
-inline babelwires::TypeConstructorArguments::TypeConstructorArguments(std::vector<TypeRef> typeArguments, std::vector<ValueHolder> valueArguments)
+inline babelwires::TypeConstructorArguments::TypeConstructorArguments(std::vector<TypeExp> typeArguments, std::vector<ValueHolder> valueArguments)
     : m_typeArguments(std::move(typeArguments))
     , m_valueArguments(std::move(valueArguments)) {
 #ifndef NDEBUG
@@ -13,23 +13,23 @@ inline babelwires::TypeConstructorArguments::TypeConstructorArguments(std::vecto
 
 inline babelwires::TypeConstructorArguments::~TypeConstructorArguments() = default;
 
-inline babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeRef typeRef0) 
-    : TypeRef(typeConstructorId, TypeConstructorArguments{{std::move(typeRef0)}}) {}
+inline babelwires::TypeExp::TypeExp(TypeConstructorId typeConstructorId, TypeExp typeExp0) 
+    : TypeExp(typeConstructorId, TypeConstructorArguments{{std::move(typeExp0)}}) {}
 
-inline babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, TypeRef typeRef0, TypeRef typeRef1)
-    : TypeRef(typeConstructorId, TypeConstructorArguments{{std::move(typeRef0), std::move(typeRef1)}}) {}
+inline babelwires::TypeExp::TypeExp(TypeConstructorId typeConstructorId, TypeExp typeExp0, TypeExp typeExp1)
+    : TypeExp(typeConstructorId, TypeConstructorArguments{{std::move(typeExp0), std::move(typeExp1)}}) {}
 
-inline babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0)
-    : TypeRef(typeConstructorId, TypeConstructorArguments{{}, {std::move(value0)}}) {}
+inline babelwires::TypeExp::TypeExp(TypeConstructorId typeConstructorId, ValueHolder value0)
+    : TypeExp(typeConstructorId, TypeConstructorArguments{{}, {std::move(value0)}}) {}
 
-inline babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1)
-    : TypeRef(typeConstructorId, TypeConstructorArguments{{}, {std::move(value0), std::move(value1)}}) {}
+inline babelwires::TypeExp::TypeExp(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1)
+    : TypeExp(typeConstructorId, TypeConstructorArguments{{}, {std::move(value0), std::move(value1)}}) {}
 
-inline babelwires::TypeRef::TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1, ValueHolder value2)
-    : TypeRef(typeConstructorId, TypeConstructorArguments{{}, {std::move(value0), std::move(value1), std::move(value2)}}) {}
+inline babelwires::TypeExp::TypeExp(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1, ValueHolder value2)
+    : TypeExp(typeConstructorId, TypeConstructorArguments{{}, {std::move(value0), std::move(value1), std::move(value2)}}) {}
 
 template <typename Visitor, typename R>
-R babelwires::TypeRef::visit(Visitor& visitor) const {
+R babelwires::TypeExp::visit(Visitor& visitor) const {
     struct VisitorMethods {
         R operator()(std::monostate) {
             return visitor(std::monostate());
@@ -46,7 +46,7 @@ R babelwires::TypeRef::visit(Visitor& visitor) const {
 }
 
 template <typename Visitor, typename R>
-R babelwires::TypeRef::visit(Visitor& visitor, const TypeRef& a, const TypeRef& b) {
+R babelwires::TypeExp::visit(Visitor& visitor, const TypeExp& a, const TypeExp& b) {
     struct VisitorMethods {
         R operator()(std::monostate, std::monostate) { return visitor(std::monostate(), std::monostate()); }
         R operator()(const RegisteredTypeId& typeIdA, const RegisteredTypeId& typeIdB) {

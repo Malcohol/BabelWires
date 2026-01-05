@@ -17,19 +17,18 @@ namespace {
     class TestSumOfMapsType : public babelwires::SumOfMapsType {
       public:
         REGISTERED_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("TestSumOfMapsType"), 1);
-        TestSumOfMapsType()
+        TestSumOfMapsType(const babelwires::TypeSystem& typeSystem)
             : babelwires::SumOfMapsType(
-                  {babelwires::DefaultIntType::getThisType(),
-                   babelwires::DefaultRationalType::getThisType()},
-                  {babelwires::DefaultIntType::getThisType(), babelwires::StringType::getThisType()}, 1,
-                  0) {}
+                  typeSystem,
+                  {babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()},
+                  {babelwires::DefaultIntType::getThisType(), babelwires::StringType::getThisType()}, 1, 0) {}
     };
 } // namespace
 
 TEST(SumOfMapsTypeTest, sumOfMapsTypeConstructor) {
     testUtils::TestEnvironment testEnvironment;
 
-    TestSumOfMapsType sumOfMapsType;
+    TestSumOfMapsType sumOfMapsType(testEnvironment.m_typeSystem);
 
     EXPECT_EQ(sumOfMapsType.getSummands().size(), 2 * 2);
 
@@ -46,7 +45,7 @@ TEST(SumOfMapsTypeTest, sumOfMapsTypeConstructor) {
 TEST(SumOfMapsTypeTest, sumOfMapsTypeCreateValue) {
     testUtils::TestEnvironment testEnvironment;
 
-    TestSumOfMapsType sumOfMapsType;
+    TestSumOfMapsType sumOfMapsType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder newValue = sumOfMapsType.createValue(testEnvironment.m_typeSystem);
 
@@ -56,33 +55,38 @@ TEST(SumOfMapsTypeTest, sumOfMapsTypeCreateValue) {
     const auto* mapValue = newValue->as<babelwires::MapValue>();
     EXPECT_NE(mapValue, nullptr);
 
-    EXPECT_EQ(mapValue->getSourceTypeRef(), babelwires::DefaultRationalType::getThisType());
-    EXPECT_EQ(mapValue->getTargetTypeRef(), babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(mapValue->getSourceTypeExp(), babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(mapValue->getTargetTypeExp(), babelwires::DefaultIntType::getThisType());
 }
 
 TEST(SumOfMapsTypeTest, validValues) {
     testUtils::TestEnvironment testEnvironment;
 
-    TestSumOfMapsType sumOfMapsType;
+    TestSumOfMapsType sumOfMapsType(testEnvironment.m_typeSystem);
 
-    babelwires::MapValue map0(testEnvironment.m_typeSystem, babelwires::DefaultIntType::getThisType(),
-                              babelwires::DefaultIntType::getThisType(), babelwires::MapEntryData::Kind::All2Sm);
-    babelwires::MapValue map1(testEnvironment.m_typeSystem, babelwires::DefaultIntType::getThisType(),
-                              babelwires::StringType::getThisType(), babelwires::MapEntryData::Kind::All21);
-    babelwires::MapValue map2(testEnvironment.m_typeSystem, babelwires::DefaultRationalType::getThisType(),
-                              babelwires::DefaultIntType::getThisType(), babelwires::MapEntryData::Kind::All21);
-    babelwires::MapValue map3(testEnvironment.m_typeSystem, babelwires::DefaultRationalType::getThisType(),
-                              babelwires::StringType::getThisType(), babelwires::MapEntryData::Kind::All21);
+    const auto& intType = testEnvironment.m_typeSystem.getEntryByType<babelwires::DefaultIntType>();
+    const auto& stringType = testEnvironment.m_typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& rationalType = testEnvironment.m_typeSystem.getEntryByType<babelwires::DefaultRationalType>();
 
+    babelwires::MapValue map0(testEnvironment.m_typeSystem, intType, intType, babelwires::MapEntryData::Kind::All2Sm);
+    babelwires::MapValue map1(testEnvironment.m_typeSystem, intType, stringType, babelwires::MapEntryData::Kind::All21);
+    babelwires::MapValue map2(testEnvironment.m_typeSystem, rationalType, intType,
+                              babelwires::MapEntryData::Kind::All21);
+    babelwires::MapValue map3(testEnvironment.m_typeSystem, rationalType, stringType,
+                              babelwires::MapEntryData::Kind::All21);
     EXPECT_TRUE(sumOfMapsType.isValidValue(testEnvironment.m_typeSystem, map0));
     EXPECT_TRUE(sumOfMapsType.isValidValue(testEnvironment.m_typeSystem, map1));
     EXPECT_TRUE(sumOfMapsType.isValidValue(testEnvironment.m_typeSystem, map2));
     EXPECT_TRUE(sumOfMapsType.isValidValue(testEnvironment.m_typeSystem, map3));
 
-    const auto [s0, t0] = sumOfMapsType.getIndexOfSourceAndTarget(sumOfMapsType.getIndexOfValue(testEnvironment.m_typeSystem, map0));
-    const auto [s1, t1] = sumOfMapsType.getIndexOfSourceAndTarget(sumOfMapsType.getIndexOfValue(testEnvironment.m_typeSystem, map1));
-    const auto [s2, t2] = sumOfMapsType.getIndexOfSourceAndTarget(sumOfMapsType.getIndexOfValue(testEnvironment.m_typeSystem, map2));
-    const auto [s3, t3] = sumOfMapsType.getIndexOfSourceAndTarget(sumOfMapsType.getIndexOfValue(testEnvironment.m_typeSystem, map3));
+    const auto [s0, t0] =
+        sumOfMapsType.getIndexOfSourceAndTarget(sumOfMapsType.getIndexOfValue(testEnvironment.m_typeSystem, map0));
+    const auto [s1, t1] =
+        sumOfMapsType.getIndexOfSourceAndTarget(sumOfMapsType.getIndexOfValue(testEnvironment.m_typeSystem, map1));
+    const auto [s2, t2] =
+        sumOfMapsType.getIndexOfSourceAndTarget(sumOfMapsType.getIndexOfValue(testEnvironment.m_typeSystem, map2));
+    const auto [s3, t3] =
+        sumOfMapsType.getIndexOfSourceAndTarget(sumOfMapsType.getIndexOfValue(testEnvironment.m_typeSystem, map3));
 
     EXPECT_EQ(s0, 0);
     EXPECT_EQ(t0, 0);
@@ -93,4 +97,3 @@ TEST(SumOfMapsTypeTest, validValues) {
     EXPECT_EQ(s3, 1);
     EXPECT_EQ(t3, 1);
 }
-

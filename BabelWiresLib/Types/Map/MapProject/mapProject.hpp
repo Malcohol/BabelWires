@@ -29,28 +29,28 @@ namespace babelwires {
         virtual ~MapProject();
 
         struct AllowedTypes {
-            std::vector<TypeRef> m_typeRefs;
+            std::vector<TypeExp> m_typeExps;
             unsigned int m_indexOfDefault = 0;
 
-            bool isRelatedToSome(const TypeSystem& typeSystem, const TypeRef& type) const;
-            bool isSubtypeOfSome(const TypeSystem& typeSystem, const TypeRef& type) const;
-            const TypeRef& getDefaultTypeRef() const { return m_typeRefs[m_indexOfDefault]; }
+            bool isRelatedToSome(const TypeSystem& typeSystem, const TypeExp& type) const;
+            bool isSubtypeOfSome(const TypeSystem& typeSystem, const TypeExp& type) const;
+            const TypeExp& getDefaultTypeExp() const { return m_typeExps[m_indexOfDefault]; }
         };
 
-        void setAllowedSourceTypeRefs(const AllowedTypes& allowedTypes);
-        void setAllowedTargetTypeRefs(const AllowedTypes& allowedTypes);
+        void setAllowedSourceTypeExps(const AllowedTypes& allowedTypes);
+        void setAllowedTargetTypeExps(const AllowedTypes& allowedTypes);
 
-        const AllowedTypes& getAllowedSourceTypeRefs() const;
-        const AllowedTypes& getAllowedTargetTypeRefs() const;
+        const AllowedTypes& getAllowedSourceTypeExps() const;
+        const AllowedTypes& getAllowedTargetTypeExps() const;
        
-        const TypeRef& getCurrentSourceTypeRef() const;
-        const TypeRef& getCurrentTargetTypeRef() const;
+        const TypeExp& getCurrentSourceTypeExp() const;
+        const TypeExp& getCurrentTargetTypeExp() const;
 
-        void setCurrentSourceTypeRef(const TypeRef& sourceId);
-        void setCurrentTargetTypeRef(const TypeRef& targetId);
+        const TypePtr& getCurrentSourceType() const;
+        const TypePtr& getCurrentTargetType() const;
 
-        const Type* getCurrentSourceType() const;
-        const Type* getCurrentTargetType() const;
+        void setCurrentSourceTypeExp(const TypeExp& sourceId);
+        void setCurrentTargetTypeExp(const TypeExp& targetId);
 
         MapValue extractMapValue() const;
         void setMapValue(const MapValue& data);
@@ -74,11 +74,14 @@ namespace babelwires {
 
       private:
         const ProjectContext& m_projectContext;
-        AllowedTypes m_allowedSourceTypeRefs;
-        AllowedTypes m_allowedTargetTypeRefs;
+        AllowedTypes m_allowedSourceTypeExps;
+        AllowedTypes m_allowedTargetTypeExps;
 
-        TypeRef m_currentSourceTypeRef;
-        TypeRef m_currentTargetTypeRef;
+        TypeExp m_currentSourceTypeExp;
+        TypeExp m_currentTargetTypeExp;
+
+        TypePtr m_currentSourceType;
+        TypePtr m_currentTargetType;
 
         Result m_sourceTypeValidity;
         Result m_targetTypeValidity;

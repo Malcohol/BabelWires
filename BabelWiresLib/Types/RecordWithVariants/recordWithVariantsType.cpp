@@ -12,18 +12,21 @@
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
-babelwires::RecordWithVariantsType::RecordWithVariantsType(Tags tags, std::vector<FieldWithTags> fields,
+babelwires::RecordWithVariantsType::RecordWithVariantsType(const TypeSystem& typeSystem, Tags tags, std::vector<FieldWithTags> fields,
                                                            unsigned int defaultTagIndex)
     : m_tags(std::move(tags))
-    , m_defaultTag(m_tags[defaultTagIndex])
-    , m_fields(std::move(fields)) {
+    , m_defaultTag(m_tags[defaultTagIndex]) {
     assert((m_tags.size() > 0) && "Empty tags set not allowed");
     assert(defaultTagIndex < m_tags.size());
     m_tagToVariantCache.reserve(m_tags.size());
+    m_fields.reserve(fields.size());
     for (const auto& t : m_tags) {
         // It's allowed for a tag not to have any associated fields.
         // Ensure that it has an entry in the cache anyway.
         m_tagToVariantCache[t] = {};
+    }
+    for (const auto& f : fields) {
+        m_fields.emplace_back(Field{f.m_identifier, f.m_type.resolve(typeSystem), std::move(f.m_tags)});
     }
     for (const auto& f : m_fields) {
         if (f.m_tags.empty()) {
@@ -54,7 +57,7 @@ const babelwires::RecordWithVariantsType::Tags& babelwires::RecordWithVariantsTy
 unsigned int babelwires::RecordWithVariantsType::getIndexOfTag(ShortId tag) const {
     const auto it = std::find(m_tags.begin(), m_tags.end(), tag);
     if (it == m_tags.end()) {
-        throw ModelException() << "The tag " << tag << " is not a tag of the type " << getTypeRef();
+        throw ModelException() << "The tag " << tag << " is not a tag of the type " << getTypeExp();
     }
     return std::distance(m_tags.begin(), it);
 }
@@ -72,8 +75,7 @@ void babelwires::RecordWithVariantsType::selectTag(const TypeSystem& typeSystem,
         recordValue.removeValue(m_fields[i].m_identifier);
     }
     for (auto i : changes.m_fieldsAdded) {
-        const Type& fieldType = m_fields[i].m_type.resolve(typeSystem);
-        recordValue.setValue(m_fields[i].m_identifier, fieldType.createValue(typeSystem));
+        recordValue.setValue(m_fields[i].m_identifier, m_fields[i].m_type->createValue(typeSystem));
     }
     recordValue.setTag(tag);
 }
@@ -88,7 +90,7 @@ babelwires::RecordWithVariantsType::FieldChanges
 babelwires::RecordWithVariantsType::getFieldChanges(ShortId currentTag, ShortId proposedTag) const {
     FieldChanges fieldChanges;
     for (unsigned int i = 0; i < m_fields.size(); ++i) {
-        const FieldWithTags& f = m_fields[i];
+        const Field& f = m_fields[i];
         const bool isCurrent = (std::find(f.m_tags.begin(), f.m_tags.end(), currentTag) != f.m_tags.end());
         const bool isProposed = (std::find(f.m_tags.begin(), f.m_tags.end(), proposedTag) != f.m_tags.end());
         if (isCurrent && !isProposed) {
@@ -119,24 +121,24 @@ unsigned int babelwires::RecordWithVariantsType::getNumChildren(const ValueHolde
     return it->second.size();
 }
 
-std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&>
+std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp>
 babelwires::RecordWithVariantsType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
     const ShortId tag = getSelectedTag(compoundValue);
     const auto it = m_tagToVariantCache.find(tag);
     assert(it != m_tagToVariantCache.end());
     const auto& recordValue = compoundValue->is<RecordWithVariantsValue>();
     const Field& f = *it->second[i];
-    return {&recordValue.getValue(f.m_identifier), PathStep{f.m_identifier}, f.m_type};
+    return {&recordValue.getValue(f.m_identifier), PathStep{f.m_identifier}, f.m_type->getTypeExp()};
 }
 
-std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypeRef&>
+std::tuple<babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp>
 babelwires::RecordWithVariantsType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
     const ShortId tag = getSelectedTag(compoundValue);
     const auto it = m_tagToVariantCache.find(tag);
     assert(it != m_tagToVariantCache.end());
     RecordWithVariantsValue& recordValue = compoundValue.copyContentsAndGetNonConst().is<RecordWithVariantsValue>();
     const Field& f = *it->second[i];
-    return {&recordValue.getValue(f.m_identifier), PathStep{f.m_identifier}, f.m_type};
+    return {&recordValue.getValue(f.m_identifier), PathStep{f.m_identifier}, f.m_type->getTypeExp()};
 }
 
 int babelwires::RecordWithVariantsType::getChildIndexFromStep(const ValueHolder& compoundValue,
@@ -160,13 +162,13 @@ int babelwires::RecordWithVariantsType::getChildIndexFromStep(const ValueHolder&
 babelwires::NewValueHolder babelwires::RecordWithVariantsType::createValue(const TypeSystem& typeSystem) const {
     auto newValue = babelwires::ValueHolder::makeValue<RecordWithVariantsValue>(m_defaultTag);
     for (const auto* f : m_tagToVariantCache.find(m_defaultTag)->second) {
-        const Type& fieldType = f->m_type.resolve(typeSystem);
-        newValue.m_nonConstReference.setValue(f->m_identifier, fieldType.createValue(typeSystem));
+        newValue.m_nonConstReference.setValue(f->m_identifier, f->m_type->createValue(typeSystem));
     }
     return std::move(newValue);
 }
 
-bool babelwires::RecordWithVariantsType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
+bool babelwires::RecordWithVariantsType::visitValue(const TypeSystem& typeSystem, const Value& v,
+                                                    ChildValueVisitor& visitor) const {
     const RecordWithVariantsValue* const recordValue = v.as<RecordWithVariantsValue>();
     if (!recordValue) {
         return false;
@@ -180,7 +182,7 @@ bool babelwires::RecordWithVariantsType::visitValue(const TypeSystem& typeSystem
         if (!value) {
             return false;
         } else {
-            if (!visitor(typeSystem, f->m_type, **value, PathStep{f->m_identifier})) {
+            if (!visitor(typeSystem, f->m_type->getTypeExp(), **value, PathStep{f->m_identifier})) {
                 return false;
             }
         }
@@ -204,56 +206,54 @@ namespace {
         currentOrder = subtypeProduct(currentOrder, localOrder);
         return (currentOrder == babelwires::SubtypeOrder::IsDisjoint);
     };
-
-    babelwires::SubtypeOrder
-    sortAndCompareFieldSets(const babelwires::TypeSystem& typeSystem,
-                            std::vector<const babelwires::RecordWithVariantsType::Field*>& thisFields,
-                            std::vector<const babelwires::RecordWithVariantsType::Field*>& otherFields) {
-        babelwires::SubtypeOrder currentOrder = babelwires::SubtypeOrder::IsEquivalent;
-        auto fieldLess = [](const babelwires::RecordWithVariantsType::Field* a,
-                            const babelwires::RecordWithVariantsType::Field* b) {
-            return a->m_identifier < b->m_identifier;
-        };
-        std::sort(thisFields.begin(), thisFields.end(), fieldLess);
-        std::sort(otherFields.begin(), otherFields.end(), fieldLess);
-        auto thisIt = thisFields.begin();
-        auto otherIt = otherFields.begin();
-        while ((thisIt < thisFields.end()) && (otherIt < otherFields.end())) {
-            if ((*thisIt)->m_identifier == (*otherIt)->m_identifier) {
-                const babelwires::SubtypeOrder fieldComparison =
-                    typeSystem.compareSubtype((*thisIt)->m_type, (*otherIt)->m_type);
-                if (updateAndCheckDisjoint(currentOrder, fieldComparison)) {
-                    return babelwires::SubtypeOrder::IsDisjoint;
-                }
-                ++thisIt;
-                ++otherIt;
-            } else if ((*thisIt)->m_identifier < (*otherIt)->m_identifier) {
-                // A record with an additional _required_ field can be a subtype of one without it.
-                // A record with an additional _optional_ field can actually have the same set of valid values as one
-                // without it, since we use "duck typing".
-                if (updateAndCheckDisjoint(currentOrder, babelwires::SubtypeOrder::IsSubtype)) {
-                    return babelwires::SubtypeOrder::IsDisjoint;
-                }
-                ++thisIt;
-            } else { // if ((*otherIt)->m_identifier < (*thisIt)->m_identifier) {
-                if (updateAndCheckDisjoint(currentOrder, babelwires::SubtypeOrder::IsSupertype)) {
-                    return babelwires::SubtypeOrder::IsDisjoint;
-                }
-                ++otherIt;
-            }
-        }
-        if (thisIt != thisFields.end()) {
-            if (updateAndCheckDisjoint(currentOrder, babelwires::SubtypeOrder::IsSubtype)) {
-                return babelwires::SubtypeOrder::IsDisjoint;
-            }
-        } else if (otherIt != otherFields.end()) {
-            if (updateAndCheckDisjoint(currentOrder, babelwires::SubtypeOrder::IsSupertype)) {
-                return babelwires::SubtypeOrder::IsDisjoint;
-            }
-        }
-        return currentOrder;
-    }
 } // namespace
+
+babelwires::SubtypeOrder babelwires::RecordWithVariantsType::sortAndCompareFieldSets(
+    const TypeSystem& typeSystem, std::vector<const Field*>& thisFields, std::vector<const Field*>& otherFields) {
+    SubtypeOrder currentOrder = babelwires::SubtypeOrder::IsEquivalent;
+    auto fieldLess = [](const Field* a,
+                        const Field* b) {
+        return a->m_identifier < b->m_identifier;
+    };
+    std::sort(thisFields.begin(), thisFields.end(), fieldLess);
+    std::sort(otherFields.begin(), otherFields.end(), fieldLess);
+    auto thisIt = thisFields.begin();
+    auto otherIt = otherFields.begin();
+    while ((thisIt < thisFields.end()) && (otherIt < otherFields.end())) {
+        if ((*thisIt)->m_identifier == (*otherIt)->m_identifier) {
+            const SubtypeOrder fieldComparison =
+                typeSystem.compareSubtype((*thisIt)->m_type->getTypeExp(), (*otherIt)->m_type->getTypeExp());
+            if (updateAndCheckDisjoint(currentOrder, fieldComparison)) {
+                return SubtypeOrder::IsDisjoint;
+            }
+            ++thisIt;
+            ++otherIt;
+        } else if ((*thisIt)->m_identifier < (*otherIt)->m_identifier) {
+            // A record with an additional _required_ field can be a subtype of one without it.
+            // A record with an additional _optional_ field can actually have the same set of valid values as one
+            // without it, since we use "duck typing".
+            if (updateAndCheckDisjoint(currentOrder, SubtypeOrder::IsSubtype)) {
+                return SubtypeOrder::IsDisjoint;
+            }
+            ++thisIt;
+        } else { // if ((*otherIt)->m_identifier < (*thisIt)->m_identifier) {
+            if (updateAndCheckDisjoint(currentOrder, SubtypeOrder::IsSupertype)) {
+                return SubtypeOrder::IsDisjoint;
+            }
+            ++otherIt;
+        }
+    }
+    if (thisIt != thisFields.end()) {
+        if (updateAndCheckDisjoint(currentOrder, SubtypeOrder::IsSubtype)) {
+            return babelwires::SubtypeOrder::IsDisjoint;
+        }
+    } else if (otherIt != otherFields.end()) {
+        if (updateAndCheckDisjoint(currentOrder, SubtypeOrder::IsSupertype)) {
+            return babelwires::SubtypeOrder::IsDisjoint;
+        }
+    }
+    return currentOrder;
+}
 
 std::optional<babelwires::SubtypeOrder>
 babelwires::RecordWithVariantsType::compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const {

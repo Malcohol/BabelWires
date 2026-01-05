@@ -44,12 +44,12 @@ TEST(ValueTreeGenericTypeUtilsTest, containsUnassignedTypeVariable) {
     babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisType());
     valueTree.setToDefault();
 
-    const testDomain::TestGenericType* const genericType = valueTree.getType().as<testDomain::TestGenericType>();
+    const testDomain::TestGenericType* const genericType = valueTree.getType()->as<testDomain::TestGenericType>();
 
     babelwires::ValueTreeNode& nestedGenericTypeNode =
         babelwires::followPath(testDomain::TestGenericType::getPathToNestedGenericType(), valueTree);
     const babelwires::GenericType* const nestedGenericType =
-        nestedGenericTypeNode.getType().as<babelwires::GenericType>();
+        nestedGenericTypeNode.getType()->as<babelwires::GenericType>();
     ASSERT_NE(nestedGenericType, nullptr);
 
     auto checkForVariable = [&](const babelwires::Path& pathToVariable) {
@@ -146,12 +146,12 @@ TEST(ValueTreeGenericTypeUtilsTest, getMaximumHeightOfUnassignedGenericType) {
     babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisType());
     valueTree.setToDefault();
 
-    const testDomain::TestGenericType* const genericType = valueTree.getType().as<testDomain::TestGenericType>();
+    const testDomain::TestGenericType* const genericType = valueTree.getType()->as<testDomain::TestGenericType>();
 
     babelwires::ValueTreeNode& nestedGenericTypeNode =
         babelwires::followPath(testDomain::TestGenericType::getPathToNestedGenericType(), valueTree);
     const babelwires::GenericType* const nestedGenericType =
-        nestedGenericTypeNode.getType().as<babelwires::GenericType>();
+        nestedGenericTypeNode.getType()->as<babelwires::GenericType>();
     ASSERT_NE(nestedGenericType, nullptr);
 
     auto checkForVariable = [&](const babelwires::Path& pathToVariable, unsigned int maximumPossible) {

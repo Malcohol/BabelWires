@@ -25,7 +25,7 @@
 
 babelwires::SetTypeVariableCommand::SetTypeVariableCommand(std::string commandName, NodeId nodeId,
                                                            Path pathToGenericType, unsigned int variableIndex,
-                                                           TypeRef newType)
+                                                           TypeExp newType)
     : CompoundCommand(commandName)
     , m_nodeId(nodeId)
     , m_pathToGenericType(std::move(pathToGenericType))
@@ -49,7 +49,7 @@ bool babelwires::SetTypeVariableCommand::initializeAndExecute(Project& project) 
         return false;
     }
 
-    const GenericType* const genericType = genericTypeNode->getType().as<GenericType>();
+    const GenericType* const genericType = genericTypeNode->getType()->as<GenericType>();
     if (!genericType) {
         return false;
     }

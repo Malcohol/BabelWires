@@ -20,26 +20,26 @@ namespace {
 babelwires::TypeSystem::TypeSystem() = default;
 babelwires::TypeSystem::~TypeSystem() = default;
 
-const babelwires::Type* babelwires::TypeSystem::tryGetRegisteredType(RegisteredTypeId id) const {
+babelwires::TypePtr babelwires::TypeSystem::tryGetRegisteredType(RegisteredTypeId id) const {
     auto it = m_registeredTypeRegistry.find(id);
     if (it != m_registeredTypeRegistry.end()) {
-        return std::get<0>(it->second).get();
+        return std::get<0>(it->second);
     }
-    return nullptr;
+    return {};
 }
 
-const babelwires::Type& babelwires::TypeSystem::getRegisteredType(RegisteredTypeId id) const {
+babelwires::TypePtr babelwires::TypeSystem::getRegisteredType(RegisteredTypeId id) const {
     auto it = m_registeredTypeRegistry.find(id);
     assert((it != m_registeredTypeRegistry.end()) && "Primitive Type not registered in type system");
-    return *std::get<0>(it->second);
+    return std::get<0>(it->second);
 }
 
-babelwires::Type* babelwires::TypeSystem::addRegisteredType(LongId typeId, VersionNumber version,
-                                                           std::unique_ptr<Type> newType) {
+const babelwires::Type* babelwires::TypeSystem::addRegisteredType(LongId typeId, VersionNumber version,
+                                                           TypePtr newType) {
     auto addResult = m_registeredTypeRegistry.emplace(
         std::pair<LongId, RegisteredTypeInfo>{typeId, RegisteredTypeInfo{std::move(newType), version}});
     assert(addResult.second && "Type with that identifier already registered");
-    babelwires::Type* const newTypeRaw = std::get<0>(addResult.first->second).get();
+    const babelwires::Type* const newTypeRaw = std::get<0>(addResult.first->second).get();
     for (auto it : newTypeRaw->getTags()) {
         m_taggedRegisteredTypes[it].emplace_back(typeId);
     }
@@ -69,14 +69,14 @@ babelwires::TypeSystem::addTypeConstructorInternal(TypeConstructorId typeId, Ver
     return std::get<0>(addResult.first->second).get();
 }
 
-babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeRef& typeRefA,
-                                                                const TypeRef& typeRefB) const {
+babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeExp& typeExpA,
+                                                                const TypeExp& typeExpB) const {
     // TODO Thread-safe cache here.
-    if (typeRefA == typeRefB) {
+    if (typeExpA == typeExpB) {
         return SubtypeOrder::IsEquivalent;
     }
-    if (const Type* typeA = typeRefA.tryResolve(*this)) {
-        if (const Type* typeB = typeRefB.tryResolve(*this)) {
+    if (const TypePtr typeA = typeExpA.tryResolve(*this)) {
+        if (const TypePtr typeB = typeExpB.tryResolve(*this)) {
             if (const auto resultFromA = typeA->compareSubtypeHelper(*this, *typeB)) {
                 return *resultFromA;
             } else if (const auto resultFromB = typeB->compareSubtypeHelper(*this, *typeA)) {
@@ -87,13 +87,13 @@ babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeRef& t
     return SubtypeOrder::IsDisjoint;
 }
 
-bool babelwires::TypeSystem::isSubType(const TypeRef& typeRefA, const TypeRef& typeRefB) const {
-    SubtypeOrder order = compareSubtype(typeRefA, typeRefB);
+bool babelwires::TypeSystem::isSubType(const TypeExp& typeExpA, const TypeExp& typeExpB) const {
+    SubtypeOrder order = compareSubtype(typeExpA, typeExpB);
     return (order == SubtypeOrder::IsEquivalent) || (order == SubtypeOrder::IsSubtype);
 }
 
-bool babelwires::TypeSystem::isRelatedType(const TypeRef& typeRefA, const TypeRef& typeRefB) const {
-    return compareSubtype(typeRefA, typeRefB) != SubtypeOrder::IsDisjoint;
+bool babelwires::TypeSystem::isRelatedType(const TypeExp& typeExpA, const TypeExp& typeExpB) const {
+    return compareSubtype(typeExpA, typeExpB) != SubtypeOrder::IsDisjoint;
 }
 
 babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getTaggedRegisteredTypes(Type::Tag tag) const {

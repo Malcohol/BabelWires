@@ -16,7 +16,7 @@
 #include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/allToSameFallbackMapEntryData.hpp>
 
-void babelwires::MapEntryModelDispatcher::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem, const Type& sourceType, const Type& targetType,
+void babelwires::MapEntryModelDispatcher::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem, const TypePtr& sourceType, const TypePtr& targetType,
                                                const MapProjectEntry& entry, unsigned int row, MapEntryModel::Column column, bool isLastRow) {
     m_rowModel = &m_rowModelStorage;
     const MapEntryData& entryData = entry.getData();
@@ -32,8 +32,8 @@ void babelwires::MapEntryModelDispatcher::init(const ValueModelRegistry& valueMo
     } else {
         // The base row model is used.
     }
-    m_rowModel->m_sourceType = &sourceType;
-    m_rowModel->m_targetType = &targetType;
+    m_rowModel->m_sourceType = sourceType;
+    m_rowModel->m_targetType = targetType;
     m_rowModel->m_mapProjectEntry = &entry;
     m_rowModel->m_row = row;
     m_rowModel->m_column = column;

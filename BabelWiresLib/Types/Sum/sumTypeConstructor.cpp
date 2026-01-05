@@ -12,10 +12,10 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/Sum/sumType.hpp>
 
-babelwires::TypeConstructor::TypeConstructorResult
-babelwires::SumTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+babelwires::TypePtr
+babelwires::SumTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                               const TypeConstructorArguments& arguments,
-                                              const std::vector<const Type*>& resolvedTypeArguments) const {
+                                              const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() < 2) {
         throw TypeSystemException() << "SumTypeConstructor expects at least 2 type arguments but got "
                                     << arguments.getTypeArguments().size();
@@ -35,10 +35,9 @@ babelwires::SumTypeConstructor::constructType(const TypeSystem& typeSystem, Type
         }
     }
 
-    return std::make_unique<ConstructedType<SumType>>(std::move(newTypeRef), arguments.getTypeArguments(),
-                                                      defaultIndex);
+    return makeType<ConstructedType<SumType>>(std::move(newTypeExp), resolvedTypeArguments, defaultIndex);
 }
 
-babelwires::TypeRef babelwires::SumTypeConstructor::makeTypeRef(std::vector<TypeRef> types) {
-    return TypeRef(getThisIdentifier(), {std::move(types), {}});
+babelwires::TypeExp babelwires::SumTypeConstructor::makeTypeExp(std::vector<TypeExp> types) {
+    return TypeExp(getThisIdentifier(), {std::move(types), {}});
 }

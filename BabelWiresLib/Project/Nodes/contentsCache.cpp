@@ -42,11 +42,11 @@ babelwires::ContentsCacheEntry::ContentsCacheEntry(std::string label, const Valu
     , m_hasUnassignedOutputTypeVariable(false) {}
 
 bool babelwires::ContentsCacheEntry::isOrHasUnassignedInputTypeVariable() const {
-    return m_hasUnassignedInputTypeVariable || (m_input && m_input->getType().as<babelwires::TypeVariableType>());
+    return m_hasUnassignedInputTypeVariable || (m_input && m_input->getType()->as<babelwires::TypeVariableType>());
 }
 
 bool babelwires::ContentsCacheEntry::isOrHasUnassignedOutputTypeVariable() const {
-    return m_hasUnassignedOutputTypeVariable || (m_output && m_output->getType().as<babelwires::TypeVariableType>());
+    return m_hasUnassignedOutputTypeVariable || (m_output && m_output->getType()->as<babelwires::TypeVariableType>());
 }
 
 babelwires::ContentsCache::ContentsCache(EditTree& edits)
@@ -120,9 +120,9 @@ namespace babelwires {
                                     bool isExpanded, GenericTypeInfo& genericTypeInfo) {
                 if (genericTypeInfo.m_depthInUnassignedGenericTree >= 0) {
                     if (numChildren == TypeVariableType::c_numChildren) {
-                        if (valueTreeNode->getType().as<TypeVariableType>()) {
+                        if (valueTreeNode->getType()->as<TypeVariableType>()) {
                             const auto typeVarData =
-                                TypeVariableData::isTypeVariable(valueTreeNode->getTypeRef());
+                                TypeVariableData::isTypeVariable(valueTreeNode->getTypeExp());
                             assert(typeVarData);
                             unsigned int currentRowIndex = getParentRowIndex(m_rows.size() - 1);
                             markRowsWithUnassignedTypeVariables<isInput>(currentRowIndex,
@@ -145,7 +145,7 @@ namespace babelwires {
                     // If this is a generic type, increase the depth.
                     // We deliberately perform after testing for collapsed nodes, since the generic type itself
                     // shouldn't be treated as a level when querying its own getMaximumHeightOfUnassignedGenericType.
-                    if (const GenericType* type = valueTreeNode->getType().as<GenericType>()) {
+                    if (const GenericType* type = valueTreeNode->getType()->as<GenericType>()) {
                         // Record the row regardless of whether there are unassigned type variables or not.
                         (isInput ? m_inputGenericTypeStack : m_outputGenericTypeStack).push_back(m_rows.size() - 1);
                         // increment the depth if this generic type or any above it had unassigned type variables.

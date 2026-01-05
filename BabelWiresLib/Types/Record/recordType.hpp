@@ -18,13 +18,13 @@ namespace babelwires {
       public:
         enum class Optionality { alwaysActive, optionalDefaultInactive, optionalDefaultActive };
 
-        struct Field {
+        struct FieldDefinition {
             ShortId m_identifier;
-            TypeRef m_type;
+            TypeExp m_type;
             Optionality m_optionality = Optionality::alwaysActive;
         };
 
-        RecordType(std::vector<Field> fields);
+        RecordType(const TypeSystem& typeSystem, const std::vector<FieldDefinition>& fields);
 
         /// A convenience method for defining a record with all the fields of "parent" plus "additionalFields".
         /// This ensures a subtype relationship between this and parent, and ensures that the relationship is
@@ -32,7 +32,17 @@ namespace babelwires {
         /// Note that you don't have to use this method to establish that relationship, since subtyping is
         /// defined by the sets of fields. This is similar to duck-typing, but since field identifiers are globally
         /// unique, a subtyping relationship should never arise unintentionally.
-        RecordType(const RecordType& parent, std::vector<Field> additionalFields);
+        RecordType(const TypeSystem& typeSystem, const RecordType& parent, const std::vector<FieldDefinition>& additionalFields);
+
+        /// The storage type, which has a resolved TypePtr instead of a TypeExp.
+        struct Field {
+            ShortId m_identifier;
+            TypePtr m_type;
+            Optionality m_optionality;
+        };
+
+        /// Construct a record when you have TypePtrs
+        RecordType(std::vector<Field> fields);
 
         std::string getFlavour() const override;
 
@@ -53,22 +63,22 @@ namespace babelwires {
         /// Is the given optional field activated?
         bool isActivated(const ValueHolder& value, ShortId fieldId) const;
 
-        /// Get the field information.
-        const std::vector<Field>& getFields() const;
-
         /// Get the set of optional fields.
         const std::vector<ShortId>& getOptionalFieldIds() const;
 
         /// Get the count of the currently active optional fields.
         unsigned int getNumActiveFields(const ValueHolder& value) const;
 
+        /// Get the field information.
+        const std::vector<Field>& getFields() const;
+
       public:
         /// Get a reference to the child's value using its field identifier.
-        std::tuple<const ValueHolder&, const TypeRef&> getChildById(const ValueHolder& compoundValue,
+        std::tuple<const ValueHolder&, TypeExp> getChildById(const ValueHolder& compoundValue,
                                                                     ShortId fieldId) const;
 
         /// Get a non-const reference to the child's value using its field identifier.
-        std::tuple<ValueHolder&, const TypeRef&> getChildByIdNonConst(ValueHolder& compoundValue,
+        std::tuple<ValueHolder&, TypeExp> getChildByIdNonConst(ValueHolder& compoundValue,
                                                                       ShortId fieldId) const;
 
       public:
@@ -76,9 +86,9 @@ namespace babelwires {
         bool visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const override;
 
         unsigned int getNumChildren(const ValueHolder& compoundValue) const override;
-        std::tuple<const ValueHolder*, PathStep, const TypeRef&> getChild(const ValueHolder& compoundValue,
+        std::tuple<const ValueHolder*, PathStep, TypeExp> getChild(const ValueHolder& compoundValue,
                                                                           unsigned int i) const override;
-        std::tuple<ValueHolder*, PathStep, const TypeRef&> getChildNonConst(ValueHolder& compoundValue,
+        std::tuple<ValueHolder*, PathStep, TypeExp> getChildNonConst(ValueHolder& compoundValue,
                                                                             unsigned int i) const override;
         int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const override;
         std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem,

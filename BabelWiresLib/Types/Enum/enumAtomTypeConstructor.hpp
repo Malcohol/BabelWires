@@ -16,10 +16,10 @@ namespace babelwires {
       public:
         TYPE_CONSTRUCTOR("EnumAtom", "[0]", "cb88eeac-92e6-4a77-aa73-04db08c0d628", 1);
 
-        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
-                                            const std::vector<const Type*>& resolvedTypeArguments) const override;
+        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,
+                                            const std::vector<TypePtr>& resolvedTypeArguments) const override;
 
         /// Convenience method.
-        static TypeRef makeTypeRef(EnumValue value);
+        static TypeExp makeTypeExp(EnumValue value);
     };
 } // namespace babelwires

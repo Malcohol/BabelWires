@@ -28,19 +28,19 @@ babelwires::IntTypeConstructor::extractValueArguments(const std::vector<ValueHol
     return {{args[0], args[1]}, args[2]};
 }
 
-babelwires::TypeConstructor::TypeConstructorResult
-babelwires::IntTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+babelwires::TypePtr
+babelwires::IntTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                               const TypeConstructorArguments& arguments,
-                                              const std::vector<const Type*>& resolvedTypeArguments) const {
+                                              const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 0) {
         throw TypeSystemException() << "IntTypeConstructor does not expect type arguments but got "
                                     << arguments.getTypeArguments().size();
     }
     auto [range, defaultValue] = extractValueArguments(arguments.getValueArguments());
-    return std::make_unique<ConstructedType<IntType>>(std::move(newTypeRef), range, defaultValue);
+    return makeType<ConstructedType<IntType>>(std::move(newTypeExp), range, defaultValue);
 }
 
-babelwires::TypeRef babelwires::IntTypeConstructor::makeTypeRef(IntValue::NativeType min, IntValue::NativeType max,
+babelwires::TypeExp babelwires::IntTypeConstructor::makeTypeExp(IntValue::NativeType min, IntValue::NativeType max,
                                                                 IntValue::NativeType defaultValue) {
-    return TypeRef(getThisIdentifier(), IntValue(min), IntValue(max), IntValue(defaultValue));
+    return TypeExp(getThisIdentifier(), IntValue(min), IntValue(max), IntValue(defaultValue));
 }

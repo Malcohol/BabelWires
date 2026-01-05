@@ -20,7 +20,7 @@ namespace babelwires {
       public:
         CLONEABLE(OneToOneMapEntryData);
         SERIALIZABLE(OneToOneMapEntryData, "oneToOne", MapEntryData, 1);
-        OneToOneMapEntryData(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef, const TypeRef& targetTypeRef);
+        OneToOneMapEntryData(const TypeSystem& typeSystem, const Type& sourceType, const Type& targetType);
         OneToOneMapEntryData(const OneToOneMapEntryData& other);
         OneToOneMapEntryData(OneToOneMapEntryData&& other);
 

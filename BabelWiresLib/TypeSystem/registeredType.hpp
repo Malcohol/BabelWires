@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
@@ -16,13 +16,13 @@
     static babelwires::RegisteredTypeId getThisIdentifier() {                                                          \
         return IDENTIFIER;                                                                                             \
     }                                                                                                                  \
-    static babelwires::TypeRef getThisType() {                                                                         \
+    static babelwires::TypeExp getThisType() {                                                                         \
         return getThisIdentifier();                                                                                    \
     }                                                                                                                  \
     static babelwires::VersionNumber getVersion() {                                                                    \
         return VERSION;                                                                                                \
     }                                                                                                                  \
-    babelwires::TypeRef getTypeRef() const override {                                                                  \
+    babelwires::TypeExp getTypeExp() const override {                                                                  \
         return getThisIdentifier();                                                                                    \
     }
 

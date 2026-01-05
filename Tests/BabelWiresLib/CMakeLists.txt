@@ -77,7 +77,7 @@ SET( LIB_TESTS_SRCS
     sumTypeTest.cpp
     targetFileNodeTest.cpp
     tupleTypeTest.cpp
-    typeRefTest.cpp
+    typeExpTest.cpp
     typeSystemTest.cpp
     typeTest.cpp
     valueNamesTest.cpp

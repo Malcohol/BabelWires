@@ -17,10 +17,10 @@ namespace babelwires {
         // SumTypes are variadic.
         TYPE_CONSTRUCTOR("Sum", "{0|+}", "e9978340-49d9-49f3-922a-3c367f5feaec", 1);
 
-        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
-                                            const std::vector<const Type*>& resolvedTypeArguments) const override;
+        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,
+                                            const std::vector<TypePtr>& resolvedTypeArguments) const override;
 
         // Convenience method
-        static TypeRef makeTypeRef(std::vector<TypeRef> types);
+        static TypeExp makeTypeExp(std::vector<TypeExp> types);
     };
 } // namespace babelwires

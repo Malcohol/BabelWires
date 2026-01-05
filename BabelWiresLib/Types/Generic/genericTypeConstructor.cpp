@@ -1,5 +1,5 @@
 /**
- * A Type constructor which constructs a GenericType from a TypeRef and a number of type variables.
+ * A Type constructor which constructs a GenericType from a TypeExp and a number of type variables.
  *
  * (C) 2025 Malcolm Tyrrell
  *
@@ -11,8 +11,8 @@
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
-babelwires::TypeRef babelwires::GenericTypeConstructor::makeTypeRef(TypeRef wrappedType, unsigned int numVariables) {
-    return TypeRef(GenericTypeConstructor::getThisIdentifier(), {{wrappedType}, {IntValue(numVariables)}});
+babelwires::TypeExp babelwires::GenericTypeConstructor::makeTypeExp(TypeExp wrappedType, unsigned int numVariables) {
+    return TypeExp(GenericTypeConstructor::getThisIdentifier(), {{wrappedType}, {IntValue(numVariables)}});
 }
 
 unsigned int babelwires::GenericTypeConstructor::extractValueArguments(const std::vector<ValueHolder>& valueArguments) {
@@ -35,17 +35,15 @@ unsigned int babelwires::GenericTypeConstructor::extractValueArguments(const std
     }
 }
 
-babelwires::TypeConstructor::TypeConstructorResult
-babelwires::GenericTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+babelwires::TypePtr
+babelwires::GenericTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                   const TypeConstructorArguments& arguments,
-                                                  const std::vector<const Type*>& resolvedTypeArguments) const {
+                                                  const std::vector<TypePtr>& resolvedTypeArguments) const {
     unsigned int numVariables = extractValueArguments(arguments.getValueArguments());
 
     if (arguments.getTypeArguments().size() != 1) {
         throw TypeSystemException() << "GenericTypeConstructor expects 1 type argument but got "
                                     << arguments.getTypeArguments().size();
     }
-    const TypeRef& wrappedType = arguments.getTypeArguments()[0];
-
-    return std::make_unique<ConstructedType<GenericType>>(std::move(newTypeRef), wrappedType, numVariables);
+    return makeType<ConstructedType<GenericType>>(std::move(newTypeExp), resolvedTypeArguments[0], numVariables);
 }

@@ -28,10 +28,10 @@ TEST(ProcessorNodeTest, sourceFileDataCreateElement) {
     babelwires::ProcessorNode* processorNode = static_cast<babelwires::ProcessorNode*>(node.get());
 
     auto& inputFeature = *processorNode->getInput();
-    ASSERT_TRUE(inputFeature.getType().as<const testDomain::TestProcessorInputOutputType>());
+    ASSERT_TRUE(inputFeature.getType()->as<const testDomain::TestProcessorInputOutputType>());
 
     const auto& outputFeature = *processorNode->getOutput();
-    ASSERT_TRUE(outputFeature.getType().as<const testDomain::TestProcessorInputOutputType>());
+    ASSERT_TRUE(outputFeature.getType()->as<const testDomain::TestProcessorInputOutputType>());
 
     testDomain::TestProcessorInputOutputType::ConstInstance input{inputFeature};
     testDomain::TestProcessorInputOutputType::ConstInstance output{outputFeature};

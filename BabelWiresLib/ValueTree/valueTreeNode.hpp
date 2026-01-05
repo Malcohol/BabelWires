@@ -12,7 +12,7 @@
 #include <Common/types.hpp>
 
 #include <BabelWiresLib/Path/pathStep.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 namespace babelwires {
@@ -31,7 +31,7 @@ namespace babelwires {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(ValueTreeNode);
 
-        ValueTreeNode(TypeRef typeRef, ValueHolder value);
+        ValueTreeNode(TypePtr typePtr, ValueHolder value);
         virtual ~ValueTreeNode();
 
         const ValueTreeNode* getOwner() const;
@@ -58,8 +58,8 @@ namespace babelwires {
         /// Note: The hash is not required to distinguish the contents of values of different types.
         std::size_t getHash() const;
 
-        /// Get the TypeRef which describes the type of the value.
-        const TypeRef& getTypeRef() const;
+        /// Get the TypeExp which describes the type of the value.
+        TypeExp getTypeExp() const;
 
         /// Get the value currently held by this node.
         const ValueHolder& getValue() const;
@@ -70,11 +70,11 @@ namespace babelwires {
         /// The root of a ValueTree carries a reference to the TypeSystem, so it can be found from any node.
         const TypeSystem& getTypeSystem() const;
 
-        /// This is a convenience method which resolves the typeRef in the context of the TypeSystem
+        /// This is a convenience method which resolves the typeExp in the context of the TypeSystem
         /// carried by the root.
-        const Type& getType() const;
+        const TypePtr& getType() const;
 
-        /// This is a convenience method which calls getType().getFlavour().
+        /// This is a convenience method which calls getType()->getFlavour().
         /// The need for nodes to provide a string description is not fundamental to the data model:
         /// it is imposed by the (current) UI.
         /// Returning the empty string tells the project that values of this kind cannot be wired together.
@@ -138,8 +138,8 @@ namespace babelwires {
         ValueTreeNode& operator=(const ValueTreeNode&) = delete;
 
       private:
-        /// The type of the value at this ValueTreeNode.
-        TypeRef m_typeRef;
+        /// The type at this ValueTreeNode.
+        TypePtr m_typePtr;
 
         /// The value at this ValueTreeNode. 
         /// Note: This should not be modified directly: all modifications should be managed via the ValueTreeRoot.

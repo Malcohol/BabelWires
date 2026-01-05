@@ -19,7 +19,7 @@
 babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEditor(QWidget* parent, ProjectGraphModel& projectGraphModel, UserLogger& userLogger, const ProjectDataLocation& data) {
     AccessModelScope scope(projectGraphModel);
     const ValueTreeNode& valueTreeNode = ComplexValueEditor::getValueTreeNodeOrThrow(scope, data);
-    const Type& type = valueTreeNode.getType();
+    const Type& type = *valueTreeNode.getType();
 
     // TODO: For now, assume ComplexValueEditors are all built-in, so we don't need a registry.
     if (type.as<MapType>() || type.as<SumOfMapsType>()) {

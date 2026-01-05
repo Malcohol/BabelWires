@@ -11,18 +11,18 @@
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleType.hpp>
 
-babelwires::TypeConstructor::TypeConstructorResult
-babelwires::TupleTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+babelwires::TypePtr
+babelwires::TupleTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                 const TypeConstructorArguments& arguments,
-                                                const std::vector<const Type*>& resolvedTypeArguments) const {
+                                                const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getValueArguments().size() > 0) {
         throw TypeSystemException() << "TupleTypeConstructor does not expect value arguments but got "
                                     << arguments.getValueArguments().size();
     }
 
-    return std::make_unique<ConstructedType<TupleType>>(std::move(newTypeRef), arguments.getTypeArguments());
+    return makeType<ConstructedType<TupleType>>(std::move(newTypeExp), resolvedTypeArguments);
 }
 
-babelwires::TypeRef babelwires::TupleTypeConstructor::makeTypeRef(std::vector<TypeRef> types) {
-    return TypeRef(getThisIdentifier(), {std::move(types), {}});
+babelwires::TypeExp babelwires::TupleTypeConstructor::makeTypeExp(std::vector<TypeExp> types) {
+    return TypeExp(getThisIdentifier(), {std::move(types), {}});
 }

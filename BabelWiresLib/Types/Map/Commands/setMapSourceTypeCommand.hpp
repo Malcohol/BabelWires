@@ -9,7 +9,7 @@
 #pragma once
 
 #include <BabelWiresLib/Commands/commands.hpp>
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 
@@ -21,18 +21,18 @@ namespace babelwires {
     class SetMapSourceTypeCommand : public SimpleCommand<MapProject> {
       public:
         CLONEABLE(SetMapSourceTypeCommand);
-        SetMapSourceTypeCommand(std::string commandName, TypeRef newSourceTypeRef);
+        SetMapSourceTypeCommand(std::string commandName, TypeExp newSourceTypeExp);
 
         virtual bool initialize(const MapProject& map) override;
         virtual void execute(MapProject& map) const override;
         virtual void undo(MapProject& map) const override;
 
       private:
-        TypeRef m_newSourceTypeRef;
+        TypeExp m_newSourceTypeExp;
 
         // Post initialization data
 
-        TypeRef m_oldSourceTypeRef;
+        TypeExp m_oldSourceTypeExp;
     };
 
 } // namespace babelwires

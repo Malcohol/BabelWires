@@ -18,7 +18,7 @@
 #include <Common/Serialization/serializer.hpp>
 
 void babelwires::ArraySizeModifierData::apply(ValueTreeNode* target) const {
-    if (const ArrayType* arrayType = target->getType().as<ArrayType>()) {
+    if (const ArrayType* arrayType = target->getType()->as<ArrayType>()) {
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
         arrayType->setSize(typeSystem, newValue, m_size);
@@ -48,7 +48,7 @@ void babelwires::ArraySizeModifierData::addEntries(ValueTreeNode* target, int in
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
     m_size += numEntriesToAdd;
 
-    if (const ArrayType* arrayType = target->getType().as<ArrayType>()) {
+    if (const ArrayType* arrayType = target->getType()->as<ArrayType>()) {
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
         arrayType->insertEntries(typeSystem, newValue, indexOfNewElement, numEntriesToAdd);
@@ -65,7 +65,7 @@ void babelwires::ArraySizeModifierData::removeEntries(ValueTreeNode* target, int
     assert((m_size >= numEntriesToRemove) && "You can't have ArraySizeModifierData with negative size");
     m_size -= numEntriesToRemove;
     
-    if (const ArrayType* arrayType = target->getType().as<ArrayType>()) {
+    if (const ArrayType* arrayType = target->getType()->as<ArrayType>()) {
         ValueHolder newValue = target->getValue();
         arrayType->removeEntries(newValue, indexOfElementToRemove, numEntriesToRemove);
         target->setValue(newValue);

@@ -40,10 +40,10 @@ babelwires::TypeVariableTypeConstructor::extractValueArguments(const std::vector
     return {static_cast<unsigned int>(args[0]), static_cast<unsigned int>(args[1])};
 }
 
-babelwires::TypeConstructor::TypeConstructorResult
-babelwires::TypeVariableTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+babelwires::TypePtr
+babelwires::TypeVariableTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                        const TypeConstructorArguments& arguments,
-                                                       const std::vector<const Type*>& resolvedTypeArguments) const {
+                                                       const std::vector<TypePtr>& resolvedTypeArguments) const {
     // Verify the arguments are valid, but actually they don't need to be passed to the resulting types.
     /*VariableData variableData =*/extractValueArguments(arguments.getValueArguments());
 
@@ -55,12 +55,12 @@ babelwires::TypeVariableTypeConstructor::constructType(const TypeSystem& typeSys
     if (arguments.getTypeArguments().size() == 1) {
         return resolvedTypeArguments[0];
     } else {
-        return std::make_unique<ConstructedType<TypeVariableType>>(std::move(newTypeRef));
+        return makeType<ConstructedType<TypeVariableType>>(std::move(newTypeExp));
     }
 }
 
-babelwires::TypeRef babelwires::TypeVariableTypeConstructor::makeTypeRef(unsigned int typeVariableIndex,
+babelwires::TypeExp babelwires::TypeVariableTypeConstructor::makeTypeExp(unsigned int typeVariableIndex,
                                                                          unsigned int numGenericTypeLevels) {
-    return babelwires::TypeRef{getThisIdentifier(), babelwires::IntValue(typeVariableIndex),
+    return babelwires::TypeExp{getThisIdentifier(), babelwires::IntValue(typeVariableIndex),
                                babelwires::IntValue(numGenericTypeLevels)};
 }

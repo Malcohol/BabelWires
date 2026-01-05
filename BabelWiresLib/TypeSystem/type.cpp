@@ -10,7 +10,7 @@
 babelwires::Type::~Type() = default;
  
 std::string babelwires::Type::getName() const {
-    return getTypeRef().toString();
+    return getTypeExp().toString();
 }
 
 std::optional<babelwires::SubtypeOrder> babelwires::Type::compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const {
@@ -26,10 +26,10 @@ const std::vector<babelwires::Type::Tag>& babelwires::Type::getTags() const {
 }
 
 bool babelwires::Type::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
-    ChildValueVisitor visitor = [&](const TypeSystem& typeSystem, const TypeRef& childTypeRef,
+    ChildValueVisitor visitor = [&](const TypeSystem& typeSystem, const TypeExp& childTypeExp,
                                    const Value& childValue, const PathStep& stepToChild) {
-        const Type& childType = childTypeRef.resolve(typeSystem);
-        return childType.isValidValue(typeSystem, childValue);
+        const TypePtr& childType = childTypeExp.resolve(typeSystem);
+        return childType->isValidValue(typeSystem, childValue);
     };
     return visitValue(typeSystem, v, visitor);
 }

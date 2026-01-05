@@ -41,7 +41,7 @@ void babelwires::SetTypeVariableAction::actionTriggered(babelwires::NodeContents
                                                         const QModelIndex& index) const {
     ProjectGraphModel& projectGraphModel = model.getProjectGraphModel();
 
-    TypeRef currentAssignment;
+    TypeExp currentAssignment;
 
     // Don't keep the project locked.
     {
@@ -53,7 +53,7 @@ void babelwires::SetTypeVariableAction::actionTriggered(babelwires::NodeContents
         if (!input) {
             return;
         }
-        if (const GenericType* const genericType = input->getType().as<GenericType>()) {
+        if (const GenericType* const genericType = input->getType()->as<GenericType>()) {
             if (m_variableIndex >= genericType->getNumVariables()) {
                 return;
             } else {
@@ -67,7 +67,7 @@ void babelwires::SetTypeVariableAction::actionTriggered(babelwires::NodeContents
     std::ostringstream text;
     text << "GenericType at " << m_locationOfGenericType;
 
-    std::vector<TypeRef> allowedTypes;
+    std::vector<TypeExp> allowedTypes;
     for (const auto& typeId : projectGraphModel.getContext().m_typeSystem.getAllRegisteredTypes()) {
         allowedTypes.emplace_back(typeId);
     }
@@ -75,7 +75,7 @@ void babelwires::SetTypeVariableAction::actionTriggered(babelwires::NodeContents
     const std::string actionName = getActionName(m_variableIndex, m_isSetTypeVariable);
 
     bool ok = true;
-    TypeRef newType;
+    TypeExp newType;
     if (m_isSetTypeVariable) {
         newType = TypeInputDialog::getType(nullptr, actionName.c_str(), text.str().c_str(), allowedTypes,
                                            currentAssignment, &ok);

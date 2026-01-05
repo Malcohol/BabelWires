@@ -20,9 +20,9 @@ namespace babelwires {
     /// NOTE: In the cases where the MapValue allows AllToSame, U must be unsigned int.
     template <typename U> class EnumSourceIndexMapApplicator {
       public:
-        EnumSourceIndexMapApplicator(const MapValue& mapValue, const EnumType& sourceEnumType,
+        EnumSourceIndexMapApplicator(const MapValue& mapValue, const TypePtrT<EnumType>& sourceEnumType,
                                      const ValueAdapter<U>& targetAdapter) : m_srcEnum(sourceEnumType) {
-            const unsigned int numEnumValues = sourceEnumType.getValueSet().size();
+            const unsigned int numEnumValues = sourceEnumType->getValueSet().size();
             m_indexToTarget.resize(numEnumValues);
             MapApplicatorFallbackHelper<unsigned int, U> fallbackHelper(mapValue, targetAdapter);
             for (unsigned int i = 0; i < numEnumValues; ++i) {
@@ -38,12 +38,12 @@ namespace babelwires {
         }
 
         U operator[](unsigned int srcIndex) const {
-            assert((srcIndex < m_srcEnum.getValueSet().size()) && "EnumType queried with out-of-range value");
+            assert((srcIndex < m_srcEnum->getValueSet().size()) && "EnumType queried with out-of-range value");
             return m_indexToTarget[srcIndex];
         }
 
       private:
-        const EnumType& m_srcEnum;
+        TypePtrT<EnumType> m_srcEnum;
         std::vector<U> m_indexToTarget;
     };
 

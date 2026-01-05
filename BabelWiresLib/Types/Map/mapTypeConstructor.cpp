@@ -23,29 +23,29 @@ babelwires::MapTypeConstructor::extractValueArguments(const TypeSystem& typeSyst
     }
 
     if (const EnumValue* enumValue = valueArguments[0]->as<EnumValue>()) {
-        const MapEntryFallbackKind& mapEntryFallbackKind = typeSystem.getEntryByType<MapEntryFallbackKind>();
-        return mapEntryFallbackKind.getValueFromIdentifier(enumValue->get());
+        const auto mapEntryFallbackKind = typeSystem.getEntryByType<MapEntryFallbackKind>();
+        return mapEntryFallbackKind->getValueFromIdentifier(enumValue->get());
     } else {
         throw TypeSystemException() << "Value argument 0 given to MapTypeConstructor was not a MapEntryFallbackKind";
     }
 }
 
-babelwires::TypeConstructor::TypeConstructorResult
-babelwires::MapTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+babelwires::TypePtr
+babelwires::MapTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                               const TypeConstructorArguments& arguments,
-                                              const std::vector<const Type*>& resolvedTypeArguments) const {
+                                              const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 2) {
         throw TypeSystemException() << "MapTypeConstructor expects 2 type arguments but got "
                                     << arguments.getTypeArguments().size();
     }
     babelwires::MapEntryData::Kind kind = extractValueArguments(typeSystem, arguments.getValueArguments());
-    return std::make_unique<ConstructedType<MapType>>(std::move(newTypeRef), arguments.getTypeArguments()[0],
-                                                      arguments.getTypeArguments()[1], kind);
+    return makeType<ConstructedType<MapType>>(std::move(newTypeExp), resolvedTypeArguments[0], resolvedTypeArguments[1],
+                                              kind);
 }
 
-babelwires::TypeRef babelwires::MapTypeConstructor::makeTypeRef(TypeRef sourceTypeRef, TypeRef targetTypeRef,
+babelwires::TypeExp babelwires::MapTypeConstructor::makeTypeExp(TypeExp sourceTypeExp, TypeExp targetTypeExp,
                                                                 MapEntryData::Kind fallbackKind) {
-    return TypeRef{getThisIdentifier(),
-                   TypeConstructorArguments{{std::move(sourceTypeRef), std::move(targetTypeRef)},
+    return TypeExp{getThisIdentifier(),
+                   TypeConstructorArguments{{std::move(sourceTypeExp), std::move(targetTypeExp)},
                                             {EnumValue(MapEntryFallbackKind::getIdentifierFromValue(fallbackKind))}}};
 }

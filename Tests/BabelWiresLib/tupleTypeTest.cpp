@@ -16,11 +16,11 @@
 TEST(TupleTypeTest, createValue) {
     testUtils::TestEnvironment testEnvironment;
 
-    testDomain::TestTupleType tupleType;
+    testDomain::TestTupleType tupleType(testEnvironment.m_typeSystem);
 
     EXPECT_EQ(tupleType.getComponentTypes().size(), 2);
-    EXPECT_EQ(tupleType.getComponentTypes()[0], babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(tupleType.getComponentTypes()[1], babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(tupleType.getComponentTypes()[0]->getTypeExp(), babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(tupleType.getComponentTypes()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisType());
 
     babelwires::ValueHolder newValue = tupleType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
@@ -32,14 +32,14 @@ TEST(TupleTypeTest, createValue) {
     const auto* newTuple = newValue->as<babelwires::TupleValue>();
     ASSERT_NE(newTuple, nullptr);
     ASSERT_EQ(newTuple->getSize(), 2);
-    EXPECT_TRUE(intType.isValidValue(testEnvironment.m_typeSystem, *newTuple->getValue(0)));
-    EXPECT_TRUE(rationalType.isValidValue(testEnvironment.m_typeSystem, *newTuple->getValue(1)));
+    EXPECT_TRUE(intType->isValidValue(testEnvironment.m_typeSystem, *newTuple->getValue(0)));
+    EXPECT_TRUE(rationalType->isValidValue(testEnvironment.m_typeSystem, *newTuple->getValue(1)));
 }
 
 TEST(TupleTypeTest, valueToString) {
     testUtils::TestEnvironment testEnvironment;
 
-    testDomain::TestTupleType tupleType;
+    testDomain::TestTupleType tupleType(testEnvironment.m_typeSystem);
     babelwires::NewValueHolder newValue = tupleType.createValue(testEnvironment.m_typeSystem);
     auto* newTuple = newValue.m_nonConstReference.as<babelwires::TupleValue>();
     ASSERT_NE(newTuple, nullptr);
@@ -55,49 +55,49 @@ TEST(TupleTypeTest, valueToString) {
 TEST(TupleTypeTest, tupleTypeConstructor) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef tupleTypeRef(babelwires::TupleTypeConstructor::getThisIdentifier(),
+    babelwires::TypeExp tupleTypeExp(babelwires::TupleTypeConstructor::getThisIdentifier(),
                                    babelwires::DefaultIntType::getThisType(),
                                    babelwires::DefaultRationalType::getThisType());
 
-    const babelwires::Type* const type = tupleTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& type = tupleTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     EXPECT_NE(type, nullptr);
     ASSERT_NE(type->as<babelwires::TupleType>(), nullptr);
 
     const babelwires::TupleType& tupleType = type->is<babelwires::TupleType>();
     EXPECT_EQ(tupleType.getComponentTypes().size(), 2);
-    EXPECT_EQ(tupleType.getComponentTypes()[0], babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(tupleType.getComponentTypes()[1], babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(tupleType.getComponentTypes()[0]->getTypeExp(), babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(tupleType.getComponentTypes()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisType());
 }
 
-TEST(TupleTypeTest, makeTypeRef) {
+TEST(TupleTypeTest, makeTypeExp) {
     testUtils::TestEnvironment testEnvironment;
 
-    auto tupleTypeRef = babelwires::TupleTypeConstructor::makeTypeRef({babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()});
+    auto tupleTypeExp = babelwires::TupleTypeConstructor::makeTypeExp({babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()});
 
-    const babelwires::Type* const type = tupleTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& type = tupleTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     EXPECT_NE(type, nullptr);
     ASSERT_NE(type->as<babelwires::TupleType>(), nullptr);
 
     const babelwires::TupleType& tupleType = type->is<babelwires::TupleType>();
     EXPECT_EQ(tupleType.getComponentTypes().size(), 2);
-    EXPECT_EQ(tupleType.getComponentTypes()[0], babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(tupleType.getComponentTypes()[1], babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(tupleType.getComponentTypes()[0]->getTypeExp(), babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(tupleType.getComponentTypes()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisType());
 }
 
 TEST(TupleTypeTest, tupleTypeConstructorMalformed) {
     testUtils::TestEnvironment testEnvironment;
 
     // Unresolved argument
-    EXPECT_THROW(babelwires::TypeRef(babelwires::TupleTypeConstructor::getThisIdentifier(),
+    EXPECT_THROW(babelwires::TypeExp(babelwires::TupleTypeConstructor::getThisIdentifier(),
                                      {{babelwires::DefaultIntType::getThisType(),
-                                       babelwires::TypeRef(babelwires::MediumId("abcdef"))}})
+                                       babelwires::TypeExp(babelwires::MediumId("abcdef"))}})
                      .resolve(testEnvironment.m_typeSystem),
                  babelwires::TypeSystemException);
 
     // Unexpected value argument
-    EXPECT_THROW(babelwires::TypeRef(babelwires::TupleTypeConstructor::getThisIdentifier(),
+    EXPECT_THROW(babelwires::TypeExp(babelwires::TupleTypeConstructor::getThisIdentifier(),
                                      {{babelwires::DefaultIntType::getThisType(),
                                        babelwires::DefaultRationalType::getThisType()},
                                       {babelwires::RationalValue(1)}})
@@ -108,13 +108,13 @@ TEST(TupleTypeTest, tupleTypeConstructorMalformed) {
 TEST(TupleTypeTest, compareSubtype) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::TypeRef AAA = babelwires::TupleTypeConstructor::makeTypeRef({testDomain::TestEnum::getThisType(), testDomain::TestEnum::getThisType(), testDomain::TestEnum::getThisType()});
-    const babelwires::TypeRef AA = babelwires::TupleTypeConstructor::makeTypeRef({testDomain::TestEnum::getThisType(), testDomain::TestEnum::getThisType()});
+    const babelwires::TypeExp AAA = babelwires::TupleTypeConstructor::makeTypeExp({testDomain::TestEnum::getThisType(), testDomain::TestEnum::getThisType(), testDomain::TestEnum::getThisType()});
+    const babelwires::TypeExp AA = babelwires::TupleTypeConstructor::makeTypeExp({testDomain::TestEnum::getThisType(), testDomain::TestEnum::getThisType()});
 
-    const babelwires::TypeRef AAB = babelwires::TupleTypeConstructor::makeTypeRef({testDomain::TestEnum::getThisType(), testDomain::TestEnum::getThisType(), testDomain::TestSubEnum::getThisType()});
-    const babelwires::TypeRef BAC = babelwires::TupleTypeConstructor::makeTypeRef({testDomain::TestSubEnum::getThisType(), testDomain::TestEnum::getThisType(), testDomain::TestSubSubEnum1::getThisType()});
-    const babelwires::TypeRef CAB = babelwires::TupleTypeConstructor::makeTypeRef({testDomain::TestSubSubEnum1::getThisType(), testDomain::TestEnum::getThisType(), testDomain::TestSubEnum::getThisType()});
-    const babelwires::TypeRef CXB = babelwires::TupleTypeConstructor::makeTypeRef({testDomain::TestSubSubEnum1::getThisType(), babelwires::DefaultIntType::getThisType(), testDomain::TestSubEnum::getThisType()});
+    const babelwires::TypeExp AAB = babelwires::TupleTypeConstructor::makeTypeExp({testDomain::TestEnum::getThisType(), testDomain::TestEnum::getThisType(), testDomain::TestSubEnum::getThisType()});
+    const babelwires::TypeExp BAC = babelwires::TupleTypeConstructor::makeTypeExp({testDomain::TestSubEnum::getThisType(), testDomain::TestEnum::getThisType(), testDomain::TestSubSubEnum1::getThisType()});
+    const babelwires::TypeExp CAB = babelwires::TupleTypeConstructor::makeTypeExp({testDomain::TestSubSubEnum1::getThisType(), testDomain::TestEnum::getThisType(), testDomain::TestSubEnum::getThisType()});
+    const babelwires::TypeExp CXB = babelwires::TupleTypeConstructor::makeTypeExp({testDomain::TestSubSubEnum1::getThisType(), babelwires::DefaultIntType::getThisType(), testDomain::TestSubEnum::getThisType()});
 
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(AAA, AAA), babelwires::SubtypeOrder::IsEquivalent);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(AAA, AAB), babelwires::SubtypeOrder::IsSupertype);

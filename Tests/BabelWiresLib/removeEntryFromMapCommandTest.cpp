@@ -19,18 +19,18 @@ TEST(RemoveEntryFromMapCommandTest, executeAndUndo) {
     testUtils::TestEnvironment environment;
     
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{babelwires::StringType::getThisType()}});
-    mapProject.setAllowedTargetTypeRefs({{babelwires::StringType::getThisType()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisType()}});
+    mapProject.setAllowedTargetTypeExps({{babelwires::StringType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(babelwires::StringType::getThisType());
-    mapValue.setTargetTypeRef(babelwires::StringType::getThisType());
+    mapValue.setSourceTypeExp(babelwires::StringType::getThisType());
+    mapValue.setTargetTypeExp(babelwires::StringType::getThisType());
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, babelwires::StringType::getThisType(),
-                                              babelwires::StringType::getThisType());
+    const auto& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
-                                                       babelwires::StringType::getThisType());
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *stringType);
+
+    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *stringType);
 
     mapValue.emplaceBack(oneToOne.clone());
 
@@ -64,18 +64,18 @@ TEST(RemoveEntryFromMapCommandTest, removeInvalid) {
     testUtils::TestEnvironment environment;
     
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{babelwires::StringType::getThisType()}});
-    mapProject.setAllowedTargetTypeRefs({{babelwires::StringType::getThisType()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisType()}});
+    mapProject.setAllowedTargetTypeExps({{babelwires::StringType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(babelwires::StringType::getThisType());
-    mapValue.setTargetTypeRef(babelwires::StringType::getThisType());
+    mapValue.setSourceTypeExp(babelwires::StringType::getThisType());
+    mapValue.setTargetTypeExp(babelwires::StringType::getThisType());
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, babelwires::StringType::getThisType(),
-                                              babelwires::StringType::getThisType());
+    const auto& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
-                                                       babelwires::StringType::getThisType());
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *stringType);
+
+    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *stringType);
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
@@ -111,18 +111,18 @@ TEST(RemoveEntryFromMapCommandTest, failAtEnd) {
     testUtils::TestEnvironment environment;
     
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeRefs({{babelwires::StringType::getThisType()}});
-    mapProject.setAllowedTargetTypeRefs({{babelwires::StringType::getThisType()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisType()}});
+    mapProject.setAllowedTargetTypeExps({{babelwires::StringType::getThisType()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeRef(babelwires::StringType::getThisType());
-    mapValue.setTargetTypeRef(babelwires::StringType::getThisType());
+    mapValue.setSourceTypeExp(babelwires::StringType::getThisType());
+    mapValue.setTargetTypeExp(babelwires::StringType::getThisType());
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, babelwires::StringType::getThisType(),
-                                              babelwires::StringType::getThisType());
+    const auto& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
 
-    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem,
-                                                       babelwires::StringType::getThisType());
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *stringType);
+
+    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *stringType);
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());

@@ -1,5 +1,5 @@
 /**
- * A TypeConstructor which constructs a TypeVariable from two IntValues and an optional typeRef.
+ * A TypeConstructor which constructs a TypeVariable from two IntValues and an optional typeExp.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -13,8 +13,8 @@
 #include <optional>
 
 namespace babelwires {
-    /// Construct a TypeVariable from two IntValues and an optional typeRef.
-    /// If there is a typeRef argument, it means the variable has been instantiated and the
+    /// Construct a TypeVariable from two IntValues and an optional typeExp.
+    /// If there is a typeExp argument, it means the variable has been instantiated and the
     /// type constructor expression is a pure wrapper for the instantiated type.
     /// The two IntValues represent the index of the variable in the generic type and the number of
     /// generic types to traverse upwards to find the generic type of which this is a variable.
@@ -22,11 +22,11 @@ namespace babelwires {
       public:
         TYPE_CONSTRUCTOR("TVar", "TVar([0],[1],{0?-})", "33f14749-b652-4d53-808b-8d8c281c310f", 1);
 
-        TypeConstructorResult constructType(const TypeSystem& typeSystem, TypeRef newTypeRef, const TypeConstructorArguments& arguments,
-                                            const std::vector<const Type*>& resolvedTypeArguments) const override;
+        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,
+                                            const std::vector<TypePtr>& resolvedTypeArguments) const override;
 
         /// Convenience method.
-        static TypeRef makeTypeRef(unsigned int typeVariableIndex = 0, unsigned int numGenericTypeLevels = 0);
+        static TypeExp makeTypeExp(unsigned int typeVariableIndex = 0, unsigned int numGenericTypeLevels = 0);
 
         /// Throws a TypeSystem exception if the arguments are not of the expected type.
         static TypeVariableData extractValueArguments(const std::vector<ValueHolder>& valueArguments);

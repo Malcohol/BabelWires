@@ -56,20 +56,20 @@ TEST(RationalTypeTest, defaultRationalTypeGetKind) {
 TEST(RationalTypeTest, defaultRationalTypeIsRegistered) {
     testUtils::TestEnvironment testEnvironment;
 
-    const auto* const foundType =
+    const babelwires::TypePtr foundType =
         testEnvironment.m_typeSystem.tryGetRegisteredType(babelwires::DefaultRationalType::getThisIdentifier());
-    EXPECT_NE(foundType, nullptr);
+    EXPECT_TRUE(foundType);
     EXPECT_NE(foundType->as<babelwires::DefaultRationalType>(), nullptr);
 }
 
 TEST(RationalTypeTest, constructedRationalTypeCreateValue) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef rationalTypeRef(
+    babelwires::TypeExp rationalTypeExp(
         babelwires::RationalTypeConstructor::getThisIdentifier(), babelwires::RationalValue(babelwires::Rational(2, 3)),
         babelwires::RationalValue(babelwires::Rational(4, 3)), babelwires::RationalValue(1));
 
-    const babelwires::Type* const rationalType = rationalTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& rationalType = rationalTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder newValue = rationalType->createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
@@ -82,11 +82,11 @@ TEST(RationalTypeTest, constructedRationalTypeCreateValue) {
 TEST(RationalTypeTest, constructedRationalTypeRange) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef rationalTypeRef(
+    babelwires::TypeExp rationalTypeExp(
         babelwires::RationalTypeConstructor::getThisIdentifier(), babelwires::RationalValue(babelwires::Rational(2, 3)),
         babelwires::RationalValue(babelwires::Rational(4, 3)), babelwires::RationalValue(1));
 
-    const babelwires::Type* const type = rationalTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& type = rationalTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     const babelwires::RationalType* const rationalType = type->as<babelwires::RationalType>();
     ASSERT_NE(rationalType, nullptr);
@@ -99,11 +99,11 @@ TEST(RationalTypeTest, constructedRationalTypeRange) {
 TEST(RationalTypeTest, constructedRationalTypeIsValidValue) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef rationalTypeRef(
+    babelwires::TypeExp rationalTypeExp(
         babelwires::RationalTypeConstructor::getThisIdentifier(), babelwires::RationalValue(babelwires::Rational(2, 3)),
         babelwires::RationalValue(babelwires::Rational(4, 3)), babelwires::RationalValue(1));
 
-    const babelwires::Type* const type = rationalTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& type = rationalTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::RationalValue(babelwires::Rational(1, 2))));
     EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::RationalValue(babelwires::Rational(2, 3))));
@@ -114,13 +114,13 @@ TEST(RationalTypeTest, constructedRationalTypeIsValidValue) {
     EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::IntValue(3)));
 }
 
-TEST(RationalTypeTest, makeTypeRef) {
+TEST(RationalTypeTest, makeTypeExp) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef rationalTypeRef = babelwires::RationalTypeConstructor::makeTypeRef(babelwires::Rational(2, 3),
+    babelwires::TypeExp rationalTypeExp = babelwires::RationalTypeConstructor::makeTypeExp(babelwires::Rational(2, 3),
         babelwires::Rational(4, 3), 1);
 
-    const babelwires::Type* const type = rationalTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& type = rationalTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     const babelwires::RationalType* const rationalType = type->as<babelwires::RationalType>();
     ASSERT_NE(rationalType, nullptr);
@@ -140,11 +140,11 @@ TEST(RationalTypeTest, makeTypeRef) {
 TEST(RationalTypeTest, sameKind) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef rationalTypeRef(
+    babelwires::TypeExp rationalTypeExp(
         babelwires::RationalTypeConstructor::getThisIdentifier(), babelwires::RationalValue(babelwires::Rational(2, 3)),
         babelwires::RationalValue(babelwires::Rational(4, 3)), babelwires::RationalValue(1));
 
-    const babelwires::Type* const type = rationalTypeRef.tryResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr& type = rationalTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     babelwires::DefaultRationalType defaultRationalType;
 
@@ -154,9 +154,9 @@ TEST(RationalTypeTest, sameKind) {
 TEST(RationalTypeTest, typeName) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::TypeRef rationalTypeRef(
+    babelwires::TypeExp rationalTypeExp(
         babelwires::RationalTypeConstructor::getThisIdentifier(), babelwires::RationalValue(babelwires::Rational(2, 3)),
         babelwires::RationalValue(babelwires::Rational(4, 3)), babelwires::RationalValue(1));
 
-    EXPECT_EQ(rationalTypeRef.toString(), "Rational{2/3..1 1/3}");
+    EXPECT_EQ(rationalTypeExp.toString(), "Rational{2/3..1 1/3}");
 }

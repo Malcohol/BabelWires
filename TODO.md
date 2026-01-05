@@ -52,7 +52,7 @@ Refactor:
   - The current design means that tree algorithms call copyContentsAndGetNonConst repeatedly for the same container.
   - See applyToSubvalues.
   - getChild should probably be adjusted to match, although that's more painful.
-* TypeRef could be a value:
+* TypeExp could be a value:
   - Among other things, type constructors could just take a single array of values.
   - Additionally, I would expect to need a value containing a type at some point.
 * Move some of the logic in doProcess up into Node.
@@ -71,7 +71,6 @@ Refactor:
   - deserializeToString methods should return a tuple which includes the position after the parsed object.
 * Command::initialize could return an enum which allows a subcommand to declare that it's not needed rather than failed.
 * Can any classes be simplified using operator <=>?
-* Rename TypeRef to something like TypeExpression or TypoExpr.
 * Types should memory managed using shared_ptr, to allow purely constructed types to be collected?
 * Rational should use the new Unicode utils and not require UI specialization.
 * Processors should have a register method, to reduce boilerplate (see libRegistration for MusicLib)
@@ -111,7 +110,7 @@ Ideas:
   - This would be useful for complex input formats.
   - An array access processor might be a more consistent way of achieving this
 * Add support for Type aliases so we don't have to define a type subclass in C++ just to avoid having a complex type name in the UI.
-  - Could this be a variant in TypeRef which carries a string and another typeRef?
+  - Could this be a variant in TypeExp which carries a string and another typeExp?
 
 Speculative ideas:
 * Programming mechanism
@@ -121,3 +120,6 @@ Speculative ideas:
 Optimizations:
 * Edit tree could offer "getModifiersAbove(path)" for use in some commands. (E.g. hasAncestorConnection)
 * Cache compareSubtype result.
+
+Improvements:
+* TypeConstructor caches could build up excess entries containing stale weakPtrs. These could be cleaned up every N type construction.

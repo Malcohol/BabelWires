@@ -21,7 +21,7 @@ TEST(SelectRecordVariantModifierDataTest, apply) {
     babelwires::ValueTreeRoot valueFeature(
         testEnvironment.m_typeSystem, testDomain::TestRecordWithVariantsType::getThisType());
     valueFeature.setToDefault();
-    const auto* type = valueFeature.getType().as<testDomain::TestRecordWithVariantsType>();
+    const auto* type = valueFeature.getType()->as<testDomain::TestRecordWithVariantsType>();
 
     EXPECT_EQ(type->getSelectedTag(valueFeature.getValue()), testDomain::TestRecordWithVariantsType::getTagBId());
 

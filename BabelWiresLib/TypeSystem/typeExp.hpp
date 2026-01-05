@@ -1,5 +1,5 @@
 /**
- * A TypeRef describes a type.
+ * A TypeExp describes a type.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -10,6 +10,7 @@
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
+#include <BabelWiresLib/TypeSystem/typePtr.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <Common/Identifiers/identifierRegistry.hpp>
@@ -20,19 +21,19 @@
 
 namespace babelwires {
     class Type;
-    class TypeRef;
+    class TypeExp;
     class TypeSystem;
 
     /// Holds the arguments to a TypeConstructor.
     class TypeConstructorArguments {
       public:
         TypeConstructorArguments() = default;
-        TypeConstructorArguments(std::vector<TypeRef> typeArguments);
-        TypeConstructorArguments(std::vector<TypeRef> typeArguments, std::vector<ValueHolder> valueArguments);
+        TypeConstructorArguments(std::vector<TypeExp> typeArguments);
+        TypeConstructorArguments(std::vector<TypeExp> typeArguments, std::vector<ValueHolder> valueArguments);
         ~TypeConstructorArguments();
 
-        const std::vector<TypeRef>& getTypeArguments() const { return m_typeArguments; }
-        std::vector<TypeRef>& getTypeArguments() { return m_typeArguments; }
+        const std::vector<TypeExp>& getTypeArguments() const { return m_typeArguments; }
+        std::vector<TypeExp>& getTypeArguments() { return m_typeArguments; }
         const std::vector<ValueHolder>& getValueArguments() const { return m_valueArguments; }
         std::vector<ValueHolder>& getValueArguments() { return m_valueArguments; }
 
@@ -51,46 +52,51 @@ namespace babelwires {
         static bool equals(const TypeConstructorArguments& a, const TypeConstructorArguments& b);
 
       private:
-        std::vector<TypeRef> m_typeArguments;
+        std::vector<TypeExp> m_typeArguments;
         std::vector<ValueHolder> m_valueArguments;
     };
 
-    /// A TypeRef describes a type by storing an Id if it is a primitive type,
-    /// or storing the id of its constructor and its arguments.
-    class TypeRef : public ProjectVisitable, public Serializable {
+    /// A TypeExp is an expression that describes a type. 
+    /// It either stores an Id for registered types, or stores the id of a constructor and its arguments.
+    class TypeExp : public ProjectVisitable, public Serializable {
       public:
-        SERIALIZABLE(TypeRef, "type", void, 1);
+        SERIALIZABLE(TypeExp, "type", void, 1);
 
-        TypeRef();
+        TypeExp();
 
-        /// A TypeRef describing a primitive type.
-        TypeRef(RegisteredTypeId typeId);
+        /// A TypeExp describing a primitive type.
+        TypeExp(RegisteredTypeId typeId);
 
-        /// A TypeRef describing a complex type, constructed by applying the TypeConstructor
+        /// A TypeExp describing a complex type, constructed by applying the TypeConstructor
         /// to the arguments.
-        TypeRef(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments);
+        TypeExp(TypeConstructorId typeConstructorId, TypeConstructorArguments arguments);
 
         // Convenience constructors
-        TypeRef(TypeConstructorId typeConstructorId, TypeRef typeRef0);
-        TypeRef(TypeConstructorId typeConstructorId, TypeRef typeRef0, TypeRef typeRef1);
-        TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0);
-        TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1);
-        TypeRef(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1,
+        TypeExp(TypeConstructorId typeConstructorId, TypeExp typeExp0);
+        TypeExp(TypeConstructorId typeConstructorId, TypeExp typeExp0, TypeExp typeExp1);
+        TypeExp(TypeConstructorId typeConstructorId, ValueHolder value0);
+        TypeExp(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1);
+        TypeExp(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1,
                 ValueHolder value2);
 
-        /// Attempt to find the type in the TypeSystem that this TypeRef describes.
-        /// Returns null if this TypeRef does not resolve.
-        const Type* tryResolve(const TypeSystem& typeSystem) const;
+        /// Attempt to find the type in the TypeSystem that this TypeExp describes.
+        /// Returns null if this TypeExp does not resolve.
+        TypePtr tryResolve(const TypeSystem& typeSystem) const;
 
-        /// Find the type in the TypeSystem that this TypeRef describes.
-        /// Throws an exception if this TypeRef does not resolve.
-        const Type& resolve(const TypeSystem& typeSystem) const;
+        /// Find the type in the TypeSystem that this TypeExp describes.
+        /// Throws an exception if this TypeExp does not resolve.
+        TypePtr resolve(const TypeSystem& typeSystem) const;
 
-        /// Find the type in the TypeSystem that this TypeRef describes.
-        /// Asserts that this TypeRef resolves.
-        const Type& assertResolve(const TypeSystem& typeSystem) const;
+        /// Find the type in the TypeSystem that this TypeExp describes.
+        /// Asserts that this TypeExp resolves.
+        TypePtr assertResolve(const TypeSystem& typeSystem) const;
 
-        /// Return a human-readable version of the TypeRef.
+        template<typename TYPE>
+        TypePtrT<TYPE> resolveAs(const TypeSystem& typeSystem) const {
+          return typeAs<TYPE>(resolve(typeSystem));
+        }
+
+        /// Return a human-readable version of the TypeExp.
         std::string toString() const;
 
         void serializeContents(Serializer& serializer) const override;
@@ -98,13 +104,13 @@ namespace babelwires {
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 
-        friend bool operator==(const TypeRef& a, const TypeRef& b) { return a.m_storage == b.m_storage; }
-        friend bool operator!=(const TypeRef& a, const TypeRef& b) { return a.m_storage != b.m_storage; }
+        friend bool operator==(const TypeExp& a, const TypeExp& b) { return a.m_storage == b.m_storage; }
+        friend bool operator!=(const TypeExp& a, const TypeExp& b) { return a.m_storage != b.m_storage; }
 
         /// Get a hash which can be used with std::hash.
         std::size_t getHash() const;
 
-        /// Does the TypeRef contain some data (other than the trivial std::monostate default state)?
+        /// Does the TypeExp contain some data (other than the trivial std::monostate default state)?
         operator bool() const;
 
       private:
@@ -112,20 +118,20 @@ namespace babelwires {
         std::string toStringHelper(babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const;
 
         /// Returns a parsed type and a position just beyond that type.
-        static std::tuple<babelwires::TypeRef, std::string_view::size_type> parseHelper(std::string_view str);
+        static std::tuple<babelwires::TypeExp, std::string_view::size_type> parseHelper(std::string_view str);
 
       public:
-        /// Visit each of the cases of the TypeRef.
+        /// Visit each of the cases of the TypeExp.
         /// Warning: Be very careful with this, because you can assume very little about how a constructor uses its
-        /// arguments. For example, the presence of a typeref argument does not guarantee that an instance of the
+        /// arguments. For example, the presence of a typeexp argument does not guarantee that an instance of the
         /// corresponding type is contained in the result.
         template <typename Visitor, typename R = decltype(Visitor::operator()(std::monostate()))>
         R visit(Visitor& visitor) const;
 
-        /// Binary exploration of two typeRefs. The typeRefs are expected to be structurally similar, or else the
+        /// Binary exploration of two typeExps. The typeExps are expected to be structurally similar, or else the
         /// no argument operator of the visitor will be called.
         template <typename Visitor, typename R = decltype(Visitor::operator()(std::monostate(), std::monostate()))>
-        static R visit(Visitor& visitor, const TypeRef& a, const TypeRef& b);
+        static R visit(Visitor& visitor, const TypeExp& a, const TypeExp& b);
 
       private:
         // TODO More compact storage.
@@ -138,8 +144,8 @@ namespace babelwires {
 } // namespace babelwires
 
 namespace std {
-    template <> struct hash<babelwires::TypeRef> {
-        inline std::size_t operator()(const babelwires::TypeRef& typeRef) const { return typeRef.getHash(); }
+    template <> struct hash<babelwires::TypeExp> {
+        inline std::size_t operator()(const babelwires::TypeExp& typeExp) const { return typeExp.getHash(); }
     };
 
     template <> struct hash<babelwires::TypeConstructorArguments> {
@@ -149,4 +155,4 @@ namespace std {
     };
 } // namespace std
 
-#include <BabelWiresLib/TypeSystem/typeRef_inl.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp_inl.hpp>

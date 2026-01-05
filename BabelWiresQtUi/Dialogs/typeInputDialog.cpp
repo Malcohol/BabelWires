@@ -14,17 +14,17 @@
 #include <QDialogButtonBox>
 
 babelwires::TypeInputDialog::TypeInputDialog(QWidget* parent, const QString& title, const QString& label,
-                                             const std::vector<TypeRef>& allowedTypeRefs,
-                                             const TypeRef& initialTypeRef, Qt::WindowFlags flags)
+                                             const std::vector<TypeExp>& allowedTypeExps,
+                                             const TypeExp& initialTypeExp, Qt::WindowFlags flags)
     : QDialog(parent) {
     setWindowTitle(title);
     setModal(true);
     setWindowFlags(flags | Qt::WindowType::WindowTitleHint);
 
     QLabel* const labelWidget = new QLabel(label, this);
-    m_typeWidget = new TypeWidget(this, allowedTypeRefs);
-    if (initialTypeRef) {
-        m_typeWidget->setTypeRef(initialTypeRef);
+    m_typeWidget = new TypeWidget(this, allowedTypeExps);
+    if (initialTypeExp) {
+        m_typeWidget->setTypeExp(initialTypeExp);
     }
    
     auto* const buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
@@ -43,15 +43,15 @@ babelwires::TypeInputDialog::TypeInputDialog(QWidget* parent, const QString& tit
     setLayout(layout);
 }
 
-babelwires::TypeRef babelwires::TypeInputDialog::getSelectedType() const {
-    return m_typeWidget->getTypeRef();
+babelwires::TypeExp babelwires::TypeInputDialog::getSelectedType() const {
+    return m_typeWidget->getTypeExp();
 }
 
-babelwires::TypeRef babelwires::TypeInputDialog::getType(QWidget* parent, const QString& title, const QString& label,
-                                                          const std::vector<TypeRef>& allowedTypeRefs,
-                                                          const TypeRef& initialTypeRef, bool* ok,
+babelwires::TypeExp babelwires::TypeInputDialog::getType(QWidget* parent, const QString& title, const QString& label,
+                                                          const std::vector<TypeExp>& allowedTypeExps,
+                                                          const TypeExp& initialTypeExp, bool* ok,
                                                           Qt::WindowFlags flags) {
-    TypeInputDialog dialog(parent, title, label, allowedTypeRefs, initialTypeRef, flags);
+    TypeInputDialog dialog(parent, title, label, allowedTypeExps, initialTypeExp, flags);
     if (dialog.exec() == QDialog::Accepted) {
         if (ok) {
             *ok = true;
@@ -61,6 +61,6 @@ babelwires::TypeRef babelwires::TypeInputDialog::getType(QWidget* parent, const 
         if (ok) {
             *ok = false;
         }
-        return TypeRef();
+        return TypeExp();
     }
 }

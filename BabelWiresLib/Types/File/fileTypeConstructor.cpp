@@ -10,10 +10,10 @@
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
 
-babelwires::TypeConstructor::TypeConstructorResult
-babelwires::FileTypeConstructor::constructType(const TypeSystem& typeSystem, TypeRef newTypeRef,
+babelwires::TypePtr
+babelwires::FileTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                const TypeConstructorArguments& arguments,
-                                               const std::vector<const Type*>& resolvedTypeArguments) const {
+                                               const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 1) {
         throw TypeSystemException() << "FileTypeConstructor expects a single type argument but got "
                                     << arguments.getTypeArguments().size();
@@ -24,9 +24,9 @@ babelwires::FileTypeConstructor::constructType(const TypeSystem& typeSystem, Typ
                                     << arguments.getValueArguments().size();
     }
 
-    return std::make_unique<ConstructedType<FileType>>(std::move(newTypeRef), arguments.getTypeArguments()[0]);
+    return makeType<ConstructedType<FileType>>(std::move(newTypeExp), typeSystem, arguments.getTypeArguments()[0]);
 }
 
-babelwires::TypeRef babelwires::FileTypeConstructor::makeTypeRef(TypeRef typeOfContents) {
-    return TypeRef(getThisIdentifier(), std::move(typeOfContents));
+babelwires::TypeExp babelwires::FileTypeConstructor::makeTypeExp(TypeExp typeOfContents) {
+    return TypeExp(getThisIdentifier(), std::move(typeOfContents));
 }

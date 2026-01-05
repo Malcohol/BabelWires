@@ -19,11 +19,11 @@
 
 namespace babelwires {
     class TypeSystem;
-    class TypeRef;
+    class TypeExp;
     class Type;
 
 #define BW_MAP_ENTRY_FALLBACK_KIND(X)                                                                                  \
-    X(One21, "OneToOne", "f498676a-fe06-4ee0-a841-5e563a6324f4")                                                      \
+    X(One21, "OneToOne", "f498676a-fe06-4ee0-a841-5e563a6324f4")                                                       \
     X(All21, "AllToOne", "d25f684d-1dad-475c-bb07-f387ee61cc3c")                                                       \
     X(All2Sm, "AllToSame", "49293192-43b2-4902-820a-e11d519b152b")
 
@@ -47,7 +47,7 @@ namespace babelwires {
         virtual bool operator==(const MapEntryData& other) const = 0;
         bool operator!=(const MapEntryData& other) const { return !(*this == other); }
 
-        Result validate(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef, const TypeRef& targetTypeRef,
+        Result validate(const TypeSystem& typeSystem, const Type& sourceType, const Type& targetType,
                         bool isLastEntry) const;
 
         using Kind = MapEntryFallbackKind::Value;
@@ -57,12 +57,12 @@ namespace babelwires {
         static bool isFallback(Kind kind);
 
         /// Create a MapEntryData of the given kind.
-        static std::unique_ptr<MapEntryData> create(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef,
-                                                    const TypeRef& targetTypeRef, Kind kind);
-        
+        static std::unique_ptr<MapEntryData> create(const TypeSystem& typeSystem, const Type& sourceTypeExp,
+                                                    const Type& targetTypeExp, Kind kind);
+
         /// Return the sourceValue or nullptr if this entry doesn't have one.
         virtual const ValueHolder* tryGetSourceValue() const;
-        /// Return the sourceValue or assert if this entry doesn't have one.        
+        /// Return the sourceValue or assert if this entry doesn't have one.
         const ValueHolder& getSourceValue() const;
         /// The default implementation asserts.
         virtual void setSourceValue(ValueHolder value);
@@ -73,8 +73,6 @@ namespace babelwires {
         const ValueHolder& getTargetValue() const;
         /// The default implementation asserts.
         virtual void setTargetValue(ValueHolder value);
-
-
 
       protected:
         virtual Result doValidate(const TypeSystem& typeSystem, const Type& sourceType,

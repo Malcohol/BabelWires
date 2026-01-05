@@ -27,16 +27,11 @@ babelwires::OneToOneMapEntryData::OneToOneMapEntryData(OneToOneMapEntryData&& ot
     m_targetValue = std::move(other.m_targetValue);
 }
 
-babelwires::OneToOneMapEntryData::OneToOneMapEntryData(const TypeSystem& typeSystem, const TypeRef& sourceTypeRef,
-                                                       const TypeRef& targetTypeRef) {
-    const Type* sourceType = sourceTypeRef.tryResolve(typeSystem);
-    assert(sourceType && "You cannot construct a OneToOneMapEntryData entry with an unknown source type");
-    const Type* targetType = targetTypeRef.tryResolve(typeSystem);
-    assert(targetType && "You cannot construct a OneToOneMapEntryData entry with an unknown target type");
-
-    m_sourceValue = sourceType->createValue(typeSystem);
+babelwires::OneToOneMapEntryData::OneToOneMapEntryData(const TypeSystem& typeSystem, const Type& sourceType,
+                                                       const Type& targetType) {
+    m_sourceValue = sourceType.createValue(typeSystem);
     assert(m_sourceValue->tryGetAsEditableValue() && "MapEntries must contain editable data");
-    m_targetValue = targetType->createValue(typeSystem);
+    m_targetValue = targetType.createValue(typeSystem);
     assert(m_targetValue->tryGetAsEditableValue() && "MapEntries must contain editable data");
 }
 

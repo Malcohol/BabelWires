@@ -7,13 +7,14 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/typeRef.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 #include <BabelWiresLib/Path/pathStep.hpp>
 
 #include <optional>
+#include <memory>
 
 namespace babelwires {
 
@@ -36,7 +37,7 @@ namespace babelwires {
 
         /// Called by visitValue when a type contains children.
         /// Returning false aborts the visit and visitValue will return false.
-        using ChildValueVisitor = std::function<bool(const TypeSystem& typeSystem, const TypeRef& childTypeRef,
+        using ChildValueVisitor = std::function<bool(const TypeSystem& typeSystem, const TypeExp& childTypeExp,
                                                      const Value& childValue, const PathStep& stepToChild)>;
 
         /// Verify that the outer structure of the value conforms to this type, calling the visitor on each child value.
@@ -44,10 +45,10 @@ namespace babelwires {
         virtual bool visitValue(const TypeSystem& typeSystem, const Value& v,
                                 ChildValueVisitor& visitor) const = 0;
 
-        /// Get a TypeRef that describes this type.
+        /// Get a TypeExp that describes this type.
         /// Registered types get an implementation of this method from the REGISTERED_TYPE macro.
         /// Types constructed by TypeConstructors must provide their own implementation.
-        virtual TypeRef getTypeRef() const = 0;
+        virtual TypeExp getTypeExp() const = 0;
 
         /// Return a short string which can be used in the UI to give a sense of the data this type handles.
         /// It is not used to impose any formal restrictions.
@@ -63,7 +64,7 @@ namespace babelwires {
         /// Used for display to the user, so it does not have to be parsable or even comprehensive.
         virtual std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const = 0;
 
-        /// Convenience function which returns a human-readable version of the type's TypeRef.
+        /// Convenience function which returns a human-readable version of the type's TypeExp.
         std::string getName() const;
 
         /// An identifier which can be used to group related types together.
@@ -80,4 +81,5 @@ namespace babelwires {
         /// The tags associated with this type.
         std::vector<Tag> m_tags;
     };
+
 } // namespace babelwires
