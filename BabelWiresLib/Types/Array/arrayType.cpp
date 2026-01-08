@@ -126,9 +126,10 @@ std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, babelwires::Typ
     return {&arrayValue.getValue(i), i, m_entryType->getTypeExp()};
 }
 
-std::tuple<babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp> babelwires::ArrayType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
+std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>
+babelwires::ArrayType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
     ArrayValue& arrayValue = compoundValue.copyContentsAndGetNonConst().is<ArrayValue>();
-    return {&arrayValue.getValue(i), i, m_entryType->getTypeExp()};
+    return {&arrayValue.getValue(i), i, m_entryType};
 }
 
 int babelwires::ArrayType::getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const {

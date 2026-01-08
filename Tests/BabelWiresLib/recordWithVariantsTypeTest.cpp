@@ -272,7 +272,7 @@ TEST(RecordWithVariantsTypeTest, getChildNonConstOfFixedField) {
 
     EXPECT_EQ(*valueHolder0, **value1);
     EXPECT_EQ(step0, step1);
-    EXPECT_EQ(type0, type1);
+    EXPECT_EQ(type0, type1->getTypeExp());
 
     *value1 = babelwires::IntValue(15);
 
@@ -306,7 +306,7 @@ TEST(RecordWithVariantsTypeTest, getChildNonConstOfFieldInBranch) {
 
     EXPECT_EQ(*valueHolder0, **value1);
     EXPECT_EQ(step0, step1);
-    EXPECT_EQ(type0, type1);
+    EXPECT_EQ(type0, type1->getTypeExp());
 
     *value1 = babelwires::IntValue(15);
 

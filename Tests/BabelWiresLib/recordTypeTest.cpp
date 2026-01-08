@@ -272,7 +272,7 @@ TEST(RecordTypeTest, getChildNonConstFixedField) {
 
     EXPECT_EQ(*valueHolder0, **value1);
     EXPECT_EQ(step0, step1);
-    EXPECT_EQ(type0, type1);
+    EXPECT_EQ(type0, type1->getTypeExp());
 
     *value1 = babelwires::IntValue(15);
 
@@ -306,7 +306,7 @@ TEST(RecordTypeTest, getChildNonConstOptionalField) {
 
     EXPECT_EQ(*valueHolder0, **value1);
     EXPECT_EQ(step0, step1);
-    EXPECT_EQ(type0, type1);
+    EXPECT_EQ(type0, type1->getTypeExp());
 
     const auto& opRecType = type0.resolveAs<babelwires::RecordType>(testEnvironment.m_typeSystem);
 

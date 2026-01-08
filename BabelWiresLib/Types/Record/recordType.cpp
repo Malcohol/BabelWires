@@ -219,12 +219,12 @@ babelwires::RecordType::getChild(const ValueHolder& compoundValue, unsigned int 
     return {&value, PathStep{f.m_identifier}, f.m_type->getTypeExp()};
 }
 
-std::tuple<babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp>
+std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>
 babelwires::RecordType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
     const Field& f = getFieldFromChildIndex(compoundValue, i);
     RecordValue& recordValue = compoundValue.copyContentsAndGetNonConst().is<RecordValue>();
     ValueHolder& value = recordValue.getValue(f.m_identifier);
-    return {&value, PathStep{f.m_identifier}, f.m_type->getTypeExp()};
+    return {&value, PathStep{f.m_identifier}, f.m_type};
 }
 
 int babelwires::RecordType::getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const {

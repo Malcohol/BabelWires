@@ -131,14 +131,14 @@ babelwires::RecordWithVariantsType::getChild(const ValueHolder& compoundValue, u
     return {&recordValue.getValue(f.m_identifier), PathStep{f.m_identifier}, f.m_type->getTypeExp()};
 }
 
-std::tuple<babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp>
+std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>
 babelwires::RecordWithVariantsType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
     const ShortId tag = getSelectedTag(compoundValue);
     const auto it = m_tagToVariantCache.find(tag);
     assert(it != m_tagToVariantCache.end());
     RecordWithVariantsValue& recordValue = compoundValue.copyContentsAndGetNonConst().is<RecordWithVariantsValue>();
     const Field& f = *it->second[i];
-    return {&recordValue.getValue(f.m_identifier), PathStep{f.m_identifier}, f.m_type->getTypeExp()};
+    return {&recordValue.getValue(f.m_identifier), PathStep{f.m_identifier}, f.m_type};
 }
 
 int babelwires::RecordWithVariantsType::getChildIndexFromStep(const ValueHolder& compoundValue,

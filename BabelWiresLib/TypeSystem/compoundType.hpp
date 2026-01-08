@@ -25,8 +25,8 @@ namespace babelwires {
 
         /// Get a writeable valueHolder to the ith child of the given value of this type.
         /// It is expected this this will shallow clone the given ValueHolder using "copyContentsAndGetNonConst".
-        virtual std::tuple<ValueHolder*, PathStep, TypeExp> getChildNonConst(ValueHolder& compoundValue,
-                                                                                    unsigned int i) const = 0;
+        virtual std::tuple<ValueHolder*, PathStep, const TypePtr&> getChildNonConst(ValueHolder& compoundValue,
+                              unsigned int i) const = 0;
 
         virtual int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const = 0;
 
