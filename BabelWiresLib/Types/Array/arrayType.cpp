@@ -121,9 +121,10 @@ unsigned int babelwires::ArrayType::getNumChildren(const ValueHolder& compoundVa
     return arrayValue.getSize();
 }
 
-std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp> babelwires::ArrayType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
+std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>
+babelwires::ArrayType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
     const ArrayValue& arrayValue = compoundValue->is<ArrayValue>();
-    return {&arrayValue.getValue(i), i, m_entryType->getTypeExp()};
+    return {&arrayValue.getValue(i), i, m_entryType};
 }
 
 std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>

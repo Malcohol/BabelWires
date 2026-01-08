@@ -33,8 +33,8 @@ namespace {
             // Iterate over the children of the compound value.
             unsigned int numChildren = compoundType->getNumChildren(sourceValue);
             for (unsigned int i = 0; i < numChildren; ++i) {
-                auto [childValue, step, childTypeExp] = compoundType->getChild(sourceValue, i);
-                if (auto childResult = applyToSubvaluesInternal(typeSystem, *childTypeExp.resolve(typeSystem),
+                auto [childValue, step, childType] = compoundType->getChild(sourceValue, i);
+                if (auto childResult = applyToSubvaluesInternal(typeSystem, *childType,
                                                                 *childValue, predicate, function)) {
                     if (!result) {
                         result = sourceValue;

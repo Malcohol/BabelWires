@@ -24,7 +24,7 @@ namespace {
                 if (childIndex >= 0) {
                     auto [childValue, _, childType] = compoundType->getChild(valueHolder, childIndex);
                     ++index;
-                    return tryFollow(typeSystem, *childType.resolve(typeSystem), *childValue, p, index);
+                    return tryFollow(typeSystem, *childType, *childValue, p, index);
                 } else {
                     return {};
                 }

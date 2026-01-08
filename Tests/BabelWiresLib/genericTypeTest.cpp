@@ -208,8 +208,7 @@ TEST(GenericTypeTest, childTypeAndTypeNames) {
     EXPECT_EQ(genericType->valueToString(typeSystem, valueHolder), "<T, U>");
 
     auto checkNames = [&](bool var0Assigned, bool var1Assigned)  {
-        auto [childValue, step, childTypeExp] = genericType->getChild(valueHolder, 0);
-        const babelwires::TypePtr& childType = childTypeExp.tryResolve(typeSystem);
+        auto [childValue, step, childType] = genericType->getChild(valueHolder, 0);
         EXPECT_NE(childType, nullptr);
         EXPECT_EQ(step, babelwires::GenericType::getStepToValue());
 

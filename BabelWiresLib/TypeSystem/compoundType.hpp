@@ -20,7 +20,7 @@ namespace babelwires {
 
         /// Get the ith child of the given value of this type.
         // TODO Clarify failure behaviour. Probably return reference.
-        virtual std::tuple<const ValueHolder*, PathStep, TypeExp> getChild(const ValueHolder& compoundValue,
+        virtual std::tuple<const ValueHolder*, PathStep, const TypePtr&> getChild(const ValueHolder& compoundValue,
                                                                                   unsigned int i) const = 0;
 
         /// Get a writeable valueHolder to the ith child of the given value of this type.

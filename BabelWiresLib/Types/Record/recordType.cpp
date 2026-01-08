@@ -211,12 +211,12 @@ const babelwires::RecordType::Field& babelwires::RecordType::getFieldFromChildIn
     return *static_cast<babelwires::RecordType::Field*>(0);
 }
 
-std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp>
+std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>
 babelwires::RecordType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
     const Field& f = getFieldFromChildIndex(compoundValue, i);
     const RecordValue& recordValue = compoundValue->is<RecordValue>();
     const ValueHolder& value = recordValue.getValue(f.m_identifier);
-    return {&value, PathStep{f.m_identifier}, f.m_type->getTypeExp()};
+    return {&value, PathStep{f.m_identifier}, f.m_type};
 }
 
 std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>

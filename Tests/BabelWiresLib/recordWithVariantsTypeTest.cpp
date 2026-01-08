@@ -183,13 +183,13 @@ namespace {
 
         EXPECT_EQ(recordType.getNumChildren(value), numChildren);
 
-        std::vector<std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp>>
+        std::vector<std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>>
             childInfos;
         std::vector<const babelwires::Type*> types;
 
         for (unsigned int i = 0; i < numChildren; ++i) {
             childInfos.emplace_back(recordType.getChild(value, i));
-            types.emplace_back(std::get<2>(childInfos.back()).resolve(typeSystem).get());
+            types.emplace_back(std::get<2>(childInfos.back()).get());
         }
 
         const unsigned int fieldA0Index = 0;
@@ -272,7 +272,7 @@ TEST(RecordWithVariantsTypeTest, getChildNonConstOfFixedField) {
 
     EXPECT_EQ(*valueHolder0, **value1);
     EXPECT_EQ(step0, step1);
-    EXPECT_EQ(type0, type1->getTypeExp());
+    EXPECT_EQ(type0->getTypeExp(), type1->getTypeExp());
 
     *value1 = babelwires::IntValue(15);
 
@@ -306,7 +306,7 @@ TEST(RecordWithVariantsTypeTest, getChildNonConstOfFieldInBranch) {
 
     EXPECT_EQ(*valueHolder0, **value1);
     EXPECT_EQ(step0, step1);
-    EXPECT_EQ(type0, type1->getTypeExp());
+    EXPECT_EQ(type0->getTypeExp(), type1->getTypeExp());
 
     *value1 = babelwires::IntValue(15);
 

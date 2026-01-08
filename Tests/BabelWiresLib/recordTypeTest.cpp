@@ -49,8 +49,8 @@ TEST(RecordTypeTest, simpleRecordTypeValue) {
 
     EXPECT_EQ(recordType.getNumChildren(newValue), 2);
 
-    const auto [child0, step0, typeExp0] = recordType.getChild(newValue, 0);
-    const auto [child1, step1, typeExp1] = recordType.getChild(newValue, 1);
+    const auto [child0, step0, type0] = recordType.getChild(newValue, 0);
+    const auto [child1, step1, type1] = recordType.getChild(newValue, 1);
 
     EXPECT_NE((*child0)->as<babelwires::IntValue>(), nullptr);
     EXPECT_NE((*child1)->as<babelwires::IntValue>(), nullptr);
@@ -58,9 +58,6 @@ TEST(RecordTypeTest, simpleRecordTypeValue) {
     EXPECT_NE(step1.asField(), nullptr);
     EXPECT_EQ(*step0.asField(), testDomain::TestSimpleRecordType::getInt0Id());
     EXPECT_EQ(*step1.asField(), testDomain::TestSimpleRecordType::getInt1Id());
-
-    const babelwires::TypePtr& type0 = typeExp0.resolve(testEnvironment.m_typeSystem);
-    const babelwires::TypePtr& type1 = typeExp1.resolve(testEnvironment.m_typeSystem);
 
     EXPECT_NE(type0->as<babelwires::IntType>(), nullptr);
     EXPECT_NE(type1->as<babelwires::IntType>(), nullptr);
@@ -123,13 +120,13 @@ namespace {
         EXPECT_EQ(recordType.getNumChildren(value),
                   testDomain::TestComplexRecordType::s_numNonOptionalFields + numOptionals);
 
-        std::vector<std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp>>
+        std::vector<std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>>
             childInfos;
         std::vector<const babelwires::Type*> types;
 
         for (unsigned int i = 0; i < testDomain::TestComplexRecordType::s_numNonOptionalFields + numOptionals; ++i) {
             childInfos.emplace_back(recordType.getChild(value, i));
-            types.emplace_back(std::get<2>(childInfos.back()).resolve(typeSystem).get());
+            types.emplace_back(std::get<2>(childInfos.back()).get());
         }
 
         unsigned int int0Index = 0;
@@ -272,7 +269,7 @@ TEST(RecordTypeTest, getChildNonConstFixedField) {
 
     EXPECT_EQ(*valueHolder0, **value1);
     EXPECT_EQ(step0, step1);
-    EXPECT_EQ(type0, type1->getTypeExp());
+    EXPECT_EQ(type0->getTypeExp(), type1->getTypeExp());
 
     *value1 = babelwires::IntValue(15);
 
@@ -306,9 +303,9 @@ TEST(RecordTypeTest, getChildNonConstOptionalField) {
 
     EXPECT_EQ(*valueHolder0, **value1);
     EXPECT_EQ(step0, step1);
-    EXPECT_EQ(type0, type1->getTypeExp());
+    EXPECT_EQ(type0->getTypeExp(), type1->getTypeExp());
 
-    const auto& opRecType = type0.resolveAs<babelwires::RecordType>(testEnvironment.m_typeSystem);
+    const auto& opRecType = type0->as<babelwires::RecordType>();
 
     // Test modification by modifying a field within the field.
 

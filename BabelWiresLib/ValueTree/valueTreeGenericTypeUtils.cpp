@@ -184,7 +184,7 @@ namespace {
                 }
                 const unsigned int childIndexInSourceType =
                     sourceCompound->getChildIndexFromStep(sourceValue, pathStep);
-                const auto [sourceChildValuePtr, _, sourceChildTypeExp] =
+                const auto [sourceChildValuePtr, _, sourceChildType] =
                     sourceCompound->getChild(sourceValue, childIndexInSourceType);
                 if (!sourceChildValuePtr) {
                     return false;
@@ -193,7 +193,7 @@ namespace {
                 if (childType->as<babelwires::GenericType>()) {
                     ++extraGenericTypeDepth;
                 }
-                return findAssignments(childTypeExp, sourceChildTypeExp, *sourceChildValuePtr, extraGenericTypeDepth);
+                return findAssignments(childTypeExp, sourceChildType->getTypeExp(), *sourceChildValuePtr, extraGenericTypeDepth);
             };
             const babelwires::TypePtr& targetType = targetTypeExp.resolve(m_typeSystem);
             if (!targetType->visitValue(m_typeSystem, *sourceValue, childValueVisitor)) {
