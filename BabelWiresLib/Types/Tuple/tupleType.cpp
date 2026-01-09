@@ -40,7 +40,7 @@ bool babelwires::TupleType::visitValue(const TypeSystem& typeSystem, const Value
         return false;
     }
     for (unsigned int i = 0; i < m_componentTypes.size(); ++i) {
-        if (!visitor(typeSystem, m_componentTypes[i]->getTypeExp(), *tuple->getValue(i), i)) {
+        if (!visitor(typeSystem, m_componentTypes[i], *tuple->getValue(i), i)) {
             return false;
         }
     }

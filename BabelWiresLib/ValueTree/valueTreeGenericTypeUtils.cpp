@@ -174,7 +174,7 @@ namespace {
                 return handleAssignment(*typeVariableData, sourceTypeExp, extraGenericTypeDepth);
             }
             babelwires::Type::ChildValueVisitor childValueVisitor = [&](const babelwires::TypeSystem& typeSystem,
-                                                                        const babelwires::TypeExp& childTypeExp,
+                                                                        const babelwires::TypePtr& childType,
                                                                         const babelwires::Value& childValue,
                                                                         const babelwires::PathStep& pathStep) {
                 const auto& sourceCompound =
@@ -189,11 +189,10 @@ namespace {
                 if (!sourceChildValuePtr) {
                     return false;
                 }
-                const babelwires::TypePtr& childType = childTypeExp.resolve(typeSystem);
                 if (childType->as<babelwires::GenericType>()) {
                     ++extraGenericTypeDepth;
                 }
-                return findAssignments(childTypeExp, sourceChildType->getTypeExp(), *sourceChildValuePtr, extraGenericTypeDepth);
+                return findAssignments(childType->getTypeExp(), sourceChildType->getTypeExp(), *sourceChildValuePtr, extraGenericTypeDepth);
             };
             const babelwires::TypePtr& targetType = targetTypeExp.resolve(m_typeSystem);
             if (!targetType->visitValue(m_typeSystem, *sourceValue, childValueVisitor)) {

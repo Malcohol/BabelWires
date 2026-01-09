@@ -178,7 +178,7 @@ bool babelwires::RecordType::visitValue(const TypeSystem& typeSystem, const Valu
                 return false;
             }
         } else {
-            if (!visitor(typeSystem, f.m_type->getTypeExp(), **value, PathStep{f.m_identifier})) {
+            if (!visitor(typeSystem, f.m_type, **value, PathStep{f.m_identifier})) {
                 return false;
             }
         }

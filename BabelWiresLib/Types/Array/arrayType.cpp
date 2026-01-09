@@ -94,7 +94,7 @@ bool babelwires::ArrayType::visitValue(const TypeSystem& typeSystem, const Value
         return false;
     }
     for (unsigned int i = 0; i < size; ++i) {
-        if (!visitor(typeSystem, m_entryType->getTypeExp(), *arrayValue->getValue(i), i)) {
+        if (!visitor(typeSystem, m_entryType, *arrayValue->getValue(i), i)) {
             return false;
         }
     }

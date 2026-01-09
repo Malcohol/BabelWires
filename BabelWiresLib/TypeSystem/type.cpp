@@ -26,9 +26,8 @@ const std::vector<babelwires::Type::Tag>& babelwires::Type::getTags() const {
 }
 
 bool babelwires::Type::isValidValue(const TypeSystem& typeSystem, const Value& v) const {
-    ChildValueVisitor visitor = [&](const TypeSystem& typeSystem, const TypeExp& childTypeExp,
+    ChildValueVisitor visitor = [&](const TypeSystem& typeSystem, const TypePtr& childType,
                                    const Value& childValue, const PathStep& stepToChild) {
-        const TypePtr& childType = childTypeExp.resolve(typeSystem);
         return childType->isValidValue(typeSystem, childValue);
     };
     return visitValue(typeSystem, v, visitor);

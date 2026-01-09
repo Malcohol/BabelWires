@@ -182,7 +182,7 @@ bool babelwires::RecordWithVariantsType::visitValue(const TypeSystem& typeSystem
         if (!value) {
             return false;
         } else {
-            if (!visitor(typeSystem, f->m_type->getTypeExp(), **value, PathStep{f->m_identifier})) {
+            if (!visitor(typeSystem, f->m_type, **value, PathStep{f->m_identifier})) {
                 return false;
             }
         }
