@@ -93,7 +93,7 @@ void babelwires::ResetMapValueCommand::execute(MapProject& map) const {
     } 
     */   
 
-    const TypePtr& type = m_type.assertResolve(typeSystem);
+    TypePtr type = m_type.assertResolve(typeSystem);
     ValueHolder newValue = type->createValue(typeSystem);
 
     if (m_location.getSide() == MapProjectDataLocation::Side::source) {

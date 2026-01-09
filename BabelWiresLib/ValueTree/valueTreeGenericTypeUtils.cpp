@@ -194,7 +194,7 @@ namespace {
                 }
                 return findAssignments(childType->getTypeExp(), sourceChildType->getTypeExp(), *sourceChildValuePtr, extraGenericTypeDepth);
             };
-            const babelwires::TypePtr& targetType = targetTypeExp.resolve(m_typeSystem);
+            babelwires::TypePtr targetType = targetTypeExp.resolve(m_typeSystem);
             if (!targetType->visitValue(m_typeSystem, *sourceValue, childValueVisitor)) {
                 return false;
             }

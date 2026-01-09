@@ -30,8 +30,8 @@ namespace {
                       const babelwires::Value& targetValue2, const babelwires::Value& targetValue3,
                       bool allToOneFallback) {
 
-        const auto& sourceType = sourceTypeId.assertResolve(typeSystem);
-        const auto& targetType = targetTypeId.assertResolve(typeSystem);
+        babelwires::TypePtr sourceType = sourceTypeId.assertResolve(typeSystem);
+        babelwires::TypePtr targetType = targetTypeId.assertResolve(typeSystem);
 
         auto oneToOne1 = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, *sourceType, *targetType);
         oneToOne1->setSourceValue(sourceValue1.clone());

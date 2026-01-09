@@ -73,7 +73,7 @@ TEST(GenericTypeTest, createValue) {
     testUtils::TestEnvironment env;
     babelwires::TypeSystem& typeSystem = env.m_typeSystem;
 
-    const babelwires::TypePtr& type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
+    babelwires::TypePtr type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
     ASSERT_NE(type, nullptr);
 
     const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
@@ -95,7 +95,7 @@ TEST(GenericTypeTest, instantiateTypeVariables) {
     testUtils::TestEnvironment env;
     babelwires::TypeSystem& typeSystem = env.m_typeSystem;
 
-    const babelwires::TypePtr& type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
+    babelwires::TypePtr type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
     ASSERT_NE(type, nullptr);
 
     const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
@@ -152,7 +152,7 @@ TEST(GenericTypeTest, instantiateNestedTypeVariable) {
     testUtils::TestEnvironment env;
     babelwires::TypeSystem& typeSystem = env.m_typeSystem;
 
-    const babelwires::TypePtr& type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
+    babelwires::TypePtr type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
     ASSERT_NE(type, nullptr);
 
     const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
@@ -196,7 +196,7 @@ TEST(GenericTypeTest, childTypeAndTypeNames) {
     testUtils::TestEnvironment env;
     babelwires::TypeSystem& typeSystem = env.m_typeSystem;
 
-    const babelwires::TypePtr& type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
+    babelwires::TypePtr type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
     ASSERT_NE(type, nullptr);
 
     const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();

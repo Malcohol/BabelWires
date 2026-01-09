@@ -87,7 +87,7 @@ TEST(TypeExpTest, resolve) {
     EXPECT_EQ(testType, typeExp.resolve(typeSystem).get());
     babelwires::TypeExp constructedTypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
                                            testUtils::TestType::getThisType());
-    const babelwires::TypePtr& newType = constructedTypeExp.resolve(typeSystem);
+    babelwires::TypePtr newType = constructedTypeExp.resolve(typeSystem);
     EXPECT_EQ(newType->getTypeExp(), constructedTypeExp);
     EXPECT_EQ(constructedTypeExp.resolve(typeSystem).get(), constructedTypeExp.resolve(typeSystem).get());
 }
@@ -105,7 +105,7 @@ TEST(TypeExpTest, tryResolveSuccess) {
 
     babelwires::TypeExp constructedTypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
                                            testUtils::TestType::getThisType());
-    const babelwires::TypePtr& newType = constructedTypeExp.tryResolve(typeSystem);
+    babelwires::TypePtr newType = constructedTypeExp.tryResolve(typeSystem);
     EXPECT_NE(newType, nullptr);
     EXPECT_EQ(newType->getTypeExp(), constructedTypeExp);
     EXPECT_EQ(constructedTypeExp.tryResolve(typeSystem).get(), constructedTypeExp.tryResolve(typeSystem).get());
@@ -167,7 +167,7 @@ TEST(TypeExpTest, tryResolveMixed) {
                               testUtils::TestType::getThisType())},
          {babelwires::StringValue(" is this string")}});
 
-    const babelwires::TypePtr& constructedTestType = constructedTestTypeExp.resolve(typeSystem);
+    babelwires::TypePtr constructedTestType = constructedTestTypeExp.resolve(typeSystem);
     const testUtils::TestType* const newTestType = constructedTestType->as<testUtils::TestType>();
     ASSERT_NE(newTestType, nullptr);
     EXPECT_EQ(newTestType->m_defaultValue, "Default value is this string");

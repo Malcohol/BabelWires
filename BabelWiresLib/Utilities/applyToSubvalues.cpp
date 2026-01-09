@@ -40,8 +40,8 @@ namespace {
                         result = sourceValue;
                         result.copyContentsAndGetNonConst();
                     }
-                    // MAYBEDO I think there's may be unnecessary clones happening here if there are intermediate compound types.
-                    auto [childNonConstValue, step2, childTypeExp2] = compoundType->getChildNonConst(result, i);
+                    // MAYBEDO I think there may be unnecessary clones happening here if there are intermediate compound types.
+                    auto [childNonConstValue, step2, childType] = compoundType->getChildNonConst(result, i);
                     *childNonConstValue = std::move(childResult);
                 }
             }

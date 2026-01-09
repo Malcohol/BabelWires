@@ -50,7 +50,7 @@ const babelwires::TypeExp& babelwires::MapProject::getCurrentTargetTypeExp() con
 
 void babelwires::MapProject::setCurrentSourceTypeExp(const TypeExp& sourceId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
-    const TypePtr& type = sourceId.tryResolve(typeSystem);
+    TypePtr type = sourceId.tryResolve(typeSystem);
     if (!type) {
         // TODO Add type name.
         m_sourceTypeValidity = "The source type is not recognized.";
@@ -73,7 +73,7 @@ void babelwires::MapProject::setCurrentSourceTypeExp(const TypeExp& sourceId) {
 
 void babelwires::MapProject::setCurrentTargetTypeExp(const TypeExp& targetId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
-    const TypePtr& type = targetId.tryResolve(typeSystem);
+    TypePtr type = targetId.tryResolve(typeSystem);
     if (!type) {
         // TODO Add type name.
         m_targetTypeValidity = "The target type is not recognized.";

@@ -42,7 +42,7 @@ TEST(EnumAtomTypeConstructorTest, makeTypeExp) {
 
     babelwires::TypeExp typeExp = babelwires::EnumAtomTypeConstructor::makeTypeExp(babelwires::EnumValue(foo));
 
-    const babelwires::TypePtr& newType = typeExp.tryResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr newType = typeExp.tryResolve(testEnvironment.m_typeSystem);
 
     ASSERT_NE(newType, nullptr);
     EXPECT_EQ(newType->getTypeExp(),

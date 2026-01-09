@@ -59,7 +59,7 @@ TEST(TupleTypeTest, tupleTypeConstructor) {
                                    babelwires::DefaultIntType::getThisType(),
                                    babelwires::DefaultRationalType::getThisType());
 
-    const babelwires::TypePtr& type = tupleTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr type = tupleTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     EXPECT_NE(type, nullptr);
     ASSERT_NE(type->as<babelwires::TupleType>(), nullptr);
@@ -75,7 +75,7 @@ TEST(TupleTypeTest, makeTypeExp) {
 
     auto tupleTypeExp = babelwires::TupleTypeConstructor::makeTypeExp({babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()});
 
-    const babelwires::TypePtr& type = tupleTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr type = tupleTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     EXPECT_NE(type, nullptr);
     ASSERT_NE(type->as<babelwires::TupleType>(), nullptr);

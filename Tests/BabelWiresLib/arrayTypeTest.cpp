@@ -31,7 +31,7 @@ TEST(ArrayTypeTest, simpleArrayTypeCreateValue) {
     EXPECT_NE(newArrayValue, nullptr);
     EXPECT_EQ(newArrayValue->getSize(), testDomain::TestSimpleArrayType::s_defaultSize);
 
-    const babelwires::TypePtr& entryType = arrayType.getEntryType().resolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr entryType = arrayType.getEntryType().resolve(testEnvironment.m_typeSystem);
     const babelwires::ValueHolder defaultEntryValue = entryType->createValue(testEnvironment.m_typeSystem);
 
     for (int i = 0; i < newArrayValue->getSize(); ++i) {
@@ -58,7 +58,7 @@ TEST(ArrayTypeTest, compoundArrayTypeCreateValue) {
     EXPECT_NE(newArrayValue, nullptr);
     EXPECT_EQ(newArrayValue->getSize(), testDomain::TestCompoundArrayType::s_defaultSize);
 
-    const babelwires::TypePtr& entryType = arrayType.getEntryType().resolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr entryType = arrayType.getEntryType().resolve(testEnvironment.m_typeSystem);
     const babelwires::ValueHolder defaultEntryValue = entryType->createValue(testEnvironment.m_typeSystem);
 
     for (int i = 0; i < newArrayValue->getSize(); ++i) {
@@ -327,7 +327,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorSucceed) {
 
     EXPECT_STREQ(arrayTypeExp.toString().c_str(), "Array<String>[1..5]");
 
-    const babelwires::TypePtr& newType = arrayTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr newType = arrayTypeExp.tryResolve(testEnvironment.m_typeSystem);
     ASSERT_NE(newType, nullptr);
 
     const babelwires::ArrayType* const arrayType = newType->as<babelwires::ArrayType>();
@@ -345,7 +345,7 @@ TEST(ArrayTypeTest, makeTypeExp) {
     babelwires::TypeExp arrayTypeExp =
         babelwires::ArrayTypeConstructor::makeTypeExp(babelwires::StringType::getThisType(), 1, 5, 3);
 
-    const babelwires::TypePtr& newType = arrayTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr newType = arrayTypeExp.tryResolve(testEnvironment.m_typeSystem);
     ASSERT_NE(newType, nullptr);
 
     const babelwires::ArrayType* const arrayType = newType->as<babelwires::ArrayType>();
@@ -363,7 +363,7 @@ TEST(ArrayTypeTest, makeTypeExpUnspecifiedDefault) {
     babelwires::TypeExp arrayTypeExp =
         babelwires::ArrayTypeConstructor::makeTypeExp(babelwires::StringType::getThisType(), 1, 5);
 
-    const babelwires::TypePtr& newType = arrayTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr newType = arrayTypeExp.tryResolve(testEnvironment.m_typeSystem);
     ASSERT_NE(newType, nullptr);
 
     const babelwires::ArrayType* const arrayType = newType->as<babelwires::ArrayType>();

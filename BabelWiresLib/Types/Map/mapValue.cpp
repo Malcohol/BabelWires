@@ -124,8 +124,8 @@ const babelwires::MapEntryData& babelwires::MapValue::getMapEntry(unsigned int i
 }
 
 bool babelwires::MapValue::isValid(const TypeSystem& typeSystem) const {
-    const TypePtr& sourceType = m_sourceTypeExp.tryResolve(typeSystem);
-    const TypePtr& targetType = m_targetTypeExp.tryResolve(typeSystem);
+    TypePtr sourceType = m_sourceTypeExp.tryResolve(typeSystem);
+    TypePtr targetType = m_targetTypeExp.tryResolve(typeSystem);
     if (!sourceType || !targetType) {
         return false;
     }

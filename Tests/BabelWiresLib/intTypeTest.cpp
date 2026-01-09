@@ -68,7 +68,7 @@ TEST(IntTypeTest, constructedIntTypeCreateValue) {
     babelwires::TypeExp intTypeExp(babelwires::IntTypeConstructor::getThisIdentifier(), babelwires::IntValue(-12),
                                    babelwires::IntValue(14), babelwires::IntValue(-3));
 
-    const babelwires::TypePtr& intType = intTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr intType = intTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder newValue = intType->createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
@@ -84,7 +84,7 @@ TEST(IntTypeTest, constructedIntTypeRange) {
     babelwires::TypeExp intTypeExp(babelwires::IntTypeConstructor::getThisIdentifier(), babelwires::IntValue(-12),
                                    babelwires::IntValue(14), babelwires::IntValue(-3));
 
-    const babelwires::TypePtr& type = intTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr type = intTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     const babelwires::IntType* const intType = type->as<babelwires::IntType>();
     ASSERT_NE(intType, nullptr);
@@ -100,7 +100,7 @@ TEST(IntTypeTest, constructedIntTypeIsValidValue) {
     babelwires::TypeExp intTypeExp(babelwires::IntTypeConstructor::getThisIdentifier(), babelwires::IntValue(-12),
                                    babelwires::IntValue(14), babelwires::IntValue(-3));
 
-    const babelwires::TypePtr& type = intTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr type = intTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::IntValue(-13)));
     EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::IntValue(-12)));
@@ -116,7 +116,7 @@ TEST(IntTypeTest, makeTypeExp) {
 
     babelwires::TypeExp intTypeExp = babelwires::IntTypeConstructor::makeTypeExp(-120, 140, -30);
 
-    const babelwires::TypePtr& type = intTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr type = intTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     const babelwires::IntType* const intType = type->as<babelwires::IntType>();
     ASSERT_NE(intType, nullptr);
@@ -139,7 +139,7 @@ TEST(IntTypeTest, sameKind) {
     babelwires::TypeExp intTypeExp(babelwires::IntTypeConstructor::getThisIdentifier(), babelwires::IntValue(-12),
                                    babelwires::IntValue(14), babelwires::IntValue(-3));
 
-    const babelwires::TypePtr& type = intTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr type = intTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     babelwires::DefaultIntType defaultIntType;
 
