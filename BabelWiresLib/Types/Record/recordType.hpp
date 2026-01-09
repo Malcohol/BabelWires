@@ -74,11 +74,11 @@ namespace babelwires {
 
       public:
         /// Get a reference to the child's value using its field identifier.
-        std::tuple<const ValueHolder&, TypeExp> getChildById(const ValueHolder& compoundValue,
+        std::tuple<const ValueHolder&, const TypePtr&> getChildById(const ValueHolder& compoundValue,
                                                                     ShortId fieldId) const;
 
         /// Get a non-const reference to the child's value using its field identifier.
-        std::tuple<ValueHolder&, TypeExp> getChildByIdNonConst(ValueHolder& compoundValue,
+        std::tuple<ValueHolder&, const TypePtr&> getChildByIdNonConst(ValueHolder& compoundValue,
                                                                       ShortId fieldId) const;
 
       public:
