@@ -8,13 +8,13 @@
 #include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 
 testDomain::TestGenericType::TestGenericType(const babelwires::TypeSystem& typeSystem)
-    : GenericType(typeSystem,
+    : GenericType(getThisIdentifier(), typeSystem,
           // Note: We assume generic types are made using TypeExp expressions, so this cannot
           // use a registered record type. Similarly, the array cannot be a registered type.
           babelwires::RecordTypeConstructor::makeTypeExp(
               getIdOfX(), babelwires::TypeVariableTypeConstructor::makeTypeExp(), getIdOfY(),
               babelwires::TypeVariableTypeConstructor::makeTypeExp(1), getIdOfInt(),
-              babelwires::DefaultIntType::getThisType(), getIdOfNestedGenericType(),
+              babelwires::DefaultIntType::getThisIdentifier(), getIdOfNestedGenericType(),
               babelwires::GenericTypeConstructor::makeTypeExp(babelwires::RecordTypeConstructor::makeTypeExp(
                   getIdOfNestedX(), babelwires::TypeVariableTypeConstructor::makeTypeExp(0, 1), getIdOfNestedZ(),
                   babelwires::TypeVariableTypeConstructor::makeTypeExp())),
@@ -107,5 +107,5 @@ babelwires::Path testDomain::TestGenericType::getPathToArray0() {
 }
 
 testDomain::TestSimpleCompoundType::TestSimpleCompoundType(const babelwires::TypeSystem& typeSystem)
-    : RecordType(typeSystem, {{TestGenericType::getIdOfNestedX(), babelwires::DefaultIntType::getThisType()},
-                   {TestGenericType::getIdOfNestedZ(), babelwires::StringType::getThisType()}}) {}
+    : RecordType(getThisIdentifier(), typeSystem, {{TestGenericType::getIdOfNestedX(), babelwires::DefaultIntType::getThisIdentifier()},
+                   {TestGenericType::getIdOfNestedZ(), babelwires::StringType::getThisIdentifier()}}) {}

@@ -174,7 +174,7 @@ namespace {
                 return handleAssignment(*typeVariableData, sourceTypeExp, extraGenericTypeDepth);
             }
             babelwires::Type::ChildValueVisitor childValueVisitor = [&](const babelwires::TypeSystem& typeSystem,
-                                                                        const babelwires::TypeExp& childTypeExp,
+                                                                        const babelwires::TypePtr& childType,
                                                                         const babelwires::Value& childValue,
                                                                         const babelwires::PathStep& pathStep) {
                 const auto& sourceCompound =
@@ -184,18 +184,17 @@ namespace {
                 }
                 const unsigned int childIndexInSourceType =
                     sourceCompound->getChildIndexFromStep(sourceValue, pathStep);
-                const auto [sourceChildValuePtr, _, sourceChildTypeExp] =
+                const auto [sourceChildValuePtr, _, sourceChildType] =
                     sourceCompound->getChild(sourceValue, childIndexInSourceType);
                 if (!sourceChildValuePtr) {
                     return false;
                 }
-                const babelwires::TypePtr& childType = childTypeExp.resolve(typeSystem);
                 if (childType->as<babelwires::GenericType>()) {
                     ++extraGenericTypeDepth;
                 }
-                return findAssignments(childTypeExp, sourceChildTypeExp, *sourceChildValuePtr, extraGenericTypeDepth);
+                return findAssignments(childType->getTypeExp(), sourceChildType->getTypeExp(), *sourceChildValuePtr, extraGenericTypeDepth);
             };
-            const babelwires::TypePtr& targetType = targetTypeExp.resolve(m_typeSystem);
+            babelwires::TypePtr targetType = targetTypeExp.resolve(m_typeSystem);
             if (!targetType->visitValue(m_typeSystem, *sourceValue, childValueVisitor)) {
                 return false;
             }
@@ -221,7 +220,12 @@ namespace {
             if (const babelwires::TypeExp& existingAssignment =
                     genericTypeNodePtr->getType()->is<babelwires::GenericType>().getTypeAssignment(
                         genericTypeNodePtr->getValue(), typeVariableData.m_typeVariableIndex)) {
-                switch (m_typeSystem.compareSubtype(sourceTypeExp, existingAssignment)) {
+                const babelwires::TypePtr sourceType = sourceTypeExp.tryResolve(m_typeSystem);
+                const babelwires::TypePtr existingType = existingAssignment.tryResolve(m_typeSystem);
+                if (!sourceType || !existingType) {
+                    return false;
+                }
+                switch (m_typeSystem.compareSubtype(*sourceType, *existingType)) {
                     case babelwires::SubtypeOrder::IsEquivalent:
                     case babelwires::SubtypeOrder::IsSubtype:
                         // Existing assignment is more general than or equal to the new one: keep existing.
@@ -241,7 +245,12 @@ namespace {
             } else {
                 // An instance of this type variable may already be assigned by the exploration algorithm, so check for
                 // consistency.
-                switch (m_typeSystem.compareSubtype(sourceTypeExp, it->second)) {
+                const babelwires::TypePtr sourceType = sourceTypeExp.tryResolve(m_typeSystem);
+                const babelwires::TypePtr assignedType = it->second.tryResolve(m_typeSystem);
+                if (!sourceType || !assignedType) {
+                    return false;
+                }
+                switch (m_typeSystem.compareSubtype(*sourceType, *assignedType)) {
                     case babelwires::SubtypeOrder::IsEquivalent:
                         return true;
                     case babelwires::SubtypeOrder::IsSubtype:

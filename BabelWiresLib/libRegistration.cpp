@@ -30,12 +30,12 @@
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
 void babelwires::registerLib(babelwires::ProjectContext& context) {
-    context.m_typeSystem.addEntry<DefaultIntType>();
-    context.m_typeSystem.addEntry<NonNegativeIntType>();
-    context.m_typeSystem.addEntry<StringType>();
-    context.m_typeSystem.addEntry<DefaultRationalType>();
-    context.m_typeSystem.addEntry<MapEntryFallbackKind>();
-    context.m_typeSystem.addEntry<FailureType>(context.m_typeSystem);
+    context.m_typeSystem.addType<DefaultIntType>();
+    context.m_typeSystem.addType<NonNegativeIntType>();
+    context.m_typeSystem.addType<StringType>();
+    context.m_typeSystem.addType<DefaultRationalType>();
+    context.m_typeSystem.addType<MapEntryFallbackKind>();
+    context.m_typeSystem.addType<FailureType>(context.m_typeSystem);
     context.m_typeSystem.addTypeConstructor<EnumAtomTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<EnumUnionTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<IntTypeConstructor>();

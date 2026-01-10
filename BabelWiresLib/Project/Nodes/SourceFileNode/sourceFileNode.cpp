@@ -96,14 +96,14 @@ bool babelwires::SourceFileNode::reload(const ProjectContext& context, UserLogge
         setFactoryName(data.m_factoryIdentifier);
         setInternalFailure(e.what());
         // A dummy root
-        auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisType());
+        auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier());
         failure->setToDefault();
         setValueTreeRoot(std::move(failure));
     } catch (const BaseException& e) {
         userLogger.logError() << "Source File Feature id=" << data.m_id << " could not be loaded: " << e.what();
         setInternalFailure(e.what());
         // A dummy file root which allows the user to change the file via the context menu.
-        auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisType());
+        auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier());
         failure->setToDefault();
         setValueTreeRoot(std::move(failure));
     }

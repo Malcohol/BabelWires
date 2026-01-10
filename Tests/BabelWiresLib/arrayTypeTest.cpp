@@ -18,7 +18,7 @@ TEST(ArrayTypeTest, simpleArrayTypeCreateValue) {
     testUtils::TestEnvironment testEnvironment;
     testDomain::TestSimpleArrayType arrayType(testEnvironment.m_typeSystem);
 
-    EXPECT_EQ(arrayType.getEntryTypeStatic(), arrayType.getEntryType());
+    EXPECT_EQ(arrayType.getEntryTypeStatic(), arrayType.getEntryType()->getTypeExp());
     EXPECT_EQ(arrayType.getInitialSize(), testDomain::TestSimpleArrayType::s_defaultSize);
     EXPECT_EQ(arrayType.getSizeRange().m_min, testDomain::TestSimpleArrayType::s_minimumSize);
     EXPECT_EQ(arrayType.getSizeRange().m_max, testDomain::TestSimpleArrayType::s_maximumSize);
@@ -31,7 +31,7 @@ TEST(ArrayTypeTest, simpleArrayTypeCreateValue) {
     EXPECT_NE(newArrayValue, nullptr);
     EXPECT_EQ(newArrayValue->getSize(), testDomain::TestSimpleArrayType::s_defaultSize);
 
-    const babelwires::TypePtr& entryType = arrayType.getEntryType().resolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr entryType = arrayType.getEntryType();
     const babelwires::ValueHolder defaultEntryValue = entryType->createValue(testEnvironment.m_typeSystem);
 
     for (int i = 0; i < newArrayValue->getSize(); ++i) {
@@ -45,7 +45,7 @@ TEST(ArrayTypeTest, compoundArrayTypeCreateValue) {
     testUtils::TestEnvironment testEnvironment;
     testDomain::TestCompoundArrayType arrayType(testEnvironment.m_typeSystem);
 
-    EXPECT_EQ(arrayType.getEntryTypeStatic(), arrayType.getEntryType());
+    EXPECT_EQ(arrayType.getEntryTypeStatic(), arrayType.getEntryType()->getTypeExp());
     EXPECT_EQ(arrayType.getInitialSize(), testDomain::TestCompoundArrayType::s_defaultSize);
     EXPECT_EQ(arrayType.getSizeRange().m_min, testDomain::TestCompoundArrayType::s_minimumSize);
     EXPECT_EQ(arrayType.getSizeRange().m_max, testDomain::TestCompoundArrayType::s_maximumSize);
@@ -58,7 +58,7 @@ TEST(ArrayTypeTest, compoundArrayTypeCreateValue) {
     EXPECT_NE(newArrayValue, nullptr);
     EXPECT_EQ(newArrayValue->getSize(), testDomain::TestCompoundArrayType::s_defaultSize);
 
-    const babelwires::TypePtr& entryType = arrayType.getEntryType().resolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr entryType = arrayType.getEntryType();
     const babelwires::ValueHolder defaultEntryValue = entryType->createValue(testEnvironment.m_typeSystem);
 
     for (int i = 0; i < newArrayValue->getSize(); ++i) {
@@ -322,18 +322,18 @@ TEST(ArrayTypeTest, arrayTypeConstructorSucceed) {
 
     babelwires::TypeExp arrayTypeExp(babelwires::ArrayTypeConstructor::getThisIdentifier(),
                                      babelwires::TypeConstructorArguments{
-                                         {babelwires::StringType::getThisType()},
+                                         {babelwires::StringType::getThisIdentifier()},
                                          {babelwires::IntValue(1), babelwires::IntValue(5), babelwires::IntValue(3)}});
 
     EXPECT_STREQ(arrayTypeExp.toString().c_str(), "Array<String>[1..5]");
 
-    const babelwires::TypePtr& newType = arrayTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr newType = arrayTypeExp.tryResolve(testEnvironment.m_typeSystem);
     ASSERT_NE(newType, nullptr);
 
     const babelwires::ArrayType* const arrayType = newType->as<babelwires::ArrayType>();
     ASSERT_NE(arrayType, nullptr);
 
-    EXPECT_EQ(arrayType->getEntryType(), babelwires::StringType::getThisType());
+    EXPECT_EQ(arrayType->getEntryType()->getTypeExp(), babelwires::StringType::getThisIdentifier());
     EXPECT_EQ(arrayType->getSizeRange().m_min, 1);
     EXPECT_EQ(arrayType->getSizeRange().m_max, 5);
     EXPECT_EQ(arrayType->getInitialSize(), 3);
@@ -343,15 +343,15 @@ TEST(ArrayTypeTest, makeTypeExp) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::TypeExp arrayTypeExp =
-        babelwires::ArrayTypeConstructor::makeTypeExp(babelwires::StringType::getThisType(), 1, 5, 3);
+        babelwires::ArrayTypeConstructor::makeTypeExp(babelwires::StringType::getThisIdentifier(), 1, 5, 3);
 
-    const babelwires::TypePtr& newType = arrayTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr newType = arrayTypeExp.tryResolve(testEnvironment.m_typeSystem);
     ASSERT_NE(newType, nullptr);
 
     const babelwires::ArrayType* const arrayType = newType->as<babelwires::ArrayType>();
     ASSERT_NE(arrayType, nullptr);
 
-    EXPECT_EQ(arrayType->getEntryType(), babelwires::StringType::getThisType());
+    EXPECT_EQ(arrayType->getEntryType()->getTypeExp(), babelwires::StringType::getThisIdentifier());
     EXPECT_EQ(arrayType->getSizeRange().m_min, 1);
     EXPECT_EQ(arrayType->getSizeRange().m_max, 5);
     EXPECT_EQ(arrayType->getInitialSize(), 3);
@@ -361,15 +361,15 @@ TEST(ArrayTypeTest, makeTypeExpUnspecifiedDefault) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::TypeExp arrayTypeExp =
-        babelwires::ArrayTypeConstructor::makeTypeExp(babelwires::StringType::getThisType(), 1, 5);
+        babelwires::ArrayTypeConstructor::makeTypeExp(babelwires::StringType::getThisIdentifier(), 1, 5);
 
-    const babelwires::TypePtr& newType = arrayTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr newType = arrayTypeExp.tryResolve(testEnvironment.m_typeSystem);
     ASSERT_NE(newType, nullptr);
 
     const babelwires::ArrayType* const arrayType = newType->as<babelwires::ArrayType>();
     ASSERT_NE(arrayType, nullptr);
 
-    EXPECT_EQ(arrayType->getEntryType(), babelwires::StringType::getThisType());
+    EXPECT_EQ(arrayType->getEntryType()->getTypeExp(), babelwires::StringType::getThisIdentifier());
     EXPECT_EQ(arrayType->getSizeRange().m_min, 1);
     EXPECT_EQ(arrayType->getSizeRange().m_max, 5);
     EXPECT_EQ(arrayType->getInitialSize(), 1);
@@ -391,7 +391,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
     {
         babelwires::TypeExp arrayTypeExp(
             babelwires::ArrayTypeConstructor::getThisIdentifier(),
-            babelwires::TypeConstructorArguments{{babelwires::StringType::getThisType()}, {}});
+            babelwires::TypeConstructorArguments{{babelwires::StringType::getThisIdentifier()}, {}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
         EXPECT_THROW(arrayTypeExp.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
@@ -400,7 +400,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
         babelwires::TypeExp arrayTypeExp(
             babelwires::ArrayTypeConstructor::getThisIdentifier(),
             babelwires::TypeConstructorArguments{
-                {babelwires::StringType::getThisType()},
+                {babelwires::StringType::getThisIdentifier()},
                 {babelwires::IntValue(-1), babelwires::IntValue(5), babelwires::IntValue(3)}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
@@ -410,7 +410,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
         babelwires::TypeExp arrayTypeExp(
             babelwires::ArrayTypeConstructor::getThisIdentifier(),
             babelwires::TypeConstructorArguments{
-                {babelwires::StringType::getThisType()},
+                {babelwires::StringType::getThisIdentifier()},
                 {babelwires::IntValue(6), babelwires::IntValue(2), babelwires::IntValue(7)}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
@@ -420,7 +420,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
         babelwires::TypeExp arrayTypeExp(
             babelwires::ArrayTypeConstructor::getThisIdentifier(),
             babelwires::TypeConstructorArguments{
-                {babelwires::StringType::getThisType()},
+                {babelwires::StringType::getThisIdentifier()},
                 {babelwires::IntValue(6), babelwires::IntValue(10), babelwires::IntValue(3)}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
@@ -430,7 +430,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
         babelwires::TypeExp arrayTypeExp(
             babelwires::ArrayTypeConstructor::getThisIdentifier(),
             babelwires::TypeConstructorArguments{
-                {babelwires::StringType::getThisType()},
+                {babelwires::StringType::getThisIdentifier()},
                 {babelwires::IntValue(6), babelwires::IntValue(10), babelwires::IntValue(12)}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
@@ -443,61 +443,67 @@ TEST(ArrayTypeTest, subtyping) {
 
     babelwires::TypeExp arrayTypeExp(babelwires::ArrayTypeConstructor::getThisIdentifier(),
                                      babelwires::TypeConstructorArguments{
-                                         {testDomain::TestSubEnum::getThisType()},
+                                         {testDomain::TestSubEnum::getThisIdentifier()},
                                          {babelwires::IntValue(2), babelwires::IntValue(6), babelwires::IntValue(3)}});
 
     babelwires::TypeExp biggerArrayTypeExp(
         babelwires::ArrayTypeConstructor::getThisIdentifier(),
         babelwires::TypeConstructorArguments{
-            {testDomain::TestSubEnum::getThisType()},
+            {testDomain::TestSubEnum::getThisIdentifier()},
             {babelwires::IntValue(1), babelwires::IntValue(7), babelwires::IntValue(3)}});
 
     babelwires::TypeExp arrayOfSupertypeTypeExp(
         babelwires::ArrayTypeConstructor::getThisIdentifier(),
         babelwires::TypeConstructorArguments{
-            {testDomain::TestEnum::getThisType()},
+            {testDomain::TestEnum::getThisIdentifier()},
             {babelwires::IntValue(2), babelwires::IntValue(6), babelwires::IntValue(3)}});
 
     babelwires::TypeExp arrayOfDifferentTypeExp(
         babelwires::ArrayTypeConstructor::getThisIdentifier(),
         babelwires::TypeConstructorArguments{
-            {babelwires::StringType::getThisType()},
+            {babelwires::StringType::getThisIdentifier()},
             {babelwires::IntValue(2), babelwires::IntValue(6), babelwires::IntValue(3)}});
 
     babelwires::TypeExp arrayOfDisjointLength(
         babelwires::ArrayTypeConstructor::getThisIdentifier(),
         babelwires::TypeConstructorArguments{
-            {babelwires::StringType::getThisType()},
+            {babelwires::StringType::getThisIdentifier()},
             {babelwires::IntValue(8), babelwires::IntValue(10), babelwires::IntValue(8)}});
 
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayTypeExp, arrayTypeExp),
+    babelwires::TypePtr arrayType = arrayTypeExp.resolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr biggerArrayType = biggerArrayTypeExp.resolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr arrayOfSupertypeType = arrayOfSupertypeTypeExp.resolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr arrayOfDifferentType = arrayOfDifferentTypeExp.resolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr arrayOfDisjointLengthType = arrayOfDisjointLength.resolve(testEnvironment.m_typeSystem);
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*arrayType, *arrayType),
               babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayTypeExp, biggerArrayTypeExp),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*arrayType, *biggerArrayType),
               babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(biggerArrayTypeExp, arrayTypeExp),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*biggerArrayType, *arrayType),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayTypeExp, arrayOfSupertypeTypeExp),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*arrayType, *arrayOfSupertypeType),
               babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayOfSupertypeTypeExp, arrayTypeExp),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*arrayOfSupertypeType, *arrayType),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(biggerArrayTypeExp, arrayOfSupertypeTypeExp),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*biggerArrayType, *arrayOfSupertypeType),
               babelwires::SubtypeOrder::IsIntersecting);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayOfSupertypeTypeExp, biggerArrayTypeExp),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*arrayOfSupertypeType, *biggerArrayType),
               babelwires::SubtypeOrder::IsIntersecting);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayTypeExp, arrayOfDifferentTypeExp),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*arrayType, *arrayOfDifferentType),
               babelwires::SubtypeOrder::IsDisjoint);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayOfDifferentTypeExp, arrayTypeExp),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*arrayOfDifferentType, *arrayType),
               babelwires::SubtypeOrder::IsDisjoint);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayTypeExp, arrayOfDisjointLength),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*arrayType, *arrayOfDisjointLengthType),
               babelwires::SubtypeOrder::IsDisjoint);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(arrayOfDisjointLength, arrayTypeExp),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*arrayOfDisjointLengthType, *arrayType),
               babelwires::SubtypeOrder::IsDisjoint);
 }
 
 TEST(ArrayTypeTest, nodeChanges) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::ValueTreeRoot arrayNode(testEnvironment.m_typeSystem,
-                                           testDomain::TestSimpleArrayType::getThisType());
+                                           testDomain::TestSimpleArrayType::getThisIdentifier());
     arrayNode.setToDefault();
 
     const testDomain::TestSimpleArrayType* arrayType = arrayNode.getType()->as<testDomain::TestSimpleArrayType>();

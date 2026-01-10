@@ -18,11 +18,11 @@ namespace babelwires {
       public:
         using ComponentTypesExps = std::vector<TypeExp>;
 
-        TupleType(const TypeSystem& typeSystem, ComponentTypesExps components);
+        TupleType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, ComponentTypesExps components);
 
         using ComponentTypes = std::vector<TypePtr>;
 
-        TupleType(ComponentTypes components);
+        TupleType(TypeExp&& typeExpOfThis, ComponentTypes components);
 
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 

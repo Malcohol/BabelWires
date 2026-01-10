@@ -50,7 +50,7 @@ const babelwires::TypeExp& babelwires::MapProject::getCurrentTargetTypeExp() con
 
 void babelwires::MapProject::setCurrentSourceTypeExp(const TypeExp& sourceId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
-    const TypePtr& type = sourceId.tryResolve(typeSystem);
+    TypePtr type = sourceId.tryResolve(typeSystem);
     if (!type) {
         // TODO Add type name.
         m_sourceTypeValidity = "The source type is not recognized.";
@@ -73,7 +73,7 @@ void babelwires::MapProject::setCurrentSourceTypeExp(const TypeExp& sourceId) {
 
 void babelwires::MapProject::setCurrentTargetTypeExp(const TypeExp& targetId) {
     const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
-    const TypePtr& type = targetId.tryResolve(typeSystem);
+    TypePtr type = targetId.tryResolve(typeSystem);
     if (!type) {
         // TODO Add type name.
         m_targetTypeValidity = "The target type is not recognized.";
@@ -174,14 +174,24 @@ const babelwires::Result& babelwires::MapProject::getTargetTypeValidity() const 
 
 
 bool babelwires::MapProject::AllowedTypes::isRelatedToSome(const TypeSystem& typeSystem, const TypeExp& typeExp) const {
-    return std::any_of(m_typeExps.begin(), m_typeExps.end(), [typeExp, &typeSystem](const TypeExp& id) {
-        return typeSystem.isRelatedType(id, typeExp);
+    const TypePtr type = typeExp.tryResolve(typeSystem);
+    if (!type) {
+        return false;
+    }
+    return std::any_of(m_typeExps.begin(), m_typeExps.end(), [type, &typeSystem](const TypeExp& id) {
+        const TypePtr idType = id.tryResolve(typeSystem);
+        return idType && typeSystem.isRelatedType(*idType, *type);
     });
 }
 
 bool babelwires::MapProject::AllowedTypes::isSubtypeOfSome(const TypeSystem& typeSystem, const TypeExp& typeExp) const {
+    const TypePtr type = typeExp.tryResolve(typeSystem);
+    if (!type) {
+        return false;
+    }
     return std::any_of(m_typeExps.begin(), m_typeExps.end(),
-                                        [typeExp, &typeSystem](const TypeExp& id) {
-                                            return typeSystem.isSubType(typeExp, id);
+                                        [type, &typeSystem](const TypeExp& id) {
+                                            const TypePtr idType = id.tryResolve(typeSystem);
+                                            return idType && typeSystem.isSubType(*type, *idType);
                                         });
 }

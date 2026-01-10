@@ -30,5 +30,5 @@ babelwires::RecordTypeConstructor::constructType(const TypeSystem& typeSystem, T
         }
     }
 
-    return makeType<ConstructedType<RecordType>>(std::move(newTypeExp), std::move(fields));
+    return makeType<RecordType>(std::move(newTypeExp), std::move(fields));
 }

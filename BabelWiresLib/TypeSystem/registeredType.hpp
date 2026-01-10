@@ -16,14 +16,8 @@
     static babelwires::RegisteredTypeId getThisIdentifier() {                                                          \
         return IDENTIFIER;                                                                                             \
     }                                                                                                                  \
-    static babelwires::TypeExp getThisType() {                                                                         \
-        return getThisIdentifier();                                                                                    \
-    }                                                                                                                  \
     static babelwires::VersionNumber getVersion() {                                                                    \
         return VERSION;                                                                                                \
-    }                                                                                                                  \
-    babelwires::TypeExp getTypeExp() const override {                                                                  \
-        return getThisIdentifier();                                                                                    \
     }
 
 /// A registered type can be directly referenced using a RegisteredTypeId.

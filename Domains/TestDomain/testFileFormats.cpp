@@ -21,7 +21,7 @@ namespace {
 } // namespace
 
 babelwires::TypeExp testDomain::getTestFileType() {
-    return babelwires::FileTypeConstructor::makeTypeExp(TestSimpleRecordType::getThisType());
+    return babelwires::FileTypeConstructor::makeTypeExp(TestSimpleRecordType::getThisIdentifier());
 }
 
 babelwires::Path testDomain::getTestFileElementPathToInt0() {

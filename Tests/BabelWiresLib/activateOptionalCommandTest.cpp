@@ -18,7 +18,7 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(
-        babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisType()));
+        babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisIdentifier()));
     const babelwires::ValueNode* const element =
         testEnvironment.m_project.getNode(elementId)->as<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
@@ -87,7 +87,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoRecord) {
     babelwires::ActivateOptionalCommand command("Test command", 51,
                                                 babelwires::Path::deserializeFromString("qqq/zzz"), opId);
 
-    babelwires::ValueNodeData elementData(testDomain::TestComplexRecordType::getThisType());
+    babelwires::ValueNodeData elementData(testDomain::TestComplexRecordType::getThisIdentifier());
     elementData.m_id = 51;
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
@@ -101,7 +101,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyNoOptional) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(
-        babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisType()));
+        babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisIdentifier()));
 
     const babelwires::Path pathToValue;
 
@@ -118,7 +118,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyFieldNotOptional) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(
-        babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisType()));
+        babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisIdentifier()));
 
     // Not an optional field
     babelwires::ShortId opId("flerm");
@@ -137,7 +137,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyAlreadyActivated) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(
-        babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisType()));
+        babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisIdentifier()));
     babelwires::ValueNode* const element =
         testEnvironment.m_project.getNode(elementId)->as<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);

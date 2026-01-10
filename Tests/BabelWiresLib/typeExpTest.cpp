@@ -78,16 +78,16 @@ TEST(TypeExpTest, resolve) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
-    const testUtils::TestType* testType = typeSystem.addEntry<testUtils::TestType>();
+    const auto testType = typeSystem.addAndGetType<testUtils::TestType>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
         typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
-    babelwires::TypeExp typeExp(testUtils::TestType::getThisType());
+    babelwires::TypeExp typeExp(testUtils::TestType::getThisIdentifier());
 
-    EXPECT_EQ(testType, typeExp.resolve(typeSystem).get());
+    EXPECT_EQ(testType.get(), typeExp.resolve(typeSystem).get());
     babelwires::TypeExp constructedTypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
-                                           testUtils::TestType::getThisType());
-    const babelwires::TypePtr& newType = constructedTypeExp.resolve(typeSystem);
+                                           testUtils::TestType::getThisIdentifier());
+    babelwires::TypePtr newType = constructedTypeExp.resolve(typeSystem);
     EXPECT_EQ(newType->getTypeExp(), constructedTypeExp);
     EXPECT_EQ(constructedTypeExp.resolve(typeSystem).get(), constructedTypeExp.resolve(typeSystem).get());
 }
@@ -96,16 +96,16 @@ TEST(TypeExpTest, tryResolveSuccess) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
-    const testUtils::TestType* testType = typeSystem.addEntry<testUtils::TestType>();
+    const auto testType = typeSystem.addAndGetType<testUtils::TestType>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
         typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
-    babelwires::TypeExp typeExp(testUtils::TestType::getThisType());
-    EXPECT_EQ(testType, typeExp.tryResolve(typeSystem).get());
+    babelwires::TypeExp typeExp(testUtils::TestType::getThisIdentifier());
+    EXPECT_EQ(testType.get(), typeExp.tryResolve(typeSystem).get());
 
     babelwires::TypeExp constructedTypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
-                                           testUtils::TestType::getThisType());
-    const babelwires::TypePtr& newType = constructedTypeExp.tryResolve(typeSystem);
+                                           testUtils::TestType::getThisIdentifier());
+    babelwires::TypePtr newType = constructedTypeExp.tryResolve(typeSystem);
     EXPECT_NE(newType, nullptr);
     EXPECT_EQ(newType->getTypeExp(), constructedTypeExp);
     EXPECT_EQ(constructedTypeExp.tryResolve(typeSystem).get(), constructedTypeExp.tryResolve(typeSystem).get());
@@ -123,7 +123,7 @@ TEST(TypeExpTest, tryResolveParallel) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
-    const testUtils::TestType* testType = typeSystem.addEntry<testUtils::TestType>();
+    const auto testType = typeSystem.addAndGetType<testUtils::TestType>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
         typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
@@ -131,7 +131,7 @@ TEST(TypeExpTest, tryResolveParallel) {
         testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
         babelwires::TypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
                             babelwires::TypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
-                                                testUtils::TestType::getThisType())));
+                                                testUtils::TestType::getThisIdentifier())));
 
     std::vector<std::tuple<babelwires::TypeExp, babelwires::TypePtr>> vectorOfResolutions;
     for (int i = 0; i < 1000; ++i) {
@@ -155,7 +155,7 @@ TEST(TypeExpTest, tryResolveMixed) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
-    const testUtils::TestType* testType = typeSystem.addEntry<testUtils::TestType>();
+    const auto testType = typeSystem.addAndGetType<testUtils::TestType>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
         typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
     const testUtils::TestMixedTypeConstructor* mixedConstructor =
@@ -164,10 +164,10 @@ TEST(TypeExpTest, tryResolveMixed) {
     babelwires::TypeExp constructedTestTypeExp(
         testUtils::TestMixedTypeConstructor::getThisIdentifier(),
         {{babelwires::TypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
-                              testUtils::TestType::getThisType())},
+                              testUtils::TestType::getThisIdentifier())},
          {babelwires::StringValue(" is this string")}});
 
-    const babelwires::TypePtr& constructedTestType = constructedTestTypeExp.resolve(typeSystem);
+    babelwires::TypePtr constructedTestType = constructedTestTypeExp.resolve(typeSystem);
     const testUtils::TestType* const newTestType = constructedTestType->as<testUtils::TestType>();
     ASSERT_NE(newTestType, nullptr);
     EXPECT_EQ(newTestType->m_defaultValue, "Default value is this string");

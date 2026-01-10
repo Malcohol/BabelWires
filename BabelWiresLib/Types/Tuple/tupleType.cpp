@@ -11,15 +11,17 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleValue.hpp>
 
-babelwires::TupleType::TupleType(const TypeSystem& typeSystem, ComponentTypesExps components) {
+babelwires::TupleType::TupleType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, ComponentTypesExps components)
+    : Type(std::move(typeExpOfThis)) {
     m_componentTypes.reserve(components.size());
     for (const auto& c : components) {
         m_componentTypes.emplace_back(c.resolve(typeSystem));
     }
 }
 
-babelwires::TupleType::TupleType(ComponentTypes components)
-    : m_componentTypes(std::move(components)) {
+babelwires::TupleType::TupleType(TypeExp&& typeExpOfThis, ComponentTypes components)
+    : Type(std::move(typeExpOfThis))
+    , m_componentTypes(std::move(components)) {
 }
 
 babelwires::NewValueHolder babelwires::TupleType::createValue(const TypeSystem& typeSystem) const {
@@ -40,7 +42,7 @@ bool babelwires::TupleType::visitValue(const TypeSystem& typeSystem, const Value
         return false;
     }
     for (unsigned int i = 0; i < m_componentTypes.size(); ++i) {
-        if (!visitor(typeSystem, m_componentTypes[i]->getTypeExp(), *tuple->getValue(i), i)) {
+        if (!visitor(typeSystem, m_componentTypes[i], *tuple->getValue(i), i)) {
             return false;
         }
     }
@@ -62,23 +64,13 @@ std::optional<babelwires::SubtypeOrder> babelwires::TupleType::compareSubtypeHel
     if (!otherTupleType) {
         return {};
     }
-    std::vector<TypeExp> componentsA;
-    componentsA.reserve(m_componentTypes.size());
-    for (const auto& c : m_componentTypes) {
-        componentsA.emplace_back(c->getTypeExp());
-    }
-    std::vector<TypeExp> componentsB;
-    componentsB.reserve(otherTupleType->m_componentTypes.size());
-    for (const auto& c : otherTupleType->m_componentTypes) {
-        componentsB.emplace_back(c->getTypeExp());
-    }
   
-    if (componentsA.size() != componentsB.size()) {
+    if (m_componentTypes.size() != otherTupleType->m_componentTypes.size()) {
         return SubtypeOrder::IsDisjoint;
     }
     SubtypeOrder order = SubtypeOrder::IsEquivalent;
-    for (int i = 0; i < componentsA.size(); ++i) {
-        const SubtypeOrder componentOrder = typeSystem.compareSubtype(componentsA[i], componentsB[i]);
+    for (int i = 0; i < m_componentTypes.size(); ++i) {
+        const SubtypeOrder componentOrder = typeSystem.compareSubtype(*m_componentTypes[i], *otherTupleType->m_componentTypes[i]);
         order = subtypeProduct(order, componentOrder);
     }
     return order;

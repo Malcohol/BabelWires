@@ -408,7 +408,7 @@ TEST(ContentsCacheTest, inputFeatureOnly) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
-                                           testDomain::TestComplexRecordType::getThisType());
+                                           testDomain::TestComplexRecordType::getThisIdentifier());
     inputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
 
@@ -423,7 +423,7 @@ TEST(ContentsCacheTest, outputFeatureOnly) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
-                                            testDomain::TestComplexRecordType::getThisType());
+                                            testDomain::TestComplexRecordType::getThisIdentifier());
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
 
@@ -437,9 +437,9 @@ TEST(ContentsCacheTest, inputAndOutputFeature) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
-                                           testDomain::TestComplexRecordType::getThisType());
+                                           testDomain::TestComplexRecordType::getThisIdentifier());
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
-                                            testDomain::TestComplexRecordType::getThisType());
+                                            testDomain::TestComplexRecordType::getThisIdentifier());
     inputFeature.setToDefault();
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
@@ -455,9 +455,9 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
-                                           testDomain::TestComplexRecordType::getThisType());
+                                           testDomain::TestComplexRecordType::getThisIdentifier());
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
-                                            testDomain::TestComplexRecordType::getThisType());
+                                            testDomain::TestComplexRecordType::getThisIdentifier());
 
     inputFeature.setToDefault();
     outputFeature.setToDefault();
@@ -519,9 +519,9 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
-                                           testDomain::TestComplexRecordType::getThisType());
+                                           testDomain::TestComplexRecordType::getThisIdentifier());
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
-                                            testDomain::TestComplexRecordType::getThisType());
+                                            testDomain::TestComplexRecordType::getThisIdentifier());
 
     inputFeature.setToDefault();
     outputFeature.setToDefault();
@@ -784,7 +784,7 @@ TEST(ContentsCacheTest, unassignedTypeVariables_noAssignments) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot valueTree(testEnvironment.m_projectContext.m_typeSystem,
-                                        testDomain::TestGenericType::getThisType());
+                                        testDomain::TestGenericType::getThisIdentifier());
     valueTree.setToDefault();
 
     babelwires::ValueTreeNode& nestedGenericTypeNode =
@@ -824,14 +824,14 @@ TEST(ContentsCacheTest, unassignedTypeVariables_noAssignments) {
             {
                 babelwires::SetTypeVariableModifierData data;
                 data.m_typeAssignments.resize(2);
-                data.m_typeAssignments[0] = tAssigned ? babelwires::StringType::getThisType() : babelwires::TypeExp();
-                data.m_typeAssignments[1] = uAssigned ? babelwires::StringType::getThisType() : babelwires::TypeExp();
+                data.m_typeAssignments[0] = tAssigned ? babelwires::StringType::getThisIdentifier() : babelwires::TypeExp();
+                data.m_typeAssignments[1] = uAssigned ? babelwires::StringType::getThisIdentifier() : babelwires::TypeExp();
                 data.apply(&valueTree);
 
                 babelwires::SetTypeVariableModifierData nestedData;
                 nestedData.m_typeAssignments.resize(1);
                 nestedData.m_typeAssignments[0] =
-                    nestedTAssigned ? babelwires::StringType::getThisType() : babelwires::TypeExp();
+                    nestedTAssigned ? babelwires::StringType::getThisIdentifier() : babelwires::TypeExp();
                 nestedData.apply(&nestedGenericTypeNode);
             }
 

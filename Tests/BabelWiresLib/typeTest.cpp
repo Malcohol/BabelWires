@@ -34,7 +34,7 @@ TEST(TypeTest, typePtrTest)
     babelwires::TypeSystem typeSystem;
     testUtils::TestLog log;
 
-    typeSystem.addEntry<babelwires::StringType>();
+    typeSystem.addType<babelwires::StringType>();
     typeSystem.addTypeConstructor<babelwires::ArrayTypeConstructor>();
 
     babelwires::TypeExp arrayOfStringsExp = babelwires::ArrayTypeConstructor::makeTypeExp(

@@ -15,7 +15,8 @@ namespace babelwires {
     class ArrayType : public CompoundType {
       public:
         /// An initialSize of -1 means the initial size is the minimum size.
-        ArrayType(TypePtr entryType, unsigned int minimumSize, unsigned int maximumSize, int initialSize = -1);
+        ArrayType(TypeExp&& typeExpOfThis, TypePtr entryType, unsigned int minimumSize, unsigned int maximumSize,
+                  int initialSize = -1);
 
         /// Get the valid size range of this array.
         Range<unsigned int> getSizeRange() const;
@@ -23,7 +24,7 @@ namespace babelwires {
         /// Get the size of a newly initialized value of this array.
         unsigned int getInitialSize() const;
 
-        TypeExp getEntryType() const;
+        const TypePtr& getEntryType() const;
 
         std::string getFlavour() const override;
 
@@ -42,10 +43,10 @@ namespace babelwires {
 
       public:
         unsigned int getNumChildren(const ValueHolder& compoundValue) const override;
-        std::tuple<const ValueHolder*, PathStep, TypeExp> getChild(const ValueHolder& compoundValue,
+        std::tuple<const ValueHolder*, PathStep, const TypePtr&> getChild(const ValueHolder& compoundValue,
                                                                           unsigned int i) const override;
-        std::tuple<ValueHolder*, PathStep, TypeExp> getChildNonConst(ValueHolder& compoundValue,
-                                                                            unsigned int i) const override;
+        std::tuple<ValueHolder*, PathStep, const TypePtr&> getChildNonConst(ValueHolder& compoundValue,
+                            unsigned int i) const override;
         int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const override;
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
 

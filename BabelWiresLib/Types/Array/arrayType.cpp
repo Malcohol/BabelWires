@@ -12,8 +12,9 @@
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
-babelwires::ArrayType::ArrayType(TypePtr entryType, unsigned int minimumSize, unsigned int maximumSize, int initialSize)
-    : m_entryType(std::move(entryType))
+babelwires::ArrayType::ArrayType(TypeExp&& typeExpOfThis, TypePtr entryType, unsigned int minimumSize, unsigned int maximumSize, int initialSize)
+    : CompoundType(std::move(typeExpOfThis))
+    , m_entryType(std::move(entryType))
     , m_minimumSize(minimumSize)
     , m_maximumSize(maximumSize)
     , m_initialSize((initialSize >= static_cast<int>(minimumSize)) ? initialSize : minimumSize) {
@@ -75,8 +76,8 @@ void babelwires::ArrayType::removeEntries(ValueHolder& value, unsigned int index
     }
 }
 
-babelwires::TypeExp babelwires::ArrayType::getEntryType() const {
-    return m_entryType->getTypeExp();
+const babelwires::TypePtr& babelwires::ArrayType::getEntryType() const {
+    return m_entryType;
 }
 
 babelwires::NewValueHolder babelwires::ArrayType::createValue(const TypeSystem& typeSystem) const {
@@ -94,7 +95,7 @@ bool babelwires::ArrayType::visitValue(const TypeSystem& typeSystem, const Value
         return false;
     }
     for (unsigned int i = 0; i < size; ++i) {
-        if (!visitor(typeSystem, m_entryType->getTypeExp(), *arrayValue->getValue(i), i)) {
+        if (!visitor(typeSystem, m_entryType, *arrayValue->getValue(i), i)) {
             return false;
         }
     }
@@ -112,7 +113,7 @@ std::optional<babelwires::SubtypeOrder> babelwires::ArrayType::compareSubtypeHel
         return {};
     }
     const SubtypeOrder rangeOrder = subtypeFromRanges(getSizeRange(), otherArray->getSizeRange());
-    const SubtypeOrder entryOrder = typeSystem.compareSubtype(m_entryType->getTypeExp(), otherArray->getEntryType());
+    const SubtypeOrder entryOrder = typeSystem.compareSubtype(*m_entryType, *otherArray->getEntryType());
     return subtypeProduct(rangeOrder, entryOrder);
 }
 
@@ -121,14 +122,16 @@ unsigned int babelwires::ArrayType::getNumChildren(const ValueHolder& compoundVa
     return arrayValue.getSize();
 }
 
-std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp> babelwires::ArrayType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
+std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>
+babelwires::ArrayType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
     const ArrayValue& arrayValue = compoundValue->is<ArrayValue>();
-    return {&arrayValue.getValue(i), i, m_entryType->getTypeExp()};
+    return {&arrayValue.getValue(i), i, m_entryType};
 }
 
-std::tuple<babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp> babelwires::ArrayType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
+std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>
+babelwires::ArrayType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
     ArrayValue& arrayValue = compoundValue.copyContentsAndGetNonConst().is<ArrayValue>();
-    return {&arrayValue.getValue(i), i, m_entryType->getTypeExp()};
+    return {&arrayValue.getValue(i), i, m_entryType};
 }
 
 int babelwires::ArrayType::getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const {

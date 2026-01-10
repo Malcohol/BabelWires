@@ -33,6 +33,8 @@ namespace testUtils {
 
         /// 0 == unbounded.
         TestType(unsigned int maximumLength = 0, std::string defaultValue = "Default value");
+        
+        TestType(babelwires::TypeExp&& typeExpOfThis, unsigned int maximumLength = 0, std::string defaultValue = "Default value");
 
         babelwires::NewValueHolder createValue(const babelwires::TypeSystem& typeSystem) const override;
         bool visitValue(const babelwires::TypeSystem& typeSystem, const babelwires::Value& value,

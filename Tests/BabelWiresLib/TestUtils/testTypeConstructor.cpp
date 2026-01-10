@@ -11,8 +11,7 @@ babelwires::TypePtr testUtils::TestUnaryTypeConstructor::constructType(
     if (!sourceType) {
         throw new babelwires::TypeSystemException();
     }
-    return babelwires::makeType<babelwires::ConstructedType<TestType>>(std::move(newTypeExp),
-                                                                   sourceType->m_maximumLength + 1);
+    return babelwires::makeType<TestType>(std::move(newTypeExp), sourceType->m_maximumLength + 1);
 }
 
 babelwires::TypePtr testUtils::TestBinaryTypeConstructor::constructType(
@@ -25,8 +24,8 @@ babelwires::TypePtr testUtils::TestBinaryTypeConstructor::constructType(
     if (!sourceType0 || !sourceType1) {
         throw new babelwires::TypeSystemException();
     }
-    return babelwires::makeType<babelwires::ConstructedType<TestType>>(
-        std::move(newTypeExp), sourceType0->m_maximumLength + sourceType1->m_maximumLength);
+    return babelwires::makeType<TestType>(std::move(newTypeExp),
+                                          sourceType0->m_maximumLength + sourceType1->m_maximumLength);
 }
 
 babelwires::TypePtr testUtils::TestMixedTypeConstructor::constructType(
@@ -43,7 +42,6 @@ babelwires::TypePtr testUtils::TestMixedTypeConstructor::constructType(
     assert(stringValue != nullptr);
 
     // Remember the typeExp, since there's no way to reconstruct it.
-    return babelwires::makeType<babelwires::ConstructedType<TestType>>(
-        std::move(newTypeExp), testType->m_maximumLength + stringValue->get().size(),
-        testType->m_defaultValue + stringValue->get());
+    return babelwires::makeType<TestType>(std::move(newTypeExp), testType->m_maximumLength + stringValue->get().size(),
+                                          testType->m_defaultValue + stringValue->get());
 }

@@ -20,10 +20,11 @@ namespace babelwires {
     /// supertype relationship).
     class MapType : public Type {
       public:
-        MapType(const TypeSystem& typeSystem, TypeExp sourceTypeExp, TypeExp targetTypeExp, MapEntryData::Kind defaultFallbackKind = MapEntryData::Kind::All21);
+        MapType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, TypeExp sourceTypeExp, TypeExp targetTypeExp,
+                MapEntryData::Kind defaultFallbackKind = MapEntryData::Kind::All21);
 
         /// Constructor when you have TypePtrs.
-        MapType(TypePtr sourceType, TypePtr targetType, MapEntryData::Kind defaultFallbackKind);
+        MapType(TypeExp&& typeExpOfThis, TypePtr sourceType, TypePtr targetType, MapEntryData::Kind defaultFallbackKind);
 
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 

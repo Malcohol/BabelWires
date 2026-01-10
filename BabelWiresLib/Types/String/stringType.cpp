@@ -8,6 +8,10 @@
 #include <BabelWiresLib/Types/String/stringType.hpp>
 
 #include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/TypeSystem/registeredType.hpp>
+
+babelwires::StringType::StringType()
+    : Type(getThisIdentifier()) {}
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 

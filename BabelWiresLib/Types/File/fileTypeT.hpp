@@ -20,13 +20,11 @@ namespace babelwires {
     template <typename T> class FileTypeT : public FileType {
       public:
         FileTypeT()
-            : FileType(T::getThisType()) {}
+            : FileType(T::getThisIdentifier()) {}
 
-        static babelwires::TypeExp getThisType() {
-            return babelwires::FileTypeConstructor::makeTypeExp(T::getThisType());
+        static babelwires::TypeExp getThisIdentifier() {
+            return babelwires::FileTypeConstructor::makeTypeExp(T::getThisIdentifier());
         }
-
-        TypeExp getTypeExp() const override { return getThisType(); }
 
         /// Implementation Note: Cannot use FileType<T> here because the FileTypeConstructor does not construct
         /// instances of this template but instances of the parent FileType class.

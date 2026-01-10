@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Types/File/fileType.hpp>
 
-babelwires::FileType::FileType(const TypeSystem& typeSystem, TypeExp typeOfContents)
-    : RecordType(typeSystem, {{getStepToContents(), typeOfContents}}) {}
+babelwires::FileType::FileType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, TypeExp typeOfContents)
+    : RecordType(std::move(typeExpOfThis), typeSystem, {{getStepToContents(), typeOfContents}}) {}
 
 std::string babelwires::FileType::getFlavour() const {
     return "";

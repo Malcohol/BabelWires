@@ -46,7 +46,7 @@ TEST(EnumUnionTypeConstructorTest, makeTypeExp) {
     babelwires::TypeExp typeExp = babelwires::EnumUnionTypeConstructor::makeTypeExp(
         testDomain::TestSubSubEnum1::getThisIdentifier(), testDomain::TestSubSubEnum2::getThisIdentifier());
 
-    const babelwires::TypePtr& newType = typeExp.tryResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr newType = typeExp.tryResolve(testEnvironment.m_typeSystem);
 
     ASSERT_NE(newType, nullptr);
     EXPECT_EQ(newType->getTypeExp(), babelwires::TypeExp(babelwires::EnumUnionTypeConstructor::getThisIdentifier(),

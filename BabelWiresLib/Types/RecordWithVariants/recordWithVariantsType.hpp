@@ -29,7 +29,7 @@ namespace babelwires {
 
         /// The tags vector provides the tags in their preferred order.
         /// The tags used in the fields vector must be found in the tags vector.
-        RecordWithVariantsType(const TypeSystem& typeSystem, Tags tags, std::vector<FieldWithTags> fields, unsigned int defaultTagIndex = 0);
+        RecordWithVariantsType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, Tags tags, std::vector<FieldWithTags> fields, unsigned int defaultTagIndex = 0);
 
         // For now, this has a separate flavour from RecordType.
         std::string getFlavour() const override;
@@ -59,10 +59,10 @@ namespace babelwires {
         bool visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const override;
 
         unsigned int getNumChildren(const ValueHolder& compoundValue) const override;
-        std::tuple<const ValueHolder*, PathStep, TypeExp> getChild(const ValueHolder& compoundValue,
+        std::tuple<const ValueHolder*, PathStep, const TypePtr&> getChild(const ValueHolder& compoundValue,
                                                                    unsigned int i) const override;
-        std::tuple<ValueHolder*, PathStep, TypeExp> getChildNonConst(ValueHolder& compoundValue,
-                                                                     unsigned int i) const override;
+        std::tuple<ValueHolder*, PathStep, const TypePtr&> getChildNonConst(ValueHolder& compoundValue,
+                           unsigned int i) const override;
         int getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const override;
         std::optional<SubtypeOrder> compareSubtypeHelper(const TypeSystem& typeSystem,
                                                          const Type& other) const override;

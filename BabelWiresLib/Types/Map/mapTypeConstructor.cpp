@@ -23,7 +23,7 @@ babelwires::MapTypeConstructor::extractValueArguments(const TypeSystem& typeSyst
     }
 
     if (const EnumValue* enumValue = valueArguments[0]->as<EnumValue>()) {
-        const auto mapEntryFallbackKind = typeSystem.getEntryByType<MapEntryFallbackKind>();
+        const auto mapEntryFallbackKind = typeSystem.getRegisteredType<MapEntryFallbackKind>();
         return mapEntryFallbackKind->getValueFromIdentifier(enumValue->get());
     } else {
         throw TypeSystemException() << "Value argument 0 given to MapTypeConstructor was not a MapEntryFallbackKind";
@@ -39,8 +39,7 @@ babelwires::MapTypeConstructor::constructType(const TypeSystem& typeSystem, Type
                                     << arguments.getTypeArguments().size();
     }
     babelwires::MapEntryData::Kind kind = extractValueArguments(typeSystem, arguments.getValueArguments());
-    return makeType<ConstructedType<MapType>>(std::move(newTypeExp), resolvedTypeArguments[0], resolvedTypeArguments[1],
-                                              kind);
+    return makeType<MapType>(std::move(newTypeExp), resolvedTypeArguments[0], resolvedTypeArguments[1], kind);
 }
 
 babelwires::TypeExp babelwires::MapTypeConstructor::makeTypeExp(TypeExp sourceTypeExp, TypeExp targetTypeExp,

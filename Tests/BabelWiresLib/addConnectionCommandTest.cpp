@@ -20,8 +20,8 @@
 TEST(AddConnectionCommandTest, addConnection) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::NodeId targetNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisType()));
-    const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisType()));
+    const babelwires::NodeId targetNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisIdentifier()));
+    const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisIdentifier()));
 
     babelwires::ValueAssignmentData assignSourceData(babelwires::IntValue(13));
     assignSourceData.m_targetPath = testDomain::TestSimpleRecordElementData().getPathToRecordInt0();
@@ -88,7 +88,7 @@ TEST(AddConnectionCommandTest, failSafelyNoTargetElement) {
 TEST(AddConnectionCommandTest, failSafelyNoSourceElement) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::NodeId targetNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisType()));
+    const babelwires::NodeId targetNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisIdentifier()));
 
     babelwires::ConnectionModifierData connectionData;
     connectionData.m_targetPath = babelwires::Path();
@@ -103,8 +103,8 @@ TEST(AddConnectionCommandTest, failSafelyNoSourceElement) {
 TEST(AddConnectionCommandTest, failSafelyNoTargetPath) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::NodeId targetNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisType()));
-    const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisType()));
+    const babelwires::NodeId targetNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisIdentifier()));
+    const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisIdentifier()));
 
     babelwires::ConnectionModifierData connectionData;
     connectionData.m_targetPath = babelwires::Path::deserializeFromString("qqq/zzz");
@@ -119,8 +119,8 @@ TEST(AddConnectionCommandTest, failSafelyNoTargetPath) {
 TEST(AddConnectionCommandTest, failSafelyNoSourcePath) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::NodeId targetNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisType()));
-    const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisType()));
+    const babelwires::NodeId targetNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisIdentifier()));
+    const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisIdentifier()));
 
     babelwires::ConnectionModifierData connectionData;
     connectionData.m_targetPath = babelwires::Path();
@@ -145,14 +145,14 @@ namespace {
 
         const babelwires::TypeExp& typeAssignment0 = genericType->getTypeAssignment(input->getValue(), 0);
         if (var0Instantiated) {
-            EXPECT_EQ(typeAssignment0, babelwires::DefaultIntType::getThisType());
+            EXPECT_EQ(typeAssignment0, babelwires::DefaultIntType::getThisIdentifier());
         } else {
             EXPECT_EQ(typeAssignment0, babelwires::TypeExp());
         }
 
         const babelwires::TypeExp& typeAssignment1 = genericType->getTypeAssignment(input->getValue(), 1);
         if (var1Instantiated) {
-            EXPECT_EQ(typeAssignment1, testDomain::TestSimpleRecordType::getThisType());
+            EXPECT_EQ(typeAssignment1, testDomain::TestSimpleRecordType::getThisIdentifier());
         } else {
             EXPECT_EQ(typeAssignment1, babelwires::TypeExp());
         }
@@ -179,7 +179,7 @@ namespace {
 
         const babelwires::TypeExp& typeAssignment0 = genericType->getTypeAssignment(nestedGenericNodeTree->getValue(), 0);
         if (varInstantiated) {
-            EXPECT_EQ(typeAssignment0, babelwires::StringType::getThisType());
+            EXPECT_EQ(typeAssignment0, babelwires::StringType::getThisIdentifier());
         } else {
             EXPECT_EQ(typeAssignment0, babelwires::TypeExp());
         }
@@ -197,8 +197,8 @@ TEST(AddConnectionCommandTest, connectToTypeVariable) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::TypeSystem& typeSystem = testEnvironment.m_typeSystem;
 
-    const babelwires::NodeId genericNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestGenericType::getThisType()));
-    const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisType()));
+    const babelwires::NodeId genericNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestGenericType::getThisIdentifier()));
+    const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisIdentifier()));
 
     babelwires::ConnectionModifierData connectionData;
     connectionData.m_targetPath = testDomain::TestGenericType::getPathToNestedX();
@@ -225,13 +225,13 @@ TEST(AddConnectionCommandTest, connectToAnotherTypeVariable) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::TypeSystem& typeSystem = testEnvironment.m_typeSystem;
 
-    const babelwires::NodeId genericNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestGenericType::getThisType()));
-    const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisType()));
+    const babelwires::NodeId genericNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestGenericType::getThisIdentifier()));
+    const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisIdentifier()));
     testEnvironment.m_project.process();
 
     babelwires::SetTypeVariableModifierData setFirstVariableData;
     setFirstVariableData.m_targetPath = babelwires::Path();
-    setFirstVariableData.m_typeAssignments.push_back(babelwires::DefaultIntType::getThisType());
+    setFirstVariableData.m_typeAssignments.push_back(babelwires::DefaultIntType::getThisIdentifier());
     setFirstVariableData.m_typeAssignments.push_back(babelwires::TypeExp());
     testEnvironment.m_project.addModifier(genericNodeId, setFirstVariableData);
     testEnvironment.m_project.process();
@@ -259,8 +259,8 @@ TEST(AddConnectionCommandTest, compoundConnectionToGenericType) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::TypeSystem& typeSystem = testEnvironment.m_typeSystem;
 
-    const babelwires::NodeId genericNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestGenericType::getThisType()));
-    const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleCompoundType::getThisType()));
+    const babelwires::NodeId genericNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestGenericType::getThisIdentifier()));
+    const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleCompoundType::getThisIdentifier()));
     testEnvironment.m_project.process();
 
     babelwires::ConnectionModifierData connectionData;

@@ -25,7 +25,7 @@
 namespace {
     // Describes an IntType -> IntType map.
     template <typename SOURCE_TYPE, typename TARGET_TYPE> babelwires::TypeExp getTestMapTypeExp() {
-        return babelwires::MapTypeConstructor::makeTypeExp(SOURCE_TYPE::getThisType(), TARGET_TYPE::getThisType());
+        return babelwires::MapTypeConstructor::makeTypeExp(SOURCE_TYPE::getThisIdentifier(), TARGET_TYPE::getThisIdentifier());
     }
 } // namespace
 
@@ -59,7 +59,7 @@ TEST(MapFeatureTest, isCompatible) {
     babelwires::ValueTreeRoot mapFeature2(testEnvironment.m_typeSystem,
                                                getTestMapTypeExp<babelwires::StringType, babelwires::DefaultIntType>());
     babelwires::ValueTreeRoot intFeature(testEnvironment.m_typeSystem,
-                                              babelwires::DefaultIntType::getThisType());
+                                              babelwires::DefaultIntType::getThisIdentifier());
 
     EXPECT_EQ(mapFeature1.getFlavour(), mapFeature2.getFlavour());
     EXPECT_NE(mapFeature1.getFlavour(), intFeature.getFlavour());

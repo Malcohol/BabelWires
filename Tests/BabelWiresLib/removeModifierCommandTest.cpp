@@ -121,12 +121,12 @@ TEST(RemoveModifierCommandTest, executeAndUndoOptionals) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(
-        babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisType()));
+        babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisIdentifier()));
 
     const babelwires::NodeId sourceId = testEnvironment.m_project.addNode(
-        babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisType()));
+        babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisIdentifier()));
     const babelwires::NodeId targetId = testEnvironment.m_project.addNode(
-        babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisType()));
+        babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisIdentifier()));
 
     const babelwires::ValueNode* const element =
         testEnvironment.m_project.getNode(elementId)->as<babelwires::ValueNode>();

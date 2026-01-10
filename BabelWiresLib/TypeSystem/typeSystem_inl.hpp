@@ -8,7 +8,7 @@
 #pragma once
 
 template<unsigned int N>
-const babelwires::TypeConstructor<N>* babelwires::TypeSystem::tryGetTypeConstructor(TypeConstructorId id) const {
+const babelwires::TypeConstructor<N>* babelwires::TypeSystem::tryGetTypeConstructorById(TypeConstructorId id) const {
     auto it = std::get<N-1>(m_typeConstructorRegistry).find(id);
     if (it != std::get<N-1>(m_typeConstructorRegistry).end()) {
         return std::get<0>(it->second).get();
@@ -17,7 +17,7 @@ const babelwires::TypeConstructor<N>* babelwires::TypeSystem::tryGetTypeConstruc
 }
 
 template<unsigned int N>
-const babelwires::TypeConstructor<N>& babelwires::TypeSystem::getTypeConstructor(TypeConstructorId id) const {
+const babelwires::TypeConstructor<N>& babelwires::TypeSystem::getTypeConstructorById(TypeConstructorId id) const {
     auto it = std::get<N-1>(m_typeConstructorRegistry).find(id);
     assert((it != std::get<N-1>(m_typeConstructorRegistry).end()) && "TypeConstructor not registered in type system");
     return *std::get<0>(it->second);

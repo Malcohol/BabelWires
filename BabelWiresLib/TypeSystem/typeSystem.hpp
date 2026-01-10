@@ -8,16 +8,14 @@
 #pragma once
 
 #include <BabelWiresLib/TypeSystem/type.hpp>
-#include <BabelWiresLib/TypeSystem/typePtr.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
+#include <BabelWiresLib/TypeSystem/typePtr.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
 
 namespace babelwires {
-    class TypeExp;
-
     class TypeSystem {
       public:
         TypeSystem();
@@ -25,44 +23,56 @@ namespace babelwires {
 
         template <typename TYPE, typename... ARGS,
                   std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
-        const TYPE* addEntry(ARGS&&... args) {
-            const Type* newType = addRegisteredType(TYPE::getThisIdentifier(), TYPE::getVersion(), makeType<TYPE>(std::forward<ARGS>(args)...));
-            return &newType->is<TYPE>();
+        void addType(ARGS&&... args) {
+            addRegisteredType(TYPE::getThisIdentifier(), TYPE::getVersion(),
+                              makeType<TYPE>(std::forward<ARGS>(args)...));
+        }
+
+        template <typename TYPE, typename... ARGS,
+                  std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
+        TypePtrT<TYPE> addAndGetType(ARGS&&... args) {
+            TypePtr newType = makeType<TYPE>(std::forward<ARGS>(args)...);
+            TypePtrT<TYPE> newTypeAs = typeAs<TYPE>(newType);
+            addRegisteredType(TYPE::getThisIdentifier(), TYPE::getVersion(), std::move(newType));
+            return newTypeAs;
         }
 
         template <typename TYPE, std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
-        TypePtrT<TYPE> getEntryByType() const {
-            return typeAs<TYPE>(getRegisteredType(TYPE::getThisIdentifier()));
+        TypePtrT<TYPE> getRegisteredType() const {
+            return typeAs<TYPE>(getRegisteredTypeById(TYPE::getThisIdentifier()));
         }
 
-        TypePtr tryGetRegisteredType(RegisteredTypeId id) const;
-        TypePtr getRegisteredType(RegisteredTypeId id) const;
+        TypePtr tryGetRegisteredTypeById(RegisteredTypeId id) const;
+        TypePtr getRegisteredTypeById(RegisteredTypeId id) const;
 
         template <typename TYPE_CONSTRUCTOR, typename... ARGS,
                   std::enable_if_t<std::is_base_of_v<TypeConstructor, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
         TYPE_CONSTRUCTOR* addTypeConstructor(ARGS&&... args) {
-            TypeConstructor* newType = addTypeConstructorInternal(TYPE_CONSTRUCTOR::getThisIdentifier(), TYPE_CONSTRUCTOR::getVersion(), std::make_unique<TYPE_CONSTRUCTOR>(std::forward<ARGS>(args)...));
+            TypeConstructor* newType =
+                addTypeConstructorInternal(TYPE_CONSTRUCTOR::getThisIdentifier(), TYPE_CONSTRUCTOR::getVersion(),
+                                           std::make_unique<TYPE_CONSTRUCTOR>(std::forward<ARGS>(args)...));
             return &newType->template is<TYPE_CONSTRUCTOR>();
         }
 
-        template <typename TYPE_CONSTRUCTOR, std::enable_if_t<std::is_base_of_v<TypeConstructor, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
-        const TYPE_CONSTRUCTOR& getTypeConstructorByType() const {
-            return getTypeConstructor(TYPE_CONSTRUCTOR::getThisIdentifier()).template is<TYPE_CONSTRUCTOR>();
+        template <typename TYPE_CONSTRUCTOR,
+                  std::enable_if_t<std::is_base_of_v<TypeConstructor, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
+        const TYPE_CONSTRUCTOR& getRegisteredTypeConstructor() const {
+            return getTypeConstructorById(TYPE_CONSTRUCTOR::getThisIdentifier()).template is<TYPE_CONSTRUCTOR>();
         }
 
-        const TypeConstructor* tryGetTypeConstructor(TypeConstructorId id) const;
-        const TypeConstructor& getTypeConstructor(TypeConstructorId id) const;
-
-        using TypeIdSet = std::vector<RegisteredTypeId>;
+        const TypeConstructor* tryGetTypeConstructorById(TypeConstructorId id) const;
+        const TypeConstructor& getTypeConstructorById(TypeConstructorId id) const;
 
         /// Determine how typeA and typeB are related by the subtype order.
-        SubtypeOrder compareSubtype(const TypeExp& typeExpA, const TypeExp& typeExpB) const;
+        SubtypeOrder compareSubtype(const Type& typeA, const Type& typeB) const;
 
         /// Confirm whether typeExpA is a subtype of typeExpB (equality is allowed).
-        bool isSubType(const TypeExp& typeExpA, const TypeExp& typeExpB) const;
+        bool isSubType(const Type& typeA, const Type& typeB) const;
 
         /// Do the two types have some values in common?
-        bool isRelatedType(const TypeExp& typeExpA, const TypeExp& typeExpB) const;
+        bool isRelatedType(const Type& typeA, const Type& typeB) const;
+
+        using TypeIdSet = std::vector<RegisteredTypeId>;
 
         TypeIdSet getAllRegisteredTypes() const;
 
@@ -70,8 +80,9 @@ namespace babelwires {
         TypeIdSet getTaggedRegisteredTypes(Type::Tag tag) const;
 
       protected:
-        const Type* addRegisteredType(LongId typeId, VersionNumber version, TypePtr newType);
-        TypeConstructor* addTypeConstructorInternal(TypeConstructorId typeConstructorId, VersionNumber version, std::unique_ptr<TypeConstructor> newTypeConstructor);
+        void addRegisteredType(LongId typeId, VersionNumber version, TypePtr newType);
+        TypeConstructor* addTypeConstructorInternal(TypeConstructorId typeConstructorId, VersionNumber version,
+                                                    std::unique_ptr<TypeConstructor> newTypeConstructor);
 
       protected:
         using RegisteredTypeInfo = std::tuple<TypePtr, VersionNumber>;

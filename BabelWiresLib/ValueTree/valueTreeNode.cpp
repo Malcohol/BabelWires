@@ -203,8 +203,8 @@ void babelwires::ValueTreeNode::initializeChildren(const TypeSystem& typeSystem)
 
     const unsigned int numChildrenNow = compound->getNumChildren(value);
     for (unsigned int i = 0; i < numChildrenNow; ++i) {
-        auto [childValue, step, childTypeExp] = compound->getChild(value, i);
-        auto child = std::make_unique<ValueTreeChild>(childTypeExp.resolve(typeSystem), *childValue, this);
+        auto [childValue, step, childType] = compound->getChild(value, i);
+        auto child = std::make_unique<ValueTreeChild>(childType, *childValue, this);
         child->initializeChildren(typeSystem);
         m_children.insert_or_assign(step, i, std::move(child));
     }
@@ -226,15 +226,15 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
 
         struct NewChildInfo {
             const ValueHolder* m_value;
-            TypeExp m_typeExp;
+            const TypePtr& m_typePtr;
             unsigned int m_index;
         };
 
         std::map<PathStep, NewChildInfo> otherValues;
         unsigned int newNumChildren = compound->getNumChildren(other);
         for (unsigned int i = 0; i < newNumChildren; ++i) {
-            auto [child, step, childTypeExp] = compound->getChild(other, i);
-            otherValues.emplace(std::pair{step, NewChildInfo{child, childTypeExp, i}});
+            auto [child, step, childType] = compound->getChild(other, i);
+            otherValues.emplace(std::pair{step, NewChildInfo{child, childType, i}});
         }
 
         auto currentIt = currentChildren.begin();
@@ -244,7 +244,7 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
         // TODO newChildMap.reserve(newNumChildren);
 
         auto addNewChild = [this, &typeSystem, &newChildMap](const auto& otherIt) {
-            auto child = std::make_unique<ValueTreeChild>(otherIt->second.m_typeExp.resolve(typeSystem), *otherIt->second.m_value, this);
+            auto child = std::make_unique<ValueTreeChild>(otherIt->second.m_typePtr, *otherIt->second.m_value, this);
             child->initializeChildren(typeSystem);
             newChildMap.insert_or_assign(otherIt->first, otherIt->second.m_index, std::move(child));
         };
@@ -262,8 +262,8 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
                 std::unique_ptr<ValueTreeChild> temp;
                 temp.swap(*currentIt->second);
                 // Types may change, e.g. when a type variable is assigned.
-                if (temp->getTypeExp() != otherIt->second.m_typeExp) {
-                    temp->m_typePtr = otherIt->second.m_typeExp.resolve(typeSystem);
+                if (temp->getTypeExp() != otherIt->second.m_typePtr->getTypeExp()) {
+                    temp->m_typePtr = otherIt->second.m_typePtr;
                     // This ensures the UI updates the connectivity of the node, since a type variable may have been
                     // assigned, allowing connections at compound nodes, or reset, disallowing them.
                     // This is more blunt than it needs to be, but type changes are probably rare.
@@ -307,7 +307,7 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
     auto childWithChangesIt = m_children.find0(step);
 
     auto compoundType = getType()->as<CompoundType>();
-    auto [childValue, step2, childTypeExp] =
+    auto [childValue, step2, childType] =
         compoundType->getChild(other, compoundType->getChildIndexFromStep(other, step));
     assert(step == step2);
 

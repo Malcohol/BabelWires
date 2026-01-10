@@ -10,8 +10,9 @@
 #include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-babelwires::SumType::SumType(const TypeSystem& typeSystem, SummandTypeExps summands, unsigned int indexOfDefaultSummand)
-    : m_indexOfDefaultSummand(indexOfDefaultSummand) {
+babelwires::SumType::SumType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, SummandTypeExps summands, unsigned int indexOfDefaultSummand)
+    : Type(std::move(typeExpOfThis))
+    , m_indexOfDefaultSummand(indexOfDefaultSummand) {
     m_summands.reserve(summands.size());
     for (const auto& s : summands) {
         m_summands.emplace_back(s.resolve(typeSystem));
@@ -19,8 +20,9 @@ babelwires::SumType::SumType(const TypeSystem& typeSystem, SummandTypeExps summa
     assert(indexOfDefaultSummand < m_summands.size());
 }
 
-babelwires::SumType::SumType(Summands summands, unsigned int indexOfDefaultSummand)
-    : m_summands(std::move(summands))
+babelwires::SumType::SumType(TypeExp&& typeExpOfThis, Summands summands, unsigned int indexOfDefaultSummand)
+    : Type(std::move(typeExpOfThis))
+    , m_summands(std::move(summands))
     , m_indexOfDefaultSummand(indexOfDefaultSummand) {
     assert(indexOfDefaultSummand < m_summands.size());
 }
@@ -41,8 +43,8 @@ bool babelwires::SumType::visitValue(const TypeSystem& typeSystem, const Value& 
     if (index == -1) {
         return false;
     }
-    const TypeExp& summandTypeExp = m_summands[static_cast<unsigned int>(index)]->getTypeExp();
-    return visitor(typeSystem, summandTypeExp, v, PathStep{});
+    const TypePtr& summandType = m_summands[static_cast<unsigned int>(index)];
+    return visitor(typeSystem, summandType, v, PathStep{});
 }
 
 std::string babelwires::SumType::getFlavour() const {
@@ -133,7 +135,7 @@ std::optional<babelwires::SubtypeOrder> babelwires::SumType::compareSubtypeHelpe
     for (int i = 0; i < summandsA.size(); ++i) {
         std::optional<SubtypeOrder> subTestForA;
         for (int j = 0; j < summandsB.size(); ++j) {
-            const SubtypeOrder ab = typeSystem.compareSubtype(summandsA[i]->getTypeExp(), summandsB[j]->getTypeExp());
+            const SubtypeOrder ab = typeSystem.compareSubtype(*summandsA[i], *summandsB[j]);
             auto& superTestForB = superTestForBs[j];
             subTestForA = subTestForA ? opUnionRight(ab, *subTestForA) : ab;
             superTestForB = superTestForB ? opUnionLeft(ab, *superTestForB) : ab;

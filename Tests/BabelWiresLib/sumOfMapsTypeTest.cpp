@@ -16,12 +16,12 @@
 namespace {
     class TestSumOfMapsType : public babelwires::SumOfMapsType {
       public:
-        REGISTERED_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("TestSumOfMapsType"), 1);
+        REGISTERED_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("TestSumOfMaps"), 1);
         TestSumOfMapsType(const babelwires::TypeSystem& typeSystem)
-            : babelwires::SumOfMapsType(
+            : babelwires::SumOfMapsType(getThisIdentifier(),
                   typeSystem,
-                  {babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()},
-                  {babelwires::DefaultIntType::getThisType(), babelwires::StringType::getThisType()}, 1, 0) {}
+                  {babelwires::DefaultIntType::getThisIdentifier(), babelwires::DefaultRationalType::getThisIdentifier()},
+                  {babelwires::DefaultIntType::getThisIdentifier(), babelwires::StringType::getThisIdentifier()}, 1, 0) {}
     };
 } // namespace
 
@@ -33,11 +33,11 @@ TEST(SumOfMapsTypeTest, sumOfMapsTypeConstructor) {
     EXPECT_EQ(sumOfMapsType.getSummands().size(), 2 * 2);
 
     EXPECT_EQ(sumOfMapsType.getSourceTypes().size(), 2);
-    EXPECT_EQ(sumOfMapsType.getSourceTypes()[0], babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(sumOfMapsType.getSourceTypes()[1], babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(sumOfMapsType.getSourceTypes()[0], babelwires::DefaultIntType::getThisIdentifier());
+    EXPECT_EQ(sumOfMapsType.getSourceTypes()[1], babelwires::DefaultRationalType::getThisIdentifier());
     EXPECT_EQ(sumOfMapsType.getTargetTypes().size(), 2);
-    EXPECT_EQ(sumOfMapsType.getTargetTypes()[0], babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(sumOfMapsType.getTargetTypes()[1], babelwires::StringType::getThisType());
+    EXPECT_EQ(sumOfMapsType.getTargetTypes()[0], babelwires::DefaultIntType::getThisIdentifier());
+    EXPECT_EQ(sumOfMapsType.getTargetTypes()[1], babelwires::StringType::getThisIdentifier());
     EXPECT_EQ(sumOfMapsType.getIndexOfDefaultSourceType(), 1);
     EXPECT_EQ(sumOfMapsType.getIndexOfDefaultTargetType(), 0);
 }
@@ -55,8 +55,8 @@ TEST(SumOfMapsTypeTest, sumOfMapsTypeCreateValue) {
     const auto* mapValue = newValue->as<babelwires::MapValue>();
     EXPECT_NE(mapValue, nullptr);
 
-    EXPECT_EQ(mapValue->getSourceTypeExp(), babelwires::DefaultRationalType::getThisType());
-    EXPECT_EQ(mapValue->getTargetTypeExp(), babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(mapValue->getSourceTypeExp(), babelwires::DefaultRationalType::getThisIdentifier());
+    EXPECT_EQ(mapValue->getTargetTypeExp(), babelwires::DefaultIntType::getThisIdentifier());
 }
 
 TEST(SumOfMapsTypeTest, validValues) {
@@ -64,9 +64,9 @@ TEST(SumOfMapsTypeTest, validValues) {
 
     TestSumOfMapsType sumOfMapsType(testEnvironment.m_typeSystem);
 
-    const auto& intType = testEnvironment.m_typeSystem.getEntryByType<babelwires::DefaultIntType>();
-    const auto& stringType = testEnvironment.m_typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& rationalType = testEnvironment.m_typeSystem.getEntryByType<babelwires::DefaultRationalType>();
+    const auto& intType = testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultIntType>();
+    const auto& stringType = testEnvironment.m_typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& rationalType = testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultRationalType>();
 
     babelwires::MapValue map0(testEnvironment.m_typeSystem, intType, intType, babelwires::MapEntryData::Kind::All2Sm);
     babelwires::MapValue map1(testEnvironment.m_typeSystem, intType, stringType, babelwires::MapEntryData::Kind::All21);

@@ -24,7 +24,7 @@ babelwires::FileTypeConstructor::constructType(const TypeSystem& typeSystem, Typ
                                     << arguments.getValueArguments().size();
     }
 
-    return makeType<ConstructedType<FileType>>(std::move(newTypeExp), typeSystem, arguments.getTypeArguments()[0]);
+    return makeType<FileType>(std::move(newTypeExp), typeSystem, arguments.getTypeArguments()[0]);
 }
 
 babelwires::TypeExp babelwires::FileTypeConstructor::makeTypeExp(TypeExp typeOfContents) {

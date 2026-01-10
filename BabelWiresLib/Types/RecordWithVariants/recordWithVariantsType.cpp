@@ -12,9 +12,10 @@
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
-babelwires::RecordWithVariantsType::RecordWithVariantsType(const TypeSystem& typeSystem, Tags tags, std::vector<FieldWithTags> fields,
+babelwires::RecordWithVariantsType::RecordWithVariantsType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, Tags tags, std::vector<FieldWithTags> fields,
                                                            unsigned int defaultTagIndex)
-    : m_tags(std::move(tags))
+    : CompoundType(std::move(typeExpOfThis))
+    , m_tags(std::move(tags))
     , m_defaultTag(m_tags[defaultTagIndex]) {
     assert((m_tags.size() > 0) && "Empty tags set not allowed");
     assert(defaultTagIndex < m_tags.size());
@@ -121,24 +122,24 @@ unsigned int babelwires::RecordWithVariantsType::getNumChildren(const ValueHolde
     return it->second.size();
 }
 
-std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp>
+std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>
 babelwires::RecordWithVariantsType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
     const ShortId tag = getSelectedTag(compoundValue);
     const auto it = m_tagToVariantCache.find(tag);
     assert(it != m_tagToVariantCache.end());
     const auto& recordValue = compoundValue->is<RecordWithVariantsValue>();
     const Field& f = *it->second[i];
-    return {&recordValue.getValue(f.m_identifier), PathStep{f.m_identifier}, f.m_type->getTypeExp()};
+    return {&recordValue.getValue(f.m_identifier), PathStep{f.m_identifier}, f.m_type};
 }
 
-std::tuple<babelwires::ValueHolder*, babelwires::PathStep, babelwires::TypeExp>
+std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>
 babelwires::RecordWithVariantsType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
     const ShortId tag = getSelectedTag(compoundValue);
     const auto it = m_tagToVariantCache.find(tag);
     assert(it != m_tagToVariantCache.end());
     RecordWithVariantsValue& recordValue = compoundValue.copyContentsAndGetNonConst().is<RecordWithVariantsValue>();
     const Field& f = *it->second[i];
-    return {&recordValue.getValue(f.m_identifier), PathStep{f.m_identifier}, f.m_type->getTypeExp()};
+    return {&recordValue.getValue(f.m_identifier), PathStep{f.m_identifier}, f.m_type};
 }
 
 int babelwires::RecordWithVariantsType::getChildIndexFromStep(const ValueHolder& compoundValue,
@@ -182,7 +183,7 @@ bool babelwires::RecordWithVariantsType::visitValue(const TypeSystem& typeSystem
         if (!value) {
             return false;
         } else {
-            if (!visitor(typeSystem, f->m_type->getTypeExp(), **value, PathStep{f->m_identifier})) {
+            if (!visitor(typeSystem, f->m_type, **value, PathStep{f->m_identifier})) {
                 return false;
             }
         }
@@ -222,7 +223,7 @@ babelwires::SubtypeOrder babelwires::RecordWithVariantsType::sortAndCompareField
     while ((thisIt < thisFields.end()) && (otherIt < otherFields.end())) {
         if ((*thisIt)->m_identifier == (*otherIt)->m_identifier) {
             const SubtypeOrder fieldComparison =
-                typeSystem.compareSubtype((*thisIt)->m_type->getTypeExp(), (*otherIt)->m_type->getTypeExp());
+                typeSystem.compareSubtype(*(*thisIt)->m_type, *(*otherIt)->m_type);
             if (updateAndCheckDisjoint(currentOrder, fieldComparison)) {
                 return SubtypeOrder::IsDisjoint;
             }

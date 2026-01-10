@@ -37,20 +37,20 @@ namespace {
     }
 } // namespace
 
-babelwires::ParallelProcessorInputBase::ParallelProcessorInputBase(const TypeSystem& typeSystem, std::vector<RecordType::FieldDefinition> commonData,
+babelwires::ParallelProcessorInputBase::ParallelProcessorInputBase(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, std::vector<RecordType::FieldDefinition> commonData,
                                                                    ShortId arrayId, TypeExp entryType)
-    : RecordType(typeSystem, addArray(std::move(commonData), arrayId, entryType)) {}
+    : RecordType(std::move(typeExpOfThis), typeSystem, addArray(std::move(commonData), arrayId, entryType)) {}
 
-babelwires::ParallelProcessorOutputBase::ParallelProcessorOutputBase(const TypeSystem& typeSystem, ShortId arrayId, TypeExp entryType)
-    : RecordType(typeSystem, {{arrayId, getParallelArray(std::move(entryType))}}) {}
+babelwires::ParallelProcessorOutputBase::ParallelProcessorOutputBase(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, ShortId arrayId, TypeExp entryType)
+    : RecordType(std::move(typeExpOfThis), typeSystem, {{arrayId, getParallelArray(std::move(entryType))}}) {}
 
 babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectContext, const TypeExp& parallelInput,
                                                  const TypeExp& parallelOutput)
     : Processor(projectContext, parallelInput, parallelOutput) {
 #ifndef NDEBUG
-    const auto& inputType = parallelInput.resolveAs<ParallelProcessorInputBase>(projectContext.m_typeSystem);
+    auto inputType = parallelInput.resolveAs<ParallelProcessorInputBase>(projectContext.m_typeSystem);
     assert(inputType && "The ParallelProcessor input type should be a ParallelProcessorInputBase");
-    const auto& outputType = parallelOutput.resolveAs<ParallelProcessorOutputBase>(projectContext.m_typeSystem);
+    auto outputType = parallelOutput.resolveAs<ParallelProcessorOutputBase>(projectContext.m_typeSystem);
     assert(outputType && "The ParallelProcessor output type should be a ParallelProcessorOutputBase");
     assert(inputType->getFields().size() >= 1);
     assert(outputType->getFields().size() == 1);

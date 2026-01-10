@@ -29,7 +29,7 @@ namespace babelwires {
         /// Enums need a set of values and a way of identifying the default.
         /// The values object can be the "output" of the REGISTERED_ID_VECTOR macro.
         /// The values must all be registered identifiers.
-        EnumType(ValueSet values, unsigned int indexOfDefaultValue);
+        EnumType(TypeExp&& typeExpOfThis, ValueSet values, unsigned int indexOfDefaultValue);
 
         /// Get the set of available enum values.
         const ValueSet& getValueSet() const;

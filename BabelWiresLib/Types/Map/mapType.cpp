@@ -10,15 +10,17 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
 
-babelwires::MapType::MapType(const TypeSystem& typeSystem, TypeExp sourceTypeExp, TypeExp targetTypeExp, MapEntryData::Kind defaultFallbackKind)
-    : m_sourceType(sourceTypeExp.resolve(typeSystem))
+babelwires::MapType::MapType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, TypeExp sourceTypeExp, TypeExp targetTypeExp, MapEntryData::Kind defaultFallbackKind)
+    : Type(std::move(typeExpOfThis))
+    , m_sourceType(sourceTypeExp.resolve(typeSystem))
     , m_targetType(targetTypeExp.resolve(typeSystem))
     , m_defaultFallbackKind(defaultFallbackKind) {
     assert(MapEntryData::isFallback(defaultFallbackKind) && "Only a fallback kind is expected here");
 }
 
-babelwires::MapType::MapType(TypePtr sourceType, TypePtr targetType, MapEntryData::Kind defaultFallbackKind)
-    : m_sourceType(std::move(sourceType))
+babelwires::MapType::MapType(TypeExp&& typeExp, TypePtr sourceType, TypePtr targetType, MapEntryData::Kind defaultFallbackKind)
+    : Type(std::move(typeExp))
+    , m_sourceType(std::move(sourceType))
     , m_targetType(std::move(targetType))
     , m_defaultFallbackKind(defaultFallbackKind) {
     assert(MapEntryData::isFallback(defaultFallbackKind) && "Only a fallback kind is expected here");
@@ -32,8 +34,15 @@ bool babelwires::MapType::visitValue(const TypeSystem& typeSystem, const Value& 
     // Note: Map is not currently treated as a compound, so we don't call the visitor on its entries.
     if (const MapValue* const map = v.as<MapValue>()) {
         // Because of the fallback entry, we don't need contravariance here.
-        return typeSystem.isRelatedType(map->getSourceTypeExp(), m_sourceType->getTypeExp()) &&
-               typeSystem.isSubType(map->getTargetTypeExp(), m_targetType->getTypeExp());
+        const TypePtr mapSourceType = map->getSourceTypeExp().tryResolve(typeSystem);
+        const TypePtr sourceType = m_sourceType->getTypeExp().tryResolve(typeSystem);
+        const TypePtr mapTargetType = map->getTargetTypeExp().tryResolve(typeSystem);
+        const TypePtr targetType = m_targetType->getTypeExp().tryResolve(typeSystem);
+        if (!mapSourceType || !sourceType || !mapTargetType || !targetType) {
+            return false;
+        }
+        return typeSystem.isRelatedType(*mapSourceType, *sourceType) &&
+               typeSystem.isSubType(*mapTargetType, *targetType);
     }
     return false;
 }
@@ -56,13 +65,13 @@ std::optional<babelwires::SubtypeOrder> babelwires::MapType::compareSubtypeHelpe
         return {};
     }
     const SubtypeOrder sourceOrder =
-        typeSystem.compareSubtype(m_sourceType->getTypeExp(), otherMapType->m_sourceType->getTypeExp());
+        typeSystem.compareSubtype(*m_sourceType, *otherMapType->m_sourceType);
     if (sourceOrder == SubtypeOrder::IsDisjoint) {
         // Because of the fallback logic, we only exclude disjoint source types here.
         return SubtypeOrder::IsDisjoint;
     }
     const SubtypeOrder targetOrder =
-        typeSystem.compareSubtype(m_targetType->getTypeExp(), otherMapType->m_targetType->getTypeExp());
+        typeSystem.compareSubtype(*m_targetType, *otherMapType->m_targetType);
     return targetOrder;
 }
 

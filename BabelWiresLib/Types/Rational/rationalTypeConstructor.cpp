@@ -40,7 +40,7 @@ babelwires::RationalTypeConstructor::constructType(const TypeSystem& typeSystem,
                                     << arguments.getTypeArguments().size();
     }
     auto [range, defaultValue] = extractValueArguments(arguments.getValueArguments());
-    return makeType<ConstructedType<RationalType>>(std::move(newTypeExp), range, defaultValue);
+    return makeType<RationalType>(std::move(newTypeExp), range, defaultValue);
 }
 
 babelwires::TypeExp babelwires::RationalTypeConstructor::makeTypeExp(Rational min, Rational max,
