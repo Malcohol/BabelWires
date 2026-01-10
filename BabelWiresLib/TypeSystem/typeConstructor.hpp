@@ -68,21 +68,7 @@ namespace babelwires {
         mutable std::unordered_map<TypeConstructorArguments, PerTypeStorage> m_cache;
     };
 
-    /// A convenience class which can used by type constructors for the type they want to construct.
-    /// It provides an implementation of getTypeExp.
-    /// Type constructors are not obliged to use this template.
-    template <typename T> class ConstructedType : public T {
-      public:
-        template <typename... ARGS>
-        ConstructedType(TypeExp typeExp, ARGS&&... args)
-            : T(std::forward<ARGS>(args)...)
-            , m_typeExp(std::move(typeExp)) {}
-
-        TypeExp getTypeExp() const override { return m_typeExp; }
-
-      private:
-        TypeExp m_typeExp;
-    };
+    // ConstructedType is obsolete now that all Types carry their own TypeExp.
 } // namespace babelwires
 
 /// Intended mainly for testing.

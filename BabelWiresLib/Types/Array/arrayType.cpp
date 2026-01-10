@@ -12,8 +12,9 @@
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
-babelwires::ArrayType::ArrayType(TypePtr entryType, unsigned int minimumSize, unsigned int maximumSize, int initialSize)
-    : m_entryType(std::move(entryType))
+babelwires::ArrayType::ArrayType(TypeExp typeExp, TypePtr entryType, unsigned int minimumSize, unsigned int maximumSize, int initialSize)
+    : CompoundType(std::move(typeExp))
+    , m_entryType(std::move(entryType))
     , m_minimumSize(minimumSize)
     , m_maximumSize(maximumSize)
     , m_initialSize((initialSize >= static_cast<int>(minimumSize)) ? initialSize : minimumSize) {

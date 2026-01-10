@@ -12,8 +12,9 @@
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-babelwires::IntType::IntType(Range<IntValue::NativeType> range, IntValue::NativeType defaultValue)
-    : m_range(range)
+babelwires::IntType::IntType(TypeExp typeExp, Range<IntValue::NativeType> range, IntValue::NativeType defaultValue)
+    : Type(std::move(typeExp))
+    , m_range(range)
     , m_defaultValue(defaultValue) {
     assert(m_range.contains(defaultValue));
 }
@@ -51,7 +52,7 @@ std::string babelwires::IntType::valueToString(const TypeSystem& typeSystem, con
 }
 
 babelwires::DefaultIntType::DefaultIntType()
-    : IntType() {}
+    : IntType(getThisType()) {}
 
 babelwires::NonNegativeIntType::NonNegativeIntType()
-    : IntType(Range<IntValue::NativeType>{0, std::numeric_limits<IntValue::NativeType>::max()}) {}
+    : IntType(getThisType(), Range<IntValue::NativeType>{0, std::numeric_limits<IntValue::NativeType>::max()}) {}

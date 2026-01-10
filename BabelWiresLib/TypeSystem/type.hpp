@@ -27,6 +27,7 @@ namespace babelwires {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(Type);
 
+        Type(TypeExp typeExp);
         virtual ~Type();
 
         /// Create a new Value representing a default instance of the type.
@@ -34,6 +35,9 @@ namespace babelwires {
 
         /// Is the value v an element of this type.
         bool isValidValue(const TypeSystem& typeSystem, const Value& v) const;
+
+        /// Get a TypeExp that describes this type.
+        const TypeExp& getTypeExp() const;
 
         /// Called by visitValue when a type contains children.
         /// Returning false aborts the visit and visitValue will return false.
@@ -44,11 +48,6 @@ namespace babelwires {
         /// This returns false if the value does not conform to this type, or if the visitor returns false.
         virtual bool visitValue(const TypeSystem& typeSystem, const Value& v,
                                 ChildValueVisitor& visitor) const = 0;
-
-        /// Get a TypeExp that describes this type.
-        /// Registered types get an implementation of this method from the REGISTERED_TYPE macro.
-        /// Types constructed by TypeConstructors must provide their own implementation.
-        virtual TypeExp getTypeExp() const = 0;
 
         /// Return a short string which can be used in the UI to give a sense of the data this type handles.
         /// It is not used to impose any formal restrictions.
@@ -78,6 +77,9 @@ namespace babelwires {
         void addTag(Tag tag);
 
       private:
+        /// The TypeExp that identifies this type.
+        TypeExp m_typeExp;
+
         /// The tags associated with this type.
         std::vector<Tag> m_tags;
     };

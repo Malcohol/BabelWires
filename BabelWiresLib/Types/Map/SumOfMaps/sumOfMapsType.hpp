@@ -19,7 +19,7 @@ namespace babelwires {
     /// sure there is a much cleaner way of providing the same functionality, but this will have to do for now.
     class SumOfMapsType : public SumType {
       public:
-        SumOfMapsType(const TypeSystem& typeSystem, SummandTypeExps sourceTypes, SummandTypeExps targetTypes,
+        SumOfMapsType(TypeExp typeExp, const TypeSystem& typeSystem, SummandTypeExps sourceTypes, SummandTypeExps targetTypes,
                       unsigned int indexOfDefaultSourceType = 0, unsigned int indexOfDefaultTargetType = 0);
 
         const SummandTypeExps& getSourceTypes() const;

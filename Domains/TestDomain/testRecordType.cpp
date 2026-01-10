@@ -8,7 +8,7 @@
 #include <Domains/TestDomain/testArrayType.hpp>
 
 testDomain::TestSimpleRecordType::TestSimpleRecordType(const babelwires::TypeSystem& typeSystem)
-    : RecordType(typeSystem, {{getInt0Id(), babelwires::DefaultIntType::getThisType()},
+    : RecordType(getThisType(), typeSystem, {{getInt0Id(), babelwires::DefaultIntType::getThisType()},
                   {getInt1Id(), babelwires::DefaultIntType::getThisType()}}) {}
 
 babelwires::ShortId testDomain::TestSimpleRecordType::getInt0Id() {
@@ -20,7 +20,7 @@ babelwires::ShortId testDomain::TestSimpleRecordType::getInt1Id() {
 }
 
 testDomain::TestComplexRecordType::TestComplexRecordType(const babelwires::TypeSystem& typeSystem)
-    : RecordType(typeSystem, {{getInt0Id(), babelwires::DefaultIntType::getThisType()},
+    : RecordType(getThisType(), typeSystem, {{getInt0Id(), babelwires::DefaultIntType::getThisType()},
                   {getOpIntId(), babelwires::DefaultIntType::getThisType(), Optionality::optionalDefaultInactive},
                   {getSubrecordId(), TestSimpleRecordType::getThisType()},
                   {getInt1Id(), babelwires::IntTypeConstructor::makeTypeExp(c_int1min, c_int1max, c_int1default)},

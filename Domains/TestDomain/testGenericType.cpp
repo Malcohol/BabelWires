@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 
 testDomain::TestGenericType::TestGenericType(const babelwires::TypeSystem& typeSystem)
-    : GenericType(typeSystem,
+    : GenericType(getThisType(), typeSystem,
           // Note: We assume generic types are made using TypeExp expressions, so this cannot
           // use a registered record type. Similarly, the array cannot be a registered type.
           babelwires::RecordTypeConstructor::makeTypeExp(
@@ -107,5 +107,5 @@ babelwires::Path testDomain::TestGenericType::getPathToArray0() {
 }
 
 testDomain::TestSimpleCompoundType::TestSimpleCompoundType(const babelwires::TypeSystem& typeSystem)
-    : RecordType(typeSystem, {{TestGenericType::getIdOfNestedX(), babelwires::DefaultIntType::getThisType()},
+    : RecordType(getThisType(), typeSystem, {{TestGenericType::getIdOfNestedX(), babelwires::DefaultIntType::getThisType()},
                    {TestGenericType::getIdOfNestedZ(), babelwires::StringType::getThisType()}}) {}

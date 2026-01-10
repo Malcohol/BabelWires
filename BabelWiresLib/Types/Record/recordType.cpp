@@ -27,21 +27,24 @@ namespace {
     }
 } // namespace
 
-babelwires::RecordType::RecordType(const TypeSystem& typeSystem, const std::vector<FieldDefinition>& fields) {
+babelwires::RecordType::RecordType(TypeExp typeExp, const TypeSystem& typeSystem, const std::vector<FieldDefinition>& fields)
+    : CompoundType(std::move(typeExp)) {
     m_fields.reserve(fields.size());
     addFields(typeSystem, m_fields, m_optionalFieldIds, fields);
 }
 
-babelwires::RecordType::RecordType(const TypeSystem& typeSystem, const RecordType& parent,
-                                   const std::vector<FieldDefinition>& additionalFields) {
+babelwires::RecordType::RecordType(TypeExp typeExp, const TypeSystem& typeSystem, const RecordType& parent,
+                                   const std::vector<FieldDefinition>& additionalFields)
+    : CompoundType(std::move(typeExp)) {
     m_fields.reserve(parent.getFields().size() + additionalFields.size());
     m_fields = parent.m_fields;
     m_optionalFieldIds = parent.m_optionalFieldIds;
     addFields(typeSystem, m_fields, m_optionalFieldIds, additionalFields);
 }
 
-babelwires::RecordType::RecordType(std::vector<Field> fields)
-    : m_fields(std::move(fields)) {
+babelwires::RecordType::RecordType(TypeExp typeExp, std::vector<Field> fields)
+    : CompoundType(std::move(typeExp))
+    , m_fields(std::move(fields)) {
     for (const auto& f : m_fields) {
         assert(f.m_identifier.getDiscriminator() != 0 && "Field identifiers must be registered");
         if (f.m_optionality != Optionality::alwaysActive) {

@@ -15,7 +15,8 @@ namespace babelwires {
     class ArrayType : public CompoundType {
       public:
         /// An initialSize of -1 means the initial size is the minimum size.
-        ArrayType(TypePtr entryType, unsigned int minimumSize, unsigned int maximumSize, int initialSize = -1);
+        ArrayType(TypeExp typeExp, TypePtr entryType, unsigned int minimumSize, unsigned int maximumSize,
+                  int initialSize = -1);
 
         /// Get the valid size range of this array.
         Range<unsigned int> getSizeRange() const;

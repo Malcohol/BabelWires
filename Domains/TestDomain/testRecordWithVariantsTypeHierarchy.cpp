@@ -25,49 +25,49 @@ namespace {
 } // namespace
 
 testDomain::RecordVWithNoFields::RecordVWithNoFields(const babelwires::TypeSystem& typeSystem)
-    : RecordWithVariantsType(typeSystem, {getIdForDefaultTag()}, {}) {}
+    : RecordWithVariantsType(getThisType(), typeSystem, {getIdForDefaultTag()}, {}) {}
 
 testDomain::RecordVA0::RecordVA0(const babelwires::TypeSystem& typeSystem)
-    : RecordWithVariantsType(typeSystem, {getIdForDefaultTag()}, {{getIdForA(), babelwires::DefaultIntType::getThisType()}}) {}
+    : RecordWithVariantsType(getThisType(), typeSystem, {getIdForDefaultTag()}, {{getIdForA(), babelwires::DefaultIntType::getThisType()}}) {}
 
 testDomain::RecordVA1::RecordVA1(const babelwires::TypeSystem& typeSystem)
-    : RecordWithVariantsType(typeSystem, {getIdForDefaultTag()}, {{getIdForA(), babelwires::DefaultIntType::getThisType()}}) {}
+    : RecordWithVariantsType(getThisType(), typeSystem, {getIdForDefaultTag()}, {{getIdForA(), babelwires::DefaultIntType::getThisType()}}) {}
 
 testDomain::RecordVB::RecordVB(const babelwires::TypeSystem& typeSystem)
-    : RecordWithVariantsType(typeSystem, {getIdForDefaultTag()}, {{getIdForB(), babelwires::DefaultIntType::getThisType()}}) {}
+    : RecordWithVariantsType(getThisType(), typeSystem, {getIdForDefaultTag()}, {{getIdForB(), babelwires::DefaultIntType::getThisType()}}) {}
 
 testDomain::RecordVAB::RecordVAB(const babelwires::TypeSystem& typeSystem)
-    : RecordWithVariantsType(typeSystem, {getIdForDefaultTag()}, {{getIdForA(), babelwires::DefaultIntType::getThisType()},
+    : RecordWithVariantsType(getThisType(), typeSystem, {getIdForDefaultTag()}, {{getIdForA(), babelwires::DefaultIntType::getThisType()},
                                                       {getIdForB(), babelwires::DefaultIntType::getThisType()}}) {}
 
 testDomain::RecordVAS::RecordVAS(const babelwires::TypeSystem& typeSystem)
-    : RecordWithVariantsType(typeSystem, {getIdForDefaultTag()}, {{getIdForA(), babelwires::StringType::getThisType()}}) {}
+    : RecordWithVariantsType(getThisType(), typeSystem, {getIdForDefaultTag()}, {{getIdForA(), babelwires::StringType::getThisType()}}) {}
 
 testDomain::RecordVAV0::RecordVAV0(const babelwires::TypeSystem& typeSystem)
-    : RecordWithVariantsType(typeSystem, {getIdForDefaultTag(), getIdForTag0()},
+    : RecordWithVariantsType(getThisType(), typeSystem, {getIdForDefaultTag(), getIdForTag0()},
                              {{getIdForA(), babelwires::DefaultIntType::getThisType()},
                               {getIdFor0(), babelwires::DefaultIntType::getThisType(), {getIdForTag0()}}}) {}
 
 testDomain::RecordVABV0::RecordVABV0(const babelwires::TypeSystem& typeSystem)
-    : RecordWithVariantsType(typeSystem, {getIdForDefaultTag(), getIdForTag0()},
+    : RecordWithVariantsType(getThisType(), typeSystem, {getIdForDefaultTag(), getIdForTag0()},
                              {{getIdForA(), babelwires::DefaultIntType::getThisType()},
                               {getIdFor0(), babelwires::DefaultIntType::getThisType(), {getIdForTag0()}},
                               {getIdForB(), babelwires::DefaultIntType::getThisType()}}) {}
 
 testDomain::RecordVABV1::RecordVABV1(const babelwires::TypeSystem& typeSystem)
-    : RecordWithVariantsType(typeSystem, {getIdForDefaultTag(), getIdForTag0(), getIdForTag1()},
+    : RecordWithVariantsType(getThisType(), typeSystem, {getIdForDefaultTag(), getIdForTag0(), getIdForTag1()},
                              {{getIdForA(), babelwires::DefaultIntType::getThisType()},
                               {getIdFor1(), babelwires::DefaultIntType::getThisType(), {getIdForTag1()}},
                               {getIdForB(), babelwires::DefaultIntType::getThisType()}}) {}
 
 testDomain::RecordVABV01::RecordVABV01(const babelwires::TypeSystem& typeSystem)
-    : RecordWithVariantsType(typeSystem, {getIdForDefaultTag(), getIdForTag0()},
+    : RecordWithVariantsType(getThisType(), typeSystem, {getIdForDefaultTag(), getIdForTag0()},
                              {{getIdForA(), babelwires::DefaultIntType::getThisType()},
                               {getIdFor0(), babelwires::DefaultIntType::getThisType(), {getIdForTag0()}},
                               {getIdForB(), babelwires::DefaultIntType::getThisType()},
                               {getIdFor1(), babelwires::DefaultIntType::getThisType(), {getIdForTag0()}}}) {}
 
 testDomain::RecordVAVB::RecordVAVB(const babelwires::TypeSystem& typeSystem)
-    : RecordWithVariantsType(typeSystem, {getIdForDefaultTag(), getIdForTag0()},
+    : RecordWithVariantsType(getThisType(), typeSystem, {getIdForDefaultTag(), getIdForTag0()},
                              {{getIdForA(), babelwires::DefaultIntType::getThisType()},
                               {getIdForB(), babelwires::DefaultIntType::getThisType(), {getIdForDefaultTag()}}}) {}

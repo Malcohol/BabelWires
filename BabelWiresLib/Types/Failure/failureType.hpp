@@ -19,7 +19,7 @@ namespace babelwires {
       public:
         REGISTERED_TYPE("failed", "Failed", "d58040ff-00dc-4f25-a9a7-17c54b56d57d", 1);
 
-        FailureType(const TypeSystem& typeSystem) : RecordType(typeSystem, {}) {}
+        FailureType(const TypeSystem& typeSystem) : RecordType(getThisType(), typeSystem, {}) {}
 
         std::string getFlavour() const override { return "Failed"; }
     };

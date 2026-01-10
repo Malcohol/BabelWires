@@ -26,8 +26,6 @@ namespace babelwires {
             return babelwires::FileTypeConstructor::makeTypeExp(T::getThisType());
         }
 
-        TypeExp getTypeExp() const override { return getThisType(); }
-
         /// Implementation Note: Cannot use FileType<T> here because the FileTypeConstructor does not construct
         /// instances of this template but instances of the parent FileType class.
         DECLARE_INSTANCE_BEGIN(FileType)

@@ -41,12 +41,13 @@ namespace {
     }
 } // namespace
 
-babelwires::GenericType::GenericType(const TypeSystem& typeSystem, const TypeExp& wrappedType,
+babelwires::GenericType::GenericType(TypeExp typeExp, const TypeSystem& typeSystem, const TypeExp& wrappedType,
                                      unsigned int numVariables)
-    : GenericType(wrappedType.resolve(typeSystem), numVariables) {}
+    : GenericType(std::move(typeExp), wrappedType.resolve(typeSystem), numVariables) {}
 
-babelwires::GenericType::GenericType(const TypePtr& wrappedType, unsigned int numVariables)
-    : m_wrappedType(std::move(wrappedType))
+babelwires::GenericType::GenericType(TypeExp typeExp, const TypePtr& wrappedType, unsigned int numVariables)
+    : CompoundType(std::move(typeExp))
+    , m_wrappedType(std::move(wrappedType))
     , m_numVariables(numVariables) {
     assert(m_numVariables > 0 && "GenericType must have at least one type variable");
     assert(m_numVariables <= TypeVariableData::c_maxNumTypeVariables && "GenericType with too many type variables");

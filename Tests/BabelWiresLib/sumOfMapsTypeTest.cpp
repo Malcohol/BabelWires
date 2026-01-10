@@ -16,9 +16,9 @@
 namespace {
     class TestSumOfMapsType : public babelwires::SumOfMapsType {
       public:
-        REGISTERED_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("TestSumOfMapsType"), 1);
+        REGISTERED_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("TestSumOfMaps"), 1);
         TestSumOfMapsType(const babelwires::TypeSystem& typeSystem)
-            : babelwires::SumOfMapsType(
+            : babelwires::SumOfMapsType(getThisType(),
                   typeSystem,
                   {babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()},
                   {babelwires::DefaultIntType::getThisType(), babelwires::StringType::getThisType()}, 1, 0) {}

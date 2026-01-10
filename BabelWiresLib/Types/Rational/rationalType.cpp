@@ -12,8 +12,9 @@
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-babelwires::RationalType::RationalType(Range<Rational> range, Rational defaultValue) 
-    : m_range(range)
+babelwires::RationalType::RationalType(TypeExp typeExp, Range<Rational> range, Rational defaultValue) 
+    : Type(std::move(typeExp))
+    , m_range(range)
     , m_defaultValue(defaultValue)
 {
 }
@@ -50,5 +51,5 @@ std::string babelwires::RationalType::valueToString(const TypeSystem& typeSystem
     return v->is<RationalValue>().toString();
 }
 
-babelwires::DefaultRationalType::DefaultRationalType() : RationalType() {}
+babelwires::DefaultRationalType::DefaultRationalType() : RationalType(getThisType()) {}
 

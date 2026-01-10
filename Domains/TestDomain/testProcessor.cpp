@@ -20,7 +20,7 @@ babelwires::ShortId testDomain::TestProcessorInputOutputType::getRecordId() {
 }
 
 testDomain::TestProcessorInputOutputType::TestProcessorInputOutputType(const babelwires::TypeSystem& typeSystem)
-    : RecordType(typeSystem, {{getIntId(), babelwires::DefaultIntType::getThisType()},
+    : RecordType(getThisType(), typeSystem, {{getIntId(), babelwires::DefaultIntType::getThisType()},
                   {getOptIntId(), babelwires::DefaultIntType::getThisType(), Optionality::optionalDefaultInactive},
                   {getArrayId(),
                    babelwires::ArrayTypeConstructor::makeTypeExp(babelwires::DefaultIntType::getThisType(), 2, 8)},

@@ -9,11 +9,11 @@ namespace {
 } // namespace
 
 testDomain::TestParallelProcessorInput::TestParallelProcessorInput(const babelwires::TypeSystem& typeSystem)
-    : babelwires::ParallelProcessorInputBase(typeSystem, {{BW_SHORT_ID("intVal", "intVal", "914142db-873d-4c7e-a40b-0b465993538c"), getLimitedIntType()}},
+    : babelwires::ParallelProcessorInputBase(getThisType(), typeSystem, {{BW_SHORT_ID("intVal", "intVal", "914142db-873d-4c7e-a40b-0b465993538c"), getLimitedIntType()}},
                                              TestParallelProcessor::getCommonArrayId(), getLimitedIntType()) {}
 
 testDomain::TestParallelProcessorOutput::TestParallelProcessorOutput(const babelwires::TypeSystem& typeSystem)
-    : babelwires::ParallelProcessorOutputBase(typeSystem, TestParallelProcessor::getCommonArrayId(), getLimitedIntType()) {}
+    : babelwires::ParallelProcessorOutputBase(getThisType(), typeSystem, TestParallelProcessor::getCommonArrayId(), getLimitedIntType()) {}
 
 testDomain::TestParallelProcessor::TestParallelProcessor(const babelwires::ProjectContext& context)
     : babelwires::ParallelProcessor(context, TestParallelProcessorInput::getThisType(),

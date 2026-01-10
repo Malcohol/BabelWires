@@ -24,7 +24,7 @@ namespace babelwires {
             Optionality m_optionality = Optionality::alwaysActive;
         };
 
-        RecordType(const TypeSystem& typeSystem, const std::vector<FieldDefinition>& fields);
+        RecordType(TypeExp typeExp, const TypeSystem& typeSystem, const std::vector<FieldDefinition>& fields);
 
         /// A convenience method for defining a record with all the fields of "parent" plus "additionalFields".
         /// This ensures a subtype relationship between this and parent, and ensures that the relationship is
@@ -32,7 +32,7 @@ namespace babelwires {
         /// Note that you don't have to use this method to establish that relationship, since subtyping is
         /// defined by the sets of fields. This is similar to duck-typing, but since field identifiers are globally
         /// unique, a subtyping relationship should never arise unintentionally.
-        RecordType(const TypeSystem& typeSystem, const RecordType& parent, const std::vector<FieldDefinition>& additionalFields);
+        RecordType(TypeExp typeExp, const TypeSystem& typeSystem, const RecordType& parent, const std::vector<FieldDefinition>& additionalFields);
 
         /// The storage type, which has a resolved TypePtr instead of a TypeExp.
         struct Field {
@@ -42,7 +42,7 @@ namespace babelwires {
         };
 
         /// Construct a record when you have TypePtrs
-        RecordType(std::vector<Field> fields);
+        RecordType(TypeExp typeExp, std::vector<Field> fields);
 
         std::string getFlavour() const override;
 

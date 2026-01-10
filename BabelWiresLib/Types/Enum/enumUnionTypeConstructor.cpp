@@ -42,7 +42,7 @@ babelwires::EnumUnionTypeConstructor::constructType(const TypeSystem& typeSystem
             }
         }
     }
-    return makeType<ConstructedType<EnumType>>(std::move(newTypeExp), std::move(unionOfValues), 0);
+    return makeType<EnumType>(std::move(newTypeExp), std::move(unionOfValues), 0);
 }
 
 babelwires::TypeExp babelwires::EnumUnionTypeConstructor::makeTypeExp(TypeExp enumA, TypeExp enumB) {

@@ -6,7 +6,7 @@
 #include <Domains/TestDomain/testRecordType.hpp>
 
 testDomain::TestRecordWithVariantsType::TestRecordWithVariantsType(const babelwires::TypeSystem& typeSystem)
-    : RecordWithVariantsType(typeSystem,
+    : RecordWithVariantsType(getThisType(), typeSystem,
           {getTagAId(), getTagBId(), getTagCId(), getTagDId()},
           {{getFieldA0Id(), babelwires::DefaultIntType::getThisType(), {getTagAId(), getTagDId()}},
            {getFf0Id(), babelwires::DefaultIntType::getThisType()},

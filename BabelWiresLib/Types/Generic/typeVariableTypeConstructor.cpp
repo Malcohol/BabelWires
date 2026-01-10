@@ -55,7 +55,7 @@ babelwires::TypeVariableTypeConstructor::constructType(const TypeSystem& typeSys
     if (arguments.getTypeArguments().size() == 1) {
         return resolvedTypeArguments[0];
     } else {
-        return makeType<ConstructedType<TypeVariableType>>(std::move(newTypeExp));
+        return makeType<TypeVariableType>(std::move(newTypeExp));
     }
 }
 

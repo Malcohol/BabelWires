@@ -37,7 +37,7 @@ babelwires::IntTypeConstructor::constructType(const TypeSystem& typeSystem, Type
                                     << arguments.getTypeArguments().size();
     }
     auto [range, defaultValue] = extractValueArguments(arguments.getValueArguments());
-    return makeType<ConstructedType<IntType>>(std::move(newTypeExp), range, defaultValue);
+    return makeType<IntType>(std::move(newTypeExp), range, defaultValue);
 }
 
 babelwires::TypeExp babelwires::IntTypeConstructor::makeTypeExp(IntValue::NativeType min, IntValue::NativeType max,

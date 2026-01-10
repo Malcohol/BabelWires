@@ -12,7 +12,8 @@
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-babelwires::TypeVariableType::TypeVariableType() = default;
+babelwires::TypeVariableType::TypeVariableType(TypeExp typeExp)
+    : Type(std::move(typeExp)) {}
 
 std::string babelwires::TypeVariableType::getFlavour() const {
     return "variable";
