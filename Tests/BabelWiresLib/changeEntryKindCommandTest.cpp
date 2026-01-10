@@ -25,7 +25,7 @@ TEST(ChangeEntryKindCommandTest, executeAndUndo) {
     mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());
     mapValue.setTargetTypeExp(babelwires::StringType::getThisIdentifier());
 
-    const babelwires::TypePtr& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
+    const babelwires::TypePtr& stringType = environment.m_typeSystem.getRegisteredType<babelwires::StringType>();
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *stringType);
 
@@ -62,7 +62,7 @@ TEST(ChangeEntryKindCommandTest, failFallbackNotAtEnd) {
     mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());
     mapValue.setTargetTypeExp(babelwires::StringType::getThisIdentifier());
 
-    const babelwires::TypePtr& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
+    const babelwires::TypePtr& stringType = environment.m_typeSystem.getRegisteredType<babelwires::StringType>();
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *stringType);
 
@@ -87,7 +87,7 @@ TEST(ChangeEntryKindCommandTest, failNotFallbackAtEnd) {
     mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());
     mapValue.setTargetTypeExp(babelwires::StringType::getThisIdentifier());
 
-    const babelwires::TypePtr& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
+    const babelwires::TypePtr& stringType = environment.m_typeSystem.getRegisteredType<babelwires::StringType>();
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *stringType);
 

@@ -57,7 +57,7 @@ class ApplyToSubvaluesTest : public ::testing::Test {
 TEST_F(ApplyToSubvaluesTest, applyToSubvalues) {
     babelwires::TypeSystem& typeSystem = m_testEnvironment.m_typeSystem;
     const auto& testComplexRecordType =
-        typeSystem.getEntryByType<testDomain::TestComplexRecordType>();
+        typeSystem.getRegisteredType<testDomain::TestComplexRecordType>();
 
     // Apply a function to increment all IntType subvalues by 1
     babelwires::applyToSubvalues(
@@ -74,7 +74,7 @@ TEST_F(ApplyToSubvaluesTest, applyToSubvalues) {
 TEST_F(ApplyToSubvaluesTest, applyToSubvaluesOfType) {
     babelwires::TypeSystem& typeSystem = m_testEnvironment.m_typeSystem;
     const auto& testComplexRecordType =
-        typeSystem.getEntryByType<testDomain::TestComplexRecordType>();
+        typeSystem.getRegisteredType<testDomain::TestComplexRecordType>();
 
     // Apply a function to increment all IntType subvalues by 1
     babelwires::applyToSubvaluesOfType<babelwires::IntType>(

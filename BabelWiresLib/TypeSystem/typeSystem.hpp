@@ -29,12 +29,12 @@ namespace babelwires {
         }
 
         template <typename TYPE, std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
-        TypePtrT<TYPE> getEntryByType() const {
-            return typeAs<TYPE>(getRegisteredType(TYPE::getThisIdentifier()));
+        TypePtrT<TYPE> getRegisteredType() const {
+            return typeAs<TYPE>(getRegisteredTypeById(TYPE::getThisIdentifier()));
         }
 
-        TypePtr tryGetRegisteredType(RegisteredTypeId id) const;
-        TypePtr getRegisteredType(RegisteredTypeId id) const;
+        TypePtr tryGetRegisteredTypeById(RegisteredTypeId id) const;
+        TypePtr getRegisteredTypeById(RegisteredTypeId id) const;
 
         template <typename TYPE_CONSTRUCTOR, typename... ARGS,
                   std::enable_if_t<std::is_base_of_v<TypeConstructor, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
@@ -51,8 +51,6 @@ namespace babelwires {
         const TypeConstructor* tryGetTypeConstructor(TypeConstructorId id) const;
         const TypeConstructor& getTypeConstructor(TypeConstructorId id) const;
 
-        using TypeIdSet = std::vector<RegisteredTypeId>;
-
         /// Determine how typeA and typeB are related by the subtype order.
         SubtypeOrder compareSubtype(const Type& typeA, const Type& typeB) const;
 
@@ -61,6 +59,8 @@ namespace babelwires {
 
         /// Do the two types have some values in common?
         bool isRelatedType(const Type& typeA, const Type& typeB) const;
+
+        using TypeIdSet = std::vector<RegisteredTypeId>;
 
         TypeIdSet getAllRegisteredTypes() const;
 

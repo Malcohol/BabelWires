@@ -184,7 +184,7 @@ TEST(MapHelperTest, unorderedMapApplicator_differentTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& testEnum = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     babelwires::MapValue mapValue = setUpTestTypeTestEnumMapValue(typeSystem, mapValue);
 
@@ -203,7 +203,7 @@ TEST(MapHelperTest, enumSourceMapApplicator_allToOneFallback) {
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& testEnum = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     babelwires::MapValue mapValue = setUpTestEnumMapValue(typeSystem, mapValue, true);
 
@@ -222,7 +222,7 @@ TEST(MapHelperTest, enumSourceMapApplicator_allToSameFallback) {
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& testEnum = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     babelwires::MapValue mapValue = setUpTestEnumMapValue(typeSystem, mapValue, false);
 
@@ -241,7 +241,7 @@ TEST(MapHelperTest, enumSourceMapApplicator_differentTypes) {
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& testEnum = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     babelwires::MapValue mapValue = setUpTestEnumTestTypeMapValue(typeSystem, mapValue);
 

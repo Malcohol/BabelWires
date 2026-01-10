@@ -321,17 +321,17 @@ TEST(RecordWithVariantsTypeTest, getChildNonConstOfFieldInBranch) {
 TEST(RecordWithVariantsTypeTest, subtype) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::TypePtr recordVWithNoFields = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordVWithNoFields>();
-    const babelwires::TypePtr recordVA0 = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordVA0>();
-    const babelwires::TypePtr recordVA1 = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordVA1>();
-    const babelwires::TypePtr recordVAB = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordVAB>();
-    const babelwires::TypePtr recordVB = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordVB>();
-    const babelwires::TypePtr recordVAS = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordVAS>();
-    const babelwires::TypePtr recordVAV0 = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordVAV0>();
-    const babelwires::TypePtr recordVABV0 = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordVABV0>();
-    const babelwires::TypePtr recordVABV01 = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordVABV01>();
-    const babelwires::TypePtr recordVAVB = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordVAVB>();
-    const babelwires::TypePtr recordVABV1 = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordVABV1>();
+    const babelwires::TypePtr recordVWithNoFields = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordVWithNoFields>();
+    const babelwires::TypePtr recordVA0 = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordVA0>();
+    const babelwires::TypePtr recordVA1 = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordVA1>();
+    const babelwires::TypePtr recordVAB = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordVAB>();
+    const babelwires::TypePtr recordVB = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordVB>();
+    const babelwires::TypePtr recordVAS = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordVAS>();
+    const babelwires::TypePtr recordVAV0 = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordVAV0>();
+    const babelwires::TypePtr recordVABV0 = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordVABV0>();
+    const babelwires::TypePtr recordVABV01 = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordVABV01>();
+    const babelwires::TypePtr recordVAVB = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordVAVB>();
+    const babelwires::TypePtr recordVABV1 = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordVABV1>();
 
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordVWithNoFields, *recordVA0),
               babelwires::SubtypeOrder::IsSupertype);

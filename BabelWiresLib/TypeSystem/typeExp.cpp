@@ -49,7 +49,7 @@ babelwires::TypePtr babelwires::TypeExp::tryResolve(const TypeSystem& typeSystem
     struct VisitorMethods {
         TypePtr operator()(std::monostate) { return {}; }
         TypePtr operator()(RegisteredTypeId typeId) {
-            return m_typeSystem.tryGetRegisteredType(typeId);
+            return m_typeSystem.tryGetRegisteredTypeById(typeId);
         }
         TypePtr operator()(const ConstructedTypeData& higherOrderData) {
             try {
@@ -73,7 +73,7 @@ babelwires::TypePtr babelwires::TypeExp::resolve(const TypeSystem& typeSystem) c
         TypePtr operator()(std::monostate) {
             throw TypeSystemException() << "A null type cannot be resolved.";
         }
-        TypePtr operator()(RegisteredTypeId typeId) { return m_typeSystem.getRegisteredType(typeId); }
+        TypePtr operator()(RegisteredTypeId typeId) { return m_typeSystem.getRegisteredTypeById(typeId); }
         TypePtr operator()(const ConstructedTypeData& higherOrderData) {
             const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
             const TypeConstructor& typeConstructor = m_typeSystem.getTypeConstructor(typeConstructorId);

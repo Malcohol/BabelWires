@@ -28,8 +28,8 @@ TEST(SetMapSourceTypeCommandTest, executeAndUndo) {
     mapValue.setSourceTypeExp(testDomain::TestSubSubEnum1::getThisIdentifier());
     mapValue.setTargetTypeExp(babelwires::StringType::getThisIdentifier());
 
-    const auto& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testEnumType = environment.m_typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& stringType = environment.m_typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testEnumType = environment.m_typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *testEnumType, *stringType);
 
@@ -82,7 +82,7 @@ TEST(SetMapSourceTypeCommandTest, failWithUnallowedType) {
     mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeExps({{babelwires::StringType::getThisIdentifier()}});
 
-    const auto& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = environment.m_typeSystem.getRegisteredType<babelwires::StringType>();
 
     babelwires::MapValue mapValue;
     mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());

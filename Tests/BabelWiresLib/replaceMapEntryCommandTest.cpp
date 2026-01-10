@@ -26,7 +26,7 @@ TEST(ReplaceMapEntryCommandTest, executeAndUndo) {
     mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());
     mapValue.setTargetTypeExp(babelwires::StringType::getThisIdentifier());
 
-    const auto& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = environment.m_typeSystem.getRegisteredType<babelwires::StringType>();
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *stringType);
 
@@ -75,7 +75,7 @@ TEST(ReplaceMapEntryCommandTest, failBeyondEnd) {
     mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());
     mapValue.setTargetTypeExp(babelwires::StringType::getThisIdentifier());
 
-    const auto& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = environment.m_typeSystem.getRegisteredType<babelwires::StringType>();
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *stringType);
 
@@ -100,7 +100,7 @@ TEST(ReplaceMapEntryCommandTest, replaceInvalid) {
     mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());
     mapValue.setTargetTypeExp(babelwires::StringType::getThisIdentifier());
 
-    const auto& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = environment.m_typeSystem.getRegisteredType<babelwires::StringType>();
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *stringType);
 
@@ -154,7 +154,7 @@ TEST(ReplaceMapEntryCommandTest, failInvalid) {
     mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());
     mapValue.setTargetTypeExp(babelwires::StringType::getThisIdentifier());
 
-    const auto& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = environment.m_typeSystem.getRegisteredType<babelwires::StringType>();
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *stringType);
 

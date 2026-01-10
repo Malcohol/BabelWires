@@ -31,7 +31,7 @@ TEST(SumTypeTest, sumTypeDefault0) {
     EXPECT_NE(newValue->as<babelwires::IntValue>(), nullptr);
 
     babelwires::ValueHolder rationalValue =
-        testEnvironment.m_typeSystem.getEntryByType<babelwires::DefaultRationalType>()->createValue(
+        testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultRationalType>()->createValue(
             testEnvironment.m_typeSystem);
 
     EXPECT_EQ(sumType.getIndexOfValue(testEnvironment.m_typeSystem, *rationalValue), 1);
@@ -56,7 +56,7 @@ TEST(SumTypeTest, sumTypeDefault1) {
     EXPECT_NE(newValue->as<babelwires::RationalValue>(), nullptr);
 
     babelwires::ValueHolder intValue =
-        testEnvironment.m_typeSystem.getEntryByType<babelwires::DefaultIntType>()->createValue(
+        testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultIntType>()->createValue(
             testEnvironment.m_typeSystem);
 
     EXPECT_EQ(sumType.getIndexOfValue(testEnvironment.m_typeSystem, *intValue), 0);
@@ -139,10 +139,10 @@ TEST(SumTypeTest, sumTypeConstructorMalformed) {
 TEST(SumTypeTest, compareSubtype) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::TypePtr sumType = testEnvironment.m_typeSystem.getEntryByType<testDomain::TestSumType>();
-    const babelwires::TypePtr intType = testEnvironment.m_typeSystem.getEntryByType<babelwires::DefaultIntType>();
-    const babelwires::TypePtr ratType = testEnvironment.m_typeSystem.getEntryByType<babelwires::DefaultRationalType>();
-    const babelwires::TypePtr stringType = testEnvironment.m_typeSystem.getEntryByType<babelwires::StringType>();
+    const babelwires::TypePtr sumType = testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestSumType>();
+    const babelwires::TypePtr intType = testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultIntType>();
+    const babelwires::TypePtr ratType = testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultRationalType>();
+    const babelwires::TypePtr stringType = testEnvironment.m_typeSystem.getRegisteredType<babelwires::StringType>();
 
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*intType, *sumType), babelwires::SubtypeOrder::IsSubtype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*sumType, *intType), babelwires::SubtypeOrder::IsSupertype);

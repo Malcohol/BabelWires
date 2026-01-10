@@ -20,7 +20,7 @@ namespace {
 babelwires::TypeSystem::TypeSystem() = default;
 babelwires::TypeSystem::~TypeSystem() = default;
 
-babelwires::TypePtr babelwires::TypeSystem::tryGetRegisteredType(RegisteredTypeId id) const {
+babelwires::TypePtr babelwires::TypeSystem::tryGetRegisteredTypeById(RegisteredTypeId id) const {
     auto it = m_registeredTypeRegistry.find(id);
     if (it != m_registeredTypeRegistry.end()) {
         return std::get<0>(it->second);
@@ -28,7 +28,7 @@ babelwires::TypePtr babelwires::TypeSystem::tryGetRegisteredType(RegisteredTypeI
     return {};
 }
 
-babelwires::TypePtr babelwires::TypeSystem::getRegisteredType(RegisteredTypeId id) const {
+babelwires::TypePtr babelwires::TypeSystem::getRegisteredTypeById(RegisteredTypeId id) const {
     auto it = m_registeredTypeRegistry.find(id);
     assert((it != m_registeredTypeRegistry.end()) && "Primitive Type not registered in type system");
     return std::get<0>(it->second);

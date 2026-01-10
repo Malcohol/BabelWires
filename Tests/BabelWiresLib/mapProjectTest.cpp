@@ -27,7 +27,7 @@ TEST(MapProjectTest, mapProjectEntry) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<babelwires::StringType>();
-    auto stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    auto stringType = typeSystem.getRegisteredType<babelwires::StringType>();
 
     babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *stringType);
 
@@ -82,9 +82,9 @@ TEST(MapProjectTest, types) {
     EXPECT_EQ(mapProject.getCurrentTargetTypeExp(), testDomain::TestEnum::getThisIdentifier());
 
     EXPECT_EQ(mapProject.getCurrentSourceType().get(),
-              environment.m_typeSystem.getEntryByType<babelwires::StringType>().get());
+              environment.m_typeSystem.getRegisteredType<babelwires::StringType>().get());
     EXPECT_EQ(mapProject.getCurrentTargetType().get(),
-              environment.m_typeSystem.getEntryByType<testDomain::TestEnum>().get());
+              environment.m_typeSystem.getRegisteredType<testDomain::TestEnum>().get());
 }
 
 TEST(MapProjectTest, badTypes) {
@@ -129,8 +129,8 @@ TEST(MapProjectTest, setAndExtractMapValue) {
     mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeExps({{testDomain::TestEnum::getThisIdentifier()}});
 
-    const auto& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testSubEnumType = environment.m_typeSystem.getEntryByType<testDomain::TestSubEnum>();
+    const auto& stringType = environment.m_typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testSubEnumType = environment.m_typeSystem.getRegisteredType<testDomain::TestSubEnum>();
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *testSubEnumType);
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *testSubEnumType);
@@ -159,8 +159,8 @@ TEST(MapProjectTest, modifyMapValue) {
     mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeExps({{testDomain::TestEnum::getThisIdentifier()}});
 
-    const auto& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testSubEnumType = environment.m_typeSystem.getEntryByType<testDomain::TestSubEnum>();
+    const auto& stringType = environment.m_typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testSubEnumType = environment.m_typeSystem.getRegisteredType<testDomain::TestSubEnum>();
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *testSubEnumType);
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *testSubEnumType);
@@ -214,7 +214,7 @@ TEST(MapProjectTest, typeChangeAndValidity) {
     mapProject.setAllowedSourceTypeExps({{testDomain::TestEnum::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeExps({{testDomain::TestEnum::getThisIdentifier()}});
 
-    const auto& testSubEnumType = environment.m_typeSystem.getEntryByType<testDomain::TestSubEnum>();
+    const auto& testSubEnumType = environment.m_typeSystem.getRegisteredType<testDomain::TestSubEnum>();
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *testSubEnumType, *testSubEnumType);
     babelwires::EnumValue newSourceValue;
@@ -269,9 +269,9 @@ TEST(MapProjectTest, modifyValidity) {
     mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeExps({{testDomain::TestEnum::getThisIdentifier()}});
 
-    const auto& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testEnumType = environment.m_typeSystem.getEntryByType<testDomain::TestEnum>();
-    const auto& testSubEnumType = environment.m_typeSystem.getEntryByType<testDomain::TestSubEnum>();
+    const auto& stringType = environment.m_typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testEnumType = environment.m_typeSystem.getRegisteredType<testDomain::TestEnum>();
+    const auto& testSubEnumType = environment.m_typeSystem.getRegisteredType<testDomain::TestSubEnum>();
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *testSubEnumType);
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *testSubEnumType);

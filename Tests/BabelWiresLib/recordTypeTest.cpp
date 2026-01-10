@@ -326,20 +326,20 @@ TEST(RecordTypeTest, subtype) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::TypePtr recordWithNoFields =
-        testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordWithNoFields>();
-    const babelwires::TypePtr recordA0 = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordA0>();
-    const babelwires::TypePtr recordA1 = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordA1>();
-    const babelwires::TypePtr recordAB = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordAB>();
-    const babelwires::TypePtr recordB = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordB>();
-    const babelwires::TypePtr recordAS = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordAS>();
-    const babelwires::TypePtr recordAOpt = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordAOpt>();
-    const babelwires::TypePtr recordABOpt = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordABOpt>();
+        testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordWithNoFields>();
+    const babelwires::TypePtr recordA0 = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordA0>();
+    const babelwires::TypePtr recordA1 = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordA1>();
+    const babelwires::TypePtr recordAB = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordAB>();
+    const babelwires::TypePtr recordB = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordB>();
+    const babelwires::TypePtr recordAS = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordAS>();
+    const babelwires::TypePtr recordAOpt = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordAOpt>();
+    const babelwires::TypePtr recordABOpt = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordABOpt>();
     const babelwires::TypePtr recordAOptFixed =
-        testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordAOptFixed>();
-    const babelwires::TypePtr recordAOptS = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordAOptS>();
-    const babelwires::TypePtr recordAsub0 = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordAsub0>();
+        testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordAOptFixed>();
+    const babelwires::TypePtr recordAOptS = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordAOptS>();
+    const babelwires::TypePtr recordAsub0 = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordAsub0>();
     const babelwires::TypePtr recordAsubBsup =
-        testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordAsubBsup>();
+        testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordAsubBsup>();
 
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordWithNoFields, *recordA0),
               babelwires::SubtypeOrder::IsSupertype);
@@ -406,7 +406,7 @@ TEST(RecordTypeTest, subtype) {
 TEST(RecordTypeTest, subtypeConstructor) {
     testUtils::TestEnvironment testEnvironment;
 
-    const auto& abOptChild = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordABOptChild>();
+    const auto& abOptChild = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordABOptChild>();
 
     const std::vector<babelwires::RecordType::Field> fields = abOptChild->getFields();
     EXPECT_EQ(fields.size(), 5);
@@ -421,9 +421,9 @@ TEST(RecordTypeTest, subtypeConstructor) {
     EXPECT_EQ(optionals[0], "Opt");
     EXPECT_EQ(optionals[1], "Opt2");
 
-    const babelwires::TypePtr recordABOpt = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordABOpt>();
+    const babelwires::TypePtr recordABOpt = testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordABOpt>();
     const babelwires::TypePtr recordABOptChild =
-        testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordABOptChild>();
+        testEnvironment.m_typeSystem.getRegisteredType<testDomain::RecordABOptChild>();
 
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordABOpt, *recordABOptChild),
               babelwires::SubtypeOrder::IsSupertype);

@@ -89,8 +89,8 @@ TEST(EnumTest, subEnum) {
     // Have to register Sub-Enums in the TypeSystem or they don't work.
     typeSystem.addEntry<testDomain::TestSubEnum>();
 
-    const auto& testEnum = typeSystem.getEntryByType<testDomain::TestEnum>();
-    const auto& testSubEnum = typeSystem.getEntryByType<testDomain::TestSubEnum>();
+    const auto& testEnum = typeSystem.getRegisteredType<testDomain::TestEnum>();
+    const auto& testSubEnum = typeSystem.getRegisteredType<testDomain::TestSubEnum>();
 
     auto [valueHolder, value] = testSubEnum->createValue(typeSystem);
     EXPECT_TRUE(valueHolder);

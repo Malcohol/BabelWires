@@ -137,7 +137,7 @@ TEST(MapValueTest, equality) {
 
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<babelwires::StringType>();
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
 
     mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, *stringType, *stringType));
 
@@ -182,7 +182,7 @@ TEST(MapValueTest, getHash) {
 
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<babelwires::StringType>();
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
 
     mapValue.emplaceBack(std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, *stringType, *stringType));
 
@@ -202,7 +202,7 @@ TEST(MapValueTest, isInvalid_validMap) {
 
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<babelwires::StringType>();  
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
 
     mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());
     mapValue.setTargetTypeExp(babelwires::StringType::getThisIdentifier());
@@ -222,7 +222,7 @@ TEST(MapValueTest, isInvalid_outOfPlaceFallback) {
 
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<babelwires::StringType>();
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
 
     mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());
     mapValue.setTargetTypeExp(babelwires::StringType::getThisIdentifier());
@@ -238,7 +238,7 @@ TEST(MapValueTest, isInvalid_noFallback) {
 
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<babelwires::StringType>();  
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
 
     mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());
     mapValue.setTargetTypeExp(babelwires::StringType::getThisIdentifier());
@@ -252,7 +252,7 @@ TEST(MapValueTest, isValid_typeMismatch) {
 
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<babelwires::StringType>();  
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
 
     mapValue.setSourceTypeExp(testTypeId1);
     mapValue.setTargetTypeExp(babelwires::StringType::getThisIdentifier());
@@ -271,7 +271,7 @@ TEST(MapValueTest, serializationTest) {
     
         babelwires::TypeSystem typeSystem;
         typeSystem.addEntry<babelwires::StringType>();  
-        const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+        const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
 
             // Note: We want to be able to serialize when entries do not match the types, as in this case.
         auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, *stringType, *stringType);
@@ -313,7 +313,7 @@ TEST(MapValueTest, cloneTest) {
 
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<babelwires::StringType>();  
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
 
     // Note: We want to be able to clone when entries do not match the types, as in this case.
     auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, *stringType, *stringType);

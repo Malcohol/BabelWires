@@ -64,9 +64,9 @@ TEST(SumOfMapsTypeTest, validValues) {
 
     TestSumOfMapsType sumOfMapsType(testEnvironment.m_typeSystem);
 
-    const auto& intType = testEnvironment.m_typeSystem.getEntryByType<babelwires::DefaultIntType>();
-    const auto& stringType = testEnvironment.m_typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& rationalType = testEnvironment.m_typeSystem.getEntryByType<babelwires::DefaultRationalType>();
+    const auto& intType = testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultIntType>();
+    const auto& stringType = testEnvironment.m_typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& rationalType = testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultRationalType>();
 
     babelwires::MapValue map0(testEnvironment.m_typeSystem, intType, intType, babelwires::MapEntryData::Kind::All2Sm);
     babelwires::MapValue map1(testEnvironment.m_typeSystem, intType, stringType, babelwires::MapEntryData::Kind::All21);

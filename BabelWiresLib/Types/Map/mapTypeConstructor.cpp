@@ -23,7 +23,7 @@ babelwires::MapTypeConstructor::extractValueArguments(const TypeSystem& typeSyst
     }
 
     if (const EnumValue* enumValue = valueArguments[0]->as<EnumValue>()) {
-        const auto mapEntryFallbackKind = typeSystem.getEntryByType<MapEntryFallbackKind>();
+        const auto mapEntryFallbackKind = typeSystem.getRegisteredType<MapEntryFallbackKind>();
         return mapEntryFallbackKind->getValueFromIdentifier(enumValue->get());
     } else {
         throw TypeSystemException() << "Value argument 0 given to MapTypeConstructor was not a MapEntryFallbackKind";

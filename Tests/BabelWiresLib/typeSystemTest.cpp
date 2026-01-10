@@ -16,11 +16,11 @@
 TEST(TypeSystemTest, isSubTypesPrimitives) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::TypePtr testType = testEnvironment.m_typeSystem.getEntryByType<testUtils::TestType>();
-    const babelwires::TypePtr testEnum = testEnvironment.m_typeSystem.getEntryByType<testDomain::TestEnum>();
-    const babelwires::TypePtr testSubEnum = testEnvironment.m_typeSystem.getEntryByType<testDomain::TestSubEnum>();
-    const babelwires::TypePtr testSubSubEnum1 = testEnvironment.m_typeSystem.getEntryByType<testDomain::TestSubSubEnum1>();
-    const babelwires::TypePtr testSubSubEnum2 = testEnvironment.m_typeSystem.getEntryByType<testDomain::TestSubSubEnum2>();
+    const babelwires::TypePtr testType = testEnvironment.m_typeSystem.getRegisteredType<testUtils::TestType>();
+    const babelwires::TypePtr testEnum = testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestEnum>();
+    const babelwires::TypePtr testSubEnum = testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestSubEnum>();
+    const babelwires::TypePtr testSubSubEnum1 = testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestSubSubEnum1>();
+    const babelwires::TypePtr testSubSubEnum2 = testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestSubSubEnum2>();
 
     EXPECT_TRUE(testEnvironment.m_typeSystem.isSubType(*testType, *testType));
     EXPECT_FALSE(testEnvironment.m_typeSystem.isSubType(*testType, *testEnum));
@@ -54,7 +54,7 @@ TEST(TypeSystemTest, compareSubtype) {
     
     const babelwires::TypePtr testType4 = testType4Exp.resolve(testEnvironment.m_typeSystem);
     const babelwires::TypePtr testType6 = testType6Exp.resolve(testEnvironment.m_typeSystem);
-    const babelwires::TypePtr testEnum = testEnvironment.m_typeSystem.getEntryByType<testDomain::TestEnum>();
+    const babelwires::TypePtr testEnum = testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*testType4, *testType4), babelwires::SubtypeOrder::IsEquivalent);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*testType4, *testType6), babelwires::SubtypeOrder::IsSubtype);
@@ -65,11 +65,11 @@ TEST(TypeSystemTest, compareSubtype) {
 TEST(TypeSystemTest, isRelatedTypes) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::TypePtr testType = testEnvironment.m_typeSystem.getEntryByType<testUtils::TestType>();
-    const babelwires::TypePtr testEnum = testEnvironment.m_typeSystem.getEntryByType<testDomain::TestEnum>();
-    const babelwires::TypePtr testSubEnum = testEnvironment.m_typeSystem.getEntryByType<testDomain::TestSubEnum>();
-    const babelwires::TypePtr testSubSubEnum1 = testEnvironment.m_typeSystem.getEntryByType<testDomain::TestSubSubEnum1>();
-    const babelwires::TypePtr testSubSubEnum2 = testEnvironment.m_typeSystem.getEntryByType<testDomain::TestSubSubEnum2>();
+    const babelwires::TypePtr testType = testEnvironment.m_typeSystem.getRegisteredType<testUtils::TestType>();
+    const babelwires::TypePtr testEnum = testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestEnum>();
+    const babelwires::TypePtr testSubEnum = testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestSubEnum>();
+    const babelwires::TypePtr testSubSubEnum1 = testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestSubSubEnum1>();
+    const babelwires::TypePtr testSubSubEnum2 = testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestSubSubEnum2>();
 
     EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testType, *testType));
     EXPECT_FALSE(testEnvironment.m_typeSystem.isRelatedType(*testType, *testEnum));

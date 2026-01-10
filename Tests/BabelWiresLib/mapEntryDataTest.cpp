@@ -48,8 +48,8 @@ TEST(MapEntryDataTest, create) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     const auto oneToOne =
         babelwires::MapEntryData::create(typeSystem, *stringType, *testEnumType, babelwires::MapEntryData::Kind::One21);
@@ -84,8 +84,8 @@ TEST(MapEntryDataTest, equalityByKind) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *testEnumType);
     babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, *testEnumType);
@@ -105,7 +105,7 @@ TEST(MapEntryDataTest, oneToOneEqualitySameTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
 
     babelwires::OneToOneMapEntryData oneToOneA(typeSystem, *stringType, *stringType);
 
@@ -133,8 +133,8 @@ TEST(MapEntryDataTest, oneToOneEqualityDifferentTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     babelwires::OneToOneMapEntryData oneToOneA(typeSystem, *stringType, *stringType);
 
@@ -164,7 +164,7 @@ TEST(MapEntryDataTest, allToOneEqualitySameTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
 
     babelwires::AllToOneFallbackMapEntryData allToOneA(typeSystem, *stringType);
 
@@ -187,8 +187,8 @@ TEST(MapEntryDataTest, allToOneEqualityDifferentTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     babelwires::AllToOneFallbackMapEntryData allToOneA(typeSystem, *stringType);
 
@@ -203,8 +203,8 @@ TEST(MapEntryDataTest, hashByKind) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     const babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *testEnumType);
     babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, *testEnumType);
@@ -224,7 +224,7 @@ TEST(MapEntryDataTest, oneToOneHashSameTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
 
     babelwires::OneToOneMapEntryData oneToOneA(typeSystem, *stringType, *stringType);
 
@@ -253,8 +253,8 @@ TEST(MapEntryDataTest, oneToOneHashDifferentTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     babelwires::OneToOneMapEntryData oneToOneA(typeSystem, *stringType, *stringType);
 
@@ -284,7 +284,7 @@ TEST(MapEntryDataTest, allToOneHashSameTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
 
     babelwires::AllToOneFallbackMapEntryData allToOneA(typeSystem, *stringType);
 
@@ -306,8 +306,8 @@ TEST(MapEntryDataTest, allToOneHashDifferentTypes) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     babelwires::AllToOneFallbackMapEntryData allToOneA(typeSystem, *stringType);
 
@@ -322,8 +322,8 @@ TEST(MapEntryDataTest, oneToOneValidate) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *testEnumType);
 
@@ -340,8 +340,8 @@ TEST(MapEntryDataTest, allToOneValidate) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, *stringType);
 
@@ -357,8 +357,8 @@ TEST(MapEntryDataTest, allToSameValidate) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     babelwires::AllToSameFallbackMapEntryData allToSame;
 
@@ -374,8 +374,8 @@ TEST(MapEntryDataTest, oneToOneGetAndSetValues) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *testEnumType);
 
@@ -400,8 +400,8 @@ TEST(MapEntryDataTest, allToOneGetAndSetValues) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, *stringType);
 
@@ -421,8 +421,8 @@ TEST(MapEntryDataTest, oneToOneSerialize) {
         typeSystem.addEntry<babelwires::StringType>();
         typeSystem.addEntry<testDomain::TestEnum>();
 
-        const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
-        const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+        const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
+        const auto& testEnumType = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
         babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *testEnumType);
         babelwires::StringValue sourceValue;
@@ -467,7 +467,7 @@ TEST(MapEntryDataTest, allToOneSerialize) {
         babelwires::TypeSystem typeSystem;
         typeSystem.addEntry<babelwires::StringType>();
 
-        const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+        const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
 
         babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, *stringType);
 
@@ -525,8 +525,8 @@ TEST(MapEntryDataTest, oneToOneClone) {
     typeSystem.addEntry<babelwires::StringType>();
     typeSystem.addEntry<testDomain::TestEnum>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
-    const auto& testEnumType = typeSystem.getEntryByType<testDomain::TestEnum>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& testEnumType = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
     babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *testEnumType);
 
@@ -560,7 +560,7 @@ TEST(MapEntryDataTest, allToOneClone) {
     babelwires::TypeSystem typeSystem;
     typeSystem.addEntry<babelwires::StringType>();
 
-    const auto& stringType = typeSystem.getEntryByType<babelwires::StringType>();
+    const auto& stringType = typeSystem.getRegisteredType<babelwires::StringType>();
 
     babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, *stringType);
 

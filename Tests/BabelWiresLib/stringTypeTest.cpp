@@ -41,7 +41,7 @@ TEST(StringTypeTest, stringTypeIsRegistered) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::TypePtr foundType =
-        testEnvironment.m_typeSystem.tryGetRegisteredType(babelwires::StringType::getThisIdentifier());
+        testEnvironment.m_typeSystem.tryGetRegisteredTypeById(babelwires::StringType::getThisIdentifier());
     EXPECT_TRUE(foundType);
     EXPECT_NE(foundType->as<babelwires::StringType>(), nullptr);
 }

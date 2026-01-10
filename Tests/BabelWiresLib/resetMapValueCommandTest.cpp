@@ -28,7 +28,7 @@ TEST(ResetMapValueCommandTest, executeAndUndoSource) {
     mapValue.setSourceTypeExp(testDomain::TestSumType::getThisIdentifier());
     mapValue.setTargetTypeExp(testDomain::TestSumType::getThisIdentifier());
 
-    const auto& testSumType = environment.m_typeSystem.getEntryByType<testDomain::TestSumType>();
+    const auto& testSumType = environment.m_typeSystem.getRegisteredType<testDomain::TestSumType>();
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *testSumType, *testSumType);
 
@@ -73,7 +73,7 @@ TEST(ResetMapValueCommandTest, executeAndUndoTarget) {
     mapValue.setSourceTypeExp(testDomain::TestSumType::getThisIdentifier());
     mapValue.setTargetTypeExp(testDomain::TestSumType::getThisIdentifier());
 
-    const auto& testSumType = environment.m_typeSystem.getEntryByType<testDomain::TestSumType>();
+    const auto& testSumType = environment.m_typeSystem.getRegisteredType<testDomain::TestSumType>();
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *testSumType, *testSumType);
 
@@ -121,7 +121,7 @@ TEST(ResetMapValueCommandTest, failBeyondEnd) {
     mapValue.setSourceTypeExp(testDomain::TestSumType::getThisIdentifier());
     mapValue.setTargetTypeExp(testDomain::TestSumType::getThisIdentifier());
 
-    const auto& testSumType = environment.m_typeSystem.getEntryByType<testDomain::TestSumType>();
+    const auto& testSumType = environment.m_typeSystem.getRegisteredType<testDomain::TestSumType>();
 
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *testSumType, *testSumType);
 
