@@ -62,7 +62,7 @@ namespace babelwires {
         bool isSubType(const TypeExp& typeExpA, const TypeExp& typeExpB) const;
 
         /// Do the two types have some values in common?
-        bool isRelatedType(const TypeExp& typeExpA, const TypeExp& typeExpB) const;
+        bool isRelatedType(const Type& typeA, const Type& typeB) const;
 
         TypeIdSet getAllRegisteredTypes() const;
 

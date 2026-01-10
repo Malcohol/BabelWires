@@ -74,48 +74,35 @@ TEST(TypeSystemTest, compareSubtype) {
 TEST(TypeSystemTest, isRelatedTypes) {
     testUtils::TestEnvironment testEnvironment;
 
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testUtils::TestType::getThisType(),
-                                                           testUtils::TestType::getThisType()));
-    EXPECT_FALSE(testEnvironment.m_typeSystem.isRelatedType(testUtils::TestType::getThisType(),
-                                                            testDomain::TestEnum::getThisType()));
-    EXPECT_FALSE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestEnum::getThisType(),
-                                                            testUtils::TestType::getThisType()));
+    const babelwires::TypePtr testType = testEnvironment.m_typeSystem.getEntryByType<testUtils::TestType>();
+    const babelwires::TypePtr testEnum = testEnvironment.m_typeSystem.getEntryByType<testDomain::TestEnum>();
+    const babelwires::TypePtr testSubEnum = testEnvironment.m_typeSystem.getEntryByType<testDomain::TestSubEnum>();
+    const babelwires::TypePtr testSubSubEnum1 = testEnvironment.m_typeSystem.getEntryByType<testDomain::TestSubSubEnum1>();
+    const babelwires::TypePtr testSubSubEnum2 = testEnvironment.m_typeSystem.getEntryByType<testDomain::TestSubSubEnum2>();
 
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestEnum::getThisType(),
-                                                           testDomain::TestEnum::getThisType()));
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubEnum::getThisType(),
-                                                           testDomain::TestSubEnum::getThisType()));
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubSubEnum1::getThisType(),
-                                                           testDomain::TestSubSubEnum1::getThisType()));
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubSubEnum2::getThisType(),
-                                                           testDomain::TestSubSubEnum2::getThisType()));
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testType, *testType));
+    EXPECT_FALSE(testEnvironment.m_typeSystem.isRelatedType(*testType, *testEnum));
+    EXPECT_FALSE(testEnvironment.m_typeSystem.isRelatedType(*testEnum, *testType));
 
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubEnum::getThisType(),
-                                                           testDomain::TestEnum::getThisType()));
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubSubEnum1::getThisType(),
-                                                           testDomain::TestEnum::getThisType()));
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubSubEnum2::getThisType(),
-                                                           testDomain::TestEnum::getThisType()));
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubSubEnum1::getThisType(),
-                                                           testDomain::TestSubEnum::getThisType()));
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubSubEnum2::getThisType(),
-                                                           testDomain::TestSubEnum::getThisType()));
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testEnum, *testEnum));
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testSubEnum, *testSubEnum));
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testSubSubEnum1, *testSubSubEnum1));
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testSubSubEnum2, *testSubSubEnum2));
 
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestEnum::getThisType(),
-                                                           testDomain::TestSubEnum::getThisType()));
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestEnum::getThisType(),
-                                                           testDomain::TestSubSubEnum1::getThisType()));
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestEnum::getThisType(),
-                                                           testDomain::TestSubSubEnum2::getThisType()));
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubEnum::getThisType(),
-                                                           testDomain::TestSubSubEnum1::getThisType()));
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubEnum::getThisType(),
-                                                           testDomain::TestSubSubEnum2::getThisType()));
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testSubEnum, *testEnum));
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testSubSubEnum1, *testEnum));
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testSubSubEnum2, *testEnum));
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testSubSubEnum1, *testSubEnum));
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testSubSubEnum2, *testSubEnum));
 
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubSubEnum1::getThisType(),
-                                                            testDomain::TestSubSubEnum2::getThisType()));
-    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(testDomain::TestSubSubEnum2::getThisType(),
-                                                            testDomain::TestSubSubEnum1::getThisType()));
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testEnum, *testSubEnum));
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testEnum, *testSubSubEnum1));
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testEnum, *testSubSubEnum2));
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testSubEnum, *testSubSubEnum1));
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testSubEnum, *testSubSubEnum2));
+
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testSubSubEnum1, *testSubSubEnum2));
+    EXPECT_TRUE(testEnvironment.m_typeSystem.isRelatedType(*testSubSubEnum2, *testSubSubEnum1));
 }
 
 TEST(TypeSystemTest, getTaggedTypes) {

@@ -34,7 +34,12 @@ bool babelwires::MapType::visitValue(const TypeSystem& typeSystem, const Value& 
     // Note: Map is not currently treated as a compound, so we don't call the visitor on its entries.
     if (const MapValue* const map = v.as<MapValue>()) {
         // Because of the fallback entry, we don't need contravariance here.
-        return typeSystem.isRelatedType(map->getSourceTypeExp(), m_sourceType->getTypeExp()) &&
+        const TypePtr mapSourceType = map->getSourceTypeExp().tryResolve(typeSystem);
+        const TypePtr sourceType = m_sourceType->getTypeExp().tryResolve(typeSystem);
+        if (!mapSourceType || !sourceType) {
+            return false;
+        }
+        return typeSystem.isRelatedType(*mapSourceType, *sourceType) &&
                typeSystem.isSubType(map->getTargetTypeExp(), m_targetType->getTypeExp());
     }
     return false;

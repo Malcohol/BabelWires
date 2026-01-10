@@ -92,8 +92,8 @@ bool babelwires::TypeSystem::isSubType(const TypeExp& typeExpA, const TypeExp& t
     return (order == SubtypeOrder::IsEquivalent) || (order == SubtypeOrder::IsSubtype);
 }
 
-bool babelwires::TypeSystem::isRelatedType(const TypeExp& typeExpA, const TypeExp& typeExpB) const {
-    return compareSubtype(typeExpA, typeExpB) != SubtypeOrder::IsDisjoint;
+bool babelwires::TypeSystem::isRelatedType(const Type& typeA, const Type& typeB) const {
+    return compareSubtype(typeA.getTypeExp(), typeB.getTypeExp()) != SubtypeOrder::IsDisjoint;
 }
 
 babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getTaggedRegisteredTypes(Type::Tag tag) const {
