@@ -34,7 +34,7 @@ babelwires::TypePtr babelwires::TypeSystem::getRegisteredTypeById(RegisteredType
     return std::get<0>(it->second);
 }
 
-const babelwires::Type* babelwires::TypeSystem::addRegisteredType(LongId typeId, VersionNumber version,
+void babelwires::TypeSystem::addRegisteredType(LongId typeId, VersionNumber version,
                                                            TypePtr newType) {
     auto addResult = m_registeredTypeRegistry.emplace(
         std::pair<LongId, RegisteredTypeInfo>{typeId, RegisteredTypeInfo{std::move(newType), version}});
@@ -43,7 +43,6 @@ const babelwires::Type* babelwires::TypeSystem::addRegisteredType(LongId typeId,
     for (auto it : newTypeRaw->getTags()) {
         m_taggedRegisteredTypes[it].emplace_back(typeId);
     }
-    return newTypeRaw;
 }
 
 const babelwires::TypeConstructor* babelwires::TypeSystem::tryGetTypeConstructorById(TypeConstructorId id) const {
