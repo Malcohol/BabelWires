@@ -46,7 +46,7 @@ const babelwires::Type* babelwires::TypeSystem::addRegisteredType(LongId typeId,
     return newTypeRaw;
 }
 
-const babelwires::TypeConstructor* babelwires::TypeSystem::tryGetTypeConstructor(TypeConstructorId id) const {
+const babelwires::TypeConstructor* babelwires::TypeSystem::tryGetTypeConstructorById(TypeConstructorId id) const {
     auto it = m_typeConstructorRegistry.find(id);
     if (it != m_typeConstructorRegistry.end()) {
         return std::get<0>(it->second).get();
@@ -54,7 +54,7 @@ const babelwires::TypeConstructor* babelwires::TypeSystem::tryGetTypeConstructor
     return nullptr;
 }
 
-const babelwires::TypeConstructor& babelwires::TypeSystem::getTypeConstructor(TypeConstructorId id) const {
+const babelwires::TypeConstructor& babelwires::TypeSystem::getTypeConstructorById(TypeConstructorId id) const {
     auto it = m_typeConstructorRegistry.find(id);
     assert((it != m_typeConstructorRegistry.end()) && "TypeConstructor not registered in type system");
     return *std::get<0>(it->second);

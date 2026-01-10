@@ -55,7 +55,7 @@ babelwires::TypePtr babelwires::TypeExp::tryResolve(const TypeSystem& typeSystem
             try {
                 const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
                 if (const TypeConstructor* const typeConstructor =
-                        m_typeSystem.tryGetTypeConstructor(typeConstructorId)) {
+                        m_typeSystem.tryGetTypeConstructorById(typeConstructorId)) {
                     return typeConstructor->tryGetOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
                 }
                 return {};
@@ -76,7 +76,7 @@ babelwires::TypePtr babelwires::TypeExp::resolve(const TypeSystem& typeSystem) c
         TypePtr operator()(RegisteredTypeId typeId) { return m_typeSystem.getRegisteredTypeById(typeId); }
         TypePtr operator()(const ConstructedTypeData& higherOrderData) {
             const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
-            const TypeConstructor& typeConstructor = m_typeSystem.getTypeConstructor(typeConstructorId);
+            const TypeConstructor& typeConstructor = m_typeSystem.getTypeConstructorById(typeConstructorId);
             return typeConstructor.getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
         }
         const TypeSystem& m_typeSystem;

@@ -44,12 +44,12 @@ namespace babelwires {
         }
 
         template <typename TYPE_CONSTRUCTOR, std::enable_if_t<std::is_base_of_v<TypeConstructor, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
-        const TYPE_CONSTRUCTOR& getTypeConstructorByType() const {
-            return getTypeConstructor(TYPE_CONSTRUCTOR::getThisIdentifier()).template is<TYPE_CONSTRUCTOR>();
+        const TYPE_CONSTRUCTOR& getRegisteredTypeConstructor() const {
+            return getTypeConstructorById(TYPE_CONSTRUCTOR::getThisIdentifier()).template is<TYPE_CONSTRUCTOR>();
         }
 
-        const TypeConstructor* tryGetTypeConstructor(TypeConstructorId id) const;
-        const TypeConstructor& getTypeConstructor(TypeConstructorId id) const;
+        const TypeConstructor* tryGetTypeConstructorById(TypeConstructorId id) const;
+        const TypeConstructor& getTypeConstructorById(TypeConstructorId id) const;
 
         /// Determine how typeA and typeB are related by the subtype order.
         SubtypeOrder compareSubtype(const Type& typeA, const Type& typeB) const;
