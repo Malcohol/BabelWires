@@ -17,7 +17,7 @@ namespace babelwires {
 
     using WeakTypePtr = std::weak_ptr<const Type>;
 
-    template <typename TYPE, typename... ARGS> TypePtr makeType(ARGS&&... args) {
+    template <typename TYPE, typename... ARGS> TypePtrT<TYPE> makeType(ARGS&&... args) {
         return std::make_shared<TYPE>(std::forward<ARGS>(args)...);
     }
 

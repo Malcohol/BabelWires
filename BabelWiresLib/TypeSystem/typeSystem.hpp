@@ -31,10 +31,9 @@ namespace babelwires {
         template <typename TYPE, typename... ARGS,
                   std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
         TypePtrT<TYPE> addAndGetType(ARGS&&... args) {
-            TypePtr newType = makeType<TYPE>(std::forward<ARGS>(args)...);
-            TypePtrT<TYPE> newTypeAs = typeAs<TYPE>(newType);
-            addRegisteredType(TYPE::getThisIdentifier(), TYPE::getVersion(), std::move(newType));
-            return newTypeAs;
+            TypePtrT<TYPE> newType = makeType<TYPE>(std::forward<ARGS>(args)...);
+            addRegisteredType(TYPE::getThisIdentifier(), TYPE::getVersion(), newType);
+            return newType;
         }
 
         template <typename TYPE, std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
