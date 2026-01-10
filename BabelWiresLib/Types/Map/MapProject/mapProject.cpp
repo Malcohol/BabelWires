@@ -185,8 +185,13 @@ bool babelwires::MapProject::AllowedTypes::isRelatedToSome(const TypeSystem& typ
 }
 
 bool babelwires::MapProject::AllowedTypes::isSubtypeOfSome(const TypeSystem& typeSystem, const TypeExp& typeExp) const {
+    const TypePtr type = typeExp.tryResolve(typeSystem);
+    if (!type) {
+        return false;
+    }
     return std::any_of(m_typeExps.begin(), m_typeExps.end(),
-                                        [typeExp, &typeSystem](const TypeExp& id) {
-                                            return typeSystem.isSubType(typeExp, id);
+                                        [type, &typeSystem](const TypeExp& id) {
+                                            const TypePtr idType = id.tryResolve(typeSystem);
+                                            return idType && typeSystem.isSubType(*type, *idType);
                                         });
 }

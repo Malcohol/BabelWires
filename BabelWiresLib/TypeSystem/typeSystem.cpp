@@ -87,8 +87,8 @@ babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeExp& t
     return SubtypeOrder::IsDisjoint;
 }
 
-bool babelwires::TypeSystem::isSubType(const TypeExp& typeExpA, const TypeExp& typeExpB) const {
-    SubtypeOrder order = compareSubtype(typeExpA, typeExpB);
+bool babelwires::TypeSystem::isSubType(const Type& typeA, const Type& typeB) const {
+    SubtypeOrder order = compareSubtype(typeA.getTypeExp(), typeB.getTypeExp());
     return (order == SubtypeOrder::IsEquivalent) || (order == SubtypeOrder::IsSubtype);
 }
 

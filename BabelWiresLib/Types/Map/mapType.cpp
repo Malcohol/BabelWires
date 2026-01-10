@@ -36,11 +36,13 @@ bool babelwires::MapType::visitValue(const TypeSystem& typeSystem, const Value& 
         // Because of the fallback entry, we don't need contravariance here.
         const TypePtr mapSourceType = map->getSourceTypeExp().tryResolve(typeSystem);
         const TypePtr sourceType = m_sourceType->getTypeExp().tryResolve(typeSystem);
-        if (!mapSourceType || !sourceType) {
+        const TypePtr mapTargetType = map->getTargetTypeExp().tryResolve(typeSystem);
+        const TypePtr targetType = m_targetType->getTypeExp().tryResolve(typeSystem);
+        if (!mapSourceType || !sourceType || !mapTargetType || !targetType) {
             return false;
         }
         return typeSystem.isRelatedType(*mapSourceType, *sourceType) &&
-               typeSystem.isSubType(map->getTargetTypeExp(), m_targetType->getTypeExp());
+               typeSystem.isSubType(*mapTargetType, *targetType);
     }
     return false;
 }

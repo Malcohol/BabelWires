@@ -59,7 +59,7 @@ namespace babelwires {
         SubtypeOrder compareSubtype(const TypeExp& typeExpA, const TypeExp& typeExpB) const;
 
         /// Confirm whether typeExpA is a subtype of typeExpB (equality is allowed).
-        bool isSubType(const TypeExp& typeExpA, const TypeExp& typeExpB) const;
+        bool isSubType(const Type& typeA, const Type& typeB) const;
 
         /// Do the two types have some values in common?
         bool isRelatedType(const Type& typeA, const Type& typeB) const;
