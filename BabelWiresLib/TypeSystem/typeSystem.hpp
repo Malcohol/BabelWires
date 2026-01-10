@@ -16,8 +16,6 @@
 #include <Common/Identifiers/identifier.hpp>
 
 namespace babelwires {
-    class TypeExp;
-
     class TypeSystem {
       public:
         TypeSystem();
