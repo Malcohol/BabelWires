@@ -12,7 +12,7 @@
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-babelwires::TypeVariableType::TypeVariableType(TypeExp typeExp)
+babelwires::TypeVariableType::TypeVariableType(TypeExp&& typeExp)
     : Type(std::move(typeExp)) {}
 
 std::string babelwires::TypeVariableType::getFlavour() const {

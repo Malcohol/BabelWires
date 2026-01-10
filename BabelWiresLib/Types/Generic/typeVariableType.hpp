@@ -16,7 +16,7 @@ namespace babelwires {
     /// The information about the type variable is carried by the typeExp.
     class TypeVariableType : public Type {
       public:
-        TypeVariableType(TypeExp typeExp);
+        TypeVariableType(TypeExp&& typeExp);
 
         std::string getFlavour() const override;
 

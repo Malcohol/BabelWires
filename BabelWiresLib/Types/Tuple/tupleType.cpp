@@ -11,7 +11,7 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleValue.hpp>
 
-babelwires::TupleType::TupleType(TypeExp typeExp, const TypeSystem& typeSystem, ComponentTypesExps components)
+babelwires::TupleType::TupleType(TypeExp&& typeExp, const TypeSystem& typeSystem, ComponentTypesExps components)
     : Type(std::move(typeExp)) {
     m_componentTypes.reserve(components.size());
     for (const auto& c : components) {
@@ -19,7 +19,7 @@ babelwires::TupleType::TupleType(TypeExp typeExp, const TypeSystem& typeSystem, 
     }
 }
 
-babelwires::TupleType::TupleType(TypeExp typeExp, ComponentTypes components)
+babelwires::TupleType::TupleType(TypeExp&& typeExp, ComponentTypes components)
     : Type(std::move(typeExp))
     , m_componentTypes(std::move(components)) {
 }

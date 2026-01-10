@@ -22,7 +22,7 @@ namespace {
     }
 }
 
-babelwires::SumOfMapsType::SumOfMapsType(TypeExp typeExp, const TypeSystem& typeSystem, SummandTypeExps sourceTypes, SummandTypeExps targetTypes,
+babelwires::SumOfMapsType::SumOfMapsType(TypeExp&& typeExp, const TypeSystem& typeSystem, SummandTypeExps sourceTypes, SummandTypeExps targetTypes,
                                          unsigned int indexOfDefaultSourceType, unsigned int indexOfDefaultTargetType)
     : SumType(std::move(typeExp), typeSystem, getTypeCombinations(sourceTypes, targetTypes),
               (indexOfDefaultSourceType * sourceTypes.size()) + indexOfDefaultTargetType)

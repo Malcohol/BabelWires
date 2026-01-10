@@ -12,7 +12,7 @@
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-babelwires::RationalType::RationalType(TypeExp typeExp, Range<Rational> range, Rational defaultValue) 
+babelwires::RationalType::RationalType(TypeExp&& typeExp, Range<Rational> range, Rational defaultValue) 
     : Type(std::move(typeExp))
     , m_range(range)
     , m_defaultValue(defaultValue)

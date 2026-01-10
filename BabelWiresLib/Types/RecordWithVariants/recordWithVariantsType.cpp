@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
-babelwires::RecordWithVariantsType::RecordWithVariantsType(TypeExp typeExp, const TypeSystem& typeSystem, Tags tags, std::vector<FieldWithTags> fields,
+babelwires::RecordWithVariantsType::RecordWithVariantsType(TypeExp&& typeExp, const TypeSystem& typeSystem, Tags tags, std::vector<FieldWithTags> fields,
                                                            unsigned int defaultTagIndex)
     : CompoundType(std::move(typeExp))
     , m_tags(std::move(tags))

@@ -19,13 +19,13 @@ namespace babelwires {
       public:
         using SummandTypeExps = std::vector<TypeExp>;
 
-        SumType(TypeExp typeExp, const TypeSystem& typeSystem, SummandTypeExps summands,
+        SumType(TypeExp&& typeExp, const TypeSystem& typeSystem, SummandTypeExps summands,
                 unsigned int indexOfDefaultSummand = 0);
 
         using Summands = std::vector<TypePtr>;
 
         /// Constructor for use when TypePtrs are available.
-        SumType(TypeExp typeExp, Summands summands, unsigned int indexOfDefaultSummand = 0);
+        SumType(TypeExp&& typeExp, Summands summands, unsigned int indexOfDefaultSummand = 0);
 
         /// Always creates a value of the first summand.
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;

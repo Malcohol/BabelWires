@@ -48,7 +48,7 @@ testUtils::TestType::TestType(unsigned int maximumLength, std::string defaultVal
         addTag(getTestTypeTag());
     }
 
-testUtils::TestType::TestType(babelwires::TypeExp typeExp, unsigned int maximumLength, std::string defaultValue)
+testUtils::TestType::TestType(babelwires::TypeExp&& typeExp, unsigned int maximumLength, std::string defaultValue)
     : Type(std::move(typeExp))
     , m_maximumLength(maximumLength)
     , m_defaultValue(defaultValue) {

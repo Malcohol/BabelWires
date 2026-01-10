@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
-babelwires::EnumType::EnumType(TypeExp typeExp, ValueSet values, unsigned int indexOfDefaultValue)
+babelwires::EnumType::EnumType(TypeExp&& typeExp, ValueSet values, unsigned int indexOfDefaultValue)
     : Type(std::move(typeExp))
     , m_values(std::move(values))
     , m_indexOfDefaultValue(indexOfDefaultValue) {

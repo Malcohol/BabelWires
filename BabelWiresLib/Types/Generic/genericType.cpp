@@ -41,11 +41,11 @@ namespace {
     }
 } // namespace
 
-babelwires::GenericType::GenericType(TypeExp typeExp, const TypeSystem& typeSystem, const TypeExp& wrappedType,
+babelwires::GenericType::GenericType(TypeExp&& typeExp, const TypeSystem& typeSystem, const TypeExp& wrappedType,
                                      unsigned int numVariables)
     : GenericType(std::move(typeExp), wrappedType.resolve(typeSystem), numVariables) {}
 
-babelwires::GenericType::GenericType(TypeExp typeExp, const TypePtr& wrappedType, unsigned int numVariables)
+babelwires::GenericType::GenericType(TypeExp&& typeExp, const TypePtr& wrappedType, unsigned int numVariables)
     : CompoundType(std::move(typeExp))
     , m_wrappedType(std::move(wrappedType))
     , m_numVariables(numVariables) {

@@ -15,7 +15,7 @@ namespace babelwires {
     /// CompoundTypes have values which have a structure made of child values.
     class CompoundType : public Type {
       public:
-        CompoundType(TypeExp typeExp) : Type(std::move(typeExp)) {}
+        CompoundType(TypeExp&& typeExp) : Type(std::move(typeExp)) {}
         /// Get the number of children in the given value of this type.
         virtual unsigned int getNumChildren(const ValueHolder& compoundValue) const = 0;
 

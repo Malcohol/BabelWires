@@ -12,7 +12,7 @@
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-babelwires::IntType::IntType(TypeExp typeExp, Range<IntValue::NativeType> range, IntValue::NativeType defaultValue)
+babelwires::IntType::IntType(TypeExp&& typeExp, Range<IntValue::NativeType> range, IntValue::NativeType defaultValue)
     : Type(std::move(typeExp))
     , m_range(range)
     , m_defaultValue(defaultValue) {

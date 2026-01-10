@@ -27,13 +27,13 @@ namespace {
     }
 } // namespace
 
-babelwires::RecordType::RecordType(TypeExp typeExp, const TypeSystem& typeSystem, const std::vector<FieldDefinition>& fields)
+babelwires::RecordType::RecordType(TypeExp&& typeExp, const TypeSystem& typeSystem, const std::vector<FieldDefinition>& fields)
     : CompoundType(std::move(typeExp)) {
     m_fields.reserve(fields.size());
     addFields(typeSystem, m_fields, m_optionalFieldIds, fields);
 }
 
-babelwires::RecordType::RecordType(TypeExp typeExp, const TypeSystem& typeSystem, const RecordType& parent,
+babelwires::RecordType::RecordType(TypeExp&& typeExp, const TypeSystem& typeSystem, const RecordType& parent,
                                    const std::vector<FieldDefinition>& additionalFields)
     : CompoundType(std::move(typeExp)) {
     m_fields.reserve(parent.getFields().size() + additionalFields.size());
@@ -42,7 +42,7 @@ babelwires::RecordType::RecordType(TypeExp typeExp, const TypeSystem& typeSystem
     addFields(typeSystem, m_fields, m_optionalFieldIds, additionalFields);
 }
 
-babelwires::RecordType::RecordType(TypeExp typeExp, std::vector<Field> fields)
+babelwires::RecordType::RecordType(TypeExp&& typeExp, std::vector<Field> fields)
     : CompoundType(std::move(typeExp))
     , m_fields(std::move(fields)) {
     for (const auto& f : m_fields) {

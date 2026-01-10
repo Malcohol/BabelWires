@@ -29,7 +29,7 @@ namespace babelwires {
 
         /// The tags vector provides the tags in their preferred order.
         /// The tags used in the fields vector must be found in the tags vector.
-        RecordWithVariantsType(TypeExp typeExp, const TypeSystem& typeSystem, Tags tags, std::vector<FieldWithTags> fields, unsigned int defaultTagIndex = 0);
+        RecordWithVariantsType(TypeExp&& typeExp, const TypeSystem& typeSystem, Tags tags, std::vector<FieldWithTags> fields, unsigned int defaultTagIndex = 0);
 
         // For now, this has a separate flavour from RecordType.
         std::string getFlavour() const override;
