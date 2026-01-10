@@ -69,31 +69,26 @@ babelwires::TypeSystem::addTypeConstructorInternal(TypeConstructorId typeId, Ver
     return std::get<0>(addResult.first->second).get();
 }
 
-babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const TypeExp& typeExpA,
-                                                                const TypeExp& typeExpB) const {
+babelwires::SubtypeOrder babelwires::TypeSystem::compareSubtype(const Type& typeA, const Type& typeB) const {
     // TODO Thread-safe cache here.
-    if (typeExpA == typeExpB) {
+    if (&typeA == &typeB) {
         return SubtypeOrder::IsEquivalent;
     }
-    if (const TypePtr typeA = typeExpA.tryResolve(*this)) {
-        if (const TypePtr typeB = typeExpB.tryResolve(*this)) {
-            if (const auto resultFromA = typeA->compareSubtypeHelper(*this, *typeB)) {
-                return *resultFromA;
-            } else if (const auto resultFromB = typeB->compareSubtypeHelper(*this, *typeA)) {
-                return reverseSubtypeOrder(*resultFromB);
-            }
-        }
+    if (const auto resultFromA = typeA.compareSubtypeHelper(*this, typeB)) {
+        return *resultFromA;
+    } else if (const auto resultFromB = typeB.compareSubtypeHelper(*this, typeA)) {
+        return reverseSubtypeOrder(*resultFromB);
     }
     return SubtypeOrder::IsDisjoint;
 }
 
 bool babelwires::TypeSystem::isSubType(const Type& typeA, const Type& typeB) const {
-    SubtypeOrder order = compareSubtype(typeA.getTypeExp(), typeB.getTypeExp());
+    SubtypeOrder order = compareSubtype(typeA, typeB);
     return (order == SubtypeOrder::IsEquivalent) || (order == SubtypeOrder::IsSubtype);
 }
 
 bool babelwires::TypeSystem::isRelatedType(const Type& typeA, const Type& typeB) const {
-    return compareSubtype(typeA.getTypeExp(), typeB.getTypeExp()) != SubtypeOrder::IsDisjoint;
+    return compareSubtype(typeA, typeB) != SubtypeOrder::IsDisjoint;
 }
 
 babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getTaggedRegisteredTypes(Type::Tag tag) const {

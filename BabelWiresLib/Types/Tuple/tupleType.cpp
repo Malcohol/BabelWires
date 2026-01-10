@@ -64,23 +64,13 @@ std::optional<babelwires::SubtypeOrder> babelwires::TupleType::compareSubtypeHel
     if (!otherTupleType) {
         return {};
     }
-    std::vector<TypeExp> componentsA;
-    componentsA.reserve(m_componentTypes.size());
-    for (const auto& c : m_componentTypes) {
-        componentsA.emplace_back(c->getTypeExp());
-    }
-    std::vector<TypeExp> componentsB;
-    componentsB.reserve(otherTupleType->m_componentTypes.size());
-    for (const auto& c : otherTupleType->m_componentTypes) {
-        componentsB.emplace_back(c->getTypeExp());
-    }
   
-    if (componentsA.size() != componentsB.size()) {
+    if (m_componentTypes.size() != otherTupleType->m_componentTypes.size()) {
         return SubtypeOrder::IsDisjoint;
     }
     SubtypeOrder order = SubtypeOrder::IsEquivalent;
-    for (int i = 0; i < componentsA.size(); ++i) {
-        const SubtypeOrder componentOrder = typeSystem.compareSubtype(componentsA[i], componentsB[i]);
+    for (int i = 0; i < m_componentTypes.size(); ++i) {
+        const SubtypeOrder componentOrder = typeSystem.compareSubtype(*m_componentTypes[i], *otherTupleType->m_componentTypes[i]);
         order = subtypeProduct(order, componentOrder);
     }
     return order;

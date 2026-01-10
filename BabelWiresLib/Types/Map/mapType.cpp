@@ -65,13 +65,13 @@ std::optional<babelwires::SubtypeOrder> babelwires::MapType::compareSubtypeHelpe
         return {};
     }
     const SubtypeOrder sourceOrder =
-        typeSystem.compareSubtype(m_sourceType->getTypeExp(), otherMapType->m_sourceType->getTypeExp());
+        typeSystem.compareSubtype(*m_sourceType, *otherMapType->m_sourceType);
     if (sourceOrder == SubtypeOrder::IsDisjoint) {
         // Because of the fallback logic, we only exclude disjoint source types here.
         return SubtypeOrder::IsDisjoint;
     }
     const SubtypeOrder targetOrder =
-        typeSystem.compareSubtype(m_targetType->getTypeExp(), otherMapType->m_targetType->getTypeExp());
+        typeSystem.compareSubtype(*m_targetType, *otherMapType->m_targetType);
     return targetOrder;
 }
 

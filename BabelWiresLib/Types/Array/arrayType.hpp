@@ -24,7 +24,7 @@ namespace babelwires {
         /// Get the size of a newly initialized value of this array.
         unsigned int getInitialSize() const;
 
-        TypeExp getEntryType() const;
+        const TypePtr& getEntryType() const;
 
         std::string getFlavour() const override;
 

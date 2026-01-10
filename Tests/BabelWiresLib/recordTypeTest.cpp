@@ -325,95 +325,83 @@ TEST(RecordTypeTest, getChildNonConstOptionalField) {
 TEST(RecordTypeTest, subtype) {
     testUtils::TestEnvironment testEnvironment;
 
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordWithNoFields::getThisType(),
-                                                          testDomain::RecordA0::getThisType()),
+    const babelwires::TypePtr recordWithNoFields = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordWithNoFields>();
+    const babelwires::TypePtr recordA0 = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordA0>();
+    const babelwires::TypePtr recordA1 = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordA1>();
+    const babelwires::TypePtr recordAB = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordAB>();
+    const babelwires::TypePtr recordB = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordB>();
+    const babelwires::TypePtr recordAS = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordAS>();
+    const babelwires::TypePtr recordAOpt = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordAOpt>();
+    const babelwires::TypePtr recordABOpt = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordABOpt>();
+    const babelwires::TypePtr recordAOptFixed = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordAOptFixed>();
+    const babelwires::TypePtr recordAOptS = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordAOptS>();
+    const babelwires::TypePtr recordAsub0 = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordAsub0>();
+    const babelwires::TypePtr recordAsubBsup = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordAsubBsup>();
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordWithNoFields, *recordA0),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(),
-                                                          testDomain::RecordWithNoFields::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordA0, *recordWithNoFields),
               babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(),
-                                                          testDomain::RecordA1::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordA0, *recordA1),
               babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA1::getThisType(),
-                                                          testDomain::RecordA0::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordA1, *recordA0),
               babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(),
-                                                          testDomain::RecordAB::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordA0, *recordAB),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordB::getThisType(),
-                                                          testDomain::RecordAB::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordB, *recordAB),
               babelwires::SubtypeOrder::IsSupertype);
 
     // { A = TestSubEnum::erm, B = TestSubEnum::erm } is a member of both A0 and B.
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(),
-                                                          testDomain::RecordB::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordA0, *recordB),
               babelwires::SubtypeOrder::IsIntersecting);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordB::getThisType(),
-                                                          testDomain::RecordA0::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordB, *recordA0),
               babelwires::SubtypeOrder::IsIntersecting);
 
     // Incompatible types
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAS::getThisType(),
-                                                          testDomain::RecordA0::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordAS, *recordA0),
               babelwires::SubtypeOrder::IsDisjoint);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(),
-                                                          testDomain::RecordAS::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordA0, *recordAS),
               babelwires::SubtypeOrder::IsDisjoint);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAS::getThisType(),
-                                                          testDomain::RecordAB::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordAS, *recordAB),
               babelwires::SubtypeOrder::IsDisjoint);
 
     // With optionals.
     // { A = TestSubEnum::erm, Opt = 100 } is a member of A0 but not of AOpt, where Opt is expected to be a TestSubEnum.
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(),
-                                                          testDomain::RecordAOpt::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordA0, *recordAOpt),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOpt::getThisType(),
-                                                          testDomain::RecordA0::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordAOpt, *recordA0),
               babelwires::SubtypeOrder::IsSubtype);
 
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(),
-                                                          testDomain::RecordABOpt::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordA0, *recordABOpt),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordABOpt::getThisType(),
-                                                          testDomain::RecordA0::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordABOpt, *recordA0),
               babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOpt::getThisType(),
-                                                          testDomain::RecordAOptFixed::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordAOpt, *recordAOptFixed),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOptFixed::getThisType(),
-                                                          testDomain::RecordAOpt::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordAOptFixed, *recordAOpt),
               babelwires::SubtypeOrder::IsSubtype);
 
     // { a : TestSubEnum::erm, b : TestSubEnum::erm } is a member of both.
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOptS::getThisType(),
-                                                          testDomain::RecordABOpt::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordAOptS, *recordABOpt),
               babelwires::SubtypeOrder::IsIntersecting);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordABOpt::getThisType(),
-                                                          testDomain::RecordAOptS::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordABOpt, *recordAOptS),
               babelwires::SubtypeOrder::IsIntersecting);
 
     // Intersecting with optionals
     // { A = TestSubEnum::erm } is a member of both.
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOpt::getThisType(),
-                                                          testDomain::RecordAOptS::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordAOpt, *recordAOptS),
               babelwires::SubtypeOrder::IsIntersecting);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAOptS::getThisType(),
-                                                          testDomain::RecordAOpt::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordAOptS, *recordAOpt),
               babelwires::SubtypeOrder::IsIntersecting);
 
     // With field subtypes
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAsub0::getThisType(),
-                                                          testDomain::RecordA0::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordAsub0, *recordA0),
               babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordA0::getThisType(),
-                                                          testDomain::RecordAsub0::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordA0, *recordAsub0),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAB::getThisType(),
-                                                          testDomain::RecordAsubBsup::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordAB, *recordAsubBsup),
               babelwires::SubtypeOrder::IsIntersecting);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordAsubBsup::getThisType(),
-                                                          testDomain::RecordAB::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordAsubBsup, *recordAB),
               babelwires::SubtypeOrder::IsIntersecting);
 }
 
@@ -437,11 +425,12 @@ TEST(RecordTypeTest, subtypeConstructor) {
     EXPECT_EQ(optionals[0], "Opt");
     EXPECT_EQ(optionals[1], "Opt2");
 
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordABOpt::getThisType(),
-                                                          testDomain::RecordABOptChild::getThisType()),
+    const babelwires::TypePtr recordABOpt = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordABOpt>();
+    const babelwires::TypePtr recordABOptChild = testEnvironment.m_typeSystem.getEntryByType<testDomain::RecordABOptChild>();
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordABOpt, *recordABOptChild),
               babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testDomain::RecordABOptChild::getThisType(),
-                                                          testDomain::RecordABOpt::getThisType()),
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*recordABOptChild, *recordABOpt),
               babelwires::SubtypeOrder::IsSubtype);
 }
 

@@ -49,13 +49,17 @@ TEST(TypeSystemTest, isSubTypesPrimitives) {
 TEST(TypeSystemTest, compareSubtype) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::TypeExp testType4(testUtils::TestMixedTypeConstructor::getThisIdentifier(), babelwires::TypeConstructorArguments{{testUtils::TestType::getThisType()}, {babelwires::StringValue("xxxx")}});
-    const babelwires::TypeExp testType6(testUtils::TestMixedTypeConstructor::getThisIdentifier(), babelwires::TypeConstructorArguments{{testUtils::TestType::getThisType()}, {babelwires::StringValue("xxxxxx")}});
+    const babelwires::TypeExp testType4Exp(testUtils::TestMixedTypeConstructor::getThisIdentifier(), babelwires::TypeConstructorArguments{{testUtils::TestType::getThisType()}, {babelwires::StringValue("xxxx")}});
+    const babelwires::TypeExp testType6Exp(testUtils::TestMixedTypeConstructor::getThisIdentifier(), babelwires::TypeConstructorArguments{{testUtils::TestType::getThisType()}, {babelwires::StringValue("xxxxxx")}});
+    
+    const babelwires::TypePtr testType4 = testType4Exp.resolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr testType6 = testType6Exp.resolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr testEnum = testEnvironment.m_typeSystem.getEntryByType<testDomain::TestEnum>();
 
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testType4, testType4), babelwires::SubtypeOrder::IsEquivalent);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testType4, testType6), babelwires::SubtypeOrder::IsSubtype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testType6, testType4), babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(testType6, testDomain::TestEnum::getThisType()), babelwires::SubtypeOrder::IsDisjoint);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*testType4, *testType4), babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*testType4, *testType6), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*testType6, *testType4), babelwires::SubtypeOrder::IsSupertype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*testType6, *testEnum), babelwires::SubtypeOrder::IsDisjoint);
 }
 
 TEST(TypeSystemTest, isRelatedTypes) {

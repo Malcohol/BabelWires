@@ -277,7 +277,7 @@ std::optional<babelwires::SubtypeOrder> babelwires::RecordType::compareSubtypeHe
     auto otherIt = otherFields.begin();
     while ((thisIt < thisFields.end()) && (otherIt < otherFields.end())) {
         if (thisIt->m_identifier == otherIt->m_identifier) {
-            const SubtypeOrder fieldComparison = typeSystem.compareSubtype(thisIt->m_type->getTypeExp(), otherIt->m_type->getTypeExp());
+            const SubtypeOrder fieldComparison = typeSystem.compareSubtype(*thisIt->m_type, *otherIt->m_type);
             allFieldTest = subtypeProduct(allFieldTest, fieldComparison);
             if (thisIt->m_optionality == Optionality::alwaysActive) {
                 if (otherIt->m_optionality != Optionality::alwaysActive) {

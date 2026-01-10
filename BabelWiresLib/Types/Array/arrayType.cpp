@@ -76,8 +76,8 @@ void babelwires::ArrayType::removeEntries(ValueHolder& value, unsigned int index
     }
 }
 
-babelwires::TypeExp babelwires::ArrayType::getEntryType() const {
-    return m_entryType->getTypeExp();
+const babelwires::TypePtr& babelwires::ArrayType::getEntryType() const {
+    return m_entryType;
 }
 
 babelwires::NewValueHolder babelwires::ArrayType::createValue(const TypeSystem& typeSystem) const {
@@ -113,7 +113,7 @@ std::optional<babelwires::SubtypeOrder> babelwires::ArrayType::compareSubtypeHel
         return {};
     }
     const SubtypeOrder rangeOrder = subtypeFromRanges(getSizeRange(), otherArray->getSizeRange());
-    const SubtypeOrder entryOrder = typeSystem.compareSubtype(m_entryType->getTypeExp(), otherArray->getEntryType());
+    const SubtypeOrder entryOrder = typeSystem.compareSubtype(*m_entryType, *otherArray->getEntryType());
     return subtypeProduct(rangeOrder, entryOrder);
 }
 

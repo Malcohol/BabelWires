@@ -220,7 +220,12 @@ namespace {
             if (const babelwires::TypeExp& existingAssignment =
                     genericTypeNodePtr->getType()->is<babelwires::GenericType>().getTypeAssignment(
                         genericTypeNodePtr->getValue(), typeVariableData.m_typeVariableIndex)) {
-                switch (m_typeSystem.compareSubtype(sourceTypeExp, existingAssignment)) {
+                const babelwires::TypePtr sourceType = sourceTypeExp.tryResolve(m_typeSystem);
+                const babelwires::TypePtr existingType = existingAssignment.tryResolve(m_typeSystem);
+                if (!sourceType || !existingType) {
+                    return false;
+                }
+                switch (m_typeSystem.compareSubtype(*sourceType, *existingType)) {
                     case babelwires::SubtypeOrder::IsEquivalent:
                     case babelwires::SubtypeOrder::IsSubtype:
                         // Existing assignment is more general than or equal to the new one: keep existing.
@@ -240,7 +245,12 @@ namespace {
             } else {
                 // An instance of this type variable may already be assigned by the exploration algorithm, so check for
                 // consistency.
-                switch (m_typeSystem.compareSubtype(sourceTypeExp, it->second)) {
+                const babelwires::TypePtr sourceType = sourceTypeExp.tryResolve(m_typeSystem);
+                const babelwires::TypePtr assignedType = it->second.tryResolve(m_typeSystem);
+                if (!sourceType || !assignedType) {
+                    return false;
+                }
+                switch (m_typeSystem.compareSubtype(*sourceType, *assignedType)) {
                     case babelwires::SubtypeOrder::IsEquivalent:
                         return true;
                     case babelwires::SubtypeOrder::IsSubtype:

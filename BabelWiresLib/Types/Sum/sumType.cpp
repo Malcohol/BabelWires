@@ -135,7 +135,7 @@ std::optional<babelwires::SubtypeOrder> babelwires::SumType::compareSubtypeHelpe
     for (int i = 0; i < summandsA.size(); ++i) {
         std::optional<SubtypeOrder> subTestForA;
         for (int j = 0; j < summandsB.size(); ++j) {
-            const SubtypeOrder ab = typeSystem.compareSubtype(summandsA[i]->getTypeExp(), summandsB[j]->getTypeExp());
+            const SubtypeOrder ab = typeSystem.compareSubtype(*summandsA[i], *summandsB[j]);
             auto& superTestForB = superTestForBs[j];
             subTestForA = subTestForA ? opUnionRight(ab, *subTestForA) : ab;
             superTestForB = superTestForB ? opUnionLeft(ab, *superTestForB) : ab;

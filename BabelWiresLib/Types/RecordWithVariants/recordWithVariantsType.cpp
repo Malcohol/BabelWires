@@ -223,7 +223,7 @@ babelwires::SubtypeOrder babelwires::RecordWithVariantsType::sortAndCompareField
     while ((thisIt < thisFields.end()) && (otherIt < otherFields.end())) {
         if ((*thisIt)->m_identifier == (*otherIt)->m_identifier) {
             const SubtypeOrder fieldComparison =
-                typeSystem.compareSubtype((*thisIt)->m_type->getTypeExp(), (*otherIt)->m_type->getTypeExp());
+                typeSystem.compareSubtype(*(*thisIt)->m_type, *(*otherIt)->m_type);
             if (updateAndCheckDisjoint(currentOrder, fieldComparison)) {
                 return SubtypeOrder::IsDisjoint;
             }

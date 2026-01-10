@@ -56,7 +56,7 @@ namespace babelwires {
         using TypeIdSet = std::vector<RegisteredTypeId>;
 
         /// Determine how typeA and typeB are related by the subtype order.
-        SubtypeOrder compareSubtype(const TypeExp& typeExpA, const TypeExp& typeExpB) const;
+        SubtypeOrder compareSubtype(const Type& typeA, const Type& typeB) const;
 
         /// Confirm whether typeExpA is a subtype of typeExpB (equality is allowed).
         bool isSubType(const Type& typeA, const Type& typeB) const;
