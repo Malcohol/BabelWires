@@ -19,8 +19,8 @@ TEST(SumTypeTest, sumTypeDefault0) {
     testDomain::TestSumType sumType(testEnvironment.m_typeSystem, 0);
 
     EXPECT_EQ(sumType.getSummands().size(), 2);
-    EXPECT_EQ(sumType.getSummands()[0]->getTypeExp(), babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(sumType.getSummands()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(sumType.getSummands()[0]->getTypeExp(), babelwires::DefaultIntType::getThisIdentifier());
+    EXPECT_EQ(sumType.getSummands()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisIdentifier());
     EXPECT_EQ(sumType.getIndexOfDefaultSummand(), 0);
 
     babelwires::ValueHolder newValue = sumType.createValue(testEnvironment.m_typeSystem);
@@ -44,8 +44,8 @@ TEST(SumTypeTest, sumTypeDefault1) {
     testDomain::TestSumType sumType(testEnvironment.m_typeSystem, 1);
 
     EXPECT_EQ(sumType.getSummands().size(), 2);
-    EXPECT_EQ(sumType.getSummands()[0]->getTypeExp(), babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(sumType.getSummands()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(sumType.getSummands()[0]->getTypeExp(), babelwires::DefaultIntType::getThisIdentifier());
+    EXPECT_EQ(sumType.getSummands()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisIdentifier());
     EXPECT_EQ(sumType.getIndexOfDefaultSummand(), 1);
 
     babelwires::ValueHolder newValue = sumType.createValue(testEnvironment.m_typeSystem);
@@ -67,8 +67,8 @@ TEST(SumTypeTest, sumTypeConstructorNoDefaultIndex) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::TypeExp sumTypeExp(babelwires::SumTypeConstructor::getThisIdentifier(),
-                                   babelwires::DefaultIntType::getThisType(),
-                                   babelwires::DefaultRationalType::getThisType());
+                                   babelwires::DefaultIntType::getThisIdentifier(),
+                                   babelwires::DefaultRationalType::getThisIdentifier());
 
     babelwires::TypePtr type = sumTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
@@ -77,8 +77,8 @@ TEST(SumTypeTest, sumTypeConstructorNoDefaultIndex) {
 
     const babelwires::SumType& sumType = type->is<babelwires::SumType>();
     EXPECT_EQ(sumType.getSummands().size(), 2);
-    EXPECT_EQ(sumType.getSummands()[0]->getTypeExp(), babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(sumType.getSummands()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(sumType.getSummands()[0]->getTypeExp(), babelwires::DefaultIntType::getThisIdentifier());
+    EXPECT_EQ(sumType.getSummands()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisIdentifier());
     EXPECT_EQ(sumType.getIndexOfDefaultSummand(), 0);
 }
 
@@ -87,7 +87,7 @@ TEST(SumTypeTest, sumTypeConstructorDefault1) {
 
     babelwires::TypeExp sumTypeExp(
         babelwires::SumTypeConstructor::getThisIdentifier(),
-        {{babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()},
+        {{babelwires::DefaultIntType::getThisIdentifier(), babelwires::DefaultRationalType::getThisIdentifier()},
          {babelwires::IntValue(1)}});
 
     babelwires::TypePtr type = sumTypeExp.tryResolve(testEnvironment.m_typeSystem);
@@ -97,8 +97,8 @@ TEST(SumTypeTest, sumTypeConstructorDefault1) {
 
     const babelwires::SumType& sumType = type->is<babelwires::SumType>();
     EXPECT_EQ(sumType.getSummands().size(), 2);
-    EXPECT_EQ(sumType.getSummands()[0]->getTypeExp(), babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(sumType.getSummands()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisType());
+    EXPECT_EQ(sumType.getSummands()[0]->getTypeExp(), babelwires::DefaultIntType::getThisIdentifier());
+    EXPECT_EQ(sumType.getSummands()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisIdentifier());
     EXPECT_EQ(sumType.getIndexOfDefaultSummand(), 1);
 }
 
@@ -107,14 +107,14 @@ TEST(SumTypeTest, sumTypeConstructorMalformed) {
 
     // Just one summand
     EXPECT_THROW(babelwires::TypeExp(babelwires::SumTypeConstructor::getThisIdentifier(),
-                                     babelwires::DefaultIntType::getThisType())
+                                     babelwires::DefaultIntType::getThisIdentifier())
                      .resolve(testEnvironment.m_typeSystem),
                  babelwires::TypeSystemException);
 
     // Wrong value argument
     EXPECT_THROW(babelwires::TypeExp(
                      babelwires::SumTypeConstructor::getThisIdentifier(),
-                     {{babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()},
+                     {{babelwires::DefaultIntType::getThisIdentifier(), babelwires::DefaultRationalType::getThisIdentifier()},
                       {babelwires::RationalValue(1)}})
                      .resolve(testEnvironment.m_typeSystem),
                  babelwires::TypeSystemException);
@@ -122,7 +122,7 @@ TEST(SumTypeTest, sumTypeConstructorMalformed) {
     // Too many value arguments
     EXPECT_THROW(babelwires::TypeExp(
                      babelwires::SumTypeConstructor::getThisIdentifier(),
-                     {{babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()},
+                     {{babelwires::DefaultIntType::getThisIdentifier(), babelwires::DefaultRationalType::getThisIdentifier()},
                       {babelwires::IntValue(1), babelwires::IntValue(1)}})
                      .resolve(testEnvironment.m_typeSystem),
                  babelwires::TypeSystemException);
@@ -130,7 +130,7 @@ TEST(SumTypeTest, sumTypeConstructorMalformed) {
     // value argument out of range
     EXPECT_THROW(babelwires::TypeExp(
                      babelwires::SumTypeConstructor::getThisIdentifier(),
-                     {{babelwires::DefaultIntType::getThisType(), babelwires::DefaultRationalType::getThisType()},
+                     {{babelwires::DefaultIntType::getThisIdentifier(), babelwires::DefaultRationalType::getThisIdentifier()},
                       {babelwires::IntValue(2)}})
                      .resolve(testEnvironment.m_typeSystem),
                  babelwires::TypeSystemException);
@@ -214,7 +214,7 @@ TEST(SumTypeTest, compareSubtype2) {
     const babelwires::TypeExp ZwExp = babelwires::IntTypeConstructor::makeTypeExp(0, 16);
     const babelwires::TypeExp QnExp = babelwires::RationalTypeConstructor::makeTypeExp(0, 4);
     const babelwires::TypeExp QwExp = babelwires::RationalTypeConstructor::makeTypeExp(0, 16);
-    const babelwires::TypeExp SExp = babelwires::StringType::getThisType();
+    const babelwires::TypeExp SExp = babelwires::StringType::getThisIdentifier();
     const babelwires::TypeExp ZdExp = babelwires::IntTypeConstructor::makeTypeExp(8, 16, 8);
 
     const babelwires::TypeExp ZnQnExp = babelwires::SumTypeConstructor::makeTypeExp({ZnExp, QnExp});
@@ -260,9 +260,9 @@ TEST(SumTypeTest, compareSubtype2) {
 TEST(SumTypeTest, subTypeAssociativity) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::TypeExp Z = babelwires::DefaultIntType::getThisType();
-    const babelwires::TypeExp Q = babelwires::DefaultRationalType::getThisType();
-    const babelwires::TypeExp S = babelwires::StringType::getThisType();
+    const babelwires::TypeExp Z = babelwires::DefaultIntType::getThisIdentifier();
+    const babelwires::TypeExp Q = babelwires::DefaultRationalType::getThisIdentifier();
+    const babelwires::TypeExp S = babelwires::StringType::getThisIdentifier();
 
     const babelwires::TypeExp ZQ_S =
         babelwires::SumTypeConstructor::makeTypeExp({babelwires::SumTypeConstructor::makeTypeExp({Z, Q}), S});

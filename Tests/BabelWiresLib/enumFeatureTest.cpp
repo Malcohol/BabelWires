@@ -12,7 +12,7 @@
 TEST(EnumFeatureTest, enumFeature) { 
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::ValueTreeRoot enumFeature{testEnvironment.m_typeSystem, testDomain::TestEnum::getThisType()};
+    babelwires::ValueTreeRoot enumFeature{testEnvironment.m_typeSystem, testDomain::TestEnum::getThisIdentifier()};
     babelwires::Instance<testDomain::TestEnum> enumInstance{enumFeature};
  
     enumFeature.setToDefault();
@@ -21,7 +21,7 @@ TEST(EnumFeatureTest, enumFeature) {
     enumInstance.set(testDomain::TestEnum::Value::Boo);
     EXPECT_EQ(enumInstance.get(), testDomain::TestEnum::Value::Boo);
 
-    babelwires::ValueTreeRoot enumFeature2{testEnvironment.m_typeSystem, testDomain::TestEnum::getThisType()};
+    babelwires::ValueTreeRoot enumFeature2{testEnvironment.m_typeSystem, testDomain::TestEnum::getThisIdentifier()};
     babelwires::Instance<testDomain::TestEnum> enumInstance2{enumFeature2};
 
     enumFeature2.setToDefault();
@@ -32,7 +32,7 @@ TEST(EnumFeatureTest, enumFeature) {
 TEST(EnumFeatureTest, enumFeatureChanges) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::ValueTreeRoot enumFeature{testEnvironment.m_typeSystem, testDomain::TestEnum::getThisType()};
+    babelwires::ValueTreeRoot enumFeature{testEnvironment.m_typeSystem, testDomain::TestEnum::getThisIdentifier()};
     babelwires::Instance<testDomain::TestEnum> enumInstance{enumFeature};
     
     // After construction, everything has changed.
@@ -64,7 +64,7 @@ TEST(EnumFeatureTest, enumFeatureChanges) {
 TEST(EnumFeatureTest, enumFeatureHash) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::ValueTreeRoot enumFeature{testEnvironment.m_typeSystem, testDomain::TestEnum::getThisType()};
+    babelwires::ValueTreeRoot enumFeature{testEnvironment.m_typeSystem, testDomain::TestEnum::getThisIdentifier()};
     babelwires::Instance<testDomain::TestEnum> enumInstance{enumFeature};
 
     enumInstance.set(testDomain::TestEnum::Value::Boo);

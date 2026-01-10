@@ -23,56 +23,56 @@ namespace {
 } // namespace
 
 testDomain::RecordWithNoFields::RecordWithNoFields(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisType(), typeSystem, {}) {}
+    : RecordType(getThisIdentifier(), typeSystem, {}) {}
 
 testDomain::RecordA0::RecordA0(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisType(), typeSystem, {{getIdForA(), TestSubEnum::getThisType()}}) {}
+    : RecordType(getThisIdentifier(), typeSystem, {{getIdForA(), TestSubEnum::getThisIdentifier()}}) {}
 
 testDomain::RecordA1::RecordA1(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisType(), typeSystem, {{getIdForA(), TestSubEnum::getThisType()}}) {}
+    : RecordType(getThisIdentifier(), typeSystem, {{getIdForA(), TestSubEnum::getThisIdentifier()}}) {}
 
 testDomain::RecordB::RecordB(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisType(), typeSystem, {{getIdForB(), TestSubEnum::getThisType()}}) {}
+    : RecordType(getThisIdentifier(), typeSystem, {{getIdForB(), TestSubEnum::getThisIdentifier()}}) {}
 
 testDomain::RecordAB::RecordAB(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisType(), typeSystem, {{getIdForA(), TestSubEnum::getThisType()}, {getIdForB(), TestSubEnum::getThisType()}}) {}
+    : RecordType(getThisIdentifier(), typeSystem, {{getIdForA(), TestSubEnum::getThisIdentifier()}, {getIdForB(), TestSubEnum::getThisIdentifier()}}) {}
 
 testDomain::RecordAS::RecordAS(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisType(), typeSystem, {{getIdForA(), babelwires::StringType::getThisType()}}) {}
+    : RecordType(getThisIdentifier(), typeSystem, {{getIdForA(), babelwires::StringType::getThisIdentifier()}}) {}
 
 testDomain::RecordAOpt::RecordAOpt(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisType(), 
-          typeSystem, {{getIdForA(), TestSubEnum::getThisType()},
-           {getIdForOpt(), TestSubEnum::getThisType(), babelwires::RecordType::Optionality::optionalDefaultInactive}}) {
+    : RecordType(getThisIdentifier(), 
+          typeSystem, {{getIdForA(), TestSubEnum::getThisIdentifier()},
+           {getIdForOpt(), TestSubEnum::getThisIdentifier(), babelwires::RecordType::Optionality::optionalDefaultInactive}}) {
 }
 
 testDomain::RecordAOptFixed::RecordAOptFixed(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisType(), 
-          typeSystem, {{getIdForA(), TestSubEnum::getThisType()},
-           {getIdForOpt(), TestSubEnum::getThisType()}}) {
+    : RecordType(getThisIdentifier(), 
+          typeSystem, {{getIdForA(), TestSubEnum::getThisIdentifier()},
+           {getIdForOpt(), TestSubEnum::getThisIdentifier()}}) {
 }
 
 testDomain::RecordABOpt::RecordABOpt(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisType(), 
-          typeSystem, {{getIdForA(), TestSubEnum::getThisType()},
-           {getIdForB(), TestSubEnum::getThisType()},
-           {getIdForOpt(), TestSubEnum::getThisType(), babelwires::RecordType::Optionality::optionalDefaultInactive}}) {
+    : RecordType(getThisIdentifier(), 
+          typeSystem, {{getIdForA(), TestSubEnum::getThisIdentifier()},
+           {getIdForB(), TestSubEnum::getThisIdentifier()},
+           {getIdForOpt(), TestSubEnum::getThisIdentifier(), babelwires::RecordType::Optionality::optionalDefaultInactive}}) {
 }
 
 testDomain::RecordAOptS::RecordAOptS(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisType(), typeSystem, {{getIdForA(), TestSubEnum::getThisType()},
-                  {getIdForOpt(), babelwires::StringType::getThisType(),
+    : RecordType(getThisIdentifier(), typeSystem, {{getIdForA(), TestSubEnum::getThisIdentifier()},
+                  {getIdForOpt(), babelwires::StringType::getThisIdentifier(),
                    babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
 
 testDomain::RecordABOptChild::RecordABOptChild(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisType(), typeSystem, RecordABOpt::getThisType().resolve(typeSystem)->is<babelwires::RecordType>(),
-                 {{getIdForC(), TestSubEnum::getThisType()},
-                  {getIdForOpt2(), TestSubEnum::getThisType(),
+    : RecordType(getThisIdentifier(), typeSystem, babelwires::TypeExp(RecordABOpt::getThisIdentifier()).resolve(typeSystem)->is<babelwires::RecordType>(),
+                 {{getIdForC(), TestSubEnum::getThisIdentifier()},
+                  {getIdForOpt2(), TestSubEnum::getThisIdentifier(),
                    babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
 
 testDomain::RecordAsub0::RecordAsub0(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisType(), typeSystem, {{getIdForA(), TestSubSubEnum1::getThisType()}}) {}
+    : RecordType(getThisIdentifier(), typeSystem, {{getIdForA(), TestSubSubEnum1::getThisIdentifier()}}) {}
 
 testDomain::RecordAsubBsup::RecordAsubBsup(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisType(), typeSystem, {{getIdForA(), TestSubSubEnum1::getThisType()}, {getIdForB(), TestEnum::getThisType()}}) {}
+    : RecordType(getThisIdentifier(), typeSystem, {{getIdForA(), TestSubSubEnum1::getThisIdentifier()}, {getIdForB(), TestEnum::getThisIdentifier()}}) {}
 

@@ -76,7 +76,7 @@ namespace {
         babelwires::StringValue targetValue3;
         targetValue3.set("zzz");
 
-        return setUpTestMapValue(typeSystem, babelwires::StringType::getThisType(), babelwires::StringType::getThisType(),
+        return setUpTestMapValue(typeSystem, babelwires::StringType::getThisIdentifier(), babelwires::StringType::getThisIdentifier(),
                                  sourceValue1, sourceValue2, targetValue1, targetValue2, targetValue3,
                                  allToOneFallback);
     }
@@ -98,7 +98,7 @@ namespace {
         babelwires::EnumValue targetValue3;
         targetValue3.set("Erm");
 
-        return setUpTestMapValue(typeSystem, testDomain::TestEnum::getThisType(), testDomain::TestEnum::getThisType(),
+        return setUpTestMapValue(typeSystem, testDomain::TestEnum::getThisIdentifier(), testDomain::TestEnum::getThisIdentifier(),
                                  sourceValue1, sourceValue2, targetValue1, targetValue2, targetValue3,
                                  allToOneFallback);
     }
@@ -120,7 +120,7 @@ namespace {
         babelwires::EnumValue targetValue3;
         targetValue3.set("Erm");
 
-        return setUpTestMapValue(typeSystem, babelwires::StringType::getThisType(), testDomain::TestEnum::getThisType(),
+        return setUpTestMapValue(typeSystem, babelwires::StringType::getThisIdentifier(), testDomain::TestEnum::getThisIdentifier(),
                                  sourceValue1, sourceValue2, targetValue1, targetValue2, targetValue3, true);
     }
 
@@ -141,7 +141,7 @@ namespace {
         babelwires::StringValue targetValue3;
         targetValue3.set("zzz");
 
-        return setUpTestMapValue(typeSystem, testDomain::TestEnum::getThisType(), testDomain::TestEnum::getThisType(),
+        return setUpTestMapValue(typeSystem, testDomain::TestEnum::getThisIdentifier(), testDomain::TestEnum::getThisIdentifier(),
                                  sourceValue1, sourceValue2, targetValue1, targetValue2, targetValue3, true);
     }
 } // namespace

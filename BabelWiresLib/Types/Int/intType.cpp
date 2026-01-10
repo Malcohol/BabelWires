@@ -52,7 +52,7 @@ std::string babelwires::IntType::valueToString(const TypeSystem& typeSystem, con
 }
 
 babelwires::DefaultIntType::DefaultIntType()
-    : IntType(getThisType()) {}
+    : IntType(getThisIdentifier()) {}
 
 babelwires::NonNegativeIntType::NonNegativeIntType()
-    : IntType(getThisType(), Range<IntValue::NativeType>{0, std::numeric_limits<IntValue::NativeType>::max()}) {}
+    : IntType(getThisIdentifier(), Range<IntValue::NativeType>{0, std::numeric_limits<IntValue::NativeType>::max()}) {}

@@ -73,7 +73,7 @@ TEST(GenericTypeTest, createValue) {
     testUtils::TestEnvironment env;
     babelwires::TypeSystem& typeSystem = env.m_typeSystem;
 
-    babelwires::TypePtr type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
+    babelwires::TypePtr type = typeSystem.getEntryByType<testDomain::TestGenericType>();
     ASSERT_NE(type, nullptr);
 
     const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
@@ -95,7 +95,7 @@ TEST(GenericTypeTest, instantiateTypeVariables) {
     testUtils::TestEnvironment env;
     babelwires::TypeSystem& typeSystem = env.m_typeSystem;
 
-    babelwires::TypePtr type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
+    babelwires::TypePtr type = typeSystem.getEntryByType<testDomain::TestGenericType>();
     ASSERT_NE(type, nullptr);
 
     const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
@@ -114,27 +114,27 @@ TEST(GenericTypeTest, instantiateTypeVariables) {
     checkInstantiations(typeSystem, *genericType, valueHolder, false, false);
 
     std::vector<babelwires::TypeExp> typeAssignments(2);
-    typeAssignments[1] = babelwires::DefaultIntType::getThisType();
+    typeAssignments[1] = babelwires::DefaultIntType::getThisIdentifier();
 
     // Instantiate the type variable with 'int'.
     genericType->setTypeVariableAssignmentAndInstantiate(typeSystem, valueHolder, typeAssignments);
     EXPECT_FALSE(genericType->getTypeAssignment(valueHolder, 0));
-    EXPECT_EQ(genericType->getTypeAssignment(valueHolder, 1), babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(genericType->getTypeAssignment(valueHolder, 1), babelwires::DefaultIntType::getThisIdentifier());
     EXPECT_TRUE(genericType->isValidValue(typeSystem, *valueHolder));
     checkInstantiations(typeSystem, *genericType, valueHolder, false, true);
 
-    typeAssignments[0] = babelwires::DefaultIntType::getThisType();
+    typeAssignments[0] = babelwires::DefaultIntType::getThisIdentifier();
 
     genericType->setTypeVariableAssignmentAndInstantiate(typeSystem, valueHolder, typeAssignments);
-    EXPECT_EQ(genericType->getTypeAssignment(valueHolder, 0), babelwires::DefaultIntType::getThisType());
-    EXPECT_EQ(genericType->getTypeAssignment(valueHolder, 1), babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(genericType->getTypeAssignment(valueHolder, 0), babelwires::DefaultIntType::getThisIdentifier());
+    EXPECT_EQ(genericType->getTypeAssignment(valueHolder, 1), babelwires::DefaultIntType::getThisIdentifier());
     EXPECT_TRUE(genericType->isValidValue(typeSystem, *valueHolder));
     checkInstantiations(typeSystem, *genericType, valueHolder, true, true);
 
     typeAssignments[1] = babelwires::TypeExp();
 
     genericType->setTypeVariableAssignmentAndInstantiate(typeSystem, valueHolder, typeAssignments);
-    EXPECT_EQ(genericType->getTypeAssignment(valueHolder, 0), babelwires::DefaultIntType::getThisType());
+    EXPECT_EQ(genericType->getTypeAssignment(valueHolder, 0), babelwires::DefaultIntType::getThisIdentifier());
     EXPECT_FALSE(genericType->getTypeAssignment(valueHolder, 1));
     EXPECT_TRUE(genericType->isValidValue(typeSystem, *valueHolder));
     checkInstantiations(typeSystem, *genericType, valueHolder, true, false);
@@ -152,7 +152,7 @@ TEST(GenericTypeTest, instantiateNestedTypeVariable) {
     testUtils::TestEnvironment env;
     babelwires::TypeSystem& typeSystem = env.m_typeSystem;
 
-    babelwires::TypePtr type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
+    babelwires::TypePtr type = typeSystem.getEntryByType<testDomain::TestGenericType>();
     ASSERT_NE(type, nullptr);
 
     const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
@@ -185,7 +185,7 @@ TEST(GenericTypeTest, instantiateNestedTypeVariable) {
     checkInstantiations(typeSystem, *genericType, valueHolder, false, false);
 
     std::vector<babelwires::TypeExp> typeAssignments(1);
-    typeAssignments[0] = babelwires::DefaultIntType::getThisType();
+    typeAssignments[0] = babelwires::DefaultIntType::getThisIdentifier();
     nestedGenericType->setTypeVariableAssignmentAndInstantiate(typeSystem, nestedValue, typeAssignments);
 
     checkNestedInstantiation(true);
@@ -196,7 +196,7 @@ TEST(GenericTypeTest, childTypeAndTypeNames) {
     testUtils::TestEnvironment env;
     babelwires::TypeSystem& typeSystem = env.m_typeSystem;
 
-    babelwires::TypePtr type = testDomain::TestGenericType::getThisType().tryResolve(typeSystem);
+    babelwires::TypePtr type = typeSystem.getEntryByType<testDomain::TestGenericType>();
     ASSERT_NE(type, nullptr);
 
     const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
@@ -234,7 +234,7 @@ TEST(GenericTypeTest, childTypeAndTypeNames) {
     checkNames(false, false);
 
     std::vector<babelwires::TypeExp> typeAssignments(2);
-    typeAssignments[1] = babelwires::StringType::getThisType();
+    typeAssignments[1] = babelwires::StringType::getThisIdentifier();
 
     genericType->setTypeVariableAssignmentAndInstantiate(typeSystem, valueHolder, typeAssignments);
 

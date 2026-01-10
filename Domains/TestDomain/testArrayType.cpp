@@ -4,21 +4,21 @@
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 
 testDomain::TestSimpleArrayType::TestSimpleArrayType(const babelwires::TypeSystem& typeSystem)
-    : babelwires::ArrayType(getThisType(), getEntryTypeStatic().resolve(typeSystem), s_minimumSize, s_maximumSize, s_defaultSize) {}
+    : babelwires::ArrayType(getThisIdentifier(), getEntryTypeStatic().resolve(typeSystem), s_minimumSize, s_maximumSize, s_defaultSize) {}
 
 babelwires::TypeExp testDomain::TestSimpleArrayType::getEntryTypeStatic() {
-    return babelwires::DefaultIntType::getThisType();
+    return babelwires::DefaultIntType::getThisIdentifier();
 }
 
 testDomain::TestCompoundArrayType::TestCompoundArrayType(const babelwires::TypeSystem& typeSystem)
-    : babelwires::ArrayType(getThisType(), getEntryTypeStatic().resolve(typeSystem), s_minimumSize, s_maximumSize, s_defaultSize) {}
+    : babelwires::ArrayType(getThisIdentifier(), getEntryTypeStatic().resolve(typeSystem), s_minimumSize, s_maximumSize, s_defaultSize) {}
 
 babelwires::TypeExp testDomain::TestCompoundArrayType::getEntryTypeStatic() {
-    return testDomain::TestSimpleArrayType::getThisType();
+    return testDomain::TestSimpleArrayType::getThisIdentifier();
 }
 
 testDomain::TestArrayElementData::TestArrayElementData()
-    : babelwires::ValueNodeData(TestSimpleArrayType::getThisType()) {}
+    : babelwires::ValueNodeData(TestSimpleArrayType::getThisIdentifier()) {}
 
 babelwires::Path testDomain::TestArrayElementData::getPathToArray() {
     return babelwires::Path();

@@ -42,7 +42,7 @@ void testUtils::TestValue::deserializeContents(babelwires::Deserializer& deseria
 }
 
 testUtils::TestType::TestType(unsigned int maximumLength, std::string defaultValue)
-    : Type(getThisType())
+    : Type(getThisIdentifier())
     , m_maximumLength(maximumLength)
     , m_defaultValue(defaultValue) {
         addTag(getTestTypeTag());

@@ -125,7 +125,7 @@ namespace babelwires {
         template <typename ENTRY_SUBTYPE,
                   std::enable_if_t<std::is_base_of_v<ENTRY, ENTRY_SUBTYPE>, std::nullptr_t> = nullptr>
         const ENTRY_SUBTYPE& getEntryByType() const {
-            const ENTRY& entry = getRegisteredEntry(ENTRY_SUBTYPE::getThisType());
+            const ENTRY& entry = getRegisteredEntry(ENTRY_SUBTYPE::getThisIdentifier());
             assert(dynamic_cast<const ENTRY_SUBTYPE*>(&entry) && "The registered type was not of the expected type");
             return static_cast<const ENTRY_SUBTYPE&>(entry);
         }

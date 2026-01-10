@@ -51,5 +51,5 @@ std::string babelwires::RationalType::valueToString(const TypeSystem& typeSystem
     return v->is<RationalValue>().toString();
 }
 
-babelwires::DefaultRationalType::DefaultRationalType() : RationalType(getThisType()) {}
+babelwires::DefaultRationalType::DefaultRationalType() : RationalType(getThisIdentifier()) {}
 

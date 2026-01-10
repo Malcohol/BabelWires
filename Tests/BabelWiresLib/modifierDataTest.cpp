@@ -27,7 +27,7 @@ TEST(ModifierDataTest, arrayInitializationApply) {
     babelwires::ArraySizeModifierData data;
     data.m_size = testDomain::TestSimpleArrayType::s_nonDefaultSize;
 
-    babelwires::ValueTreeRoot arrayFeature(testEnvironment.m_typeSystem, testDomain::TestSimpleArrayType::getThisType());
+    babelwires::ValueTreeRoot arrayFeature(testEnvironment.m_typeSystem, testDomain::TestSimpleArrayType::getThisIdentifier());
     arrayFeature.setToDefault();
 
     EXPECT_EQ(arrayFeature.getNumChildren(), testDomain::TestSimpleArrayType::s_defaultSize);
@@ -35,7 +35,7 @@ TEST(ModifierDataTest, arrayInitializationApply) {
     data.apply(&arrayFeature);
     EXPECT_EQ(arrayFeature.getNumChildren(), testDomain::TestSimpleArrayType::s_nonDefaultSize);
 
-    babelwires::ValueTreeRoot notArrayFeature(testEnvironment.m_typeSystem, babelwires::DefaultIntType::getThisType());
+    babelwires::ValueTreeRoot notArrayFeature(testEnvironment.m_typeSystem, babelwires::DefaultIntType::getThisIdentifier());
     EXPECT_THROW(data.apply(&notArrayFeature), babelwires::ModelException);
 }
 
@@ -77,9 +77,9 @@ TEST(ModifierDataTest, assignFromFeatureApply) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot srcFeature{testEnvironment.m_typeSystem,
-                                              babelwires::DefaultIntType::getThisType()};
+                                              babelwires::DefaultIntType::getThisIdentifier()};
     babelwires::ValueTreeRoot targetFeature{testEnvironment.m_typeSystem,
-                                                 babelwires::DefaultIntType::getThisType()};
+                                                 babelwires::DefaultIntType::getThisIdentifier()};
 
     srcFeature.setToDefault();
     targetFeature.setToDefault();
@@ -117,9 +117,9 @@ TEST(ModifierDataTest, assignFromFeatureBadConnectionApply) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot srcFeature{testEnvironment.m_typeSystem,
-                                              babelwires::DefaultIntType::getThisType()};
+                                              babelwires::DefaultIntType::getThisIdentifier()};
     babelwires::ValueTreeRoot targetFeature{testEnvironment.m_typeSystem,
-                                                 babelwires::StringType::getThisType()};
+                                                 babelwires::StringType::getThisIdentifier()};
 
     srcFeature.setToDefault();
     targetFeature.setToDefault();

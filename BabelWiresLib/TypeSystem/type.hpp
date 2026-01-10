@@ -28,7 +28,7 @@ namespace babelwires {
         DOWNCASTABLE_TYPE_HIERARCHY(Type);
 
         /// A type carries the type expression that describes it, so this must be supplied.
-        /// Registered types can use getThisType() to get their TypeExp.
+        /// Registered types can use getThisIdentifier() to get their TypeExp.
         /// Type constructors will have the typeExp available when constructing the type.
         Type(TypeExp&& typeExpOfThis);
         virtual ~Type();

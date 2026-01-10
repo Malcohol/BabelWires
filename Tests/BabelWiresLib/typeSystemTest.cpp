@@ -49,8 +49,8 @@ TEST(TypeSystemTest, isSubTypesPrimitives) {
 TEST(TypeSystemTest, compareSubtype) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::TypeExp testType4Exp(testUtils::TestMixedTypeConstructor::getThisIdentifier(), babelwires::TypeConstructorArguments{{testUtils::TestType::getThisType()}, {babelwires::StringValue("xxxx")}});
-    const babelwires::TypeExp testType6Exp(testUtils::TestMixedTypeConstructor::getThisIdentifier(), babelwires::TypeConstructorArguments{{testUtils::TestType::getThisType()}, {babelwires::StringValue("xxxxxx")}});
+    const babelwires::TypeExp testType4Exp(testUtils::TestMixedTypeConstructor::getThisIdentifier(), babelwires::TypeConstructorArguments{{testUtils::TestType::getThisIdentifier()}, {babelwires::StringValue("xxxx")}});
+    const babelwires::TypeExp testType6Exp(testUtils::TestMixedTypeConstructor::getThisIdentifier(), babelwires::TypeConstructorArguments{{testUtils::TestType::getThisIdentifier()}, {babelwires::StringValue("xxxxxx")}});
     
     const babelwires::TypePtr testType4 = testType4Exp.resolve(testEnvironment.m_typeSystem);
     const babelwires::TypePtr testType6 = testType6Exp.resolve(testEnvironment.m_typeSystem);
@@ -102,5 +102,5 @@ TEST(TypeSystemTest, getTaggedTypes) {
     auto types = testEnvironment.m_typeSystem.getTaggedRegisteredTypes(testUtils::TestType::getTestTypeTag());
 
     EXPECT_EQ(types.size(), 1);
-    EXPECT_EQ(types[0], testUtils::TestType::getThisType());
+    EXPECT_EQ(types[0], testUtils::TestType::getThisIdentifier());
 }

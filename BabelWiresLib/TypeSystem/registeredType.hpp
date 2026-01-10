@@ -16,9 +16,6 @@
     static babelwires::RegisteredTypeId getThisIdentifier() {                                                          \
         return IDENTIFIER;                                                                                             \
     }                                                                                                                  \
-    static babelwires::TypeExp getThisType() {                                                                         \
-        return getThisIdentifier();                                                                                    \
-    }                                                                                                                  \
     static babelwires::VersionNumber getVersion() {                                                                    \
         return VERSION;                                                                                                \
     }

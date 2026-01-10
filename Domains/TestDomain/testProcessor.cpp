@@ -20,11 +20,11 @@ babelwires::ShortId testDomain::TestProcessorInputOutputType::getRecordId() {
 }
 
 testDomain::TestProcessorInputOutputType::TestProcessorInputOutputType(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisType(), typeSystem, {{getIntId(), babelwires::DefaultIntType::getThisType()},
-                  {getOptIntId(), babelwires::DefaultIntType::getThisType(), Optionality::optionalDefaultInactive},
+    : RecordType(getThisIdentifier(), typeSystem, {{getIntId(), babelwires::DefaultIntType::getThisIdentifier()},
+                  {getOptIntId(), babelwires::DefaultIntType::getThisIdentifier(), Optionality::optionalDefaultInactive},
                   {getArrayId(),
-                   babelwires::ArrayTypeConstructor::makeTypeExp(babelwires::DefaultIntType::getThisType(), 2, 8)},
-                  {getRecordId(), TestSimpleRecordType::getThisType()}}) {}
+                   babelwires::ArrayTypeConstructor::makeTypeExp(babelwires::DefaultIntType::getThisIdentifier(), 2, 8)},
+                  {getRecordId(), TestSimpleRecordType::getThisIdentifier()}}) {}
 
 const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToInt =
     babelwires::Path::deserializeFromString("Int");
@@ -46,8 +46,8 @@ const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToInt2 =
     babelwires::Path::deserializeFromString("Record/intR0");
 
 testDomain::TestProcessor::TestProcessor(const babelwires::ProjectContext& context)
-    : babelwires::Processor(context, testDomain::TestProcessorInputOutputType::getThisType(),
-                            testDomain::TestProcessorInputOutputType::getThisType()) {}
+    : babelwires::Processor(context, testDomain::TestProcessorInputOutputType::getThisIdentifier(),
+                            testDomain::TestProcessorInputOutputType::getThisIdentifier()) {}
 
 void testDomain::TestProcessor::processValue(babelwires::UserLogger& userLogger, const babelwires::ValueTreeNode& input,
                                             babelwires::ValueTreeNode& output) const {

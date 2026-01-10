@@ -21,12 +21,12 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
     testUtils::TestEnvironment environment;
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisType()}});
-    mapProject.setAllowedTargetTypeExps({{testDomain::TestEnum::getThisType()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeExps({{testDomain::TestEnum::getThisIdentifier()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeExp(babelwires::StringType::getThisType());
-    mapValue.setTargetTypeExp(testDomain::TestSubSubEnum1::getThisType());
+    mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());
+    mapValue.setTargetTypeExp(testDomain::TestSubSubEnum1::getThisIdentifier());
 
     const auto& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
     const auto& testEnumType = environment.m_typeSystem.getEntryByType<testDomain::TestEnum>();
@@ -54,19 +54,19 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
 
     mapProject.setMapValue(mapValue);
 
-    EXPECT_EQ(mapProject.getCurrentTargetTypeExp(), testDomain::TestSubSubEnum1::getThisType());
+    EXPECT_EQ(mapProject.getCurrentTargetTypeExp(), testDomain::TestSubSubEnum1::getThisIdentifier());
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
     EXPECT_FALSE(mapProject.getMapEntry(2).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(3).getValidity());
 
-    babelwires::SetMapTargetTypeCommand testCopyConstructor("Set type", testDomain::TestSubSubEnum2::getThisType());
+    babelwires::SetMapTargetTypeCommand testCopyConstructor("Set type", testDomain::TestSubSubEnum2::getThisIdentifier());
     babelwires::SetMapTargetTypeCommand command = testCopyConstructor;
 
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);
 
-    EXPECT_EQ(mapProject.getCurrentTargetTypeExp(), testDomain::TestSubSubEnum2::getThisType());
+    EXPECT_EQ(mapProject.getCurrentTargetTypeExp(), testDomain::TestSubSubEnum2::getThisIdentifier());
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_FALSE(mapProject.getMapEntry(1).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(2).getValidity());
@@ -74,7 +74,7 @@ TEST(SetMapTargetTypeCommandTest, executeAndUndo) {
 
     command.undo(mapProject);
 
-    EXPECT_EQ(mapProject.getCurrentTargetTypeExp(), testDomain::TestSubSubEnum1::getThisType());
+    EXPECT_EQ(mapProject.getCurrentTargetTypeExp(), testDomain::TestSubSubEnum1::getThisIdentifier());
     EXPECT_TRUE(mapProject.getMapEntry(0).getValidity());
     EXPECT_TRUE(mapProject.getMapEntry(1).getValidity());
     EXPECT_FALSE(mapProject.getMapEntry(2).getValidity());
@@ -85,12 +85,12 @@ TEST(SetMapTargetTypeCommandTest, failWithUnallowedType) {
     testUtils::TestEnvironment environment;
         
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisType()}});
-    mapProject.setAllowedTargetTypeExps({{babelwires::StringType::getThisType()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeExps({{babelwires::StringType::getThisIdentifier()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeExp(babelwires::StringType::getThisType());
-    mapValue.setTargetTypeExp(babelwires::StringType::getThisType());
+    mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());
+    mapValue.setTargetTypeExp(babelwires::StringType::getThisIdentifier());
 
     const auto& stringType = environment.m_typeSystem.getEntryByType<babelwires::StringType>();
 
@@ -99,7 +99,7 @@ TEST(SetMapTargetTypeCommandTest, failWithUnallowedType) {
 
     mapProject.setMapValue(mapValue);
 
-    babelwires::SetMapTargetTypeCommand command("Set type", testDomain::TestEnum::getThisType());
+    babelwires::SetMapTargetTypeCommand command("Set type", testDomain::TestEnum::getThisIdentifier());
 
     EXPECT_FALSE(command.initialize(mapProject));
 }

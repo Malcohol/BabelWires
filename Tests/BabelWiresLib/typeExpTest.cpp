@@ -82,11 +82,11 @@ TEST(TypeExpTest, resolve) {
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
         typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
-    babelwires::TypeExp typeExp(testUtils::TestType::getThisType());
+    babelwires::TypeExp typeExp(testUtils::TestType::getThisIdentifier());
 
     EXPECT_EQ(testType, typeExp.resolve(typeSystem).get());
     babelwires::TypeExp constructedTypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
-                                           testUtils::TestType::getThisType());
+                                           testUtils::TestType::getThisIdentifier());
     babelwires::TypePtr newType = constructedTypeExp.resolve(typeSystem);
     EXPECT_EQ(newType->getTypeExp(), constructedTypeExp);
     EXPECT_EQ(constructedTypeExp.resolve(typeSystem).get(), constructedTypeExp.resolve(typeSystem).get());
@@ -100,11 +100,11 @@ TEST(TypeExpTest, tryResolveSuccess) {
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
         typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
-    babelwires::TypeExp typeExp(testUtils::TestType::getThisType());
+    babelwires::TypeExp typeExp(testUtils::TestType::getThisIdentifier());
     EXPECT_EQ(testType, typeExp.tryResolve(typeSystem).get());
 
     babelwires::TypeExp constructedTypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
-                                           testUtils::TestType::getThisType());
+                                           testUtils::TestType::getThisIdentifier());
     babelwires::TypePtr newType = constructedTypeExp.tryResolve(typeSystem);
     EXPECT_NE(newType, nullptr);
     EXPECT_EQ(newType->getTypeExp(), constructedTypeExp);
@@ -131,7 +131,7 @@ TEST(TypeExpTest, tryResolveParallel) {
         testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
         babelwires::TypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
                             babelwires::TypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
-                                                testUtils::TestType::getThisType())));
+                                                testUtils::TestType::getThisIdentifier())));
 
     std::vector<std::tuple<babelwires::TypeExp, babelwires::TypePtr>> vectorOfResolutions;
     for (int i = 0; i < 1000; ++i) {
@@ -164,7 +164,7 @@ TEST(TypeExpTest, tryResolveMixed) {
     babelwires::TypeExp constructedTestTypeExp(
         testUtils::TestMixedTypeConstructor::getThisIdentifier(),
         {{babelwires::TypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
-                              testUtils::TestType::getThisType())},
+                              testUtils::TestType::getThisIdentifier())},
          {babelwires::StringValue(" is this string")}});
 
     babelwires::TypePtr constructedTestType = constructedTestTypeExp.resolve(typeSystem);

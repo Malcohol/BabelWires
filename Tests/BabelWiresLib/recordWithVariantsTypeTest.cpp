@@ -394,7 +394,7 @@ TEST(RecordWithVariantsTypeTest, featureChanges) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot valueFeature(testEnvironment.m_typeSystem,
-                                           testDomain::TestRecordWithVariantsType::getThisType());
+                                           testDomain::TestRecordWithVariantsType::getThisIdentifier());
     valueFeature.setToDefault();
 
     const testDomain::TestRecordWithVariantsType* recordWithVariantsType =

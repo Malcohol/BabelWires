@@ -6,15 +6,15 @@
 #include <Domains/TestDomain/testRecordType.hpp>
 
 testDomain::TestRecordWithVariantsType::TestRecordWithVariantsType(const babelwires::TypeSystem& typeSystem)
-    : RecordWithVariantsType(getThisType(), typeSystem,
+    : RecordWithVariantsType(getThisIdentifier(), typeSystem,
           {getTagAId(), getTagBId(), getTagCId(), getTagDId()},
-          {{getFieldA0Id(), babelwires::DefaultIntType::getThisType(), {getTagAId(), getTagDId()}},
-           {getFf0Id(), babelwires::DefaultIntType::getThisType()},
-           {getFieldB0Id(), TestSimpleRecordType::getThisType(), {getTagBId()}},
-           {getFieldABId(), babelwires::DefaultIntType::getThisType(), {getTagAId(), getTagBId(), getTagDId()}},
-           {getFieldA1Id(), TestSimpleRecordType::getThisType(), {getTagAId(), getTagDId()}},
-           {getFf1Id(), TestSimpleRecordType::getThisType()},
-           {getFieldBCId(), babelwires::DefaultIntType::getThisType(), {getTagBId(), getTagCId()}}},
+          {{getFieldA0Id(), babelwires::DefaultIntType::getThisIdentifier(), {getTagAId(), getTagDId()}},
+           {getFf0Id(), babelwires::DefaultIntType::getThisIdentifier()},
+           {getFieldB0Id(), TestSimpleRecordType::getThisIdentifier(), {getTagBId()}},
+           {getFieldABId(), babelwires::DefaultIntType::getThisIdentifier(), {getTagAId(), getTagBId(), getTagDId()}},
+           {getFieldA1Id(), TestSimpleRecordType::getThisIdentifier(), {getTagAId(), getTagDId()}},
+           {getFf1Id(), TestSimpleRecordType::getThisIdentifier()},
+           {getFieldBCId(), babelwires::DefaultIntType::getThisIdentifier(), {getTagBId(), getTagCId()}}},
           1) {}
 
 babelwires::ShortId testDomain::TestRecordWithVariantsType::getTagAId() {
@@ -62,7 +62,7 @@ babelwires::ShortId testDomain::TestRecordWithVariantsType::getFieldBCId() {
 }
 
 testDomain::TestRecordWithVariantsElementData::TestRecordWithVariantsElementData()
-    : ValueNodeData(testDomain::TestRecordWithVariantsType::getThisType()) {}
+    : ValueNodeData(testDomain::TestRecordWithVariantsType::getThisIdentifier()) {}
 
 babelwires::Path testDomain::TestRecordWithVariantsElementData::getPathToRecordWithVariants() {
     return babelwires::Path();

@@ -11,7 +11,7 @@
 #include <BabelWiresLib/TypeSystem/registeredType.hpp>
 
 babelwires::StringType::StringType()
-    : Type(getThisType()) {}
+    : Type(getThisIdentifier()) {}
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
