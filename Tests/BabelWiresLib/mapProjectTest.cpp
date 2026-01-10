@@ -26,7 +26,7 @@ namespace {
 TEST(MapProjectTest, mapProjectEntry) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<babelwires::StringType>();
+    typeSystem.addType<babelwires::StringType>();
     auto stringType = typeSystem.getRegisteredType<babelwires::StringType>();
 
     babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *stringType);

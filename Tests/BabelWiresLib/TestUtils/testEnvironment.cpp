@@ -26,7 +26,7 @@ testUtils::TestEnvironment::TestEnvironment()
             babelwires::IdentifierRegistry::Authority::isAuthoritative);
     }
 
-    m_typeSystem.addEntry<testUtils::TestType>();
+    m_typeSystem.addType<testUtils::TestType>();
 
     m_typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
     m_typeSystem.addTypeConstructor<testUtils::TestBinaryTypeConstructor>();

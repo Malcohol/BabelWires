@@ -78,7 +78,7 @@ TEST(TypeExpTest, resolve) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
-    const testUtils::TestType* testType = typeSystem.addEntry<testUtils::TestType>();
+    const testUtils::TestType* testType = typeSystem.addType<testUtils::TestType>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
         typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
@@ -96,7 +96,7 @@ TEST(TypeExpTest, tryResolveSuccess) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
-    const testUtils::TestType* testType = typeSystem.addEntry<testUtils::TestType>();
+    const testUtils::TestType* testType = typeSystem.addType<testUtils::TestType>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
         typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
@@ -123,7 +123,7 @@ TEST(TypeExpTest, tryResolveParallel) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
-    const testUtils::TestType* testType = typeSystem.addEntry<testUtils::TestType>();
+    const testUtils::TestType* testType = typeSystem.addType<testUtils::TestType>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
         typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
 
@@ -155,7 +155,7 @@ TEST(TypeExpTest, tryResolveMixed) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
-    const testUtils::TestType* testType = typeSystem.addEntry<testUtils::TestType>();
+    const testUtils::TestType* testType = typeSystem.addType<testUtils::TestType>();
     const testUtils::TestUnaryTypeConstructor* unaryConstructor =
         typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
     const testUtils::TestMixedTypeConstructor* mixedConstructor =

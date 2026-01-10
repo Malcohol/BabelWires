@@ -85,9 +85,9 @@ TEST(EnumTest, subEnum) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
 
-    typeSystem.addEntry<testDomain::TestEnum>();
+    typeSystem.addType<testDomain::TestEnum>();
     // Have to register Sub-Enums in the TypeSystem or they don't work.
-    typeSystem.addEntry<testDomain::TestSubEnum>();
+    typeSystem.addType<testDomain::TestSubEnum>();
 
     const auto& testEnum = typeSystem.getRegisteredType<testDomain::TestEnum>();
     const auto& testSubEnum = typeSystem.getRegisteredType<testDomain::TestSubEnum>();

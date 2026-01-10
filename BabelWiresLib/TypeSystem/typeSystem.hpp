@@ -23,7 +23,7 @@ namespace babelwires {
 
         template <typename TYPE, typename... ARGS,
                   std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
-        const TYPE* addEntry(ARGS&&... args) {
+        const TYPE* addType(ARGS&&... args) {
             const Type* newType = addRegisteredType(TYPE::getThisIdentifier(), TYPE::getVersion(), makeType<TYPE>(std::forward<ARGS>(args)...));
             return &newType->is<TYPE>();
         }

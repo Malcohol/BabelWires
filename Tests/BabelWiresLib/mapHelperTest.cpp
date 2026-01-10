@@ -149,7 +149,7 @@ namespace {
 TEST(MapHelperTest, unorderedMapApplicator_allToOneFallback) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<babelwires::StringType>();
+    typeSystem.addType<babelwires::StringType>();
 
     babelwires::MapValue mapValue = setUpTestTypeMapValue(typeSystem, mapValue, true);
 
@@ -165,7 +165,7 @@ TEST(MapHelperTest, unorderedMapApplicator_allToOneFallback) {
 TEST(MapHelperTest, unorderedMapApplicator_allToSameFallback) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<babelwires::StringType>();
+    typeSystem.addType<babelwires::StringType>();
 
     babelwires::MapValue mapValue = setUpTestTypeMapValue(typeSystem, mapValue, false);
 
@@ -181,8 +181,8 @@ TEST(MapHelperTest, unorderedMapApplicator_allToSameFallback) {
 TEST(MapHelperTest, unorderedMapApplicator_differentTypes) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<babelwires::StringType>();
-    typeSystem.addEntry<testDomain::TestEnum>();
+    typeSystem.addType<babelwires::StringType>();
+    typeSystem.addType<testDomain::TestEnum>();
 
     const auto& testEnum = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
@@ -201,7 +201,7 @@ TEST(MapHelperTest, unorderedMapApplicator_differentTypes) {
 TEST(MapHelperTest, enumSourceMapApplicator_allToOneFallback) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<testDomain::TestEnum>();
+    typeSystem.addType<testDomain::TestEnum>();
 
     const auto& testEnum = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
@@ -220,7 +220,7 @@ TEST(MapHelperTest, enumSourceMapApplicator_allToOneFallback) {
 TEST(MapHelperTest, enumSourceMapApplicator_allToSameFallback) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<testDomain::TestEnum>();
+    typeSystem.addType<testDomain::TestEnum>();
 
     const auto& testEnum = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
@@ -239,7 +239,7 @@ TEST(MapHelperTest, enumSourceMapApplicator_allToSameFallback) {
 TEST(MapHelperTest, enumSourceMapApplicator_differentTypes) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addEntry<testDomain::TestEnum>();
+    typeSystem.addType<testDomain::TestEnum>();
 
     const auto& testEnum = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
