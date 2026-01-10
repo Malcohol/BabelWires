@@ -17,10 +17,10 @@ namespace babelwires {
     class GenericType : public CompoundType {
       public:
         /// Create a generic type with the given number of variables.
-        GenericType(TypeExp&& typeExp, const TypeSystem& typeSystem, const TypeExp& wrappedType,
+        GenericType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, const TypeExp& wrappedType,
                     unsigned int numVariables);
 
-        GenericType(TypeExp&& typeExp, const TypePtr& wrappedType, unsigned int numVariables);
+        GenericType(TypeExp&& typeExpOfThis, const TypePtr& wrappedType, unsigned int numVariables);
 
         std::string getFlavour() const override;
 

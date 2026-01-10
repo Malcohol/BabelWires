@@ -41,12 +41,12 @@ namespace {
     }
 } // namespace
 
-babelwires::GenericType::GenericType(TypeExp&& typeExp, const TypeSystem& typeSystem, const TypeExp& wrappedType,
+babelwires::GenericType::GenericType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, const TypeExp& wrappedType,
                                      unsigned int numVariables)
-    : GenericType(std::move(typeExp), wrappedType.resolve(typeSystem), numVariables) {}
+    : GenericType(std::move(typeExpOfThis), wrappedType.resolve(typeSystem), numVariables) {}
 
-babelwires::GenericType::GenericType(TypeExp&& typeExp, const TypePtr& wrappedType, unsigned int numVariables)
-    : CompoundType(std::move(typeExp))
+babelwires::GenericType::GenericType(TypeExp&& typeExpOfThis, const TypePtr& wrappedType, unsigned int numVariables)
+    : CompoundType(std::move(typeExpOfThis))
     , m_wrappedType(std::move(wrappedType))
     , m_numVariables(numVariables) {
     assert(m_numVariables > 0 && "GenericType must have at least one type variable");

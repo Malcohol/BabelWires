@@ -16,7 +16,7 @@ namespace babelwires {
     /// Common between IntTypes constructed with a range and/or default.
     class IntType : public Type {
       public:
-        IntType(TypeExp&& typeExp, Range<IntValue::NativeType> range = Range<IntValue::NativeType>(),
+        IntType(TypeExp&& typeExpOfThis, Range<IntValue::NativeType> range = Range<IntValue::NativeType>(),
                 IntValue::NativeType defaultValue = 0);
 
         /// Get the range of valid values.

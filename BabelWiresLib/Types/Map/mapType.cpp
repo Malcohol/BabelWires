@@ -10,8 +10,8 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
 
-babelwires::MapType::MapType(TypeExp&& typeExp, const TypeSystem& typeSystem, TypeExp sourceTypeExp, TypeExp targetTypeExp, MapEntryData::Kind defaultFallbackKind)
-    : Type(std::move(typeExp))
+babelwires::MapType::MapType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, TypeExp sourceTypeExp, TypeExp targetTypeExp, MapEntryData::Kind defaultFallbackKind)
+    : Type(std::move(typeExpOfThis))
     , m_sourceType(sourceTypeExp.resolve(typeSystem))
     , m_targetType(targetTypeExp.resolve(typeSystem))
     , m_defaultFallbackKind(defaultFallbackKind) {

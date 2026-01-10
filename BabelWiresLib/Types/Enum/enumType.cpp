@@ -9,8 +9,8 @@
 
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
-babelwires::EnumType::EnumType(TypeExp&& typeExp, ValueSet values, unsigned int indexOfDefaultValue)
-    : Type(std::move(typeExp))
+babelwires::EnumType::EnumType(TypeExp&& typeExpOfThis, ValueSet values, unsigned int indexOfDefaultValue)
+    : Type(std::move(typeExpOfThis))
     , m_values(std::move(values))
     , m_indexOfDefaultValue(indexOfDefaultValue) {
     m_sortedValues = m_values;

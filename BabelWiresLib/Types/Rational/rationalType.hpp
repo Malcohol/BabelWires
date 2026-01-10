@@ -17,7 +17,7 @@ namespace babelwires {
     /// Common between RationalTypes constructed with a range and/or default.
     class RationalType : public Type {
       public:
-        RationalType(TypeExp&& typeExp, Range<Rational> range = Range<Rational>(), Rational defaultValue = 0);
+        RationalType(TypeExp&& typeExpOfThis, Range<Rational> range = Range<Rational>(), Rational defaultValue = 0);
 
         /// Get the range of valid values.
         Range<Rational> getRange() const;

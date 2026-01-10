@@ -27,7 +27,7 @@ namespace babelwires {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(Type);
 
-        Type(TypeExp&& typeExp);
+        Type(TypeExp&& typeExpOfThis);
         virtual ~Type();
 
         /// Create a new Value representing a default instance of the type.

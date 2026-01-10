@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
-babelwires::Type::Type(TypeExp&& typeExp)
-    : m_typeExp(std::move(typeExp)) {}
+babelwires::Type::Type(TypeExp&& typeExpOfThis)
+    : m_typeExp(std::move(typeExpOfThis)) {}
 
 babelwires::Type::~Type() = default;
 

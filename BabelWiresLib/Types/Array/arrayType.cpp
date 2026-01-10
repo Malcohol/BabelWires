@@ -12,8 +12,8 @@
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
-babelwires::ArrayType::ArrayType(TypeExp&& typeExp, TypePtr entryType, unsigned int minimumSize, unsigned int maximumSize, int initialSize)
-    : CompoundType(std::move(typeExp))
+babelwires::ArrayType::ArrayType(TypeExp&& typeExpOfThis, TypePtr entryType, unsigned int minimumSize, unsigned int maximumSize, int initialSize)
+    : CompoundType(std::move(typeExpOfThis))
     , m_entryType(std::move(entryType))
     , m_minimumSize(minimumSize)
     , m_maximumSize(maximumSize)

@@ -12,9 +12,9 @@
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
-babelwires::RecordWithVariantsType::RecordWithVariantsType(TypeExp&& typeExp, const TypeSystem& typeSystem, Tags tags, std::vector<FieldWithTags> fields,
+babelwires::RecordWithVariantsType::RecordWithVariantsType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, Tags tags, std::vector<FieldWithTags> fields,
                                                            unsigned int defaultTagIndex)
-    : CompoundType(std::move(typeExp))
+    : CompoundType(std::move(typeExpOfThis))
     , m_tags(std::move(tags))
     , m_defaultTag(m_tags[defaultTagIndex]) {
     assert((m_tags.size() > 0) && "Empty tags set not allowed");

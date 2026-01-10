@@ -12,8 +12,8 @@
 
 #include <Common/Identifiers/registeredIdentifier.hpp>
 
-babelwires::IntType::IntType(TypeExp&& typeExp, Range<IntValue::NativeType> range, IntValue::NativeType defaultValue)
-    : Type(std::move(typeExp))
+babelwires::IntType::IntType(TypeExp&& typeExpOfThis, Range<IntValue::NativeType> range, IntValue::NativeType defaultValue)
+    : Type(std::move(typeExpOfThis))
     , m_range(range)
     , m_defaultValue(defaultValue) {
     assert(m_range.contains(defaultValue));

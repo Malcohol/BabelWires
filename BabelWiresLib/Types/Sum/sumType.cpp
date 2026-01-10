@@ -10,8 +10,8 @@
 #include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-babelwires::SumType::SumType(TypeExp&& typeExp, const TypeSystem& typeSystem, SummandTypeExps summands, unsigned int indexOfDefaultSummand)
-    : Type(std::move(typeExp))
+babelwires::SumType::SumType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, SummandTypeExps summands, unsigned int indexOfDefaultSummand)
+    : Type(std::move(typeExpOfThis))
     , m_indexOfDefaultSummand(indexOfDefaultSummand) {
     m_summands.reserve(summands.size());
     for (const auto& s : summands) {
@@ -20,8 +20,8 @@ babelwires::SumType::SumType(TypeExp&& typeExp, const TypeSystem& typeSystem, Su
     assert(indexOfDefaultSummand < m_summands.size());
 }
 
-babelwires::SumType::SumType(TypeExp&& typeExp, Summands summands, unsigned int indexOfDefaultSummand)
-    : Type(std::move(typeExp))
+babelwires::SumType::SumType(TypeExp&& typeExpOfThis, Summands summands, unsigned int indexOfDefaultSummand)
+    : Type(std::move(typeExpOfThis))
     , m_summands(std::move(summands))
     , m_indexOfDefaultSummand(indexOfDefaultSummand) {
     assert(indexOfDefaultSummand < m_summands.size());
