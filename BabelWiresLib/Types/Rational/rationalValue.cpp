@@ -51,7 +51,7 @@ std::size_t babelwires::RationalValue::getHash() const {
 }
 
 bool babelwires::RationalValue::operator==(const Value& other) const {
-    const RationalValue* otherValue = other.as<RationalValue>();
+    const RationalValue* otherValue = other.tryAs<RationalValue>();
     return otherValue && (m_value == otherValue->m_value);
 }
 

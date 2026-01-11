@@ -97,7 +97,7 @@ TEST(ConnectionDescriptionTest, getCommands) {
             targetElement->findModifier(testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(1));
         if (isAdded) {
             ASSERT_NE(modifier, nullptr);
-            const babelwires::ConnectionModifier* connection = modifier->as<babelwires::ConnectionModifier>();
+            const babelwires::ConnectionModifier* connection = modifier->tryAs<babelwires::ConnectionModifier>();
             ASSERT_NE(connection, nullptr);
             EXPECT_EQ(connection->getModifierData().m_targetPath, connectionData.m_targetPath);
             EXPECT_EQ(connection->getModifierData().m_sourcePath, connectionData.m_sourcePath);

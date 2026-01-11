@@ -37,7 +37,7 @@ void babelwires::ChangeSourceFileAction::actionTriggered(babelwires::NodeContent
         if (!f) {
             return;
         }
-        const FileNode* const fileElement = f->as<FileNode>();
+        const FileNode* const fileElement = f->tryAs<FileNode>();
         if (!fileElement) {
             return;
         }

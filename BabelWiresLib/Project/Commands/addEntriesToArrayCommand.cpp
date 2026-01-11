@@ -56,7 +56,7 @@ bool babelwires::AddEntriesToArrayCommand::initializeAndExecute(Project& project
     }
 
     if (const Modifier* modifier = nodeToModify->findModifier(m_pathToArray)) {
-        if (modifier->getModifierData().as<ArraySizeModifierData>()) {
+        if (modifier->getModifierData().tryAs<ArraySizeModifierData>()) {
             m_wasModifier = true;
         }
     }

@@ -64,7 +64,7 @@ std::size_t babelwires::RecordValue::getHash() const {
 }
 
 bool babelwires::RecordValue::operator==(const Value& other) const {
-    const RecordValue *const otherRecord = other.as<RecordValue>();
+    const RecordValue *const otherRecord = other.tryAs<RecordValue>();
     if (otherRecord == nullptr) {
         return false;
     }

@@ -26,7 +26,7 @@ namespace babelwires {
 
         template <typename TYPE, typename VALUE_MODEL_TYPE> void registryHandler() {
             m_handlers.emplace_back([](const Type* type, ValueModel* valueModelAllocation) {
-                if (type->template as<TYPE>()) {
+                if (type->template tryAs<TYPE>()) {
                     static_assert(sizeof(VALUE_MODEL_TYPE) <= sizeof(babelwires::ValueModel));
                     new (valueModelAllocation) VALUE_MODEL_TYPE();
                     return true;

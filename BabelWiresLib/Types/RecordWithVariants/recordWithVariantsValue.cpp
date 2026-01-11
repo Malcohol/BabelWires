@@ -17,7 +17,7 @@ std::size_t babelwires::RecordWithVariantsValue::getHash() const {
 }
 
 bool babelwires::RecordWithVariantsValue::operator==(const Value& other) const {
-    const auto* otherAsRecordWithVariants = other.as<RecordWithVariantsValue>();
+    const auto* otherAsRecordWithVariants = other.tryAs<RecordWithVariantsValue>();
     if (!otherAsRecordWithVariants) {
         return false;
     }

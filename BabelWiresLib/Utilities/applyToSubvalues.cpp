@@ -26,7 +26,7 @@ namespace {
         }
 
         // If the predicate does not match, check if the value is a compound type.
-        if (const auto* compoundType = type.as<babelwires::CompoundType>()) {
+        if (const auto* compoundType = type.tryAs<babelwires::CompoundType>()) {
             // Assigned only if some value within it needs to be modified.
             babelwires::ValueHolder result;
 

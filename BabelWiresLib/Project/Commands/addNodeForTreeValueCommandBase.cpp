@@ -32,7 +32,7 @@ babelwires::NodeId babelwires::AddNodeForTreeValueCommandBase::getNodeId() const
 
 bool babelwires::AddNodeForTreeValueCommandBase::shouldSubsume(const Command& subsequentCommand,
                                                                 bool thisIsAlreadyExecuted) const {
-    const auto* moveNodeCommand = subsequentCommand.as<MoveNodeCommand>();
+    const auto* moveNodeCommand = subsequentCommand.tryAs<MoveNodeCommand>();
     if (!moveNodeCommand) {
         return false;
     }
@@ -49,7 +49,7 @@ bool babelwires::AddNodeForTreeValueCommandBase::shouldSubsume(const Command& su
 }
 
 void babelwires::AddNodeForTreeValueCommandBase::subsume(std::unique_ptr<Command> subsequentCommand) {
-    assert(subsequentCommand->as<MoveNodeCommand>() && "subsume should not have been called");
+    assert(subsequentCommand->tryAs<MoveNodeCommand>() && "subsume should not have been called");
     MoveNodeCommand* moveNodeCommand = static_cast<MoveNodeCommand*>(subsequentCommand.get());
     if (auto optionalPosition = moveNodeCommand->getPositionForOnlyNode(m_newNodeId)) {
         m_positionForNewNode = *optionalPosition;

@@ -64,7 +64,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
     if (!hasAncestorConnection) {
         // TODO: There should be a way to move this to a virtual function on modifiers, so these modifiers know how to
         // remove themselves cleanly.
-        if (modifier->getModifierData().as<ArraySizeModifierData>()) {
+        if (modifier->getModifierData().tryAs<ArraySizeModifierData>()) {
             auto [compoundFeature, currentSize, range, initialSize] =
                 ValueTreeHelper::getInfoFromArray(tryFollowPath(m_path, *input));
             if (compoundFeature) {
@@ -73,7 +73,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
                                                                                      initialSize - currentSize));
                 }
             }
-        } else if (const auto* optModifierData = modifier->getModifierData().as<SelectOptionalsModifierData>()) {
+        } else if (const auto* optModifierData = modifier->getModifierData().tryAs<SelectOptionalsModifierData>()) {
             auto [compoundFeature, optionals] =
                 ValueTreeHelper::getInfoFromRecordWithOptionals(tryFollowPath(m_path, *input));
             if (compoundFeature) {
@@ -87,7 +87,7 @@ bool babelwires::RemoveModifierCommand::initializeAndExecute(Project& project) {
                     }
                 }
             }
-        } else if (const auto* varModifierData = modifier->getModifierData().as<SelectRecordVariantModifierData>()) {
+        } else if (const auto* varModifierData = modifier->getModifierData().tryAs<SelectRecordVariantModifierData>()) {
             auto [compoundFeature, isDefault, fieldsToRemove] =
                 ValueTreeHelper::getInfoFromRecordWithVariants(tryFollowPath(m_path, *input));
             if (!isDefault) {

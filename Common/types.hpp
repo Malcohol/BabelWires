@@ -9,12 +9,12 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <filesystem>
 #include <limits>
 #include <memory>
+#include <string>
 #include <type_traits>
 #include <vector>
-#include <string>
-#include <filesystem>
 
 namespace babelwires {
 
@@ -92,25 +92,25 @@ namespace babelwires {
     std::string pathToString(const std::filesystem::path& path);
 } // namespace babelwires
 
-/// Adds "as" and "is" methods to a hierarchy.
-/// "as" provides limited downcasting within the hierarchy.
-/// foo.as<BAR>() either returns a BAR* or nullptr.
-/// "is" is not a dynamic_cast: it is a shorthand for a static_cast to a T&, although it does assert using "as".
-/// These should neaten up dynamic_casting in client code, and should make refactors easier in future.
+/// Adds "as" and "tryAs" methods to a hierarchy.
+/// "tryAs" provides limited downcasting within the hierarchy.
+/// foo.tryAs<BAR>() either returns a BAR* or nullptr.
+/// "is" is not a dynamic_cast: it is a shorthand for a static_cast to a T&, although it does assert using "tryAs".
+/// Direct use of dynamic_cast (and other RTTI features) is not permitted in the codebase.
 #define DOWNCASTABLE_TYPE_HIERARCHY(BASE)                                                                              \
-    template <typename T, std::enable_if_t<std::is_base_of_v<BASE, T>, std::nullptr_t> = nullptr> T* as() {            \
+    template <typename T, std::enable_if_t<std::is_base_of_v<BASE, T>, std::nullptr_t> = nullptr> T* tryAs() {         \
         return dynamic_cast<T*>(this);                                                                                 \
     }                                                                                                                  \
     template <typename T, std::enable_if_t<std::is_base_of_v<BASE, T>, std::nullptr_t> = nullptr>                      \
-    const T* as() const {                                                                                              \
+    const T* tryAs() const {                                                                                           \
         return dynamic_cast<const T*>(this);                                                                           \
     }                                                                                                                  \
-    template <typename T, std::enable_if_t<std::is_base_of_v<BASE, T>, std::nullptr_t> = nullptr> T& is() {            \
-        assert(as<T>());                                                                                               \
+    template <typename T, std::enable_if_t<std::is_base_of_v<BASE, T>, std::nullptr_t> = nullptr> T& as() {            \
+        assert(tryAs<T>());                                                                                            \
         return static_cast<T&>(*this);                                                                                 \
     }                                                                                                                  \
     template <typename T, std::enable_if_t<std::is_base_of_v<BASE, T>, std::nullptr_t> = nullptr>                      \
-    const T& is() const {                                                                                              \
-        assert(as<T>());                                                                                               \
+    const T& as() const {                                                                                              \
+        assert(tryAs<T>());                                                                                            \
         return static_cast<const T&>(*this);                                                                           \
     }

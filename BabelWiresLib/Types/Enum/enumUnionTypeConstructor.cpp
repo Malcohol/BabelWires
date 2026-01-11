@@ -29,7 +29,7 @@ babelwires::EnumUnionTypeConstructor::constructType(const TypeSystem& typeSystem
     EnumType::ValueSet unionOfValues;
     std::unordered_set<ShortId> setOfValuesSeen;
     for (unsigned int i = 0; i < resolvedTypeArguments.size(); ++i) {
-        const EnumType* const enumType = resolvedTypeArguments[i]->as<EnumType>();
+        const EnumType* const enumType = resolvedTypeArguments[i]->tryAs<EnumType>();
         if (!enumType) {
             throw TypeSystemException() << "Argument number " << i
                                         << " passed to EnumTypeConstructor was not an enum type ("

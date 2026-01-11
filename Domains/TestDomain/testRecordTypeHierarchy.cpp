@@ -65,7 +65,7 @@ testDomain::RecordAOptS::RecordAOptS(const babelwires::TypeSystem& typeSystem)
                    babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
 
 testDomain::RecordABOptChild::RecordABOptChild(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisIdentifier(), typeSystem, babelwires::TypeExp(RecordABOpt::getThisIdentifier()).resolve(typeSystem)->is<babelwires::RecordType>(),
+    : RecordType(getThisIdentifier(), typeSystem, babelwires::TypeExp(RecordABOpt::getThisIdentifier()).resolve(typeSystem)->as<babelwires::RecordType>(),
                  {{getIdForC(), TestSubEnum::getThisIdentifier()},
                   {getIdForOpt2(), TestSubEnum::getThisIdentifier(),
                    babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}

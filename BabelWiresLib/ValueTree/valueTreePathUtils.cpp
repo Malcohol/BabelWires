@@ -43,7 +43,7 @@ babelwires::getRootAndPathTo(const ValueTreeNode& valueTreeNode) {
         parent = current->getOwner();
     }
     std::reverse(steps.begin(), steps.end());
-    return {current->is<ValueTreeRoot>(), Path(std::move(steps))};
+    return {current->as<ValueTreeRoot>(), Path(std::move(steps))};
 }
 
 babelwires::RootAndPath<babelwires::ValueTreeRoot> babelwires::getRootAndPathTo(ValueTreeNode& valueTreeNode) {
@@ -58,7 +58,7 @@ babelwires::RootAndPath<babelwires::ValueTreeRoot> babelwires::getRootAndPathTo(
         parent = current->getOwnerNonConst();
     }
     std::reverse(steps.begin(), steps.end());
-    return {current->is<ValueTreeRoot>(), Path(std::move(steps))};
+    return {current->as<ValueTreeRoot>(), Path(std::move(steps))};
 }
 
 namespace {

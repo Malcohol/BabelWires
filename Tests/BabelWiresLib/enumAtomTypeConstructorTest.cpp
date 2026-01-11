@@ -27,7 +27,7 @@ TEST(EnumAtomTypeConstructorTest, construct) {
     EXPECT_EQ(newType->getTypeExp(),
               babelwires::TypeExp(babelwires::EnumAtomTypeConstructor::getThisIdentifier(), enumValue.clone()));
 
-    const babelwires::EnumType* const enumType = newType->as<babelwires::EnumType>();
+    const babelwires::EnumType* const enumType = newType->tryAs<babelwires::EnumType>();
     ASSERT_NE(enumType, nullptr);
 
     const auto& valueSet = enumType->getValueSet();
@@ -48,7 +48,7 @@ TEST(EnumAtomTypeConstructorTest, makeTypeExp) {
     EXPECT_EQ(newType->getTypeExp(),
               babelwires::TypeExp(babelwires::EnumAtomTypeConstructor::getThisIdentifier(), babelwires::EnumValue(foo)));
 
-    const babelwires::EnumType* const enumType = newType->as<babelwires::EnumType>();
+    const babelwires::EnumType* const enumType = newType->tryAs<babelwires::EnumType>();
     ASSERT_NE(enumType, nullptr);
 
     const auto& valueSet = enumType->getValueSet();

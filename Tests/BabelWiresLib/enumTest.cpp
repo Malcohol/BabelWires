@@ -70,7 +70,7 @@ TEST(EnumTest, createValue) {
 
     auto [valueHolder, value] = testEnum.createValue(typeSystem);
     EXPECT_TRUE(valueHolder);
-    auto enumValue = value.as<babelwires::EnumValue>();
+    auto enumValue = value.tryAs<babelwires::EnumValue>();
     EXPECT_TRUE(enumValue);
     EXPECT_TRUE(testEnum.isValidValue(typeSystem, value));
     EXPECT_EQ(enumValue->get(), "Bar");
@@ -94,7 +94,7 @@ TEST(EnumTest, subEnum) {
 
     auto [valueHolder, value] = testSubEnum->createValue(typeSystem);
     EXPECT_TRUE(valueHolder);
-    auto enumValue = value.as<babelwires::EnumValue>();
+    auto enumValue = value.tryAs<babelwires::EnumValue>();
     EXPECT_TRUE(enumValue);
     EXPECT_TRUE(testEnum->isValidValue(typeSystem, value));
     EXPECT_TRUE(testSubEnum->isValidValue(typeSystem, value));

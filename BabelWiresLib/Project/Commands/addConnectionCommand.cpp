@@ -94,7 +94,7 @@ bool babelwires::AddConnectionCommand::initializeAndExecute(Project& project) {
         // moment, I don't think modifiers can currently fail/recover based on the presence of other modifiers.
         for (const auto& modifier : targetNode->getEdits().modifierRange(m_modifierToAdd->m_targetPath)) {
             if (m_modifierToAdd->m_targetPath.isStrictPrefixOf(modifier->getTargetPath()) &&
-                modifier->as<ArraySizeModifier>()) {
+                modifier->tryAs<ArraySizeModifier>()) {
                 subcommands.emplace_back(std::make_unique<RemoveModifierCommand>(
                     "Remove modifier subcommand", m_targetNodeId, modifier->getTargetPath()));
             }

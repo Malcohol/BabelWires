@@ -27,11 +27,11 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
         babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisIdentifier()));
 
     const babelwires::ValueNode* const element =
-        testEnvironment.m_project.getNode(elementId)->as<babelwires::ValueNode>();
+        testEnvironment.m_project.getNode(elementId)->tryAs<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
 
     const babelwires::ValueNode* const targetElement =
-        testEnvironment.m_project.getNode(targetId)->as<babelwires::ValueNode>();
+        testEnvironment.m_project.getNode(targetId)->tryAs<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
 
     const babelwires::Path pathToValue;
@@ -68,7 +68,7 @@ TEST(DeactivateOptionalsCommandTest, executeAndUndo) {
 
     const babelwires::ValueTreeNode* const input = element->getInput();
     ASSERT_NE(input, nullptr);
-    const testDomain::TestComplexRecordType* const type = input->getType()->as<testDomain::TestComplexRecordType>();
+    const testDomain::TestComplexRecordType* const type = input->getType()->tryAs<testDomain::TestComplexRecordType>();
 
     babelwires::DeactivateOptionalCommand testCopyConstructor("Test command", elementId, pathToValue,
         testDomain::TestComplexRecordType::getOpRecId());

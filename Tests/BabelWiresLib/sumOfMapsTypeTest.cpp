@@ -52,7 +52,7 @@ TEST(SumOfMapsTypeTest, sumOfMapsTypeCreateValue) {
     EXPECT_TRUE(newValue);
     EXPECT_TRUE(sumOfMapsType.isValidValue(testEnvironment.m_typeSystem, *newValue));
 
-    const auto* mapValue = newValue->as<babelwires::MapValue>();
+    const auto* mapValue = newValue->tryAs<babelwires::MapValue>();
     EXPECT_NE(mapValue, nullptr);
 
     EXPECT_EQ(mapValue->getSourceTypeExp(), babelwires::DefaultRationalType::getThisIdentifier());

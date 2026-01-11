@@ -25,14 +25,14 @@ namespace {
 
 QWidget* babelwires::IntValueModel::createEditor(QWidget* parent) const {
     auto spinBox = std::make_unique<SpinBoxValueEditor>(parent, nullptr);
-    auto range = getType()->is<IntType>().getRange();
+    auto range = getType()->as<IntType>().getRange();
     spinBox->setMinimum(clampToInt(range.m_min));
     spinBox->setMaximum(clampToInt(range.m_max));
     return spinBox.release();
 }
 
 void babelwires::IntValueModel::setEditorData(QWidget* editor) const {
-    const IntValue& v = getValue()->is<IntValue>();
+    const IntValue& v = getValue()->as<IntValue>();
     const int value = v.get();
 
     auto spinBox = qobject_cast<SpinBoxValueEditor*>(editor);
@@ -45,7 +45,7 @@ babelwires::ValueHolder babelwires::IntValueModel::createValueFromEditorIfDiffer
     assert(spinBox && "Unexpected editor");
     const int newValue = spinBox->value();
 
-    const IntValue& v = getValue()->is<IntValue>();
+    const IntValue& v = getValue()->as<IntValue>();
     const int currentValue = v.get();
 
     if (newValue != currentValue) {
@@ -55,7 +55,7 @@ babelwires::ValueHolder babelwires::IntValueModel::createValueFromEditorIfDiffer
 }
 
 bool babelwires::IntValueModel::isItemEditable() const {
-    return getValue()->as<IntValue>();
+    return getValue()->tryAs<IntValue>();
 }
 
 bool babelwires::IntValueModel::validateEditor(QWidget* editor) const {

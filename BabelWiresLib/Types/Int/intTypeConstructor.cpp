@@ -18,7 +18,7 @@ babelwires::IntTypeConstructor::extractValueArguments(const std::vector<ValueHol
 
     IntValue::NativeType args[3];
     for (int i = 0; i < 3; ++i) {
-        if (const IntValue* intValue = valueArguments[i]->as<IntValue>()) {
+        if (const IntValue* intValue = valueArguments[i]->tryAs<IntValue>()) {
             args[i] = intValue->get();
         } else {
             throw TypeSystemException() << "Argument " << i << " given to IntTypeConstructor was not an IntValue";

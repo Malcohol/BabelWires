@@ -44,7 +44,7 @@ std::size_t babelwires::AllToOneFallbackMapEntryData::getHash() const {
 }
 
 bool babelwires::AllToOneFallbackMapEntryData::operator==(const MapEntryData& other) const {
-    const AllToOneFallbackMapEntryData* otherData = other.as<AllToOneFallbackMapEntryData>();
+    const AllToOneFallbackMapEntryData* otherData = other.tryAs<AllToOneFallbackMapEntryData>();
     if (!otherData) {
         return false;
     }

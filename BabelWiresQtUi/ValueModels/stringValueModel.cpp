@@ -18,7 +18,7 @@ QWidget* babelwires::StringValueModel::createEditor(QWidget* parent) const {
 }
 
 void babelwires::StringValueModel::setEditorData(QWidget* editor) const {
-    const StringValue& v = getValue()->is<StringValue>();
+    const StringValue& v = getValue()->as<StringValue>();
     const std::string& value = v.get();
 
     auto lineEditor = qobject_cast<LineEditValueEditor*>(editor);
@@ -31,7 +31,7 @@ babelwires::ValueHolder babelwires::StringValueModel::createValueFromEditorIfDif
     assert(lineEditor && "Unexpected editor");
     const std::string newValue = lineEditor->text().toStdString();
 
-    const StringValue& v = getValue()->is<StringValue>();
+    const StringValue& v = getValue()->as<StringValue>();
     const std::string currentValue = v.get();
     
     if (newValue != currentValue) {
@@ -41,7 +41,7 @@ babelwires::ValueHolder babelwires::StringValueModel::createValueFromEditorIfDif
 }
 
 bool babelwires::StringValueModel::isItemEditable() const {
-    return getValue()->as<StringValue>();
+    return getValue()->tryAs<StringValue>();
 }
 
 bool babelwires::StringValueModel::validateEditor(QWidget* editor) const {

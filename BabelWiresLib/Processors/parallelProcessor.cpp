@@ -71,8 +71,8 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
         }
     }
 
-    const auto& arrayInput = input.getChild(input.getNumChildren() - 1)->is<ValueTreeNode>();
-    auto& arrayOutput = output.getChild(output.getNumChildren() - 1)->is<ValueTreeNode>();
+    const auto& arrayInput = input.getChild(input.getNumChildren() - 1)->as<ValueTreeNode>();
+    auto& arrayOutput = output.getChild(output.getNumChildren() - 1)->as<ValueTreeNode>();
 
     if (arrayInput.isChanged(ValueTreeNode::Changes::StructureChanged)) {
         // TODO: This is very inefficient in cases where a single entry has been added or removed.
@@ -102,9 +102,9 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
     const TypeSystem& typeSystem = input.getTypeSystem();
 
     for (unsigned int i = 0; i < arrayInput.getNumChildren(); ++i) {
-        const ValueTreeNode& inputEntry = arrayInput.getChild(i)->is<ValueTreeNode>();
+        const ValueTreeNode& inputEntry = arrayInput.getChild(i)->as<ValueTreeNode>();
         if (shouldProcessAll || arrayInput.getChild(i)->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
-            ValueTreeNode& outputEntry = arrayOutput.getChild(i)->is<ValueTreeNode>();
+            ValueTreeNode& outputEntry = arrayOutput.getChild(i)->as<ValueTreeNode>();
             entriesToProcess.emplace_back(EntryData{typeSystem, i, inputEntry, outputEntry});
         }
     }
@@ -137,7 +137,7 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
         throw compositeException;
     }
 
-    ArrayValue newOutput = arrayOutput.getValue()->is<ArrayValue>();
+    ArrayValue newOutput = arrayOutput.getValue()->as<ArrayValue>();
     for (EntryData& data : entriesToProcess) {
         newOutput.setValue(data.m_index, data.m_outputEntry->getValue());
     }

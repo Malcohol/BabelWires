@@ -43,14 +43,14 @@ TEST(ModifierTest, basicStuff) {
     EXPECT_EQ(intMod.asConnectionModifier(), nullptr);
     EXPECT_EQ(intMod.getModifierData().m_targetPath, path);
     EXPECT_EQ(intMod.getTargetPath(), path);
-    EXPECT_NE(intMod.getModifierData().as<babelwires::ValueAssignmentData>(), nullptr);
+    EXPECT_NE(intMod.getModifierData().tryAs<babelwires::ValueAssignmentData>(), nullptr);
     EXPECT_NE(static_cast<const babelwires::ValueAssignmentData&>(intMod.getModifierData())
                   .getValue()
-                  ->as<babelwires::IntValue>(),
+                  ->tryAs<babelwires::IntValue>(),
               nullptr);
     EXPECT_EQ(static_cast<const babelwires::ValueAssignmentData&>(intMod.getModifierData())
                   .getValue()
-                  ->as<babelwires::IntValue>()
+                  ->tryAs<babelwires::IntValue>()
                   ->get(),
               198);
 
@@ -71,14 +71,14 @@ TEST(ModifierTest, clone) {
     auto clone = intMod.clone();
     ASSERT_NE(clone, nullptr);
     EXPECT_EQ(clone->getModifierData().m_targetPath, path);
-    EXPECT_NE(clone->getModifierData().as<babelwires::ValueAssignmentData>(), nullptr);
+    EXPECT_NE(clone->getModifierData().tryAs<babelwires::ValueAssignmentData>(), nullptr);
     EXPECT_NE(static_cast<const babelwires::ValueAssignmentData&>(clone->getModifierData())
                   .getValue()
-                  ->as<babelwires::IntValue>(),
+                  ->tryAs<babelwires::IntValue>(),
               nullptr);
     EXPECT_EQ(static_cast<const babelwires::ValueAssignmentData&>(clone->getModifierData())
                   .getValue()
-                  ->as<babelwires::IntValue>()
+                  ->tryAs<babelwires::IntValue>()
                   ->get(),
               198);
 }

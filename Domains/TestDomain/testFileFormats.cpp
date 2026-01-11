@@ -78,7 +78,7 @@ testDomain::TestSourceFileFormat::loadFromFile(const std::filesystem::path& path
     auto [r0, r1] = getFileData(path);
     auto newFeature = std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, getTestFileType());
     newFeature->setToDefault();
-    TestSimpleRecordType::Instance instance{newFeature->getChild(0)->is<babelwires::ValueTreeNode>()};
+    TestSimpleRecordType::Instance instance{newFeature->getChild(0)->as<babelwires::ValueTreeNode>()};
     instance.getintR0().set(r0);
     instance.getintR1().set(r1);
     return newFeature;
@@ -110,6 +110,6 @@ void testDomain::TestTargetFileFormat::writeToFile(const babelwires::ProjectCont
                                                   const babelwires::ValueTreeRoot& contents,
                                                   const std::filesystem::path& path) const {
     std::ofstream os(path);    
-    TestSimpleRecordType::ConstInstance instance{contents.getChild(0)->is<babelwires::ValueTreeNode>()};
+    TestSimpleRecordType::ConstInstance instance{contents.getChild(0)->as<babelwires::ValueTreeNode>()};
     TestSourceFileFormat::writeToTestFile(path, instance.getintR0().get(), instance.getintR1().get());
 }

@@ -47,7 +47,7 @@ namespace {
         bool canContainFilePaths() const override { return m_canContainFilePaths; }
         std::size_t getHash() const override { return 0; }
         bool operator==(const Value& other) const override {
-            const TestableValue* const otherTestableValue = other.as<TestableValue>();
+            const TestableValue* const otherTestableValue = other.tryAs<TestableValue>();
             return !otherTestableValue || (m_x == otherTestableValue->m_x);
         }
         std::string toString() const override { return "TestValue"; }
@@ -65,7 +65,7 @@ namespace {
 
 TEST(ValueHolderTest, constructionFromRValue) {
     babelwires::ValueHolder valueHolder{TestableValue(5)};
-    const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
+    const TestableValue* const valueInHolder = valueHolder->tryAs<TestableValue>();
     ASSERT_NE(valueInHolder, nullptr);
 
     EXPECT_FALSE(valueInHolder->m_wasCopied);
@@ -76,7 +76,7 @@ TEST(ValueHolderTest, constructionFromRValue) {
 TEST(ValueHolderTest, constructionFromUniquePtr) {
     auto uniquePtr = std::make_unique<TestableValue>(5);
     babelwires::ValueHolder valueHolder{std::move(uniquePtr)};
-    const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
+    const TestableValue* const valueInHolder = valueHolder->tryAs<TestableValue>();
     ASSERT_NE(valueInHolder, nullptr);
 
     EXPECT_FALSE(valueInHolder->m_wasCopied);
@@ -87,7 +87,7 @@ TEST(ValueHolderTest, constructionFromUniquePtr) {
 TEST(ValueHolderTest, assignmentFromRValue) {
     babelwires::ValueHolder valueHolder;
     valueHolder = TestableValue(5);
-    const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
+    const TestableValue* const valueInHolder = valueHolder->tryAs<TestableValue>();
     ASSERT_NE(valueInHolder, nullptr);
 
     EXPECT_FALSE(valueInHolder->m_wasCopied);
@@ -99,7 +99,7 @@ TEST(ValueHolderTest, assignmentFromUniquePtr) {
     auto uniquePtr = std::make_unique<TestableValue>(5);
     babelwires::ValueHolder valueHolder;
     valueHolder = std::move(uniquePtr);
-    const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
+    const TestableValue* const valueInHolder = valueHolder->tryAs<TestableValue>();
     ASSERT_NE(valueInHolder, nullptr);
 
     EXPECT_FALSE(valueInHolder->m_wasCopied);
@@ -114,7 +114,7 @@ TEST(ValueHolderTest, makeValue) {
     newValueHolder.m_nonConstReference.m_x = -3;
 
     babelwires::ValueHolder valueHolder = std::move(newValueHolder);
-    const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
+    const TestableValue* const valueInHolder = valueHolder->tryAs<TestableValue>();
     ASSERT_NE(valueInHolder, nullptr);
     EXPECT_EQ(valueInHolder->m_x, -3);
 }
@@ -124,17 +124,17 @@ TEST(ValueHolderTest, copyContentsAndGetNonConst) {
     babelwires::ValueHolder valueHolder2{valueHolder};
     babelwires::ValueHolder valueHolder3{valueHolder};
     {
-        const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
+        const TestableValue* const valueInHolder = valueHolder->tryAs<TestableValue>();
         ASSERT_NE(valueInHolder, nullptr);
         EXPECT_EQ(valueInHolder->m_x, 5);
     }
     {
-        const TestableValue* const valueInHolder2 = valueHolder2->as<TestableValue>();
+        const TestableValue* const valueInHolder2 = valueHolder2->tryAs<TestableValue>();
         ASSERT_NE(valueInHolder2, nullptr);
         EXPECT_EQ(valueInHolder2->m_x, 5);
     }
     {
-        const TestableValue* const valueInHolder3 = valueHolder3->as<TestableValue>();
+        const TestableValue* const valueInHolder3 = valueHolder3->tryAs<TestableValue>();
         ASSERT_NE(valueInHolder3, nullptr);
         EXPECT_EQ(valueInHolder3->m_x, 5);
     }
@@ -143,9 +143,9 @@ TEST(ValueHolderTest, copyContentsAndGetNonConst) {
         TestableValue& valueInHolder2NonConst = dynamic_cast<TestableValue&>(copyOf2);
         valueInHolder2NonConst.m_x = 23;
 
-        const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
-        const TestableValue* const valueInHolder2 = valueHolder2->as<TestableValue>();
-        const TestableValue* const valueInHolder3 = valueHolder3->as<TestableValue>();
+        const TestableValue* const valueInHolder = valueHolder->tryAs<TestableValue>();
+        const TestableValue* const valueInHolder2 = valueHolder2->tryAs<TestableValue>();
+        const TestableValue* const valueInHolder3 = valueHolder3->tryAs<TestableValue>();
         EXPECT_EQ(valueInHolder->m_x, 5);
         EXPECT_EQ(valueInHolder2->m_x, 23);
         EXPECT_EQ(valueInHolder3->m_x, 5);
@@ -194,7 +194,7 @@ TEST(ValueHolderTest, visitIdentifiers) {
         IdentifierVisitor visitor;
         valueHolder.visitIdentifiers(visitor);
         EXPECT_EQ(visitor.m_ids.size(), 0);
-        const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
+        const TestableValue* const valueInHolder = valueHolder->tryAs<TestableValue>();
         ASSERT_NE(valueInHolder, nullptr);
         EXPECT_EQ(valueInHolder->m_id, "Foo");
     }
@@ -205,7 +205,7 @@ TEST(ValueHolderTest, visitIdentifiers) {
         valueHolder.visitIdentifiers(visitor);
         EXPECT_EQ(visitor.m_ids.size(), 1);
         EXPECT_EQ(visitor.m_ids[0], "Foo");
-        const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
+        const TestableValue* const valueInHolder = valueHolder->tryAs<TestableValue>();
         ASSERT_NE(valueInHolder, nullptr);
         EXPECT_EQ(valueInHolder->m_id, "Foo2");
     }
@@ -224,7 +224,7 @@ TEST(ValueHolderTest, visitFilePaths) {
         babelwires::ValueHolder valueHolder{TestableValue(5, false, hasFilePaths)};
         valueHolder.visitFilePaths(filePathVisitor);
         EXPECT_EQ(filePaths.size(), 0);
-        const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
+        const TestableValue* const valueInHolder = valueHolder->tryAs<TestableValue>();
         ASSERT_NE(valueInHolder, nullptr);
         EXPECT_EQ(valueInHolder->m_filePath, babelwires::FilePath(std::filesystem::path("Bar")));
     }
@@ -234,7 +234,7 @@ TEST(ValueHolderTest, visitFilePaths) {
         valueHolder.visitFilePaths(filePathVisitor);
         EXPECT_EQ(filePaths.size(), 1);
         EXPECT_EQ(filePaths[0], babelwires::FilePath(std::filesystem::path("Bar")));
-        const TestableValue* const valueInHolder = valueHolder->as<TestableValue>();
+        const TestableValue* const valueInHolder = valueHolder->tryAs<TestableValue>();
         ASSERT_NE(valueInHolder, nullptr);
         EXPECT_EQ(valueInHolder->m_filePath, babelwires::FilePath(std::filesystem::path("Bar2")));
     }

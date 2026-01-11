@@ -25,7 +25,7 @@ std::size_t babelwires::ProjectDataLocation::getHash() const {
 
 bool babelwires::ProjectDataLocation::equals(const DataLocation& other) const {
     if (DataLocation::equals(other)) {
-        if (const auto* otherProjectDataLocation = other.as<ProjectDataLocation>()) {
+        if (const auto* otherProjectDataLocation = other.tryAs<ProjectDataLocation>()) {
             return m_nodeId == otherProjectDataLocation->m_nodeId;
         }
     }

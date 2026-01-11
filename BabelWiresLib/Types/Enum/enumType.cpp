@@ -64,7 +64,7 @@ bool babelwires::EnumType::isAValue(const babelwires::ShortId& id) const {
 
 bool babelwires::EnumType::visitValue(const TypeSystem& typeSystem, const Value& v,
                                 ChildValueVisitor& visitor) const {
-    if (const auto* enumValue = v.as<EnumValue>()) {
+    if (const auto* enumValue = v.tryAs<EnumValue>()) {
         return isAValue(enumValue->get());
     }
     return false;
@@ -80,7 +80,7 @@ std::string babelwires::EnumType::getFlavour() const {
 
 std::optional<babelwires::SubtypeOrder> babelwires::EnumType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                     const Type& other) const {
-    const EnumType* const otherEnum = other.as<EnumType>();
+    const EnumType* const otherEnum = other.tryAs<EnumType>();
     if (!otherEnum) {
         return {};
     }
@@ -128,5 +128,5 @@ std::optional<babelwires::SubtypeOrder> babelwires::EnumType::compareSubtypeHelp
 }
 
 std::string babelwires::EnumType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
-    return v->is<EnumValue>().toString();
+    return v->as<EnumValue>().toString();
 }

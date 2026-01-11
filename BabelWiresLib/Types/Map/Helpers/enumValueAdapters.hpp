@@ -14,7 +14,7 @@ namespace babelwires {
     /// Convert an EnumValue to the identifier it carries.
     struct EnumToIdentifierValueAdapter {
         babelwires::ShortId operator() (const Value& value) const {
-            const auto& enumValue = value.is<EnumValue>();
+            const auto& enumValue = value.as<EnumValue>();
             return enumValue.get();
         }
     };
@@ -25,7 +25,7 @@ namespace babelwires {
         TypePtrT<EnumType> m_enum;
 
         unsigned int operator() (const Value& value) const {
-            const auto& enumValue = value.is<EnumValue>();
+            const auto& enumValue = value.as<EnumValue>();
             return m_enum->getIndexFromIdentifier(enumValue.get());
         }
     };
@@ -36,7 +36,7 @@ namespace babelwires {
         const ENUM& m_enum;
 
         typename ENUM::Value operator() (const Value& value) const {
-            const auto& enumValue = value.is<EnumValue>();
+            const auto& enumValue = value.as<EnumValue>();
             return m_enum.getValueFromIdentifier(enumValue.get());
         }
     };

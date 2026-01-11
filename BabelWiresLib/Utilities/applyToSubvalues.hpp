@@ -24,7 +24,7 @@ namespace babelwires {
     void applyToSubvaluesOfType(const TypeSystem& typeSystem, const Type& type, ValueHolder& sourceValue,
                                 const std::function<void(const Type&, Value&)>& function) {
         applyToSubvalues(
-            typeSystem, type, sourceValue, [](const Type& t, const Value& v) { return t.as<TYPE_CLASS>(); }, function);
+            typeSystem, type, sourceValue, [](const Type& t, const Value& v) { return t.tryAs<TYPE_CLASS>(); }, function);
     }
 
 } // namespace babelwires

@@ -289,9 +289,9 @@ TEST(MapValueTest, serializationTest) {
     EXPECT_EQ(dataPtr->m_targetTypeExp, testTypeId2);
     EXPECT_EQ(dataPtr->getNumMapEntries(), 2);
     EXPECT_EQ(dataPtr->getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::One21);
-    const babelwires::ValueHolder& sourceValue = dataPtr->getMapEntry(0).as<babelwires::OneToOneMapEntryData>()->getSourceValue();
+    const babelwires::ValueHolder& sourceValue = dataPtr->getMapEntry(0).tryAs<babelwires::OneToOneMapEntryData>()->getSourceValue();
     ASSERT_NE(sourceValue, nullptr);
-    const auto *const sourceAsTestValue = sourceValue->as<babelwires::StringValue>();
+    const auto *const sourceAsTestValue = sourceValue->tryAs<babelwires::StringValue>();
     ASSERT_NE(sourceAsTestValue, nullptr);
     EXPECT_EQ(sourceAsTestValue->get(), "test mapValue serialization");
 
@@ -321,7 +321,7 @@ TEST(MapValueTest, cloneTest) {
     EXPECT_EQ(cloneMapValue->m_targetTypeExp, testTypeId2);
     EXPECT_EQ(cloneMapValue->getNumMapEntries(), 2);
     EXPECT_EQ(cloneMapValue->getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::One21);
-    const auto *const clonedEntryData = cloneMapValue->getMapEntry(0).as<babelwires::OneToOneMapEntryData>();
+    const auto *const clonedEntryData = cloneMapValue->getMapEntry(0).tryAs<babelwires::OneToOneMapEntryData>();
     ASSERT_NE(clonedEntryData, nullptr);
     EXPECT_NE(clonedEntryData, entryDataPtr);
     EXPECT_EQ(*clonedEntryData, *entryDataPtr);

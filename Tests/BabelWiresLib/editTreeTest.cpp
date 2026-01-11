@@ -103,37 +103,37 @@ TEST(EditTreeTest, severalModifier) {
     ASSERT_TRUE(tree.findModifier(path5));
     ASSERT_TRUE(tree.findModifier(path6));
 
-    ASSERT_TRUE(tree.findModifier(path1)->getModifierData().as<babelwires::ValueAssignmentData>());
-    ASSERT_TRUE(tree.findModifier(path2)->getModifierData().as<babelwires::ValueAssignmentData>());
-    ASSERT_TRUE(tree.findModifier(path3)->getModifierData().as<babelwires::ValueAssignmentData>());
-    ASSERT_TRUE(tree.findModifier(path4)->getModifierData().as<babelwires::ValueAssignmentData>());
-    ASSERT_TRUE(tree.findModifier(path5)->getModifierData().as<babelwires::ValueAssignmentData>());
-    ASSERT_TRUE(tree.findModifier(path6)->getModifierData().as<babelwires::ValueAssignmentData>());
+    ASSERT_TRUE(tree.findModifier(path1)->getModifierData().tryAs<babelwires::ValueAssignmentData>());
+    ASSERT_TRUE(tree.findModifier(path2)->getModifierData().tryAs<babelwires::ValueAssignmentData>());
+    ASSERT_TRUE(tree.findModifier(path3)->getModifierData().tryAs<babelwires::ValueAssignmentData>());
+    ASSERT_TRUE(tree.findModifier(path4)->getModifierData().tryAs<babelwires::ValueAssignmentData>());
+    ASSERT_TRUE(tree.findModifier(path5)->getModifierData().tryAs<babelwires::ValueAssignmentData>());
+    ASSERT_TRUE(tree.findModifier(path6)->getModifierData().tryAs<babelwires::ValueAssignmentData>());
 
     EXPECT_EQ(static_cast<const babelwires::ValueAssignmentData*>(&tree.findModifier(path1)->getModifierData())
                   ->getValue()
-                  ->as<babelwires::IntValue>()
+                  ->tryAs<babelwires::IntValue>()
                   ->get(),
               1);
     EXPECT_EQ(
         static_cast<const babelwires::ValueAssignmentData*>(&tree.findModifier(path2)->getModifierData())->getValue()
-                  ->as<babelwires::IntValue>()
+                  ->tryAs<babelwires::IntValue>()
                   ->get(), 2);
     EXPECT_EQ(
         static_cast<const babelwires::ValueAssignmentData*>(&tree.findModifier(path3)->getModifierData())->getValue()
-                  ->as<babelwires::IntValue>()
+                  ->tryAs<babelwires::IntValue>()
                   ->get(), 3);
     EXPECT_EQ(
         static_cast<const babelwires::ValueAssignmentData*>(&tree.findModifier(path4)->getModifierData())->getValue()
-                  ->as<babelwires::IntValue>()
+                  ->tryAs<babelwires::IntValue>()
                   ->get(), 4);
     EXPECT_EQ(
         static_cast<const babelwires::ValueAssignmentData*>(&tree.findModifier(path5)->getModifierData())->getValue()
-                  ->as<babelwires::IntValue>()
+                  ->tryAs<babelwires::IntValue>()
                   ->get(), 5);
     EXPECT_EQ(
         static_cast<const babelwires::ValueAssignmentData*>(&tree.findModifier(path6)->getModifierData())->getValue()
-                  ->as<babelwires::IntValue>()
+                  ->tryAs<babelwires::IntValue>()
                   ->get(), 6);
 
     tree.removeModifier(tree.findModifier(path3));

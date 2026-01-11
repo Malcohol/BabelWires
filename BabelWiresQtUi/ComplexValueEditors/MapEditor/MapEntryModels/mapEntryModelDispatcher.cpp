@@ -20,13 +20,13 @@ void babelwires::MapEntryModelDispatcher::init(const ValueModelRegistry& valueMo
                                                const MapProjectEntry& entry, unsigned int row, MapEntryModel::Column column, bool isLastRow) {
     m_rowModel = &m_rowModelStorage;
     const MapEntryData& entryData = entry.getData();
-    if (entryData.as<OneToOneMapEntryData>()) {
+    if (entryData.tryAs<OneToOneMapEntryData>()) {
         static_assert(sizeof(babelwires::MapEntryModel) == sizeof(babelwires::OneToOneMapEntryModel));
         new (m_rowModel) babelwires::OneToOneMapEntryModel();
-    } else if (entryData.as<AllToOneFallbackMapEntryData>()) {
+    } else if (entryData.tryAs<AllToOneFallbackMapEntryData>()) {
         static_assert(sizeof(babelwires::MapEntryModel) == sizeof(babelwires::AllToOneFallbackMapEntryModel));
         new (m_rowModel) babelwires::AllToOneFallbackMapEntryModel();
-    } else if (entryData.as<AllToSameFallbackMapEntryData>()) {
+    } else if (entryData.tryAs<AllToSameFallbackMapEntryData>()) {
         static_assert(sizeof(babelwires::MapEntryModel) == sizeof(babelwires::AllToSameFallbackMapEntryModel));
         new (m_rowModel) babelwires::AllToSameFallbackMapEntryModel();
     } else {

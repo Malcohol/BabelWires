@@ -21,9 +21,9 @@ void babelwires::GenericTypeValueModel::getContextMenuActions(
     ValueModel::getContextMenuActions(location, actionsOut);
     if (!m_isReadOnly) {
         auto entryGroup = std::make_unique<ContextMenuGroup>("Generic Type");
-        if (const auto& projectDataLocation = location.as<ProjectDataLocation>()) {
-            const GenericType& genericType = m_type->is<GenericType>();
-            const GenericValue& genericValue = getValue()->is<GenericValue>();
+        if (const auto& projectDataLocation = location.tryAs<ProjectDataLocation>()) {
+            const GenericType& genericType = m_type->as<GenericType>();
+            const GenericValue& genericValue = getValue()->as<GenericValue>();
             for (unsigned int i = 0; i < genericType.getNumVariables(); ++i) {
                 auto setTypeVariable = std::make_unique<SetTypeVariableAction>(*projectDataLocation, i, true);
                 // TODO tooltip.

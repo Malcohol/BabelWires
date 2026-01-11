@@ -38,19 +38,19 @@ namespace {
 } // namespace
 
 QString babelwires::RationalValueModel::getRichText() const {
-    const Rational value = getValue()->is<RationalValue>().get();
+    const Rational value = getValue()->as<RationalValue>().get();
     return value.toHtmlString().c_str();
 }
 
 QWidget* babelwires::RationalValueModel::createEditor(QWidget* parent) const {
     auto editor = new LineEditValueEditor(parent);
     editor->setValidator(new RationalValidator);
-    //auto range = getType()->is<RationalType>().getRange();
+    //auto range = getType()->as<RationalType>().getRange();
     return editor;
 }
 
 void babelwires::RationalValueModel::setEditorData(QWidget* editor) const {
-    const RationalValue& v = getValue()->is<RationalValue>();
+    const RationalValue& v = getValue()->as<RationalValue>();
     const Rational value = v.get();
 
     auto lineEditor = qobject_cast<LineEditValueEditor*>(editor);
@@ -59,7 +59,7 @@ void babelwires::RationalValueModel::setEditorData(QWidget* editor) const {
 }
 
 babelwires::ValueHolder babelwires::RationalValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
-    const RationalValue& v = getValue()->is<RationalValue>();
+    const RationalValue& v = getValue()->as<RationalValue>();
     const Rational currentValue = v.get();
 
     auto lineEditor = qobject_cast<const LineEditValueEditor*>(editor);
@@ -78,7 +78,7 @@ babelwires::ValueHolder babelwires::RationalValueModel::createValueFromEditorIfD
 }
 
 bool babelwires::RationalValueModel::isItemEditable() const {
-    return getValue()->as<RationalValue>();
+    return getValue()->tryAs<RationalValue>();
 }
 
 bool babelwires::RationalValueModel::validateEditor(QWidget* editor) const {

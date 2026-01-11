@@ -11,7 +11,7 @@ std::size_t testUtils::TestValue::getHash() const {
 }
 
 bool testUtils::TestValue::operator==(const Value& other) const {
-    if (const TestValue* const otherTestValue = other.as<TestValue>()) {
+    if (const TestValue* const otherTestValue = other.tryAs<TestValue>()) {
         return otherTestValue->m_value == m_value;
     } else {
         return false;
@@ -61,7 +61,7 @@ babelwires::NewValueHolder testUtils::TestType::createValue(const babelwires::Ty
 
 bool testUtils::TestType::visitValue(const babelwires::TypeSystem& typeSystem, const babelwires::Value& value,
                                 ChildValueVisitor& visitor) const {
-    const TestValue* const testValue = value.as<TestValue>();
+    const TestValue* const testValue = value.tryAs<TestValue>();
     if (!testValue) {
         return false;
     }
@@ -73,7 +73,7 @@ std::string testUtils::TestType::getFlavour() const {
 }
 
 std::optional<babelwires::SubtypeOrder> testUtils::TestType::compareSubtypeHelper(const babelwires::TypeSystem& typeSystem, const babelwires::Type& other) const {
-    const TestType *const otherTestType = other.as<TestType>();
+    const TestType *const otherTestType = other.tryAs<TestType>();
     if (!otherTestType) {
         return {};
     }
@@ -91,5 +91,5 @@ babelwires::Type::Tag testUtils::TestType::getTestTypeTag() {
 }
 
 std::string testUtils::TestType::valueToString(const babelwires::TypeSystem& typeSystem, const babelwires::ValueHolder& v) const { 
-    return v->is<TestValue>().toString();
+    return v->as<TestValue>().toString();
 }

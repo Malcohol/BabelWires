@@ -22,7 +22,7 @@ babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEdi
     const Type& type = *valueTreeNode.getType();
 
     // TODO: For now, assume ComplexValueEditors are all built-in, so we don't need a registry.
-    if (type.as<MapType>() || type.as<SumOfMapsType>()) {
+    if (type.tryAs<MapType>() || type.tryAs<SumOfMapsType>()) {
         // TODO: For now use a floating window.
         return new MapEditor(nullptr, projectGraphModel, userLogger, data);
     }

@@ -18,7 +18,7 @@ std::size_t babelwires::AllToSameFallbackMapEntryData::getHash() const {
 }
 
 bool babelwires::AllToSameFallbackMapEntryData::operator==(const MapEntryData& other) const {
-    return other.as<AllToSameFallbackMapEntryData>();
+    return other.tryAs<AllToSameFallbackMapEntryData>();
 }
 
 void babelwires::AllToSameFallbackMapEntryData::serializeContents(Serializer& serializer) const {

@@ -238,12 +238,12 @@ TEST(ProjectBundleTest, filePathResolution) {
 
         ASSERT_EQ(projectData.m_nodes.size(), 2);
         {
-            auto elementData = projectData.m_nodes[0].get()->as<babelwires::SourceFileNodeData>();
+            auto elementData = projectData.m_nodes[0].get()->tryAs<babelwires::SourceFileNodeData>();
             ASSERT_NE(elementData, nullptr);
             EXPECT_EQ(elementData->m_filePath, scenario.m_expectedResolvedPath);
         }
         {
-            auto elementData = projectData.m_nodes[1].get()->as<babelwires::TargetFileNodeData>();
+            auto elementData = projectData.m_nodes[1].get()->tryAs<babelwires::TargetFileNodeData>();
             ASSERT_NE(elementData, nullptr);
             EXPECT_EQ(elementData->m_filePath, scenario.m_expectedResolvedPath);
         }

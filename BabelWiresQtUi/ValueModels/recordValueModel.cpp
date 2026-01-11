@@ -21,9 +21,9 @@ void babelwires::RecordValueModel::getContextMenuActions(const DataLocation& loc
                                                          std::vector<ContextMenuEntry>& entriesOut) const {
     ValueModel::getContextMenuActions(location, entriesOut);
     if (!m_isReadOnly) {
-        const RecordType& recordType = m_type->is<RecordType>();
+        const RecordType& recordType = m_type->as<RecordType>();
         if (recordType.getOptionalFieldIds().size() > 0) {
-            if (const auto& projectDataLocation = location.as<ProjectDataLocation>()) {
+            if (const auto& projectDataLocation = location.tryAs<ProjectDataLocation>()) {
                 auto group = std::make_unique<ContextMenuGroup>("Optional fields", QActionGroup::ExclusionPolicy::None);
                 for (auto opId : recordType.getOptionalFieldIds()) {
                     const std::string fieldName = IdentifierRegistry::read()->getName(opId).c_str();

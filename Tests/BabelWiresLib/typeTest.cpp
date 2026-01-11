@@ -22,7 +22,7 @@ TEST(TypeTest, typeAndValue)
     babelwires::StringType type;
     auto [valueHolder, value] = type.createValue(typeSystem);
     EXPECT_TRUE(valueHolder);
-    EXPECT_TRUE(value.as<babelwires::StringValue>());
+    EXPECT_TRUE(value.tryAs<babelwires::StringValue>());
     EXPECT_TRUE(type.isValidValue(typeSystem, value));
 
     testDomain::TestEnum testEnum;

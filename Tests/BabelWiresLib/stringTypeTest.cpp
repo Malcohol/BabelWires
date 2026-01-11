@@ -14,7 +14,7 @@ TEST(StringTypeTest, stringTypeCreateValue) {
     babelwires::ValueHolder newValue = stringType.createValue(typeSystem);
     EXPECT_TRUE(newValue);
 
-    const auto* const newStringValue = newValue->as<babelwires::StringValue>();
+    const auto* const newStringValue = newValue->tryAs<babelwires::StringValue>();
     EXPECT_NE(newStringValue, nullptr);
     EXPECT_EQ(newStringValue->get(), std::string());
 }
@@ -43,5 +43,5 @@ TEST(StringTypeTest, stringTypeIsRegistered) {
     const babelwires::TypePtr foundType =
         testEnvironment.m_typeSystem.tryGetRegisteredTypeById(babelwires::StringType::getThisIdentifier());
     EXPECT_TRUE(foundType);
-    EXPECT_NE(foundType->as<babelwires::StringType>(), nullptr);
+    EXPECT_NE(foundType->tryAs<babelwires::StringType>(), nullptr);
 }

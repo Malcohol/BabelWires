@@ -20,7 +20,7 @@
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 void babelwires::SumValueModel::initializeValueModelDispatcherForSummand(ValueModelDispatcher& valueModel) const {
-    const SumType& sumType = getType()->is<SumType>();
+    const SumType& sumType = getType()->as<SumType>();
     const unsigned int currentIndex = sumType.getIndexOfValue(*m_typeSystem, *getValue());
     assert((currentIndex >= 0) && "Value not a valid instance of any summand of a SumType");
     const TypePtr& summandType = sumType.getSummands()[currentIndex];
@@ -63,7 +63,7 @@ void babelwires::SumValueModel::getContextMenuActions(
     ValueModel::getContextMenuActions(location, entriesOut);
     if (!m_isReadOnly) {
         auto group = std::make_unique<ContextMenuGroup>("SumType");
-        const SumType& sumType = getType()->is<SumType>();
+        const SumType& sumType = getType()->as<SumType>();
         const unsigned int currentIndex = sumType.getIndexOfValue(*m_typeSystem, *getValue());
         assert((currentIndex >= 0) && "Value not a valid instance of any summand of a SumType");
         const TypePtr& currentSummand = sumType.getSummands()[currentIndex];
@@ -71,14 +71,14 @@ void babelwires::SumValueModel::getContextMenuActions(
             const TypePtr& summandRef = sumType.getSummands()[i];
             std::unique_ptr<ContextMenuAction> action;
             // TODO Need some form of generalization here.
-            if (const auto* mapLocation = location.as<MapProjectDataLocation>()) {
+            if (const auto* mapLocation = location.tryAs<MapProjectDataLocation>()) {
                 action = std::make_unique<MapCommandContextMenuAction>(
                     std::make_unique<ResetMapValueCommand>(summandRef->getTypeExp().toString(), *mapLocation, summandRef->getTypeExp())
                 );
                 action->setCheckable(true);
             } else {
                 // TODO This seems to work but is very awkward.
-                const auto* projectLocation  = location.as<ProjectDataLocation>();
+                const auto* projectLocation  = location.tryAs<ProjectDataLocation>();
                 assert(projectLocation);
                 auto assignmentData = std::make_unique<ValueAssignmentData>(summandRef->createValue(*m_typeSystem));
                 assignmentData->m_targetPath = projectLocation->getPathToValue();

@@ -37,7 +37,7 @@ namespace {
 
         const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
         const auto* element =
-            testEnvironment.m_project.getNode(elementId)->as<babelwires::SourceFileNode>();
+            testEnvironment.m_project.getNode(elementId)->tryAs<babelwires::SourceFileNode>();
         ASSERT_NE(element, nullptr);
 
         const auto getOutput = [element]() {
@@ -109,7 +109,7 @@ TEST(ChangeFileCommandTest, executeAndUndoTarget) {
     elementData.m_factoryIdentifier = testDomain::TestTargetFileFormat::getThisIdentifier();
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
-    const auto* element = testEnvironment.m_project.getNode(elementId)->as<babelwires::TargetFileNode>();
+    const auto* element = testEnvironment.m_project.getNode(elementId)->tryAs<babelwires::TargetFileNode>();
     ASSERT_NE(element, nullptr);
 
     EXPECT_EQ(element->getFilePath(), filePath1);

@@ -52,11 +52,11 @@ inline void babelwires::ValueHolder::clear() {
 }
 
 inline const babelwires::Value& babelwires::ValueHolder::operator*() const {
-    return m_pointerToValue->is<Value>();
+    return m_pointerToValue->as<Value>();
 }
 
 inline const babelwires::Value* babelwires::ValueHolder::operator->() const {
-    return &m_pointerToValue->is<Value>();
+    return &m_pointerToValue->as<Value>();
 }
 
 inline void babelwires::ValueHolder::swap(ValueHolder& other) {

@@ -15,7 +15,7 @@ TEST(RationalTypeTest, defaultRationalTypeCreateValue) {
     babelwires::ValueHolder newValue = rationalType.createValue(typeSystem);
     EXPECT_TRUE(newValue);
 
-    const auto* const newRationalValue = newValue->as<babelwires::RationalValue>();
+    const auto* const newRationalValue = newValue->tryAs<babelwires::RationalValue>();
     EXPECT_NE(newRationalValue, nullptr);
     EXPECT_EQ(newRationalValue->get(), 0);
 }
@@ -59,7 +59,7 @@ TEST(RationalTypeTest, defaultRationalTypeIsRegistered) {
     const babelwires::TypePtr foundType =
         testEnvironment.m_typeSystem.tryGetRegisteredTypeById(babelwires::DefaultRationalType::getThisIdentifier());
     EXPECT_TRUE(foundType);
-    EXPECT_NE(foundType->as<babelwires::DefaultRationalType>(), nullptr);
+    EXPECT_NE(foundType->tryAs<babelwires::DefaultRationalType>(), nullptr);
 }
 
 TEST(RationalTypeTest, constructedRationalTypeCreateValue) {
@@ -74,7 +74,7 @@ TEST(RationalTypeTest, constructedRationalTypeCreateValue) {
     babelwires::ValueHolder newValue = rationalType->createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
 
-    const auto* const newRationalValue = newValue->as<babelwires::RationalValue>();
+    const auto* const newRationalValue = newValue->tryAs<babelwires::RationalValue>();
     EXPECT_NE(newRationalValue, nullptr);
     EXPECT_EQ(newRationalValue->get(), 1);
 }
@@ -88,7 +88,7 @@ TEST(RationalTypeTest, constructedRationalTypeRange) {
 
     babelwires::TypePtr type = rationalTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
-    const babelwires::RationalType* const rationalType = type->as<babelwires::RationalType>();
+    const babelwires::RationalType* const rationalType = type->tryAs<babelwires::RationalType>();
     ASSERT_NE(rationalType, nullptr);
 
     auto range = rationalType->getRange();
@@ -122,7 +122,7 @@ TEST(RationalTypeTest, makeTypeExp) {
 
     babelwires::TypePtr type = rationalTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
-    const babelwires::RationalType* const rationalType = type->as<babelwires::RationalType>();
+    const babelwires::RationalType* const rationalType = type->tryAs<babelwires::RationalType>();
     ASSERT_NE(rationalType, nullptr);
 
     auto range = rationalType->getRange();
@@ -132,7 +132,7 @@ TEST(RationalTypeTest, makeTypeExp) {
     babelwires::ValueHolder newValue = type->createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
 
-    const auto* const newRationalValue = newValue->as<babelwires::RationalValue>();
+    const auto* const newRationalValue = newValue->tryAs<babelwires::RationalValue>();
     EXPECT_NE(newRationalValue, nullptr);
     EXPECT_EQ(newRationalValue->get(), 1);
 }

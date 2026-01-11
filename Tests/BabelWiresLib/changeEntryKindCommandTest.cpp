@@ -40,15 +40,15 @@ TEST(ChangeEntryKindCommandTest, executeAndUndo) {
     babelwires::ChangeEntryKindCommand command = testCopyConstructor;
 
     EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::All21);
-    EXPECT_NE(mapProject.getMapEntry(1).getData().as<babelwires::AllToOneFallbackMapEntryData>(), nullptr);
+    EXPECT_NE(mapProject.getMapEntry(1).getData().tryAs<babelwires::AllToOneFallbackMapEntryData>(), nullptr);
 
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);
     EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::One21);
-    EXPECT_NE(mapProject.getMapEntry(1).getData().as<babelwires::OneToOneMapEntryData>(), nullptr);
+    EXPECT_NE(mapProject.getMapEntry(1).getData().tryAs<babelwires::OneToOneMapEntryData>(), nullptr);
     command.undo(mapProject);
     EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::All21);
-    EXPECT_NE(mapProject.getMapEntry(1).getData().as<babelwires::AllToOneFallbackMapEntryData>(), nullptr);
+    EXPECT_NE(mapProject.getMapEntry(1).getData().tryAs<babelwires::AllToOneFallbackMapEntryData>(), nullptr);
 }
 
 TEST(ChangeEntryKindCommandTest, failFallbackNotAtEnd) {

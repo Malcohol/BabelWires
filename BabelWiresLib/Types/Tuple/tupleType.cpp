@@ -34,7 +34,7 @@ babelwires::NewValueHolder babelwires::TupleType::createValue(const TypeSystem& 
 }
 
 bool babelwires::TupleType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
-    const TupleValue* tuple = v.as<TupleValue>();
+    const TupleValue* tuple = v.tryAs<TupleValue>();
     if (!tuple) {
         return false;
     }
@@ -60,7 +60,7 @@ const babelwires::TupleType::ComponentTypes& babelwires::TupleType::getComponent
 std::optional<babelwires::SubtypeOrder> babelwires::TupleType::compareSubtypeHelper(
     const TypeSystem& typeSystem, const Type& other) const {
     
-    const TupleType* const otherTupleType = other.as<TupleType>();
+    const TupleType* const otherTupleType = other.tryAs<TupleType>();
     if (!otherTupleType) {
         return {};
     }
@@ -77,7 +77,7 @@ std::optional<babelwires::SubtypeOrder> babelwires::TupleType::compareSubtypeHel
 }
 
 std::string babelwires::TupleType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
-    const TupleValue& tuple = v->is<TupleValue>();
+    const TupleValue& tuple = v->as<TupleValue>();
     assert(isValidValue(typeSystem, *v));
     std::ostringstream os;
     os << "(";

@@ -39,7 +39,7 @@ struct babelwires::BlockStream::Iterator {
         assert((m_current != nullptr) && "operator++ called in unexpected state");
         if (m_current->m_numBytesToNextEvent > 0) {
             auto* nextEvent = m_current->getNextEventInBlock();
-            assert((nextEvent->template as<EVENT>() != nullptr) && "The stream contained an event of unexpected type");
+            assert((nextEvent->template tryAs<EVENT>() != nullptr) && "The stream contained an event of unexpected type");
             m_current = static_cast<EVENT*>(nextEvent);
         } else {
             assert((m_current == m_blockStream->m_blocks[m_blockIndex]->m_lastEvent) &&
@@ -49,7 +49,7 @@ struct babelwires::BlockStream::Iterator {
                 m_current = nullptr;
             } else {
                 auto* nextEvent = m_blockStream->m_blocks[m_blockIndex]->m_firstEvent;
-                assert((nextEvent->template as<EVENT>() != nullptr) &&
+                assert((nextEvent->template tryAs<EVENT>() != nullptr) &&
                        "The stream contained an event of unexpected type");
                 m_current = static_cast<EVENT*>(nextEvent);
             }
@@ -70,7 +70,7 @@ struct babelwires::BlockStream::Iterator {
             m_current = static_cast<EVENT*>(m_blockStream->m_blocks[m_blockIndex]->m_lastEvent);
         } else if (m_current->m_numBytesFromPreviousEvent > 0) {
             auto* previousEvent = m_current->getPreviousEventInBlock();
-            assert((previousEvent->template as<EVENT>() != nullptr) &&
+            assert((previousEvent->template tryAs<EVENT>() != nullptr) &&
                    "The stream contained an event of unexpected type");
             m_current = static_cast<EVENT*>(previousEvent);
         } else {
@@ -79,7 +79,7 @@ struct babelwires::BlockStream::Iterator {
             assert((m_blockIndex > 0) && "operator-- called in unexpected state");
             --m_blockIndex;
             auto* previousEvent = m_blockStream->m_blocks[m_blockIndex]->m_lastEvent;
-            assert((previousEvent->template as<EVENT>() != nullptr) &&
+            assert((previousEvent->template tryAs<EVENT>() != nullptr) &&
                    "The stream contained an event of unexpected type");
             m_current = static_cast<EVENT*>(previousEvent);
         }

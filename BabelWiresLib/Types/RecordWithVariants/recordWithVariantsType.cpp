@@ -71,7 +71,7 @@ void babelwires::RecordWithVariantsType::selectTag(const TypeSystem& typeSystem,
                                                    ShortId tag) const {
     const ShortId currentTag = getSelectedTag(value);
     const FieldChanges changes = getFieldChanges(currentTag, tag);
-    RecordWithVariantsValue& recordValue = value.copyContentsAndGetNonConst().is<RecordWithVariantsValue>();
+    RecordWithVariantsValue& recordValue = value.copyContentsAndGetNonConst().as<RecordWithVariantsValue>();
     for (auto i : changes.m_fieldsRemoved) {
         recordValue.removeValue(m_fields[i].m_identifier);
     }
@@ -82,7 +82,7 @@ void babelwires::RecordWithVariantsType::selectTag(const TypeSystem& typeSystem,
 }
 
 babelwires::ShortId babelwires::RecordWithVariantsType::getSelectedTag(const ValueHolder& value) const {
-    const auto& recordValue = value->is<RecordWithVariantsValue>();
+    const auto& recordValue = value->as<RecordWithVariantsValue>();
     assert(isTag(recordValue.getTag()) && "RecordWithVariant has unrecognized tag");
     return recordValue.getTag();
 }
@@ -127,7 +127,7 @@ babelwires::RecordWithVariantsType::getChild(const ValueHolder& compoundValue, u
     const ShortId tag = getSelectedTag(compoundValue);
     const auto it = m_tagToVariantCache.find(tag);
     assert(it != m_tagToVariantCache.end());
-    const auto& recordValue = compoundValue->is<RecordWithVariantsValue>();
+    const auto& recordValue = compoundValue->as<RecordWithVariantsValue>();
     const Field& f = *it->second[i];
     return {&recordValue.getValue(f.m_identifier), PathStep{f.m_identifier}, f.m_type};
 }
@@ -137,7 +137,7 @@ babelwires::RecordWithVariantsType::getChildNonConst(ValueHolder& compoundValue,
     const ShortId tag = getSelectedTag(compoundValue);
     const auto it = m_tagToVariantCache.find(tag);
     assert(it != m_tagToVariantCache.end());
-    RecordWithVariantsValue& recordValue = compoundValue.copyContentsAndGetNonConst().is<RecordWithVariantsValue>();
+    RecordWithVariantsValue& recordValue = compoundValue.copyContentsAndGetNonConst().as<RecordWithVariantsValue>();
     const Field& f = *it->second[i];
     return {&recordValue.getValue(f.m_identifier), PathStep{f.m_identifier}, f.m_type};
 }
@@ -170,7 +170,7 @@ babelwires::NewValueHolder babelwires::RecordWithVariantsType::createValue(const
 
 bool babelwires::RecordWithVariantsType::visitValue(const TypeSystem& typeSystem, const Value& v,
                                                     ChildValueVisitor& visitor) const {
-    const RecordWithVariantsValue* const recordValue = v.as<RecordWithVariantsValue>();
+    const RecordWithVariantsValue* const recordValue = v.tryAs<RecordWithVariantsValue>();
     if (!recordValue) {
         return false;
     }
@@ -258,7 +258,7 @@ babelwires::SubtypeOrder babelwires::RecordWithVariantsType::sortAndCompareField
 
 std::optional<babelwires::SubtypeOrder>
 babelwires::RecordWithVariantsType::compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const {
-    const RecordWithVariantsType* const otherRecord = other.as<RecordWithVariantsType>();
+    const RecordWithVariantsType* const otherRecord = other.tryAs<RecordWithVariantsType>();
     if (!otherRecord) {
         return {};
     }
@@ -320,7 +320,7 @@ babelwires::RecordWithVariantsType::compareSubtypeHelper(const TypeSystem& typeS
 std::string babelwires::RecordWithVariantsType::valueToString(const TypeSystem& typeSystem,
                                                               const ValueHolder& v) const {
     std::ostringstream os;
-    const RecordWithVariantsValue* const recordValue = v->as<RecordWithVariantsValue>();
+    const RecordWithVariantsValue* const recordValue = v->tryAs<RecordWithVariantsValue>();
     auto identifierRegistry = IdentifierRegistry::read();
     os << "Variant: " << identifierRegistry->getName(recordValue->getTag());
     return os.str();
@@ -328,8 +328,8 @@ std::string babelwires::RecordWithVariantsType::valueToString(const TypeSystem& 
 
 bool babelwires::RecordWithVariantsType::areDifferentNonRecursively(const ValueHolder& compoundValueA,
                                                                     const ValueHolder& compoundValueB) const {
-    const RecordWithVariantsValue* const recordA = compoundValueA->as<RecordWithVariantsValue>();
-    const RecordWithVariantsValue* const recordB = compoundValueB->as<RecordWithVariantsValue>();
+    const RecordWithVariantsValue* const recordA = compoundValueA->tryAs<RecordWithVariantsValue>();
+    const RecordWithVariantsValue* const recordB = compoundValueB->tryAs<RecordWithVariantsValue>();
     if (recordA && recordB) {
         return recordA->getTag() != recordB->getTag();
     } else {

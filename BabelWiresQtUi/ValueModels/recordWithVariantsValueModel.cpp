@@ -20,10 +20,10 @@ void babelwires::RecordWithVariantsValueModel::getContextMenuActions(const DataL
                                                                      std::vector<ContextMenuEntry>& entriesOut) const {
     ValueModel::getContextMenuActions(location, entriesOut);
     if (!m_isReadOnly) {
-        if (const auto& projectDataLocation = location.as<ProjectDataLocation>()) {
+        if (const auto& projectDataLocation = location.tryAs<ProjectDataLocation>()) {
             auto group = std::make_unique<ContextMenuGroup>("Variants");
-            const RecordWithVariantsType& recordType = m_type->is<RecordWithVariantsType>();
-            const RecordWithVariantsValue& recordValue = getValue()->is<RecordWithVariantsValue>();
+            const RecordWithVariantsType& recordType = m_type->as<RecordWithVariantsType>();
+            const RecordWithVariantsValue& recordValue = getValue()->as<RecordWithVariantsValue>();
             const ShortId currentTag = recordValue.getTag();
             for (auto tagId : recordType.getTags()) {
                 std::string fieldName = IdentifierRegistry::read()->getName(tagId).c_str();

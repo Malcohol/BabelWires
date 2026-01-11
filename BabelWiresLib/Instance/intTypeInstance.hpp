@@ -20,7 +20,7 @@ namespace babelwires {
             : InstanceCommonBase<VALUE_TREE_NODE, INT_TYPE>(valueFeature) {}
 
         typename IntValue::NativeType get() const {
-            const IntValue& intValue = this->m_valueTreeNode.getValue()->template is<IntValue>();
+            const IntValue& intValue = this->m_valueTreeNode.getValue()->template as<IntValue>();
             return intValue.get();
         }
         template <typename VALUE_TREE_NODE_M = VALUE_TREE_NODE>

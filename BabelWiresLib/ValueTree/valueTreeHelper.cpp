@@ -18,7 +18,7 @@ babelwires::ValueTreeHelper::getInfoFromArray(const ValueTreeNode* f) {
     if (!f) {
         return {};
     }
-    if (auto arrayType = f->getType()->as<ArrayType>()) {
+    if (auto arrayType = f->getType()->tryAs<ArrayType>()) {
         return {f, arrayType->getNumChildren(f->getValue()), arrayType->getSizeRange(),
                 arrayType->getInitialSize()};
     }
@@ -30,7 +30,7 @@ babelwires::ValueTreeHelper::getInfoFromRecordWithOptionals(const ValueTreeNode*
     if (!f) {
         return {};
     }
-    if (auto recordType = f->getType()->as<RecordType>()) {
+    if (auto recordType = f->getType()->tryAs<RecordType>()) {
         std::map<ShortId, bool> currentlyActivatedOptionals;
         for (auto opt : recordType->getOptionalFieldIds()) {
             currentlyActivatedOptionals.insert(std::pair{ opt, recordType->isActivated(f->getValue(), opt)});
@@ -44,7 +44,7 @@ std::tuple<const babelwires::ValueTreeNode*, bool, std::vector<babelwires::Short
     if (!f) { 
         return {};
     }
-    if (auto recordWithVariantsType = f->getType()->as<RecordWithVariantsType>()) {
+    if (auto recordWithVariantsType = f->getType()->tryAs<RecordWithVariantsType>()) {
         if (!tagId) {
             tagId = recordWithVariantsType->getDefaultTag();
         } else if (!recordWithVariantsType->isTag(*tagId)) {

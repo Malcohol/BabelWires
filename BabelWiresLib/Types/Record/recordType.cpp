@@ -76,7 +76,7 @@ void babelwires::RecordType::activateField(const TypeSystem& typeSystem, ValueHo
         throw ModelException() << "Field " << fieldId << " is already activated";
     }
 
-    RecordValue& recordValue = value.copyContentsAndGetNonConst().is<RecordValue>();
+    RecordValue& recordValue = value.copyContentsAndGetNonConst().as<RecordValue>();
     // If the value happens to be already there, it gets overridden.
     recordValue.setValue(field.m_identifier, field.m_type->createValue(typeSystem));
 }
@@ -91,7 +91,7 @@ void babelwires::RecordType::deactivateField(ValueHolder& value, ShortId fieldId
         throw ModelException() << "Field " << fieldId << " is not activated";
     }
 
-    RecordValue& recordValue = value.copyContentsAndGetNonConst().is<RecordValue>();
+    RecordValue& recordValue = value.copyContentsAndGetNonConst().as<RecordValue>();
     recordValue.removeValue(field.m_identifier);
 }
 
@@ -99,7 +99,7 @@ void babelwires::RecordType::selectOptionals(const TypeSystem& typeSystem, Value
                                              const std::map<ShortId, bool>& optionalsState) const {
     // Avoid modifying the value if we throw after partially processing the fields.
     ValueHolder temp = value;
-    RecordValue& recordValue = temp.copyContentsAndGetNonConst().is<RecordValue>();
+    RecordValue& recordValue = temp.copyContentsAndGetNonConst().as<RecordValue>();
 
     unsigned int count = 0;
     std::vector<ShortId> availableOptionals = getOptionalFieldIds();
@@ -135,7 +135,7 @@ bool babelwires::RecordType::isOptional(ShortId fieldId) const {
 }
 
 bool babelwires::RecordType::isActivated(const ValueHolder& value, ShortId fieldId) const {
-    const RecordValue& recordValue = value->is<RecordValue>();
+    const RecordValue& recordValue = value->as<RecordValue>();
     return recordValue.tryGetValue(fieldId);
 }
 
@@ -148,7 +148,7 @@ const std::vector<babelwires::ShortId>& babelwires::RecordType::getOptionalField
 }
 
 unsigned int babelwires::RecordType::getNumActiveFields(const ValueHolder& value) const {
-    const RecordValue& recordValue = value->is<RecordValue>();
+    const RecordValue& recordValue = value->as<RecordValue>();
     unsigned int numActiveFields = 0;
     for (const auto& f : m_optionalFieldIds) {
         if (recordValue.tryGetValue(f)) {
@@ -170,7 +170,7 @@ babelwires::NewValueHolder babelwires::RecordType::createValue(const TypeSystem&
 
 bool babelwires::RecordType::visitValue(const TypeSystem& typeSystem, const Value& v,
                                         ChildValueVisitor& visitor) const {
-    const RecordValue* const recordValue = v.as<RecordValue>();
+    const RecordValue* const recordValue = v.tryAs<RecordValue>();
     if (!recordValue) {
         return false;
     }
@@ -217,7 +217,7 @@ const babelwires::RecordType::Field& babelwires::RecordType::getFieldFromChildIn
 std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>
 babelwires::RecordType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
     const Field& f = getFieldFromChildIndex(compoundValue, i);
-    const RecordValue& recordValue = compoundValue->is<RecordValue>();
+    const RecordValue& recordValue = compoundValue->as<RecordValue>();
     const ValueHolder& value = recordValue.getValue(f.m_identifier);
     return {&value, PathStep{f.m_identifier}, f.m_type};
 }
@@ -225,7 +225,7 @@ babelwires::RecordType::getChild(const ValueHolder& compoundValue, unsigned int 
 std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>
 babelwires::RecordType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
     const Field& f = getFieldFromChildIndex(compoundValue, i);
-    RecordValue& recordValue = compoundValue.copyContentsAndGetNonConst().is<RecordValue>();
+    RecordValue& recordValue = compoundValue.copyContentsAndGetNonConst().as<RecordValue>();
     ValueHolder& value = recordValue.getValue(f.m_identifier);
     return {&value, PathStep{f.m_identifier}, f.m_type};
 }
@@ -251,7 +251,7 @@ int babelwires::RecordType::getChildIndexFromStep(const ValueHolder& compoundVal
 
 std::optional<babelwires::SubtypeOrder> babelwires::RecordType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                                      const Type& other) const {
-    const RecordType* const otherRecord = other.as<RecordType>();
+    const RecordType* const otherRecord = other.tryAs<RecordType>();
     if (!otherRecord) {
         return {};
     }
@@ -332,7 +332,7 @@ std::optional<babelwires::SubtypeOrder> babelwires::RecordType::compareSubtypeHe
 }
 
 std::string babelwires::RecordType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const {
-    const RecordValue& recordValue = v->is<RecordValue>();
+    const RecordValue& recordValue = v->as<RecordValue>();
     const unsigned int numOptionalFields = m_optionalFieldIds.size();
     if (numOptionalFields > 0) {
         const unsigned int numActivatedFields = getNumActiveFields(v);
@@ -349,7 +349,7 @@ std::string babelwires::RecordType::valueToString(const TypeSystem& typeSystem, 
 std::tuple<const babelwires::ValueHolder&, const babelwires::TypePtr&>
 babelwires::RecordType::getChildById(const ValueHolder& compoundValue, ShortId fieldId) const {
     assert(!isOptional(fieldId) || isActivated(compoundValue, fieldId));
-    const RecordValue& recordValue = compoundValue->is<RecordValue>();
+    const RecordValue& recordValue = compoundValue->as<RecordValue>();
     const ValueHolder& fieldValue = recordValue.getValue(fieldId);
     const Field& field = getField(fieldId);
     return {fieldValue, field.m_type};
@@ -358,7 +358,7 @@ babelwires::RecordType::getChildById(const ValueHolder& compoundValue, ShortId f
 std::tuple<babelwires::ValueHolder&, const babelwires::TypePtr&>
 babelwires::RecordType::getChildByIdNonConst(ValueHolder& compoundValue, ShortId fieldId) const {
     assert(!isOptional(fieldId) || isActivated(compoundValue, fieldId));
-    RecordValue& recordValue = compoundValue.copyContentsAndGetNonConst().is<RecordValue>();
+    RecordValue& recordValue = compoundValue.copyContentsAndGetNonConst().as<RecordValue>();
     ValueHolder& fieldValue = recordValue.getValue(fieldId);
     const Field& field = getField(fieldId);
     return {fieldValue, field.m_type};

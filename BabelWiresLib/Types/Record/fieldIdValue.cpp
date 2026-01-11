@@ -24,7 +24,7 @@ std::size_t babelwires::FieldIdValue::getHash() const {
 }
 
 bool babelwires::FieldIdValue::operator==(const Value& other) const {
-    const FieldIdValue *const otherValue = other.as<FieldIdValue>();
+    const FieldIdValue *const otherValue = other.tryAs<FieldIdValue>();
     return otherValue && (get() == otherValue->get() && (m_optionality == otherValue->m_optionality));
 }
 

@@ -43,7 +43,7 @@ TEST(ResetMapValueCommandTest, executeAndUndoSource) {
 
     EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::One21);
     EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::One21);
-    EXPECT_NE(mapProject.getMapEntry(1).getData().getSourceValue()->as<babelwires::RationalValue>(), nullptr);
+    EXPECT_NE(mapProject.getMapEntry(1).getData().getSourceValue()->tryAs<babelwires::RationalValue>(), nullptr);
     EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::All2Sm);
 
     EXPECT_TRUE(command.initialize(mapProject));
@@ -52,13 +52,13 @@ TEST(ResetMapValueCommandTest, executeAndUndoSource) {
     EXPECT_EQ(mapProject.getNumMapEntries(), 3);
     EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::One21);
     EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::One21);
-    EXPECT_NE(mapProject.getMapEntry(1).getData().getSourceValue()->as<babelwires::IntValue>(), nullptr);
+    EXPECT_NE(mapProject.getMapEntry(1).getData().getSourceValue()->tryAs<babelwires::IntValue>(), nullptr);
     EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::All2Sm);
 
     command.undo(mapProject);
     EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::One21);
     EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::One21);
-    EXPECT_NE(mapProject.getMapEntry(1).getData().getSourceValue()->as<babelwires::RationalValue>(), nullptr);
+    EXPECT_NE(mapProject.getMapEntry(1).getData().getSourceValue()->tryAs<babelwires::RationalValue>(), nullptr);
     EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::All2Sm);
 }
 
@@ -92,7 +92,7 @@ TEST(ResetMapValueCommandTest, executeAndUndoTarget) {
     EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::One21);
     EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::One21);
     EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::All21);
-    EXPECT_NE(mapProject.getMapEntry(1).getData().getTargetValue()->as<babelwires::RationalValue>(), nullptr);
+    EXPECT_NE(mapProject.getMapEntry(1).getData().getTargetValue()->tryAs<babelwires::RationalValue>(), nullptr);
 
     EXPECT_TRUE(command.initialize(mapProject));
     command.execute(mapProject);
@@ -101,13 +101,13 @@ TEST(ResetMapValueCommandTest, executeAndUndoTarget) {
     EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::One21);
     EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::One21);
     EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::All21);
-    EXPECT_NE(mapProject.getMapEntry(2).getData().getTargetValue()->as<babelwires::IntValue>(), nullptr);
+    EXPECT_NE(mapProject.getMapEntry(2).getData().getTargetValue()->tryAs<babelwires::IntValue>(), nullptr);
 
     command.undo(mapProject);
     EXPECT_EQ(mapProject.getMapEntry(0).getData().getKind(), babelwires::MapEntryData::Kind::One21);
     EXPECT_EQ(mapProject.getMapEntry(1).getData().getKind(), babelwires::MapEntryData::Kind::One21);
     EXPECT_EQ(mapProject.getMapEntry(2).getData().getKind(), babelwires::MapEntryData::Kind::All21);
-    EXPECT_NE(mapProject.getMapEntry(2).getData().getTargetValue()->as<babelwires::RationalValue>(), nullptr);
+    EXPECT_NE(mapProject.getMapEntry(2).getData().getTargetValue()->tryAs<babelwires::RationalValue>(), nullptr);
 }
 
 TEST(ResetMapValueCommandTest, failBeyondEnd) {

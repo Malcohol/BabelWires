@@ -32,7 +32,7 @@ babelwires::NewValueHolder babelwires::MapType::createValue(const TypeSystem& ty
 
 bool babelwires::MapType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
     // Note: Map is not currently treated as a compound, so we don't call the visitor on its entries.
-    if (const MapValue* const map = v.as<MapValue>()) {
+    if (const MapValue* const map = v.tryAs<MapValue>()) {
         // Because of the fallback entry, we don't need contravariance here.
         const TypePtr mapSourceType = map->getSourceTypeExp().tryResolve(typeSystem);
         const TypePtr sourceType = m_sourceType->getTypeExp().tryResolve(typeSystem);
@@ -60,7 +60,7 @@ babelwires::TypeExp babelwires::MapType::getTargetTypeExp() const {
 
 std::optional<babelwires::SubtypeOrder> babelwires::MapType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                    const Type& other) const {
-    const MapType* const otherMapType = other.as<MapType>();
+    const MapType* const otherMapType = other.tryAs<MapType>();
     if (!otherMapType) {
         return {};
     }
@@ -76,5 +76,5 @@ std::optional<babelwires::SubtypeOrder> babelwires::MapType::compareSubtypeHelpe
 }
 
 std::string babelwires::MapType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
-    return v->is<MapValue>().toString();
+    return v->as<MapValue>().toString();
 }

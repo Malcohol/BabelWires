@@ -13,8 +13,8 @@
 #include <BabelWiresLib/Types/Tuple/tupleType.hpp>
 
 QWidget* babelwires::TupleValueModel::createEditor(QWidget* parent) const {
-    const auto& tupleType = getType()->is<TupleType>();
-    const auto& tupleValue = getValue()->is<TupleValue>();
+    const auto& tupleType = getType()->as<TupleType>();
+    const auto& tupleValue = getValue()->as<TupleValue>();
     auto tupleEditor = std::make_unique<TupleValueEditor>(parent, *m_valueModelRegistry, *m_typeSystem, tupleType, tupleValue);
     return tupleEditor.release();
 }
@@ -23,7 +23,7 @@ QWidget* babelwires::TupleValueModel::createEditor(QWidget* parent) const {
 void babelwires::TupleValueModel::setEditorData(QWidget* editor) const {
     auto tupleEditor = qobject_cast<TupleValueEditor*>(editor);
     assert(tupleEditor && "Unexpected editor");
-    const auto& tupleValue = getValue()->is<TupleValue>();
+    const auto& tupleValue = getValue()->as<TupleValue>();
     tupleEditor->setEditorData(tupleValue);
 }
 
@@ -31,7 +31,7 @@ babelwires::ValueHolder babelwires::TupleValueModel::createValueFromEditorIfDiff
     auto tupleEditor = dynamic_cast<const TupleValueEditor*>(editor);
     assert(tupleEditor && "Unexpected editor");
 
-    const auto& currentValue = getValue()->is<TupleValue>();
+    const auto& currentValue = getValue()->as<TupleValue>();
     const auto& editorValue = tupleEditor->getEditorData();
 
     if (editorValue != currentValue) {
@@ -41,7 +41,7 @@ babelwires::ValueHolder babelwires::TupleValueModel::createValueFromEditorIfDiff
 }
 
 bool babelwires::TupleValueModel::isItemEditable() const {
-    return getValue()->as<TupleValue>();
+    return getValue()->tryAs<TupleValue>();
 }
 
 bool babelwires::TupleValueModel::validateEditor(QWidget* editor) const {

@@ -19,7 +19,7 @@ namespace {
     tryFollow(const babelwires::TypeSystem& typeSystem, const babelwires::Type& type,
               const babelwires::ValueHolder& valueHolder, const babelwires::Path& p, int& index) {
         if (index < p.getNumSteps()) {
-            if (const auto* compoundType = type.as<babelwires::CompoundType>()) {
+            if (const auto* compoundType = type.tryAs<babelwires::CompoundType>()) {
                 const int childIndex = compoundType->getChildIndexFromStep(valueHolder, p.getStep(index));
                 if (childIndex >= 0) {
                     auto [childValue, _, childType] = compoundType->getChild(valueHolder, childIndex);
@@ -40,7 +40,7 @@ namespace {
     followNonConst(const babelwires::TypeSystem& typeSystem, const babelwires::Type& type,
                    babelwires::ValueHolder& valueHolder, const babelwires::Path& p, int& index) {
         if (index < p.getNumSteps()) {
-            if (auto* compoundType = type.as<babelwires::CompoundType>()) {
+            if (auto* compoundType = type.tryAs<babelwires::CompoundType>()) {
                 const int childIndex = compoundType->getChildIndexFromStep(valueHolder, p.getStep(index));
                 if (childIndex >= 0) {
                     auto [childValue, _, childType] = compoundType->getChildNonConst(valueHolder, childIndex);
@@ -64,7 +64,7 @@ namespace {
         assert(paths.size() > 0);
         if ((paths.size() == 1) && (paths[0]->getNumSteps() == depth)) {
             visitor(type, valueHolder);
-        } else if (const auto& compoundType = type.as<babelwires::CompoundType>()) {
+        } else if (const auto& compoundType = type.tryAs<babelwires::CompoundType>()) {
             // Break the paths span into sub-spans, corresponding to children.
             auto left = paths.begin();
             auto next = left;

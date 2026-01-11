@@ -55,7 +55,7 @@ bool babelwires::DeactivateOptionalCommand::initializeAndExecute(Project& projec
 
     if (const Modifier* modifier = nodeToModify->getEdits().findModifier(m_pathToRecord)) {
         const auto& modifierData = modifier->getModifierData();
-        if (const auto* activateOptionalsModifierData = modifier->getModifierData().as<SelectOptionalsModifierData>()) {
+        if (const auto* activateOptionalsModifierData = modifier->getModifierData().tryAs<SelectOptionalsModifierData>()) {
             auto activatedOptionals = activateOptionalsModifierData->getOptionalActivationData();
             auto ait = activatedOptionals.find(m_optional);
             if (ait != activatedOptionals.end()) {

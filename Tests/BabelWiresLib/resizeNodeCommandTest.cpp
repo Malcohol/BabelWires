@@ -19,7 +19,7 @@ TEST(ResizeNodeCommandTest, executeAndUndo) {
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     const testUtils::TestNode* node =
-        testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
+        testEnvironment.m_project.getNode(elementId)->tryAs<testUtils::TestNode>();
     ASSERT_NE(node, nullptr);
     EXPECT_EQ(node->getUiSize().m_width, 77);
 
@@ -62,7 +62,7 @@ TEST(ResizeNodeCommandTest, subsumeMoves) {
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     const testUtils::TestNode* node =
-        testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
+        testEnvironment.m_project.getNode(elementId)->tryAs<testUtils::TestNode>();
     ASSERT_NE(node, nullptr);
     EXPECT_EQ(node->getUiSize().m_width, 77);
 
@@ -95,7 +95,7 @@ TEST(ResizeNodeCommandTest, subsumeMovesDelay) {
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(elementData);
     const testUtils::TestNode* node =
-        testEnvironment.m_project.getNode(elementId)->as<testUtils::TestNode>();
+        testEnvironment.m_project.getNode(elementId)->tryAs<testUtils::TestNode>();
     ASSERT_NE(node, nullptr);
     EXPECT_EQ(node->getUiSize().m_width, 77);
 

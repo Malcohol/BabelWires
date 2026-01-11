@@ -20,7 +20,7 @@ babelwires::NewValueHolder babelwires::StringType::createValue(const TypeSystem&
 }
 
 bool babelwires::StringType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
-    return v.as<StringValue>();
+    return v.tryAs<StringValue>();
 }
 
 std::string babelwires::StringType::getFlavour() const {
@@ -29,7 +29,7 @@ std::string babelwires::StringType::getFlavour() const {
 
 
 std::optional<babelwires::SubtypeOrder> babelwires::StringType::compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const {
-    if (other.as<StringType>()) {
+    if (other.tryAs<StringType>()) {
         return SubtypeOrder::IsEquivalent;
     } else {
         return {};
@@ -37,5 +37,5 @@ std::optional<babelwires::SubtypeOrder> babelwires::StringType::compareSubtypeHe
 }
 
 std::string babelwires::StringType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
-    return v->is<StringValue>().toString();
+    return v->as<StringValue>().toString();
 }

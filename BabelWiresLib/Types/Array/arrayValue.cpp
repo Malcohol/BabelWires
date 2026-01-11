@@ -30,7 +30,7 @@ std::size_t babelwires::ArrayValue::getHash() const {
 }
 
 bool babelwires::ArrayValue::operator==(const Value& other) const {
-    const ArrayValue *const otherArray = other.as<ArrayValue>();
+    const ArrayValue *const otherArray = other.tryAs<ArrayValue>();
     if (otherArray == nullptr) {
         return false;
     }

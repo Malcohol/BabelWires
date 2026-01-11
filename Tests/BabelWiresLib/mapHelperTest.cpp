@@ -20,7 +20,7 @@
 
 namespace {
     std::string testValueAdapter(const babelwires::Value& value) {
-        return value.as<babelwires::StringValue>()->get();
+        return value.tryAs<babelwires::StringValue>()->get();
     }
 
     babelwires::MapValue

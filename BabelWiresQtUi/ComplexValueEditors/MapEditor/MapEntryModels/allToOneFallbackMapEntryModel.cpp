@@ -16,7 +16,7 @@
 const babelwires::AllToOneFallbackMapEntryData&
 babelwires::AllToOneFallbackMapEntryModel::getAllToOneFallbackMapEntryData() const {
     assert(m_mapProjectEntry);
-    assert(m_mapProjectEntry->getData().as<AllToOneFallbackMapEntryData>());
+    assert(m_mapProjectEntry->getData().tryAs<AllToOneFallbackMapEntryData>());
     return static_cast<const babelwires::AllToOneFallbackMapEntryData&>(m_mapProjectEntry->getData());
 }
 
@@ -57,7 +57,7 @@ babelwires::AllToOneFallbackMapEntryModel::createReplacementDataFromEditor(QWidg
 
     if (ValueHolder newValue = m_targetValueModel->createValueFromEditorIfDifferent(editor)) {
         std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();
-        babelwires::AllToOneFallbackMapEntryData *const currentAllToOneData = currentData->as<AllToOneFallbackMapEntryData>();
+        babelwires::AllToOneFallbackMapEntryData *const currentAllToOneData = currentData->tryAs<AllToOneFallbackMapEntryData>();
         assert(currentAllToOneData && "Unexpected MapEntryData");
         currentAllToOneData->setTargetValue(std::move(newValue));
         return currentData;

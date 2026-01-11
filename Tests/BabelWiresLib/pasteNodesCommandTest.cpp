@@ -127,7 +127,7 @@ TEST(PasteNodesCommandTest, executeAndUndoDuplicateData) {
         const babelwires::Node* newTargetElement = nullptr;
 
         for (const auto& pair : testEnvironment.m_project.getNodes()) {
-            if (pair.second->as<babelwires::SourceFileNode>()) {
+            if (pair.second->tryAs<babelwires::SourceFileNode>()) {
                 if (pair.first == testUtils::TestProjectData::c_sourceNodeId) {
                     EXPECT_EQ(originalSourceElement, nullptr);
                     originalSourceElement = pair.second.get();
@@ -135,7 +135,7 @@ TEST(PasteNodesCommandTest, executeAndUndoDuplicateData) {
                     EXPECT_EQ(newSourceElement, nullptr);
                     newSourceElement = pair.second.get();
                 }
-            } else if (pair.second->as<babelwires::ProcessorNode>()) {
+            } else if (pair.second->tryAs<babelwires::ProcessorNode>()) {
                 if (pair.first == testUtils::TestProjectData::c_processorId) {
                     EXPECT_EQ(originalProcessor, nullptr);
                     originalProcessor = pair.second.get();
@@ -143,7 +143,7 @@ TEST(PasteNodesCommandTest, executeAndUndoDuplicateData) {
                     EXPECT_EQ(newProcessor, nullptr);
                     newProcessor = pair.second.get();
                 }
-            } else if (pair.second->as<babelwires::TargetFileNode>()) {
+            } else if (pair.second->tryAs<babelwires::TargetFileNode>()) {
                 if (pair.first == testUtils::TestProjectData::c_targetNodeId) {
                     EXPECT_EQ(originalTargetElement, nullptr);
                     originalTargetElement = pair.second.get();
@@ -168,7 +168,7 @@ TEST(PasteNodesCommandTest, executeAndUndoDuplicateData) {
             ASSERT_NE(modifier, nullptr);
             EXPECT_FALSE(modifier->isFailed());
             const babelwires::ConnectionModifierData* modData =
-                modifier->getModifierData().as<babelwires::ConnectionModifierData>();
+                modifier->getModifierData().tryAs<babelwires::ConnectionModifierData>();
             ASSERT_NE(modData, nullptr);
             EXPECT_EQ(modData->m_sourceId, newSourceElement->getNodeId());
         } else {
