@@ -25,7 +25,7 @@ babelwires::SumTypeConstructor::constructType(const TypeSystem& typeSystem, Type
         throw TypeSystemException() << "SumTypeConstructor expects at most 1 value argument but got "
                                     << arguments.getValueArguments().size();
     } else if (arguments.getValueArguments().size() == 1) {
-        if (const auto* intValue = arguments.getValueArguments()[0]->as<babelwires::IntValue>()) {
+        if (const auto* intValue = arguments.getValueArguments()[0]->tryAs<babelwires::IntValue>()) {
             defaultIndex = intValue->get();
             if (defaultIndex >= arguments.getTypeArguments().size()) {
                 throw TypeSystemException() << "The default index provided to the SumTypeConstructor was out of range";

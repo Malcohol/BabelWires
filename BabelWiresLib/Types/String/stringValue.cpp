@@ -52,7 +52,7 @@ std::size_t babelwires::StringValue::getHash() const {
 }
 
 bool babelwires::StringValue::operator==(const Value& other) const {
-    const StringValue* otherValue = other.as<StringValue>();
+    const StringValue* otherValue = other.tryAs<StringValue>();
     return otherValue && (m_value == otherValue->m_value);
 }
 

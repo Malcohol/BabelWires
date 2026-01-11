@@ -10,7 +10,7 @@
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
 babelwires::Value& babelwires::ValueHolder::copyContentsAndGetNonConst() {
-    std::shared_ptr<Value> clone = m_pointerToValue->is<Value>().cloneShared();
+    std::shared_ptr<Value> clone = m_pointerToValue->as<Value>().cloneShared();
     Value* ptrToClone = clone.get();
     m_pointerToValue = clone;
     return *ptrToClone;
@@ -34,5 +34,5 @@ void babelwires::ValueHolder::visitFilePaths(FilePathVisitor& visitor) {
 
 
 const babelwires::Value* babelwires::ValueHolder::getUnsafe() const {
-    return &m_pointerToValue->is<Value>();
+    return &m_pointerToValue->as<Value>();
 }

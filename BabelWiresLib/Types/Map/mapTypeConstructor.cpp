@@ -22,7 +22,7 @@ babelwires::MapTypeConstructor::extractValueArguments(const TypeSystem& typeSyst
         return babelwires::MapEntryData::Kind::All21;
     }
 
-    if (const EnumValue* enumValue = valueArguments[0]->as<EnumValue>()) {
+    if (const EnumValue* enumValue = valueArguments[0]->tryAs<EnumValue>()) {
         const auto mapEntryFallbackKind = typeSystem.getRegisteredType<MapEntryFallbackKind>();
         return mapEntryFallbackKind->getValueFromIdentifier(enumValue->get());
     } else {

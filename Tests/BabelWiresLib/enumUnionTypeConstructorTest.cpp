@@ -30,7 +30,7 @@ TEST(EnumUnionTypeConstructorTest, construct) {
                                                          testDomain::TestSubSubEnum1::getThisIdentifier(),
                                                          testDomain::TestSubSubEnum2::getThisIdentifier()));
 
-    const babelwires::EnumType* const enumType = newType->as<babelwires::EnumType>();
+    const babelwires::EnumType* const enumType = newType->tryAs<babelwires::EnumType>();
     ASSERT_NE(enumType, nullptr);
 
     const auto& valueSet = enumType->getValueSet();
@@ -53,7 +53,7 @@ TEST(EnumUnionTypeConstructorTest, makeTypeExp) {
                                                          testDomain::TestSubSubEnum1::getThisIdentifier(),
                                                          testDomain::TestSubSubEnum2::getThisIdentifier()));
 
-    const babelwires::EnumType* const enumType = newType->as<babelwires::EnumType>();
+    const babelwires::EnumType* const enumType = newType->tryAs<babelwires::EnumType>();
     ASSERT_NE(enumType, nullptr);
 
     const auto& valueSet = enumType->getValueSet();

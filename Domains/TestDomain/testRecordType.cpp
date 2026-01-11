@@ -156,15 +156,15 @@ babelwires::Path testDomain::TestComplexRecordElementData::getPathToRecordOpIntO
 testDomain::TestComplexRecordTypeFeatureInfo::TestComplexRecordTypeFeatureInfo(
     const babelwires::ValueTreeNode& testRecord)
     : m_record(testRecord)
-    , m_int(testRecord.getChildFromStep(testDomain::TestComplexRecordType::getInt0Id()).is<babelwires::ValueTreeNode>())
+    , m_int(testRecord.getChildFromStep(testDomain::TestComplexRecordType::getInt0Id()).as<babelwires::ValueTreeNode>())
     , m_array(
-          testRecord.getChildFromStep(testDomain::TestComplexRecordType::getArrayId()).is<babelwires::ValueTreeNode>())
-    , m_elem0(m_array.getChildFromStep(0).is<babelwires::ValueTreeNode>())
-    , m_elem1(m_array.getChildFromStep(1).is<babelwires::ValueTreeNode>())
+          testRecord.getChildFromStep(testDomain::TestComplexRecordType::getArrayId()).as<babelwires::ValueTreeNode>())
+    , m_elem0(m_array.getChildFromStep(0).as<babelwires::ValueTreeNode>())
+    , m_elem1(m_array.getChildFromStep(1).as<babelwires::ValueTreeNode>())
     , m_subRecord(testRecord.getChildFromStep(testDomain::TestComplexRecordType::getSubrecordId())
-                      .is<babelwires::ValueTreeNode>())
+                      .as<babelwires::ValueTreeNode>())
     , m_subRecordInt(
-          m_subRecord.getChildFromStep(testDomain::TestSimpleRecordType::getInt0Id()).is<babelwires::ValueTreeNode>())
+          m_subRecord.getChildFromStep(testDomain::TestSimpleRecordType::getInt0Id()).as<babelwires::ValueTreeNode>())
     , m_pathToRecord(babelwires::getPathTo(&testRecord))
     , m_pathToInt(babelwires::getPathTo(&m_int))
     , m_pathToArray(babelwires::getPathTo(&m_array))

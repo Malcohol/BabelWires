@@ -49,7 +49,7 @@ bool babelwires::PasteNodesCommand::initialize(const Project& project) {
             std::remove_if(node->m_modifiers.begin(), node->m_modifiers.end(),
                            [this, &remappingTable, preserveInConnections, newNodeId,
                             &project](std::unique_ptr<ModifierData>& modData) {
-                               if (auto* assignFromData = modData.get()->as<ConnectionModifierData>()) {
+                               if (auto* assignFromData = modData.get()->tryAs<ConnectionModifierData>()) {
                                    NodeId& sourceId = assignFromData->m_sourceId;
                                    auto it = remappingTable.find(sourceId);
                                    if (it == remappingTable.end()) {

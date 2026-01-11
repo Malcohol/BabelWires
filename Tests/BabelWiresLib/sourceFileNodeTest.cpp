@@ -22,7 +22,7 @@ namespace {
         auto fileFeature = std::make_unique<babelwires::ValueTreeRoot>(testEnvironment.m_projectContext.m_typeSystem,
                                                                        testDomain::getTestFileType());
         fileFeature->setToDefault();
-        testDomain::TestSimpleRecordType::Instance instance{fileFeature->getChild(0)->is<babelwires::ValueTreeNode>()};
+        testDomain::TestSimpleRecordType::Instance instance{fileFeature->getChild(0)->as<babelwires::ValueTreeNode>()};
         instance.getintR0().set(value);
         fileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log, *fileFeature, path);
     }
@@ -47,7 +47,7 @@ TEST(SourceFileNodeTest, sourceFileDataCreateElement) {
     auto node = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(node);
     ASSERT_FALSE(node->isFailed());
-    ASSERT_TRUE(node->as<babelwires::SourceFileNode>());
+    ASSERT_TRUE(node->tryAs<babelwires::SourceFileNode>());
     babelwires::SourceFileNode* sourceFileNode = static_cast<babelwires::SourceFileNode*>(node.get());
 
     EXPECT_EQ(sourceFileNode->getFilePath(), tempFilePath.m_filePath);
@@ -111,7 +111,7 @@ TEST(SourceFileNodeTest, changeFile) {
     auto node = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(node);
     ASSERT_FALSE(node->isFailed());
-    ASSERT_TRUE(node->as<babelwires::SourceFileNode>());
+    ASSERT_TRUE(node->tryAs<babelwires::SourceFileNode>());
     babelwires::SourceFileNode* sourceFileNode = static_cast<babelwires::SourceFileNode*>(node.get());
 
     sourceFileNode->clearChanges();

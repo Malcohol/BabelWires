@@ -29,7 +29,7 @@ TEST(TupleTypeTest, createValue) {
     const auto& intType = testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultIntType>();
     const auto& rationalType = testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultRationalType>();
 
-    const auto* newTuple = newValue->as<babelwires::TupleValue>();
+    const auto* newTuple = newValue->tryAs<babelwires::TupleValue>();
     ASSERT_NE(newTuple, nullptr);
     ASSERT_EQ(newTuple->getSize(), 2);
     EXPECT_TRUE(intType->isValidValue(testEnvironment.m_typeSystem, *newTuple->getValue(0)));
@@ -41,7 +41,7 @@ TEST(TupleTypeTest, valueToString) {
 
     testDomain::TestTupleType tupleType(testEnvironment.m_typeSystem);
     babelwires::NewValueHolder newValue = tupleType.createValue(testEnvironment.m_typeSystem);
-    auto* newTuple = newValue.m_nonConstReference.as<babelwires::TupleValue>();
+    auto* newTuple = newValue.m_nonConstReference.tryAs<babelwires::TupleValue>();
     ASSERT_NE(newTuple, nullptr);
 
     newTuple->setValue(0, babelwires::IntValue(34));
@@ -62,9 +62,9 @@ TEST(TupleTypeTest, tupleTypeConstructor) {
     babelwires::TypePtr type = tupleTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     EXPECT_NE(type, nullptr);
-    ASSERT_NE(type->as<babelwires::TupleType>(), nullptr);
+    ASSERT_NE(type->tryAs<babelwires::TupleType>(), nullptr);
 
-    const babelwires::TupleType& tupleType = type->is<babelwires::TupleType>();
+    const babelwires::TupleType& tupleType = type->as<babelwires::TupleType>();
     EXPECT_EQ(tupleType.getComponentTypes().size(), 2);
     EXPECT_EQ(tupleType.getComponentTypes()[0]->getTypeExp(), babelwires::DefaultIntType::getThisIdentifier());
     EXPECT_EQ(tupleType.getComponentTypes()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisIdentifier());
@@ -78,9 +78,9 @@ TEST(TupleTypeTest, makeTypeExp) {
     babelwires::TypePtr type = tupleTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
     EXPECT_NE(type, nullptr);
-    ASSERT_NE(type->as<babelwires::TupleType>(), nullptr);
+    ASSERT_NE(type->tryAs<babelwires::TupleType>(), nullptr);
 
-    const babelwires::TupleType& tupleType = type->is<babelwires::TupleType>();
+    const babelwires::TupleType& tupleType = type->as<babelwires::TupleType>();
     EXPECT_EQ(tupleType.getComponentTypes().size(), 2);
     EXPECT_EQ(tupleType.getComponentTypes()[0]->getTypeExp(), babelwires::DefaultIntType::getThisIdentifier());
     EXPECT_EQ(tupleType.getComponentTypes()[1]->getTypeExp(), babelwires::DefaultRationalType::getThisIdentifier());

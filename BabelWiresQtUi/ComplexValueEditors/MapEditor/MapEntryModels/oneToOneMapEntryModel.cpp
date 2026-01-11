@@ -13,7 +13,7 @@
 
 const babelwires::OneToOneMapEntryData& babelwires::OneToOneMapEntryModel::getOneToOneMapEntryData() const {
     assert(m_mapProjectEntry);
-    assert(m_mapProjectEntry->getData().as<OneToOneMapEntryData>());
+    assert(m_mapProjectEntry->getData().tryAs<OneToOneMapEntryData>());
     return static_cast<const babelwires::OneToOneMapEntryData&>(m_mapProjectEntry->getData());
 }
 
@@ -76,7 +76,7 @@ babelwires::OneToOneMapEntryModel::createReplacementDataFromEditor(QWidget* edit
         case Column::sourceValue:
             if (ValueHolder newValue = m_sourceValueModel->createValueFromEditorIfDifferent(editor)) {
                 std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();
-                babelwires::OneToOneMapEntryData* currentDiscreteData = currentData->as<OneToOneMapEntryData>();
+                babelwires::OneToOneMapEntryData* currentDiscreteData = currentData->tryAs<OneToOneMapEntryData>();
                 currentDiscreteData->setSourceValue(std::move(newValue));
                 return currentData;
             }
@@ -84,7 +84,7 @@ babelwires::OneToOneMapEntryModel::createReplacementDataFromEditor(QWidget* edit
         case Column::targetValue:
             if (ValueHolder newValue = m_targetValueModel->createValueFromEditorIfDifferent(editor)) {
                 std::unique_ptr<babelwires::MapEntryData> currentData = m_mapProjectEntry->getData().clone();
-                babelwires::OneToOneMapEntryData* currentDiscreteData = currentData->as<OneToOneMapEntryData>();
+                babelwires::OneToOneMapEntryData* currentDiscreteData = currentData->tryAs<OneToOneMapEntryData>();
                 currentDiscreteData->setTargetValue(std::move(newValue));
                 return currentData;
             }

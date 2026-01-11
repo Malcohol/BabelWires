@@ -310,7 +310,7 @@ namespace {
 
     babelwires::ValueTreeNode* tryFollowPathToValue(babelwires::ValueTreeNode* start, const babelwires::Path& p,
                                                     int index) {
-        if ((index < p.getNumSteps()) && !start->as<babelwires::ValueTreeRoot>()) {
+        if ((index < p.getNumSteps()) && !start->tryAs<babelwires::ValueTreeRoot>()) {
             if (auto* compound = start) {
                 babelwires::ValueTreeNode& child = compound->getChildFromStep(p.getStep(index));
                 return tryFollowPathToValue(&child, p, index + 1);
@@ -362,7 +362,7 @@ void babelwires::Node::finishModifications(const Project& project, UserLogger& u
         ValueTreeNode* input = doGetInputNonConst();
         // First, apply any other modifiers which apply beneath the path
         for (auto it : m_edits.modifierRange(p)) {
-            if (const auto& connection = it->as<ConnectionModifier>()) {
+            if (const auto& connection = it->tryAs<ConnectionModifier>()) {
                 // We force connections in this case.
                 connection->applyConnection(project, userLogger, input, true);
             } else {

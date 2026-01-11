@@ -13,7 +13,7 @@
 
 bool babelwires::MapProjectDataLocation::equals(const DataLocation& other) const {
     if (DataLocation::equals(other)) {
-        if (const auto* otherMapProjectDataLocation = other.as<MapProjectDataLocation>()) {
+        if (const auto* otherMapProjectDataLocation = other.tryAs<MapProjectDataLocation>()) {
             return (m_entryIndex == otherMapProjectDataLocation->m_entryIndex) &&
                    (m_side == otherMapProjectDataLocation->m_side);
         }

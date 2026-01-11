@@ -23,7 +23,7 @@ babelwires::EnumAtomTypeConstructor::constructType(const TypeSystem& typeSystem,
         throw TypeSystemException() << "EnumAtomTypeConstructor expects a single value argument but got "
                                     << arguments.getValueArguments().size();
     }
-    const EnumValue* const enumValue = arguments.getValueArguments()[0]->as<EnumValue>();
+    const EnumValue* const enumValue = arguments.getValueArguments()[0]->tryAs<EnumValue>();
     if (!enumValue) {
         throw TypeSystemException() << "Non-EnumValue argument << " << arguments.getValueArguments()[0]
                                     << " provided to EnumAtomTypeConstructor";

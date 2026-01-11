@@ -168,7 +168,7 @@ TEST(TypeExpTest, tryResolveMixed) {
          {babelwires::StringValue(" is this string")}});
 
     babelwires::TypePtr constructedTestType = constructedTestTypeExp.resolve(typeSystem);
-    const testUtils::TestType* const newTestType = constructedTestType->as<testUtils::TestType>();
+    const testUtils::TestType* const newTestType = constructedTestType->tryAs<testUtils::TestType>();
     ASSERT_NE(newTestType, nullptr);
     EXPECT_EQ(newTestType->m_defaultValue, "Default value is this string");
 }

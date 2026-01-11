@@ -37,12 +37,12 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
     const babelwires::ValueTreeNode& output = processor.getOutput();
 
     babelwires::ValueTreeNode& intValueTreeNode =
-        processor.getInput().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
+        processor.getInput().getChildFromStep(babelwires::PathStep("intVal")).as<babelwires::ValueTreeNode>();
 
     babelwires::ValueTreeNode& inputArrayTreeNode =
-        input.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).is<babelwires::ValueTreeNode>();
+        input.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).as<babelwires::ValueTreeNode>();
     const babelwires::ValueTreeNode& outputArrayTreeNode =
-        output.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).is<babelwires::ValueTreeNode>();
+        output.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).as<babelwires::ValueTreeNode>();
 
     babelwires::ArrayInstanceImpl<babelwires::ValueTreeNode, babelwires::IntType> inputArray(inputArrayTreeNode);
     const babelwires::ArrayInstanceImpl<const babelwires::ValueTreeNode, babelwires::IntType> outputArray(
@@ -91,12 +91,12 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
     const babelwires::ValueTreeNode& output = processor.getOutput();
 
     babelwires::ValueTreeNode& intValueTreeNode =
-        processor.getInput().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
+        processor.getInput().getChildFromStep(babelwires::PathStep("intVal")).as<babelwires::ValueTreeNode>();
 
     babelwires::ValueTreeNode& inputArrayTreeNode =
-        input.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).is<babelwires::ValueTreeNode>();
+        input.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).as<babelwires::ValueTreeNode>();
     const babelwires::ValueTreeNode& outputArrayTreeNode =
-        output.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).is<babelwires::ValueTreeNode>();
+        output.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).as<babelwires::ValueTreeNode>();
 
     babelwires::ArrayInstanceImpl<babelwires::ValueTreeNode, babelwires::IntType> inputArray(inputArrayTreeNode);
     const babelwires::ArrayInstanceImpl<const babelwires::ValueTreeNode, babelwires::IntType> outputArray(
@@ -159,12 +159,12 @@ TEST(ParallelProcessorTest, testFailure) {
     const babelwires::ValueTreeNode& output = processor.getOutput();
 
     babelwires::ValueTreeNode& intValueTreeNode =
-        processor.getInput().getChildFromStep(babelwires::PathStep("intVal")).is<babelwires::ValueTreeNode>();
+        processor.getInput().getChildFromStep(babelwires::PathStep("intVal")).as<babelwires::ValueTreeNode>();
 
     babelwires::ValueTreeNode& inputArrayTreeNode =
-        input.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).is<babelwires::ValueTreeNode>();
+        input.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).as<babelwires::ValueTreeNode>();
     const babelwires::ValueTreeNode& outputArrayTreeNode =
-        output.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).is<babelwires::ValueTreeNode>();
+        output.getChildFromStep(testDomain::TestParallelProcessor::getCommonArrayId()).as<babelwires::ValueTreeNode>();
 
     babelwires::ArrayInstanceImpl<babelwires::ValueTreeNode, babelwires::IntType> inputArray(inputArrayTreeNode);
     const babelwires::ArrayInstanceImpl<const babelwires::ValueTreeNode, babelwires::IntType> outputArray(

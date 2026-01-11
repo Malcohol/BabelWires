@@ -43,7 +43,7 @@ TEST(AddConnectionCommandTest, addConnection) {
         ASSERT_NE(targetInput, nullptr);
 
         const babelwires::ValueTreeNode& intTreeNode = babelwires::followPath(testDomain::TestSimpleRecordElementData().getPathToRecordInt1(), *targetInput);
-        const babelwires::IntValue* const intValue = intTreeNode.getValue()->as<babelwires::IntValue>();
+        const babelwires::IntValue* const intValue = intTreeNode.getValue()->tryAs<babelwires::IntValue>();
         ASSERT_NE(intValue, nullptr);
 
         const babelwires::Modifier* const modifier = targetNode->findModifier(testDomain::TestSimpleRecordElementData().getPathToRecordInt1());
@@ -140,7 +140,7 @@ namespace {
         const babelwires::ValueTreeNode *const input = genericNode->getInput();
         ASSERT_NE(input, nullptr);
 
-        const testDomain::TestGenericType *const genericType = input->getType()->as<testDomain::TestGenericType>();
+        const testDomain::TestGenericType *const genericType = input->getType()->tryAs<testDomain::TestGenericType>();
         ASSERT_NE(genericType, nullptr);
 
         const babelwires::TypeExp& typeAssignment0 = genericType->getTypeAssignment(input->getValue(), 0);
@@ -174,7 +174,7 @@ namespace {
         const babelwires::ValueTreeNode *const nestedGenericNodeTree = babelwires::tryFollowPath(testDomain::TestGenericType::getPathToNestedGenericType(), *input);
         ASSERT_NE(nestedGenericNodeTree, nullptr);
 
-        const babelwires::GenericType *const genericType = nestedGenericNodeTree->getType()->as<babelwires::GenericType>();
+        const babelwires::GenericType *const genericType = nestedGenericNodeTree->getType()->tryAs<babelwires::GenericType>();
         ASSERT_NE(genericType, nullptr);
 
         const babelwires::TypeExp& typeAssignment0 = genericType->getTypeAssignment(nestedGenericNodeTree->getValue(), 0);

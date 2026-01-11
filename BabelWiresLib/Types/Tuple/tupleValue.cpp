@@ -41,7 +41,7 @@ std::size_t babelwires::TupleValue::getHash() const {
 }
 
 bool babelwires::TupleValue::operator==(const Value& other) const {
-    const TupleValue* const otherTuple = other.as<TupleValue>();
+    const TupleValue* const otherTuple = other.tryAs<TupleValue>();
     if (otherTuple == nullptr) {
         return false;
     }

@@ -18,14 +18,14 @@ Bugs:
 * It should not be possible to drag and connect from collapsed nodes.
 
 Things to check:
+* Possible deadlock in the typeSystem. 
+  - If a TypeExp consisting of an Array containing a Record was being resolved in parallel with one consisting of a Record containing an Array, I suspect the system will deadlock.
 * Check that elements get sorted by ID when saved in projectData.
-* Do non-const Node::getInputFeature and getOutputFeature really need to be public?
 * The complex types used by the ChordMap function (in BabelWires-Music) suggest that my attempt at flexible maps wasn't successful
   - The types and function are doing work I thought the framework would do.
   - Review the map system: Perhaps I should just simplify it.
 
 Structured Data Flow:
-1. Optimization: Try to avoid excess copies of values. Remove constructor from ValueHolder which copies its value argument.
 1. Consider replacing NewValueHolder by a unique_ptr variant inside ValueHolder. This might allow unique ownership to last a bit longer and avoid some unnecessary clones. (Threading probably means we can never return to this state after sharing.)
 
 New features:
@@ -55,6 +55,7 @@ Refactor:
 * TypeExp could be a value:
   - Among other things, type constructors could just take a single array of values.
   - Additionally, I would expect to need a value containing a type at some point.
+  - Challenge: Perhaps a TypeConstructors might want to receive an unresolvable TypeExp.
 * Move some of the logic in doProcess up into Node.
 * Think about modules and dlls.
   - Review plugin initialization
@@ -71,8 +72,8 @@ Refactor:
   - deserializeToString methods should return a tuple which includes the position after the parsed object.
 * Command::initialize could return an enum which allows a subcommand to declare that it's not needed rather than failed.
 * Can any classes be simplified using operator <=>?
-* Types should memory managed using shared_ptr, to allow purely constructed types to be collected?
 * Rational should use the new Unicode utils and not require UI specialization.
+  - Should be able to parse pasted unicode rationals too.
 * Processors should have a register method, to reduce boilerplate (see libRegistration for MusicLib)
 
 UI:
@@ -111,6 +112,13 @@ Ideas:
   - An array access processor might be a more consistent way of achieving this
 * Add support for Type aliases so we don't have to define a type subclass in C++ just to avoid having a complex type name in the UI.
   - Could this be a variant in TypeExp which carries a string and another typeExp?
+* TypeSystem registration could be done entirely in terms of TypeExp.
+  - In Phase 1, Types would be registered, but not immediately constructed.
+  - In Phase 2, they are sorted by dependency (which is available using the typeExps)
+  - In Phase 3, they are constructed in dependency order.
+  - The REGISTER_TYPE macro could provide some kind of default TypeConstructor.
+  - Related to: obtaining a non-trivial TypeExp which constructs a compound Type.
+    - This would relax requirements on generic types, where they currently must be defined using TypeExps. 
 
 Speculative ideas:
 * Programming mechanism

@@ -21,7 +21,7 @@ babelwires::TypeVariableTypeConstructor::extractValueArguments(const std::vector
 
     IntValue::NativeType args[2];
     for (int i = 0; i < 2; ++i) {
-        if (const IntValue* intValue = valueArguments[i]->as<IntValue>()) {
+        if (const IntValue* intValue = valueArguments[i]->tryAs<IntValue>()) {
             const IntValue::NativeType nativeValue = intValue->get();
             if (nativeValue < 0) {
                 throw TypeSystemException()

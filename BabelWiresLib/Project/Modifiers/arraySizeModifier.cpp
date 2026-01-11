@@ -22,11 +22,11 @@ babelwires::ArraySizeModifier::ArraySizeModifier(const ArraySizeModifier& other)
     : LocalModifier(other) {}
 
 const babelwires::ArraySizeModifierData& babelwires::ArraySizeModifier::getModifierData() const {
-    return *Modifier::getModifierData().as<babelwires::ArraySizeModifierData>();
+    return *Modifier::getModifierData().tryAs<babelwires::ArraySizeModifierData>();
 }
 
 babelwires::ArraySizeModifierData& babelwires::ArraySizeModifier::getModifierData() {
-    return *Modifier::getModifierData().as<babelwires::ArraySizeModifierData>();
+    return *Modifier::getModifierData().tryAs<babelwires::ArraySizeModifierData>();
 }
 
 bool babelwires::ArraySizeModifier::addArrayEntries(UserLogger& userLogger, ValueTreeNode* container, int indexOfNewElement,

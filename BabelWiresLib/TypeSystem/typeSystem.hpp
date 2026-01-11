@@ -50,13 +50,13 @@ namespace babelwires {
             TypeConstructor* newType =
                 addTypeConstructorInternal(TYPE_CONSTRUCTOR::getThisIdentifier(), TYPE_CONSTRUCTOR::getVersion(),
                                            std::make_unique<TYPE_CONSTRUCTOR>(std::forward<ARGS>(args)...));
-            return &newType->template is<TYPE_CONSTRUCTOR>();
+            return &newType->template as<TYPE_CONSTRUCTOR>();
         }
 
         template <typename TYPE_CONSTRUCTOR,
                   std::enable_if_t<std::is_base_of_v<TypeConstructor, TYPE_CONSTRUCTOR>, std::nullptr_t> = nullptr>
         const TYPE_CONSTRUCTOR& getRegisteredTypeConstructor() const {
-            return getTypeConstructorById(TYPE_CONSTRUCTOR::getThisIdentifier()).template is<TYPE_CONSTRUCTOR>();
+            return getTypeConstructorById(TYPE_CONSTRUCTOR::getThisIdentifier()).template as<TYPE_CONSTRUCTOR>();
         }
 
         const TypeConstructor* tryGetTypeConstructorById(TypeConstructorId id) const;

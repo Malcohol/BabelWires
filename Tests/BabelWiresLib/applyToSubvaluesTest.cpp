@@ -62,9 +62,9 @@ TEST_F(ApplyToSubvaluesTest, applyToSubvalues) {
     // Apply a function to increment all IntType subvalues by 1
     babelwires::applyToSubvalues(
         typeSystem, *testComplexRecordType, m_recordValue,
-        [](const babelwires::Type& type, const babelwires::Value& value) { return type.as<babelwires::IntType>(); },
+        [](const babelwires::Type& type, const babelwires::Value& value) { return type.tryAs<babelwires::IntType>(); },
         [](const babelwires::Type& type, babelwires::Value& value) {
-            auto& intValue = value.getAsEditableValue().is<babelwires::IntValue>();
+            auto& intValue = value.getAsEditableValue().as<babelwires::IntValue>();
             intValue.set(intValue.get() + 1);
         });
     // Check that all IntType subvalues have been incremented by 1
@@ -80,7 +80,7 @@ TEST_F(ApplyToSubvaluesTest, applyToSubvaluesOfType) {
     babelwires::applyToSubvaluesOfType<babelwires::IntType>(
         typeSystem, *testComplexRecordType, m_recordValue,
         [](const babelwires::Type& type, babelwires::Value& value) {
-            auto& intValue = value.getAsEditableValue().is<babelwires::IntValue>();
+            auto& intValue = value.getAsEditableValue().as<babelwires::IntValue>();
             intValue.set(intValue.get() + 1);
         });
 

@@ -18,6 +18,6 @@ std::size_t babelwires::EnumValue::getHash() const {
 }
 
 bool babelwires::EnumValue::operator==(const Value& other) const {
-    const EnumValue* otherValue = other.as<EnumValue>();
+    const EnumValue* otherValue = other.tryAs<EnumValue>();
     return otherValue && (get() == otherValue->get());
 }

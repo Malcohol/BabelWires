@@ -51,7 +51,7 @@ std::size_t babelwires::IntValue::getHash() const {
 }
 
 bool babelwires::IntValue::operator==(const Value& other) const {
-    const IntValue* otherValue = other.as<IntValue>();
+    const IntValue* otherValue = other.tryAs<IntValue>();
     return otherValue && (m_value == otherValue->m_value);
 }
 

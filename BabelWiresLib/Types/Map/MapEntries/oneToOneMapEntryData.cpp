@@ -41,7 +41,7 @@ std::size_t babelwires::OneToOneMapEntryData::getHash() const {
 }
 
 bool babelwires::OneToOneMapEntryData::operator==(const MapEntryData& other) const {
-    const OneToOneMapEntryData* otherData = other.as<OneToOneMapEntryData>();
+    const OneToOneMapEntryData* otherData = other.tryAs<OneToOneMapEntryData>();
     if (!otherData) {
         return false;
     }

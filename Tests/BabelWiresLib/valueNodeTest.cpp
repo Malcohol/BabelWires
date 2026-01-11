@@ -24,11 +24,11 @@ TEST(ValueNodeTest, simpleType) {
     auto newElement = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
 
     ASSERT_NE(newElement, nullptr);
-    babelwires::ValueNode* const valueNode = newElement->as<babelwires::ValueNode>();
+    babelwires::ValueNode* const valueNode = newElement->tryAs<babelwires::ValueNode>();
     ASSERT_NE(valueNode, nullptr);
 
     const babelwires::ValueNodeData* const valueNodeData =
-        valueNode->getNodeData().as<babelwires::ValueNodeData>();
+        valueNode->getNodeData().tryAs<babelwires::ValueNodeData>();
     ASSERT_NE(valueNodeData, nullptr);
     EXPECT_EQ(valueNode->getNodeData().m_id, 10);
     EXPECT_EQ(valueNodeData->getTypeExp(), babelwires::DefaultIntType::getThisIdentifier());
@@ -42,7 +42,7 @@ TEST(ValueNodeTest, simpleType) {
 
     EXPECT_EQ(input->getTypeExp(), babelwires::DefaultIntType::getThisIdentifier());
     const babelwires::ValueHolder value = input->getValue();
-    const babelwires::IntValue* intValue = value->as<babelwires::IntValue>();
+    const babelwires::IntValue* intValue = value->tryAs<babelwires::IntValue>();
     ASSERT_NE(intValue, nullptr);
     EXPECT_EQ(intValue->get(), -4);
 }
@@ -77,10 +77,10 @@ TEST(ValueNodeTest, valueNodeDataSerialization) {
     EXPECT_EQ(dataPtr->getTypeExp(), babelwires::DefaultIntType::getThisIdentifier());
     ASSERT_EQ(dataPtr->m_modifiers.size(), 1);
     const babelwires::ValueAssignmentData* const assignmentData =
-        dataPtr->m_modifiers[0]->as<babelwires::ValueAssignmentData>();
+        dataPtr->m_modifiers[0]->tryAs<babelwires::ValueAssignmentData>();
     ASSERT_NE(assignmentData, nullptr);
     const babelwires::ValueHolder value = assignmentData->getValue();
-    const babelwires::IntValue* intValue = value->as<babelwires::IntValue>();
+    const babelwires::IntValue* intValue = value->tryAs<babelwires::IntValue>();
     ASSERT_NE(intValue, nullptr);
     EXPECT_EQ(intValue->get(), 12);
 }

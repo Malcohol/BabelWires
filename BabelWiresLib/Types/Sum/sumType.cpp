@@ -105,7 +105,7 @@ namespace {
         unsigned int i = 0;
         while (i < summands.size()) {
             const babelwires::Type* summand = summands[i];
-            if (const babelwires::SumType* const subSumType = summand->as<babelwires::SumType>()) {
+            if (const babelwires::SumType* const subSumType = summand->tryAs<babelwires::SumType>()) {
                 const std::vector<babelwires::TypePtr>& subSummands = subSumType->getSummands();
                 summands[i] = subSummands[0].get();
                 summands.reserve(summands.size() + subSummands.size() - 1);
@@ -151,7 +151,7 @@ std::optional<babelwires::SubtypeOrder> babelwires::SumType::compareSubtypeHelpe
 
     const SubtypeOrder result = opCombine(*subTest, superTest);
     if (result == SubtypeOrder::IsDisjoint) {
-        if (other.as<SumType>()) {
+        if (other.tryAs<SumType>()) {
             // Definitely disjoint
             return SubtypeOrder::IsDisjoint;
         } else {

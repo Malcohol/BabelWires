@@ -73,7 +73,7 @@ TEST(ProjectTest, addGetAndRemoveElement) {
 
     const babelwires::Node* node = testEnvironment.m_project.getNode(elementId);
     EXPECT_NE(node, nullptr);
-    EXPECT_NE(node->as<babelwires::ValueNode>(), nullptr);
+    EXPECT_NE(node->tryAs<babelwires::ValueNode>(), nullptr);
     EXPECT_TRUE(node->isChanged(babelwires::Node::Changes::NodeIsNew));
 
     testEnvironment.m_project.removeNode(elementId);
@@ -167,7 +167,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     {
         const babelwires::Modifier* const modifier = node->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
-        ASSERT_TRUE(modifier->getModifierData().as<babelwires::ArraySizeModifierData>());
+        ASSERT_TRUE(modifier->getModifierData().tryAs<babelwires::ArraySizeModifierData>());
         EXPECT_EQ(static_cast<const babelwires::ArraySizeModifierData&>(modifier->getModifierData()).m_size,
                   testDomain::TestSimpleArrayType::s_defaultSize + 2);
     }
@@ -177,7 +177,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     {
         const babelwires::Modifier* const modifier = node->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
-        EXPECT_EQ(modifier->getModifierData().as<babelwires::ArraySizeModifierData>()->m_size,
+        EXPECT_EQ(modifier->getModifierData().tryAs<babelwires::ArraySizeModifierData>()->m_size,
                   testDomain::TestSimpleArrayType::s_defaultSize + 4);
     }
 
@@ -186,7 +186,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSimple) {
     {
         const babelwires::Modifier* const modifier = node->findModifier(pathToArray);
         ASSERT_NE(modifier, nullptr);
-        EXPECT_EQ(modifier->getModifierData().as<babelwires::ArraySizeModifierData>()->m_size,
+        EXPECT_EQ(modifier->getModifierData().tryAs<babelwires::ArraySizeModifierData>()->m_size,
                   testDomain::TestSimpleArrayType::s_defaultSize + 2);
     }
 
@@ -289,7 +289,7 @@ TEST(ProjectTest, addAndRemoveArrayEntriesSource) {
         testEnvironment.m_project.addModifier(targetNodeId, modData);
     }
     const babelwires::ConnectionModifierData& connectionData =
-        *targetElement->findModifier(pathToTargetFeature)->getModifierData().as<babelwires::ConnectionModifierData>();
+        *targetElement->findModifier(pathToTargetFeature)->getModifierData().tryAs<babelwires::ConnectionModifierData>();
 
     testEnvironment.m_project.process();
 
@@ -389,13 +389,13 @@ TEST(ProjectTest, reloadSource) {
     sourceFileData.m_factoryIdentifier = testDomain::TestSourceFileFormat::getThisIdentifier();
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(sourceFileData);
-    const babelwires::Node* node = testEnvironment.m_project.getNode(elementId)->as<babelwires::Node>();
+    const babelwires::Node* node = testEnvironment.m_project.getNode(elementId)->tryAs<babelwires::Node>();
     ASSERT_NE(node, nullptr);
     ASSERT_NE(node->getOutput(), nullptr);
 
     auto getIntInElement = [node]() {
         testDomain::TestSimpleRecordType::ConstInstance instance(
-            node->getOutput()->is<babelwires::ValueTreeNode>().getChild(0)->is<babelwires::ValueTreeNode>());
+            node->getOutput()->as<babelwires::ValueTreeNode>().getChild(0)->as<babelwires::ValueTreeNode>());
         return instance.getintR0().get();
     };
 
@@ -429,14 +429,14 @@ TEST(ProjectTest, saveTarget) {
     targetFileData.m_factoryIdentifier = testDomain::TestTargetFileFormat::getThisIdentifier();
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(targetFileData);
-    babelwires::Node* node = testEnvironment.m_project.getNode(elementId)->as<babelwires::Node>();
+    babelwires::Node* node = testEnvironment.m_project.getNode(elementId)->tryAs<babelwires::Node>();
     ASSERT_NE(node, nullptr);
     ASSERT_NE(node->getInput(), nullptr);
 
     testDomain::TestSimpleRecordType::Instance instance(node->getInputNonConst(babelwires::Path())
-                                                            ->is<babelwires::ValueTreeNode>()
+                                                            ->as<babelwires::ValueTreeNode>()
                                                             .getChild(0)
-                                                            ->is<babelwires::ValueTreeNode>());
+                                                            ->as<babelwires::ValueTreeNode>());
 
     instance.getintR0().set(47);
 

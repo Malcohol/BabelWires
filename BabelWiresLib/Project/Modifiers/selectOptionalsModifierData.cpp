@@ -54,9 +54,9 @@ void babelwires::SelectOptionalsModifierData::deserializeContents(Deserializer& 
              deserializer.deserializeArray<SerializableOptional>("optionals", Deserializer::IsOptional::Optional);
          it.isValid(); ++it) {
         const auto newObject = it.getObject();
-        if (newObject->as<SerializableOptional_Activate>()) {
+        if (newObject->tryAs<SerializableOptional_Activate>()) {
             m_optionalsActivation[newObject->m_optional] = true;
-        } else if (newObject->as<SerializableOptional_Deactivate>()) {
+        } else if (newObject->tryAs<SerializableOptional_Deactivate>()) {
             m_optionalsActivation[newObject->m_optional] = false;
         } else {
             throw ModelException() << "Problem deserializing activated/deactivated optional";
@@ -65,7 +65,7 @@ void babelwires::SelectOptionalsModifierData::deserializeContents(Deserializer& 
 }
 
 void babelwires::SelectOptionalsModifierData::apply(ValueTreeNode* target) const {
-    if (auto recordType = target->getType()->as<RecordType>()) {
+    if (auto recordType = target->getType()->tryAs<RecordType>()) {
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
         recordType->selectOptionals(typeSystem, newValue, m_optionalsActivation);

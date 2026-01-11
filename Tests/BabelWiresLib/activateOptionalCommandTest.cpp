@@ -20,12 +20,12 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(
         babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisIdentifier()));
     const babelwires::ValueNode* const element =
-        testEnvironment.m_project.getNode(elementId)->as<babelwires::ValueNode>();
+        testEnvironment.m_project.getNode(elementId)->tryAs<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
 
     const babelwires::ValueTreeNode* const input = element->getInput();
     ASSERT_NE(input, nullptr);
-    const testDomain::TestComplexRecordType* const type = input->getType()->as<testDomain::TestComplexRecordType>();
+    const testDomain::TestComplexRecordType* const type = input->getType()->tryAs<testDomain::TestComplexRecordType>();
 
     const babelwires::Path pathToValue;
 
@@ -47,7 +47,7 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
         const babelwires::Modifier* modifier =
             element->getEdits().findModifier(pathToValue);
         EXPECT_NE(modifier, nullptr);
-        EXPECT_NE(modifier->getModifierData().as<babelwires::SelectOptionalsModifierData>(), nullptr);
+        EXPECT_NE(modifier->getModifierData().tryAs<babelwires::SelectOptionalsModifierData>(), nullptr);
     }
 
     command.undo(testEnvironment.m_project);
@@ -65,7 +65,7 @@ TEST(ActivateOptionalsCommandTest, executeAndUndo) {
         const babelwires::Modifier* modifier =
             element->getEdits().findModifier(pathToValue);
         EXPECT_NE(modifier, nullptr);
-        EXPECT_NE(modifier->getModifierData().as<babelwires::SelectOptionalsModifierData>(), nullptr);
+        EXPECT_NE(modifier->getModifierData().tryAs<babelwires::SelectOptionalsModifierData>(), nullptr);
     }
 }
 
@@ -139,7 +139,7 @@ TEST(ActivateOptionalsCommandTest, failSafelyAlreadyActivated) {
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(
         babelwires::ValueNodeData(testDomain::TestComplexRecordType::getThisIdentifier()));
     babelwires::ValueNode* const element =
-        testEnvironment.m_project.getNode(elementId)->as<babelwires::ValueNode>();
+        testEnvironment.m_project.getNode(elementId)->tryAs<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
 
     const babelwires::Path pathToValue;

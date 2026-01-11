@@ -38,13 +38,13 @@ void babelwires::ArrayType::setSize(const TypeSystem& typeSystem, ValueHolder& v
     if (newSize > m_maximumSize) {
         throw ModelException() << "The new array size " << newSize << " is above the maximum " << m_maximumSize;
     }
-    ArrayValue& arrayValue = value.copyContentsAndGetNonConst().is<ArrayValue>();
+    ArrayValue& arrayValue = value.copyContentsAndGetNonConst().as<ArrayValue>();
     arrayValue.setSize(typeSystem, *m_entryType, newSize);
 }
 
 void babelwires::ArrayType::insertEntries(const TypeSystem& typeSystem, ValueHolder& value, unsigned int indexOfNewElement, unsigned int numEntriesToAdd) const {
     assert((numEntriesToAdd > 0) && "insertEntries must actually add entries");
-    const ArrayValue& current = value->is<ArrayValue>();
+    const ArrayValue& current = value->as<ArrayValue>();
     const unsigned int currentSize = current.getSize();
     if (currentSize + numEntriesToAdd > m_maximumSize) {
         throw ModelException() << "Adding " << numEntriesToAdd << " new entries will make the array bigger than its maximum size " << m_maximumSize;
@@ -52,7 +52,7 @@ void babelwires::ArrayType::insertEntries(const TypeSystem& typeSystem, ValueHol
     if (indexOfNewElement > currentSize) {
         throw ModelException() << "The index " << indexOfNewElement << " at which to add is not currently in the array";
     }
-    ArrayValue& arrayValue = value.copyContentsAndGetNonConst().is<ArrayValue>();
+    ArrayValue& arrayValue = value.copyContentsAndGetNonConst().as<ArrayValue>();
     for (unsigned int i = 0; i < numEntriesToAdd; ++i )
     {
         arrayValue.insertValue(typeSystem, *m_entryType, indexOfNewElement + i);
@@ -61,7 +61,7 @@ void babelwires::ArrayType::insertEntries(const TypeSystem& typeSystem, ValueHol
 
 void babelwires::ArrayType::removeEntries(ValueHolder& value, unsigned int indexOfElementToRemove, unsigned int numEntriesToRemove) const {
     assert((numEntriesToRemove > 0) && "removeEntries must actually remove entries");
-    const ArrayValue& current = value->is<ArrayValue>();
+    const ArrayValue& current = value->as<ArrayValue>();
     const unsigned int currentSize = current.getSize();
     if (currentSize - numEntriesToRemove < m_minimumSize) {
         throw ModelException() << "Removing " << numEntriesToRemove << " entries will make the array smaller than its minimum size " << m_minimumSize;
@@ -69,7 +69,7 @@ void babelwires::ArrayType::removeEntries(ValueHolder& value, unsigned int index
     if (indexOfElementToRemove + numEntriesToRemove > currentSize) {
         throw ModelException() << "The indices to remove are not all in the array";
     }
-    ArrayValue& arrayValue = value.copyContentsAndGetNonConst().is<ArrayValue>();
+    ArrayValue& arrayValue = value.copyContentsAndGetNonConst().as<ArrayValue>();
     for (unsigned int i = 0; i < numEntriesToRemove; ++i )
     {
         arrayValue.removeValue(indexOfElementToRemove);
@@ -86,7 +86,7 @@ babelwires::NewValueHolder babelwires::ArrayType::createValue(const TypeSystem& 
 
 bool babelwires::ArrayType::visitValue(const TypeSystem& typeSystem, const Value& v,
                                 ChildValueVisitor& visitor) const {
-    const ArrayValue* const arrayValue = v.as<ArrayValue>();
+    const ArrayValue* const arrayValue = v.tryAs<ArrayValue>();
     if (!arrayValue) {
         return false;
     }
@@ -108,7 +108,7 @@ std::string babelwires::ArrayType::getFlavour() const {
 
 std::optional<babelwires::SubtypeOrder> babelwires::ArrayType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                      const Type& other) const {
-    const ArrayType* const otherArray = other.as<ArrayType>();
+    const ArrayType* const otherArray = other.tryAs<ArrayType>();
     if (!otherArray) {
         return {};
     }
@@ -118,24 +118,24 @@ std::optional<babelwires::SubtypeOrder> babelwires::ArrayType::compareSubtypeHel
 }
 
 unsigned int babelwires::ArrayType::getNumChildren(const ValueHolder& compoundValue) const {
-    const ArrayValue& arrayValue = compoundValue->is<ArrayValue>();
+    const ArrayValue& arrayValue = compoundValue->as<ArrayValue>();
     return arrayValue.getSize();
 }
 
 std::tuple<const babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>
 babelwires::ArrayType::getChild(const ValueHolder& compoundValue, unsigned int i) const {
-    const ArrayValue& arrayValue = compoundValue->is<ArrayValue>();
+    const ArrayValue& arrayValue = compoundValue->as<ArrayValue>();
     return {&arrayValue.getValue(i), i, m_entryType};
 }
 
 std::tuple<babelwires::ValueHolder*, babelwires::PathStep, const babelwires::TypePtr&>
 babelwires::ArrayType::getChildNonConst(ValueHolder& compoundValue, unsigned int i) const {
-    ArrayValue& arrayValue = compoundValue.copyContentsAndGetNonConst().is<ArrayValue>();
+    ArrayValue& arrayValue = compoundValue.copyContentsAndGetNonConst().as<ArrayValue>();
     return {&arrayValue.getValue(i), i, m_entryType};
 }
 
 int babelwires::ArrayType::getChildIndexFromStep(const ValueHolder& compoundValue, const PathStep& step) const {
-    const ArrayValue& arrayValue = compoundValue->is<ArrayValue>();
+    const ArrayValue& arrayValue = compoundValue->as<ArrayValue>();
     if (const ArrayIndex* index = step.asIndex()) {
         if (*index < arrayValue.getSize()) {
             return *index;

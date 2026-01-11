@@ -26,7 +26,7 @@ void babelwires::SaveFileAction::actionTriggered(babelwires::NodeContentsModel& 
     if (!node) {
         return;
     }
-    FileNode* const fileElement = node->as<FileNode>();
+    FileNode* const fileElement = node->tryAs<FileNode>();
     if (!fileElement) {
         return;
     }

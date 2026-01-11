@@ -20,7 +20,7 @@ babelwires::RationalTypeConstructor::extractValueArguments(const std::vector<Val
 
     Rational args[3];
     for (int i = 0; i < 3; ++i) {
-        if (const RationalValue* intValue = valueArguments[i]->as<RationalValue>()) {
+        if (const RationalValue* intValue = valueArguments[i]->tryAs<RationalValue>()) {
             args[i] = intValue->get();
         } else {
             throw TypeSystemException() << "Argument " << i

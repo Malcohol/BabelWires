@@ -24,7 +24,7 @@ babelwires::NewValueHolder babelwires::RationalType::createValue(const TypeSyste
 }
 
 bool babelwires::RationalType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
-    if (const RationalValue* const ratValue = v.as<RationalValue>()) {
+    if (const RationalValue* const ratValue = v.tryAs<RationalValue>()) {
         return m_range.contains(ratValue->get());
     }
     return false;
@@ -40,7 +40,7 @@ std::string babelwires::RationalType::getFlavour() const {
 
 std::optional<babelwires::SubtypeOrder> babelwires::RationalType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                               const Type& other) const {
-    const RationalType *const otherRationalType = other.as<RationalType>();
+    const RationalType *const otherRationalType = other.tryAs<RationalType>();
     if (!otherRationalType) {
         return {};
     }
@@ -48,7 +48,7 @@ std::optional<babelwires::SubtypeOrder> babelwires::RationalType::compareSubtype
 }
 
 std::string babelwires::RationalType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
-    return v->is<RationalValue>().toString();
+    return v->as<RationalValue>().toString();
 }
 
 babelwires::DefaultRationalType::DefaultRationalType() : RationalType(getThisIdentifier()) {}

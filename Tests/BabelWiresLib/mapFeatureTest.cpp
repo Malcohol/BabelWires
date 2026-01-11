@@ -46,7 +46,7 @@ TEST(MapFeatureTest, setToDefault) {
 
     mapFeature.setToDefault();
 
-    const babelwires::MapValue* const mapValue = mapFeature.getValue()->as<babelwires::MapValue>();
+    const babelwires::MapValue* const mapValue = mapFeature.getValue()->tryAs<babelwires::MapValue>();
 
     EXPECT_TRUE(mapValue->isValid(testEnvironment.m_typeSystem));
 }

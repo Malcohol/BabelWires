@@ -15,13 +15,13 @@ const babelwires::ValueTreeNode& babelwires::InstanceUtils::getChild(const babel
                                                             babelwires::ShortId id) {
     const int index = recordTreeNode.getChildIndexFromStep(id);
     assert(index >= 0);
-    return recordTreeNode.getChild(index)->is<babelwires::ValueTreeNode>();
+    return recordTreeNode.getChild(index)->as<babelwires::ValueTreeNode>();
 }
 
 babelwires::ValueTreeNode& babelwires::InstanceUtils::getChild(babelwires::ValueTreeNode& recordTreeNode, babelwires::ShortId id) {
     const int index = recordTreeNode.getChildIndexFromStep(id);
     assert(index >= 0);
-    return recordTreeNode.getChild(index)->is<babelwires::ValueTreeNode>();
+    return recordTreeNode.getChild(index)->as<babelwires::ValueTreeNode>();
 }
 
 
@@ -29,7 +29,7 @@ const babelwires::ValueTreeNode* babelwires::InstanceUtils::tryGetChild(const ba
                                                                babelwires::ShortId id) {
     const int index = recordTreeNode.getChildIndexFromStep(id);
     if (index >= 0) {
-        return &recordTreeNode.getChild(index)->is<babelwires::ValueTreeNode>();
+        return &recordTreeNode.getChild(index)->as<babelwires::ValueTreeNode>();
     } else {
         return nullptr;
     }
@@ -37,7 +37,7 @@ const babelwires::ValueTreeNode* babelwires::InstanceUtils::tryGetChild(const ba
 
 babelwires::ValueTreeNode& babelwires::InstanceUtils::activateAndGetChild(babelwires::ValueTreeNode& recordTreeNode,
                                                                  babelwires::ShortId id) {
-    const RecordType& recordType = recordTreeNode.getType()->is<RecordType>();
+    const RecordType& recordType = recordTreeNode.getType()->as<RecordType>();
     babelwires::ValueHolder recordValue = recordTreeNode.getValue();
     if (!recordType.isActivated(recordValue, id)) {
         const babelwires::TypeSystem& typeSystem = recordTreeNode.getTypeSystem();
@@ -49,7 +49,7 @@ babelwires::ValueTreeNode& babelwires::InstanceUtils::activateAndGetChild(babelw
 
 void babelwires::InstanceUtils::deactivateChild(babelwires::ValueTreeNode& recordTreeNode,
                                                                  babelwires::ShortId id) {
-    const RecordType& recordType = recordTreeNode.getType()->is<RecordType>();
+    const RecordType& recordType = recordTreeNode.getType()->as<RecordType>();
     babelwires::ValueHolder recordValue = recordTreeNode.getValue();
     if (recordType.isActivated(recordValue, id)) {
         recordType.deactivateField(recordValue, id);
@@ -58,13 +58,13 @@ void babelwires::InstanceUtils::deactivateChild(babelwires::ValueTreeNode& recor
 }
 
 babelwires::ShortId babelwires::InstanceUtils::getSelectedTag(const ValueTreeNode& valueTreeNode) {
-    const RecordWithVariantsType& type = valueTreeNode.getType()->is<RecordWithVariantsType>();
+    const RecordWithVariantsType& type = valueTreeNode.getType()->as<RecordWithVariantsType>();
     const ValueHolder& value = valueTreeNode.getValue();
     return type.getSelectedTag(value);
 }
 
 void babelwires::InstanceUtils::selectTag(ValueTreeNode& valueTreeNode, ShortId tag) {
-    const RecordWithVariantsType& type = valueTreeNode.getType()->is<RecordWithVariantsType>();
+    const RecordWithVariantsType& type = valueTreeNode.getType()->as<RecordWithVariantsType>();
     ValueHolder value = valueTreeNode.getValue();
     if (tag != type.getSelectedTag(value)) {
         const babelwires::TypeSystem& typeSystem = valueTreeNode.getTypeSystem();
@@ -78,7 +78,7 @@ unsigned int babelwires::InstanceUtils::getArraySize(const babelwires::ValueTree
 }
 
 void babelwires::InstanceUtils::setArraySize(babelwires::ValueTreeNode& arrayTreeNode, unsigned int newSize) {
-    const auto& type = arrayTreeNode.getType()->is<babelwires::ArrayType>();
+    const auto& type = arrayTreeNode.getType()->as<babelwires::ArrayType>();
     const auto& typeSystem = arrayTreeNode.getTypeSystem();
     babelwires::ValueHolder value = arrayTreeNode.getValue();
     value.copyContentsAndGetNonConst();
@@ -87,9 +87,9 @@ void babelwires::InstanceUtils::setArraySize(babelwires::ValueTreeNode& arrayTre
 }
 
 const babelwires::ValueTreeNode& babelwires::InstanceUtils::getChild(const babelwires::ValueTreeNode& arrayTreeNode, unsigned int index) {
-    return arrayTreeNode.getChild(index)->is<babelwires::ValueTreeNode>();
+    return arrayTreeNode.getChild(index)->as<babelwires::ValueTreeNode>();
 }
 
 babelwires::ValueTreeNode& babelwires::InstanceUtils::getChild(babelwires::ValueTreeNode& arrayTreeNode, unsigned int index) {
-    return arrayTreeNode.getChild(index)->is<babelwires::ValueTreeNode>();
+    return arrayTreeNode.getChild(index)->as<babelwires::ValueTreeNode>();
 }

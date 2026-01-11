@@ -642,12 +642,12 @@ namespace {
                            babelwires::ValueTreeRoot* outputFeature) {
         EXPECT_EQ(entry->getLabel(), testDomain::TestSimpleRecordType::s_int0FieldName);
         if (inputFeature) {
-            EXPECT_EQ(entry->getInput(), inputFeature->getChild(0)->is<babelwires::ValueTreeNode>().getChild(0));
+            EXPECT_EQ(entry->getInput(), inputFeature->getChild(0)->as<babelwires::ValueTreeNode>().getChild(0));
         } else {
             EXPECT_FALSE(entry->getInput());
         }
         if (outputFeature) {
-            EXPECT_EQ(entry->getOutput(), outputFeature->getChild(0)->is<babelwires::ValueTreeNode>().getChild(0));
+            EXPECT_EQ(entry->getOutput(), outputFeature->getChild(0)->as<babelwires::ValueTreeNode>().getChild(0));
         } else {
             EXPECT_FALSE(entry->getOutput());
         }
@@ -790,7 +790,7 @@ TEST(ContentsCacheTest, unassignedTypeVariables_noAssignments) {
     babelwires::ValueTreeNode& nestedGenericTypeNode =
         babelwires::followPath(testDomain::TestGenericType::getPathToNestedGenericType(), valueTree);
     const babelwires::GenericType* const nestedGenericType =
-        nestedGenericTypeNode.getType()->as<babelwires::GenericType>();
+        nestedGenericTypeNode.getType()->tryAs<babelwires::GenericType>();
     ASSERT_NE(nestedGenericType, nullptr);
 
     // The algorithms are tricky, so we test all combinations of:

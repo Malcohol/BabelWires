@@ -22,7 +22,7 @@ babelwires::RecordTypeConstructor::constructType(const TypeSystem& typeSystem, T
 
     std::vector<RecordType::Field> fields;
     for (unsigned int i = 0; i < arguments.getValueArguments().size(); ++i) {
-        if (const FieldIdValue* fieldId = arguments.getValueArguments()[i]->as<FieldIdValue>()) {
+        if (const FieldIdValue* fieldId = arguments.getValueArguments()[i]->tryAs<FieldIdValue>()) {
             fields.emplace_back(
                 RecordType::Field{fieldId->get(), resolvedTypeArguments[i], fieldId->getOptionality()});
         } else {

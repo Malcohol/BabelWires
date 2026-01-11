@@ -15,7 +15,7 @@
 babelwires::SetMapCommand::SetMapCommand(std::string commandName, ValueHolder newData)
     : SimpleCommand(commandName)
     , m_newContents(std::move(newData)) {
-    assert(m_newContents->as<MapValue>() && "SetMapCommand given non-map value");
+    assert(m_newContents->tryAs<MapValue>() && "SetMapCommand given non-map value");
 }
 
 bool babelwires::SetMapCommand::initialize(const MapProject& map) {
@@ -24,9 +24,9 @@ bool babelwires::SetMapCommand::initialize(const MapProject& map) {
 }
 
 void babelwires::SetMapCommand::execute(MapProject& map) const {
-    map.setMapValue(m_newContents->is<MapValue>());
+    map.setMapValue(m_newContents->as<MapValue>());
 }
 
 void babelwires::SetMapCommand::undo(MapProject& map) const {
-    map.setMapValue(m_oldContents->is<MapValue>());
+    map.setMapValue(m_oldContents->as<MapValue>());
 }

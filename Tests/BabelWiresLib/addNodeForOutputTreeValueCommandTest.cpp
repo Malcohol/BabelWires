@@ -45,13 +45,13 @@ TEST_P(AddNodeForOutputTreeValueCommandTest, executeAndUndo) {
     auto testWhenExecuted = [&] () {
         const babelwires::Node* const newNode = testEnvironment.m_project.getNode(newNodeId);
         ASSERT_NE(newNode, nullptr);
-        EXPECT_NE(newNode->as<babelwires::ValueNode>(), nullptr);
+        EXPECT_NE(newNode->tryAs<babelwires::ValueNode>(), nullptr);
 
         {
             const babelwires::Modifier* const modifierAtNewNode = newNode->findModifier(babelwires::Path());
             ASSERT_NE(modifierAtNewNode, nullptr);
 
-            const babelwires::ConnectionModifier* const connectionAtNewNode = modifierAtNewNode->as<babelwires::ConnectionModifier>();
+            const babelwires::ConnectionModifier* const connectionAtNewNode = modifierAtNewNode->tryAs<babelwires::ConnectionModifier>();
             ASSERT_NE(connectionAtNewNode, nullptr);
 
             const babelwires::ConnectionModifierData& connectionData = connectionAtNewNode->getModifierData();
@@ -65,7 +65,7 @@ TEST_P(AddNodeForOutputTreeValueCommandTest, executeAndUndo) {
             const babelwires::Modifier* const modifierAtTargetNode = targetNode->findModifier(testDomain::TestComplexRecordElementData::getPathToRecordSubrecord());
             ASSERT_NE(modifierAtTargetNode, nullptr);
 
-            const babelwires::ConnectionModifier* const connectionAtTargetNode = modifierAtTargetNode->as<babelwires::ConnectionModifier>();
+            const babelwires::ConnectionModifier* const connectionAtTargetNode = modifierAtTargetNode->tryAs<babelwires::ConnectionModifier>();
             ASSERT_NE(connectionAtTargetNode, nullptr);
 
             const babelwires::ConnectionModifierData& connectionData = connectionAtTargetNode->getModifierData();
@@ -88,7 +88,7 @@ TEST_P(AddNodeForOutputTreeValueCommandTest, executeAndUndo) {
         const babelwires::Modifier* const modifierAtTargetNode = targetNode->findModifier(testDomain::TestComplexRecordElementData::getPathToRecordSubrecord());
         ASSERT_NE(modifierAtTargetNode, nullptr);
 
-        const babelwires::ConnectionModifier* const connectionAtTargetNode = modifierAtTargetNode->as<babelwires::ConnectionModifier>();
+        const babelwires::ConnectionModifier* const connectionAtTargetNode = modifierAtTargetNode->tryAs<babelwires::ConnectionModifier>();
         ASSERT_NE(connectionAtTargetNode, nullptr);
 
         const babelwires::ConnectionModifierData& connectionData = connectionAtTargetNode->getModifierData();
@@ -124,7 +124,7 @@ TEST_P(AddNodeForOutputTreeValueCommandTest, subsumeMoves) {
     command.undo(testEnvironment.m_project);
     command.execute(testEnvironment.m_project);
     const auto* element =
-        testEnvironment.m_project.getNode(command.getNodeId())->as<babelwires::ValueNode>();
+        testEnvironment.m_project.getNode(command.getNodeId())->tryAs<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, 14);
     EXPECT_EQ(element->getUiPosition().m_y, 88);

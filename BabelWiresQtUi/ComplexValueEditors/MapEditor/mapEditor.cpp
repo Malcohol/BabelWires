@@ -92,13 +92,13 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectGraphModel& projectGrap
             const ValueTreeNode& mapTreeNode = getMapTreeNode(scope);
             m_typeExp = mapTreeNode.getTypeExp();
             const MapValue& mapValue = getMapValueFromProject(scope);
-            if (mapTreeNode.getType()->as<MapType>()) {
+            if (mapTreeNode.getType()->tryAs<MapType>()) {
                 m_map.setAllowedSourceTypeExps(
-                    MapProject::AllowedTypes{{mapTreeNode.getType()->is<MapType>().getSourceTypeExp()}});
+                    MapProject::AllowedTypes{{mapTreeNode.getType()->as<MapType>().getSourceTypeExp()}});
                 m_map.setAllowedTargetTypeExps(
-                    MapProject::AllowedTypes{{mapTreeNode.getType()->is<MapType>().getTargetTypeExp()}});
+                    MapProject::AllowedTypes{{mapTreeNode.getType()->as<MapType>().getTargetTypeExp()}});
             } else {
-                const SumOfMapsType* const sumOfMaps = mapTreeNode.getType()->as<SumOfMapsType>();
+                const SumOfMapsType* const sumOfMaps = mapTreeNode.getType()->tryAs<SumOfMapsType>();
                 assert(sumOfMaps && "MapEditor expecting a MapType of SumOfMapsType");
                 m_map.setAllowedSourceTypeExps(
                     MapProject::AllowedTypes{sumOfMaps->getSourceTypes(), sumOfMaps->getIndexOfDefaultSourceType()});
@@ -195,22 +195,22 @@ void babelwires::MapEditor::applyMapToProject() {
 
 const babelwires::ValueTreeNode& babelwires::MapEditor::getMapTreeNode(const AccessModelScope& scope) const {
     const ValueTreeNode& mapTreeNode = ComplexValueEditor::getValueTreeNode(scope, getDataLocation());
-    assert(mapTreeNode.getType()->as<MapType>() || mapTreeNode.getType()->as<SumOfMapsType>());
+    assert(mapTreeNode.getType()->tryAs<MapType>() || mapTreeNode.getType()->tryAs<SumOfMapsType>());
     return mapTreeNode;
 }
 
 const babelwires::MapValue& babelwires::MapEditor::getMapValueFromProject(const AccessModelScope& scope) const {
     if (const ValueAssignmentData* const modifier = tryGetMapValueAssignmentData(scope)) {
-        if (const MapValue* const mapValue = modifier->getValue()->as<MapValue>()) {
+        if (const MapValue* const mapValue = modifier->getValue()->tryAs<MapValue>()) {
             return *mapValue;
         }
     }
-    return getMapTreeNode(scope).getValue()->is<MapValue>();
+    return getMapTreeNode(scope).getValue()->as<MapValue>();
 }
 
 const babelwires::ValueTreeNode* babelwires::MapEditor::tryGetMapTreeNode(const AccessModelScope& scope) const {
     const ValueTreeNode* mapTreeNode = ComplexValueEditor::tryGetValueTreeNode(scope, getDataLocation());
-    if (mapTreeNode->getType()->as<MapType>() || mapTreeNode->getType()->as<SumOfMapsType>()) {
+    if (mapTreeNode->getType()->tryAs<MapType>() || mapTreeNode->getType()->tryAs<SumOfMapsType>()) {
         return mapTreeNode;
     }
     return nullptr;
@@ -230,12 +230,12 @@ babelwires::MapEditor::tryGetMapValueAssignmentData(const AccessModelScope& scop
         return nullptr;
     }
 
-    return modifier->getModifierData().as<ValueAssignmentData>();
+    return modifier->getModifierData().tryAs<ValueAssignmentData>();
 }
 
 babelwires::ValueHolder babelwires::MapEditor::tryGetMapValueFromProject(const AccessModelScope& scope) const {
     if (const ValueAssignmentData* const modifier = tryGetMapValueAssignmentData(scope)) {
-        if (modifier->getValue()->as<MapValue>()) {
+        if (modifier->getValue()->tryAs<MapValue>()) {
             return modifier->getValue();
         }
     }

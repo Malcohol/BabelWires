@@ -39,37 +39,37 @@ void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModel
     // TODO Allow the UI to register callbacks into the corresponding ValueTypes.
     if (valueModelRegistry.handleValueTreeNodeOfType(type.get(), m_valueModel)) {
         // Handled by a registered handler.
-    } else if (type->as<EnumType>()) {
+    } else if (type->tryAs<EnumType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::EnumValueModel));
         new (m_valueModel) babelwires::EnumValueModel();
-    } else if (type->as<IntType>()) {
+    } else if (type->tryAs<IntType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::IntValueModel));
         new (m_valueModel) babelwires::IntValueModel();
-    } else if (type->as<RationalType>()) {
+    } else if (type->tryAs<RationalType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::RationalValueModel));
         new (m_valueModel) babelwires::RationalValueModel();
-    } else if (type->as<StringType>()) {
+    } else if (type->tryAs<StringType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::StringValueModel));
         new (m_valueModel) babelwires::StringValueModel();
-    } else if (type->as<MapType>() || type->as<SumOfMapsType>()) {
+    } else if (type->tryAs<MapType>() || type->tryAs<SumOfMapsType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::MapValueModel));
         new (m_valueModel) babelwires::MapValueModel();
-    } else if (type->as<ArrayType>()) {
+    } else if (type->tryAs<ArrayType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::ArrayValueModel));
         new (m_valueModel) babelwires::ArrayValueModel();
-    } else if (type->as<RecordType>()) {
+    } else if (type->tryAs<RecordType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::RecordValueModel));
         new (m_valueModel) babelwires::RecordValueModel();
-    } else if (type->as<RecordWithVariantsType>()) {
+    } else if (type->tryAs<RecordWithVariantsType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::RecordWithVariantsValueModel));
         new (m_valueModel) babelwires::RecordWithVariantsValueModel();
-    } else if (type->as<TupleType>()) {
+    } else if (type->tryAs<TupleType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::TupleValueModel));
         new (m_valueModel) babelwires::TupleValueModel();
-    } else if (type->as<SumType>()) {
+    } else if (type->tryAs<SumType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::SumValueModel));
         new (m_valueModel) babelwires::SumValueModel();
-    } else if (type->as<GenericType>()) {
+    } else if (type->tryAs<GenericType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::GenericTypeValueModel));
         new (m_valueModel) babelwires::GenericTypeValueModel();
     } else {

@@ -105,7 +105,7 @@ template <typename EDIT_TREE, typename MODIFIER_TYPE> struct babelwires::EditTre
     }
     typename CopyConst<EDIT_TREE, MODIFIER_TYPE>::type* operator*() {
         auto* currentModifier = m_tree.m_nodes[m_index].m_modifier.get();
-        assert(currentModifier->template as<MODIFIER_TYPE>() && "The filter isn't working");
+        assert(currentModifier->template tryAs<MODIFIER_TYPE>() && "The filter isn't working");
         return static_cast<MODIFIER_TYPE*>(currentModifier);
     }
 

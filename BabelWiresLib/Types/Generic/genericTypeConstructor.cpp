@@ -21,7 +21,7 @@ unsigned int babelwires::GenericTypeConstructor::extractValueArguments(const std
                                     << valueArguments.size();
     } else if (valueArguments.empty()) {
         return 1; // Default to 1 variable if no argument is given.
-    } else if (const IntValue* intValue = valueArguments[0]->as<IntValue>()) {
+    } else if (const IntValue* intValue = valueArguments[0]->tryAs<IntValue>()) {
         const IntValue::NativeType nativeValue = intValue->get();
         if (nativeValue < 0) {
             throw TypeSystemException() << "Value argument given to GenericTypeConstructor was negative";

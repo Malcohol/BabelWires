@@ -72,7 +72,7 @@ void babelwires::MapValue::setTargetTypeExp(const TypeExp& targetId) {
 }
 
 bool babelwires::MapValue::operator==(const Value& other) const {
-    if (const MapValue* otherMap = other.as<MapValue>()) {
+    if (const MapValue* otherMap = other.tryAs<MapValue>()) {
         return *this == *otherMap;
     }
     return false;

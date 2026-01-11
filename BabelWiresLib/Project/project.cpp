@@ -154,12 +154,12 @@ void babelwires::Project::addArrayEntries(NodeId nodeId, const Path& pathToArray
         if (ValueTreeNode* const inputArray = node->getInputNonConst(pathToArray)) {
             ValueTreeNode* valueTreeNode = tryFollowPath(pathToArray, *inputArray);
             assert(valueTreeNode && "Path should resolve");
-            assert(valueTreeNode->getType()->as<ArrayType>());
+            assert(valueTreeNode->getType()->tryAs<ArrayType>());
 
             // First, ensure there is an appropriate modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
             if (Modifier* const modifier = node->findModifier(pathToArray)) {
-                arrayModifier = modifier->as<ArraySizeModifier>();
+                arrayModifier = modifier->tryAs<ArraySizeModifier>();
                 if (!arrayModifier && ensureModifier) {
                     // Defensive: Wasn't an array modifier at the path, so let it be replaced.
                     // This won't be restored by an undo, but that shouldn't matter since it isn't
@@ -196,12 +196,12 @@ void babelwires::Project::removeArrayEntries(NodeId nodeId, const Path& pathToAr
         if (ValueTreeNode* const inputArray = node->getInputNonConst(pathToArray)) {
             ValueTreeNode* valueTreeNode = tryFollowPath(pathToArray, *inputArray);
             assert(valueTreeNode && "Path should resolve");
-            assert(valueTreeNode->getType()->as<ArrayType>());
+            assert(valueTreeNode->getType()->tryAs<ArrayType>());
 
             // First, check if there is a modifier at the array.
             ArraySizeModifier* arrayModifier = nullptr;
             if (Modifier* const modifier = node->findModifier(pathToArray)) {
-                arrayModifier = modifier->as<ArraySizeModifier>();
+                arrayModifier = modifier->tryAs<ArraySizeModifier>();
                 if (!arrayModifier && ensureModifier) {
                     // Defensive: Wasn't an array modifier at the path, so let it be replaced.
                     // This won't be restored by an undo, but that shouldn't matter since it isn't
@@ -295,7 +295,7 @@ void babelwires::Project::tryToReloadAllSources() {
     int attemptedReloads = 0;
     int successfulReloads = 0;
     for (const auto& [_, f] : m_nodes) {
-        if (FileNode* const fileNode = f->as<FileNode>()) {
+        if (FileNode* const fileNode = f->tryAs<FileNode>()) {
             if (isNonzero(fileNode->getSupportedFileOperations() & FileNode::FileOperations::reload)) {
                 ++attemptedReloads;
                 if (fileNode->reload(m_context, m_userLogger)) {
@@ -311,7 +311,7 @@ void babelwires::Project::tryToSaveAllTargets() {
     int attemptedSaves = 0;
     int successfulSaves = 0;
     for (const auto& [_, f] : m_nodes) {
-        if (FileNode* const fileNode = f->as<FileNode>()) {
+        if (FileNode* const fileNode = f->tryAs<FileNode>()) {
             if (isNonzero(fileNode->getSupportedFileOperations() & FileNode::FileOperations::save)) {
                 ++attemptedSaves;
                 if (fileNode->save(m_context, m_userLogger)) {
@@ -327,7 +327,7 @@ void babelwires::Project::tryToReloadSource(NodeId id) {
     assert((id != INVALID_NODE_ID) && "Invalid id");
     Node* f = getNode(id);
     assert(f && "There was no such feature node");
-    FileNode* const fileNode = f->as<FileNode>();
+    FileNode* const fileNode = f->tryAs<FileNode>();
     assert(fileNode && "There was no such file node");
     assert(isNonzero(fileNode->getSupportedFileOperations() & FileNode::FileOperations::reload) &&
            "There was no such reloadable file node");
@@ -338,7 +338,7 @@ void babelwires::Project::tryToSaveTarget(NodeId id) {
     assert((id != INVALID_NODE_ID) && "Invalid id");
     Node* f = getNode(id);
     assert(f && "There was no such feature node");
-    FileNode* const fileNode = f->as<FileNode>();
+    FileNode* const fileNode = f->tryAs<FileNode>();
     assert(fileNode && "There was no such file node");
     assert(isNonzero(fileNode->getSupportedFileOperations() & FileNode::FileOperations::save) &&
            "There was no such saveable file node");
@@ -596,8 +596,8 @@ void babelwires::Project::setOptionalActivation(NodeId nodeId, const Path& pathT
 
     if (Modifier* existingModifier = nodeToModify->getEdits().findModifier(pathToRecord)) {
         if (auto activateOptionalsModifierData =
-                existingModifier->getModifierData().as<SelectOptionalsModifierData>()) {
-            auto localModifier = existingModifier->as<LocalModifier>();
+                existingModifier->getModifierData().tryAs<SelectOptionalsModifierData>()) {
+            auto localModifier = existingModifier->tryAs<LocalModifier>();
             assert(localModifier && "Non-local modifier carrying local data");
             modifierData = activateOptionalsModifierData;
             activateOptionalsModifierData->setOptionalActivation(optional, isActivated);
@@ -625,9 +625,9 @@ void babelwires::Project::resetOptionalActivation(NodeId nodeId, const Path& pat
     assert(input);
     Modifier* existingModifier = nodeToModify->getEdits().findModifier(pathToRecord);
     assert(existingModifier && "There must be a modifier if an optional is being reset");
-    auto& modifierData = existingModifier->getModifierData().is<SelectOptionalsModifierData>();
+    auto& modifierData = existingModifier->getModifierData().as<SelectOptionalsModifierData>();
     modifierData.resetOptionalActivation(optional);
-    auto& localModifier = existingModifier->is<LocalModifier>();
+    auto& localModifier = existingModifier->as<LocalModifier>();
     localModifier.applyIfLocal(m_userLogger, input);
 
     if (modifierData.isDefaultState()) {

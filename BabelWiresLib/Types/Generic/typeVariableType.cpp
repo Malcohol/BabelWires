@@ -24,12 +24,12 @@ babelwires::NewValueHolder babelwires::TypeVariableType::createValue(const TypeS
 }
 
 bool babelwires::TypeVariableType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
-    return v.as<TypeVariableValue>() != nullptr;
+    return v.tryAs<TypeVariableValue>() != nullptr;
 }
 
 std::optional<babelwires::SubtypeOrder> babelwires::TypeVariableType::compareSubtypeHelper(const TypeSystem& typeSystem, const Type& other) const {
     // TODO: Since the subtype order is responsible for connectivity, this may need to be more sophisticated.
-    return other.as<TypeVariableType>() ? SubtypeOrder::IsEquivalent : SubtypeOrder::IsIntersecting;
+    return other.tryAs<TypeVariableType>() ? SubtypeOrder::IsEquivalent : SubtypeOrder::IsIntersecting;
 }
 
 std::string babelwires::TypeVariableType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const {

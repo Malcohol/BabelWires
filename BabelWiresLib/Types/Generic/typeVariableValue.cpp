@@ -15,5 +15,5 @@ std::size_t babelwires::TypeVariableValue::getHash() const {
 }
 
 bool babelwires::TypeVariableValue::operator==(const Value& other) const {
-    return other.as<TypeVariableValue>();
+    return other.tryAs<TypeVariableValue>();
 }

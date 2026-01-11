@@ -26,7 +26,7 @@ TEST(AddNodeCommandTest, executeAndUndo) {
 
     const babelwires::Node* newElement = testEnvironment.m_project.getNode(command.getNodeId());
     ASSERT_NE(newElement, nullptr);
-    EXPECT_NE(newElement->as<babelwires::ValueNode>(), nullptr);
+    EXPECT_NE(newElement->tryAs<babelwires::ValueNode>(), nullptr);
 
     command.undo(testEnvironment.m_project);
 
@@ -36,7 +36,7 @@ TEST(AddNodeCommandTest, executeAndUndo) {
 
     const babelwires::Node* restoredElement = testEnvironment.m_project.getNode(command.getNodeId());
     ASSERT_NE(restoredElement, nullptr);
-    EXPECT_NE(restoredElement->as<babelwires::ValueNode>(), nullptr);
+    EXPECT_NE(restoredElement->tryAs<babelwires::ValueNode>(), nullptr);
 }
 
 TEST(AddNodeCommandTest, subsumeMoves) {
@@ -57,7 +57,7 @@ TEST(AddNodeCommandTest, subsumeMoves) {
     addCommand.undo(testEnvironment.m_project);
     addCommand.execute(testEnvironment.m_project);
     const auto* element =
-        testEnvironment.m_project.getNode(addCommand.getNodeId())->as<babelwires::ValueNode>();
+        testEnvironment.m_project.getNode(addCommand.getNodeId())->tryAs<babelwires::ValueNode>();
     ASSERT_NE(element, nullptr);
     EXPECT_EQ(element->getUiPosition().m_x, 14);
     EXPECT_EQ(element->getUiPosition().m_y, 88);

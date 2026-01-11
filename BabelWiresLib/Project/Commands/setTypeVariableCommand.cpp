@@ -49,7 +49,7 @@ bool babelwires::SetTypeVariableCommand::initializeAndExecute(Project& project) 
         return false;
     }
 
-    const GenericType* const genericType = genericTypeNode->getType()->as<GenericType>();
+    const GenericType* const genericType = genericTypeNode->getType()->tryAs<GenericType>();
     if (!genericType) {
         return false;
     }
@@ -66,7 +66,7 @@ bool babelwires::SetTypeVariableCommand::initializeAndExecute(Project& project) 
     newData->m_targetPath = m_pathToGenericType;
     if (const Modifier* const currentModifier = nodeToModify->findModifier(m_pathToGenericType)) {
         if (const auto* const setTypeVariableModifier =
-                currentModifier->getModifierData().as<SetTypeVariableModifierData>()) {
+                currentModifier->getModifierData().tryAs<SetTypeVariableModifierData>()) {
             // If the modifier already exists, then we can just update it.
             newData->m_typeAssignments = setTypeVariableModifier->m_typeAssignments;
         }

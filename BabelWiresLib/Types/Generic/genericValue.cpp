@@ -49,7 +49,7 @@ std::size_t babelwires::GenericValue::getHash() const {
 }
 
 bool babelwires::GenericValue::operator==(const Value& other) const {
-    if (const GenericValue* otherValue = other.as<GenericValue>()) {
+    if (const GenericValue* otherValue = other.tryAs<GenericValue>()) {
         return (m_actualWrappedType == otherValue->m_actualWrappedType) &&
                (m_wrappedValue == otherValue->m_wrappedValue);
     } else {

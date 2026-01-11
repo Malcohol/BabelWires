@@ -36,7 +36,7 @@ void babelwires::SetTypeVariableModifierData::visitIdentifiers(IdentifierVisitor
 }
 
 void babelwires::SetTypeVariableModifierData::apply(ValueTreeNode* target) const {
-    if (auto genericType = target->getType()->as<GenericType>()) {
+    if (auto genericType = target->getType()->tryAs<GenericType>()) {
         ValueHolder newValue = target->getValue();
         if (m_typeAssignments.size() != genericType->getNumVariables()) {
             throw ModelException()

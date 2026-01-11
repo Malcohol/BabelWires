@@ -20,11 +20,11 @@ namespace {
             ASSERT_TRUE(var0memberValue);
             auto [var0memberType, var0memberValueHolder] = *var0memberValue;
             if (var0Assigned) {
-                const auto* const intType = var0memberType.as<babelwires::IntType>();
+                const auto* const intType = var0memberType.tryAs<babelwires::IntType>();
                 ASSERT_TRUE(intType);
                 EXPECT_TRUE(intType->isValidValue(typeSystem, *var0memberValueHolder));
             } else {
-                EXPECT_TRUE(var0memberType.as<babelwires::TypeVariableType>());
+                EXPECT_TRUE(var0memberType.tryAs<babelwires::TypeVariableType>());
             }
         } // namespace
         {
@@ -33,11 +33,11 @@ namespace {
             ASSERT_TRUE(var0inNestedGenericTypeValue);
             auto [var0inNestedGenericTypeType, var0inNestedGenericTypeValueHolder] = *var0inNestedGenericTypeValue;
             if (var0Assigned) {
-                const auto* const intType = var0inNestedGenericTypeType.as<babelwires::IntType>();
+                const auto* const intType = var0inNestedGenericTypeType.tryAs<babelwires::IntType>();
                 ASSERT_TRUE(intType);
                 EXPECT_TRUE(intType->isValidValue(typeSystem, *var0inNestedGenericTypeValueHolder));
             } else {
-                EXPECT_TRUE(var0inNestedGenericTypeType.as<babelwires::TypeVariableType>());
+                EXPECT_TRUE(var0inNestedGenericTypeType.tryAs<babelwires::TypeVariableType>());
             }
         }
         {
@@ -46,11 +46,11 @@ namespace {
             ASSERT_TRUE(var0inArrayValue);
             auto [var0inArrayType, var0inArrayValueHolder] = *var0inArrayValue;
             if (var0Assigned) {
-                const auto* const intType = var0inArrayType.as<babelwires::IntType>();
+                const auto* const intType = var0inArrayType.tryAs<babelwires::IntType>();
                 ASSERT_TRUE(intType);
                 EXPECT_TRUE(intType->isValidValue(typeSystem, *var0inArrayValueHolder));
             } else {
-                EXPECT_TRUE(var0inArrayType.as<babelwires::TypeVariableType>());
+                EXPECT_TRUE(var0inArrayType.tryAs<babelwires::TypeVariableType>());
             }
         }
         {
@@ -59,11 +59,11 @@ namespace {
             ASSERT_TRUE(var1memberValue);
             auto [var1memberType, var1memberValueHolder] = *var1memberValue;
             if (var1Assigned) {
-                const auto* const intType = var1memberType.as<babelwires::IntType>();
+                const auto* const intType = var1memberType.tryAs<babelwires::IntType>();
                 ASSERT_TRUE(intType);
                 EXPECT_TRUE(intType->isValidValue(typeSystem, *var1memberValueHolder));
             } else {
-                EXPECT_TRUE(var1memberType.as<babelwires::TypeVariableType>());
+                EXPECT_TRUE(var1memberType.tryAs<babelwires::TypeVariableType>());
             }
         }
     }
@@ -76,7 +76,7 @@ TEST(GenericTypeTest, createValue) {
     babelwires::TypePtr type = typeSystem.getRegisteredType<testDomain::TestGenericType>();
     ASSERT_NE(type, nullptr);
 
-    const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
+    const babelwires::GenericType* const genericType = type->tryAs<babelwires::GenericType>();
     ASSERT_NE(genericType, nullptr);
 
     babelwires::ValueHolder valueHolder = genericType->createValue(typeSystem);
@@ -98,7 +98,7 @@ TEST(GenericTypeTest, instantiateTypeVariables) {
     babelwires::TypePtr type = typeSystem.getRegisteredType<testDomain::TestGenericType>();
     ASSERT_NE(type, nullptr);
 
-    const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
+    const babelwires::GenericType* const genericType = type->tryAs<babelwires::GenericType>();
     ASSERT_NE(genericType, nullptr);
 
     babelwires::ValueHolder valueHolder = genericType->createValue(typeSystem);
@@ -155,7 +155,7 @@ TEST(GenericTypeTest, instantiateNestedTypeVariable) {
     babelwires::TypePtr type = typeSystem.getRegisteredType<testDomain::TestGenericType>();
     ASSERT_NE(type, nullptr);
 
-    const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
+    const babelwires::GenericType* const genericType = type->tryAs<babelwires::GenericType>();
     ASSERT_NE(genericType, nullptr);
 
     babelwires::ValueHolder valueHolder = genericType->createValue(typeSystem);
@@ -164,7 +164,7 @@ TEST(GenericTypeTest, instantiateNestedTypeVariable) {
     auto [nestedType, nestedValue] = babelwires::followPathNonConst(
         typeSystem, *genericType, testDomain::TestGenericType::getPathToNestedGenericType(), valueHolder);
     
-    const babelwires::GenericType* const nestedGenericType = nestedType.as<babelwires::GenericType>();
+    const babelwires::GenericType* const nestedGenericType = nestedType.tryAs<babelwires::GenericType>();
     ASSERT_NE(nestedGenericType, nullptr);
 
     auto checkNestedInstantiation = [&](bool isInstantiated)  {
@@ -173,11 +173,11 @@ TEST(GenericTypeTest, instantiateNestedTypeVariable) {
         ASSERT_TRUE(nestedVarMemberValue);
         auto [nestedVar0Type, nestedVar0ValueHolder] = *nestedVarMemberValue;
         if (isInstantiated) {
-            const auto* const intType = nestedVar0Type.as<babelwires::IntType>();
+            const auto* const intType = nestedVar0Type.tryAs<babelwires::IntType>();
             ASSERT_TRUE(intType);
             EXPECT_TRUE(intType->isValidValue(typeSystem, *nestedVar0ValueHolder));
         } else {
-            EXPECT_TRUE(nestedVar0Type.as<babelwires::TypeVariableType>());
+            EXPECT_TRUE(nestedVar0Type.tryAs<babelwires::TypeVariableType>());
         }
     };
 
@@ -199,7 +199,7 @@ TEST(GenericTypeTest, childTypeAndTypeNames) {
     babelwires::TypePtr type = typeSystem.getRegisteredType<testDomain::TestGenericType>();
     ASSERT_NE(type, nullptr);
 
-    const babelwires::GenericType* const genericType = type->as<babelwires::GenericType>();
+    const babelwires::GenericType* const genericType = type->tryAs<babelwires::GenericType>();
     ASSERT_NE(genericType, nullptr);
 
     babelwires::ValueHolder valueHolder = genericType->createValue(typeSystem);

@@ -35,7 +35,7 @@ TEST(TargetFileNodeTest, targetFileDataCreateElement) {
     auto node = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(node);
     ASSERT_FALSE(node->isFailed());
-    ASSERT_TRUE(node->as<babelwires::TargetFileNode>());
+    ASSERT_TRUE(node->tryAs<babelwires::TargetFileNode>());
     babelwires::TargetFileNode* targetFileNode =
         static_cast<babelwires::TargetFileNode*>(node.get());
 
@@ -93,7 +93,7 @@ TEST(TargetFileNodeTest, changeFile) {
     auto node = data.createNode(testEnvironment.m_projectContext, testEnvironment.m_log, 10);
     ASSERT_TRUE(node);
     ASSERT_FALSE(node->isFailed());
-    ASSERT_TRUE(node->as<babelwires::TargetFileNode>());
+    ASSERT_TRUE(node->tryAs<babelwires::TargetFileNode>());
     babelwires::TargetFileNode* targetFileNode =
         static_cast<babelwires::TargetFileNode*>(node.get());
 

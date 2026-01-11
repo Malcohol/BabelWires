@@ -24,7 +24,7 @@ babelwires::NewValueHolder babelwires::IntType::createValue(const TypeSystem& ty
 }
 
 bool babelwires::IntType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
-    if (const IntValue* const intValue = v.as<IntValue>()) {
+    if (const IntValue* const intValue = v.tryAs<IntValue>()) {
         return m_range.contains(intValue->get());
     }
     return false;
@@ -40,7 +40,7 @@ std::string babelwires::IntType::getFlavour() const {
 
 std::optional<babelwires::SubtypeOrder> babelwires::IntType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                    const Type& other) const {
-    const IntType* const otherIntType = other.as<IntType>();
+    const IntType* const otherIntType = other.tryAs<IntType>();
     if (!otherIntType) {
         return {};
     }
@@ -48,7 +48,7 @@ std::optional<babelwires::SubtypeOrder> babelwires::IntType::compareSubtypeHelpe
 }
 
 std::string babelwires::IntType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const {
-    return v->is<IntValue>().toString();
+    return v->as<IntValue>().toString();
 }
 
 babelwires::DefaultIntType::DefaultIntType()

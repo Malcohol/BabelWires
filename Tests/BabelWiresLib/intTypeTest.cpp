@@ -15,7 +15,7 @@ TEST(IntTypeTest, defaultIntTypeCreateValue) {
     babelwires::ValueHolder newValue = intType.createValue(typeSystem);
     EXPECT_TRUE(newValue);
 
-    const auto* const newIntValue = newValue->as<babelwires::IntValue>();
+    const auto* const newIntValue = newValue->tryAs<babelwires::IntValue>();
     EXPECT_NE(newIntValue, nullptr);
     EXPECT_EQ(newIntValue->get(), 0);
 }
@@ -59,7 +59,7 @@ TEST(IntTypeTest, defaultIntTypeIsRegistered) {
     const babelwires::TypePtr foundType =
         testEnvironment.m_typeSystem.tryGetRegisteredTypeById(babelwires::DefaultIntType::getThisIdentifier());
     EXPECT_TRUE(foundType);
-    EXPECT_NE(foundType->as<babelwires::DefaultIntType>(), nullptr);
+    EXPECT_NE(foundType->tryAs<babelwires::DefaultIntType>(), nullptr);
 }
 
 TEST(IntTypeTest, constructedIntTypeCreateValue) {
@@ -73,7 +73,7 @@ TEST(IntTypeTest, constructedIntTypeCreateValue) {
     babelwires::ValueHolder newValue = intType->createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
 
-    const auto* const newIntValue = newValue->as<babelwires::IntValue>();
+    const auto* const newIntValue = newValue->tryAs<babelwires::IntValue>();
     EXPECT_NE(newIntValue, nullptr);
     EXPECT_EQ(newIntValue->get(), -3);
 }
@@ -86,7 +86,7 @@ TEST(IntTypeTest, constructedIntTypeRange) {
 
     babelwires::TypePtr type = intTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
-    const babelwires::IntType* const intType = type->as<babelwires::IntType>();
+    const babelwires::IntType* const intType = type->tryAs<babelwires::IntType>();
     ASSERT_NE(intType, nullptr);
 
     auto range = intType->getRange();
@@ -118,7 +118,7 @@ TEST(IntTypeTest, makeTypeExp) {
 
     babelwires::TypePtr type = intTypeExp.tryResolve(testEnvironment.m_typeSystem);
 
-    const babelwires::IntType* const intType = type->as<babelwires::IntType>();
+    const babelwires::IntType* const intType = type->tryAs<babelwires::IntType>();
     ASSERT_NE(intType, nullptr);
 
     auto range = intType->getRange();
@@ -128,7 +128,7 @@ TEST(IntTypeTest, makeTypeExp) {
     babelwires::ValueHolder newValue = intType->createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(newValue);
 
-    const auto* const newIntValue = newValue->as<babelwires::IntValue>();
+    const auto* const newIntValue = newValue->tryAs<babelwires::IntValue>();
     EXPECT_NE(newIntValue, nullptr);
     EXPECT_EQ(newIntValue->get(), -30);
 }

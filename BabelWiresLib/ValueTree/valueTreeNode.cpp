@@ -158,7 +158,7 @@ const babelwires::TypeSystem& babelwires::ValueTreeNode::getTypeSystem() const {
     const ValueTreeNode* current = this;
     while (1) {
         // TODO Query owner first and do a checking downcast when at root.
-        if (const ValueTreeRoot* currentAsRoot = current->as<ValueTreeRoot>()) {
+        if (const ValueTreeRoot* currentAsRoot = current->tryAs<ValueTreeRoot>()) {
             return currentAsRoot->getTypeSystem();
         }
         const ValueTreeNode* const owner = current->getOwner();
@@ -196,7 +196,7 @@ int babelwires::ValueTreeNode::getChildIndexFromStep(const PathStep& step) const
 void babelwires::ValueTreeNode::initializeChildren(const TypeSystem& typeSystem) {
     // TODO: Do in constructor?
     const ValueHolder& value = getValue();
-    auto* compound = getType()->as<CompoundType>();
+    auto* compound = getType()->tryAs<CompoundType>();
     if (!compound) {
         return;
     }
@@ -216,7 +216,7 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
 
     Changes changes = Changes::NothingChanged;
 
-    if (auto* compound = getType()->as<CompoundType>()) {
+    if (auto* compound = getType()->tryAs<CompoundType>()) {
         // Should only be here if the type hasn't changed, so we can use compound with other.
 
         std::map<PathStep, std::unique_ptr<ValueTreeChild>*> currentChildren;
@@ -306,7 +306,7 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
     const PathStep step = path.getStep(pathIndex);
     auto childWithChangesIt = m_children.find0(step);
 
-    auto compoundType = getType()->as<CompoundType>();
+    auto compoundType = getType()->tryAs<CompoundType>();
     auto [childValue, step2, childType] =
         compoundType->getChild(other, compoundType->getChildIndexFromStep(other, step));
     assert(step == step2);

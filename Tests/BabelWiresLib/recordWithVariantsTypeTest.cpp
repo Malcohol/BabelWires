@@ -48,7 +48,7 @@ TEST(RecordWithVariantsTypeTest, value) {
     // The second tag of the test record is the default.
     EXPECT_EQ(recordType.getSelectedTag(newValue), testDomain::TestRecordWithVariantsType::getTagBId());
 
-    const auto* newRecordValue = newValue->as<babelwires::RecordWithVariantsValue>();
+    const auto* newRecordValue = newValue->tryAs<babelwires::RecordWithVariantsValue>();
     EXPECT_NE(newRecordValue, nullptr);
 
     EXPECT_EQ(newRecordValue->getTag(), testDomain::TestRecordWithVariantsType::getTagBId());
@@ -65,7 +65,7 @@ TEST(RecordWithVariantsTypeTest, value) {
     recordType.selectTag(testEnvironment.m_typeSystem, newValue, testDomain::TestRecordWithVariantsType::getTagAId());
     EXPECT_EQ(recordType.getSelectedTag(newValue), testDomain::TestRecordWithVariantsType::getTagAId());
 
-    newRecordValue = newValue->as<babelwires::RecordWithVariantsValue>();
+    newRecordValue = newValue->tryAs<babelwires::RecordWithVariantsValue>();
     EXPECT_NE(newRecordValue, nullptr);
     EXPECT_EQ(newRecordValue->getTag(), testDomain::TestRecordWithVariantsType::getTagAId());
 
@@ -81,7 +81,7 @@ TEST(RecordWithVariantsTypeTest, value) {
     recordType.selectTag(testEnvironment.m_typeSystem, newValue, testDomain::TestRecordWithVariantsType::getTagCId());
     EXPECT_EQ(recordType.getSelectedTag(newValue), testDomain::TestRecordWithVariantsType::getTagCId());
 
-    newRecordValue = newValue->as<babelwires::RecordWithVariantsValue>();
+    newRecordValue = newValue->tryAs<babelwires::RecordWithVariantsValue>();
     EXPECT_NE(newRecordValue, nullptr);
     EXPECT_EQ(newRecordValue->getTag(), testDomain::TestRecordWithVariantsType::getTagCId());
 
@@ -137,7 +137,7 @@ TEST(RecordWithVariantsTypeTest, isValidValue) {
     EXPECT_TRUE(recordType.isValidValue(testEnvironment.m_typeSystem, *newValue));
 
     babelwires::Value& nonConstValue = newValue.copyContentsAndGetNonConst();
-    auto* nonConstRecordValue = nonConstValue.as<babelwires::RecordWithVariantsValue>();
+    auto* nonConstRecordValue = nonConstValue.tryAs<babelwires::RecordWithVariantsValue>();
     EXPECT_NE(nonConstRecordValue, nullptr);
 
     // An extra field is allowed
@@ -161,7 +161,7 @@ namespace {
     void verifyComplexRecord(const babelwires::TypeSystem& typeSystem,
                              const testDomain::TestRecordWithVariantsType& recordType,
                              const babelwires::ValueHolder& value, babelwires::ShortId expectedTag) {
-        auto* const recordValue = value->as<babelwires::RecordWithVariantsValue>();
+        auto* const recordValue = value->tryAs<babelwires::RecordWithVariantsValue>();
         EXPECT_NE(recordValue, nullptr);
 
         EXPECT_NE(recordValue->tryGetValue(testDomain::TestRecordWithVariantsType::getFf0Id()), nullptr);
@@ -398,7 +398,7 @@ TEST(RecordWithVariantsTypeTest, featureChanges) {
     valueFeature.setToDefault();
 
     const testDomain::TestRecordWithVariantsType* recordWithVariantsType =
-        valueFeature.getType()->as<testDomain::TestRecordWithVariantsType>();
+        valueFeature.getType()->tryAs<testDomain::TestRecordWithVariantsType>();
     ASSERT_NE(recordWithVariantsType, nullptr);
 
     valueFeature.clearChanges();

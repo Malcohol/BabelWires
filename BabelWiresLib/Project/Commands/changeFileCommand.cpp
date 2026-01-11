@@ -24,7 +24,7 @@ bool babelwires::ChangeFileCommand::initialize(const Project& project) {
         return false;
     }
 
-    const FileNode* const fileElement = node->as<FileNode>();
+    const FileNode* const fileElement = node->tryAs<FileNode>();
 
     if (!fileElement) {
         return false;
@@ -37,7 +37,7 @@ bool babelwires::ChangeFileCommand::initialize(const Project& project) {
 void babelwires::ChangeFileCommand::execute(Project& project) const {
     Node* const node = project.getNode(m_nodeId);
     assert(node && "The node should already be in the project");
-    FileNode* const fileElement = node->as<FileNode>();
+    FileNode* const fileElement = node->tryAs<FileNode>();
     assert(fileElement && "The node should be a file node");
     fileElement->setFilePath(m_newFilePath);
     if (isNonzero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::reload)) {
@@ -48,7 +48,7 @@ void babelwires::ChangeFileCommand::execute(Project& project) const {
 void babelwires::ChangeFileCommand::undo(Project& project) const {
     Node* const node = project.getNode(m_nodeId);
     assert(node && "The node should already be in the project");
-    FileNode* const fileElement = node->as<FileNode>();
+    FileNode* const fileElement = node->tryAs<FileNode>();
     assert(fileElement && "The node should be a file node");
     fileElement->setFilePath(m_oldFilePath);
     if (isNonzero(fileElement->getSupportedFileOperations() & FileNode::FileOperations::reload)) {

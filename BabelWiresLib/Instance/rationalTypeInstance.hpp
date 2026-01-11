@@ -20,7 +20,7 @@ namespace babelwires {
             : InstanceCommonBase<VALUE_TREE_NODE, RATIONAL_TYPE>(valueFeature) {}
 
         Rational get() const {
-            const RationalValue& value = this->m_valueTreeNode.getValue()->template is<RationalValue>();
+            const RationalValue& value = this->m_valueTreeNode.getValue()->template as<RationalValue>();
             return value.get();
         }
         template <typename VALUE_TREE_NODE_M = VALUE_TREE_NODE>
