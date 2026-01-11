@@ -151,6 +151,61 @@ TEST(TypeExpTest, tryResolveParallel) {
     }
 }
 
+#include <iostream>
+
+TEST(TypeExpTest, tryResolveParallel2) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    babelwires::TypeSystem typeSystem;
+
+    const testUtils::TestType* testType = typeSystem.addEntry<testUtils::TestType>();
+    const testUtils::TestUnaryTypeConstructor* unaryConstructor =
+        typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
+    const testUtils::TestBinaryTypeConstructor* binaryConstructor =
+        typeSystem.addTypeConstructor<testUtils::TestBinaryTypeConstructor>();
+
+    struct Entry {
+        babelwires::TypeExp m_typeExp;
+        babelwires::TypePtr m_typePtr;
+    };
+
+    std::vector<Entry> vectorOfResolutions;
+    vectorOfResolutions.emplace_back(Entry{testUtils::TestType::getThisIdentifier()}); 
+
+    for (int i = 0; i < 4; ++i) {
+        std::vector<Entry> newUnaryTypes;
+        std::vector<Entry> newBinaryTypes;
+        
+        std::for_each(vectorOfResolutions.begin(), vectorOfResolutions.end(),
+            [&newUnaryTypes] (const Entry& e) {
+                newUnaryTypes.emplace_back(Entry{babelwires::TypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(), e.m_typeExp)});
+            }
+        );
+        std::for_each(vectorOfResolutions.begin(), vectorOfResolutions.end(),
+            [&newBinaryTypes, &vectorOfResolutions] (const Entry& e0) {
+                std::for_each(vectorOfResolutions.begin(), vectorOfResolutions.end(),
+                    [&newBinaryTypes, &e0] (const Entry& e1) {
+                        newBinaryTypes.emplace_back(Entry{babelwires::TypeExp(testUtils::TestBinaryTypeConstructor::getThisIdentifier(), e0.m_typeExp, e1.m_typeExp)});
+                });
+            });
+        vectorOfResolutions.insert(vectorOfResolutions.end(), newUnaryTypes.begin(), newUnaryTypes.end());
+        vectorOfResolutions.insert(vectorOfResolutions.end(), newBinaryTypes.begin(), newBinaryTypes.end());
+    }
+
+    std::cout << "Num entries " << vectorOfResolutions.size() << std::endl;
+
+    std::for_each(
+#ifndef __APPLE__
+        std::execution::par,
+#endif
+        vectorOfResolutions.begin(), vectorOfResolutions.end(),
+        [&typeSystem](auto& entry) { entry.m_typePtr = entry.m_typeExp.tryResolve(typeSystem); });
+
+    for (const auto& entry : vectorOfResolutions) {
+        EXPECT_NE(entry.m_typePtr, nullptr);
+        EXPECT_EQ(entry.m_typePtr->getTypeExp(), entry.m_typeExp);
+    }
+}
+
 TEST(TypeExpTest, tryResolveMixed) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
