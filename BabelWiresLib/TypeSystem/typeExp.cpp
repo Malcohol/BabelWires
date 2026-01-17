@@ -8,8 +8,8 @@
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 
 #include <BabelWiresLib/TypeSystem/Detail/typeNameFormatter.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <Common/Hash/hash.hpp>
 #include <Common/Serialization/deserializer.hpp>
@@ -33,7 +33,8 @@ std::size_t babelwires::TypeConstructorArguments::getHash() const {
     return hash;
 }
 
-bool babelwires::TypeConstructorArguments::equals(const TypeConstructorArguments& a, const TypeConstructorArguments& b) {
+bool babelwires::TypeConstructorArguments::equals(const TypeConstructorArguments& a,
+                                                  const TypeConstructorArguments& b) {
     return (a.m_typeArguments == b.m_typeArguments) && (a.m_valueArguments == b.m_valueArguments);
 }
 
@@ -48,9 +49,7 @@ babelwires::TypeExp::TypeExp(TypeConstructorId typeConstructorId, TypeConstructo
 babelwires::TypePtr babelwires::TypeExp::tryResolve(const TypeSystem& typeSystem) const {
     struct VisitorMethods {
         TypePtr operator()(std::monostate) { return {}; }
-        TypePtr operator()(RegisteredTypeId typeId) {
-            return m_typeSystem.tryGetRegisteredTypeById(typeId);
-        }
+        TypePtr operator()(RegisteredTypeId typeId) { return m_typeSystem.tryGetRegisteredTypeById(typeId); }
         TypePtr operator()(const ConstructedTypeData& higherOrderData) {
             try {
                 const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
@@ -70,9 +69,7 @@ babelwires::TypePtr babelwires::TypeExp::tryResolve(const TypeSystem& typeSystem
 
 babelwires::TypePtr babelwires::TypeExp::resolve(const TypeSystem& typeSystem) const {
     struct VisitorMethods {
-        TypePtr operator()(std::monostate) {
-            throw TypeSystemException() << "A null type cannot be resolved.";
-        }
+        TypePtr operator()(std::monostate) { throw TypeSystemException() << "A null type cannot be resolved."; }
         TypePtr operator()(RegisteredTypeId typeId) { return m_typeSystem.getRegisteredTypeById(typeId); }
         TypePtr operator()(const ConstructedTypeData& higherOrderData) {
             const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
@@ -95,6 +92,16 @@ babelwires::TypePtr babelwires::TypeExp::assertResolve(const TypeSystem& typeSys
         return {};
     }
 #endif
+}
+
+babelwires::TypePtr babelwires::TypeExp::construct(const TypeSystem& typeSystem, RegisteredTypeId typeId) const {
+    if (const ConstructedTypeData* const higherOrderData = std::get_if<ConstructedTypeData>(&m_storage)) {
+        const TypeConstructorId typeConstructorId = std::get<0>(*higherOrderData);
+        const TypeConstructor& typeConstructor = typeSystem.getTypeConstructorById(typeConstructorId);
+        return typeConstructor.constructWithoutCaching(typeSystem, typeId, std::get<1>(*higherOrderData));
+    } else {
+        throw TypeSystemException() << "Only constructed types can be constructed.";
+    }
 }
 
 std::string babelwires::TypeExp::toStringHelper(babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const {

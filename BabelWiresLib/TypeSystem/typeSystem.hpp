@@ -9,6 +9,7 @@
 
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/typePtr.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
@@ -82,6 +83,8 @@ namespace babelwires {
         void addRegisteredType(LongId typeId, VersionNumber version, TypePtr newType);
         TypeConstructor* addTypeConstructorInternal(TypeConstructorId typeConstructorId, VersionNumber version,
                                                     std::unique_ptr<TypeConstructor> newTypeConstructor);
+
+        void addConstructedType(RegisteredTypeId typeId, VersionNumber version, TypeExp typeExp);
 
       protected:
         using RegisteredTypeInfo = std::tuple<TypePtr, VersionNumber>;

@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/TypeSystem/typePtr.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
+#include <BabelWiresLib/TypeSystem/typePtr.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 
 #include <Common/Identifiers/identifier.hpp>
@@ -29,12 +29,16 @@ namespace babelwires {
 
         /// Get the constructed type from the cache, or construct a new one.
         /// Returns null if the type cannot be constructed.
-        TypePtr tryGetOrConstructType(const TypeSystem& typeSystem,
-                                          const TypeConstructorArguments& arguments) const;
+        TypePtr tryGetOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
 
         /// Get the constructed type from the cache, or construct a new one.
         /// Throws a TypeSystemException if the type cannot be constructed.
         TypePtr getOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
+
+        /// Construct a new type without using the cache.
+        /// The new type will carry the typeId as its TypeExp.
+        TypePtr constructWithoutCaching(const TypeSystem& typeSystem, RegisteredTypeId typeId,
+                                        const TypeConstructorArguments& arguments) const;
 
         /// This is supplied by the TYPE_CONSTRUCTOR macro.
         virtual TypeConstructorId getTypeConstructorId() const = 0;
@@ -44,17 +48,17 @@ namespace babelwires {
         /// or throw a TypeSystemException if it cannot be constructed.
         /// The newTypeExp is provided to allow implementations to move it into a newly constructed type.
         /// Resolved types corresponding to the type arguments are provided. However, newly constructed
-        /// types should be passed TypeExps from the arguments rather than using the TypeExps of the 
+        /// types should be passed TypeExps from the arguments rather than using the TypeExps of the
         /// resolved types.
         virtual TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
-                                                    const TypeConstructorArguments& arguments,
-                                                    const std::vector<TypePtr>& resolvedTypeArguments) const = 0;
+                                      const TypeConstructorArguments& arguments,
+                                      const std::vector<TypePtr>& resolvedTypeArguments) const = 0;
 
       private:
         using TypeOrError = std::variant<TypePtr, std::string>;
-        
+
         TypeOrError getOrConstructTypeInternal(const TypeSystem& typeSystem,
-                                                         const TypeConstructorArguments& arguments) const;
+                                               const TypeConstructorArguments& arguments) const;
 
       private:
         /// A mutex which ensures thread-safe access to the cache.

@@ -105,3 +105,8 @@ babelwires::TypeSystem::TypeIdSet babelwires::TypeSystem::getAllRegisteredTypes(
     }
     return result;
 }
+
+void babelwires::TypeSystem::addConstructedType(RegisteredTypeId typeId, VersionNumber version, TypeExp typeExp) {
+    TypePtr newType = typeExp.construct(*this, typeId);
+    addRegisteredType(typeId, version, newType);
+}
