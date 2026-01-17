@@ -18,8 +18,6 @@ Bugs:
 * It should not be possible to drag and connect from collapsed nodes.
 
 Things to check:
-* Possible deadlock in the typeSystem. 
-  - If a TypeExp consisting of an Array containing a Record was being resolved in parallel with one consisting of a Record containing an Array, I suspect the system will deadlock.
 * Check that elements get sorted by ID when saved in projectData.
 * The complex types used by the ChordMap function (in BabelWires-Music) suggest that my attempt at flexible maps wasn't successful
   - The types and function are doing work I thought the framework would do.

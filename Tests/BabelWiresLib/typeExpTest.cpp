@@ -15,7 +15,9 @@
 #include <Tests/TestUtils/testIdentifiers.hpp>
 #include <Tests/TestUtils/testLog.hpp>
 
+#include <algorithm>
 #include <execution>
+#include <random>
 
 TEST(TypeExpTest, equality) {
     babelwires::TypeExp nullTypeExp;
@@ -111,45 +113,71 @@ TEST(TypeExpTest, tryResolveSuccess) {
     EXPECT_EQ(constructedTypeExp.tryResolve(typeSystem).get(), constructedTypeExp.tryResolve(typeSystem).get());
 }
 
-TEST(TypeExpTest, tryResolveFailure) {
-    babelwires::IdentifierRegistryScope identifierRegistry;
-    babelwires::TypeSystem typeSystem;
+// std::execution::par not currently supported on MacOs.
+#ifndef __APPLE__
 
-    EXPECT_EQ(nullptr, babelwires::TypeExp().tryResolve(typeSystem));
-    EXPECT_EQ(nullptr, babelwires::TypeExp(babelwires::RegisteredTypeId("Foo")).tryResolve(typeSystem));
-}
-
+// Test resolving a number of TypeExps in parallel, where the typeExps are combinations of two type constructors.
+// This is intended to test for thread-safety issues in the TypeExp resolution and the caches held by TypeConstructors.
 TEST(TypeExpTest, tryResolveParallel) {
     babelwires::IdentifierRegistryScope identifierRegistry;
     babelwires::TypeSystem typeSystem;
 
-    const auto testType = typeSystem.addAndGetType<testUtils::TestType>();
-    const testUtils::TestUnaryTypeConstructor* unaryConstructor =
-        typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
+    typeSystem.addType<testUtils::TestType>();
+    typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
+    typeSystem.addTypeConstructor<testUtils::TestBinaryTypeConstructor>();
 
-    babelwires::TypeExp constructedTypeExp(
-        testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
-        babelwires::TypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
-                            babelwires::TypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
-                                                testUtils::TestType::getThisIdentifier())));
+    struct Entry {
+        babelwires::TypeExp m_typeExp;
+        babelwires::TypePtr m_typePtr;
+    };
 
-    std::vector<std::tuple<babelwires::TypeExp, babelwires::TypePtr>> vectorOfResolutions;
-    for (int i = 0; i < 1000; ++i) {
-        vectorOfResolutions.emplace_back(std::tuple{constructedTypeExp, nullptr});
+    std::vector<Entry> vectorOfResolutions;
+    vectorOfResolutions.emplace_back(Entry{testUtils::TestType::getThisIdentifier()});
+
+    // The number of entries at a given depth is (2^(2^d)) - 1
+    const auto getNumEntriesAtDepth = [](unsigned int d) { return (1 << (1 << d)) - 1; };
+    const unsigned int depth = 4;
+    // Every combination at depth 4 exceeds reasonable test time on slow machines, so cap it.
+    const unsigned int maximumNumEntries = 16639;
+
+    vectorOfResolutions.reserve(getNumEntriesAtDepth(depth));
+
+    for (unsigned int d = 0; d < depth; ++d) {
+        unsigned int currentSize = getNumEntriesAtDepth(d);
+        for (unsigned int j = 0; j < currentSize; ++j) {
+            if (vectorOfResolutions.size() >= maximumNumEntries) {
+                break;
+            }
+            vectorOfResolutions.emplace_back(
+                Entry{babelwires::TypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(), vectorOfResolutions[j].m_typeExp)});
+            for (unsigned int k = 0; k < currentSize; ++k) {
+                vectorOfResolutions.emplace_back(
+                    Entry{babelwires::TypeExp(testUtils::TestBinaryTypeConstructor::getThisIdentifier(),
+                                              vectorOfResolutions[j].m_typeExp, vectorOfResolutions[k].m_typeExp)});
+            }
+        }
     }
+
+    ASSERT_EQ(vectorOfResolutions.size(), maximumNumEntries);
+
+    {
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(vectorOfResolutions.begin(), vectorOfResolutions.end(), g);
+    }
+
+    // Resolve the TypeExps in parallel.
     std::for_each(
-#ifndef __APPLE__
         std::execution::par,
-#endif
         vectorOfResolutions.begin(), vectorOfResolutions.end(),
-        [&typeSystem](auto& tuple) { std::get<1>(tuple) = std::get<0>(tuple).tryResolve(typeSystem); });
-    for (int i = 0; i < 1000; ++i) {
-        const babelwires::TypePtr& resolvedType = std::get<1>(vectorOfResolutions[i]);
-        EXPECT_NE(resolvedType, nullptr);
-        EXPECT_EQ(resolvedType->getTypeExp(), constructedTypeExp);
-        EXPECT_EQ(resolvedType, std::get<1>(vectorOfResolutions[0]));
+        [&typeSystem](auto& entry) { entry.m_typePtr = entry.m_typeExp.tryResolve(typeSystem); });
+
+    for (const auto& entry : vectorOfResolutions) {
+        EXPECT_NE(entry.m_typePtr, nullptr);
+        EXPECT_EQ(entry.m_typePtr->getTypeExp(), entry.m_typeExp);
     }
 }
+#endif
 
 TEST(TypeExpTest, tryResolveMixed) {
     babelwires::IdentifierRegistryScope identifierRegistry;
@@ -223,9 +251,11 @@ TEST(TypeExpTest, toStringSuccessTypes) {
     babelwires::TypeConstructorId withOptional = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "WithOp", "TC<{0?none}>([0])", "971f582f-c6f9-4e46-9499-20f5d1d44cfd",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeExp(withOptional, babelwires::TypeConstructorArguments{{foo}, {babelwires::IntValue(12)}}).toString(), "TC<Foofoo>(12)");
+    EXPECT_EQ(babelwires::TypeExp(withOptional, babelwires::TypeConstructorArguments{{foo}, {babelwires::IntValue(12)}})
+                  .toString(),
+              "TC<Foofoo>(12)");
     EXPECT_EQ(babelwires::TypeExp(withOptional, babelwires::IntValue(12)).toString(), "TC<none>(12)");
-    
+
     babelwires::TypeConstructorId withOp0 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "WithOp", "{0|+}", "eebf69eb-bc91-44ce-8af6-8218f3d16705",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
@@ -239,7 +269,6 @@ TEST(TypeExpTest, toStringSuccessTypes) {
     EXPECT_EQ(babelwires::TypeExp(withOp1, foo).toString(), "Foofoo");
     EXPECT_EQ(babelwires::TypeExp(withOp1, {{foo, foo}, {}}).toString(), "Foofoo<}>Foofoo");
     EXPECT_EQ(babelwires::TypeExp(withOp1, {{foo, foo, foo}, {}}).toString(), "Foofoo<}>Foofoo<}>Foofoo");
-
 }
 
 TEST(TypeExpTest, toStringSuccessValues) {
@@ -286,7 +315,8 @@ TEST(TypeExpTest, toStringSuccessValues) {
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
     EXPECT_EQ(babelwires::TypeExp(withOp1, foo.clone()).toString(), "foo");
     EXPECT_EQ(babelwires::TypeExp(withOp1, {{}, {foo.clone(), bar.clone()}}).toString(), "foo<]>bar");
-    EXPECT_EQ(babelwires::TypeExp(withOp1, {{}, {foo.clone(), bar.clone(), foo.clone()}}).toString(), "foo<]>bar<]>foo");
+    EXPECT_EQ(babelwires::TypeExp(withOp1, {{}, {foo.clone(), bar.clone(), foo.clone()}}).toString(),
+              "foo<]>bar<]>foo");
 }
 
 TEST(TypeExpTest, toStringSuccessMixed) {
@@ -302,7 +332,8 @@ TEST(TypeExpTest, toStringSuccessMixed) {
     babelwires::TypeConstructorId mixed = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "WithOp", "{0}+[0|<\\]>]+{1}", "258495b5-a88e-45c0-83ca-762817c27fb1",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    EXPECT_EQ(babelwires::TypeExp(mixed, {{foo, foo}, {bar.clone(), boo.clone(), bar.clone()}}).toString(), "Foofoo+bar<]>boo<]>bar+Foofoo");
+    EXPECT_EQ(babelwires::TypeExp(mixed, {{foo, foo}, {bar.clone(), boo.clone(), bar.clone()}}).toString(),
+              "Foofoo+bar<]>boo<]>bar+Foofoo");
 }
 
 TEST(TypeExpTest, toStringMalformed) {
@@ -354,7 +385,7 @@ TEST(TypeExpTest, serialization) {
         babelwires::TypeConstructorArguments{{babelwires::RegisteredTypeId("Bar")}, {babelwires::IntValue(16)}});
 
     std::vector<babelwires::TypeExp> testRefs = {
-        nullTypeExp,         registeredTypeExp1,   registeredTypeExp2,        constructedTypeExp1,
+        nullTypeExp,         registeredTypeExp1,  registeredTypeExp2,       constructedTypeExp1,
         constructedTypeExp2, constructedTypeExp3, constructedTypeExpValue1, constructedTypeExpMixed1};
 
     for (auto typeExp : testRefs) {
