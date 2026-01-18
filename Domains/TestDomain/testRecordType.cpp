@@ -10,12 +10,12 @@
 #include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 
 namespace {
-    struct FieldInfo {
+    struct DeferredFieldInfo {
         std::function<babelwires::ShortId()> m_getIdFunc;
         std::function<babelwires::TypeExp()> m_getTypeExpFunc;
         testDomain::TestComplexRecordType::Optionality m_optionality;
     };
-    babelwires::TypeExp makeRecordDefiningTypeExp(const std::vector<const FieldInfo*>& fieldInfos) {
+    babelwires::TypeExp makeRecordDefiningTypeExp(const std::vector<const DeferredFieldInfo*>& fieldInfos) {
         std::vector<babelwires::ValueHolder> m_fieldNames;
         std::vector<babelwires::TypeExp> m_types;
         for (const auto* info : fieldInfos) {
@@ -37,7 +37,7 @@ namespace {
         Decl_##TYPE_NAME(VALUE_TREE_NODE& valueTreeNode) {}                                                            \
         REGISTERED_TYPE(#TYPE_NAME, TYPE_STRING, TYPE_UUID, TYPE_VERSION);                                             \
         static babelwires::TypeExp getDefiningTypeExp() { return makeRecordDefiningTypeExp(m_fieldInfo); }             \
-        inline static std::vector<const FieldInfo*> m_fieldInfo;
+        inline static std::vector<const DeferredFieldInfo*> m_fieldInfo;
 
 #define DECLARE_RECORD_END()                                                                                           \
     }                                                                                                                  \
@@ -50,15 +50,15 @@ namespace {
     static babelwires::TypeExp get_##FIELD_NAME##_Type() {                                                             \
         return VALUE_TYPE::getThisIdentifier();                                                                        \
     }                                                                                                                  \
-    struct FieldInfo_##FIELD_NAME : public FieldInfo {                                                                 \
-        FieldInfo_##FIELD_NAME() {                                                                                     \
+    struct DeferredFieldInfo_##FIELD_NAME : public DeferredFieldInfo {                                                                 \
+        DeferredFieldInfo_##FIELD_NAME() {                                                                                     \
             m_getIdFunc = &get_##FIELD_NAME##_Id;                                                                      \
             m_getTypeExpFunc = &get_##FIELD_NAME##_Type;                                                               \
             m_optionality = OPTIONALITY;                                                                               \
             m_fieldInfo.push_back(this);                                                                               \
         }                                                                                                              \
     };                                                                                                                 \
-    inline static FieldInfo_##FIELD_NAME s_fieldInfoInstance_##FIELD_NAME;
+    inline static DeferredFieldInfo_##FIELD_NAME s_deferredFieldInfo_##FIELD_NAME;
 
 #define DECLARE_RECORD_FIELD(FIELD_NAME, FIELD_STRING, FIELD_UUID, VALUE_TYPE)                                         \
     DECLARE_FIELD_INFO(FIELD_NAME, FIELD_STRING, FIELD_UUID, VALUE_TYPE,                                               \
