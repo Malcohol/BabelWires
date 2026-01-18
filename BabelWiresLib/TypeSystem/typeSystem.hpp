@@ -37,6 +37,12 @@ namespace babelwires {
             return newType;
         }
 
+        template<typename TYPE_DECLARATION>
+        void addTypeDeclaration() {
+            addConstructedType(TYPE_DECLARATION::getThisIdentifier(), TYPE_DECLARATION::getVersion(),
+                               TYPE_DECLARATION::getDefiningTypeExp());
+        }
+
         template <typename TYPE, std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
         TypePtrT<TYPE> getRegisteredType() const {
             return typeAs<TYPE>(getRegisteredTypeById(TYPE::getThisIdentifier()));
