@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
-#include <Common/Log/userLogger.hpp>
+#include <BaseLib/Log/userLogger.hpp>
 
 #include <cassert>
 

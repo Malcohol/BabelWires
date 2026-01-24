@@ -12,7 +12,7 @@
 #include <vector>
 
 #include <BabelWiresLib/Path/path.hpp>
-#include <Common/Utilities/enumFlags.hpp>
+#include <BaseLib/Utilities/enumFlags.hpp>
 
 namespace babelwires {
 

@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 #include <Domains/TestDomain/testRecordType.hpp>
 #include <Domains/TestDomain/testRecordWithVariantsType.hpp>

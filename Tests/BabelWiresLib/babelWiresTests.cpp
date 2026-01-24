@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

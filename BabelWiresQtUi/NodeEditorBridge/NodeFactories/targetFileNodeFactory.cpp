@@ -14,7 +14,7 @@
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
 #include <BabelWiresLib/Project/Nodes/TargetFileNode/targetFileNodeData.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp> 
+#include <BaseLib/Identifiers/identifierRegistry.hpp> 
 
 babelwires::TargetFileNodeFactory::TargetFileNodeFactory(const UiProjectContext& uiProjectContext)
     : m_targetFileFormatRegistry(uiProjectContext.m_targetFileFormatReg) {}

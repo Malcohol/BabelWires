@@ -9,8 +9,8 @@
 
 #include <BabelWiresLib/Types/String/stringType.hpp>
 
-#include <Common/Serialization/serializer.hpp>
-#include <Common/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
 
 babelwires::StringValue::StringValue() = default;
 babelwires::StringValue::StringValue(std::string value) : m_value(std::move(value)) {}

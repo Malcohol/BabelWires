@@ -7,9 +7,9 @@
  **/
 #include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
 
-#include <Common/Hash/hash.hpp>
-#include <Common/Serialization/serializer.hpp>
-#include <Common/Serialization/deserializer.hpp>
+#include <BaseLib/Hash/hash.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
 
 bool babelwires::DataLocation::equals(const DataLocation& other) const { 
     return m_pathToValue != other.m_pathToValue;

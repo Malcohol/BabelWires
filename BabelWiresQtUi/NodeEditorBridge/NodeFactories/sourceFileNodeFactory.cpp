@@ -18,7 +18,7 @@
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp> 
+#include <BaseLib/Identifiers/identifierRegistry.hpp> 
 
 babelwires::SourceFileNodeFactory::SourceFileNodeFactory(const UiProjectContext& projectContext)
     : m_sourceFileFormatRegistry(projectContext.m_sourceFileFormatReg) {}

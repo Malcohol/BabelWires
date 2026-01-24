@@ -15,7 +15,7 @@
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Types/Record/recordValue.hpp>
 
-#include <Common/Log/debugLogger.hpp>
+#include <BaseLib/Log/debugLogger.hpp>
 
 void babelwires::RecordValueModel::getContextMenuActions(const DataLocation& location,
                                                          std::vector<ContextMenuEntry>& entriesOut) const {

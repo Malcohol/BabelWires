@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
-#include <Common/Math/rational.hpp>
+#include <BaseLib/Math/rational.hpp>
 
 namespace babelwires {
 

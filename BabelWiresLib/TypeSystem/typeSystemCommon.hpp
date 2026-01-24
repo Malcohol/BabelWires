@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <Common/Identifiers/identifier.hpp>
+#include <BaseLib/Identifiers/identifier.hpp>
 
 namespace babelwires {
     using RegisteredTypeId = MediumId;

@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresExe/babelWiresOptions.hpp>
 
-#include <Common/exceptions.hpp>
+#include <BaseLib/exceptions.hpp>
 
 namespace {
     const char s_helpString[] = "help";

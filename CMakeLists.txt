@@ -19,7 +19,7 @@ SET(gtest_force_shared_crt ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-ADD_SUBDIRECTORY( Common )
+ADD_SUBDIRECTORY( BaseLib )
 ADD_SUBDIRECTORY( BabelWiresLib )
 
 find_package(Git QUIET)
@@ -64,7 +64,7 @@ set(BUILD_TESTING ON)
 add_subdirectory(extern/nodeeditor)
 
 add_subdirectory(Tests/TestUtils)
-add_subdirectory(Tests/Common)
+add_subdirectory(Tests/BaseLib)
 add_subdirectory(Tests/BabelWiresLib)
 add_subdirectory(Tests/BabelWiresLib/TestUtils)
 

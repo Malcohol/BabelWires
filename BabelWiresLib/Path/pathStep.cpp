@@ -7,9 +7,9 @@
  **/
 #include <BabelWiresLib/Path/pathStep.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
-#include <Common/Identifiers/identifierVisitor.hpp>
-#include <Common/exceptions.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierVisitor.hpp>
+#include <BaseLib/exceptions.hpp>
 
 #include <charconv>
 #include <sstream>

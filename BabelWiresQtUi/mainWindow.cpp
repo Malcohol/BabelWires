@@ -29,8 +29,8 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
-#include <Common/Log/unifiedLog.hpp>
-#include <Common/exceptions.hpp>
+#include <BaseLib/Log/unifiedLog.hpp>
+#include <BaseLib/exceptions.hpp>
 
 #include <QtNodes/ConnectionStyle>
 #include <QtNodes/GraphicsView>

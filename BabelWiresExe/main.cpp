@@ -23,11 +23,11 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/libRegistration.hpp>
 
-#include <Common/IO/fileDataSource.hpp>
-#include <Common/Identifiers/identifierRegistry.hpp>
-#include <Common/Log/ostreamLogListener.hpp>
-#include <Common/Log/unifiedLog.hpp>
-#include <Common/Serialization/deserializationRegistry.hpp>
+#include <BaseLib/IO/fileDataSource.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Log/ostreamLogListener.hpp>
+#include <BaseLib/Log/unifiedLog.hpp>
+#include <BaseLib/Serialization/deserializationRegistry.hpp>
 
 // "plugins"
 #include <Domains/Music/MusicLib/libRegistration.hpp>

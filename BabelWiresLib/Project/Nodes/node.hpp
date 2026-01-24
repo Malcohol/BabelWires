@@ -12,8 +12,8 @@
 #include <BabelWiresLib/Project/Nodes/editTree.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 
-#include <Common/Utilities/enumFlags.hpp>
-#include <Common/Utilities/pointerRange.hpp>
+#include <BaseLib/Utilities/enumFlags.hpp>
+#include <BaseLib/Utilities/pointerRange.hpp>
 
 #include <memory>
 #include <vector>

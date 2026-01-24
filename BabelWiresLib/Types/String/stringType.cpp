@@ -13,7 +13,7 @@
 babelwires::StringType::StringType()
     : Type(getThisIdentifier()) {}
 
-#include <Common/Identifiers/registeredIdentifier.hpp>
+#include <BaseLib/Identifiers/registeredIdentifier.hpp>
 
 babelwires::NewValueHolder babelwires::StringType::createValue(const TypeSystem& typeSystem) const {
     return ValueHolder::makeValue<StringValue>();

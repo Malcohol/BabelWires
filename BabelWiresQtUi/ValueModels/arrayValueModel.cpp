@@ -13,7 +13,7 @@
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
 
-#include <Common/Log/debugLogger.hpp>
+#include <BaseLib/Log/debugLogger.hpp>
 
 void babelwires::ArrayValueModel::getContextMenuActions(
     const DataLocation& location,

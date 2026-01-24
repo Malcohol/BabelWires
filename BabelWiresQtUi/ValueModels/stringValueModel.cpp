@@ -11,7 +11,7 @@
 
 #include <BabelWiresLib/Types/String/stringValue.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 QWidget* babelwires::StringValueModel::createEditor(QWidget* parent) const {
     return new LineEditValueEditor(parent);

@@ -7,9 +7,9 @@
  **/
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectDataLocation.hpp>
 
-#include <Common/Hash/hash.hpp>
-#include <Common/Serialization/deserializer.hpp>
-#include <Common/Serialization/serializer.hpp>
+#include <BaseLib/Hash/hash.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
 
 bool babelwires::MapProjectDataLocation::equals(const DataLocation& other) const {
     if (DataLocation::equals(other)) {

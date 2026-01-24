@@ -9,8 +9,8 @@
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-#include <Common/Serialization/deserializer.hpp>
-#include <Common/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
 
 std::size_t babelwires::AllToSameFallbackMapEntryData::getHash() const {
     // "Id Fallback" (an arbitrary hash value)

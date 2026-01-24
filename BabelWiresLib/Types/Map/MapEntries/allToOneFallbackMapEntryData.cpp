@@ -10,8 +10,8 @@
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-#include <Common/Serialization/serializer.hpp>
-#include <Common/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
 
 babelwires::AllToOneFallbackMapEntryData::AllToOneFallbackMapEntryData() = default;
 

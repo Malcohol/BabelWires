@@ -11,10 +11,10 @@
 #include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/Project/uiPosition.hpp>
 
-#include <Common/Cloning/cloneable.hpp>
-#include <Common/Serialization/serializable.hpp>
-#include <Common/types.hpp>
-#include <Common/Log/userLogger.hpp>
+#include <BaseLib/Cloning/cloneable.hpp>
+#include <BaseLib/Serialization/serializable.hpp>
+#include <BaseLib/common.hpp>
+#include <BaseLib/Log/userLogger.hpp>
 
 #include <memory>
 #include <string>

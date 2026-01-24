@@ -16,7 +16,7 @@
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
 
-#include <Common/Log/userLogger.hpp>
+#include <BaseLib/Log/userLogger.hpp>
 
 babelwires::SourceFileNode::SourceFileNode(const ProjectContext& context, UserLogger& userLogger,
                                                  const SourceFileNodeData& data, NodeId newId)

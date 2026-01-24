@@ -12,9 +12,9 @@
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/TypeSystem/typePtr.hpp>
 
-#include <Common/Identifiers/identifier.hpp>
-#include <Common/Identifiers/identifierRegistry.hpp>
-#include <Common/Serialization/serializable.hpp>
+#include <BaseLib/Identifiers/identifier.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Serialization/serializable.hpp>
 
 #include <variant>
 #include <vector>

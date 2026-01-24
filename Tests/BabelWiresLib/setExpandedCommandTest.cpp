@@ -5,7 +5,7 @@
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 #include <Domains/TestDomain/testRecordType.hpp>
 

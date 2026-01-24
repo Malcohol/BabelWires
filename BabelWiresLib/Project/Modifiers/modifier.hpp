@@ -9,9 +9,9 @@
 
 #include <BabelWiresLib/Path/pathStep.hpp>
 
-#include <Common/Cloning/cloneable.hpp>
-#include <Common/Utilities/enumFlags.hpp>
-#include <Common/types.hpp>
+#include <BaseLib/Cloning/cloneable.hpp>
+#include <BaseLib/Utilities/enumFlags.hpp>
+#include <BaseLib/common.hpp>
 
 
 #include <memory>

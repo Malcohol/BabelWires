@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Project/projectData.hpp>
 
-#include <Common/Serialization/deserializer.hpp>
-#include <Common/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
 
 babelwires::ProjectData::ProjectData(const ProjectData& other) {
     m_nodes.reserve(other.m_nodes.size());

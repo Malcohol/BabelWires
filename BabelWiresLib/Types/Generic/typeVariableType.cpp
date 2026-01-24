@@ -10,7 +10,7 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableValue.hpp>
 
-#include <Common/Identifiers/registeredIdentifier.hpp>
+#include <BaseLib/Identifiers/registeredIdentifier.hpp>
 
 babelwires::TypeVariableType::TypeVariableType(TypeExp&& typeExpOfThis)
     : Type(std::move(typeExpOfThis)) {}

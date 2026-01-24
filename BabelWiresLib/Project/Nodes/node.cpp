@@ -19,8 +19,8 @@
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
-#include <Common/types.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/common.hpp>
 
 #include <algorithm>
 

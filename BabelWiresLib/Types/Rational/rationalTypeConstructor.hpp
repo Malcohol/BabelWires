@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 
-#include <Common/Math/rational.hpp>
+#include <BaseLib/Math/rational.hpp>
 
 namespace babelwires {
     /// Construct a new RationalType from three RationalValues: min, max and default.

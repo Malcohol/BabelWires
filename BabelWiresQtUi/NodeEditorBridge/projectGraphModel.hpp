@@ -12,7 +12,7 @@
 #include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>
 #include <BabelWiresLib/ProjectExtra/projectObserver.hpp>
 
-#include <Common/multiKeyMap.hpp>
+#include <BaseLib/multiKeyMap.hpp>
 
 #include <QtNodes/AbstractGraphModel>
 

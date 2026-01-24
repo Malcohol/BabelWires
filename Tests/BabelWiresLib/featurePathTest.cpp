@@ -5,12 +5,12 @@
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
-#include <Common/Identifiers/registeredIdentifier.hpp>
-#include <Common/Log/unifiedLog.hpp>
-#include <Common/Serialization/XML/xmlDeserializer.hpp>
-#include <Common/Serialization/XML/xmlSerializer.hpp>
-#include <Common/exceptions.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/registeredIdentifier.hpp>
+#include <BaseLib/Log/unifiedLog.hpp>
+#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
+#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/exceptions.hpp>
 
 #include <Domains/TestDomain/testRecordType.hpp>
 

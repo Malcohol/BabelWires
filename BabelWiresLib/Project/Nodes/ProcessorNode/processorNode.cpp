@@ -19,7 +19,7 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 
-#include <Common/Log/userLogger.hpp>
+#include <BaseLib/Log/userLogger.hpp>
 
 babelwires::ProcessorNode::ProcessorNode(const ProjectContext& context, UserLogger& userLogger,
                                                const ProcessorNodeData& data, NodeId newId)

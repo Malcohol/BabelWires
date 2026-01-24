@@ -7,7 +7,7 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 TEST(EnumFeatureTest, enumFeature) { 
     testUtils::TestEnvironment testEnvironment;

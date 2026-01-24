@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>
 
-#include <Common/Signal/signal.hpp>
+#include <BaseLib/Signal/signal.hpp>
 
 #include <unordered_set>
 

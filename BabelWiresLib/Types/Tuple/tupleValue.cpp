@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Types/Tuple/tupleValue.hpp>
 
-#include <Common/Serialization/deserializer.hpp>
-#include <Common/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
 
 babelwires::TupleValue::TupleValue(Tuple componentValues)
     : m_componentValues(std::move(componentValues)) {}

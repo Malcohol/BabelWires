@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 namespace {
     // QSpinBox cannot cover the full range of IntValue::NativeType, but it's likely to be rare for someone

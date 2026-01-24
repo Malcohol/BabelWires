@@ -16,8 +16,8 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 
-#include <Common/Hash/hash.hpp>
-#include <Common/Log/userLogger.hpp>
+#include <BaseLib/Hash/hash.hpp>
+#include <BaseLib/Log/userLogger.hpp>
 
 #include <fstream>
 

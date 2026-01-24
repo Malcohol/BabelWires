@@ -13,7 +13,7 @@
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
 
-#include <Common/Log/debugLogger.hpp>
+#include <BaseLib/Log/debugLogger.hpp>
 
 void babelwires::GenericTypeValueModel::getContextMenuActions(
     const DataLocation& location,

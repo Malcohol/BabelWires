@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include <Common/DataContext/filePathVisitor.hpp>
-#include <Common/Identifiers/identifierVisitor.hpp>
+#include <BaseLib/DataContext/filePathVisitor.hpp>
+#include <BaseLib/Identifiers/identifierVisitor.hpp>
 
 #include <BabelWiresLib/TypeSystem/value.hpp>
 

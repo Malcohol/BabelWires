@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
 
-#include <Common/Registry/fileTypeRegistry.hpp>
+#include <BaseLib/Registry/fileTypeRegistry.hpp>
 
 #include <QtWidgets/QFileDialog>
 

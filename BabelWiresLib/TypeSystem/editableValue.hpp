@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
-#include <Common/Serialization/serializable.hpp>
+#include <BaseLib/Serialization/serializable.hpp>
 
 namespace babelwires {
 

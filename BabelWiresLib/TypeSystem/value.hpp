@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include <Common/Cloning/cloneable.hpp>
-#include <Common/Identifiers/identifier.hpp>
+#include <BaseLib/Cloning/cloneable.hpp>
+#include <BaseLib/Identifiers/identifier.hpp>
 
 namespace babelwires {
     class Type;

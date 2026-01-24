@@ -13,7 +13,7 @@
 #include <BabelWiresLib/Types/Map/mapType.hpp>
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
 
-#include <Common/Log/debugLogger.hpp>
+#include <BaseLib/Log/debugLogger.hpp>
 
 void babelwires::MapValueModel::getContextMenuActions(const DataLocation& location,
                                                       std::vector<ContextMenuEntry>& actionsOut) const {

@@ -1,7 +1,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testValueAndType.hpp>
 
-#include <Common/Serialization/deserializer.hpp>
-#include <Common/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
 
 testUtils::TestValue::TestValue(std::string value)
     : m_value(value) {}

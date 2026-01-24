@@ -11,8 +11,8 @@
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
-#include <Common/Serialization/deserializer.hpp>
-#include <Common/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
 
 void babelwires::SetTypeVariableModifierData::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("path", m_targetPath);
