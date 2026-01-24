@@ -18,7 +18,7 @@ namespace babelwires {
 } // namespace babelwires
 
 #ifdef __GNUC__
-#define FORCE_KEEP __attribute__((used))
+#define FORCE_KEEP __attribute__((used, retain))
 #else
 #define FORCE_KEEP
 #endif
