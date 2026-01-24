@@ -6,6 +6,42 @@
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 #include <BabelWiresLib/TypeSystem/registeredType.hpp>
 
+namespace babelwires {
+    namespace InstanceUtils {
+
+        struct DeferredFieldInfo {
+            std::function<babelwires::ShortId()> m_getIdFunc;
+            std::function<babelwires::TypeExp()> m_getTypeExpFunc;
+            RecordType::Optionality m_optionality;
+        };
+    } // namespace InstanceUtils
+} // namespace babelwires
+
+#define DECLARE_INSTANCE_BEGIN2(TYPE)                                                                                  \
+    DECLARE_INSTANCE_BEGIN(TYPE)                                                                                       \
+    inline static std::vector<const babelwires::InstanceUtils::DeferredFieldInfo*> m_fieldInfo;
+
+#define DECLARE_INSTANCE_FIELD_INFO(FIELD_NAME, FIELD_STRING, FIELD_UUID, VALUE_TYPE, OPTIONALITY)                     \
+    static babelwires::ShortId get_##FIELD_NAME##_Id() {                                                               \
+        return BW_SHORT_ID(#FIELD_NAME, FIELD_STRING, FIELD_UUID);                                                     \
+    }                                                                                                                  \
+    static babelwires::TypeExp get_##FIELD_NAME##_TypeExp() {                                                          \
+        return VALUE_TYPE::getThisIdentifier();                                                                        \
+    }                                                                                                                  \
+    struct DeferredFieldInfo_##FIELD_NAME : public babelwires::InstanceUtils::DeferredFieldInfo {                      \
+        DeferredFieldInfo_##FIELD_NAME() {                                                                             \
+            m_getIdFunc = &get_##FIELD_NAME##_Id;                                                                      \
+            m_getTypeExpFunc = &get_##FIELD_NAME##_TypeExp;                                                            \
+            m_optionality = OPTIONALITY;                                                                               \
+            m_fieldInfo.push_back(this);                                                                               \
+        }                                                                                                              \
+    };                                                                                                                 \
+    inline static DeferredFieldInfo_##FIELD_NAME s_deferredFieldInfo_##FIELD_NAME;
+
+#define DECLARE_INSTANCE_FIELD2(FIELD_NAME, FIELD_STRING, FIELD_UUID, VALUE_TYPE)                                      \
+    DECLARE_INSTANCE_FIELD(FIELD_NAME, VALUE_TYPE)                                                                     \
+    DECLARE_INSTANCE_FIELD_INFO(FIELD_NAME, FIELD_STRING, FIELD_UUID, VALUE_TYPE, RecordType::Optionality::alwaysActive)
+
 namespace testDomain {
 
     class TestSimpleRecordType : public babelwires::RecordType {
@@ -14,9 +50,9 @@ namespace testDomain {
 
         REGISTERED_TYPE("srecordT", "SimpleRecord", "ea96a409-6424-4924-aefe-ecbe66139f17", 1);
 
-        DECLARE_INSTANCE_BEGIN(TestSimpleRecordType)
-        DECLARE_INSTANCE_FIELD(intR0, babelwires::IntType)
-        DECLARE_INSTANCE_FIELD(intR1, babelwires::IntType)
+        DECLARE_INSTANCE_BEGIN2(TestSimpleRecordType)
+        DECLARE_INSTANCE_FIELD2(intR0, "Int0", "00000000-1111-2222-3333-800070000001", babelwires::DefaultIntType)
+        DECLARE_INSTANCE_FIELD2(intR1, "Int1", "00000000-1111-2222-3333-800070000002", babelwires::DefaultIntType)
         DECLARE_INSTANCE_END()
 
         // Specifically for unit testing.
@@ -114,7 +150,6 @@ namespace testDomain {
         static babelwires::Path getPathToRecordArrayEntry(unsigned int i);
         static babelwires::Path getPathToRecordOpIntOn();
     };
-
 
     /// Useful for unit tests which want to access parts of the ValueTreeNode hierarchy of this record type
     /// without using the Instance system.

@@ -9,79 +9,27 @@
 
 #include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 
-namespace {
-    struct DeferredFieldInfo {
-        std::function<babelwires::ShortId()> m_getIdFunc;
-        std::function<babelwires::TypeExp()> m_getTypeExpFunc;
-        testDomain::TestComplexRecordType::Optionality m_optionality;
-    };
-    babelwires::TypeExp makeRecordDefiningTypeExp(const std::vector<const DeferredFieldInfo*>& fieldInfos) {
-        std::vector<babelwires::ValueHolder> m_fieldNames;
-        std::vector<babelwires::TypeExp> m_types;
-        for (const auto* info : fieldInfos) {
-            m_fieldNames.emplace_back(babelwires::FieldIdValue(info->m_getIdFunc(), info->m_optionality));
-            m_types.emplace_back(info->m_getTypeExpFunc());
+namespace babelwires {
+    namespace InstanceUtils {
+
+        std::vector<babelwires::RecordType::FieldDefinition> makeRecordFieldDefinitions(
+            const std::vector<const DeferredFieldInfo*>& fieldInfos) {
+            std::vector<babelwires::RecordType::FieldDefinition> fieldDefinitions;
+            fieldDefinitions.reserve(fieldInfos.size());
+            for (const auto* info : fieldInfos) {
+                fieldDefinitions.push_back({info->m_getIdFunc(), info->m_getTypeExpFunc(), info->m_optionality});
+            }
+            return fieldDefinitions;
         }
-        return babelwires::TypeExp(babelwires::RecordTypeConstructor::getThisIdentifier(),
-                                   babelwires::TypeConstructorArguments{std::move(m_types), std::move(m_fieldNames)});
-    }
+    } // namespace InstanceUtils
 
-} // namespace
-
-#define DECLARE_RECORD_BEGIN(TYPE_NAME, TYPE_STRING, TYPE_UUID, TYPE_VERSION)                                          \
-    template <typename VALUE_TREE_NODE> class Decl_##TYPE_NAME;                                                        \
-    using TYPE_NAME = Decl_##TYPE_NAME<babelwires::ValueTreeNode>;                                                     \
-    using Const##TYPE_NAME = Decl_##TYPE_NAME<const babelwires::ValueTreeNode>;                                        \
-    template <typename VALUE_TREE_NODE> class Decl_##TYPE_NAME : babelwires::InstanceUntypedBase<VALUE_TREE_NODE> {    \
-      public:                                                                                                          \
-        Decl_##TYPE_NAME(VALUE_TREE_NODE& valueTreeNode) {}                                                            \
-        REGISTERED_TYPE(#TYPE_NAME, TYPE_STRING, TYPE_UUID, TYPE_VERSION);                                             \
-        static babelwires::TypeExp getDefiningTypeExp() { return makeRecordDefiningTypeExp(m_fieldInfo); }             \
-        inline static std::vector<const DeferredFieldInfo*> m_fieldInfo;
-
-#define DECLARE_RECORD_END()                                                                                           \
-    }                                                                                                                  \
-    ;
-
-#define DECLARE_FIELD_INFO(FIELD_NAME, FIELD_STRING, FIELD_UUID, VALUE_TYPE, OPTIONALITY)                              \
-    static babelwires::ShortId get_##FIELD_NAME##_Id() {                                                               \
-        return BW_SHORT_ID(#FIELD_NAME, FIELD_STRING, FIELD_UUID);                                                     \
-    }                                                                                                                  \
-    static babelwires::TypeExp get_##FIELD_NAME##_Type() {                                                             \
-        return VALUE_TYPE::getThisIdentifier();                                                                        \
-    }                                                                                                                  \
-    struct DeferredFieldInfo_##FIELD_NAME : public DeferredFieldInfo {                                                                 \
-        DeferredFieldInfo_##FIELD_NAME() {                                                                                     \
-            m_getIdFunc = &get_##FIELD_NAME##_Id;                                                                      \
-            m_getTypeExpFunc = &get_##FIELD_NAME##_Type;                                                               \
-            m_optionality = OPTIONALITY;                                                                               \
-            m_fieldInfo.push_back(this);                                                                               \
-        }                                                                                                              \
-    };                                                                                                                 \
-    inline static DeferredFieldInfo_##FIELD_NAME s_deferredFieldInfo_##FIELD_NAME;
-
-#define DECLARE_RECORD_FIELD(FIELD_NAME, FIELD_STRING, FIELD_UUID, VALUE_TYPE)                                         \
-    DECLARE_FIELD_INFO(FIELD_NAME, FIELD_STRING, FIELD_UUID, VALUE_TYPE,                                               \
-                       babelwires::RecordType::Optionality::alwaysActive)                                              \
-    babelwires::ConstInstance<VALUE_TYPE> get##FIELD_NAME() const {                                                    \
-        return babelwires::InstanceUtils::getChild(this->m_valueTreeNode, #FIELD_NAME);                                \
-    }                                                                                                                  \
-    template <typename VALUE_TREE_NODE_M = VALUE_TREE_NODE>                                                            \
-    std::enable_if_t<!std::is_const_v<VALUE_TREE_NODE_M>, babelwires::Instance<VALUE_TYPE>> get##FIELD_NAME() {        \
-        return babelwires::InstanceUtils::getChild(this->m_valueTreeNode, #FIELD_NAME);                                \
-    }
-
-namespace {
-    DECLARE_RECORD_BEGIN(TestSimpleRecordType, "SimpleRecord", "ea96a409-6424-4924-aefe-ecbe66139f17", 1)
-    DECLARE_RECORD_FIELD(intR0, "Int0", "00000000-1111-2222-3333-800070000001", babelwires::DefaultIntType)
-    DECLARE_RECORD_FIELD(intR1, "Int1", "00000000-1111-2222-3333-800070000002", babelwires::DefaultIntType)
-    DECLARE_RECORD_END()
-} // namespace
+} // namespace babelwires
 
 testDomain::TestSimpleRecordType::TestSimpleRecordType(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisIdentifier(), typeSystem,
-                 {{getInt0Id(), babelwires::DefaultIntType::getThisIdentifier()},
-                  {getInt1Id(), babelwires::DefaultIntType::getThisIdentifier()}}) {}
+    : RecordType(getThisIdentifier(), typeSystem, babelwires::InstanceUtils::makeRecordFieldDefinitions(Instance::m_fieldInfo)) {
+        //void* erm = &Instance::s_deferredFieldInfo_intR0;
+        //void* irm = &Instance::s_deferredFieldInfo_intR1;
+    }
 
 babelwires::ShortId testDomain::TestSimpleRecordType::getInt0Id() {
     return BW_SHORT_ID(s_int0IdInitializer, s_int0FieldName, s_int0Uuid);
