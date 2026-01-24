@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BaseLib/types.hpp>
+#include <BaseLib/common.hpp>
 #include <functional>
 #include <string_view>
 

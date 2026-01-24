@@ -3,7 +3,7 @@ SET( COMMON_SRCS
 	exceptions.cpp
 	Identifiers/identifierRegistry.cpp
 	Identifiers/registeredIdentifier.cpp
-	types.cpp
+	common.cpp
 	Cloning/cloneable.cpp
 	Registry/registry.cpp
 	Registry/fileTypeRegistry.cpp

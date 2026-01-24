@@ -9,7 +9,7 @@
 
 #include <BaseLib/Utilities/enumFlags.hpp>
 #include <BaseLib/multiKeyMap.hpp>
-#include <BaseLib/types.hpp>
+#include <BaseLib/common.hpp>
 
 #include <BabelWiresLib/Path/pathStep.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>

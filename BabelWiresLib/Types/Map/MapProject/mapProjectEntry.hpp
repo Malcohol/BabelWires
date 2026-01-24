@@ -12,7 +12,7 @@
 
 #include <BaseLib/Cloning/cloneable.hpp>
 #include <BaseLib/Utilities/result.hpp>
-#include <BaseLib/types.hpp>
+#include <BaseLib/common.hpp>
 
 namespace babelwires {
     class MapEntryData;

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BaseLib/types.hpp>
+#include <BaseLib/common.hpp>
 
 TEST(TypesTest, isValidIdentifier) {
     EXPECT_TRUE(babelwires::isValidIdentifier("a"));

@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/Commands/commandTimestamp.hpp>
 
-#include <BaseLib/types.hpp>
+#include <BaseLib/common.hpp>
 #include <BaseLib/Cloning/cloneable.hpp>
 
 #include <chrono>

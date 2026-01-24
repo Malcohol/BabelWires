@@ -13,7 +13,7 @@
 
 #include <BaseLib/Cloning/cloneable.hpp>
 #include <BaseLib/Serialization/serializable.hpp>
-#include <BaseLib/types.hpp>
+#include <BaseLib/common.hpp>
 #include <BaseLib/Log/userLogger.hpp>
 
 #include <memory>

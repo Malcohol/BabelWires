@@ -20,7 +20,7 @@
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
-#include <BaseLib/types.hpp>
+#include <BaseLib/common.hpp>
 
 #include <algorithm>
 

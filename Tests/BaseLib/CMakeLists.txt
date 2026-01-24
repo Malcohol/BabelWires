@@ -19,7 +19,7 @@ SET( COMMON_TESTS_SRCS
    serializationTest.cpp
    signalTest.cpp
    streamEventHolderTest.cpp
-   typesTest.cpp
+   commonTest.cpp
    uuidTest.cpp
    )
 

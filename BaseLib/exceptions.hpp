@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BaseLib/types.hpp>
+#include <BaseLib/common.hpp>
 #include <sstream>
 #include <stdexcept>
 #include <type_traits>

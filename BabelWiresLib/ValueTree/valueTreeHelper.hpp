@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BaseLib/types.hpp>
+#include <BaseLib/common.hpp>
 #include <BaseLib/Identifiers/identifier.hpp>
 
 #include <map>

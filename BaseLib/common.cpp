@@ -5,7 +5,7 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BaseLib/types.hpp>
+#include <BaseLib/common.hpp>
 
 #include <cassert>
 #include <cctype>

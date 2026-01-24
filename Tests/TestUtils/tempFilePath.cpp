@@ -1,6 +1,6 @@
 #include <Tests/TestUtils/tempFilePath.hpp>
 
-#include <BaseLib/types.hpp>
+#include <BaseLib/common.hpp>
 
 #include <cassert>
 #include <fstream>

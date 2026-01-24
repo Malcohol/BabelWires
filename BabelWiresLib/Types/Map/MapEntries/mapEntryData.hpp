@@ -14,7 +14,7 @@
 #include <BaseLib/Cloning/cloneable.hpp>
 #include <BaseLib/Serialization/serializable.hpp>
 #include <BaseLib/Utilities/result.hpp>
-#include <BaseLib/types.hpp>
+#include <BaseLib/common.hpp>
 
 namespace babelwires {
     class TypeSystem;

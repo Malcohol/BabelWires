@@ -11,7 +11,7 @@
 
 #include <BaseLib/Cloning/cloneable.hpp>
 #include <BaseLib/Utilities/enumFlags.hpp>
-#include <BaseLib/types.hpp>
+#include <BaseLib/common.hpp>
 
 
 #include <memory>
