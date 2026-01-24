@@ -17,6 +17,12 @@ namespace babelwires {
     } // namespace InstanceUtils
 } // namespace babelwires
 
+#ifdef __GNUC__
+#define FORCE_KEEP __attribute__((used))
+#else
+#define FORCE_KEEP
+#endif
+
 #define DECLARE_INSTANCE_BEGIN2(TYPE)                                                                                  \
     DECLARE_INSTANCE_BEGIN(TYPE)                                                                                       \
     inline static std::vector<const babelwires::InstanceUtils::DeferredFieldInfo*> m_fieldInfo;
@@ -36,7 +42,7 @@ namespace babelwires {
             m_fieldInfo.push_back(this);                                                                               \
         }                                                                                                              \
     };                                                                                                                 \
-    inline static DeferredFieldInfo_##FIELD_NAME s_deferredFieldInfo_##FIELD_NAME;
+    FORCE_KEEP inline static DeferredFieldInfo_##FIELD_NAME s_deferredFieldInfo_##FIELD_NAME;
 
 #define DECLARE_INSTANCE_FIELD2(FIELD_NAME, FIELD_STRING, FIELD_UUID, VALUE_TYPE)                                      \
     DECLARE_INSTANCE_FIELD(FIELD_NAME, VALUE_TYPE)                                                                     \
