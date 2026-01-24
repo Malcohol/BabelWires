@@ -16,8 +16,8 @@
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
-#include <Common/Serialization/deserializer.hpp>
-#include <Common/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
 
 const babelwires::ValueTreeNode* babelwires::ConnectionModifierData::getSourceTreeNode(const Project& project) const {
     const Node* sourceElement = project.getNode(m_sourceId);

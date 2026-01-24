@@ -10,7 +10,7 @@
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/registeredType.hpp>
 
-#include <Common/Math/rational.hpp>
+#include <BaseLib/Math/rational.hpp>
 
 namespace babelwires {
 

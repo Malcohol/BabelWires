@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
-#include <Common/Serialization/deserializer.hpp>
-#include <Common/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
 
 babelwires::IntValue::IntValue() : m_value(0) {}
 babelwires::IntValue::IntValue(NativeType value) : m_value(value) {}

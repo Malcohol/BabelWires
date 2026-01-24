@@ -14,8 +14,8 @@
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
-#include <Common/Serialization/deserializer.hpp>
-#include <Common/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
 
 void babelwires::ArraySizeModifierData::apply(ValueTreeNode* target) const {
     if (const ArrayType* arrayType = target->getType()->tryAs<ArrayType>()) {

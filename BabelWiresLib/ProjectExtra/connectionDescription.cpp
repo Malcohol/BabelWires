@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 
-#include <Common/Hash/hash.hpp>
+#include <BaseLib/Hash/hash.hpp>
 
 #include <cassert>
 

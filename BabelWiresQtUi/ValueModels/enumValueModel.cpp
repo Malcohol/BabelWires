@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 QWidget* babelwires::EnumValueModel::createEditor(QWidget* parent) const {
     const EnumType* const e = m_type->tryAs<EnumType>();

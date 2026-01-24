@@ -11,11 +11,10 @@
 #include <BabelWiresLib/TypeSystem/registeredType.hpp>
 #include <BabelWiresLib/Types/Enum/enumWithCppEnum.hpp>
 
-#include <Common/Cloning/cloneable.hpp>
-#include <Common/Serialization/serializable.hpp>
-#include <Common/Utilities/result.hpp>
-
-#include <Common/types.hpp>
+#include <BaseLib/Cloning/cloneable.hpp>
+#include <BaseLib/Serialization/serializable.hpp>
+#include <BaseLib/Utilities/result.hpp>
+#include <BaseLib/types.hpp>
 
 namespace babelwires {
     class TypeSystem;

@@ -13,8 +13,8 @@
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
-#include <Common/Identifiers/identifier.hpp>
-#include <Common/Utilities/result.hpp>
+#include <BaseLib/Identifiers/identifier.hpp>
+#include <BaseLib/Utilities/result.hpp>
 
 #include <vector>
 #include <memory>

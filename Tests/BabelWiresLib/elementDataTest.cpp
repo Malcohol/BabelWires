@@ -10,9 +10,9 @@
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
-#include <Common/Serialization/XML/xmlDeserializer.hpp>
-#include <Common/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
+#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
 
 #include <Domains/TestDomain/testFileFormats.hpp>
 #include <Domains/TestDomain/testProcessor.hpp>

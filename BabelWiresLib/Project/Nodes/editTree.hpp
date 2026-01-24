@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Path/path.hpp>
-#include <Common/types.hpp>
+#include <BaseLib/types.hpp>
 
 #include <memory>
 #include <type_traits>

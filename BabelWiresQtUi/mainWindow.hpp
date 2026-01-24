@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Project/projectData.hpp>
 #include <BabelWiresLib/Project/uiPosition.hpp>
 
-#include <Common/Signal/signalSubscription.hpp>
+#include <BaseLib/Signal/signalSubscription.hpp>
 
 #include <QMainWindow>
 

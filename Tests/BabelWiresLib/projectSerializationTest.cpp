@@ -2,7 +2,7 @@
 
 #include <BabelWiresLib/Serialization/projectSerialization.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 #include <Domains/TestDomain/testFileFormats.hpp>
 

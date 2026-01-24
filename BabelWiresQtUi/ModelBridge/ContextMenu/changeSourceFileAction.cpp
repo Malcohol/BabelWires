@@ -18,7 +18,7 @@
 #include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-#include <Common/Registry/fileTypeRegistry.hpp>
+#include <BaseLib/Registry/fileTypeRegistry.hpp>
 
 babelwires::ChangeSourceFileAction::ChangeSourceFileAction()
     : NodeContentsContextMenuActionBase(tr("Open file\u2026")) {}

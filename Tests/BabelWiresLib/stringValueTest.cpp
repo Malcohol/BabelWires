@@ -4,8 +4,8 @@
 
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
-#include <Common/Serialization/XML/xmlDeserializer.hpp>
-#include <Common/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
+#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
 
 #include <Tests/TestUtils/testLog.hpp>
 

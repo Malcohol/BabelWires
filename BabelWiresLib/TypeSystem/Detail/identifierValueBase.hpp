@@ -8,9 +8,9 @@
 #pragma once
 
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
-#include <Common/Identifiers/identifierRegistry.hpp>
-#include <Common/Serialization/deserializer.hpp>
-#include <Common/Serialization/serializer.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
 
 namespace babelwires {
 

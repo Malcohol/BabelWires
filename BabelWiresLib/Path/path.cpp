@@ -12,11 +12,11 @@
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
-#include <Common/Hash/hash.hpp>
-#include <Common/Identifiers/identifierRegistry.hpp>
-#include <Common/Identifiers/identifierVisitor.hpp>
-#include <Common/Log/debugLogger.hpp>
-#include <Common/types.hpp>
+#include <BaseLib/Hash/hash.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierVisitor.hpp>
+#include <BaseLib/Log/debugLogger.hpp>
+#include <BaseLib/types.hpp>
 
 #include <algorithm>
 #include <type_traits>

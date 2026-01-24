@@ -10,9 +10,9 @@
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
 
-#include <Common/Identifiers/identifier.hpp>
-#include <Common/Serialization/serializable.hpp>
-#include <Common/Utilities/result.hpp>
+#include <BaseLib/Identifiers/identifier.hpp>
+#include <BaseLib/Serialization/serializable.hpp>
+#include <BaseLib/Utilities/result.hpp>
 
 #include <vector>
 #include <memory>

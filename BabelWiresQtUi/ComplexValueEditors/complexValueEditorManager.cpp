@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
-#include <Common/Log/userLogger.hpp>
+#include <BaseLib/Log/userLogger.hpp>
 
 void babelwires::ComplexValueEditorManager::openEditorForValue(QWidget* parent, ProjectGraphModel& projectGraphModel, UserLogger& userLogger, const ProjectDataLocation& data) {
     auto it = std::find_if(m_openValueEditors.begin(), m_openValueEditors.end(), [&data](const ComplexValueEditor* editor){ return data == editor->getDataLocation(); });

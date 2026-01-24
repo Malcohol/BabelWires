@@ -8,7 +8,7 @@
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 #include <Domains/TestDomain/testParallelProcessor.hpp>
 

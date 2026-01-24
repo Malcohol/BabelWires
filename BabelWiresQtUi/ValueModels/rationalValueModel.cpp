@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 #include <QString>
 #include <QValidator>

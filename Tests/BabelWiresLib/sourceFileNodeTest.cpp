@@ -4,7 +4,7 @@
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 #include <Domains/TestDomain/testFileFormats.hpp>
 #include <Domains/TestDomain/testRecordType.hpp>

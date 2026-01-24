@@ -10,9 +10,9 @@
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-#include <Common/Cloning/cloneable.hpp>
-#include <Common/Utilities/result.hpp>
-#include <Common/types.hpp>
+#include <BaseLib/Cloning/cloneable.hpp>
+#include <BaseLib/Utilities/result.hpp>
+#include <BaseLib/types.hpp>
 
 namespace babelwires {
     class MapEntryData;

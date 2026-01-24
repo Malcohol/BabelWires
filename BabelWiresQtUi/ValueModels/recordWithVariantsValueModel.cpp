@@ -14,7 +14,7 @@
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
 
-#include <Common/Log/debugLogger.hpp>
+#include <BaseLib/Log/debugLogger.hpp>
 
 void babelwires::RecordWithVariantsValueModel::getContextMenuActions(const DataLocation& location,
                                                                      std::vector<ContextMenuEntry>& entriesOut) const {

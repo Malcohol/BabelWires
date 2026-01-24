@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <Common/exceptions.hpp>
+#include <BaseLib/exceptions.hpp>
 
 namespace babelwires {
     class TypeSystemException : public ExceptionWithStream<TypeSystemException> {};

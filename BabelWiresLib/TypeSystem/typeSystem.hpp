@@ -13,7 +13,7 @@
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 
-#include <Common/Identifiers/identifier.hpp>
+#include <BaseLib/Identifiers/identifier.hpp>
 
 namespace babelwires {
     class TypeSystem {

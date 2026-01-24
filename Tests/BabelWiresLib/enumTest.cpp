@@ -6,7 +6,7 @@
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 #include <BabelWiresLib/Types/Enum/enumWithCppEnum.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>
 

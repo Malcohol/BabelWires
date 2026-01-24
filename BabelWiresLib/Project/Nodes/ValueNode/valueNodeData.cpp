@@ -10,8 +10,8 @@
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
-#include <Common/Serialization/deserializer.hpp>
-#include <Common/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
 
 babelwires::ValueNodeData::ValueNodeData(TypeExp typeExp)
     : m_typeExp(std::move(typeExp)) {}

@@ -10,9 +10,9 @@
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
-#include <Common/Serialization/XML/xmlDeserializer.hpp>
-#include <Common/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
+#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 

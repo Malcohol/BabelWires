@@ -7,8 +7,8 @@
  **/
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
 
-#include <Common/Serialization/deserializer.hpp>
-#include <Common/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
 
 babelwires::RationalValue::RationalValue() = default;
 babelwires::RationalValue::RationalValue(Rational value) : m_value(value) {}

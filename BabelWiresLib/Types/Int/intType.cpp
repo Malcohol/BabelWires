@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
 
-#include <Common/Identifiers/registeredIdentifier.hpp>
+#include <BaseLib/Identifiers/registeredIdentifier.hpp>
 
 babelwires::IntType::IntType(TypeExp&& typeExpOfThis, Range<IntValue::NativeType> range, IntValue::NativeType defaultValue)
     : Type(std::move(typeExpOfThis))

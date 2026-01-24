@@ -7,9 +7,9 @@
  **/
 #pragma once
 
-#include <Common/Utilities/enumFlags.hpp>
-#include <Common/multiKeyMap.hpp>
-#include <Common/types.hpp>
+#include <BaseLib/Utilities/enumFlags.hpp>
+#include <BaseLib/multiKeyMap.hpp>
+#include <BaseLib/types.hpp>
 
 #include <BabelWiresLib/Path/pathStep.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>

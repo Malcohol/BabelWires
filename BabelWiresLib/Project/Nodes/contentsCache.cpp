@@ -17,7 +17,7 @@
 #include <BabelWiresLib/ValueTree/valueTreeGenericTypeUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 #include <unordered_set>
 

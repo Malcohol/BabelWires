@@ -85,10 +85,10 @@ jobs:
     - name: Build
       run: cmake --build build --config ${{ matrix.config.build_type }}
 
-    - name: CommonTest
+    - name: BaseLibTest
       working-directory: build
       shell: bash
-      run: Tests/Common/${{ matrix.config.targetFolder }}commonTests${{ matrix.config.exeExtension }}
+      run: Tests/BaseLib/${{ matrix.config.targetFolder }}commonTests${{ matrix.config.exeExtension }}
 
     - name: BabelWiresTest
       working-directory: build/Tests/BabelWiresLib

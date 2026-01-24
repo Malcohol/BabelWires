@@ -11,8 +11,8 @@
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 
-#include <Common/Identifiers/identifier.hpp>
-#include <Common/Identifiers/registeredIdentifier.hpp>
+#include <BaseLib/Identifiers/identifier.hpp>
+#include <BaseLib/Identifiers/registeredIdentifier.hpp>
 
 #include <shared_mutex>
 #include <variant>

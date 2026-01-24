@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
-#include <Common/Log/userLogger.hpp>
+#include <BaseLib/Log/userLogger.hpp>
 
 #include <cassert>
 

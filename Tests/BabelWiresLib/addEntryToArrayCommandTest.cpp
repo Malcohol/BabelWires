@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 #include <Domains/TestDomain/testArrayType.hpp>
 #include <Domains/TestDomain/testRecordType.hpp>

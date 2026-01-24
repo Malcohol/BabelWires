@@ -10,7 +10,7 @@
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 
-#include <Common/Utilities/unicodeUtils.hpp>
+#include <BaseLib/Utilities/unicodeUtils.hpp>
 
 #include <cassert>
 #include <sstream>

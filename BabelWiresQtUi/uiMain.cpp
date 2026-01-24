@@ -14,7 +14,7 @@
 #include <BabelWiresLib/Commands/commandManager.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-#include <Common/Log/unifiedLog.hpp>
+#include <BaseLib/Log/unifiedLog.hpp>
 
 #include <QtWidgets/QApplication>
 

@@ -7,8 +7,8 @@
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
-#include <Common/Identifiers/registeredIdentifier.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/registeredIdentifier.hpp>
 
 #include <Domains/TestDomain/testRecordType.hpp>
 #include <Domains/TestDomain/testArrayType.hpp>

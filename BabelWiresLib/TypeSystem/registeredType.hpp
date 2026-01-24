@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 
-#include <Common/Identifiers/registeredIdentifier.hpp>
+#include <BaseLib/Identifiers/registeredIdentifier.hpp>
 
 /// This macro is exists primarily for testing. The REGISTERED_TYPE macro should almost always be used instead.
 #define REGISTERED_TYPE_WITH_REGISTERED_ID(IDENTIFIER, VERSION)                                                        \

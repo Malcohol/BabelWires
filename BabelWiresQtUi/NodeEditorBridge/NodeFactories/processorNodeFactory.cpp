@@ -15,7 +15,7 @@
 #include <BabelWiresLib/Project/Commands/addNodeCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp> 
+#include <BaseLib/Identifiers/identifierRegistry.hpp> 
 
 babelwires::ProcessorNodeFactory::ProcessorNodeFactory(const UiProjectContext& projectContext)
     : m_processorFactoryRegistry(projectContext.m_processorReg) {}

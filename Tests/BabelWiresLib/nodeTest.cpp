@@ -5,8 +5,8 @@
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
-#include <Common/Identifiers/registeredIdentifier.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/registeredIdentifier.hpp>
 
 #include <Domains/TestDomain/testArrayType.hpp>
 #include <Domains/TestDomain/testRecordType.hpp>

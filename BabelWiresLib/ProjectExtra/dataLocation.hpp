@@ -11,8 +11,8 @@
 #include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 
-#include <Common/Cloning/cloneable.hpp>
-#include <Common/Serialization/serializable.hpp>
+#include <BaseLib/Cloning/cloneable.hpp>
+#include <BaseLib/Serialization/serializable.hpp>
 
 namespace babelwires {
     /// A DataLocation identifies some data within the system.

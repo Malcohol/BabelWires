@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 
-#include <Common/Identifiers/identifier.hpp>
+#include <BaseLib/Identifiers/identifier.hpp>
 
 namespace babelwires {
     class MapProject;

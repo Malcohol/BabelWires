@@ -9,8 +9,8 @@
 
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 
-#include <Common/Cloning/cloneable.hpp>
-#include <Common/Serialization/serializable.hpp>
+#include <BaseLib/Cloning/cloneable.hpp>
+#include <BaseLib/Serialization/serializable.hpp>
 
 namespace babelwires {
 

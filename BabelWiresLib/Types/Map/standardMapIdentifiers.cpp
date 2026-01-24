@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Types/Map/standardMapIdentifiers.hpp>
 
-#include <Common/Identifiers/registeredIdentifier.hpp>
+#include <BaseLib/Identifiers/registeredIdentifier.hpp>
 
 babelwires::ShortId babelwires::getWildcardId() {
     return BW_SHORT_ID("_wild", c_wildcard, "6e51fc3f-de0b-4111-92bb-7d843223ae25");

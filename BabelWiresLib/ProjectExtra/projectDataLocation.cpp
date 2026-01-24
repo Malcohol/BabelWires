@@ -7,9 +7,9 @@
  **/
 #include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
 
-#include <Common/Hash/hash.hpp>
-#include <Common/Serialization/deserializer.hpp>
-#include <Common/Serialization/serializer.hpp>
+#include <BaseLib/Hash/hash.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
 
 babelwires::ProjectDataLocation::ProjectDataLocation(NodeId elementId, Path pathToValue)
     : DataLocation(std::move(pathToValue))

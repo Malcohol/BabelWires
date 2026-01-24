@@ -26,9 +26,9 @@
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
-#include <Common/IO/fileDataSource.hpp>
-#include <Common/Log/userLogger.hpp>
-#include <Common/exceptions.hpp>
+#include <BaseLib/IO/fileDataSource.hpp>
+#include <BaseLib/Log/userLogger.hpp>
+#include <BaseLib/exceptions.hpp>
 
 #include <algorithm>
 #include <cassert>

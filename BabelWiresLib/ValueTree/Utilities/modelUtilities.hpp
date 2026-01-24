@@ -10,7 +10,7 @@
 
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
-#include <Common/types.hpp>
+#include <BaseLib/types.hpp>
 
 namespace babelwires {
     /// Convenience functions supporting ranged for loop.

@@ -12,7 +12,7 @@
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
-#include <Common/Identifiers/registeredIdentifier.hpp>
+#include <BaseLib/Identifiers/registeredIdentifier.hpp>
 
 babelwires::Processor::Processor(const ProjectContext& projectContext, const TypeExp& inputTypeExp,
                                  const TypeExp& outputTypeExp)

@@ -10,9 +10,9 @@
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
-#include <Common/DataContext/filePath.hpp>
+#include <BaseLib/DataContext/filePath.hpp>
 
-#include <Common/exceptions.hpp>
+#include <BaseLib/exceptions.hpp>
 
 babelwires::ProjectBundle::ProjectBundle(std::filesystem::path pathToProjectFile, ProjectData&& projectData)
     : DataBundle(std::move(pathToProjectFile), std::move(projectData)) {

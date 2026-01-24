@@ -10,8 +10,8 @@
 #include <BabelWiresLib/Commands/commandManager.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 
-#include <Common/Log/debugLogger.hpp>
-#include <Common/Log/userLogger.hpp>
+#include <BaseLib/Log/debugLogger.hpp>
+#include <BaseLib/Log/userLogger.hpp>
 
 #include <cassert>
 

@@ -5,10 +5,10 @@
 #include <BabelWiresLib/Types/File/fileType.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
-#include <Common/IO/fileDataSource.hpp>
-#include <Common/Identifiers/identifierRegistry.hpp>
-#include <Common/Identifiers/registeredIdentifier.hpp>
-#include <Common/exceptions.hpp>
+#include <BaseLib/IO/fileDataSource.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/registeredIdentifier.hpp>
+#include <BaseLib/exceptions.hpp>
 
 #include <Domains/TestDomain/testRecordType.hpp>
 

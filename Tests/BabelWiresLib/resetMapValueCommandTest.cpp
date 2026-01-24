@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 #include <Domains/TestDomain/testSumType.hpp>
 

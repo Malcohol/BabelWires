@@ -4,7 +4,7 @@
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
-#include <Common/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 

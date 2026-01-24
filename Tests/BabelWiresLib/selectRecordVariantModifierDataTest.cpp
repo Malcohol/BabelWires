@@ -6,8 +6,8 @@
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
-#include <Common/Serialization/XML/xmlDeserializer.hpp>
-#include <Common/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
+#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
 
 #include <Domains/TestDomain/testRecordWithVariantsType.hpp>
 
