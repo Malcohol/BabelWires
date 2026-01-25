@@ -11,7 +11,7 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <BaseLib/Cloning/cloneable.hpp>
-#include <BaseLib/Utilities/result.hpp>
+#include <BaseLib/result.hpp>
 #include <BaseLib/common.hpp>
 
 namespace babelwires {

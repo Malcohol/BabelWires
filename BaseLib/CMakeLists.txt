@@ -24,7 +24,6 @@ SET( COMMON_SRCS
 	Serialization/XML/xmlDeserializer.cpp
 	Signal/signalSubscription.cpp
 	BlockStream/blockStream.cpp
-	Utilities/result.cpp
 	Utilities/unicodeUtils.cpp
    )
 

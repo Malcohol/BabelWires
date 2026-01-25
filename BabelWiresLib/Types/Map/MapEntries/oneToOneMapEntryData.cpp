@@ -95,13 +95,13 @@ babelwires::Result babelwires::OneToOneMapEntryData::doValidate(const TypeSystem
     const bool sourceTypeIsValid = sourceType.isValidValue(typeSystem, *m_sourceValue);
     const bool targetTypeIsValid = targetType.isValidValue(typeSystem, *m_targetValue);
     if (!sourceTypeIsValid && !targetTypeIsValid) {
-        return "Neither source nor target values are valid.";
+        return Error() << "Neither source nor target values are valid.";
     } else if (!sourceTypeIsValid) {
-        return "The source value isn't valid.";
+        return Error() << "The source value isn't valid.";
     } else if (!targetTypeIsValid) {
-        return "The target value isn't valid.";
+        return Error() << "The target value isn't valid.";
     }
-    return Result::success;
+    return {};
 }
 
 babelwires::MapEntryData::Kind babelwires::OneToOneMapEntryData::getKind() const {

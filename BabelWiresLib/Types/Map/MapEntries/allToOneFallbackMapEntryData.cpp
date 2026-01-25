@@ -72,9 +72,9 @@ void babelwires::AllToOneFallbackMapEntryData::visitFilePaths(FilePathVisitor& v
 babelwires::Result babelwires::AllToOneFallbackMapEntryData::doValidate(const TypeSystem& typeSystem, const Type& sourceType, const Type& targetType) const  {
     const bool targetTypeIsValid = targetType.isValidValue(typeSystem, *m_targetValue);
     if (!targetTypeIsValid) {
-        return "The target value isn't valid.";
+        return Error() << "The target value isn't valid.";
     }
-    return Result::success;
+    return {};
 }
 
 babelwires::MapEntryData::Kind babelwires::AllToOneFallbackMapEntryData::getKind() const {

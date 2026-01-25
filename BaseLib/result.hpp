@@ -15,8 +15,10 @@ namespace babelwires {
     class ErrorStorage;
 
     /// Result type which is either a T or an Error.
-    /// Note: There's also a simple Result class in BaseLib/Utilities/result.hpp for backwards compatibility.
     template <typename T> using ParseResult = std::expected<T, ErrorStorage>;
+
+    /// Simple result type for success/failure operations (replaces old Result class).
+    using Result = std::expected<void, ErrorStorage>;
 
     class ErrorStorage {
       public:
