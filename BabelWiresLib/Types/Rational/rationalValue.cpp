@@ -26,7 +26,7 @@ void babelwires::RationalValue::serializeContents(Serializer& serializer) const 
 }
 
 void babelwires::RationalValue::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("value", m_value);
+    THROW_ON_ERROR(deserializer.deserializeValue("value", m_value), ParseException);
 }
 
 void babelwires::RationalValue::visitIdentifiers(IdentifierVisitor& visitor) {

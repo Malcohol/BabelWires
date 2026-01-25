@@ -55,9 +55,9 @@ std::string babelwires::Uuid::serializeToString() const {
     return newText.str();
 }
 
-babelwires::Uuid babelwires::Uuid::deserializeFromString(std::string_view uuidText) {
+babelwires::ResultT<babelwires::Uuid> babelwires::Uuid::deserializeFromString(std::string_view uuidText) {
     if (!isValid(uuidText)) {
-        throw ParseException() << "Failed to parse a UUID";
+        return Error() << "Failed to parse a UUID";
     }
     return Uuid(std::string(uuidText));
 }

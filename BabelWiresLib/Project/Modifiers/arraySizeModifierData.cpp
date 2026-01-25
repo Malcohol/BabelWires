@@ -39,8 +39,8 @@ void babelwires::ArraySizeModifierData::serializeContents(Serializer& serializer
 }
 
 void babelwires::ArraySizeModifierData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_targetPath);
-    deserializer.deserializeValue("size", m_size);
+    THROW_ON_ERROR(deserializer.deserializeValue("path", m_targetPath), ParseException);
+    THROW_ON_ERROR(deserializer.deserializeValue("size", m_size), ParseException);
 }
 
 void babelwires::ArraySizeModifierData::addEntries(ValueTreeNode* target, int indexOfNewElement,

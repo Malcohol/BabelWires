@@ -141,22 +141,22 @@ TEST(RationalTest, partialParse) {
     EXPECT_EQ(Rational::partialParse("0/", r), Rational::PartialParseResult::Truncated);
 }
 
-TEST(RationalTest, parseString) {
+TEST(RationalTest, deserializeFromString) {
     // Success
-    EXPECT_EQ(Rational::parseString("0"), Rational(0));
-    EXPECT_EQ(Rational::parseString("1"), Rational(1));
-    EXPECT_EQ(Rational::parseString("-1"), Rational(-1));
-    EXPECT_EQ(Rational::parseString("-1/2"), Rational(-1, 2));
+    EXPECT_EQ(*Rational::deserializeFromString("0"), Rational(0));
+    EXPECT_EQ(*Rational::deserializeFromString("1"), Rational(1));
+    EXPECT_EQ(*Rational::deserializeFromString("-1"), Rational(-1));
+    EXPECT_EQ(*Rational::deserializeFromString("-1/2"), Rational(-1, 2));
 
-    EXPECT_THROW(Rational::parseString("a"), ParseException);
-    EXPECT_THROW(Rational::parseString("--1"), ParseException);
-    EXPECT_THROW(Rational::parseString("01"), ParseException);
-    EXPECT_THROW(Rational::parseString("1/"), ParseException);
-    EXPECT_THROW(Rational::parseString("1/a"), ParseException);
-    EXPECT_THROW(Rational::parseString("1a"), ParseException);
-    EXPECT_THROW(Rational::parseString("1/02"), ParseException);
-    EXPECT_THROW(Rational::parseString("1/2/3"), ParseException);
-    EXPECT_THROW(Rational::parseString("1/-3"), ParseException);
+    EXPECT_FALSE(Rational::deserializeFromString("a").has_value());
+    EXPECT_FALSE(Rational::deserializeFromString("--1").has_value());
+    EXPECT_FALSE(Rational::deserializeFromString("01").has_value());
+    EXPECT_FALSE(Rational::deserializeFromString("1/").has_value());
+    EXPECT_FALSE(Rational::deserializeFromString("1/a").has_value());
+    EXPECT_FALSE(Rational::deserializeFromString("1a").has_value());
+    EXPECT_FALSE(Rational::deserializeFromString("1/02").has_value());
+    EXPECT_FALSE(Rational::deserializeFromString("1/2/3").has_value());
+    EXPECT_FALSE(Rational::deserializeFromString("1/-3").has_value());
 }
 
 TEST(RationalTest, serializeDeserialize) {

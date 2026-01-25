@@ -20,8 +20,8 @@ void babelwires::SelectRecordVariantModifierData::serializeContents(Serializer& 
 }
 
 void babelwires::SelectRecordVariantModifierData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_targetPath);
-    deserializer.deserializeValue("select", m_tagToSelect);
+    THROW_ON_ERROR(deserializer.deserializeValue("path", m_targetPath), ParseException);
+    THROW_ON_ERROR(deserializer.deserializeValue("select", m_tagToSelect), ParseException);
 }
 
 void babelwires::SelectRecordVariantModifierData::apply(ValueTreeNode* target) const {

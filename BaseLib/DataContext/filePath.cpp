@@ -67,13 +67,13 @@ std::string babelwires::FilePath::serializeToString() const {
     return pathToString(m_filePath);
 }
 
-babelwires::FilePath babelwires::FilePath::deserializeFromString(const std::string& string) {
+babelwires::ResultT<babelwires::FilePath> babelwires::FilePath::deserializeFromString(const std::string& string) {
     std::filesystem::path path;
     try {
         path = std::filesystem::u8path(string);
     }
     catch (const std::exception&) {
-        throw ParseException() << "Failed to parse \"" << string << "\" as a file path.";
+        return Error() << "Failed to parse \"" << string << "\" as a file path.";
     }
     return FilePath(path);
 }
