@@ -53,11 +53,11 @@ namespace babelwires {
         std::enable_if_t<IsSerializableValue<V>::value && std::is_same_v<decltype(V::deserializeFromString(std::declval<std::string>())), ResultT<V>>, Result>
         deserializeValue(std::string_view key, V& value) {
             std::string asString;
-            auto ret = deserializeValue(key, asString);
+            Result ret = deserializeValue(key, asString);
             if (!ret) {
                 return ret;
             }
-            auto result = V::deserializeFromString(asString);
+            ResultT<V> result = V::deserializeFromString(asString);
             if (!result) {
                 return std::move(result).transform([](const auto&) {});
             }
