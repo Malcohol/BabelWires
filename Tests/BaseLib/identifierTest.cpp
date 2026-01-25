@@ -86,11 +86,11 @@ TEST(IdentifierTest, identifierSerialization) {
 }
 
 TEST(IdentifierTest, identifierDeserialization) {
-    const babelwires::ShortId hello = babelwires::ShortId::deserializeFromString("Hello");
+    const babelwires::ShortId hello = *babelwires::ShortId::deserializeFromString("Hello");
     EXPECT_EQ(hello, "Hello");
     EXPECT_EQ(hello.getDiscriminator(), 0);
 
-    const babelwires::ShortId hello1 = babelwires::ShortId::deserializeFromString("Hello'12");
+    const babelwires::ShortId hello1 = *babelwires::ShortId::deserializeFromString("Hello'12");
     EXPECT_EQ(hello1, "Hello");
     EXPECT_EQ(hello1.getDiscriminator(), 12);
 
@@ -208,11 +208,11 @@ TEST(IdentifierTest, longIdentifierSerialization) {
 
 
 TEST(IdentifierTest, longIdentifierDeserialization) {
-    const babelwires::LongId hello = babelwires::LongId::deserializeFromString("Hello_world");
+    const babelwires::LongId hello = *babelwires::LongId::deserializeFromString("Hello_world");
     EXPECT_EQ(hello, "Hello_world");
     EXPECT_EQ(hello.getDiscriminator(), 0);
 
-    const babelwires::LongId hello1 = babelwires::LongId::deserializeFromString("Hello_world'12");
+    const babelwires::LongId hello1 = *babelwires::LongId::deserializeFromString("Hello_world'12");
     EXPECT_EQ(hello1, "Hello_world");
     EXPECT_EQ(hello1.getDiscriminator(), 12);
 

@@ -28,7 +28,7 @@ namespace {
         data.m_uiData.m_uiPosition.m_x = 12;
         data.m_uiData.m_uiPosition.m_y = -44;
         data.m_uiData.m_uiSize.m_width = 300;
-        data.m_expandedPaths.emplace_back(babelwires::Path::deserializeFromString("aa/bb"));
+        data.m_expandedPaths.emplace_back(*babelwires::Path::deserializeFromString("aa/bb"));
     }
 
     void checkCommonFields(const babelwires::NodeData& data, bool testExpandedPaths = true) {
@@ -38,7 +38,7 @@ namespace {
         EXPECT_EQ(data.m_uiData.m_uiSize.m_width, 300);
         if (testExpandedPaths) {
             ASSERT_EQ(data.m_expandedPaths.size(), 1);
-            EXPECT_EQ(data.m_expandedPaths[0], babelwires::Path::deserializeFromString("aa/bb"));
+            EXPECT_EQ(data.m_expandedPaths[0], *babelwires::Path::deserializeFromString("aa/bb"));
         } else {
             EXPECT_EQ(data.m_expandedPaths.size(), 0);
         }
@@ -142,7 +142,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath;
 
-    const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
+    const babelwires::Path expandedPath = *babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::Node> node =
@@ -231,7 +231,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     setCommonFields(data);
     setModifiers(data, testDomain::getTestFileElementPathToInt0());
 
-    const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
+    const babelwires::Path expandedPath = *babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::Node> node =
@@ -313,7 +313,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
     setCommonFields(data);
     setModifiers(data, testDomain::TestProcessorInputOutputType::s_intIdInitializer);
 
-    const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
+    const babelwires::Path expandedPath = *babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::Node> node =

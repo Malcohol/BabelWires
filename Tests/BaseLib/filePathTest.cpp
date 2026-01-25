@@ -19,12 +19,12 @@ TEST(FilePathTest, serializeToString) {
 }
 
 TEST(FilePathTest, deserializeFromString) {
-    EXPECT_EQ(babelwires::FilePath::deserializeFromString("Foo"), "Foo");
-    EXPECT_EQ(babelwires::FilePath::deserializeFromString("Foo/Bar.boo"), "Foo/Bar.boo");
-    EXPECT_EQ(babelwires::FilePath::deserializeFromString("Foo/Bar/Bar.boo"), "Foo/Bar/Bar.boo");
-    EXPECT_EQ(babelwires::FilePath::deserializeFromString("/Foo/Bar.boo"), "/Foo/Bar.boo");
-    EXPECT_EQ(babelwires::FilePath::deserializeFromString("c:/Foo/Bar.boo"), "c:/Foo/Bar.boo");
-    EXPECT_EQ(babelwires::FilePath::deserializeFromString(""), "");
+    EXPECT_EQ(*babelwires::FilePath::deserializeFromString("Foo"), "Foo");
+    EXPECT_EQ(*babelwires::FilePath::deserializeFromString("Foo/Bar.boo"), "Foo/Bar.boo");
+    EXPECT_EQ(*babelwires::FilePath::deserializeFromString("Foo/Bar/Bar.boo"), "Foo/Bar/Bar.boo");
+    EXPECT_EQ(*babelwires::FilePath::deserializeFromString("/Foo/Bar.boo"), "/Foo/Bar.boo");
+    EXPECT_EQ(*babelwires::FilePath::deserializeFromString("c:/Foo/Bar.boo"), "c:/Foo/Bar.boo");
+    EXPECT_EQ(*babelwires::FilePath::deserializeFromString(""), "");
 }
 
 TEST(FilePathTest, interpretRelativeTo) {

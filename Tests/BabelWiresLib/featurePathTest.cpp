@@ -19,9 +19,9 @@
 #include <Tests/TestUtils/testLog.hpp>
 
 TEST(FeaturePathTest, pathConstructFromSteps) {
-    std::vector<babelwires::PathStep> steps = {babelwires::PathStep::deserializeFromString("Hello'2"), 13,
-                                               babelwires::PathStep::deserializeFromString("Hello'3"),
-                                               babelwires::PathStep::deserializeFromString("World'1")};
+    std::vector<babelwires::PathStep> steps = {*babelwires::PathStep::deserializeFromString("Hello'2"), 13,
+                                               *babelwires::PathStep::deserializeFromString("Hello'3"),
+                                               *babelwires::PathStep::deserializeFromString("World'1")};
     babelwires::Path path(steps);
 
     EXPECT_EQ(path.getNumSteps(), 4);
@@ -73,10 +73,10 @@ TEST(FeaturePathTest, pathOps) {
 
 TEST(FeaturePathTest, append) {
     babelwires::Path path0(
-        std::vector<babelwires::PathStep>{babelwires::PathStep::deserializeFromString("Hello'2"), 13});
+        std::vector<babelwires::PathStep>{*babelwires::PathStep::deserializeFromString("Hello'2"), 13});
     babelwires::Path path1(
-        std::vector<babelwires::PathStep>{babelwires::PathStep::deserializeFromString("Hello'3"),
-                                          babelwires::PathStep::deserializeFromString("World'1")});
+        std::vector<babelwires::PathStep>{*babelwires::PathStep::deserializeFromString("Hello'3"),
+                                          *babelwires::PathStep::deserializeFromString("World'1")});
     babelwires::Path appendedPath = path0;
     appendedPath.append(path1);
 
@@ -91,9 +91,9 @@ TEST(FeaturePathTest, append) {
 
 TEST(FeaturePathTest, removePrefix) {
     babelwires::Path path(
-        std::vector<babelwires::PathStep>{babelwires::PathStep::deserializeFromString("Hello'2"), 13,
-                                          babelwires::PathStep::deserializeFromString("Hello'3"),
-                                          babelwires::PathStep::deserializeFromString("World'1")});
+        std::vector<babelwires::PathStep>{*babelwires::PathStep::deserializeFromString("Hello'2"), 13,
+                                          *babelwires::PathStep::deserializeFromString("Hello'3"),
+                                          *babelwires::PathStep::deserializeFromString("World'1")});
     babelwires::Path path2 = path;
     path2.removePrefix(2);
     EXPECT_EQ(path2.getNumSteps(), 2);
@@ -275,24 +275,24 @@ TEST(FeaturePathTest, pathSerialization) {
 }
 
 TEST(FeaturePathTest, pathDeserialization) {
-    EXPECT_EQ(babelwires::Path::deserializeFromString("").getNumSteps(), 0);
+    EXPECT_EQ(babelwires::Path::deserializeFromString("").value().getNumSteps(), 0);
 
     babelwires::Path path1;
-    EXPECT_NO_THROW(path1 = babelwires::Path::deserializeFromString("Forb/12/Erm"));
+    EXPECT_NO_THROW(path1 = *babelwires::Path::deserializeFromString("Forb/12/Erm"));
     EXPECT_EQ(path1.getNumSteps(), 3);
     EXPECT_EQ(path1.getStep(0), babelwires::PathStep("Forb"));
     EXPECT_EQ(path1.getStep(1), 12);
     EXPECT_EQ(path1.getStep(2), babelwires::PathStep("Erm"));
 
     babelwires::Path path2;
-    EXPECT_NO_THROW(path2 = babelwires::Path::deserializeFromString("12/Forb/Erm"));
+    EXPECT_NO_THROW(path2 = *babelwires::Path::deserializeFromString("12/Forb/Erm"));
     EXPECT_EQ(path2.getNumSteps(), 3);
     EXPECT_EQ(path2.getStep(0), 12);
     EXPECT_EQ(path2.getStep(1), babelwires::PathStep("Forb"));
     EXPECT_EQ(path2.getStep(2), babelwires::PathStep("Erm"));
 
     babelwires::Path path3;
-    EXPECT_NO_THROW(path3 = babelwires::Path::deserializeFromString("Forb'2/12/Erm'4"));
+    EXPECT_NO_THROW(path3 = *babelwires::Path::deserializeFromString("Forb'2/12/Erm'4"));
     EXPECT_EQ(path3.getNumSteps(), 3);
     EXPECT_EQ(path3.getStep(0), babelwires::PathStep("Forb"));
     EXPECT_EQ(path3.getStep(0).getField().getDiscriminator(), 2);

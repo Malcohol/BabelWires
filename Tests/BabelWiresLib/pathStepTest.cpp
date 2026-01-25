@@ -102,24 +102,24 @@ TEST(PathStepTest, serialization) {
 
 TEST(PathStepTest, deserialization) {
     babelwires::PathStep step(0);
-    EXPECT_NO_THROW(step = babelwires::PathStep::deserializeFromString("Hello"));
+    EXPECT_NO_THROW(step = *babelwires::PathStep::deserializeFromString("Hello"));
     EXPECT_TRUE(step.isField());
     EXPECT_EQ(step.getField(), babelwires::ShortId("Hello"));
     EXPECT_EQ(step.getField().getDiscriminator(), 0);
 
     babelwires::PathStep step1(0);
-    EXPECT_NO_THROW(step1 = babelwires::PathStep::deserializeFromString("Hello'2"));
+    EXPECT_NO_THROW(step1 = *babelwires::PathStep::deserializeFromString("Hello'2"));
     EXPECT_TRUE(step1.isField());
     EXPECT_EQ(step1.getField(), babelwires::ShortId("Hello"));
     EXPECT_EQ(step1.getField().getDiscriminator(), 2);
 
     babelwires::PathStep step2("Erm");
-    EXPECT_NO_THROW(step2 = babelwires::PathStep::deserializeFromString("10"));
+    EXPECT_NO_THROW(step2 = *babelwires::PathStep::deserializeFromString("10"));
     EXPECT_TRUE(step2.isIndex());
     EXPECT_EQ(step2.getIndex(), 10);
 
     babelwires::PathStep notAStep;
-    EXPECT_NO_THROW(notAStep = babelwires::PathStep::deserializeFromString(babelwires::PathStep::c_notAStepRepresentation));
+    EXPECT_NO_THROW(notAStep = *babelwires::PathStep::deserializeFromString(babelwires::PathStep::c_notAStepRepresentation));
     EXPECT_TRUE(notAStep.isNotAStep());
     
     EXPECT_THROW(babelwires::PathStep::deserializeFromString("'"), babelwires::ParseException);
