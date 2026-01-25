@@ -11,6 +11,7 @@
 #include <BaseLib/Serialization/serializableValue.hpp>
 #include <BaseLib/Serialization/serializerDeserializerCommon.hpp>
 #include <BaseLib/exceptions.hpp>
+#include <BaseLib/result.hpp>
 
 #include <cassert>
 #include <cstdint>
@@ -59,8 +60,23 @@ namespace babelwires {
                                       IsOptional isOptional = IsOptional::Required) = 0;
 
         /// Objects with methods "serializeToString" and "deserializeToString" can be deserialized as values.
+        /// For types that return ParseResult from deserializeFromString, use THROW_ON_ERROR.
         template <typename V>
-        std::enable_if_t<IsSerializableValue<V>::value, bool>
+        std::enable_if_t<IsSerializableValue<V>::value && std::is_same_v<decltype(V::deserializeFromString(std::declval<std::string>())), ParseResult<V>>, bool>
+        deserializeValue(std::string_view key, V& value, IsOptional isOptional = IsOptional::Required) {
+            std::string asString;
+            const bool ret = deserializeValue(key, asString, isOptional);
+            if (ret) {
+                auto result = V::deserializeFromString(asString);
+                THROW_ON_ERROR(result, ParseException);
+                value = *result;
+            }
+            return ret;
+        }
+
+        /// For types that still throw from deserializeFromString (old style).
+        template <typename V>
+        std::enable_if_t<IsSerializableValue<V>::value && !std::is_same_v<decltype(V::deserializeFromString(std::declval<std::string>())), ParseResult<V>>, bool>
         deserializeValue(std::string_view key, V& value, IsOptional isOptional = IsOptional::Required) {
             std::string asString;
             const bool ret = deserializeValue(key, asString, isOptional);

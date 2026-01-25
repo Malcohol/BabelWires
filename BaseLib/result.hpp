@@ -1,0 +1,69 @@
+/**
+ * Class for representing an error.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
+
+#include <expected>
+#include <sstream>
+#include <string>
+
+namespace babelwires {
+    class ErrorStorage;
+
+    /// Result type which is either a T or an Error.
+    /// Note: There's also a simple Result class in BaseLib/Utilities/result.hpp for backwards compatibility.
+    template <typename T> using ParseResult = std::expected<T, ErrorStorage>;
+
+    class ErrorStorage {
+      public:
+        ErrorStorage(std::string message)
+            : m_message(std::move(message)) {}
+
+        const std::string& toString() const { return m_message; }
+
+        /// Allow implicit conversion to a ParseResult.
+        template <typename T> operator ParseResult<T>() && {
+            return std::unexpected<ErrorStorage>(std::move(*this));
+        }
+
+      private:
+        std::string m_message;
+    };
+
+    /// Class representing an error.
+    class Error {
+      public:
+        Error() = default;
+        Error(Error&&) = default;
+        Error& operator=(Error&&) = default;
+
+        // Copy operations not available since ostringstream is not copyable
+        Error(const Error&) = delete;
+        Error& operator=(const Error&) = delete;
+
+        template <typename T> Error& operator<<(T&& t) {
+            m_os << std::forward<T>(t);
+            return *this;
+        }
+
+        /// Allow implicit conversion to a ParseResult.
+        template <typename T> operator ParseResult<T>() {
+            return std::unexpected<ErrorStorage>(ErrorStorage(m_os.str()));
+        }
+
+      private:
+        std::ostringstream m_os;
+    };
+
+} // namespace babelwires
+
+#define THROW_ON_ERROR(RESULT, EXCEPTION_TYPE)                                                                         \
+    do {                                                                                                               \
+        if (!(RESULT)) {                                                                                               \
+            throw EXCEPTION_TYPE() << (RESULT).error().toString();                                                     \
+        }                                                                                                              \
+    } while (0)

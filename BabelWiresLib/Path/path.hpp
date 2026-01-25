@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Path/pathStep.hpp>
+#include <BaseLib/result.hpp>
 
 #include <memory>
 #include <ostream>
@@ -46,7 +47,7 @@ namespace babelwires {
         std::string serializeToString() const;
 
         /// Parse a serialized representation of a path.
-        static Path deserializeFromString(const std::string& pathString);
+        static ParseResult<Path> deserializeFromString(const std::string& pathString);
 
         bool operator==(const Path& other) const;
         bool operator!=(const Path& other) const;

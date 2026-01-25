@@ -9,6 +9,7 @@
 
 #include <BaseLib/Hash/hash.hpp>
 #include <BaseLib/exceptions.hpp>
+#include <BaseLib/result.hpp>
 
 #include <algorithm>
 #include <array>
@@ -123,8 +124,8 @@ namespace babelwires {
         std::string serializeToString() const;
 
         /// Parse a string as an identifier. This will parse disciminators too.
-        /// This throws a ParseException if the identifier is not valid.
-        static IdentifierBase deserializeFromString(std::string_view str);
+        /// This returns a ParseResult which can contain an error if the identifier is not valid.
+        static ParseResult<IdentifierBase> deserializeFromString(std::string_view str);
 
         /// Shorter identifiers can be converted to a code, which does exclude the discriminator.
         template <int T = NUM_BLOCKS, typename std::enable_if_t<(T == 1), std::nullptr_t> = nullptr>

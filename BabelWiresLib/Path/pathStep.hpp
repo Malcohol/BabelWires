@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BaseLib/Identifiers/identifier.hpp>
+#include <BaseLib/result.hpp>
 
 #include <ostream>
 
@@ -85,8 +86,8 @@ namespace babelwires {
         std::string serializeToString() const;
 
         /// Parse a string as a path step.
-        /// This can throw a ParseException.
-        static PathStep deserializeFromString(std::string_view str);
+        /// This returns a ParseResult which can contain an error.
+        static ParseResult<PathStep> deserializeFromString(std::string_view str);
 
         friend bool operator==(const PathStep& a, const PathStep& b) { return a.getDataAsCode() == b.getDataAsCode(); }
         friend bool operator!=(const PathStep& a, const PathStep& b) { return a.getDataAsCode() != b.getDataAsCode(); }

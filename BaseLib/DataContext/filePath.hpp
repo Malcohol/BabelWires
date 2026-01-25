@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/result.hpp>
+
 #include <filesystem>
 #include <ostream>
 
@@ -52,7 +54,7 @@ namespace babelwires {
         std::string serializeToString() const;
         
         /// Parse a serialized representation of a path.
-        static FilePath deserializeFromString(const std::string& string);
+        static ParseResult<FilePath> deserializeFromString(const std::string& string);
 
       public:
         /// Used when a test fails to print the paths.
