@@ -9,6 +9,7 @@
 
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
+#include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/typePtr.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
@@ -34,6 +35,12 @@ namespace babelwires {
             TypePtrT<TYPE> newType = makeType<TYPE>(std::forward<ARGS>(args)...);
             addRegisteredType(TYPE::getThisIdentifier(), TYPE::getVersion(), newType);
             return newType;
+        }
+
+        template<typename TYPE_DECLARATION>
+        void addTypeDeclaration() {
+            addConstructedType(TYPE_DECLARATION::getThisIdentifier(), TYPE_DECLARATION::getVersion(),
+                               TYPE_DECLARATION::getDefiningTypeExp());
         }
 
         template <typename TYPE, std::enable_if_t<std::is_base_of_v<Type, TYPE>, std::nullptr_t> = nullptr>
@@ -82,6 +89,8 @@ namespace babelwires {
         void addRegisteredType(LongId typeId, VersionNumber version, TypePtr newType);
         TypeConstructor* addTypeConstructorInternal(TypeConstructorId typeConstructorId, VersionNumber version,
                                                     std::unique_ptr<TypeConstructor> newTypeConstructor);
+
+        void addConstructedType(RegisteredTypeId typeId, VersionNumber version, TypeExp typeExp);
 
       protected:
         using RegisteredTypeInfo = std::tuple<TypePtr, VersionNumber>;

@@ -110,3 +110,34 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
         }
     }
 }
+
+babelwires::TypePtr
+babelwires::TypeConstructor::constructWithoutCaching(const TypeSystem& typeSystem, RegisteredTypeId typeId,
+                                                     const TypeConstructorArguments& arguments) const {
+
+    // TODO Unify with above and tidy up
+    std::vector<TypePtr> resolvedArguments;
+    resolvedArguments.reserve(arguments.getTypeArguments().size());
+    std::vector<std::string> unresolvedTypesString;
+    for (auto arg : arguments.getTypeArguments()) {
+        if (const TypePtr argAsType = arg.tryResolve(typeSystem)) {
+            resolvedArguments.emplace_back(argAsType);
+        } else {
+            unresolvedTypesString.emplace_back(arg.toString());
+        }
+    }
+
+    if (resolvedArguments.size() == arguments.getTypeArguments().size()) {
+        TypeExp newTypeExp(typeId);
+        return constructType(typeSystem, std::move(newTypeExp), arguments, resolvedArguments);
+    } else {
+        std::ostringstream os;
+        os << "Failed to construct a type because the following type arguments failed to resolve: ";
+        const char* sep = "";
+        for (auto refString : unresolvedTypesString) {
+            os << sep << refString;
+            sep = ", ";
+        }
+        throw TypeSystemException() << os.str();
+    }
+}

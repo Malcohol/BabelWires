@@ -7,9 +7,29 @@
 
 #include <Domains/TestDomain/testArrayType.hpp>
 
+#include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
+
+namespace babelwires {
+    namespace InstanceUtils {
+
+        std::vector<babelwires::RecordType::FieldDefinition> makeRecordFieldDefinitions(
+            const std::vector<const DeferredFieldInfo*>& fieldInfos) {
+            std::vector<babelwires::RecordType::FieldDefinition> fieldDefinitions;
+            fieldDefinitions.reserve(fieldInfos.size());
+            for (const auto* info : fieldInfos) {
+                fieldDefinitions.push_back({info->m_getIdFunc(), info->m_getTypeExpFunc(), info->m_optionality});
+            }
+            return fieldDefinitions;
+        }
+    } // namespace InstanceUtils
+
+} // namespace babelwires
+
 testDomain::TestSimpleRecordType::TestSimpleRecordType(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisIdentifier(), typeSystem, {{getInt0Id(), babelwires::DefaultIntType::getThisIdentifier()},
-                  {getInt1Id(), babelwires::DefaultIntType::getThisIdentifier()}}) {}
+    : RecordType(getThisIdentifier(), typeSystem, babelwires::InstanceUtils::makeRecordFieldDefinitions(Instance::m_fieldInfo)) {
+        //void* erm = &Instance::s_deferredFieldInfo_intR0;
+        //void* irm = &Instance::s_deferredFieldInfo_intR1;
+    }
 
 babelwires::ShortId testDomain::TestSimpleRecordType::getInt0Id() {
     return BW_SHORT_ID(s_int0IdInitializer, s_int0FieldName, s_int0Uuid);
@@ -20,14 +40,16 @@ babelwires::ShortId testDomain::TestSimpleRecordType::getInt1Id() {
 }
 
 testDomain::TestComplexRecordType::TestComplexRecordType(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisIdentifier(), typeSystem, {{getInt0Id(), babelwires::DefaultIntType::getThisIdentifier()},
-                  {getOpIntId(), babelwires::DefaultIntType::getThisIdentifier(), Optionality::optionalDefaultInactive},
-                  {getSubrecordId(), TestSimpleRecordType::getThisIdentifier()},
-                  {getInt1Id(), babelwires::IntTypeConstructor::makeTypeExp(c_int1min, c_int1max, c_int1default)},
-                  {getOpRecId(), TestSimpleRecordType::getThisIdentifier(), Optionality::optionalDefaultInactive},
-                  {getStringId(), babelwires::StringType::getThisIdentifier()},
-                  {getArrayId(), testDomain::TestSimpleArrayType::getThisIdentifier()},
-                  {getOnOptId(), babelwires::DefaultIntType::getThisIdentifier(), Optionality::optionalDefaultActive }}) {}
+    : RecordType(
+          getThisIdentifier(), typeSystem,
+          {{getInt0Id(), babelwires::DefaultIntType::getThisIdentifier()},
+           {getOpIntId(), babelwires::DefaultIntType::getThisIdentifier(), Optionality::optionalDefaultInactive},
+           {getSubrecordId(), TestSimpleRecordType::getThisIdentifier()},
+           {getInt1Id(), babelwires::IntTypeConstructor::makeTypeExp(c_int1min, c_int1max, c_int1default)},
+           {getOpRecId(), TestSimpleRecordType::getThisIdentifier(), Optionality::optionalDefaultInactive},
+           {getStringId(), babelwires::StringType::getThisIdentifier()},
+           {getArrayId(), testDomain::TestSimpleArrayType::getThisIdentifier()},
+           {getOnOptId(), babelwires::DefaultIntType::getThisIdentifier(), Optionality::optionalDefaultActive}}) {}
 
 babelwires::ShortId testDomain::TestComplexRecordType::getInt0Id() {
     return BW_SHORT_ID(s_intIdInitializer, s_intFieldName, "1aafde9a-fb39-4a2d-8a29-55fc9d6d093b");

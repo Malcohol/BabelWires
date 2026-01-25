@@ -96,6 +96,9 @@ namespace babelwires {
           return typeAs<TYPE>(resolve(typeSystem));
         }
 
+        /// Construct a new type based on this TypeExp (which must have an outer TypeConstructor).
+        TypePtr construct(const TypeSystem& typeSystem, RegisteredTypeId typeId) const;
+
         /// Return a human-readable version of the TypeExp.
         std::string toString() const;
 
