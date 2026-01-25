@@ -70,7 +70,7 @@ std::string babelwires::Path::serializeToString() const {
     return os.str();
 }
 
-babelwires::ParseResult<babelwires::Path> babelwires::Path::deserializeFromString(const std::string& pathString) {
+babelwires::ResultT<babelwires::Path> babelwires::Path::deserializeFromString(const std::string& pathString) {
     if (pathString.empty()) {
         return Path{};
     }

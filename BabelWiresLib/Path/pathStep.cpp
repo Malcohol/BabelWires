@@ -47,7 +47,7 @@ std::string babelwires::PathStep::serializeToString() const {
     }
 }
 
-babelwires::ParseResult<babelwires::PathStep> babelwires::PathStep::deserializeFromString(std::string_view str) {
+babelwires::ResultT<babelwires::PathStep> babelwires::PathStep::deserializeFromString(std::string_view str) {
     if (str.empty()) {
         return Error() << "Could not parse a PathStep from an empty string.";
     }

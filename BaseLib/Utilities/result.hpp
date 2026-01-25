@@ -15,7 +15,7 @@ namespace babelwires {
     class ErrorStorage;
 
     /// Result type which is either a T or an Error.
-    template <typename T> using ParseResult = std::expected<T, ErrorStorage>;
+    template <typename T> using ResultT = std::expected<T, ErrorStorage>;
 
     /// Simple result type for success/failure operations (replaces old Result class).
     using Result = std::expected<void, ErrorStorage>;
@@ -27,8 +27,8 @@ namespace babelwires {
 
         const std::string& toString() const { return m_message; }
 
-        /// Allow implicit conversion to a ParseResult.
-        template <typename T> operator ParseResult<T>() && {
+        /// Allow implicit conversion to a ResultT.
+        template <typename T> operator ResultT<T>() && {
             return std::unexpected<ErrorStorage>(std::move(*this));
         }
 
@@ -52,8 +52,8 @@ namespace babelwires {
             return *this;
         }
 
-        /// Allow implicit conversion to a ParseResult.
-        template <typename T> operator ParseResult<T>() {
+        /// Allow implicit conversion to a ResultT.
+        template <typename T> operator ResultT<T>() {
             return std::unexpected<ErrorStorage>(ErrorStorage(m_os.str()));
         }
 

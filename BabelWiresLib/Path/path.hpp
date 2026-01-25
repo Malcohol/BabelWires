@@ -47,7 +47,7 @@ namespace babelwires {
         std::string serializeToString() const;
 
         /// Parse a serialized representation of a path.
-        static ParseResult<Path> deserializeFromString(const std::string& pathString);
+        static ResultT<Path> deserializeFromString(const std::string& pathString);
 
         bool operator==(const Path& other) const;
         bool operator!=(const Path& other) const;

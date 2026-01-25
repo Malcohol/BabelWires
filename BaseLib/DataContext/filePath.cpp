@@ -67,7 +67,7 @@ std::string babelwires::FilePath::serializeToString() const {
     return pathToString(m_filePath);
 }
 
-babelwires::ParseResult<babelwires::FilePath> babelwires::FilePath::deserializeFromString(const std::string& string) {
+babelwires::ResultT<babelwires::FilePath> babelwires::FilePath::deserializeFromString(const std::string& string) {
     std::filesystem::path path;
     try {
         path = std::filesystem::u8path(string);

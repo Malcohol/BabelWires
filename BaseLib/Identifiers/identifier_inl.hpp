@@ -58,7 +58,7 @@ template <unsigned int NUM_BLOCKS> babelwires::IdentifierBase<NUM_BLOCKS>::Ident
 }
 
 template <unsigned int NUM_BLOCKS>
-babelwires::ParseResult<babelwires::IdentifierBase<NUM_BLOCKS>>
+babelwires::ResultT<babelwires::IdentifierBase<NUM_BLOCKS>>
 babelwires::IdentifierBase<NUM_BLOCKS>::deserializeFromString(std::string_view str) {
     Discriminator discriminator = 0;
     std::size_t idEnd = str.find(s_discriminatorDelimiter);
