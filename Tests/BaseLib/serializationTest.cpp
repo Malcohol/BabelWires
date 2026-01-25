@@ -21,9 +21,10 @@ namespace {
 
         void deserializeContents(Deserializer& deserializer) override {
             THROW_ON_ERROR(deserializer.deserializeValue("x", m_x), ParseException);
-            for (auto it = deserializer.deserializeValueArray<std::string>("array", Deserializer::IsOptional::Optional);
-                 it.isValid(); ++it) {
-                m_array.emplace_back(std::move(it.deserializeValue()));
+            if (auto itResult = deserializer.deserializeValueArray<std::string>("array")) {
+                for (auto& it = *itResult; it.isValid(); ++it) {
+                    m_array.emplace_back(std::move(it.deserializeValue()));
+                }
             }
         }
 
@@ -74,7 +75,9 @@ namespace {
             if (std::unique_ptr<A> a = deserializer.deserializeObject<A>()) {
                 m_a = std::move(*a);
             }
-            for (auto it = deserializer.deserializeArray<A>("arrayOfAs"); it.isValid(); ++it) {
+            auto itResult = deserializer.deserializeArray<A>("arrayOfAs");
+            THROW_ON_ERROR(itResult, ParseException);
+            for (auto& it = *itResult; it.isValid(); ++it) {
                 m_arrayOfAs.emplace_back(std::move(*it.getObject()));
             }
         }
@@ -316,10 +319,10 @@ namespace {
                 deserializer.deserializeObject<Concrete1>("concrete1", babelwires::Deserializer::IsOptional::Optional);
             m_concrete2 =
                 deserializer.deserializeObject<Concrete2>("concrete2", babelwires::Deserializer::IsOptional::Optional);
-            for (auto it =
-                     deserializer.deserializeArray<Base>("objects", babelwires::Deserializer::IsOptional::Optional);
-                 it.isValid(); ++it) {
-                m_objects.emplace_back(it.getObject());
+            if (auto itResult = deserializer.deserializeArray<Base>("objects")) {
+                for (auto& it = *itResult; it.isValid(); ++it) {
+                    m_objects.emplace_back(it.getObject());
+                }
             }
         }
 

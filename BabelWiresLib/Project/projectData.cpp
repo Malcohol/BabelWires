@@ -25,10 +25,10 @@ void babelwires::ProjectData::serializeContents(Serializer& serializer) const {
 void babelwires::ProjectData::deserializeContents(Deserializer& deserializer) {
     // Optional - ignore failure
     deserializer.deserializeValue("id", m_projectId);
-    auto it = deserializer.deserializeArray<NodeData>("elements");
-    while (it.isValid()) {
+    auto itResult = deserializer.deserializeArray<NodeData>("elements");
+    THROW_ON_ERROR(itResult, ParseException);
+    for (auto& it = *itResult; it.isValid(); ++it) {
         m_nodes.emplace_back(std::move(it.getObject()));
-        ++it;
     }
 }
 

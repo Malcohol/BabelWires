@@ -164,16 +164,15 @@ void babelwires::TypeExp::deserializeContents(Deserializer& deserializer) {
         if (deserializer.deserializeValue("typeConstructorId", typeConstructorId)) {
             std::vector<TypeExp> typeArguments;
             std::vector<ValueHolder> valueArguments;
-            auto typeIt = deserializer.deserializeArray<TypeExp>("typeArguments", Deserializer::IsOptional::Optional);
-            while (typeIt.isValid()) {
-                typeArguments.emplace_back(std::move(*typeIt.getObject()));
-                ++typeIt;
+            if (auto typeItResult = deserializer.deserializeArray<TypeExp>("typeArguments")) {
+                for (auto& typeIt = *typeItResult; typeIt.isValid(); ++typeIt) {
+                    typeArguments.emplace_back(std::move(*typeIt.getObject()));
+                }
             }
-            auto valueIt =
-                deserializer.deserializeArray<EditableValue>("valueArguments", Deserializer::IsOptional::Optional);
-            while (valueIt.isValid()) {
-                valueArguments.emplace_back(uniquePtrCast<Value>(valueIt.getObject()));
-                ++valueIt;
+            if (auto valueItResult = deserializer.deserializeArray<EditableValue>("valueArguments")) {
+                for (auto& valueIt = *valueItResult; valueIt.isValid(); ++valueIt) {
+                    valueArguments.emplace_back(uniquePtrCast<Value>(valueIt.getObject()));
+                }
             }
             m_storage = ConstructedTypeData{typeConstructorId, {std::move(typeArguments), std::move(valueArguments)}};
         } else {

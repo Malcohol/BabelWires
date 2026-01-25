@@ -50,16 +50,16 @@ void babelwires::SelectOptionalsModifierData::serializeContents(Serializer& seri
 
 void babelwires::SelectOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
     THROW_ON_ERROR(deserializer.deserializeValue("path", m_targetPath), ParseException);
-    for (auto it =
-             deserializer.deserializeArray<SerializableOptional>("optionals", Deserializer::IsOptional::Optional);
-         it.isValid(); ++it) {
-        const auto newObject = it.getObject();
-        if (newObject->tryAs<SerializableOptional_Activate>()) {
-            m_optionalsActivation[newObject->m_optional] = true;
-        } else if (newObject->tryAs<SerializableOptional_Deactivate>()) {
-            m_optionalsActivation[newObject->m_optional] = false;
-        } else {
-            throw ModelException() << "Problem deserializing activated/deactivated optional";
+    if (auto itResult = deserializer.deserializeArray<SerializableOptional>("optionals")) {
+        for (auto& it = *itResult; it.isValid(); ++it) {
+            const auto newObject = it.getObject();
+            if (newObject->tryAs<SerializableOptional_Activate>()) {
+                m_optionalsActivation[newObject->m_optional] = true;
+            } else if (newObject->tryAs<SerializableOptional_Deactivate>()) {
+                m_optionalsActivation[newObject->m_optional] = false;
+            } else {
+                throw ModelException() << "Problem deserializing activated/deactivated optional";
+            }
         }
     }
 }

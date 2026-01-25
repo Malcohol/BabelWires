@@ -69,7 +69,9 @@ void babelwires::ProjectBundle::serializeAdditionalMetadata(Serializer& serializ
 }
 
 void babelwires::ProjectBundle::deserializeAdditionalMetadata(Deserializer& deserializer) {
-    for (auto it = deserializer.deserializeArray<FactoryInfoPair>("factoryMetadata"); it.isValid(); ++it) {
+    auto itResult = deserializer.deserializeArray<FactoryInfoPair>("factoryMetadata");
+    THROW_ON_ERROR(itResult, ParseException);
+    for (auto& it = *itResult; it.isValid(); ++it) {
         auto fm = it.getObject();
         m_factoryMetadata.insert(std::make_pair(std::move(fm->m_factoryIdentifier), fm->m_factoryVersion));
     }

@@ -72,9 +72,10 @@ void babelwires::NodeData::serializeModifiers(Serializer& serializer) const {
 }
 
 void babelwires::NodeData::deserializeModifiers(Deserializer& deserializer) {
-    for (auto it = deserializer.deserializeArray<ModifierData>("modifiers", Deserializer::IsOptional::Optional);
-         it.isValid(); ++it) {
-        m_modifiers.emplace_back(it.getObject());
+    if (auto itResult = deserializer.deserializeArray<ModifierData>("modifiers")) {
+        for (auto& it = *itResult; it.isValid(); ++it) {
+            m_modifiers.emplace_back(it.getObject());
+        }
     }
 }
 
@@ -88,10 +89,10 @@ void babelwires::NodeData::deserializeUiData(Deserializer& deserializer) {
             deserializer.deserializeObject<UiData>(UiData::serializationType, Deserializer::IsOptional::Optional)) {
         m_uiData = *uiData;
     }
-    for (auto it = deserializer.deserializeValueArray<Path>("expandedPaths", Deserializer::IsOptional::Optional,
-                                                                   "path");
-         it.isValid(); ++it) {
-        m_expandedPaths.emplace_back(std::move(it.deserializeValue()));
+    if (auto itResult = deserializer.deserializeValueArray<Path>("expandedPaths", "path")) {
+        for (auto& it = *itResult; it.isValid(); ++it) {
+            m_expandedPaths.emplace_back(std::move(it.deserializeValue()));
+        }
     }
 }
 
