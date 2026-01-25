@@ -8,6 +8,7 @@
 #include <BaseLib/uuid.hpp>
 
 #include <BaseLib/exceptions.hpp>
+#include <BaseLib/result.hpp>
 
 #include <algorithm>
 #include <cassert>
@@ -55,9 +56,9 @@ std::string babelwires::Uuid::serializeToString() const {
     return newText.str();
 }
 
-babelwires::Uuid babelwires::Uuid::deserializeFromString(std::string_view uuidText) {
+babelwires::ParseResult<babelwires::Uuid> babelwires::Uuid::deserializeFromString(std::string_view uuidText) {
     if (!isValid(uuidText)) {
-        throw ParseException() << "Failed to parse a UUID";
+        return Error() << "Failed to parse a UUID";
     }
     return Uuid(std::string(uuidText));
 }

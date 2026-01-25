@@ -24,7 +24,7 @@ TEST(UuidTest, basicOperations) {
     }
     {
         std::string serialized = uuid.serializeToString();
-        Uuid uuidD = Uuid::deserializeFromString(serialized);
+        Uuid uuidD = *Uuid::deserializeFromString(serialized);
         EXPECT_EQ(uuid, uuidD);
     }
 }
