@@ -157,12 +157,11 @@ void babelwires::TypeExp::serializeContents(Serializer& serializer) const {
 
 void babelwires::TypeExp::deserializeContents(Deserializer& deserializer) {
     RegisteredTypeId typeId;
-    if (deserializer.deserializeValue("typeId", typeId, babelwires::Deserializer::IsOptional::Optional)) {
+    if (deserializer.deserializeValue("typeId", typeId)) {
         m_storage = typeId;
     } else {
         TypeConstructorId typeConstructorId;
-        if (deserializer.deserializeValue("typeConstructorId", typeConstructorId,
-                                          babelwires::Deserializer::IsOptional::Optional)) {
+        if (deserializer.deserializeValue("typeConstructorId", typeConstructorId)) {
             std::vector<TypeExp> typeArguments;
             std::vector<ValueHolder> valueArguments;
             auto typeIt = deserializer.deserializeArray<TypeExp>("typeArguments", Deserializer::IsOptional::Optional);

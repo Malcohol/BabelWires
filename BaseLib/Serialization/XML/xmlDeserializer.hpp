@@ -19,16 +19,16 @@ namespace babelwires {
         XmlDeserializer(std::string_view xmlText, const DeserializationRegistry& deserializationRegistry,
                         UserLogger& userLogger);
 
-        bool deserializeValue(std::string_view key, bool& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::string& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::uint64_t& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::uint32_t& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::uint16_t& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::uint8_t& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::int64_t& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::int32_t& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::int16_t& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::int8_t& value, IsOptional isOptional) override;
+        Result deserializeValue(std::string_view key, bool& value) override;
+        Result deserializeValue(std::string_view key, std::string& value) override;
+        Result deserializeValue(std::string_view key, std::uint64_t& value) override;
+        Result deserializeValue(std::string_view key, std::uint32_t& value) override;
+        Result deserializeValue(std::string_view key, std::uint16_t& value) override;
+        Result deserializeValue(std::string_view key, std::uint8_t& value) override;
+        Result deserializeValue(std::string_view key, std::int64_t& value) override;
+        Result deserializeValue(std::string_view key, std::int32_t& value) override;
+        Result deserializeValue(std::string_view key, std::int16_t& value) override;
+        Result deserializeValue(std::string_view key, std::int8_t& value) override;
 
         /// Client code must call this before this object is destroyed.
         using Deserializer::finalize;
@@ -65,8 +65,7 @@ namespace babelwires {
         void keyWasQueried(std::string_view key);
 
         template <typename INT_TYPE>
-        bool getIntValue(const tinyxml2::XMLElement& element, std::string_view key, INT_TYPE& value,
-                         babelwires::Deserializer::IsOptional isOptional);
+        Result getIntValue(const tinyxml2::XMLElement& element, std::string_view key, INT_TYPE& value);
 
       private:
         tinyxml2::XMLDocument m_doc;

@@ -52,9 +52,9 @@ void babelwires::MapProjectDataLocation::serializeContents(Serializer& serialize
 
 void babelwires::MapProjectDataLocation::deserializeContents(Deserializer& deserializer) {
     DataLocation::deserializeContents(deserializer);
-    deserializer.deserializeValue("entryIndex", m_entryIndex);
+    THROW_ON_ERROR(deserializer.deserializeValue("entryIndex", m_entryIndex), ParseException);
     std::string tmp;
-    deserializer.deserializeValue("side", tmp);
+    THROW_ON_ERROR(deserializer.deserializeValue("side", tmp), ParseException);
     if (tmp == "source") {
         m_side = Side::source;
     } else if (tmp == "target") {

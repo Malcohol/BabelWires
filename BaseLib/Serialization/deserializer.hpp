@@ -35,43 +35,34 @@ namespace babelwires {
         };
 
         /// Get a value from the current object.
-        /// If optional, these methods return a boolean to indicate success.
-        /// Otherwise they throw a ParseException.
+        /// These methods return a Result to indicate success/failure.
 
-        virtual bool deserializeValue(std::string_view key, bool& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::string& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::uint64_t& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::uint32_t& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::uint16_t& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::uint8_t& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::int64_t& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::int32_t& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::int16_t& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::int8_t& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
+        virtual Result deserializeValue(std::string_view key, bool& value) = 0;
+        virtual Result deserializeValue(std::string_view key, std::string& value) = 0;
+        virtual Result deserializeValue(std::string_view key, std::uint64_t& value) = 0;
+        virtual Result deserializeValue(std::string_view key, std::uint32_t& value) = 0;
+        virtual Result deserializeValue(std::string_view key, std::uint16_t& value) = 0;
+        virtual Result deserializeValue(std::string_view key, std::uint8_t& value) = 0;
+        virtual Result deserializeValue(std::string_view key, std::int64_t& value) = 0;
+        virtual Result deserializeValue(std::string_view key, std::int32_t& value) = 0;
+        virtual Result deserializeValue(std::string_view key, std::int16_t& value) = 0;
+        virtual Result deserializeValue(std::string_view key, std::int8_t& value) = 0;
 
-        /// Objects with methods "serializeToString" and "deserializeToString" can be deserialized as values.
-        /// For types that return ResultT from deserializeFromString, use THROW_ON_ERROR.
+        /// Objects with methods "serializeToString" and "deserializeFromString" can be deserialized as values.
         template <typename V>
-        std::enable_if_t<IsSerializableValue<V>::value && std::is_same_v<decltype(V::deserializeFromString(std::declval<std::string>())), ResultT<V>>, bool>
-        deserializeValue(std::string_view key, V& value, IsOptional isOptional = IsOptional::Required) {
+        std::enable_if_t<IsSerializableValue<V>::value && std::is_same_v<decltype(V::deserializeFromString(std::declval<std::string>())), ResultT<V>>, Result>
+        deserializeValue(std::string_view key, V& value) {
             std::string asString;
-            const bool ret = deserializeValue(key, asString, isOptional);
-            if (ret) {
-                auto result = V::deserializeFromString(asString);
-                THROW_ON_ERROR(result, ParseException);
-                value = *result;
+            auto ret = deserializeValue(key, asString);
+            if (!ret) {
+                return ret;
             }
-            return ret;
+            auto result = V::deserializeFromString(asString);
+            if (!result) {
+                return std::move(result).transform([](const auto&) {});
+            }
+            value = *result;
+            return {};
         }
 
         /// Deserialize a child object of type T.
@@ -197,7 +188,8 @@ babelwires::Deserializer::Iterator<T> babelwires::Deserializer::deserializeArray
 template <typename T> struct babelwires::Deserializer::ValueIterator : BaseIterator {
     /// Pass in a tempValue if T cannot be default constructed.
     T deserializeValue(T tempValue = T()) {
-        m_deserializer.deserializeValue("value", tempValue);
+        auto result = m_deserializer.deserializeValue("value", tempValue);
+        THROW_ON_ERROR(result, ParseException);
         return tempValue;
     }
 

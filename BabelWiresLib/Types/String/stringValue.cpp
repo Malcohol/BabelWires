@@ -28,7 +28,7 @@ void babelwires::StringValue::serializeContents(Serializer& serializer) const {
 }
 
 void babelwires::StringValue::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("value", m_value);
+    THROW_ON_ERROR(deserializer.deserializeValue("value", m_value), ParseException);
 }
 
 void babelwires::StringValue::visitIdentifiers(IdentifierVisitor& visitor) {

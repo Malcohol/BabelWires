@@ -20,7 +20,7 @@ namespace {
         }
 
         void deserializeContents(Deserializer& deserializer) override {
-            deserializer.deserializeValue("x", m_x);
+            THROW_ON_ERROR(deserializer.deserializeValue("x", m_x), ParseException);
             for (auto it = deserializer.deserializeValueArray<std::string>("array", Deserializer::IsOptional::Optional);
                  it.isValid(); ++it) {
                 m_array.emplace_back(std::move(it.deserializeValue()));
@@ -132,7 +132,9 @@ namespace {
 
             void serializeContents(Serializer& serializer) const override { serializer.serializeValue("x", m_x); }
 
-            void deserializeContents(Deserializer& deserializer) override { deserializer.deserializeValue("x", m_x); }
+            void deserializeContents(Deserializer& deserializer) override { 
+                THROW_ON_ERROR(deserializer.deserializeValue("x", m_x), ParseException); 
+            }
 
             // A refactor will split this into a sign and an unsigened int.
             int m_x = 0;
@@ -154,15 +156,15 @@ namespace {
                 const int version = deserializer.getTypeVersion("C");
                 if (version == 1) {
                     int oldInt = 0;
-                    deserializer.deserializeValue("x", oldInt);
+                    THROW_ON_ERROR(deserializer.deserializeValue("x", oldInt), ParseException);
                     m_isPositive = (oldInt >= 0);
                     m_x = std::abs(oldInt);
                 } else {
                     // Current versions.
                     // This case is also used for later versions and version 0, but the serialization system will have
                     // warned.
-                    deserializer.deserializeValue("isPositive", m_isPositive);
-                    deserializer.deserializeValue("x", m_x);
+                    THROW_ON_ERROR(deserializer.deserializeValue("isPositive", m_isPositive), ParseException);
+                    THROW_ON_ERROR(deserializer.deserializeValue("x", m_x), ParseException);
                 }
             }
 
@@ -242,7 +244,9 @@ namespace {
 
         void serializeContents(Serializer& serializer) const override { serializer.serializeValue("x", m_x); }
 
-        void deserializeContents(Deserializer& deserializer) override { deserializer.deserializeValue("x", m_x); }
+        void deserializeContents(Deserializer& deserializer) override { 
+            THROW_ON_ERROR(deserializer.deserializeValue("x", m_x), ParseException); 
+        }
 
         int m_x = 0;
     };
@@ -258,7 +262,9 @@ namespace {
 
         void serializeContents(Serializer& serializer) const override { serializer.serializeValue("s", m_s); }
 
-        void deserializeContents(Deserializer& deserializer) override { deserializer.deserializeValue("s", m_s); }
+        void deserializeContents(Deserializer& deserializer) override { 
+            THROW_ON_ERROR(deserializer.deserializeValue("s", m_s), ParseException); 
+        }
 
         std::string m_s;
     };
@@ -272,7 +278,7 @@ namespace {
 
         void deserializeContents(Deserializer& deserializer) override {
             Concrete1::deserializeContents(deserializer);
-            deserializer.deserializeValue("u32", m_u32);
+            THROW_ON_ERROR(deserializer.deserializeValue("u32", m_u32), ParseException);
         }
 
         std::uint32_t m_u32;

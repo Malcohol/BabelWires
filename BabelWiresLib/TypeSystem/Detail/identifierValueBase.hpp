@@ -36,7 +36,7 @@ namespace babelwires {
         }
 
         void deserializeContents(Deserializer& deserializer) override {
-            deserializer.deserializeValue("value", m_value);
+            THROW_ON_ERROR(deserializer.deserializeValue("value", m_value), ParseException);
         }
 
         void visitIdentifiers(IdentifierVisitor& visitor) override { visitor(m_value); }

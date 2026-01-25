@@ -27,9 +27,9 @@ void babelwires::UiData::serializeContents(Serializer& serializer) const {
 }
 
 void babelwires::UiData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("x", m_uiPosition.m_x);
-    deserializer.deserializeValue("y", m_uiPosition.m_y);
-    deserializer.deserializeValue("width", m_uiSize.m_width);
+    THROW_ON_ERROR(deserializer.deserializeValue("x", m_uiPosition.m_x), ParseException);
+    THROW_ON_ERROR(deserializer.deserializeValue("y", m_uiPosition.m_y), ParseException);
+    THROW_ON_ERROR(deserializer.deserializeValue("width", m_uiSize.m_width), ParseException);
 }
 
 babelwires::NodeData::NodeData(const NodeData& other, ShallowCloneContext)
@@ -62,8 +62,8 @@ void babelwires::NodeData::addCommonKeyValuePairs(Serializer& serializer) const 
 }
 
 void babelwires::NodeData::getCommonKeyValuePairs(Deserializer& deserializer) {
-    deserializer.deserializeValue("id", m_id);
-    deserializer.deserializeValue("factory", m_factoryIdentifier);
+    THROW_ON_ERROR(deserializer.deserializeValue("id", m_id), ParseException);
+    THROW_ON_ERROR(deserializer.deserializeValue("factory", m_factoryIdentifier), ParseException);
     // Factory versions are handled by the projectBundle.
 }
 

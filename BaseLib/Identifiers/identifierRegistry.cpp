@@ -35,9 +35,9 @@ void babelwires::IdentifierRegistry::InstanceData::serializeContents(Serializer&
 }
 
 void babelwires::IdentifierRegistry::InstanceData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("id", m_identifier);
-    deserializer.deserializeValue("name", m_fieldName);
-    deserializer.deserializeValue("uuid", m_uuid);
+    THROW_ON_ERROR(deserializer.deserializeValue("id", m_identifier), ParseException);
+    THROW_ON_ERROR(deserializer.deserializeValue("name", m_fieldName), ParseException);
+    THROW_ON_ERROR(deserializer.deserializeValue("uuid", m_uuid), ParseException);
     m_authority = Authority::isProvisional;
 }
 

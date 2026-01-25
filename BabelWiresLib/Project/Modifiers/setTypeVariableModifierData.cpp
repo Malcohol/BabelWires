@@ -20,7 +20,7 @@ void babelwires::SetTypeVariableModifierData::serializeContents(Serializer& seri
 }
 
 void babelwires::SetTypeVariableModifierData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_targetPath);
+    THROW_ON_ERROR(deserializer.deserializeValue("path", m_targetPath), ParseException);
     auto it = deserializer.deserializeArray<TypeExp>("typeAssignments");
     while (it.isValid()) {
         m_typeAssignments.emplace_back(std::move(*it.getObject()));

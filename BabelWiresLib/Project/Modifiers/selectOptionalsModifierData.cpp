@@ -22,7 +22,7 @@ namespace {
             serializer.serializeValue("optional", m_optional);
         }
         void deserializeContents(babelwires::Deserializer& deserializer) {
-            deserializer.deserializeValue("optional", m_optional);
+            THROW_ON_ERROR(deserializer.deserializeValue("optional", m_optional), babelwires::ParseException);
         };
         babelwires::ShortId m_optional;
     };
@@ -49,7 +49,7 @@ void babelwires::SelectOptionalsModifierData::serializeContents(Serializer& seri
 }
 
 void babelwires::SelectOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_targetPath);
+    THROW_ON_ERROR(deserializer.deserializeValue("path", m_targetPath), ParseException);
     for (auto it =
              deserializer.deserializeArray<SerializableOptional>("optionals", Deserializer::IsOptional::Optional);
          it.isValid(); ++it) {

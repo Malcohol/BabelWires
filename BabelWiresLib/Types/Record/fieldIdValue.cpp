@@ -39,7 +39,7 @@ void babelwires::FieldIdValue::serializeContents(Serializer& serializer) const {
 void babelwires::FieldIdValue::deserializeContents(Deserializer& deserializer) {
     IdentifierValueBase::deserializeContents(deserializer);
     std::string optional;
-    if (deserializer.deserializeValue(c_serializedOptionality, optional, Deserializer::IsOptional::Optional)) {
+    if (deserializer.deserializeValue(c_serializedOptionality, optional)) {
         if (optional == c_serializedOptionalValue) {
             m_optionality = RecordType::Optionality::optionalDefaultInactive;
         } else {

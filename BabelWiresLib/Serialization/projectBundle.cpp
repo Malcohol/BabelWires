@@ -51,8 +51,8 @@ namespace {
             serializer.serializeValue("version", m_factoryVersion);
         }
         void deserializeContents(babelwires::Deserializer& deserializer) override {
-            deserializer.deserializeValue("id", m_factoryIdentifier);
-            deserializer.deserializeValue("version", m_factoryVersion);
+            THROW_ON_ERROR(deserializer.deserializeValue("id", m_factoryIdentifier), babelwires::ParseException);
+            THROW_ON_ERROR(deserializer.deserializeValue("version", m_factoryVersion), babelwires::ParseException);
         }
     };
 } // namespace

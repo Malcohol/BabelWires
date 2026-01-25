@@ -39,7 +39,7 @@ void babelwires::TargetFileNodeData::serializeContents(Serializer& serializer) c
 
 void babelwires::TargetFileNodeData::deserializeContents(Deserializer& deserializer) {
     getCommonKeyValuePairs(deserializer);
-    deserializer.deserializeValue("filePath", m_filePath);
+    THROW_ON_ERROR(deserializer.deserializeValue("filePath", m_filePath), ParseException);
     deserializeModifiers(deserializer);
     deserializeUiData(deserializer);
 }
