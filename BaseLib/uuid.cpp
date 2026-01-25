@@ -8,7 +8,6 @@
 #include <BaseLib/uuid.hpp>
 
 #include <BaseLib/exceptions.hpp>
-#include <BaseLib/result.hpp>
 
 #include <algorithm>
 #include <cassert>

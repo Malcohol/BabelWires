@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/Path/pathStep.hpp>
-#include <BaseLib/result.hpp>
+#include <BaseLib/Utilities/result.hpp>
 
 #include <memory>
 #include <ostream>

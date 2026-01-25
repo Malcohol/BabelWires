@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BaseLib/result.hpp>
+#include <BaseLib/Utilities/result.hpp>
 
 TEST(ResultTest, success) {
     babelwires::Result result{};
