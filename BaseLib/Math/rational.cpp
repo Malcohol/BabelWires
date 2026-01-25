@@ -291,15 +291,15 @@ babelwires::Rational::PartialParseResult babelwires::Rational::partialParse(std:
     return PartialParseResult::Success;
 }
 
-babelwires::Rational babelwires::Rational::parseString(std::string_view str) {
+babelwires::ResultT<babelwires::Rational> babelwires::Rational::parseString(std::string_view str) {
     Rational value;
     switch (partialParse(str, value)) {
         case PartialParseResult::Success:
             return value;
         case PartialParseResult::Failure:
-            throw ParseException() << "Could not parse \"" << str << "\" as a rational number";
+            return Error() << "Could not parse \"" << str << "\" as a rational number";
         case PartialParseResult::Truncated:
-            throw ParseException() << "Could not parse \"" << str << "\" as a rational number. Possible truncation";
+            return Error() << "Could not parse \"" << str << "\" as a rational number. Possible truncation";
     }
     return value;
 }

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BaseLib/Math/math.hpp>
+#include <BaseLib/Utilities/result.hpp>
 
 #include <cctype>
 #include <cstdint>
@@ -57,12 +58,11 @@ namespace babelwires {
 
         static PartialParseResult partialParse(std::string_view str, Rational& valueOut);
 
-        /// Throws a ParseException if the string is not a rational.
-        static Rational parseString(std::string_view str);
+        static ResultT<Rational> parseString(std::string_view str);
 
         /// Serialization
         std::string serializeToString() const { return toString(); }
-        static Rational deserializeFromString(const std::string_view str) { return parseString(str); }
+        static ResultT<Rational> deserializeFromString(const std::string_view str) { return parseString(str); }
 
         /// Get a hash value for the rational.
         std::size_t getHash() const;

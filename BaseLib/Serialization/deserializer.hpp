@@ -74,18 +74,6 @@ namespace babelwires {
             return ret;
         }
 
-        /// For types that still throw from deserializeFromString (old style).
-        template <typename V>
-        std::enable_if_t<IsSerializableValue<V>::value && !std::is_same_v<decltype(V::deserializeFromString(std::declval<std::string>())), ResultT<V>>, bool>
-        deserializeValue(std::string_view key, V& value, IsOptional isOptional = IsOptional::Required) {
-            std::string asString;
-            const bool ret = deserializeValue(key, asString, isOptional);
-            if (ret) {
-                value = V::deserializeFromString(asString);
-            }
-            return ret;
-        }
-
         /// Deserialize a child object of type T.
         /// The key is often the name of a field, but by default it duplicates the name of the object's type.
         template <typename T>
