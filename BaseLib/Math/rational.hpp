@@ -58,11 +58,9 @@ namespace babelwires {
 
         static PartialParseResult partialParse(std::string_view str, Rational& valueOut);
 
-        static ResultT<Rational> parseString(std::string_view str);
-
         /// Serialization
         std::string serializeToString() const { return toString(); }
-        static ResultT<Rational> deserializeFromString(const std::string_view str) { return parseString(str); }
+        static ResultT<Rational> deserializeFromString(std::string_view str);
 
         /// Get a hash value for the rational.
         std::size_t getHash() const;

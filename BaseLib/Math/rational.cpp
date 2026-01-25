@@ -291,7 +291,7 @@ babelwires::Rational::PartialParseResult babelwires::Rational::partialParse(std:
     return PartialParseResult::Success;
 }
 
-babelwires::ResultT<babelwires::Rational> babelwires::Rational::parseString(std::string_view str) {
+babelwires::ResultT<babelwires::Rational> babelwires::Rational::deserializeFromString(std::string_view str) {
     Rational value;
     switch (partialParse(str, value)) {
         case PartialParseResult::Success:
