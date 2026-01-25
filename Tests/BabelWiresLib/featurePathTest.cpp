@@ -278,21 +278,27 @@ TEST(FeaturePathTest, pathDeserialization) {
     EXPECT_EQ(babelwires::Path::deserializeFromString("").value().getNumSteps(), 0);
 
     babelwires::Path path1;
-    EXPECT_NO_THROW(path1 = *babelwires::Path::deserializeFromString("Forb/12/Erm"));
+    auto path1Result = babelwires::Path::deserializeFromString("Forb/12/Erm");
+    EXPECT_TRUE(path1Result.has_value());
+    path1 = *path1Result;
     EXPECT_EQ(path1.getNumSteps(), 3);
     EXPECT_EQ(path1.getStep(0), babelwires::PathStep("Forb"));
     EXPECT_EQ(path1.getStep(1), 12);
     EXPECT_EQ(path1.getStep(2), babelwires::PathStep("Erm"));
 
     babelwires::Path path2;
-    EXPECT_NO_THROW(path2 = *babelwires::Path::deserializeFromString("12/Forb/Erm"));
+    auto path2Result = babelwires::Path::deserializeFromString("12/Forb/Erm");
+    EXPECT_TRUE(path2Result.has_value());
+    path2 = *path2Result;
     EXPECT_EQ(path2.getNumSteps(), 3);
     EXPECT_EQ(path2.getStep(0), 12);
     EXPECT_EQ(path2.getStep(1), babelwires::PathStep("Forb"));
     EXPECT_EQ(path2.getStep(2), babelwires::PathStep("Erm"));
 
     babelwires::Path path3;
-    EXPECT_NO_THROW(path3 = *babelwires::Path::deserializeFromString("Forb'2/12/Erm'4"));
+    auto path3Result = babelwires::Path::deserializeFromString("Forb'2/12/Erm'4");
+    EXPECT_TRUE(path3Result.has_value());
+    path3 = *path3Result;
     EXPECT_EQ(path3.getNumSteps(), 3);
     EXPECT_EQ(path3.getStep(0), babelwires::PathStep("Forb"));
     EXPECT_EQ(path3.getStep(0).getField().getDiscriminator(), 2);
@@ -300,13 +306,13 @@ TEST(FeaturePathTest, pathDeserialization) {
     EXPECT_EQ(path3.getStep(2), babelwires::PathStep("Erm"));
     EXPECT_EQ(path3.getStep(2).getField().getDiscriminator(), 4);
 
-    EXPECT_THROW(babelwires::Path::deserializeFromString("Foo//Bar"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::Path::deserializeFromString("/Foo"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::Path::deserializeFromString("'23/Foo"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::Path::deserializeFromString("Foo/Hællo/Foo"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::Path::deserializeFromString("Foo/3Hello"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::Path::deserializeFromString("Foo/Erm'233232"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::Path::deserializeFromString("Foo/Erm/"), babelwires::ParseException);
+    EXPECT_FALSE(babelwires::Path::deserializeFromString("Foo//Bar").has_value());
+    EXPECT_FALSE(babelwires::Path::deserializeFromString("/Foo").has_value());
+    EXPECT_FALSE(babelwires::Path::deserializeFromString("'23/Foo").has_value());
+    EXPECT_FALSE(babelwires::Path::deserializeFromString("Foo/Hællo/Foo").has_value());
+    EXPECT_FALSE(babelwires::Path::deserializeFromString("Foo/3Hello").has_value());
+    EXPECT_FALSE(babelwires::Path::deserializeFromString("Foo/Erm'233232").has_value());
+    EXPECT_FALSE(babelwires::Path::deserializeFromString("Foo/Erm/").has_value());
 }
 
 TEST(FeaturePathTest, pathHash) {
