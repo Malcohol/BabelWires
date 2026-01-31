@@ -57,36 +57,11 @@ namespace babelwires {
             IsSerializableValue<V>::value &&
                 std::is_same_v<decltype(V::deserializeFromString(std::declval<std::string>())), ResultT<V>>,
             ResultT<bool>>
-        tryDeserializeValue(std::string_view key, V& value) {
-            std::string asString;
-            ResultT<bool> ret = tryDeserializeValue(key, asString);
-            if (!ret) {
-                return ret;
-            }
-            if (!*ret) {
-                return false;
-            }
-            ResultT<V> result = V::deserializeFromString(asString);
-            if (result) {
-                value = *result;
-            }
-            return result.transform([](const V&) { return true; });
-        }
+        tryDeserializeValue(std::string_view key, V& value);
 
         /// Deserialize a value of type T with the given key.
         /// The result will hold an error if the key is not found or there is a parse error.
-        template <typename T> Result deserializeValue(std::string_view key, T& value) {
-            const ResultT<bool> result = tryDeserializeValue(key, value);
-            if (result) {
-                if (*result) {
-                    return {};
-                } else {
-                    return Error() << "No value for \"" << key << "\" found";
-                }
-            } else {
-                return Error() << "Error when deserializing \"" << key << "\": " << result.error().toString();
-            }
-        }
+        template <typename T> Result deserializeValue(std::string_view key, T& value);
 
         /// Deserialize a child object of type T.
         /// The key is often the name of a field, but by default it duplicates the name of the object's type.
@@ -166,24 +141,6 @@ namespace babelwires {
 
 } // namespace babelwires
 
-template <typename T> std::unique_ptr<T> babelwires::Deserializer::deserializeCurrentObject() {
-    return std::unique_ptr<T>(static_cast<T*>(deserializeCurrentObject(T::getSerializationTag())));
-}
-
-template <typename T>
-std::unique_ptr<T> babelwires::Deserializer::deserializeObject(std::string_view key, IsOptional isOptional) {
-    if (!pushObject(key)) {
-        if (isOptional == IsOptional::Required) {
-            throw ParseException() << "Missing child \"" << key << "\"";
-        } else {
-            return nullptr;
-        }
-    }
-    auto ret = deserializeCurrentObject<T>();
-    popObject();
-    return ret;
-}
-
 struct babelwires::Deserializer::BaseIterator {
     void operator++();
     bool isValid() const;
@@ -204,56 +161,18 @@ struct babelwires::Deserializer::BaseIterator {
 };
 
 template <typename T> struct babelwires::Deserializer::Iterator : BaseIterator {
-    std::unique_ptr<T> getObject() { return m_deserializer.deserializeCurrentObject<T>(); }
+    std::unique_ptr<T> getObject();
 
-    Iterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer)
-        : BaseIterator(std::move(impl), deserializer) {}
+    Iterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer);
 };
 
-template <typename T>
-babelwires::ResultT<typename babelwires::Deserializer::Iterator<T>>
-babelwires::Deserializer::tryDeserializeArray(std::string_view key) {
-    if (!pushArray(key)) {
-        return ResultT<Iterator<T>>(std::in_place, nullptr, *this);
-    }
-    return ResultT<Iterator<T>>(std::in_place, getIteratorImpl(), *this);
-}
 
-template <typename T>
-babelwires::ResultT<typename babelwires::Deserializer::Iterator<T>>
-babelwires::Deserializer::deserializeArray(std::string_view key) {
-    if (!pushArray(key)) {
-        return Error() << "Missing child \"" + std::string(key) + "\"";
-    }
-    return ResultT<Iterator<T>>(std::in_place, getIteratorImpl(), *this);
-}
 
 template <typename T> struct babelwires::Deserializer::ValueIterator : BaseIterator {
     /// Pass in a tempValue if T cannot be default constructed.
-    T deserializeValue(T tempValue = T()) {
-        auto result = m_deserializer.deserializeValue("value", tempValue);
-        THROW_ON_ERROR(result, ParseException);
-        return tempValue;
-    }
+    T deserializeValue(T tempValue = T());
 
-    ValueIterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer, std::string_view typeName)
-        : BaseIterator(std::move(impl), deserializer, std::string(typeName)) {}
+    ValueIterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer, std::string_view typeName);
 };
 
-template <typename T>
-babelwires::ResultT<typename babelwires::Deserializer::ValueIterator<T>>
-babelwires::Deserializer::tryDeserializeValueArray(std::string_view key, std::string_view typeName) {
-    if (!pushArray(key)) {
-        return ResultT<ValueIterator<T>>(std::in_place, nullptr, *this);
-    }
-    return ResultT<ValueIterator<T>>(std::in_place, getIteratorImpl(), *this, typeName);
-}
-
-template <typename T>
-babelwires::ResultT<typename babelwires::Deserializer::ValueIterator<T>>
-babelwires::Deserializer::deserializeValueArray(std::string_view key, std::string_view typeName) {
-    if (!pushArray(key)) {
-        return Error() << "Missing child \"" + std::string(key) + "\"";
-    }
-    return ResultT<ValueIterator<T>>(std::in_place, getIteratorImpl(), *this, typeName);
-}
+#include <BaseLib/Serialization/deserializer_inl.hpp>

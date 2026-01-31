@@ -1,0 +1,120 @@
+/**
+ * Inline implementations for the Deserializer.
+ *
+ * (C) 2021 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
+
+#include <type_traits>
+
+template <typename V>
+std::enable_if_t<
+    babelwires::IsSerializableValue<V>::value &&
+        std::is_same_v<decltype(V::deserializeFromString(std::declval<std::string>())), babelwires::ResultT<V>>,
+    babelwires::ResultT<bool>>
+babelwires::Deserializer::tryDeserializeValue(std::string_view key, V& value) {
+    std::string asString;
+    ResultT<bool> ret = tryDeserializeValue(key, asString);
+    if (!ret) {
+        return ret;
+    }
+    if (!*ret) {
+        return false;
+    }
+    ResultT<V> result = V::deserializeFromString(asString);
+    if (result) {
+        value = *result;
+    }
+    return result.transform([](const V&) { return true; });
+}
+
+template <typename T>
+inline babelwires::Result babelwires::Deserializer::deserializeValue(std::string_view key, T& value) {
+    const ResultT<bool> result = tryDeserializeValue(key, value);
+    if (result) {
+        if (*result) {
+            return {};
+        } else {
+            return Error() << "No value for \"" << key << "\" found";
+        }
+    } else {
+        return Error() << "Error when deserializing \"" << key << "\": " << result.error().toString();
+    }
+}
+
+template <typename T>
+inline std::unique_ptr<T> babelwires::Deserializer::deserializeCurrentObject() {
+    return std::unique_ptr<T>(static_cast<T*>(deserializeCurrentObject(T::getSerializationTag())));
+}
+
+template <typename T>
+inline std::unique_ptr<T> babelwires::Deserializer::deserializeObject(std::string_view key, IsOptional isOptional) {
+    if (!pushObject(key)) {
+        if (isOptional == IsOptional::Required) {
+            throw ParseException() << "Missing child \"" << key << "\"";
+        } else {
+            return nullptr;
+        }
+    }
+    auto ret = deserializeCurrentObject<T>();
+    popObject();
+    return ret;
+}
+
+template <typename T>
+inline std::unique_ptr<T> babelwires::Deserializer::Iterator<T>::getObject() {
+    return m_deserializer.deserializeCurrentObject<T>();
+}
+
+template <typename T>
+inline babelwires::Deserializer::Iterator<T>::Iterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer)
+    : BaseIterator(std::move(impl), deserializer) {}
+
+template <typename T>
+inline babelwires::ResultT<typename babelwires::Deserializer::Iterator<T>>
+babelwires::Deserializer::tryDeserializeArray(std::string_view key) {
+    if (!pushArray(key)) {
+        return ResultT<Iterator<T>>(std::in_place, nullptr, *this);
+    }
+    return ResultT<Iterator<T>>(std::in_place, getIteratorImpl(), *this);
+}
+
+template <typename T>
+inline babelwires::ResultT<typename babelwires::Deserializer::Iterator<T>>
+babelwires::Deserializer::deserializeArray(std::string_view key) {
+    if (!pushArray(key)) {
+        return Error() << "Missing child \"" + std::string(key) + "\"";
+    }
+    return ResultT<Iterator<T>>(std::in_place, getIteratorImpl(), *this);
+}
+
+template <typename T>
+inline T babelwires::Deserializer::ValueIterator<T>::deserializeValue(T tempValue) {
+    auto result = m_deserializer.deserializeValue("value", tempValue);
+    THROW_ON_ERROR(result, ParseException);
+    return tempValue;
+}
+
+template <typename T>
+inline babelwires::Deserializer::ValueIterator<T>::ValueIterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer, std::string_view typeName)
+    : BaseIterator(std::move(impl), deserializer, std::string(typeName)) {}
+
+template <typename T>
+inline babelwires::ResultT<typename babelwires::Deserializer::ValueIterator<T>>
+babelwires::Deserializer::tryDeserializeValueArray(std::string_view key, std::string_view typeName) {
+    if (!pushArray(key)) {
+        return ResultT<ValueIterator<T>>(std::in_place, nullptr, *this);
+    }
+    return ResultT<ValueIterator<T>>(std::in_place, getIteratorImpl(), *this, typeName);
+}
+
+template <typename T>
+inline babelwires::ResultT<typename babelwires::Deserializer::ValueIterator<T>>
+babelwires::Deserializer::deserializeValueArray(std::string_view key, std::string_view typeName) {
+    if (!pushArray(key)) {
+        return Error() << "Missing child \"" + std::string(key) + "\"";
+    }
+    return ResultT<ValueIterator<T>>(std::in_place, getIteratorImpl(), *this, typeName);
+}
