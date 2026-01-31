@@ -50,7 +50,7 @@ void babelwires::SelectOptionalsModifierData::serializeContents(Serializer& seri
 
 void babelwires::SelectOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
     THROW_ON_ERROR(deserializer.deserializeValue("path", m_targetPath), ParseException);
-    if (auto itResult = deserializer.deserializeArray<SerializableOptional>("optionals")) {
+    if (auto itResult = deserializer.tryDeserializeArray<SerializableOptional>("optionals")) {
         for (auto& it = *itResult; it.isValid(); ++it) {
             const auto newObject = it.getObject();
             if (newObject->tryAs<SerializableOptional_Activate>()) {

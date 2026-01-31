@@ -75,8 +75,7 @@ namespace babelwires {
 
         /// Deserialize a value of type T with the given key.
         /// The result will hold an error if the key is not found or there is a parse error.
-        template<typename T>
-        Result deserializeValue(std::string_view key, T& value) {
+        template <typename T> Result deserializeValue(std::string_view key, T& value) {
             const ResultT<bool> result = tryDeserializeValue(key, value);
             if (result) {
                 if (*result) {
@@ -98,6 +97,12 @@ namespace babelwires {
         /// A non-standard iterator, which provides access to the deserialized objects of base type T in an array.
         template <typename T> struct Iterator;
 
+        /// If the array is present in the data, get an iterator to the beginning of the array with the given key.
+        /// Otherwise return a result with an iterator that is not valid.
+        /// It's assumed that the caller does not need to distinguish between a missing array and an empty array
+        /// (even if an empty array is not valid for the type).
+        template <typename T> ResultT<Iterator<T>> tryDeserializeArray(std::string_view key);
+
         /// Get an iterator to the beginning of the array with the given key.
         /// Returns a Result containing the iterator on success, or an error if the array is not found.
         /// After checking the result, calling code can use for(auto& it = *result; it.isValid(); ++it) { ... }
@@ -105,6 +110,13 @@ namespace babelwires {
 
         /// A non-standard iterator, which provides access to deserialized values of type T in an array.
         template <typename T> struct ValueIterator;
+
+        /// If the value array is present in the data, get an iterator to the beginning of the value array with the
+        /// given key. Otherwise return a result with an iterator that is not valid. It's assumed that the caller does
+        /// not need to distinguish between a missing array and an empty array
+        /// (even if an empty array is not valid for the type).
+        template <typename T>
+        ResultT<ValueIterator<T>> tryDeserializeValueArray(std::string_view, std::string_view typeName = "element");
 
         /// Get a ValueIterator to the beginning of the value array with the given key.
         /// Returns a Result containing the iterator on success, or an error if the array is not found.
@@ -200,9 +212,18 @@ template <typename T> struct babelwires::Deserializer::Iterator : BaseIterator {
 
 template <typename T>
 babelwires::ResultT<typename babelwires::Deserializer::Iterator<T>>
+babelwires::Deserializer::tryDeserializeArray(std::string_view key) {
+    if (!pushArray(key)) {
+        return ResultT<Iterator<T>>(std::in_place, nullptr, *this);
+    }
+    return ResultT<Iterator<T>>(std::in_place, getIteratorImpl(), *this);
+}
+
+template <typename T>
+babelwires::ResultT<typename babelwires::Deserializer::Iterator<T>>
 babelwires::Deserializer::deserializeArray(std::string_view key) {
     if (!pushArray(key)) {
-        return std::unexpected(ErrorStorage(std::string("Missing child \"") + std::string(key) + "\""));
+        return Error() << "Missing child \"" + std::string(key) + "\"";
     }
     return ResultT<Iterator<T>>(std::in_place, getIteratorImpl(), *this);
 }
@@ -221,9 +242,18 @@ template <typename T> struct babelwires::Deserializer::ValueIterator : BaseItera
 
 template <typename T>
 babelwires::ResultT<typename babelwires::Deserializer::ValueIterator<T>>
+babelwires::Deserializer::tryDeserializeValueArray(std::string_view key, std::string_view typeName) {
+    if (!pushArray(key)) {
+        return ResultT<ValueIterator<T>>(std::in_place, nullptr, *this);
+    }
+    return ResultT<ValueIterator<T>>(std::in_place, getIteratorImpl(), *this, typeName);
+}
+
+template <typename T>
+babelwires::ResultT<typename babelwires::Deserializer::ValueIterator<T>>
 babelwires::Deserializer::deserializeValueArray(std::string_view key, std::string_view typeName) {
     if (!pushArray(key)) {
-        return std::unexpected(ErrorStorage(std::string("Missing child \"") + std::string(key) + "\""));
+        return Error() << "Missing child \"" + std::string(key) + "\"";
     }
     return ResultT<ValueIterator<T>>(std::in_place, getIteratorImpl(), *this, typeName);
 }

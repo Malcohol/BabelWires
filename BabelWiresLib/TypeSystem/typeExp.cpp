@@ -167,12 +167,16 @@ void babelwires::TypeExp::deserializeContents(Deserializer& deserializer) {
     } else if (*typeConstructorIdResult) {
         std::vector<TypeExp> typeArguments;
         std::vector<ValueHolder> valueArguments;
-        if (auto typeItResult = deserializer.deserializeArray<TypeExp>("typeArguments")) {
+        auto typeItResult = deserializer.tryDeserializeArray<TypeExp>("typeArguments");
+        THROW_ON_ERROR(typeItResult, ParseException);
+        if (typeItResult) {
             for (auto& typeIt = *typeItResult; typeIt.isValid(); ++typeIt) {
                 typeArguments.emplace_back(std::move(*typeIt.getObject()));
             }
         }
-        if (auto valueItResult = deserializer.deserializeArray<EditableValue>("valueArguments")) {
+        auto valueItResult = deserializer.tryDeserializeArray<EditableValue>("valueArguments");
+        THROW_ON_ERROR(valueItResult, ParseException);
+        if (valueItResult) {
             for (auto& valueIt = *valueItResult; valueIt.isValid(); ++valueIt) {
                 valueArguments.emplace_back(uniquePtrCast<Value>(valueIt.getObject()));
             }
