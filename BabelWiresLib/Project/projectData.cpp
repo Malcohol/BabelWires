@@ -23,8 +23,8 @@ void babelwires::ProjectData::serializeContents(Serializer& serializer) const {
 }
 
 void babelwires::ProjectData::deserializeContents(Deserializer& deserializer) {
-    // Optional - ignore failure
-    deserializer.deserializeValue("id", m_projectId);
+    const auto result = deserializer.tryDeserializeValue("id", m_projectId);
+    THROW_ON_ERROR(result, ParseException);
     auto itResult = deserializer.deserializeArray<NodeData>("elements");
     THROW_ON_ERROR(itResult, ParseException);
     for (auto& it = *itResult; it.isValid(); ++it) {

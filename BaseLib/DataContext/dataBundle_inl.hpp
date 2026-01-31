@@ -112,8 +112,8 @@ template <typename DATA> void babelwires::DataBundle<DATA>::serializeContents(Se
 }
 
 template <typename DATA> void babelwires::DataBundle<DATA>::deserializeContents(Deserializer& deserializer) {
-    // Optional - ignore failure
-    deserializer.deserializeValue("filePath", m_pathToFile);
+    const auto result = deserializer.tryDeserializeValue("filePath", m_pathToFile);
+    THROW_ON_ERROR(result, ParseException);
     m_data = std::move(*deserializer.deserializeObject<DATA>(DATA::serializationType));
     deserializeAdditionalMetadata(deserializer);
     m_identifierRegistry =

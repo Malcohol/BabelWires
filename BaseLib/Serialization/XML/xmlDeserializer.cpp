@@ -34,7 +34,7 @@ namespace
 }
 
 template <typename INT_TYPE>
-babelwires::Result babelwires::XmlDeserializer::getIntValue(const tinyxml2::XMLElement& element, std::string_view key,
+babelwires::ResultT<bool> babelwires::XmlDeserializer::getIntValue(const tinyxml2::XMLElement& element, std::string_view key,
                                               INT_TYPE& value) {
     keyWasQueried(key);
     BigInt<INT_TYPE> bigValue;
@@ -42,7 +42,7 @@ babelwires::Result babelwires::XmlDeserializer::getIntValue(const tinyxml2::XMLE
         case tinyxml2::XML_WRONG_ATTRIBUTE_TYPE:
             return Error() << "Attribute \"" << key << "\" did not contain an int";
         case tinyxml2::XML_NO_ATTRIBUTE:
-            return Error() << "Required attribute \"" << key << "\" not found";
+            return false;
         case tinyxml2::XML_SUCCESS:
             break;
         default:
@@ -52,7 +52,7 @@ babelwires::Result babelwires::XmlDeserializer::getIntValue(const tinyxml2::XMLE
         return Error() << "Attribute \"" << key << "\" was out of range";
     }
     value = static_cast<INT_TYPE>(bigValue);
-    return {};
+    return true;
 }
 
 babelwires::XmlDeserializer::XmlDeserializer(std::string_view xmlText,
@@ -77,61 +77,61 @@ const tinyxml2::XMLNode* babelwires::XmlDeserializer::getCurrentNode() const {
     }
 }
 
-babelwires::Result babelwires::XmlDeserializer::deserializeValue(std::string_view key, std::uint64_t& value) {
+babelwires::ResultT<bool> babelwires::XmlDeserializer::tryDeserializeValue(std::string_view key, std::uint64_t& value) {
     return getIntValue(*getCurrentElement(), key, value);
 }
 
-babelwires::Result babelwires::XmlDeserializer::deserializeValue(std::string_view key, std::uint32_t& value) {
+babelwires::ResultT<bool> babelwires::XmlDeserializer::tryDeserializeValue(std::string_view key, std::uint32_t& value) {
     return getIntValue(*getCurrentElement(), key, value);
 }
 
-babelwires::Result babelwires::XmlDeserializer::deserializeValue(std::string_view key, std::uint16_t& value) {
+babelwires::ResultT<bool> babelwires::XmlDeserializer::tryDeserializeValue(std::string_view key, std::uint16_t& value) {
     return getIntValue(*getCurrentElement(), key, value);
 }
 
-babelwires::Result babelwires::XmlDeserializer::deserializeValue(std::string_view key, std::uint8_t& value) {
+babelwires::ResultT<bool> babelwires::XmlDeserializer::tryDeserializeValue(std::string_view key, std::uint8_t& value) {
     return getIntValue(*getCurrentElement(), key, value);
 }
 
-babelwires::Result babelwires::XmlDeserializer::deserializeValue(std::string_view key, std::int32_t& value) {
+babelwires::ResultT<bool> babelwires::XmlDeserializer::tryDeserializeValue(std::string_view key, std::int32_t& value) {
     return getIntValue(*getCurrentElement(), key, value);
 }
 
-babelwires::Result babelwires::XmlDeserializer::deserializeValue(std::string_view key, std::int64_t& value) {
+babelwires::ResultT<bool> babelwires::XmlDeserializer::tryDeserializeValue(std::string_view key, std::int64_t& value) {
     return getIntValue(*getCurrentElement(), key, value);
 }
 
-babelwires::Result babelwires::XmlDeserializer::deserializeValue(std::string_view key, std::int16_t& value) {
+babelwires::ResultT<bool> babelwires::XmlDeserializer::tryDeserializeValue(std::string_view key, std::int16_t& value) {
     return getIntValue(*getCurrentElement(), key, value);
 }
 
-babelwires::Result babelwires::XmlDeserializer::deserializeValue(std::string_view key, std::int8_t& value) {
+babelwires::ResultT<bool> babelwires::XmlDeserializer::tryDeserializeValue(std::string_view key, std::int8_t& value) {
     return getIntValue(*getCurrentElement(), key, value);
 }
 
-babelwires::Result babelwires::XmlDeserializer::deserializeValue(std::string_view key, bool& value) {
+babelwires::ResultT<bool> babelwires::XmlDeserializer::tryDeserializeValue(std::string_view key, bool& value) {
     keyWasQueried(key);
     switch (getCurrentElement()->QueryBoolAttribute(babelwires::toCStr(key), &value)) {
         case tinyxml2::XML_WRONG_ATTRIBUTE_TYPE:
-            return Error() << "Attribute \"" << key << "\" did not contain an bool";
+            return Error() << "Attribute \"" << key << "\" did not contain a bool";
         case tinyxml2::XML_NO_ATTRIBUTE:
-            return Error() << "Required attribute \"" << key << "\" not found";
+            return false;
         case tinyxml2::XML_SUCCESS:
             break;
         default:
             return Error() << "Unhandled XML error";
     }
-    return {};
+    return true;
 }
 
-babelwires::Result babelwires::XmlDeserializer::deserializeValue(std::string_view key, std::string& value) {
+babelwires::ResultT<bool> babelwires::XmlDeserializer::tryDeserializeValue(std::string_view key, std::string& value) {
     keyWasQueried(key);
     const char* attr = getCurrentElement()->Attribute(toCStr(key));
     if (!attr) {
-        return Error() << "No such attribute \"" << key << "\"";
+        return false;
     }
     value = attr;
-    return {};
+    return true;
 }
 
 void babelwires::XmlDeserializer::contextPush(std::string_view key, const tinyxml2::XMLElement* element, bool isArray) {

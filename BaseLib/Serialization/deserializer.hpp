@@ -35,37 +35,58 @@ namespace babelwires {
         };
 
         /// Get a value from the current object.
-        /// These methods return a Result to indicate success/failure.
+        /// These methods return a ResultT<bool> where:
+        /// - Success with true means key was found and parsed successfully
+        /// - Success with false means key was missing (no error)
+        /// - Error means there was a parsing problem
 
-        virtual Result deserializeValue(std::string_view key, bool& value) = 0;
-        virtual Result deserializeValue(std::string_view key, std::string& value) = 0;
-        virtual Result deserializeValue(std::string_view key, std::uint64_t& value) = 0;
-        virtual Result deserializeValue(std::string_view key, std::uint32_t& value) = 0;
-        virtual Result deserializeValue(std::string_view key, std::uint16_t& value) = 0;
-        virtual Result deserializeValue(std::string_view key, std::uint8_t& value) = 0;
-        virtual Result deserializeValue(std::string_view key, std::int64_t& value) = 0;
-        virtual Result deserializeValue(std::string_view key, std::int32_t& value) = 0;
-        virtual Result deserializeValue(std::string_view key, std::int16_t& value) = 0;
-        virtual Result deserializeValue(std::string_view key, std::int8_t& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, bool& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::string& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::uint64_t& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::uint32_t& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::uint16_t& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::uint8_t& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::int64_t& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::int32_t& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::int16_t& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::int8_t& value) = 0;
 
         /// Objects with methods "serializeToString" and "deserializeFromString" can be deserialized as values.
         template <typename V>
         std::enable_if_t<
             IsSerializableValue<V>::value &&
                 std::is_same_v<decltype(V::deserializeFromString(std::declval<std::string>())), ResultT<V>>,
-            Result>
-        deserializeValue(std::string_view key, V& value) {
+            ResultT<bool>>
+        tryDeserializeValue(std::string_view key, V& value) {
             std::string asString;
-            Result ret = deserializeValue(key, asString);
+            ResultT<bool> ret = tryDeserializeValue(key, asString);
             if (!ret) {
                 return ret;
             }
-            ResultT<V> result = V::deserializeFromString(asString);
-            if (!result) {
-                return std::move(result).transform([](const auto&) {});
+            if (!*ret) {
+                return false;
             }
-            value = *result;
-            return {};
+            ResultT<V> result = V::deserializeFromString(asString);
+            if (result) {
+                value = *result;
+            }
+            return result.transform([](const V&) { return true; });
+        }
+
+        /// Deserialize a value of type T with the given key.
+        /// The result will hold an error if the key is not found or there is a parse error.
+        template<typename T>
+        Result deserializeValue(std::string_view key, T& value) {
+            const ResultT<bool> result = tryDeserializeValue(key, value);
+            if (result) {
+                if (*result) {
+                    return {};
+                } else {
+                    return Error() << "No value for \"" << key << "\" found";
+                }
+            } else {
+                return Error() << "Error when deserializing \"" << key << "\": " << result.error().toString();
+            }
         }
 
         /// Deserialize a child object of type T.
