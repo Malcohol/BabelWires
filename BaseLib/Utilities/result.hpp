@@ -1,40 +1,71 @@
 /**
- * A result class which can carry an explanation why it failed.
+ * Class for representing an error.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
 
+#include <expected>
+#include <sstream>
 #include <string>
 
 namespace babelwires {
-    /// A simple result class which carries a reason why it failed if it isn't success.
-    class Result {
+    class ErrorStorage;
+
+    /// Result type which is either a T or an Error.
+    template <typename T> using ResultT = std::expected<T, ErrorStorage>;
+
+    /// Simple result type for success/failure operations (replaces old Result class).
+    using Result = std::expected<void, ErrorStorage>;
+
+    class ErrorStorage {
       public:
-        /// Allow unambiguous construction in the successful case.
-        enum Success { success };
+        ErrorStorage(std::string message)
+            : m_message(std::move(message)) {}
 
-        /// Construct a successful result.
-        Result(Success) {}
-        
-        /// Construct a failed result with a justification.
-        Result(std::string reasonWhyFailed);
-        
-        /// Construct a failed result with a justification.
-        Result(const char* reasonWhyFailed);
+        const std::string& toString() const { return m_message; }
 
-        /// Return true if successful.
-        operator bool() const {
-            return m_reasonWhyFailed.empty();
+        /// Allow implicit conversion to a ResultT.
+        template <typename T> operator ResultT<T>() && {
+            return std::unexpected<ErrorStorage>(std::move(*this));
         }
 
-        /// Get the reason why the result was not successful.
-        std::string getReasonWhyFailed() const;
+      private:
+        std::string m_message;
+    };
+
+    /// Class representing an error.
+    class Error {
+      public:
+        Error() = default;
+        Error(Error&&) = default;
+        Error& operator=(Error&&) = default;
+
+        // Copy operations not available since ostringstream is not copyable
+        Error(const Error&) = delete;
+        Error& operator=(const Error&) = delete;
+
+        template <typename T> Error& operator<<(T&& t) {
+            m_os << std::forward<T>(t);
+            return *this;
+        }
+
+        /// Allow implicit conversion to a ResultT.
+        template <typename T> operator ResultT<T>() {
+            return std::unexpected<ErrorStorage>(ErrorStorage(m_os.str()));
+        }
 
       private:
-        /// Empty means successful.
-        std::string m_reasonWhyFailed;
+        std::ostringstream m_os;
     };
-}
+
+} // namespace babelwires
+
+#define THROW_ON_ERROR(RESULT, EXCEPTION_TYPE)                                                                         \
+    do {                                                                                                               \
+        if (!(RESULT)) {                                                                                               \
+            throw EXCEPTION_TYPE() << (RESULT).error().toString();                                                     \
+        }                                                                                                              \
+    } while (0)

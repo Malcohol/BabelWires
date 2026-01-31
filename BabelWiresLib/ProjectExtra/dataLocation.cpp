@@ -40,7 +40,7 @@ void babelwires::DataLocation::serializeContents(Serializer& serializer) const {
 }
 
 void babelwires::DataLocation::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToValue);
+    THROW_ON_ERROR(deserializer.deserializeValue("path", m_pathToValue), ParseException);
 }
 
 void babelwires::DataLocation::visitIdentifiers(IdentifierVisitor& visitor) {

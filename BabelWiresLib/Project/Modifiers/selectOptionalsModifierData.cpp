@@ -22,7 +22,7 @@ namespace {
             serializer.serializeValue("optional", m_optional);
         }
         void deserializeContents(babelwires::Deserializer& deserializer) {
-            deserializer.deserializeValue("optional", m_optional);
+            THROW_ON_ERROR(deserializer.deserializeValue("optional", m_optional), babelwires::ParseException);
         };
         babelwires::ShortId m_optional;
     };
@@ -49,17 +49,17 @@ void babelwires::SelectOptionalsModifierData::serializeContents(Serializer& seri
 }
 
 void babelwires::SelectOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_targetPath);
-    for (auto it =
-             deserializer.deserializeArray<SerializableOptional>("optionals", Deserializer::IsOptional::Optional);
-         it.isValid(); ++it) {
-        const auto newObject = it.getObject();
-        if (newObject->tryAs<SerializableOptional_Activate>()) {
-            m_optionalsActivation[newObject->m_optional] = true;
-        } else if (newObject->tryAs<SerializableOptional_Deactivate>()) {
-            m_optionalsActivation[newObject->m_optional] = false;
-        } else {
-            throw ModelException() << "Problem deserializing activated/deactivated optional";
+    THROW_ON_ERROR(deserializer.deserializeValue("path", m_targetPath), ParseException);
+    if (auto itResult = deserializer.tryDeserializeArray<SerializableOptional>("optionals")) {
+        for (auto& it = *itResult; it.isValid(); ++it) {
+            const auto newObject = it.getObject();
+            if (newObject->tryAs<SerializableOptional_Activate>()) {
+                m_optionalsActivation[newObject->m_optional] = true;
+            } else if (newObject->tryAs<SerializableOptional_Deactivate>()) {
+                m_optionalsActivation[newObject->m_optional] = false;
+            } else {
+                throw ModelException() << "Problem deserializing activated/deactivated optional";
+            }
         }
     }
 }

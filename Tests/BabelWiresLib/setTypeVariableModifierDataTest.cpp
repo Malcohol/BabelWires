@@ -117,7 +117,7 @@ TEST(SetTypeVariableModifierDataTest, clone) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::SetTypeVariableModifierData data;
-    data.m_targetPath = babelwires::Path::deserializeFromString("foo/bar/boo");
+    data.m_targetPath = *babelwires::Path::deserializeFromString("foo/bar/boo");
     data.m_typeAssignments.resize(2);
     data.m_typeAssignments[0] = babelwires::StringType::getThisIdentifier();
     data.m_typeAssignments[1] = babelwires::DefaultIntType::getThisIdentifier();
@@ -137,7 +137,7 @@ TEST(SetTypeVariableModifierDataTest, serialize) {
         testUtils::TestEnvironment testEnvironment;
 
         babelwires::SetTypeVariableModifierData data;
-        data.m_targetPath = babelwires::Path::deserializeFromString("foo/bar/boo");
+        data.m_targetPath = *babelwires::Path::deserializeFromString("foo/bar/boo");
         data.m_typeAssignments.resize(2);
         data.m_typeAssignments[0] = babelwires::StringType::getThisIdentifier();
         data.m_typeAssignments[1] = babelwires::DefaultIntType::getThisIdentifier();
@@ -155,7 +155,7 @@ TEST(SetTypeVariableModifierDataTest, serialize) {
     auto dataPtr = deserializer.deserializeObject<babelwires::SetTypeVariableModifierData>();
     deserializer.finalize();
 
-    EXPECT_EQ(dataPtr->m_targetPath, babelwires::Path::deserializeFromString("foo/bar/boo"));
+    EXPECT_EQ(dataPtr->m_targetPath, *babelwires::Path::deserializeFromString("foo/bar/boo"));
     ASSERT_EQ(dataPtr->m_typeAssignments.size(), 2);
     EXPECT_EQ(dataPtr->m_typeAssignments[0], babelwires::StringType::getThisIdentifier());
     EXPECT_EQ(dataPtr->m_typeAssignments[1], babelwires::DefaultIntType::getThisIdentifier());

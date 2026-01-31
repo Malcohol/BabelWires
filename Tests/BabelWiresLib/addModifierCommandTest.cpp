@@ -126,7 +126,7 @@ TEST(AddModifierCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
-    modData.m_targetPath = babelwires::Path::deserializeFromString("qqq/zzz");
+    modData.m_targetPath = *babelwires::Path::deserializeFromString("qqq/zzz");
 
     babelwires::AddModifierCommand command("Test command", 51, modData.clone());
 
@@ -142,7 +142,7 @@ TEST(AddModifierCommandTest, failSafelyNoTarget) {
     testEnvironment.m_project.getNode(elementId);
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
-    modData.m_targetPath = babelwires::Path::deserializeFromString("qqq/zzz");
+    modData.m_targetPath = *babelwires::Path::deserializeFromString("qqq/zzz");
 
     babelwires::AddModifierCommand command("Test command", elementId, modData.clone());
 

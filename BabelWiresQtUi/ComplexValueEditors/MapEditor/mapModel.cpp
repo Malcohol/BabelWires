@@ -80,7 +80,7 @@ QVariant babelwires::MapModel::data(const QModelIndex& index, int role) const {
         case Qt::ToolTipRole: {
             const Result validity = entry.getValidity();
             if (!validity) {
-                return QString(validity.getReasonWhyFailed().c_str());
+                return QString(validity.error().toString().c_str());
             } else {
                 return {};
             }

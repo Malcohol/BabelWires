@@ -44,5 +44,5 @@ void babelwires::ProjectDataLocation::serializeContents(Serializer& serializer) 
 
 void babelwires::ProjectDataLocation::deserializeContents(Deserializer& deserializer) {
     DataLocation::deserializeContents(deserializer);
-    deserializer.deserializeValue("id", m_nodeId);
+    THROW_ON_ERROR(deserializer.deserializeValue("id", m_nodeId), ParseException);
 }

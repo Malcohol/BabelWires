@@ -70,9 +70,9 @@ std::string babelwires::Path::serializeToString() const {
     return os.str();
 }
 
-babelwires::Path babelwires::Path::deserializeFromString(const std::string& pathString) {
+babelwires::ResultT<babelwires::Path> babelwires::Path::deserializeFromString(const std::string& pathString) {
     if (pathString.empty()) {
-        return {};
+        return Path{};
     }
 
     Path path;
@@ -82,9 +82,13 @@ babelwires::Path babelwires::Path::deserializeFromString(const std::string& path
         ++start;
         const int next = pathString.find(s_pathDelimiter, start);
         const std::string stepString = pathString.substr(start, next - start);
-        path.m_steps.emplace_back(PathStep::deserializeFromString(stepString));
+        auto stepResult = PathStep::deserializeFromString(stepString);
+        if (!stepResult) {
+            return std::move(stepResult.error());
+        }
+        path.m_steps.emplace_back(*stepResult);
         if (path.m_steps.back().isNotAStep()) {
-            throw ParseException() << "Parsing a path encountered a step which is not a step";
+            return Error() << "Parsing a path encountered a step which is not a step";
         }
         start = next;
     } while (start != std::string::npos);

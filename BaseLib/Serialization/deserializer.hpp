@@ -1,8 +1,9 @@
 /**
- * The Deserializer supports the loading of serialized data, where the particular representation (e.g. XML) of data is abstracted.
+ * The Deserializer supports the loading of serialized data, where the particular representation (e.g. XML) of data is
+ * abstracted.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -10,6 +11,7 @@
 #include <BaseLib/Serialization/serializable.hpp>
 #include <BaseLib/Serialization/serializableValue.hpp>
 #include <BaseLib/Serialization/serializerDeserializerCommon.hpp>
+#include <BaseLib/Utilities/result.hpp>
 #include <BaseLib/exceptions.hpp>
 
 #include <cassert>
@@ -18,7 +20,6 @@
 #include <string_view>
 
 namespace babelwires {
-
 
     class Deserializer : public SerializerDeserializerCommon {
       public:
@@ -34,41 +35,33 @@ namespace babelwires {
         };
 
         /// Get a value from the current object.
-        /// If optional, these methods return a boolean to indicate success.
-        /// Otherwise they throw a ParseException.
+        /// These methods return a ResultT<bool> where:
+        /// - Success with true means key was found and parsed successfully
+        /// - Success with false means key was missing (no error)
+        /// - Error means there was a parsing problem
 
-        virtual bool deserializeValue(std::string_view key, bool& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::string& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::uint64_t& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::uint32_t& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::uint16_t& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::uint8_t& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::int64_t& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::int32_t& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::int16_t& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
-        virtual bool deserializeValue(std::string_view key, std::int8_t& value,
-                                      IsOptional isOptional = IsOptional::Required) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, bool& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::string& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::uint64_t& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::uint32_t& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::uint16_t& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::uint8_t& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::int64_t& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::int32_t& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::int16_t& value) = 0;
+        virtual ResultT<bool> tryDeserializeValue(std::string_view key, std::int8_t& value) = 0;
 
-        /// Objects with methods "serializeToString" and "deserializeToString" can be deserialized as values.
+        /// Objects with methods "serializeToString" and "deserializeFromString" can be deserialized as values.
         template <typename V>
-        std::enable_if_t<IsSerializableValue<V>::value, bool>
-        deserializeValue(std::string_view key, V& value, IsOptional isOptional = IsOptional::Required) {
-            std::string asString;
-            const bool ret = deserializeValue(key, asString, isOptional);
-            if (ret) {
-                value = V::deserializeFromString(asString);
-            }
-            return ret;
-        }
+        std::enable_if_t<
+            IsSerializableValue<V>::value &&
+                std::is_same_v<decltype(V::deserializeFromString(std::declval<std::string>())), ResultT<V>>,
+            ResultT<bool>>
+        tryDeserializeValue(std::string_view key, V& value);
+
+        /// Deserialize a value of type T with the given key.
+        /// The result will hold an error if the key is not found or there is a parse error.
+        template <typename T> Result deserializeValue(std::string_view key, T& value);
 
         /// Deserialize a child object of type T.
         /// The key is often the name of a field, but by default it duplicates the name of the object's type.
@@ -79,17 +72,32 @@ namespace babelwires {
         /// A non-standard iterator, which provides access to the deserialized objects of base type T in an array.
         template <typename T> struct Iterator;
 
+        /// If the array is present in the data, get an iterator to the beginning of the array with the given key.
+        /// Otherwise return a result with an iterator that is not valid.
+        /// It's assumed that the caller does not need to distinguish between a missing array and an empty array
+        /// (even if an empty array is not valid for the type).
+        template <typename T> ResultT<Iterator<T>> tryDeserializeArray(std::string_view key);
+
         /// Get an iterator to the beginning of the array with the given key.
-        template <typename T>
-        Iterator<T> deserializeArray(std::string_view key, IsOptional isOptional = IsOptional::Required);
+        /// Returns a Result containing the iterator on success, or an error if the array is not found.
+        /// After checking the result, calling code can use for(auto& it = *result; it.isValid(); ++it) { ... }
+        template <typename T> ResultT<Iterator<T>> deserializeArray(std::string_view key);
 
         /// A non-standard iterator, which provides access to deserialized values of type T in an array.
         template <typename T> struct ValueIterator;
 
-        /// Get a ValueIterator to the beginning of the value array with the given key.
+        /// If the value array is present in the data, get an iterator to the beginning of the value array with the
+        /// given key. Otherwise return a result with an iterator that is not valid. It's assumed that the caller does
+        /// not need to distinguish between a missing array and an empty array
+        /// (even if an empty array is not valid for the type).
         template <typename T>
-        ValueIterator<T> deserializeValueArray(std::string_view, IsOptional isOptional = IsOptional::Required,
-                                               std::string_view typeName = "element");
+        ResultT<ValueIterator<T>> tryDeserializeValueArray(std::string_view, std::string_view typeName = "element");
+
+        /// Get a ValueIterator to the beginning of the value array with the given key.
+        /// Returns a Result containing the iterator on success, or an error if the array is not found.
+        /// After checking the result, calling code can use for(auto& it = *result; it.isValid(); ++it) { ... }
+        template <typename T>
+        ResultT<ValueIterator<T>> deserializeValueArray(std::string_view, std::string_view typeName = "element");
 
         /// Get a description of the current parsing location which can be used in errors and warnings (e.g. a line
         /// number).
@@ -133,24 +141,6 @@ namespace babelwires {
 
 } // namespace babelwires
 
-template <typename T> std::unique_ptr<T> babelwires::Deserializer::deserializeCurrentObject() {
-    return std::unique_ptr<T>(static_cast<T*>(deserializeCurrentObject(T::getSerializationTag())));
-}
-
-template <typename T>
-std::unique_ptr<T> babelwires::Deserializer::deserializeObject(std::string_view key, IsOptional isOptional) {
-    if (!pushObject(key)) {
-        if (isOptional == IsOptional::Required) {
-            throw ParseException() << "Missing child \"" << key << "\"";
-        } else {
-            return nullptr;
-        }
-    }
-    auto ret = deserializeCurrentObject<T>();
-    popObject();
-    return ret;
-}
-
 struct babelwires::Deserializer::BaseIterator {
     void operator++();
     bool isValid() const;
@@ -171,46 +161,18 @@ struct babelwires::Deserializer::BaseIterator {
 };
 
 template <typename T> struct babelwires::Deserializer::Iterator : BaseIterator {
-    std::unique_ptr<T> getObject() { return m_deserializer.deserializeCurrentObject<T>(); }
+    std::unique_ptr<T> getObject();
 
-    Iterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer)
-        : BaseIterator(std::move(impl), deserializer) {}
+    Iterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer);
 };
 
-template <typename T>
-babelwires::Deserializer::Iterator<T> babelwires::Deserializer::deserializeArray(std::string_view key,
-                                                                                 IsOptional isOptional) {
-    if (!pushArray(key)) {
-        if (isOptional == IsOptional::Required) {
-            throw ParseException() << "Missing child \"" << key << "\"";
-        } else {
-            return Iterator<T>(nullptr, *this);
-        }
-    }
-    return Iterator<T>(getIteratorImpl(), *this);
-}
+
 
 template <typename T> struct babelwires::Deserializer::ValueIterator : BaseIterator {
     /// Pass in a tempValue if T cannot be default constructed.
-    T deserializeValue(T tempValue = T()) {
-        m_deserializer.deserializeValue("value", tempValue);
-        return tempValue;
-    }
+    T deserializeValue(T tempValue = T());
 
-    ValueIterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer, std::string_view typeName)
-        : BaseIterator(std::move(impl), deserializer, std::string(typeName)) {}
+    ValueIterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer, std::string_view typeName);
 };
 
-template <typename T>
-babelwires::Deserializer::ValueIterator<T> babelwires::Deserializer::deserializeValueArray(std::string_view key,
-                                                                                           IsOptional isOptional,
-                                                                                           std::string_view typeName) {
-    if (!pushArray(key)) {
-        if (isOptional == IsOptional::Required) {
-            throw ParseException() << "Missing child \"" << key << "\"";
-        } else {
-            return ValueIterator<T>(nullptr, *this, typeName);
-        }
-    }
-    return ValueIterator<T>(getIteratorImpl(), *this, typeName);
-}
+#include <BaseLib/Serialization/deserializer_inl.hpp>

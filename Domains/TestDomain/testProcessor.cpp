@@ -27,23 +27,23 @@ testDomain::TestProcessorInputOutputType::TestProcessorInputOutputType(const bab
                   {getRecordId(), TestSimpleRecordType::getThisIdentifier()}}) {}
 
 const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToInt =
-    babelwires::Path::deserializeFromString("Int");
+    *babelwires::Path::deserializeFromString("Int");
 const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToArray =
-    babelwires::Path::deserializeFromString("Array");
+    *babelwires::Path::deserializeFromString("Array");
 const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToArray_0 =
-    babelwires::Path::deserializeFromString("Array/0");
+    *babelwires::Path::deserializeFromString("Array/0");
 const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToArray_1 =
-    babelwires::Path::deserializeFromString("Array/1");
+    *babelwires::Path::deserializeFromString("Array/1");
 const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToArray_2 =
-    babelwires::Path::deserializeFromString("Array/2");
+    *babelwires::Path::deserializeFromString("Array/2");
 const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToArray_3 =
-    babelwires::Path::deserializeFromString("Array/3");
+    *babelwires::Path::deserializeFromString("Array/3");
 const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToArray_4 =
-    babelwires::Path::deserializeFromString("Array/4");
+    *babelwires::Path::deserializeFromString("Array/4");
 const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToRecord =
-    babelwires::Path::deserializeFromString("Record");
+    *babelwires::Path::deserializeFromString("Record");
 const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToInt2 =
-    babelwires::Path::deserializeFromString("Record/intR0");
+    *babelwires::Path::deserializeFromString("Record/intR0");
 
 testDomain::TestProcessor::TestProcessor(const babelwires::ProjectContext& context)
     : babelwires::Processor(context, testDomain::TestProcessorInputOutputType::getThisIdentifier(),

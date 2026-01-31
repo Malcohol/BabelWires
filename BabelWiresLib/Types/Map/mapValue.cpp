@@ -152,11 +152,11 @@ void babelwires::MapValue::serializeContents(Serializer& serializer) const {
 void babelwires::MapValue::deserializeContents(Deserializer& deserializer) {
     m_sourceTypeExp = std::move(*deserializer.deserializeObject<TypeExp>("sourceType"));
     m_targetTypeExp = std::move(*deserializer.deserializeObject<TypeExp>("targetType"));
-    auto it = deserializer.deserializeArray<MapEntryData>("entries", Deserializer::IsOptional::Optional);
-    while (it.isValid()) {
-        std::unique_ptr<MapEntryData> newEntry = it.getObject();
-        m_mapEntries.emplace_back(std::move(newEntry));
-        ++it;
+    if (auto itResult = deserializer.deserializeArray<MapEntryData>("entries")) {
+        for (auto& it = *itResult; it.isValid(); ++it) {
+            std::unique_ptr<MapEntryData> newEntry = it.getObject();
+            m_mapEntries.emplace_back(std::move(newEntry));
+        }
     }
 }
 

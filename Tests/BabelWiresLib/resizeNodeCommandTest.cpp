@@ -46,7 +46,7 @@ TEST(ResizeNodeCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
-    modData.m_targetPath = babelwires::Path::deserializeFromString("qqq/zzz");
+    modData.m_targetPath = *babelwires::Path::deserializeFromString("qqq/zzz");
 
     babelwires::ResizeNodeCommand command("Test command", 57, babelwires::UiSize{113});
 

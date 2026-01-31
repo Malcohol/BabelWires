@@ -40,7 +40,7 @@ TEST(MapProjectTest, mapProjectEntry) {
 
     entry.validate(typeSystem, stringType, stringType, true);
     EXPECT_FALSE(entry.getValidity());
-    std::string reason = entry.getValidity().getReasonWhyFailed();
+    std::string reason = entry.getValidity().error().toString();
     EXPECT_TRUE(reason.find("fallback") != reason.npos);
 }
 
