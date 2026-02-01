@@ -26,14 +26,6 @@ namespace babelwires {
         Deserializer(UserLogger& userLogger, const DeserializationRegistry& deserializationRegistry);
         virtual ~Deserializer();
 
-        enum class IsOptional {
-            /// A ParseException will be thrown if the object or value is not found.
-            Required,
-
-            /// No exception is thrown if the object or value is not found.
-            Optional
-        };
-
         /// Get a value from the current object.
         /// These methods return a ResultT<bool> where:
         /// - Success with true means key was found and parsed successfully
@@ -66,8 +58,12 @@ namespace babelwires {
         /// Deserialize a child object of type T.
         /// The key is often the name of a field, but by default it duplicates the name of the object's type.
         template <typename T>
-        std::unique_ptr<T> deserializeObject(std::string_view key = T::serializationType,
-                                             IsOptional isOptional = IsOptional::Required);
+        std::unique_ptr<T> deserializeObject(std::string_view key = T::serializationType);
+
+        /// Deserialize a child object of type T.
+        /// If the key is missing, a nullptr is returned.
+        template <typename T>
+        ResultT<std::unique_ptr<T>> tryDeserializeObject(std::string_view key = T::serializationType);
 
         /// A non-standard iterator, which provides access to the deserialized objects of base type T in an array.
         template <typename T> struct Iterator;

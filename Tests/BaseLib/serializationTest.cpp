@@ -137,8 +137,8 @@ namespace {
 
             void serializeContents(Serializer& serializer) const override { serializer.serializeValue("x", m_x); }
 
-            void deserializeContents(Deserializer& deserializer) override { 
-                THROW_ON_ERROR(deserializer.deserializeValue("x", m_x), ParseException); 
+            void deserializeContents(Deserializer& deserializer) override {
+                THROW_ON_ERROR(deserializer.deserializeValue("x", m_x), ParseException);
             }
 
             // A refactor will split this into a sign and an unsigened int.
@@ -249,8 +249,8 @@ namespace {
 
         void serializeContents(Serializer& serializer) const override { serializer.serializeValue("x", m_x); }
 
-        void deserializeContents(Deserializer& deserializer) override { 
-            THROW_ON_ERROR(deserializer.deserializeValue("x", m_x), ParseException); 
+        void deserializeContents(Deserializer& deserializer) override {
+            THROW_ON_ERROR(deserializer.deserializeValue("x", m_x), ParseException);
         }
 
         int m_x = 0;
@@ -267,8 +267,8 @@ namespace {
 
         void serializeContents(Serializer& serializer) const override { serializer.serializeValue("s", m_s); }
 
-        void deserializeContents(Deserializer& deserializer) override { 
-            THROW_ON_ERROR(deserializer.deserializeValue("s", m_s), ParseException); 
+        void deserializeContents(Deserializer& deserializer) override {
+            THROW_ON_ERROR(deserializer.deserializeValue("s", m_s), ParseException);
         }
 
         std::string m_s;
@@ -312,15 +312,21 @@ namespace {
         }
 
         void deserializeContents(Deserializer& deserializer) override {
-            m_base = deserializer.deserializeObject<Base>("base", babelwires::Deserializer::IsOptional::Optional);
-            m_concrete0 =
-                deserializer.deserializeObject<Concrete0>("concrete0", babelwires::Deserializer::IsOptional::Optional);
-            m_intermediate = deserializer.deserializeObject<Intermediate>(
-                "intermediate", babelwires::Deserializer::IsOptional::Optional);
-            m_concrete1 =
-                deserializer.deserializeObject<Concrete1>("concrete1", babelwires::Deserializer::IsOptional::Optional);
-            m_concrete2 =
-                deserializer.deserializeObject<Concrete2>("concrete2", babelwires::Deserializer::IsOptional::Optional);
+            auto baseResult = deserializer.tryDeserializeObject<Base>("base");
+            THROW_ON_ERROR(baseResult, ParseException);
+            m_base = std::move(*baseResult);
+            auto concreteResult = deserializer.tryDeserializeObject<Concrete0>("concrete0");
+            THROW_ON_ERROR(concreteResult, ParseException);
+            m_concrete0 = std::move(*concreteResult);
+            auto intermediateResult = deserializer.tryDeserializeObject<Intermediate>("intermediate");
+            THROW_ON_ERROR(intermediateResult, ParseException);
+            m_intermediate = std::move(*intermediateResult);
+            auto concrete1Result = deserializer.tryDeserializeObject<Concrete1>("concrete1");
+            THROW_ON_ERROR(concrete1Result, ParseException);
+            m_concrete1 = std::move(*concrete1Result);
+            auto concrete2Result = deserializer.tryDeserializeObject<Concrete2>("concrete2");
+            THROW_ON_ERROR(concrete2Result, ParseException);
+            m_concrete2 = std::move(*concrete2Result);
             if (auto itResult = deserializer.deserializeArray<Base>("objects")) {
                 for (auto& it = *itResult; it.isValid(); ++it) {
                     auto result = it.getObject();
@@ -404,8 +410,8 @@ TEST(SerializationTest, polymorphismFail) {
         serializedContents = std::move(os.str());
     }
 
-    // Replace Concrete2 by an unrelated type, a distanct relation and its parent type.
-    // All of these scenarios should throw, since they are not subtypes of Concrete2.
+    // Replace Concrete2 by an unrelated type, a distant relation and its parent type.
+    // All of these scenarios should fail, since they are not subtypes of Concrete2.
     for (const auto& t : std::array<std::string_view, 3>{"A", "Concrete0", "Concrete1"}) {
         std::string serializedContents2 = serializedContents;
 

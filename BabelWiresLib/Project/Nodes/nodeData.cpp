@@ -87,9 +87,11 @@ void babelwires::NodeData::serializeUiData(Serializer& serializer) const {
 }
 
 void babelwires::NodeData::deserializeUiData(Deserializer& deserializer) {
-    if (auto uiData =
-            deserializer.deserializeObject<UiData>(UiData::serializationType, Deserializer::IsOptional::Optional)) {
-        m_uiData = *uiData;
+    auto uiData =
+            deserializer.tryDeserializeObject<UiData>(UiData::serializationType);
+    THROW_ON_ERROR(uiData, ParseException);    
+    if (*uiData) {        
+        m_uiData = **uiData;
     }
     if (auto itResult = deserializer.deserializeValueArray<Path>("expandedPaths", "path")) {
         for (auto& it = *itResult; it.isValid(); ++it) {
