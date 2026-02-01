@@ -22,16 +22,15 @@ void babelwires::ProjectData::serializeContents(Serializer& serializer) const {
     serializer.serializeArray("elements", m_nodes);
 }
 
-void babelwires::ProjectData::deserializeContents(Deserializer& deserializer) {
-    const auto result = deserializer.tryDeserializeValue("id", m_projectId);
-    THROW_ON_ERROR(result, ParseException);
-    auto itResult = deserializer.deserializeArray<NodeData>("elements");
-    THROW_ON_ERROR(itResult, ParseException);
-    for (auto& it = *itResult; it.isValid(); ++it) {
-        auto result = it.getObject();
-        THROW_ON_ERROR(result, ParseException);
-        m_nodes.emplace_back(std::move(*result));
+babelwires::Result babelwires::ProjectData::deserializeContents(Deserializer& deserializer) {
+    auto result = deserializer.tryDeserializeValue("id", m_projectId);
+    if (auto itResult = deserializer.deserializeArray<NodeData>("elements")) {
+        for (auto& it = *itResult; it.isValid(); ++it) {
+            ASSIGN_OR_ERROR(auto nodeResult, it.getObject());
+            m_nodes.emplace_back(std::move(nodeResult));
+        }
     }
+    return {};
 }
 
 void babelwires::ProjectData::visitIdentifiers(IdentifierVisitor& visitor) {

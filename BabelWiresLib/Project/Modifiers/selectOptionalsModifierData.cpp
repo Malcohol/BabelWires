@@ -21,8 +21,8 @@ namespace {
         void serializeContents(babelwires::Serializer& serializer) const {
             serializer.serializeValue("optional", m_optional);
         }
-        void deserializeContents(babelwires::Deserializer& deserializer) {
-            THROW_ON_ERROR(deserializer.deserializeValue("optional", m_optional), babelwires::ParseException);
+        babelwires::Result deserializeContents(babelwires::Deserializer& deserializer) {
+            return deserializer.deserializeValue("optional", m_optional);
         };
         babelwires::ShortId m_optional;
     };
@@ -48,13 +48,11 @@ void babelwires::SelectOptionalsModifierData::serializeContents(Serializer& seri
     serializer.serializeArray("optionals", temp);
 }
 
-void babelwires::SelectOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
-    THROW_ON_ERROR(deserializer.deserializeValue("path", m_targetPath), ParseException);
+babelwires::Result babelwires::SelectOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.deserializeValue("path", m_targetPath));
     if (auto itResult = deserializer.tryDeserializeArray<SerializableOptional>("optionals")) {
         for (auto& it = *itResult; it.isValid(); ++it) {
-            auto result = it.getObject();
-            THROW_ON_ERROR(result, ParseException);
-            const auto newObject = std::move(*result);
+            ASSIGN_OR_ERROR(const auto newObject, it.getObject());
             if (newObject->tryAs<SerializableOptional_Activate>()) {
                 m_optionalsActivation[newObject->m_optional] = true;
             } else if (newObject->tryAs<SerializableOptional_Deactivate>()) {
@@ -64,6 +62,7 @@ void babelwires::SelectOptionalsModifierData::deserializeContents(Deserializer& 
             }
         }
     }
+    return {};
 }
 
 void babelwires::SelectOptionalsModifierData::apply(ValueTreeNode* target) const {

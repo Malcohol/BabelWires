@@ -42,11 +42,12 @@ namespace {
             serializer.serializeValue("filePath", m_filePath);
         }
 
-        void deserializeContents(babelwires::Deserializer& deserializer) override {
-            THROW_ON_ERROR(deserializer.deserializeValue("shortId", m_shortId), babelwires::ParseException);
-            THROW_ON_ERROR(deserializer.deserializeValue("mediumId", m_mediumId), babelwires::ParseException);
-            THROW_ON_ERROR(deserializer.deserializeValue("longId", m_longId), babelwires::ParseException);
-            THROW_ON_ERROR(deserializer.deserializeValue("filePath", m_filePath), babelwires::ParseException);
+        babelwires::Result deserializeContents(babelwires::Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeValue("shortId", m_shortId));
+            DO_OR_ERROR(deserializer.deserializeValue("mediumId", m_mediumId));
+            DO_OR_ERROR(deserializer.deserializeValue("longId", m_longId));
+            DO_OR_ERROR(deserializer.deserializeValue("filePath", m_filePath));
+            return {};
         }
 
         int m_contents;

@@ -38,9 +38,10 @@ void babelwires::ArraySizeModifierData::serializeContents(Serializer& serializer
     serializer.serializeValue("size", m_size);
 }
 
-void babelwires::ArraySizeModifierData::deserializeContents(Deserializer& deserializer) {
-    THROW_ON_ERROR(deserializer.deserializeValue("path", m_targetPath), ParseException);
-    THROW_ON_ERROR(deserializer.deserializeValue("size", m_size), ParseException);
+babelwires::Result babelwires::ArraySizeModifierData::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.deserializeValue("path", m_targetPath));
+    DO_OR_ERROR(deserializer.deserializeValue("size", m_size));
+    return {};
 }
 
 void babelwires::ArraySizeModifierData::addEntries(ValueTreeNode* target, int indexOfNewElement,

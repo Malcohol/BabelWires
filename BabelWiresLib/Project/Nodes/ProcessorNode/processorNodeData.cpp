@@ -37,8 +37,9 @@ void babelwires::ProcessorNodeData::serializeContents(Serializer& serializer) co
     serializeUiData(serializer);
 }
 
-void babelwires::ProcessorNodeData::deserializeContents(Deserializer& deserializer) {
-    getCommonKeyValuePairs(deserializer);
-    deserializeModifiers(deserializer);
-    deserializeUiData(deserializer);
+babelwires::Result babelwires::ProcessorNodeData::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(getCommonKeyValuePairs(deserializer));
+    DO_OR_ERROR(deserializeModifiers(deserializer));
+    DO_OR_ERROR(deserializeUiData(deserializer));
+    return {};
 }

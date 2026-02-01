@@ -24,7 +24,8 @@ bool babelwires::AllToSameFallbackMapEntryData::operator==(const MapEntryData& o
 void babelwires::AllToSameFallbackMapEntryData::serializeContents(Serializer& serializer) const {
 }
 
-void babelwires::AllToSameFallbackMapEntryData::deserializeContents(Deserializer& deserializer) {
+babelwires::Result babelwires::AllToSameFallbackMapEntryData::deserializeContents(Deserializer& deserializer) {
+    return {};
 }
 
 void babelwires::AllToSameFallbackMapEntryData::visitIdentifiers(IdentifierVisitor& visitor) {

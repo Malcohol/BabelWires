@@ -57,8 +57,9 @@ void babelwires::AllToOneFallbackMapEntryData::serializeContents(Serializer& ser
     serializer.serializeObject(m_targetValue->getAsEditableValue(), "target");
 }
 
-void babelwires::AllToOneFallbackMapEntryData::deserializeContents(Deserializer& deserializer) {
+babelwires::Result babelwires::AllToOneFallbackMapEntryData::deserializeContents(Deserializer& deserializer) {
     m_targetValue = uniquePtrCast<Value>(deserializer.deserializeObject<EditableValue>("target"));
+    return {};
 }
 
 void babelwires::AllToOneFallbackMapEntryData::visitIdentifiers(IdentifierVisitor& visitor) {

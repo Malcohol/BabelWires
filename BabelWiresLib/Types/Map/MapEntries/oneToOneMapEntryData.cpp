@@ -75,10 +75,10 @@ void babelwires::OneToOneMapEntryData::serializeContents(Serializer& serializer)
     serializer.serializeObject(m_targetValue->getAsEditableValue(), "target");
 }
 
-void babelwires::OneToOneMapEntryData::deserializeContents(Deserializer& deserializer) {
-    // TODO: If refactoring to a constructor, can remove the null handling in == and clone.
+babelwires::Result babelwires::OneToOneMapEntryData::deserializeContents(Deserializer& deserializer) {
     m_sourceValue = uniquePtrCast<Value>(deserializer.deserializeObject<EditableValue>("source"));
     m_targetValue = uniquePtrCast<Value>(deserializer.deserializeObject<EditableValue>("target"));
+    return {};
 }
 
 void babelwires::OneToOneMapEntryData::visitIdentifiers(IdentifierVisitor& visitor) {

@@ -152,43 +152,37 @@ void babelwires::TypeExp::serializeContents(Serializer& serializer) const {
     std::visit(visitorMethods, m_storage);
 }
 
-void babelwires::TypeExp::deserializeContents(Deserializer& deserializer) {
+babelwires::Result babelwires::TypeExp::deserializeContents(Deserializer& deserializer) {
     RegisteredTypeId typeId;
     TypeConstructorId typeConstructorId;
-    const ResultT<bool> typeIdResult = deserializer.tryDeserializeValue("typeId", typeId);
-    const ResultT<bool> typeConstructorIdResult =
-        deserializer.tryDeserializeValue("typeConstructorId", typeConstructorId);
-    THROW_ON_ERROR(typeIdResult, ParseException);
-    THROW_ON_ERROR(typeConstructorIdResult, ParseException);
-    if (*typeIdResult && *typeConstructorIdResult) {
+    ASSIGN_OR_ERROR(const bool typeIdResult, deserializer.tryDeserializeValue("typeId", typeId));
+    ASSIGN_OR_ERROR(const bool typeConstructorIdResult, deserializer.tryDeserializeValue("typeConstructorId", typeConstructorId));
+    if (typeIdResult && typeConstructorIdResult) {
         throw ParseException() << "TypeExp cannot have both typeId and typeConstructorId";
-    } else if (*typeIdResult) {
+    } else if (typeIdResult) {
         m_storage = typeId;
-    } else if (*typeConstructorIdResult) {
+    } else if (typeConstructorIdResult) {
         std::vector<TypeExp> typeArguments;
         std::vector<ValueHolder> valueArguments;
         auto typeItResult = deserializer.tryDeserializeArray<TypeExp>("typeArguments");
-        THROW_ON_ERROR(typeItResult, ParseException);
         if (typeItResult) {
             for (auto& typeIt = *typeItResult; typeIt.isValid(); ++typeIt) {
-                auto result = typeIt.getObject();
-                THROW_ON_ERROR(result, ParseException);
-                typeArguments.emplace_back(std::move(**result));
+                ASSIGN_OR_ERROR(auto result, typeIt.getObject());
+                typeArguments.emplace_back(std::move(*result));
             }
         }
         auto valueItResult = deserializer.tryDeserializeArray<EditableValue>("valueArguments");
-        THROW_ON_ERROR(valueItResult, ParseException);
         if (valueItResult) {
             for (auto& valueIt = *valueItResult; valueIt.isValid(); ++valueIt) {
-                auto result = valueIt.getObject();
-                THROW_ON_ERROR(result, ParseException);
-                valueArguments.emplace_back(uniquePtrCast<Value>(std::move(*result)));
+                ASSIGN_OR_ERROR(auto result, valueIt.getObject());
+                valueArguments.emplace_back(uniquePtrCast<Value>(std::move(result)));
             }
         }
         m_storage = ConstructedTypeData{typeConstructorId, {std::move(typeArguments), std::move(valueArguments)}};
     } else {
         m_storage = {};
     }
+    return {};
 }
 
 void babelwires::TypeExp::visitIdentifiers(IdentifierVisitor& visitor) {

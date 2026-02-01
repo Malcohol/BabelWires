@@ -34,11 +34,12 @@ void babelwires::IdentifierRegistry::InstanceData::serializeContents(Serializer&
     serializer.serializeValue("uuid", m_uuid);
 }
 
-void babelwires::IdentifierRegistry::InstanceData::deserializeContents(Deserializer& deserializer) {
-    THROW_ON_ERROR(deserializer.deserializeValue("id", m_identifier), ParseException);
-    THROW_ON_ERROR(deserializer.deserializeValue("name", m_fieldName), ParseException);
-    THROW_ON_ERROR(deserializer.deserializeValue("uuid", m_uuid), ParseException);
+babelwires::Result babelwires::IdentifierRegistry::InstanceData::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.deserializeValue("id", m_identifier));
+    DO_OR_ERROR(deserializer.deserializeValue("name", m_fieldName));
+    DO_OR_ERROR(deserializer.deserializeValue("uuid", m_uuid));
     m_authority = Authority::isProvisional;
+    return {};
 }
 
 babelwires::LongId babelwires::IdentifierRegistry::addLongIdWithMetadata(babelwires::LongId identifier,
@@ -240,12 +241,10 @@ void babelwires::IdentifierRegistry::serializeContents(Serializer& serializer) c
     serializer.serializeArray("identifiers", contents);
 }
 
-void babelwires::IdentifierRegistry::deserializeContents(Deserializer& deserializer) {
+babelwires::Result babelwires::IdentifierRegistry::deserializeContents(Deserializer& deserializer) {
     if (auto itResult = deserializer.deserializeArray<InstanceData>("identifiers")) {
         for (auto& it = *itResult; it.isValid(); ++it) {
-            auto result = it.getObject();
-            THROW_ON_ERROR(result, babelwires::ParseException);
-            std::unique_ptr<InstanceData> instanceDataPtr = std::move(*result);
+            ASSIGN_OR_ERROR(std::unique_ptr<InstanceData> instanceDataPtr, it.getObject());
             InstanceData* instanceData = instanceDataPtr.get();
 
         const ShortId::Discriminator discriminator = instanceDataPtr->m_identifier.getDiscriminator();
@@ -269,6 +268,7 @@ void babelwires::IdentifierRegistry::deserializeContents(Deserializer& deseriali
         data.m_instanceDatas[discriminator - 1] = uit->second.get();
         }
     }
+    return {};
 }
 
 babelwires::IdentifierRegistryScope::IdentifierRegistryScope()

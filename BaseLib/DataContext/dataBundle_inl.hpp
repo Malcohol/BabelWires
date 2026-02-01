@@ -111,11 +111,14 @@ template <typename DATA> void babelwires::DataBundle<DATA>::serializeContents(Se
     serializer.serializeObject(m_identifierRegistry);
 }
 
-template <typename DATA> void babelwires::DataBundle<DATA>::deserializeContents(Deserializer& deserializer) {
-    const auto result = deserializer.tryDeserializeValue("filePath", m_pathToFile);
-    THROW_ON_ERROR(result, ParseException);
-    m_data = std::move(*deserializer.deserializeObject<DATA>(DATA::serializationType));
+template <typename DATA> babelwires::Result babelwires::DataBundle<DATA>::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.tryDeserializeValue("filePath", m_pathToFile));
+    if (auto dataPtr = deserializer.deserializeObject<DATA>(DATA::serializationType)) {
+        m_data = std::move(*dataPtr);
+    }
     deserializeAdditionalMetadata(deserializer);
-    m_identifierRegistry =
-        std::move(*deserializer.deserializeObject<IdentifierRegistry>(IdentifierRegistry::serializationType));
+    if (auto identRegistryPtr = deserializer.deserializeObject<IdentifierRegistry>(IdentifierRegistry::serializationType)) {
+        m_identifierRegistry = std::move(*identRegistryPtr);
+    }
+    return {};
 }

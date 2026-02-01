@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BaseLib/Serialization/automaticDeserializationRegistry.hpp>
+#include <BaseLib/Utilities/result.hpp>
 #include <cassert>
 #include <functional>
 #include <memory>
@@ -26,7 +27,7 @@ namespace babelwires {
         virtual void serializeContents(Serializer& serializer) const = 0;
 
         /// Concrete classes need to implement this, to deserialize their contents.
-        virtual void deserializeContents(Deserializer& deserializer) = 0;
+        virtual Result deserializeContents(Deserializer& deserializer) = 0;
 
         /// This is supplied automatically by both SERIALIZABLE macros.
         virtual std::string_view getSerializationType() const = 0;
@@ -66,7 +67,7 @@ namespace babelwires {
         babelwires::Deserializer& deserializer) {                                                                      \
         /* make_unique requires a public default constructor. */                                                       \
         std::unique_ptr<T> newObject(new T());                                                                         \
-        newObject->deserializeContents(deserializer);                                                                  \
+        DO_OR_ERROR(newObject->deserializeContents(deserializer));                                                     \
         return std::move(newObject);                                                                                   \
     }
 

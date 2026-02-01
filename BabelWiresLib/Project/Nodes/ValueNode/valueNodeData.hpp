@@ -26,7 +26,7 @@ namespace babelwires {
         bool checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) override;
 
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        Result deserializeContents(Deserializer& deserializer) override;
 
         const TypeExp& getTypeExp() const;
 

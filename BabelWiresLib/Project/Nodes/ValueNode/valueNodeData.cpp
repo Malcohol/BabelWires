@@ -34,11 +34,12 @@ void babelwires::ValueNodeData::serializeContents(Serializer& serializer) const 
     serializeUiData(serializer);
 }
 
-void babelwires::ValueNodeData::deserializeContents(Deserializer& deserializer) {
-    getCommonKeyValuePairs(deserializer);
+babelwires::Result babelwires::ValueNodeData::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(getCommonKeyValuePairs(deserializer));
     m_typeExp = std::move(*deserializer.deserializeObject<TypeExp>());
-    deserializeModifiers(deserializer);
-    deserializeUiData(deserializer);
+    DO_OR_ERROR(deserializeModifiers(deserializer));
+    DO_OR_ERROR(deserializeUiData(deserializer));
+    return {};
 }
 
 std::unique_ptr<babelwires::Node>

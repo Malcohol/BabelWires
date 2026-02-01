@@ -62,10 +62,11 @@ void babelwires::ConnectionModifierData::serializeContents(Serializer& serialize
     serializer.serializeValue("sourcePath", m_sourcePath);
 }
 
-void babelwires::ConnectionModifierData::deserializeContents(Deserializer& deserializer) {
-    THROW_ON_ERROR(deserializer.deserializeValue("path", m_targetPath), ParseException);
-    THROW_ON_ERROR(deserializer.deserializeValue("sourceId", m_sourceId), ParseException);
-    THROW_ON_ERROR(deserializer.deserializeValue("sourcePath", m_sourcePath), ParseException);
+babelwires::Result babelwires::ConnectionModifierData::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.deserializeValue("path", m_targetPath));
+    DO_OR_ERROR(deserializer.deserializeValue("sourceId", m_sourceId));
+    DO_OR_ERROR(deserializer.deserializeValue("sourcePath", m_sourcePath));
+    return {};
 }
 
 std::unique_ptr<babelwires::Modifier> babelwires::ConnectionModifierData::createModifier() const {

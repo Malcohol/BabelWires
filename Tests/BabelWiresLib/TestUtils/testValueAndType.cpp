@@ -37,8 +37,8 @@ void testUtils::TestValue::serializeContents(babelwires::Serializer& serializer)
     serializer.serializeValue("value", m_value);
 }
 
-void testUtils::TestValue::deserializeContents(babelwires::Deserializer& deserializer) {
-    THROW_ON_ERROR(deserializer.deserializeValue("value", m_value), babelwires::ParseException);
+babelwires::Result testUtils::TestValue::deserializeContents(babelwires::Deserializer& deserializer) {
+    return deserializer.deserializeValue("value", m_value);
 }
 
 testUtils::TestType::TestType(unsigned int maximumLength, std::string defaultValue)

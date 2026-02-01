@@ -19,7 +19,7 @@ namespace babelwires {
         std::size_t getHash() const override;
         bool operator==(const MapEntryData& other) const override;
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        Result deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
         Kind getKind() const override;

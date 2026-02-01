@@ -19,13 +19,14 @@ namespace {
             serializer.serializeValueArray("array", m_array);
         }
 
-        void deserializeContents(Deserializer& deserializer) override {
-            THROW_ON_ERROR(deserializer.deserializeValue("x", m_x), ParseException);
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeValue("x", m_x));
             if (auto itResult = deserializer.deserializeValueArray<std::string>("array")) {
                 for (auto& it = *itResult; it.isValid(); ++it) {
                     m_array.emplace_back(std::move(it.deserializeValue()));
                 }
             }
+            return {};
         }
 
         int m_x = 0;
@@ -71,17 +72,17 @@ namespace {
             serializer.serializeArray("arrayOfAs", m_arrayOfAs);
         }
 
-        void deserializeContents(Deserializer& deserializer) override {
+        Result deserializeContents(Deserializer& deserializer) override {
             if (std::unique_ptr<A> a = deserializer.deserializeObject<A>()) {
                 m_a = std::move(*a);
             }
-            auto itResult = deserializer.deserializeArray<A>("arrayOfAs");
-            THROW_ON_ERROR(itResult, ParseException);
-            for (auto& it = *itResult; it.isValid(); ++it) {
-                auto result = it.getObject();
-                THROW_ON_ERROR(result, ParseException);
-                m_arrayOfAs.emplace_back(std::move(**result));
+            if (auto itResult = deserializer.deserializeArray<A>("arrayOfAs")) {
+                for (auto& it = *itResult; it.isValid(); ++it) {
+                    ASSIGN_OR_ERROR(auto result, it.getObject());
+                    m_arrayOfAs.emplace_back(std::move(*result));
+                }
             }
+            return {};
         }
 
         A m_a;
@@ -137,8 +138,9 @@ namespace {
 
             void serializeContents(Serializer& serializer) const override { serializer.serializeValue("x", m_x); }
 
-            void deserializeContents(Deserializer& deserializer) override {
-                THROW_ON_ERROR(deserializer.deserializeValue("x", m_x), ParseException);
+            Result deserializeContents(Deserializer& deserializer) override {
+                DO_OR_ERROR(deserializer.deserializeValue("x", m_x));
+                return {};
             }
 
             // A refactor will split this into a sign and an unsigened int.
@@ -157,20 +159,21 @@ namespace {
                 serializer.serializeValue("x", m_x);
             }
 
-            void deserializeContents(Deserializer& deserializer) override {
+            Result deserializeContents(Deserializer& deserializer) override {
                 const int version = deserializer.getTypeVersion("C");
                 if (version == 1) {
                     int oldInt = 0;
-                    THROW_ON_ERROR(deserializer.deserializeValue("x", oldInt), ParseException);
+                    DO_OR_ERROR(deserializer.deserializeValue("x", oldInt));
                     m_isPositive = (oldInt >= 0);
                     m_x = std::abs(oldInt);
                 } else {
                     // Current versions.
                     // This case is also used for later versions and version 0, but the serialization system will have
                     // warned.
-                    THROW_ON_ERROR(deserializer.deserializeValue("isPositive", m_isPositive), ParseException);
-                    THROW_ON_ERROR(deserializer.deserializeValue("x", m_x), ParseException);
+                    DO_OR_ERROR(deserializer.deserializeValue("isPositive", m_isPositive));
+                    DO_OR_ERROR(deserializer.deserializeValue("x", m_x));
                 }
+                return {};
             }
 
             bool m_isPositive = true;
@@ -249,8 +252,9 @@ namespace {
 
         void serializeContents(Serializer& serializer) const override { serializer.serializeValue("x", m_x); }
 
-        void deserializeContents(Deserializer& deserializer) override {
-            THROW_ON_ERROR(deserializer.deserializeValue("x", m_x), ParseException);
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeValue("x", m_x));
+            return {};
         }
 
         int m_x = 0;
@@ -267,8 +271,9 @@ namespace {
 
         void serializeContents(Serializer& serializer) const override { serializer.serializeValue("s", m_s); }
 
-        void deserializeContents(Deserializer& deserializer) override {
-            THROW_ON_ERROR(deserializer.deserializeValue("s", m_s), ParseException);
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeValue("s", m_s));
+            return {};
         }
 
         std::string m_s;
@@ -281,9 +286,10 @@ namespace {
             serializer.serializeValue("u32", m_u32);
         }
 
-        void deserializeContents(Deserializer& deserializer) override {
-            Concrete1::deserializeContents(deserializer);
-            THROW_ON_ERROR(deserializer.deserializeValue("u32", m_u32), ParseException);
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(Concrete1::deserializeContents(deserializer));
+            DO_OR_ERROR(deserializer.deserializeValue("u32", m_u32));
+            return {};
         }
 
         std::uint32_t m_u32;
@@ -311,29 +317,19 @@ namespace {
             serializer.serializeArray("objects", m_objects);
         }
 
-        void deserializeContents(Deserializer& deserializer) override {
-            auto baseResult = deserializer.tryDeserializeObject<Base>("base");
-            THROW_ON_ERROR(baseResult, ParseException);
-            m_base = std::move(*baseResult);
-            auto concreteResult = deserializer.tryDeserializeObject<Concrete0>("concrete0");
-            THROW_ON_ERROR(concreteResult, ParseException);
-            m_concrete0 = std::move(*concreteResult);
-            auto intermediateResult = deserializer.tryDeserializeObject<Intermediate>("intermediate");
-            THROW_ON_ERROR(intermediateResult, ParseException);
-            m_intermediate = std::move(*intermediateResult);
-            auto concrete1Result = deserializer.tryDeserializeObject<Concrete1>("concrete1");
-            THROW_ON_ERROR(concrete1Result, ParseException);
-            m_concrete1 = std::move(*concrete1Result);
-            auto concrete2Result = deserializer.tryDeserializeObject<Concrete2>("concrete2");
-            THROW_ON_ERROR(concrete2Result, ParseException);
-            m_concrete2 = std::move(*concrete2Result);
+        Result deserializeContents(Deserializer& deserializer) override {
+            ASSIGN_OR_ERROR(m_base, deserializer.tryDeserializeObject<Base>("base"));
+            ASSIGN_OR_ERROR(m_concrete0, deserializer.tryDeserializeObject<Concrete0>("concrete0"));
+            ASSIGN_OR_ERROR(m_intermediate, deserializer.tryDeserializeObject<Intermediate>("intermediate"));
+            ASSIGN_OR_ERROR(m_concrete1, deserializer.tryDeserializeObject<Concrete1>("concrete1"));
+            ASSIGN_OR_ERROR(m_concrete2, deserializer.tryDeserializeObject<Concrete2>("concrete2"));
             if (auto itResult = deserializer.deserializeArray<Base>("objects")) {
                 for (auto& it = *itResult; it.isValid(); ++it) {
-                    auto result = it.getObject();
-                    THROW_ON_ERROR(result, ParseException);
-                    m_objects.emplace_back(std::move(*result));
+                    ASSIGN_OR_ERROR(auto ptr, it.getObject());
+                    m_objects.emplace_back(std::move(ptr));
                 }
             }
+            return {};
         }
 
         std::unique_ptr<Base> m_base;

@@ -149,17 +149,16 @@ void babelwires::MapValue::serializeContents(Serializer& serializer) const {
     serializer.serializeArray("entries", m_mapEntries);
 }
 
-void babelwires::MapValue::deserializeContents(Deserializer& deserializer) {
+babelwires::Result babelwires::MapValue::deserializeContents(Deserializer& deserializer) {
     m_sourceTypeExp = std::move(*deserializer.deserializeObject<TypeExp>("sourceType"));
     m_targetTypeExp = std::move(*deserializer.deserializeObject<TypeExp>("targetType"));
     if (auto itResult = deserializer.deserializeArray<MapEntryData>("entries")) {
         for (auto& it = *itResult; it.isValid(); ++it) {
-            auto result = it.getObject();
-            THROW_ON_ERROR(result, ParseException);
-            std::unique_ptr<MapEntryData> newEntry = std::move(*result);
+            ASSIGN_OR_ERROR(std::unique_ptr<MapEntryData> newEntry, it.getObject());
             m_mapEntries.emplace_back(std::move(newEntry));
         }
     }
+    return {};
 }
 
 void babelwires::MapValue::visitIdentifiers(IdentifierVisitor& visitor) {

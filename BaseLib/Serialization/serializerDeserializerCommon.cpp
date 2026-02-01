@@ -46,9 +46,10 @@ namespace {
             serializer.serializeValue("version", m_version);
         }
 
-        void deserializeContents(babelwires::Deserializer& deserializer) override {
-            THROW_ON_ERROR(deserializer.deserializeValue("type", m_type), babelwires::ParseException);
-            THROW_ON_ERROR(deserializer.deserializeValue("version", m_version), babelwires::ParseException);
+        babelwires::Result deserializeContents(babelwires::Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeValue("type", m_type));
+            DO_OR_ERROR(deserializer.deserializeValue("version", m_version));
+            return {};
         }
     };
 } // namespace

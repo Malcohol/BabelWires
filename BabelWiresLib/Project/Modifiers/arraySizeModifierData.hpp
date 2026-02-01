@@ -21,7 +21,7 @@ namespace babelwires {
 
         SERIALIZABLE(ArraySizeModifierData, "arraySize", LocalModifierData, 1);
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        Result deserializeContents(Deserializer& deserializer) override;
 
         int m_size = 0;
     };

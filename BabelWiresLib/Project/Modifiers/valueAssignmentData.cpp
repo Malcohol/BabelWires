@@ -36,10 +36,11 @@ void babelwires::ValueAssignmentData::serializeContents(Serializer& serializer) 
     serializer.serializeObject(m_value->getAsEditableValue(), "value");
 }
 
-void babelwires::ValueAssignmentData::deserializeContents(Deserializer& deserializer) {
-    THROW_ON_ERROR(deserializer.deserializeValue("path", m_targetPath), ParseException);
+babelwires::Result babelwires::ValueAssignmentData::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.deserializeValue("path", m_targetPath));
     // The uniquePtrCast is needed to disambiguate the assignment operator.
     m_value = uniquePtrCast<Value>(deserializer.deserializeObject<EditableValue>("value"));
+    return {};
 }
 
 void babelwires::ValueAssignmentData::visitIdentifiers(IdentifierVisitor& visitor) {

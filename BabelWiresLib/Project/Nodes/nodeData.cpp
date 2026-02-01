@@ -26,10 +26,11 @@ void babelwires::UiData::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("width", m_uiSize.m_width);
 }
 
-void babelwires::UiData::deserializeContents(Deserializer& deserializer) {
-    THROW_ON_ERROR(deserializer.deserializeValue("x", m_uiPosition.m_x), ParseException);
-    THROW_ON_ERROR(deserializer.deserializeValue("y", m_uiPosition.m_y), ParseException);
-    THROW_ON_ERROR(deserializer.deserializeValue("width", m_uiSize.m_width), ParseException);
+babelwires::Result babelwires::UiData::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.deserializeValue("x", m_uiPosition.m_x));
+    DO_OR_ERROR(deserializer.deserializeValue("y", m_uiPosition.m_y));
+    DO_OR_ERROR(deserializer.deserializeValue("width", m_uiSize.m_width));
+    return {};
 }
 
 babelwires::NodeData::NodeData(const NodeData& other, ShallowCloneContext)
@@ -61,24 +62,29 @@ void babelwires::NodeData::addCommonKeyValuePairs(Serializer& serializer) const 
     // Factory versions are handled by the projectBundle.
 }
 
-void babelwires::NodeData::getCommonKeyValuePairs(Deserializer& deserializer) {
-    THROW_ON_ERROR(deserializer.deserializeValue("id", m_id), ParseException);
-    THROW_ON_ERROR(deserializer.deserializeValue("factory", m_factoryIdentifier), ParseException);
+babelwires::Result babelwires::NodeData::getCommonKeyValuePairs(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.deserializeValue("id", m_id));
+    DO_OR_ERROR(deserializer.deserializeValue("factory", m_factoryIdentifier));
     // Factory versions are handled by the projectBundle.
+    return {};
 }
 
 void babelwires::NodeData::serializeModifiers(Serializer& serializer) const {
     serializer.serializeArray("modifiers", m_modifiers);
 }
 
-void babelwires::NodeData::deserializeModifiers(Deserializer& deserializer) {
-    if (auto itResult = deserializer.deserializeArray<ModifierData>("modifiers")) {
-        for (auto& it = *itResult; it.isValid(); ++it) {
-            auto result = it.getObject();
-            THROW_ON_ERROR(result, ParseException);
-            m_modifiers.emplace_back(std::move(*result));
-        }
+babelwires::Result babelwires::NodeData::deserializeModifiers(Deserializer& deserializer) {
+    // TODO RESULT
+    auto itResult = deserializer.tryDeserializeArray<ModifierData>("modifiers");
+    if (!itResult) {
+        return std::unexpected(itResult.error());
     }
+    for (auto& it = *itResult; it.isValid(); ++it) {
+        auto result = it.getObject();
+        THROW_ON_ERROR(result, ParseException);
+        m_modifiers.emplace_back(std::move(*result));
+    }
+    return {};
 }
 
 void babelwires::NodeData::serializeUiData(Serializer& serializer) const {
@@ -86,18 +92,20 @@ void babelwires::NodeData::serializeUiData(Serializer& serializer) const {
     serializer.serializeValueArray("expandedPaths", m_expandedPaths, "path");
 }
 
-void babelwires::NodeData::deserializeUiData(Deserializer& deserializer) {
+babelwires::Result babelwires::NodeData::deserializeUiData(Deserializer& deserializer) {
     auto uiData =
             deserializer.tryDeserializeObject<UiData>(UiData::serializationType);
     THROW_ON_ERROR(uiData, ParseException);    
     if (*uiData) {        
         m_uiData = **uiData;
     }
+    // TODO RESULT
     if (auto itResult = deserializer.deserializeValueArray<Path>("expandedPaths", "path")) {
         for (auto& it = *itResult; it.isValid(); ++it) {
             m_expandedPaths.emplace_back(std::move(it.deserializeValue()));
         }
     }
+    return {};
 }
 
 void babelwires::NodeData::visitIdentifiers(IdentifierVisitor& visitor) {

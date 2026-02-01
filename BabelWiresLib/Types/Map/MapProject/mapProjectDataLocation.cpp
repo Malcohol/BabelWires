@@ -50,11 +50,11 @@ void babelwires::MapProjectDataLocation::serializeContents(Serializer& serialize
     serializer.serializeValue("side", (m_side == Side::source) ? "source" : "target");
 }
 
-void babelwires::MapProjectDataLocation::deserializeContents(Deserializer& deserializer) {
-    DataLocation::deserializeContents(deserializer);
-    THROW_ON_ERROR(deserializer.deserializeValue("entryIndex", m_entryIndex), ParseException);
+babelwires::Result babelwires::MapProjectDataLocation::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(DataLocation::deserializeContents(deserializer));
+    DO_OR_ERROR(deserializer.deserializeValue("entryIndex", m_entryIndex));
     std::string tmp;
-    THROW_ON_ERROR(deserializer.deserializeValue("side", tmp), ParseException);
+    DO_OR_ERROR(deserializer.deserializeValue("side", tmp));
     if (tmp == "source") {
         m_side = Side::source;
     } else if (tmp == "target") {
@@ -62,4 +62,5 @@ void babelwires::MapProjectDataLocation::deserializeContents(Deserializer& deser
     } else {
         throw ParseException() << "Unrecognized side \"" << tmp << "\" when parsing a MapDataLocation";
     }
+    return {};
 }

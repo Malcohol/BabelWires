@@ -19,7 +19,7 @@ namespace testUtils {
         void visitIdentifiers(babelwires::IdentifierVisitor& visitor) override;
         void visitFilePaths(babelwires::FilePathVisitor& visitor) override;
         void serializeContents(babelwires::Serializer& serializer) const override;
-        void deserializeContents(babelwires::Deserializer& deserializer) override;
+        babelwires::Result deserializeContents(babelwires::Deserializer& deserializer) override;
         bool canContainIdentifiers() const override;
         bool canContainFilePaths() const override;
 

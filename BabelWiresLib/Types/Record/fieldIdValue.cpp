@@ -47,12 +47,11 @@ void babelwires::FieldIdValue::serializeContents(Serializer& serializer) const {
     }
 }
 
-void babelwires::FieldIdValue::deserializeContents(Deserializer& deserializer) {
-    IdentifierValueBase::deserializeContents(deserializer);
+babelwires::Result babelwires::FieldIdValue::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(IdentifierValueBase::deserializeContents(deserializer));
     std::string optional;
-    const auto result = deserializer.tryDeserializeValue(c_serializedOptionality, optional);
-    THROW_ON_ERROR(result, ParseException);
-    if (*result) {
+    ASSIGN_OR_ERROR(const auto result, deserializer.tryDeserializeValue(c_serializedOptionality, optional));
+    if (result) {
         if (optional == c_serializedOptionalInactiveValue) {
             m_optionality = RecordType::Optionality::optionalDefaultInactive;
         } else if (optional == c_serializedOptionalActiveValue) {
@@ -63,6 +62,7 @@ void babelwires::FieldIdValue::deserializeContents(Deserializer& deserializer) {
     } else {
         m_optionality = RecordType::Optionality::alwaysActive;
     }
+    return {};
 }
 
 std::string babelwires::FieldIdValue::toString() const {

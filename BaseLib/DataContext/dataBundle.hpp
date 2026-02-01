@@ -47,7 +47,7 @@ namespace babelwires {
                                           UserLogger& userLogger) &&;
 
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        Result deserializeContents(Deserializer& deserializer) override;
 
         const DATA& getData() const { return m_data; }
         DATA& getData() { return m_data; }
