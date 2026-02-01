@@ -28,9 +28,7 @@ namespace babelwires {
         const std::string& toString() const { return m_message; }
 
         /// Allow implicit conversion to a ResultT.
-        template <typename T> operator ResultT<T>() && {
-            return std::unexpected<ErrorStorage>(std::move(*this));
-        }
+        template <typename T> operator ResultT<T>() && { return std::unexpected<ErrorStorage>(std::move(*this)); }
 
       private:
         std::string m_message;
@@ -53,9 +51,7 @@ namespace babelwires {
         }
 
         /// Allow implicit conversion to a ResultT.
-        template <typename T> operator ResultT<T>() {
-            return std::unexpected<ErrorStorage>(ErrorStorage(m_os.str()));
-        }
+        template <typename T> operator ResultT<T>() { return std::unexpected<ErrorStorage>(ErrorStorage(m_os.str())); }
 
       private:
         std::ostringstream m_os;
@@ -68,4 +64,23 @@ namespace babelwires {
         if (!(RESULT)) {                                                                                               \
             throw EXCEPTION_TYPE() << (RESULT).error().toString();                                                     \
         }                                                                                                              \
-    } while (0)
+    } while (0);
+
+#define DO_OR_ERROR(EXPRESSION_THAT_RETURNS_RESULT)                                                                    \
+    {                                                                                                                  \
+        const auto doOrErrorResult = EXPRESSION_THAT_RETURNS_RESULT;                                                   \
+        if (!doOrErrorResult) {                                                                                        \
+            return std::unexpected(DoOrErrorResult.error());                                                           \
+        }                                                                                                              \
+    }
+
+#define UNIQUE_NAME(X, Y) COMBINE_HELPER(X, Y)
+#define COMBINE_HELPER(X, Y) X##Y
+
+// We can't use a scope in this case since it would enclose the target expression.
+// Instead use a file-unique variable name. That requires the whole statement to be placed on one
+// line of code.
+// clang-format off
+#define ASSIGN_OR_ERROR(TARGET_EXPRESSION, EXPRESSION_THAT_RETURNS_RESULTT)                                            \
+    const auto UNIQUE_NAME(assignOrErrorResult, __LINE__) = EXPRESSION_THAT_RETURNS_RESULTT; if (!UNIQUE_NAME(assignOrErrorResult, __LINE__)) { return std::unexpected(UNIQUE_NAME(assignOrErrorResult, __LINE__).error()); } TARGET_EXPRESSION = *UNIQUE_NAME(assignOrErrorResult, __LINE__);
+// clang-format on
