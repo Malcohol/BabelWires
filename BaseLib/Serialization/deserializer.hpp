@@ -66,6 +66,18 @@ namespace babelwires {
         template <typename T>
         ResultT<std::unique_ptr<T>> tryDeserializeObject(std::string_view key = T::serializationType);
 
+        /// Deserialize a child object of type T.
+        /// Returns an error if the key is not found or if there is a parse error.
+        /// The object is assigned by value, so any polymorphism is lost.
+        template<typename T>
+        babelwires::Result deserializeObjectByValue(T& object, std::string_view key = T::serializationType);
+
+        /// Deserialize a child object of type T.
+        /// If the key is not found, then false is returned and the object is not modified.
+        /// The object is assigned by value, so any polymorphism is lost.
+        template<typename T>
+        babelwires::ResultT<bool> tryDeserializeObjectByValue(T& object, std::string_view key = T::serializationType);
+
         /// A non-standard iterator, which provides access to the deserialized objects of base type T in an array.
         template <typename T> struct Iterator;
 

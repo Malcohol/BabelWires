@@ -113,10 +113,8 @@ template <typename DATA> void babelwires::DataBundle<DATA>::serializeContents(Se
 
 template <typename DATA> babelwires::Result babelwires::DataBundle<DATA>::deserializeContents(Deserializer& deserializer) {
     DO_OR_ERROR(deserializer.tryDeserializeValue("filePath", m_pathToFile));
-    ASSIGN_OR_ERROR(auto dataPtr, deserializer.deserializeObject<DATA>(DATA::serializationType));
-    m_data = std::move(*dataPtr);
+    DO_OR_ERROR(deserializer.deserializeObjectByValue<DATA>(m_data, DATA::serializationType));
     deserializeAdditionalMetadata(deserializer);
-    ASSIGN_OR_ERROR(auto identRegistryPtr, deserializer.deserializeObject<IdentifierRegistry>(IdentifierRegistry::serializationType));
-    m_identifierRegistry = std::move(*identRegistryPtr);
+    DO_OR_ERROR(deserializer.deserializeObjectByValue<IdentifierRegistry>(m_identifierRegistry, IdentifierRegistry::serializationType));
     return {};
 }

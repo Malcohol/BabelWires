@@ -72,6 +72,25 @@ babelwires::Deserializer::tryDeserializeObject(std::string_view key) {
     return ret;
 }
 
+template<typename T>
+babelwires::Result babelwires::Deserializer::deserializeObjectByValue(T& object, std::string_view key) {
+    // MAYBEDO: Reject strict subclasses, since the slicing will discard data?
+    ASSIGN_OR_ERROR(auto objPtr, deserializeObject<T>(key));
+    object = std::move(*objPtr);
+    return {};    
+}
+
+template<typename T>
+babelwires::ResultT<bool> babelwires::Deserializer::tryDeserializeObjectByValue(T& object, std::string_view key) {
+    // MAYBEDO: Reject strict subclasses, since the slicing will discard data?
+    ASSIGN_OR_ERROR(auto objPtr, tryDeserializeObject<T>(key));
+    if (!objPtr) {
+        return false;
+    }
+    object = std::move(*objPtr);
+    return true;
+}
+
 template <typename T> inline babelwires::ResultT<std::unique_ptr<T>> babelwires::Deserializer::Iterator<T>::getObject() {
     return m_deserializer.deserializeCurrentObject<T>();
 }

@@ -36,8 +36,7 @@ void babelwires::ValueNodeData::serializeContents(Serializer& serializer) const 
 
 babelwires::Result babelwires::ValueNodeData::deserializeContents(Deserializer& deserializer) {
     DO_OR_ERROR(getCommonKeyValuePairs(deserializer));
-    ASSIGN_OR_ERROR(auto typeExpPtr, deserializer.deserializeObject<TypeExp>());
-    m_typeExp = std::move(*typeExpPtr);
+    DO_OR_ERROR(deserializer.deserializeObjectByValue<TypeExp>(m_typeExp));
     DO_OR_ERROR(deserializeModifiers(deserializer));
     DO_OR_ERROR(deserializeUiData(deserializer));
     return {};
