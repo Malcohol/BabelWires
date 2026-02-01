@@ -70,7 +70,7 @@ namespace babelwires {
     {                                                                                                                  \
         const auto doOrErrorResult = EXPRESSION_THAT_RETURNS_RESULT;                                                   \
         if (!doOrErrorResult) {                                                                                        \
-            return std::unexpected(DoOrErrorResult.error());                                                           \
+            return std::unexpected(doOrErrorResult.error());                                                           \
         }                                                                                                              \
     }
 
@@ -82,5 +82,5 @@ namespace babelwires {
 // line of code.
 // clang-format off
 #define ASSIGN_OR_ERROR(TARGET_EXPRESSION, EXPRESSION_THAT_RETURNS_RESULTT)                                            \
-    const auto UNIQUE_NAME(assignOrErrorResult, __LINE__) = EXPRESSION_THAT_RETURNS_RESULTT; if (!UNIQUE_NAME(assignOrErrorResult, __LINE__)) { return std::unexpected(UNIQUE_NAME(assignOrErrorResult, __LINE__).error()); } TARGET_EXPRESSION = *UNIQUE_NAME(assignOrErrorResult, __LINE__);
+    auto UNIQUE_NAME(assignOrErrorResult, __LINE__) = EXPRESSION_THAT_RETURNS_RESULTT; if (!UNIQUE_NAME(assignOrErrorResult, __LINE__)) { return std::unexpected(UNIQUE_NAME(assignOrErrorResult, __LINE__).error()); } TARGET_EXPRESSION = std::move(*UNIQUE_NAME(assignOrErrorResult, __LINE__));
 // clang-format on
