@@ -111,7 +111,9 @@ TEST(ElementDataTest, sourceFileDataSerialize) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::SourceFileNodeData>();
+    auto dataPtrResult = deserializer.deserializeObject<babelwires::SourceFileNodeData>();
+    ASSERT_TRUE(dataPtrResult);
+    auto dataPtr = std::move(*dataPtrResult);
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
@@ -212,7 +214,9 @@ TEST(ElementDataTest, targetFileDataSerialize) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::TargetFileNodeData>();
+    auto dataPtrResult = deserializer.deserializeObject<babelwires::TargetFileNodeData>();
+    ASSERT_TRUE(dataPtrResult);
+    auto dataPtr = std::move(*dataPtrResult);
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
@@ -296,7 +300,9 @@ TEST(ElementDataTest, processorDataSerialize) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::ProcessorNodeData>();
+    auto dataPtrResult = deserializer.deserializeObject<babelwires::ProcessorNodeData>();
+    ASSERT_TRUE(dataPtrResult);
+    auto dataPtr = std::move(*dataPtrResult);
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");

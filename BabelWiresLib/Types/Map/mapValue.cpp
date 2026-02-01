@@ -150,8 +150,10 @@ void babelwires::MapValue::serializeContents(Serializer& serializer) const {
 }
 
 babelwires::Result babelwires::MapValue::deserializeContents(Deserializer& deserializer) {
-    m_sourceTypeExp = std::move(*deserializer.deserializeObject<TypeExp>("sourceType"));
-    m_targetTypeExp = std::move(*deserializer.deserializeObject<TypeExp>("targetType"));
+    ASSIGN_OR_ERROR(auto sourceTypeExpPtr, deserializer.deserializeObject<TypeExp>("sourceType"));
+    m_sourceTypeExp = std::move(*sourceTypeExpPtr);
+    ASSIGN_OR_ERROR(auto targetTypeExpPtr, deserializer.deserializeObject<TypeExp>("targetType"));
+    m_targetTypeExp = std::move(*targetTypeExpPtr);
     if (auto itResult = deserializer.deserializeArray<MapEntryData>("entries")) {
         for (auto& it = *itResult; it.isValid(); ++it) {
             ASSIGN_OR_ERROR(std::unique_ptr<MapEntryData> newEntry, it.getObject());

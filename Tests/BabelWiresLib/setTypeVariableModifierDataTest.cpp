@@ -152,7 +152,9 @@ TEST(SetTypeVariableModifierDataTest, serialize) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::SetTypeVariableModifierData>();
+    auto dataPtrResult = deserializer.deserializeObject<babelwires::SetTypeVariableModifierData>();
+    ASSERT_TRUE(dataPtrResult);
+    auto dataPtr = std::move(*dataPtrResult);
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_targetPath, *babelwires::Path::deserializeFromString("foo/bar/boo"));

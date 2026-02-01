@@ -443,7 +443,9 @@ TEST(MapEntryDataTest, oneToOneSerialize) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::OneToOneMapEntryData>();
+    auto dataPtrResult = deserializer.deserializeObject<babelwires::OneToOneMapEntryData>();
+    ASSERT_TRUE(dataPtrResult);
+    auto dataPtr = std::move(*dataPtrResult);
     deserializer.finalize();
 
     ASSERT_NE(dataPtr, nullptr);
@@ -485,7 +487,9 @@ TEST(MapEntryDataTest, allToOneSerialize) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::AllToOneFallbackMapEntryData>();
+    auto dataPtrResult = deserializer.deserializeObject<babelwires::AllToOneFallbackMapEntryData>();
+    ASSERT_TRUE(dataPtrResult);
+    auto dataPtr = std::move(*dataPtrResult);
     deserializer.finalize();
 
     ASSERT_NE(dataPtr, nullptr);
@@ -514,7 +518,9 @@ TEST(MapEntryDataTest, allToSameSerialize) {
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
     babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::AllToSameFallbackMapEntryData>();
+    auto dataPtrResult = deserializer.deserializeObject<babelwires::AllToSameFallbackMapEntryData>();
+    ASSERT_TRUE(dataPtrResult);
+    auto dataPtr = std::move(*dataPtrResult);
     deserializer.finalize();
 
     ASSERT_NE(dataPtr, nullptr);

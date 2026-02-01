@@ -52,14 +52,13 @@ inline babelwires::ResultT<std::unique_ptr<T>> babelwires::Deserializer::deseria
 }
 
 template <typename T>
-inline std::unique_ptr<T> babelwires::Deserializer::deserializeObject(std::string_view key) {
+inline babelwires::ResultT<std::unique_ptr<T>> babelwires::Deserializer::deserializeObject(std::string_view key) {
     if (!pushObject(key)) {
-        throw ParseException() << "Missing child \"" << key << "\"";
+        return Error() << "Missing child \"" << key << "\"";
     }
     ResultT<std::unique_ptr<T>> ret = deserializeCurrentObject<T>();
     popObject();
-    THROW_ON_ERROR(ret, ParseException);
-    return std::move(*ret);
+    return ret;
 }
 
 template<typename T>

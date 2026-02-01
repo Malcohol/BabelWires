@@ -15,8 +15,9 @@ typename babelwires::DataSerialization<BUNDLE>::Data babelwires::DataSerializati
 
     XmlDeserializer deserializer(str, context.m_deserializationReg, userLogger);
     try {
-        auto projectBundle = deserializer.deserializeObject<BUNDLE>(BUNDLE::serializationType);
-        assert(projectBundle);
+        auto projectBundleResult = deserializer.deserializeObject<BUNDLE>(BUNDLE::serializationType);
+        THROW_ON_ERROR(projectBundleResult, ParseException);
+        auto projectBundle = std::move(*projectBundleResult);
         deserializer.finalize();
         return std::move(*projectBundle).resolveAgainstCurrentContext(context, pathToFile, userLogger);
     } catch (ParseException& e) {

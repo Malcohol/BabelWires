@@ -400,7 +400,9 @@ TEST(TypeExpTest, serialization) {
         testUtils::TestLog log;
         babelwires::AutomaticDeserializationRegistry deserializationReg;
         babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-        auto typeExpPtr = deserializer.deserializeObject<babelwires::TypeExp>();
+        auto typeExpPtrResult = deserializer.deserializeObject<babelwires::TypeExp>();
+        ASSERT_TRUE(typeExpPtrResult);
+        auto typeExpPtr = std::move(*typeExpPtrResult);
         deserializer.finalize();
 
         ASSERT_NE(typeExpPtr, nullptr);

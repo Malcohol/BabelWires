@@ -53,7 +53,9 @@ TEST(SerializationTest, values) {
         TestLog log;
         AutomaticDeserializationRegistry deserializationReg;
         babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-        auto APtr = deserializer.deserializeObject<A>();
+        auto APtrResult = deserializer.deserializeObject<A>();
+        ASSERT_TRUE(APtrResult);
+        auto APtr = std::move(*APtrResult);
         deserializer.finalize();
 
         EXPECT_EQ(APtr->m_x, 12);
@@ -73,8 +75,8 @@ namespace {
         }
 
         Result deserializeContents(Deserializer& deserializer) override {
-            if (std::unique_ptr<A> a = deserializer.deserializeObject<A>()) {
-                m_a = std::move(*a);
+            if (auto aResult = deserializer.deserializeObject<A>()) {
+                m_a = std::move(**aResult);
             }
             if (auto itResult = deserializer.deserializeArray<A>("arrayOfAs")) {
                 for (auto& it = *itResult; it.isValid(); ++it) {
@@ -113,7 +115,9 @@ TEST(SerializationTest, objects) {
         TestLog log;
         AutomaticDeserializationRegistry deserializationReg;
         babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-        auto BPtr = deserializer.deserializeObject<B>();
+        auto BPtrResult = deserializer.deserializeObject<B>();
+        ASSERT_TRUE(BPtrResult);
+        auto BPtr = std::move(*BPtrResult);
         deserializer.finalize();
 
         EXPECT_EQ(BPtr->m_a.m_x, 12);
@@ -207,7 +211,9 @@ TEST(SerializationTest, versioningOld) {
         TestLog log;
         AutomaticDeserializationRegistry deserializationReg;
         babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-        auto CPtr = deserializer.deserializeObject<current::C>();
+        auto CPtrResult = deserializer.deserializeObject<current::C>();
+        ASSERT_TRUE(CPtrResult);
+        auto CPtr = std::move(*CPtrResult);
         deserializer.finalize();
 
         EXPECT_EQ(CPtr->m_isPositive, false);
@@ -234,7 +240,9 @@ TEST(SerializationTest, versioningCurrent) {
         TestLog log;
         AutomaticDeserializationRegistry deserializationReg;
         babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-        auto CPtr = deserializer.deserializeObject<current::C>();
+        auto CPtrResult = deserializer.deserializeObject<current::C>();
+        ASSERT_TRUE(CPtrResult);
+        auto CPtr = std::move(*CPtrResult);
         deserializer.finalize();
 
         EXPECT_EQ(CPtr->m_isPositive, false);
@@ -369,7 +377,9 @@ TEST(SerializationTest, polymorphism) {
         TestLog log;
         AutomaticDeserializationRegistry deserializationReg;
         babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-        auto MainPtr = deserializer.deserializeObject<Main>();
+        auto MainPtrResult = deserializer.deserializeObject<Main>();
+        ASSERT_TRUE(MainPtrResult);
+        auto MainPtr = std::move(*MainPtrResult);
         deserializer.finalize();
 
         ASSERT_NE(MainPtr->m_base, nullptr);
@@ -423,7 +433,9 @@ TEST(SerializationTest, polymorphismFail) {
             AutomaticDeserializationRegistry deserializationReg;
             try {
                 babelwires::XmlDeserializer deserializer(serializedContents2, deserializationReg, log);
-                auto MainPtr = deserializer.deserializeObject<Main>();
+                auto MainPtrResult = deserializer.deserializeObject<Main>();
+                THROW_ON_ERROR(MainPtrResult, ParseException);
+                auto MainPtr = std::move(*MainPtrResult);
                 deserializer.finalize();
             } catch (const ParseException& e) {
                 EXPECT_NE(std::string_view(e.what()).find(t), std::string_view::npos);

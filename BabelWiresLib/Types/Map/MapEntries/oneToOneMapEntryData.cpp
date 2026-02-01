@@ -76,8 +76,10 @@ void babelwires::OneToOneMapEntryData::serializeContents(Serializer& serializer)
 }
 
 babelwires::Result babelwires::OneToOneMapEntryData::deserializeContents(Deserializer& deserializer) {
-    m_sourceValue = uniquePtrCast<Value>(deserializer.deserializeObject<EditableValue>("source"));
-    m_targetValue = uniquePtrCast<Value>(deserializer.deserializeObject<EditableValue>("target"));
+    ASSIGN_OR_ERROR(auto sourcePtr, deserializer.deserializeObject<EditableValue>("source"));
+    m_sourceValue = uniquePtrCast<Value>(std::move(sourcePtr));
+    ASSIGN_OR_ERROR(auto targetPtr, deserializer.deserializeObject<EditableValue>("target"));
+    m_targetValue = uniquePtrCast<Value>(std::move(targetPtr));
     return {};
 }
 

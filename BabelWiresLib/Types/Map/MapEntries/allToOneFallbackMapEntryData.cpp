@@ -58,7 +58,8 @@ void babelwires::AllToOneFallbackMapEntryData::serializeContents(Serializer& ser
 }
 
 babelwires::Result babelwires::AllToOneFallbackMapEntryData::deserializeContents(Deserializer& deserializer) {
-    m_targetValue = uniquePtrCast<Value>(deserializer.deserializeObject<EditableValue>("target"));
+    ASSIGN_OR_ERROR(auto targetPtr, deserializer.deserializeObject<EditableValue>("target"));
+    m_targetValue = uniquePtrCast<Value>(std::move(targetPtr));
     return {};
 }
 

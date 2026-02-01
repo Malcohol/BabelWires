@@ -57,8 +57,9 @@ namespace babelwires {
 
         /// Deserialize a child object of type T.
         /// The key is often the name of a field, but by default it duplicates the name of the object's type.
+        /// Returns an error if the key is not found or if there is a parse error.
         template <typename T>
-        std::unique_ptr<T> deserializeObject(std::string_view key = T::serializationType);
+        ResultT<std::unique_ptr<T>> deserializeObject(std::string_view key = T::serializationType);
 
         /// Deserialize a child object of type T.
         /// If the key is missing, a nullptr is returned.
