@@ -74,7 +74,9 @@ void babelwires::NodeData::serializeModifiers(Serializer& serializer) const {
 void babelwires::NodeData::deserializeModifiers(Deserializer& deserializer) {
     if (auto itResult = deserializer.deserializeArray<ModifierData>("modifiers")) {
         for (auto& it = *itResult; it.isValid(); ++it) {
-            m_modifiers.emplace_back(it.getObject());
+            auto result = it.getObject();
+            THROW_ON_ERROR(result, ParseException);
+            m_modifiers.emplace_back(std::move(*result));
         }
     }
 }

@@ -111,9 +111,9 @@ namespace babelwires {
         void finalize();
 
       protected:
-        template <typename T> std::unique_ptr<T> deserializeCurrentObject();
+        template <typename T> ResultT<std::unique_ptr<T>> deserializeCurrentObject();
 
-        void* deserializeCurrentObject(const void* tagOfTypeSought);
+        ResultT<std::unique_ptr<Serializable>> deserializeCurrentObject(const void* tagOfTypeSought);
 
         struct BaseIterator;
         struct AbstractIterator {
@@ -161,7 +161,7 @@ struct babelwires::Deserializer::BaseIterator {
 };
 
 template <typename T> struct babelwires::Deserializer::Iterator : BaseIterator {
-    std::unique_ptr<T> getObject();
+    ResultT<std::unique_ptr<T>> getObject();
 
     Iterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer);
 };

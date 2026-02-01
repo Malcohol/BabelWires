@@ -171,14 +171,18 @@ void babelwires::TypeExp::deserializeContents(Deserializer& deserializer) {
         THROW_ON_ERROR(typeItResult, ParseException);
         if (typeItResult) {
             for (auto& typeIt = *typeItResult; typeIt.isValid(); ++typeIt) {
-                typeArguments.emplace_back(std::move(*typeIt.getObject()));
+                auto result = typeIt.getObject();
+                THROW_ON_ERROR(result, ParseException);
+                typeArguments.emplace_back(std::move(**result));
             }
         }
         auto valueItResult = deserializer.tryDeserializeArray<EditableValue>("valueArguments");
         THROW_ON_ERROR(valueItResult, ParseException);
         if (valueItResult) {
             for (auto& valueIt = *valueItResult; valueIt.isValid(); ++valueIt) {
-                valueArguments.emplace_back(uniquePtrCast<Value>(valueIt.getObject()));
+                auto result = valueIt.getObject();
+                THROW_ON_ERROR(result, ParseException);
+                valueArguments.emplace_back(uniquePtrCast<Value>(std::move(*result)));
             }
         }
         m_storage = ConstructedTypeData{typeConstructorId, {std::move(typeArguments), std::move(valueArguments)}};

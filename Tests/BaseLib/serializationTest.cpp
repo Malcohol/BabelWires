@@ -78,7 +78,9 @@ namespace {
             auto itResult = deserializer.deserializeArray<A>("arrayOfAs");
             THROW_ON_ERROR(itResult, ParseException);
             for (auto& it = *itResult; it.isValid(); ++it) {
-                m_arrayOfAs.emplace_back(std::move(*it.getObject()));
+                auto result = it.getObject();
+                THROW_ON_ERROR(result, ParseException);
+                m_arrayOfAs.emplace_back(std::move(**result));
             }
         }
 
@@ -321,7 +323,9 @@ namespace {
                 deserializer.deserializeObject<Concrete2>("concrete2", babelwires::Deserializer::IsOptional::Optional);
             if (auto itResult = deserializer.deserializeArray<Base>("objects")) {
                 for (auto& it = *itResult; it.isValid(); ++it) {
-                    m_objects.emplace_back(it.getObject());
+                    auto result = it.getObject();
+                    THROW_ON_ERROR(result, ParseException);
+                    m_objects.emplace_back(std::move(*result));
                 }
             }
         }

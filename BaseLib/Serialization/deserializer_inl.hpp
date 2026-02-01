@@ -45,8 +45,10 @@ inline babelwires::Result babelwires::Deserializer::deserializeValue(std::string
 }
 
 template <typename T>
-inline std::unique_ptr<T> babelwires::Deserializer::deserializeCurrentObject() {
-    return std::unique_ptr<T>(static_cast<T*>(deserializeCurrentObject(T::getSerializationTag())));
+inline babelwires::ResultT<std::unique_ptr<T>> babelwires::Deserializer::deserializeCurrentObject() {
+    return deserializeCurrentObject(T::getSerializationTag()).transform([](std::unique_ptr<Serializable>&& basePtr) {
+        return uniquePtrCast<T>(std::move(basePtr));
+    });
 }
 
 template <typename T>
@@ -58,18 +60,19 @@ inline std::unique_ptr<T> babelwires::Deserializer::deserializeObject(std::strin
             return nullptr;
         }
     }
-    auto ret = deserializeCurrentObject<T>();
+    ResultT<std::unique_ptr<T>> ret = deserializeCurrentObject<T>();
     popObject();
-    return ret;
+    THROW_ON_ERROR(ret, ParseException);
+    return std::move(*ret);
 }
 
-template <typename T>
-inline std::unique_ptr<T> babelwires::Deserializer::Iterator<T>::getObject() {
+template <typename T> inline babelwires::ResultT<std::unique_ptr<T>> babelwires::Deserializer::Iterator<T>::getObject() {
     return m_deserializer.deserializeCurrentObject<T>();
 }
 
 template <typename T>
-inline babelwires::Deserializer::Iterator<T>::Iterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer)
+inline babelwires::Deserializer::Iterator<T>::Iterator(std::unique_ptr<AbstractIterator> impl,
+                                                       Deserializer& deserializer)
     : BaseIterator(std::move(impl), deserializer) {}
 
 template <typename T>
@@ -90,15 +93,15 @@ babelwires::Deserializer::deserializeArray(std::string_view key) {
     return ResultT<Iterator<T>>(std::in_place, getIteratorImpl(), *this);
 }
 
-template <typename T>
-inline T babelwires::Deserializer::ValueIterator<T>::deserializeValue(T tempValue) {
+template <typename T> inline T babelwires::Deserializer::ValueIterator<T>::deserializeValue(T tempValue) {
     auto result = m_deserializer.deserializeValue("value", tempValue);
     THROW_ON_ERROR(result, ParseException);
     return tempValue;
 }
 
 template <typename T>
-inline babelwires::Deserializer::ValueIterator<T>::ValueIterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer, std::string_view typeName)
+inline babelwires::Deserializer::ValueIterator<T>::ValueIterator(std::unique_ptr<AbstractIterator> impl,
+                                                                 Deserializer& deserializer, std::string_view typeName)
     : BaseIterator(std::move(impl), deserializer, std::string(typeName)) {}
 
 template <typename T>

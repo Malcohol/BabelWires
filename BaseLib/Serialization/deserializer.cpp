@@ -62,7 +62,7 @@ void babelwires::Deserializer::finalize() {
     m_wasFinalized = true;
 }
 
-void* babelwires::Deserializer::deserializeCurrentObject(const void* tagOfTypeSought) {
+babelwires::ResultT<std::unique_ptr<babelwires::Serializable>> babelwires::Deserializer::deserializeCurrentObject(const void* tagOfTypeSought) {
     const std::string_view currentTypeName = getCurrentTypeName();
     if (const DeserializationRegistry::Entry* entry = m_deserializationRegistry.findEntry(currentTypeName)) {
         const void* entryTag = entry->m_baseClassTag;
@@ -74,8 +74,8 @@ void* babelwires::Deserializer::deserializeCurrentObject(const void* tagOfTypeSo
             // The registered entry is a subtype of the type we're trying to deserialize.
             return entry->m_factory(*this);
         } else {
-            throw ParseException() << "The type \"" << currentTypeName << "\" was not expected here";
+            return Error() << "The type \"" << currentTypeName << "\" was not expected here";
         }
     }
-    throw ParseException() << "Unknown type \"" << currentTypeName << "\"";
+    return Error() << "Unknown type \"" << currentTypeName << "\"";
 }

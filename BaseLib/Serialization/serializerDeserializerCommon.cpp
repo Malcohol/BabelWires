@@ -65,7 +65,9 @@ void babelwires::SerializerDeserializerCommon::deserializeMetadata(
     Deserializer& deserializer, UserLogger& userLogger, const DeserializationRegistry& deserializationRegistry) {
     if (auto itResult = deserializer.deserializeArray<SerializationMetadata>("serializationMetadata")) {
         for (auto& it = *itResult; it.isValid(); ++it) {
-            auto ptr = it.getObject();
+            auto ptrResult = it.getObject();
+            THROW_ON_ERROR(ptrResult, ParseException);
+            auto ptr = std::move(*ptrResult);
             const auto [_, wasInserted] = m_serializationVersions.insert(std::pair(ptr->m_type, ptr->m_version));
             if (!wasInserted) {
                 throw ParseException() << "The type \"" << ptr->m_type << "\" already has a version";

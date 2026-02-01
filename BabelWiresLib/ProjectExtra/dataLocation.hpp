@@ -20,7 +20,7 @@ namespace babelwires {
     /// to allow it to identify those subvalues.
     /// Note: In theory, a path on its own could be used to express the current use-cases, but I do not
     /// want to assume that will always be a possible or convenient option.
-    class DataLocation : public Cloneable, Serializable, ProjectVisitable {
+    class DataLocation : public Cloneable, public Serializable, public ProjectVisitable {
       public:
         DOWNCASTABLE_TYPE_HIERARCHY(DataLocation);
         CLONEABLE_ABSTRACT(DataLocation);

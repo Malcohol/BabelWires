@@ -243,7 +243,9 @@ void babelwires::IdentifierRegistry::serializeContents(Serializer& serializer) c
 void babelwires::IdentifierRegistry::deserializeContents(Deserializer& deserializer) {
     if (auto itResult = deserializer.deserializeArray<InstanceData>("identifiers")) {
         for (auto& it = *itResult; it.isValid(); ++it) {
-            std::unique_ptr<InstanceData> instanceDataPtr = it.getObject();
+            auto result = it.getObject();
+            THROW_ON_ERROR(result, babelwires::ParseException);
+            std::unique_ptr<InstanceData> instanceDataPtr = std::move(*result);
             InstanceData* instanceData = instanceDataPtr.get();
 
         const ShortId::Discriminator discriminator = instanceDataPtr->m_identifier.getDiscriminator();

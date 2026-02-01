@@ -62,11 +62,12 @@ namespace babelwires {
     static const babelwires::DeserializationRegistry::Entry* getDeserializationRegistryEntry() {                       \
         return &babelwires::Detail::SerializableConcrete<T>::s_registryEntry;                                          \
     }                                                                                                                  \
-    static T* deserializingFactory(babelwires::Deserializer& deserializer) {                                           \
+    static babelwires::ResultT<std::unique_ptr<babelwires::Serializable>> deserializingFactory(                        \
+        babelwires::Deserializer& deserializer) {                                                                      \
         /* make_unique requires a public default constructor. */                                                       \
         std::unique_ptr<T> newObject(new T());                                                                         \
         newObject->deserializeContents(deserializer);                                                                  \
-        return newObject.release();                                                                                    \
+        return std::move(newObject);                                                                                   \
     }
 
     // Implementation details

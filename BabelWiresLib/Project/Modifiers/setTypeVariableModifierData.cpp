@@ -24,7 +24,9 @@ void babelwires::SetTypeVariableModifierData::deserializeContents(Deserializer& 
     auto itResult = deserializer.deserializeArray<TypeExp>("typeAssignments");
     THROW_ON_ERROR(itResult, ParseException);
     for (auto& it = *itResult; it.isValid(); ++it) {
-        m_typeAssignments.emplace_back(std::move(*it.getObject()));
+        auto result = it.getObject();
+        THROW_ON_ERROR(result, ParseException);
+        m_typeAssignments.emplace_back(std::move(**result));
     }
 }
 

@@ -28,7 +28,9 @@ void babelwires::ProjectData::deserializeContents(Deserializer& deserializer) {
     auto itResult = deserializer.deserializeArray<NodeData>("elements");
     THROW_ON_ERROR(itResult, ParseException);
     for (auto& it = *itResult; it.isValid(); ++it) {
-        m_nodes.emplace_back(std::move(it.getObject()));
+        auto result = it.getObject();
+        THROW_ON_ERROR(result, ParseException);
+        m_nodes.emplace_back(std::move(*result));
     }
 }
 

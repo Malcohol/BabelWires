@@ -52,7 +52,9 @@ void babelwires::SelectOptionalsModifierData::deserializeContents(Deserializer& 
     THROW_ON_ERROR(deserializer.deserializeValue("path", m_targetPath), ParseException);
     if (auto itResult = deserializer.tryDeserializeArray<SerializableOptional>("optionals")) {
         for (auto& it = *itResult; it.isValid(); ++it) {
-            const auto newObject = it.getObject();
+            auto result = it.getObject();
+            THROW_ON_ERROR(result, ParseException);
+            const auto newObject = std::move(*result);
             if (newObject->tryAs<SerializableOptional_Activate>()) {
                 m_optionalsActivation[newObject->m_optional] = true;
             } else if (newObject->tryAs<SerializableOptional_Deactivate>()) {

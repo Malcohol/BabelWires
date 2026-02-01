@@ -154,7 +154,9 @@ void babelwires::MapValue::deserializeContents(Deserializer& deserializer) {
     m_targetTypeExp = std::move(*deserializer.deserializeObject<TypeExp>("targetType"));
     if (auto itResult = deserializer.deserializeArray<MapEntryData>("entries")) {
         for (auto& it = *itResult; it.isValid(); ++it) {
-            std::unique_ptr<MapEntryData> newEntry = it.getObject();
+            auto result = it.getObject();
+            THROW_ON_ERROR(result, ParseException);
+            std::unique_ptr<MapEntryData> newEntry = std::move(*result);
             m_mapEntries.emplace_back(std::move(newEntry));
         }
     }

@@ -8,17 +8,19 @@
 #pragma once
 
 #include <BaseLib/common.hpp>
+#include <BaseLib/Utilities/result.hpp>
 #include <functional>
 #include <string_view>
 
 namespace babelwires {
 
     class Deserializer;
+    struct Serializable;
 
     /// An interface for looking up deserialization information about classes.
     class DeserializationRegistry {
       public:
-        using Factory = std::function<void*(Deserializer& deserializer)>;
+        using Factory = std::function<ResultT<std::unique_ptr<Serializable>>(Deserializer& deserializer)>;
 
         /// Instances of this object represent the registration of a single concrete class' deserializingFactory.
         struct Entry {
