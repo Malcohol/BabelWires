@@ -75,14 +75,11 @@ namespace {
         }
 
         Result deserializeContents(Deserializer& deserializer) override {
-            if (auto aResult = deserializer.deserializeObject<A>()) {
-                m_a = std::move(**aResult);
-            }
-            if (auto itResult = deserializer.deserializeArray<A>("arrayOfAs")) {
-                for (auto& it = *itResult; it.isValid(); ++it) {
-                    ASSIGN_OR_ERROR(auto result, it.getObject());
-                    m_arrayOfAs.emplace_back(std::move(*result));
-                }
+            DO_OR_ERROR(deserializer.deserializeObjectByValue<A>(m_a));
+            ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<A>("arrayOfAs"));
+            for (; it.isValid(); ++it) {
+                ASSIGN_OR_ERROR(auto result, it.getObject());
+                m_arrayOfAs.emplace_back(std::move(*result));
             }
             return {};
         }
@@ -331,11 +328,10 @@ namespace {
             ASSIGN_OR_ERROR(m_intermediate, deserializer.tryDeserializeObject<Intermediate>("intermediate"));
             ASSIGN_OR_ERROR(m_concrete1, deserializer.tryDeserializeObject<Concrete1>("concrete1"));
             ASSIGN_OR_ERROR(m_concrete2, deserializer.tryDeserializeObject<Concrete2>("concrete2"));
-            if (auto itResult = deserializer.deserializeArray<Base>("objects")) {
-                for (auto& it = *itResult; it.isValid(); ++it) {
-                    ASSIGN_OR_ERROR(auto ptr, it.getObject());
-                    m_objects.emplace_back(std::move(ptr));
-                }
+            ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<Base>("objects"));
+            for (; it.isValid(); ++it) {
+                ASSIGN_OR_ERROR(auto ptr, it.getObject());
+                m_objects.emplace_back(std::move(ptr));
             }
             return {};
         }

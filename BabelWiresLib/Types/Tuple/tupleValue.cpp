@@ -65,11 +65,10 @@ void babelwires::TupleValue::serializeContents(Serializer& serializer) const {
 }
 
 babelwires::Result babelwires::TupleValue::deserializeContents(Deserializer& deserializer) {
-    if (auto typeItResult = deserializer.deserializeArray<EditableValue>("componentValues")) {
-        for (auto& typeIt = *typeItResult; typeIt.isValid(); ++typeIt) {
-            ASSIGN_OR_ERROR(auto result, typeIt.getObject());
-            m_componentValues.emplace_back(uniquePtrCast<Value>(std::move(result)));
-        }
+    ASSIGN_OR_ERROR(auto typeIt, deserializer.deserializeArray<EditableValue>("componentValues"));
+    for (; typeIt.isValid(); ++typeIt) {
+        ASSIGN_OR_ERROR(auto result, typeIt.getObject());
+        m_componentValues.emplace_back(uniquePtrCast<Value>(std::move(result)));
     }
     return {};
 }

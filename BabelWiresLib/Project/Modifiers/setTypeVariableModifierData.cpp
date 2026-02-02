@@ -21,11 +21,10 @@ void babelwires::SetTypeVariableModifierData::serializeContents(Serializer& seri
 
 babelwires::Result babelwires::SetTypeVariableModifierData::deserializeContents(Deserializer& deserializer) {
     DO_OR_ERROR(deserializer.deserializeValue("path", m_targetPath));
-    if (auto itResult = deserializer.deserializeArray<TypeExp>("typeAssignments")) {
-        for (auto& it = *itResult; it.isValid(); ++it) {
-            ASSIGN_OR_ERROR(auto result, it.getObject());
-            m_typeAssignments.emplace_back(std::move(*result));
-        }
+    ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<TypeExp>("typeAssignments"));
+    for (; it.isValid(); ++it) {
+        ASSIGN_OR_ERROR(auto result, it.getObject());
+        m_typeAssignments.emplace_back(std::move(*result));
     }
     return {};
 }

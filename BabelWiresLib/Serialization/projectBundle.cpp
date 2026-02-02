@@ -69,15 +69,13 @@ void babelwires::ProjectBundle::serializeAdditionalMetadata(Serializer& serializ
     serializer.serializeArray("factoryMetadata", factoryMetadata);
 }
 
-void babelwires::ProjectBundle::deserializeAdditionalMetadata(Deserializer& deserializer) {
-    if (auto itResult = deserializer.deserializeArray<FactoryInfoPair>("factoryMetadata")) {
-        for (auto& it = *itResult; it.isValid(); ++it) {
-            auto fmResult = it.getObject();
-            THROW_ON_ERROR(fmResult, ParseException);
-            auto fm = std::move(*fmResult);
-            m_factoryMetadata.insert(std::make_pair(std::move(fm->m_factoryIdentifier), fm->m_factoryVersion));
-        }
+babelwires::Result babelwires::ProjectBundle::deserializeAdditionalMetadata(Deserializer& deserializer) {
+    ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<FactoryInfoPair>("factoryMetadata"));
+    for (; it.isValid(); ++it) {
+        ASSIGN_OR_ERROR(auto fm, it.getObject());
+        m_factoryMetadata.insert(std::make_pair(std::move(fm->m_factoryIdentifier), fm->m_factoryVersion));
     }
+    return {};
 }
 
 void babelwires::ProjectBundle::visitIdentifiers(IdentifierVisitor& visitor) {

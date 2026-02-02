@@ -242,31 +242,30 @@ void babelwires::IdentifierRegistry::serializeContents(Serializer& serializer) c
 }
 
 babelwires::Result babelwires::IdentifierRegistry::deserializeContents(Deserializer& deserializer) {
-    if (auto itResult = deserializer.deserializeArray<InstanceData>("identifiers")) {
-        for (auto& it = *itResult; it.isValid(); ++it) {
-            ASSIGN_OR_ERROR(std::unique_ptr<InstanceData> instanceDataPtr, it.getObject());
-            InstanceData* instanceData = instanceDataPtr.get();
+    ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<InstanceData>("identifiers"));
+    for (; it.isValid(); ++it) {
+        ASSIGN_OR_ERROR(std::unique_ptr<InstanceData> instanceDataPtr, it.getObject());
+        InstanceData* instanceData = instanceDataPtr.get();
 
-            const ShortId::Discriminator discriminator = instanceDataPtr->m_identifier.getDiscriminator();
-            if (discriminator == 0) {
-                throw ParseException() << "An identifier in the identifier metadata had no discriminator";
-            }
-
-            auto [uit, wasInserted] = m_uuidToInstanceDataMap.insert(
-                std::pair<Uuid, std::unique_ptr<InstanceData>>(instanceData->m_uuid, std::move(instanceDataPtr)));
-            if (!wasInserted) {
-                throw ParseException() << "An identifier with uuid \"" << uit->first << "\" was duplicated";
-            }
-
-            Data& data = m_instanceDatasFromIdentifier[instanceData->m_identifier.withoutDiscriminator()];
-
-            data.m_instanceDatas.resize(discriminator);
-            if (data.m_instanceDatas[discriminator - 1]) {
-                throw ParseException() << "The identifier registry already has an identifier \""
-                                       << instanceData->m_identifier << "\"";
-            }
-            data.m_instanceDatas[discriminator - 1] = uit->second.get();
+        const ShortId::Discriminator discriminator = instanceDataPtr->m_identifier.getDiscriminator();
+        if (discriminator == 0) {
+            throw ParseException() << "An identifier in the identifier metadata had no discriminator";
         }
+
+        auto [uit, wasInserted] = m_uuidToInstanceDataMap.insert(
+            std::pair<Uuid, std::unique_ptr<InstanceData>>(instanceData->m_uuid, std::move(instanceDataPtr)));
+        if (!wasInserted) {
+            throw ParseException() << "An identifier with uuid \"" << uit->first << "\" was duplicated";
+        }
+
+        Data& data = m_instanceDatasFromIdentifier[instanceData->m_identifier.withoutDiscriminator()];
+
+        data.m_instanceDatas.resize(discriminator);
+        if (data.m_instanceDatas[discriminator - 1]) {
+            throw ParseException() << "The identifier registry already has an identifier \""
+                                    << instanceData->m_identifier << "\"";
+        }
+        data.m_instanceDatas[discriminator - 1] = uit->second.get();
     }
     return {};
 }

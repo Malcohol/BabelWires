@@ -114,7 +114,7 @@ template <typename DATA> void babelwires::DataBundle<DATA>::serializeContents(Se
 template <typename DATA> babelwires::Result babelwires::DataBundle<DATA>::deserializeContents(Deserializer& deserializer) {
     DO_OR_ERROR(deserializer.tryDeserializeValue("filePath", m_pathToFile));
     DO_OR_ERROR(deserializer.deserializeObjectByValue<DATA>(m_data, DATA::serializationType));
-    deserializeAdditionalMetadata(deserializer);
+    DO_OR_ERROR(deserializeAdditionalMetadata(deserializer));
     DO_OR_ERROR(deserializer.deserializeObjectByValue<IdentifierRegistry>(m_identifierRegistry, IdentifierRegistry::serializationType));
     return {};
 }

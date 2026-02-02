@@ -42,7 +42,7 @@ namespace babelwires {
         void adaptDataToAdditionalMetadata(const DataContext& context, UserLogger& userLogger) override;
 
         void serializeAdditionalMetadata(Serializer& serializer) const override;
-        void deserializeAdditionalMetadata(Deserializer& deserializer) override;
+        Result deserializeAdditionalMetadata(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
         void visitFilePaths(FilePathVisitor& visitor) override;
 

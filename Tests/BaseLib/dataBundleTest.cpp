@@ -76,7 +76,7 @@ namespace {
 
         void serializeAdditionalMetadata(babelwires::Serializer& serializer) const override {}
 
-        void deserializeAdditionalMetadata(babelwires::Deserializer& deserializer) override {}
+        babelwires::Result deserializeAdditionalMetadata(babelwires::Deserializer& deserializer) override { return {}; }
     };
 } // namespace
 

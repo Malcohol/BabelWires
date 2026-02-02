@@ -66,7 +66,7 @@ namespace babelwires {
         virtual void serializeAdditionalMetadata(Serializer& serializer) const {}
 
         /// Allows the subclass to put additional metadata at the same level as the metadata handled by this class.
-        virtual void deserializeAdditionalMetadata(Deserializer& deserializer) {}
+        virtual Result deserializeAdditionalMetadata(Deserializer& deserializer) { return {}; }
 
       private:
         /// Ensure the identifiers in the data refer to the context independent m_identifierRegistry.
