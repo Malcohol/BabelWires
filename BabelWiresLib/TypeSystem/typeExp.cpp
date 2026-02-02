@@ -158,7 +158,7 @@ babelwires::Result babelwires::TypeExp::deserializeContents(Deserializer& deseri
     ASSIGN_OR_ERROR(const bool typeIdResult, deserializer.tryDeserializeValue("typeId", typeId));
     ASSIGN_OR_ERROR(const bool typeConstructorIdResult, deserializer.tryDeserializeValue("typeConstructorId", typeConstructorId));
     if (typeIdResult && typeConstructorIdResult) {
-        throw ParseException() << "TypeExp cannot have both typeId and typeConstructorId";
+        return Error() << "TypeExp cannot have both typeId and typeConstructorId";
     } else if (typeIdResult) {
         m_storage = typeId;
     } else if (typeConstructorIdResult) {

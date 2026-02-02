@@ -57,7 +57,7 @@ babelwires::Result babelwires::FieldIdValue::deserializeContents(Deserializer& d
         } else if (optional == c_serializedOptionalActiveValue) {
             m_optionality = RecordType::Optionality::optionalDefaultActive;
         } else {
-            throw ParseException() << "FieldIdValue has unknown optionality value '" << optional << "'";
+            return Error() << "FieldIdValue has unknown optionality value '" << optional << "'";
         }
     } else {
         m_optionality = RecordType::Optionality::alwaysActive;

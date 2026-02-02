@@ -60,7 +60,7 @@ babelwires::Result babelwires::MapProjectDataLocation::deserializeContents(Deser
     } else if (tmp == "target") {
         m_side = Side::target;
     } else {
-        throw ParseException() << "Unrecognized side \"" << tmp << "\" when parsing a MapDataLocation";
+        return Error() << "Unrecognized side \"" << tmp << "\" when parsing a MapDataLocation";
     }
     return {};
 }

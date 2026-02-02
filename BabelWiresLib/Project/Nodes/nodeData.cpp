@@ -10,8 +10,8 @@
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
-#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
 #include <BaseLib/Serialization/deserializer.hpp>
@@ -49,8 +49,7 @@ babelwires::NodeData::NodeData(const NodeData& other)
 }
 
 std::unique_ptr<babelwires::Node> babelwires::NodeData::createNode(const ProjectContext& context,
-                                                                                          UserLogger& userLogger,
-                                                                                          NodeId newId) const {
+                                                                   UserLogger& userLogger, NodeId newId) const {
     std::unique_ptr<babelwires::Node> newNode = doCreateNode(context, userLogger, newId);
     newNode->applyLocalModifiers(userLogger);
     return newNode;
@@ -74,15 +73,9 @@ void babelwires::NodeData::serializeModifiers(Serializer& serializer) const {
 }
 
 babelwires::Result babelwires::NodeData::deserializeModifiers(Deserializer& deserializer) {
-    // TODO RESULT
-    auto itResult = deserializer.tryDeserializeArray<ModifierData>("modifiers");
-    if (!itResult) {
-        return std::unexpected(itResult.error());
-    }
-    for (auto& it = *itResult; it.isValid(); ++it) {
-        auto result = it.getObject();
-        THROW_ON_ERROR(result, ParseException);
-        m_modifiers.emplace_back(std::move(*result));
+    ASSIGN_OR_ERROR(auto it, deserializer.tryDeserializeArray<ModifierData>("modifiers"));
+    for (; it.isValid(); ++it) {
+        ASSIGN_OR_ERROR(m_modifiers.emplace_back(), it.getObject());
     }
     return {};
 }
@@ -93,17 +86,10 @@ void babelwires::NodeData::serializeUiData(Serializer& serializer) const {
 }
 
 babelwires::Result babelwires::NodeData::deserializeUiData(Deserializer& deserializer) {
-    auto uiData =
-            deserializer.tryDeserializeObject<UiData>(UiData::serializationType);
-    THROW_ON_ERROR(uiData, ParseException);    
-    if (*uiData) {        
-        m_uiData = **uiData;
-    }
-    // TODO RESULT
-    if (auto itResult = deserializer.deserializeValueArray<Path>("expandedPaths", "path")) {
-        for (auto& it = *itResult; it.isValid(); ++it) {
-            m_expandedPaths.emplace_back(std::move(it.deserializeValue()));
-        }
+    DO_OR_ERROR(deserializer.tryDeserializeObjectByValue<UiData>(m_uiData));
+    ASSIGN_OR_ERROR(auto it, deserializer.tryDeserializeValueArray<Path>("expandedPaths", "path"));
+    for (; it.isValid(); ++it) {
+        m_expandedPaths.emplace_back(std::move(it.deserializeValue()));
     }
     return {};
 }
