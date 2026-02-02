@@ -108,9 +108,11 @@ namespace babelwires {
         template <typename T>
         ResultT<ValueIterator<T>> deserializeValueArray(std::string_view, std::string_view typeName = "element");
 
+
         /// Get a description of the current parsing location which can be used in errors and warnings (e.g. a line
         /// number).
-        virtual void addContextDescription(ParseException& e) const = 0;
+        template <typename T>
+        void augmentResultWithContext(ResultT<T>& result) const;
 
       protected:
         /// Subclass must call this before the Deserializer interface is used.
@@ -141,6 +143,8 @@ namespace babelwires {
         virtual void popArray() = 0;
 
         virtual std::string_view getCurrentTypeName() = 0;
+
+        virtual ErrorStorage addContextDescription(const ErrorStorage& e) const = 0;
 
       protected:
         bool m_wasFinalized = false;
@@ -176,8 +180,6 @@ template <typename T> struct babelwires::Deserializer::Iterator : BaseIterator {
 
     Iterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer);
 };
-
-
 
 template <typename T> struct babelwires::Deserializer::ValueIterator : BaseIterator {
     /// Pass in a tempValue if T cannot be default constructed.

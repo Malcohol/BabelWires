@@ -2,7 +2,7 @@
  * The XmlDeserializer implements the Deserializer and loads data from an XML representation.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
@@ -15,27 +15,27 @@ void babelwires::XmlDeserializer::keyWasQueried(std::string_view key) {
     m_xmlContext.back().m_keysQueried.insert(std::string(key));
 }
 
-namespace 
-{
+namespace {
     // Work around the fact that tinyxml2 doesn't use overloading for integer queries.
 
-    template<typename T>
-    using BigInt = std::conditional_t<std::is_signed_v<T>, std::int64_t, std::uint64_t>;
+    template <typename T> using BigInt = std::conditional_t<std::is_signed_v<T>, std::int64_t, std::uint64_t>;
 
-    template<typename T>
-    std::enable_if_t<std::is_signed_v<T>, tinyxml2::XMLError> queryIntAttribute(const tinyxml2::XMLElement& element, std::string_view key, BigInt<T>& value) {
+    template <typename T>
+    std::enable_if_t<std::is_signed_v<T>, tinyxml2::XMLError>
+    queryIntAttribute(const tinyxml2::XMLElement& element, std::string_view key, BigInt<T>& value) {
         return element.QueryInt64Attribute(babelwires::toCStr(key), &value);
     }
 
-    template<typename T>
-    std::enable_if_t<std::is_unsigned_v<T>, tinyxml2::XMLError> queryIntAttribute(const tinyxml2::XMLElement& element, std::string_view key, BigInt<T>& value) {
+    template <typename T>
+    std::enable_if_t<std::is_unsigned_v<T>, tinyxml2::XMLError>
+    queryIntAttribute(const tinyxml2::XMLElement& element, std::string_view key, BigInt<T>& value) {
         return element.QueryUnsigned64Attribute(babelwires::toCStr(key), &value);
     }
-}
+} // namespace
 
 template <typename INT_TYPE>
-babelwires::ResultT<bool> babelwires::XmlDeserializer::getIntValue(const tinyxml2::XMLElement& element, std::string_view key,
-                                              INT_TYPE& value) {
+babelwires::ResultT<bool> babelwires::XmlDeserializer::getIntValue(const tinyxml2::XMLElement& element,
+                                                                   std::string_view key, INT_TYPE& value) {
     keyWasQueried(key);
     BigInt<INT_TYPE> bigValue;
     switch (queryIntAttribute<INT_TYPE>(element, key, bigValue)) {
@@ -232,12 +232,15 @@ std::unique_ptr<babelwires::Deserializer::AbstractIterator> babelwires::XmlDeser
     return std::make_unique<IteratorImpl>(*this, m_xmlContext.back().m_element);
 }
 
-void babelwires::XmlDeserializer::addContextDescription(ParseException& e) const {
+babelwires::ErrorStorage babelwires::XmlDeserializer::addContextDescription(const ErrorStorage& e) const {
     const tinyxml2::XMLNode* const node = getCurrentNode();
+    Error error;
+    error << e;
     if (!m_xmlContext.empty()) {
         if (const tinyxml2::XMLElement* const element = m_xmlContext.back().m_element) {
-            e << " in element <" << element->Name() << ">";
+            error << " when parsing element <" << element->Name() << ">";
         }
     }
-    e << " at line " << node->GetLineNum();
+    error << " at line " << node->GetLineNum();
+    return error;
 }

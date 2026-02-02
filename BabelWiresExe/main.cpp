@@ -97,8 +97,11 @@ int main(int argc, char* argv[]) {
 
         if (options.m_mode == ProgramOptions::MODE_RUN_PROJECT) {
             Project project(context, log);
-            ProjectData projectData = ProjectSerialization::loadFromFile(options.m_inputFileName.c_str(), context, log);
-            project.setProjectData(projectData);
+            ResultT<ProjectData> projectDataResult = ProjectSerialization::loadFromFile(options.m_inputFileName.c_str(), context, log);
+            if (!projectDataResult) {
+                throw FileIoException() << projectDataResult.error().toString();
+            }
+            project.setProjectData(std::move(*projectDataResult));
             project.tryToSaveAllTargets();
             return EXIT_SUCCESS;
         } else {

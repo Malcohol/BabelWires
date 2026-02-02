@@ -288,9 +288,12 @@ void babelwires::MainWindow::openProject() {
                     std::string filePathStr = filePath.toStdString();
                     m_userLogger.logInfo() << "Open project \"" << filePathStr << '"';
                     ModifyModelScope scope(m_projectGraphModel);
-                    ProjectData projectData =
+                    ResultT<ProjectData> projectData =
                         ProjectSerialization::loadFromFile(filePathStr, m_projectGraphModel.getContext(), m_userLogger);
-                    scope.getProject().setProjectData(projectData);
+                    if (!projectData) {
+                        throw FileIoException() << projectData.error().toString();
+                    }
+                    scope.getProject().setProjectData(*projectData);
                     setCurrentFilePath(filePath);
                     return;
                 } catch (FileIoException& e) {
@@ -443,20 +446,19 @@ void babelwires::MainWindow::paste() {
     QByteArray contents = mimedata->data(getClipboardMimetype());
     std::string asString(contents.data(), contents.length());
 
-    try {
-        ProjectData projectData = ProjectSerialization::loadFromString(asString, m_projectGraphModel.getContext(),
+    ResultT<ProjectData> projectData = ProjectSerialization::loadFromString(asString, m_projectGraphModel.getContext(),
                                                                        getFullFilePath().toStdString(), m_userLogger);
+    if (projectData)  {
         {
             auto* flowView = dynamic_cast<QtNodes::GraphicsView*>(centralWidget());
             assert(flowView && "Unexpected central widget");
             const QPointF centre = flowView->sceneRect().center();
             UiPosition offset{static_cast<UiCoord>(centre.x()), static_cast<UiCoord>(centre.y())};
-            projectUtilities::translate(offset, projectData);
+            projectUtilities::translate(offset, *projectData);
         }
-
-        auto command = std::make_unique<PasteNodesCommand>("Paste elements", std::move(projectData));
+        auto command = std::make_unique<PasteNodesCommand>("Paste elements", std::move(*projectData));
         m_projectGraphModel.scheduleCommand(std::move(command));
-    } catch (std::exception&) {
+    } else {
         // When using a specific mime-type, log a debug message?
         m_userLogger.logWarning() << "Failed to paste from clipboard";
     }

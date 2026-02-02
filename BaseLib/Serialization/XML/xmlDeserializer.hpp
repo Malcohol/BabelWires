@@ -33,8 +33,6 @@ namespace babelwires {
         /// Client code must call this before this object is destroyed.
         using Deserializer::finalize;
 
-        void addContextDescription(ParseException& e) const override;
-
       protected:
         struct IteratorImpl : Deserializer::AbstractIterator {
             IteratorImpl(XmlDeserializer& deserializer, const tinyxml2::XMLElement* arrayElement);
@@ -55,6 +53,8 @@ namespace babelwires {
         void popArray() override;
 
         std::string_view getCurrentTypeName() override;
+
+        ErrorStorage addContextDescription(const ErrorStorage& e) const override;
 
       private:
         friend IteratorImpl;

@@ -22,10 +22,11 @@ TEST(ProjectSerializationTest, saveLoadStringSameContext) {
     const std::string serializedContents =
         babelwires::ProjectSerialization::saveToString(std::filesystem::current_path(), std::move(testProjectData));
 
-    babelwires::ProjectData loadedData = babelwires::ProjectSerialization::loadFromString(
+    babelwires::ResultT<babelwires::ProjectData> loadedData = babelwires::ProjectSerialization::loadFromString(
         serializedContents, testEnvironment.m_projectContext, std::filesystem::current_path(), testEnvironment.m_log);
 
-    testUtils::TestProjectData::testProjectData(testEnvironment.m_projectContext, loadedData);
+    ASSERT_TRUE(loadedData) << loadedData.error().toString();
+    testUtils::TestProjectData::testProjectData(testEnvironment.m_projectContext, *loadedData);
 }
 
 TEST(ProjectSerializationTest, saveLoadStringSeparateContext) {
@@ -44,11 +45,12 @@ TEST(ProjectSerializationTest, saveLoadStringSeparateContext) {
         // Note: Identifier registry is a singleton so it isn't scoped by the TestEnvironment.
         testUtils::TestEnvironment testEnvironment;
 
-        babelwires::ProjectData loadedData =
+        babelwires::ResultT<babelwires::ProjectData> loadedData =
             babelwires::ProjectSerialization::loadFromString(serializedContents, testEnvironment.m_projectContext,
                                                              std::filesystem::current_path(), testEnvironment.m_log);
 
-        testUtils::TestProjectData::testProjectData(testEnvironment.m_projectContext, loadedData);
+        ASSERT_TRUE(loadedData) << loadedData.error().toString();
+        testUtils::TestProjectData::testProjectData(testEnvironment.m_projectContext, *loadedData);
     }
 }
 
@@ -66,9 +68,10 @@ TEST(ProjectSerializationTest, saveLoadFile) {
     {
         testUtils::TestEnvironment testEnvironment;
 
-        babelwires::ProjectData loadedData = babelwires::ProjectSerialization::loadFromFile(
+        babelwires::ResultT<babelwires::ProjectData> loadedData = babelwires::ProjectSerialization::loadFromFile(
             tempFile, testEnvironment.m_projectContext, testEnvironment.m_log);
 
-        testUtils::TestProjectData::testProjectData(testEnvironment.m_projectContext, loadedData);
+        ASSERT_TRUE(loadedData) << loadedData.error().toString();
+        testUtils::TestProjectData::testProjectData(testEnvironment.m_projectContext, *loadedData);
     }
 }

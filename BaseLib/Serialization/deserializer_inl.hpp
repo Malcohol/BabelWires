@@ -133,7 +133,7 @@ template <typename T>
 inline babelwires::ResultT<typename babelwires::Deserializer::ValueIterator<T>>
 babelwires::Deserializer::tryDeserializeValueArray(std::string_view key, std::string_view typeName) {
     if (!pushArray(key)) {
-        return ResultT<ValueIterator<T>>(std::in_place, nullptr, *this);
+        return ResultT<ValueIterator<T>>(std::in_place, nullptr, *this, typeName);
     }
     return ResultT<ValueIterator<T>>(std::in_place, getIteratorImpl(), *this, typeName);
 }
@@ -145,4 +145,11 @@ babelwires::Deserializer::deserializeValueArray(std::string_view key, std::strin
         return Error() << "Missing child \"" + std::string(key) + "\"";
     }
     return ResultT<ValueIterator<T>>(std::in_place, getIteratorImpl(), *this, typeName);
+}
+
+template <typename T>
+void babelwires::Deserializer::augmentResultWithContext(ResultT<T>& result) const {
+    if (!result) {
+        result = Error() << addContextDescription(result.error());
+    }
 }
