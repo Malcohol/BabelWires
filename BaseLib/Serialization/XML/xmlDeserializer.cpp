@@ -139,7 +139,7 @@ void babelwires::XmlDeserializer::contextPush(std::string_view key, const tinyxm
     m_xmlContext.emplace_back(ContextEntry{element, isArray, m_xmlContext.back().m_isArray});
 }
 
-void babelwires::XmlDeserializer::contextPop() {
+babelwires::Result babelwires::XmlDeserializer::contextPop() {
     // Check that all the children were queried, to ensure all content in the file gets deserialized correctly.
     const tinyxml2::XMLNode* node = getCurrentNode()->FirstChild();
     while (node) {
@@ -147,10 +147,10 @@ void babelwires::XmlDeserializer::contextPop() {
         if (const tinyxml2::XMLElement* element = node->ToElement()) {
             const char* const name = element->Name();
             if (keysQueried.find(name) == keysQueried.end()) {
-                throw babelwires::ParseException() << "Unexpected element \"" << name << "\"";
+                return Error() << "Unexpected element \"" << name << "\"";
             }
         } else if (!node->ToComment()) {
-            throw babelwires::ParseException() << "Unexpected content";
+            return Error() << "Unexpected content";
         }
 
         node = node->NextSibling();
@@ -160,13 +160,14 @@ void babelwires::XmlDeserializer::contextPop() {
     while (attr) {
         auto& keysQueried = m_xmlContext.back().m_keysQueried;
         if (keysQueried.find(attr->Name()) == keysQueried.end()) {
-            throw babelwires::ParseException() << "Unexpected attribute " << attr->Name();
+            return Error() << "Unexpected attribute " << attr->Name();
         }
 
         attr = attr->Next();
     }
 
     m_xmlContext.pop_back();
+    return {};
 }
 
 bool babelwires::XmlDeserializer::pushObject(std::string_view key) {
@@ -177,8 +178,8 @@ bool babelwires::XmlDeserializer::pushObject(std::string_view key) {
     return element;
 }
 
-void babelwires::XmlDeserializer::popObject() {
-    contextPop();
+babelwires::Result babelwires::XmlDeserializer::popObject() {
+    return contextPop();
 }
 
 bool babelwires::XmlDeserializer::pushArray(std::string_view key) {
@@ -189,8 +190,8 @@ bool babelwires::XmlDeserializer::pushArray(std::string_view key) {
     return element;
 }
 
-void babelwires::XmlDeserializer::popArray() {
-    contextPop();
+babelwires::Result babelwires::XmlDeserializer::popArray() {
+    return contextPop();
 }
 
 std::string_view babelwires::XmlDeserializer::getCurrentTypeName() {
@@ -216,6 +217,7 @@ babelwires::XmlDeserializer::IteratorImpl::IteratorImpl(XmlDeserializer& deseria
 
 void babelwires::XmlDeserializer::IteratorImpl::operator++() {
     assert(isValid());
+    // TODO RESULT
     m_deserializer.contextPop();
     m_currentElement = m_currentElement->NextSiblingElement();
     if (m_currentElement) {

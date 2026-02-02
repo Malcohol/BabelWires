@@ -47,10 +47,10 @@ namespace babelwires {
         std::unique_ptr<AbstractIterator> getIteratorImpl() override;
 
         bool pushObject(std::string_view key) override;
-        void popObject() override;
+        Result popObject() override;
 
         bool pushArray(std::string_view key) override;
-        void popArray() override;
+        Result popArray() override;
 
         std::string_view getCurrentTypeName() override;
 
@@ -59,7 +59,7 @@ namespace babelwires {
       private:
         friend IteratorImpl;
         void contextPush(std::string_view key, const tinyxml2::XMLElement* element, bool isArray);
-        void contextPop();
+        Result contextPop();
         const tinyxml2::XMLElement* getCurrentElement() const;
         const tinyxml2::XMLNode* getCurrentNode() const;
         void keyWasQueried(std::string_view key);

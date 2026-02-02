@@ -56,8 +56,8 @@ inline babelwires::ResultT<std::unique_ptr<T>> babelwires::Deserializer::deseria
     if (!pushObject(key)) {
         return Error() << "Missing child \"" << key << "\"";
     }
-    ResultT<std::unique_ptr<T>> ret = deserializeCurrentObject<T>();
-    popObject();
+    ASSIGN_OR_ERROR(ResultT<std::unique_ptr<T>> ret, deserializeCurrentObject<T>());
+    DO_OR_ERROR(popObject());
     return ret;
 }
 
@@ -67,8 +67,8 @@ babelwires::Deserializer::tryDeserializeObject(std::string_view key) {
     if (!pushObject(key)) {
         return nullptr;
     }
-    ResultT<std::unique_ptr<T>> ret = deserializeCurrentObject<T>();
-    popObject();
+    ASSIGN_OR_ERROR(ResultT<std::unique_ptr<T>> ret, deserializeCurrentObject<T>());
+    DO_OR_ERROR(popObject());
     return ret;
 }
 

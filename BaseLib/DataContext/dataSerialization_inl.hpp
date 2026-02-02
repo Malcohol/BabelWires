@@ -20,7 +20,7 @@ babelwires::DataSerialization<BUNDLE>::loadFromStream(std::istream& is, const Da
             return projectBundleResult.error();
         }
         auto projectBundle = std::move(*projectBundleResult);
-        deserializer.finalize();
+        DO_OR_ERROR(deserializer.finalize());
         return std::move(*projectBundle).resolveAgainstCurrentContext(context, pathToFile, userLogger);
     } catch (ParseException& e) {
         throw;

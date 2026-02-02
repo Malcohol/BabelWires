@@ -119,7 +119,7 @@ namespace babelwires {
         void initialize();
 
         /// Subclass must call this before the contents are considered finalized.
-        void finalize();
+        Result finalize();
 
       protected:
         template <typename T> ResultT<std::unique_ptr<T>> deserializeCurrentObject();
@@ -137,10 +137,10 @@ namespace babelwires {
 
         /// Find the child, returns false if the child is missing.
         virtual bool pushObject(std::string_view key) = 0;
-        virtual void popObject() = 0;
+        virtual Result popObject() = 0;
 
         virtual bool pushArray(std::string_view key) = 0;
-        virtual void popArray() = 0;
+        virtual Result popArray() = 0;
 
         virtual std::string_view getCurrentTypeName() = 0;
 

@@ -57,9 +57,9 @@ void babelwires::Deserializer::initialize() {
     deserializeMetadata(*this, m_userLogger, m_deserializationRegistry);
 }
 
-void babelwires::Deserializer::finalize() {
-    popObject();
+babelwires::Result babelwires::Deserializer::finalize() {
     m_wasFinalized = true;
+    return popObject();
 }
 
 babelwires::ResultT<std::unique_ptr<babelwires::Serializable>> babelwires::Deserializer::deserializeCurrentObject(const void* tagOfTypeSought) {

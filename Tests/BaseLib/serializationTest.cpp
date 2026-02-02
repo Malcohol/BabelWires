@@ -427,17 +427,11 @@ TEST(SerializationTest, polymorphismFail) {
         {
             TestLog log;
             AutomaticDeserializationRegistry deserializationReg;
-            try {
-                babelwires::XmlDeserializer deserializer(serializedContents2, deserializationReg, log);
-                auto MainPtrResult = deserializer.deserializeObject<Main>();
-                THROW_ON_ERROR(MainPtrResult, ParseException);
-                auto MainPtr = std::move(*MainPtrResult);
-                deserializer.finalize();
-            } catch (const ParseException& e) {
-                EXPECT_NE(std::string_view(e.what()).find(t), std::string_view::npos);
-            } catch (...) {
-                EXPECT_TRUE(false);
-            }
+            babelwires::XmlDeserializer deserializer(serializedContents2, deserializationReg, log);
+            auto MainPtrResult = deserializer.deserializeObject<Main>();
+            EXPECT_FALSE(MainPtrResult);
+            EXPECT_NE(std::string_view(MainPtrResult.error().toString()).find(t), std::string_view::npos);
+            deserializer.finalize();
         }
     }
 }
