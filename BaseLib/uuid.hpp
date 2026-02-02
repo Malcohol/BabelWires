@@ -43,9 +43,10 @@ namespace babelwires {
 
         std::string serializeToString() const;
 
-    /// Returns a ResultT containing the Uuid if the uuidText is in the correct form:
-    /// xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-    static ResultT<Uuid> deserializeFromString(std::string_view uuidText);
+        /// Returns an error if the uuidText is not of the correct form:
+        /// xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        static ResultT<Uuid> deserializeFromString(std::string_view uuidText);
+        
         friend std::ostream& operator<<(std::ostream& os, const Uuid& uuid) { return os << uuid.serializeToString(); }
 
         friend bool operator==(const Uuid& a, const Uuid& b) { return (a.m_high == b.m_high) && (a.m_low == b.m_low); }
