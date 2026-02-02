@@ -118,9 +118,8 @@ babelwires::Deserializer::deserializeArray(std::string_view key) {
     return ResultT<Iterator<T>>(std::in_place, getIteratorImpl(), *this);
 }
 
-template <typename T> inline T babelwires::Deserializer::ValueIterator<T>::deserializeValue(T tempValue) {
-    auto result = m_deserializer.deserializeValue("value", tempValue);
-    THROW_ON_ERROR(result, ParseException);
+template <typename T> inline babelwires::ResultT<T> babelwires::Deserializer::ValueIterator<T>::deserializeValue(T tempValue) {
+    DO_OR_ERROR(m_deserializer.deserializeValue("value", tempValue));
     return tempValue;
 }
 

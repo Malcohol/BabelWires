@@ -89,7 +89,7 @@ babelwires::Result babelwires::NodeData::deserializeUiData(Deserializer& deseria
     DO_OR_ERROR(deserializer.tryDeserializeObjectByValue<UiData>(m_uiData));
     ASSIGN_OR_ERROR(auto it, deserializer.tryDeserializeValueArray<Path>("expandedPaths", "path"));
     for (; it.isValid(); ++it) {
-        m_expandedPaths.emplace_back(std::move(it.deserializeValue()));
+        ASSIGN_OR_ERROR(m_expandedPaths.emplace_back(), it.deserializeValue());
     }
     return {};
 }

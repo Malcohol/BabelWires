@@ -23,7 +23,7 @@ namespace {
             DO_OR_ERROR(deserializer.deserializeValue("x", m_x));
             if (auto itResult = deserializer.deserializeValueArray<std::string>("array")) {
                 for (auto& it = *itResult; it.isValid(); ++it) {
-                    m_array.emplace_back(std::move(it.deserializeValue()));
+                    ASSIGN_OR_ERROR(m_array.emplace_back(), it.deserializeValue());
                 }
             }
             return {};

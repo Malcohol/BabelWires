@@ -183,7 +183,7 @@ template <typename T> struct babelwires::Deserializer::Iterator : BaseIterator {
 
 template <typename T> struct babelwires::Deserializer::ValueIterator : BaseIterator {
     /// Pass in a tempValue if T cannot be default constructed.
-    T deserializeValue(T tempValue = T());
+    ResultT<T> deserializeValue(T tempValue = T());
 
     ValueIterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer, std::string_view typeName);
 };
