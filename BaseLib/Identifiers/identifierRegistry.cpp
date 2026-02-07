@@ -243,7 +243,7 @@ void babelwires::IdentifierRegistry::serializeContents(Serializer& serializer) c
 
 babelwires::Result babelwires::IdentifierRegistry::deserializeContents(Deserializer& deserializer) {
     ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<InstanceData>("identifiers"));
-    for (; it.isValid(); ++it) {
+    while (it.isValid()) {
         ASSIGN_OR_ERROR(std::unique_ptr<InstanceData> instanceDataPtr, it.getObject());
         InstanceData* instanceData = instanceDataPtr.get();
 
@@ -266,6 +266,7 @@ babelwires::Result babelwires::IdentifierRegistry::deserializeContents(Deseriali
                                     << instanceData->m_identifier << "\"";
         }
         data.m_instanceDatas[discriminator - 1] = uit->second.get();
+        DO_OR_ERROR(it.advance());
     }
     return {};
 }

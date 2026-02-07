@@ -153,9 +153,10 @@ babelwires::Result babelwires::MapValue::deserializeContents(Deserializer& deser
     DO_OR_ERROR(deserializer.deserializeObjectByValue<TypeExp>(m_sourceTypeExp, "sourceType"));
     DO_OR_ERROR(deserializer.deserializeObjectByValue<TypeExp>(m_targetTypeExp, "targetType"));
     ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<MapEntryData>("entries"));
-    for (; it.isValid(); ++it) {
+    while (it.isValid()) {
         ASSIGN_OR_ERROR(std::unique_ptr<MapEntryData> newEntry, it.getObject());
         m_mapEntries.emplace_back(std::move(newEntry));
+        DO_OR_ERROR(it.advance());
     }
     return {};
 }

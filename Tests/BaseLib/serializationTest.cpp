@@ -21,9 +21,10 @@ namespace {
 
         Result deserializeContents(Deserializer& deserializer) override {
             DO_OR_ERROR(deserializer.deserializeValue("x", m_x));
-            if (auto itResult = deserializer.deserializeValueArray<std::string>("array")) {
-                for (auto& it = *itResult; it.isValid(); ++it) {
-                    ASSIGN_OR_ERROR(m_array.emplace_back(), it.deserializeValue());
+            if (auto it = deserializer.tryDeserializeValueArray<std::string>("array")) {
+                while (it->isValid()) {
+                    ASSIGN_OR_ERROR(m_array.emplace_back(), it->deserializeValue());
+                    DO_OR_ERROR(it->advance());
                 }
             }
             return {};
@@ -78,9 +79,10 @@ namespace {
         Result deserializeContents(Deserializer& deserializer) override {
             DO_OR_ERROR(deserializer.deserializeObjectByValue<A>(m_a));
             ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<A>("arrayOfAs"));
-            for (; it.isValid(); ++it) {
+            while (it.isValid()) {
                 ASSIGN_OR_ERROR(auto result, it.getObject());
                 m_arrayOfAs.emplace_back(std::move(*result));
+                DO_OR_ERROR(it.advance());
             }
             return {};
         }
@@ -333,9 +335,10 @@ namespace {
             ASSIGN_OR_ERROR(m_concrete1, deserializer.tryDeserializeObject<Concrete1>("concrete1"));
             ASSIGN_OR_ERROR(m_concrete2, deserializer.tryDeserializeObject<Concrete2>("concrete2"));
             ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<Base>("objects"));
-            for (; it.isValid(); ++it) {
+            while (it.isValid()) {
                 ASSIGN_OR_ERROR(auto ptr, it.getObject());
                 m_objects.emplace_back(std::move(ptr));
+                DO_OR_ERROR(it.advance());
             }
             return {};
         }

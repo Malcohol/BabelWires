@@ -65,7 +65,7 @@ void babelwires::SerializerDeserializerCommon::serializeMetadata(Serializer& ser
 babelwires::Result babelwires::SerializerDeserializerCommon::deserializeMetadata(
     Deserializer& deserializer, UserLogger& userLogger, const DeserializationRegistry& deserializationRegistry) {
     ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<SerializationMetadata>("serializationMetadata"));
-    for (; it.isValid(); ++it) {
+    while (it.isValid()) {
         ASSIGN_OR_ERROR(auto ptr, it.getObject());
         const auto [_, wasInserted] = m_serializationVersions.insert(std::pair(ptr->m_type, ptr->m_version));
         if (!wasInserted) {
@@ -82,6 +82,7 @@ babelwires::Result babelwires::SerializerDeserializerCommon::deserializeMetadata
                                     << ". The data was possibly created by a newer version of this software, and it "
                                         "may not load correctly.";
         }
+        DO_OR_ERROR(it.advance());
     }
     return {};
 }

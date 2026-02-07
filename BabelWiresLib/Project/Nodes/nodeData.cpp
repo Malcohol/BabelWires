@@ -74,8 +74,9 @@ void babelwires::NodeData::serializeModifiers(Serializer& serializer) const {
 
 babelwires::Result babelwires::NodeData::deserializeModifiers(Deserializer& deserializer) {
     ASSIGN_OR_ERROR(auto it, deserializer.tryDeserializeArray<ModifierData>("modifiers"));
-    for (; it.isValid(); ++it) {
+    while (it.isValid()) {
         ASSIGN_OR_ERROR(m_modifiers.emplace_back(), it.getObject());
+        DO_OR_ERROR(it.advance());
     }
     return {};
 }
@@ -88,8 +89,9 @@ void babelwires::NodeData::serializeUiData(Serializer& serializer) const {
 babelwires::Result babelwires::NodeData::deserializeUiData(Deserializer& deserializer) {
     DO_OR_ERROR(deserializer.tryDeserializeObjectByValue<UiData>(m_uiData));
     ASSIGN_OR_ERROR(auto it, deserializer.tryDeserializeValueArray<Path>("expandedPaths", "path"));
-    for (; it.isValid(); ++it) {
+    while (it.isValid()) {
         ASSIGN_OR_ERROR(m_expandedPaths.emplace_back(), it.deserializeValue());
+        DO_OR_ERROR(it.advance());
     }
     return {};
 }

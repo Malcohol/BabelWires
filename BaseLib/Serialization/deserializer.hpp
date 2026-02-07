@@ -89,7 +89,7 @@ namespace babelwires {
 
         /// Get an iterator to the beginning of the array with the given key.
         /// Returns a Result containing the iterator on success, or an error if the array is not found.
-        /// After checking the result, calling code can use for(auto& it = *result; it.isValid(); ++it) { ... }
+        /// After checking the result, calling code can use while(it.isValid()) { ... DO_OR_ERROR(it.advance()); }
         template <typename T> ResultT<Iterator<T>> deserializeArray(std::string_view key);
 
         /// A non-standard iterator, which provides access to deserialized values of type T in an array.
@@ -104,7 +104,7 @@ namespace babelwires {
 
         /// Get a ValueIterator to the beginning of the value array with the given key.
         /// Returns a Result containing the iterator on success, or an error if the array is not found.
-        /// After checking the result, calling code can use for(auto& it = *result; it.isValid(); ++it) { ... }
+        /// After checking the result, calling code can use while(it.isValid()) { ... DO_OR_ERROR(it.advance()); }
         template <typename T>
         ResultT<ValueIterator<T>> deserializeValueArray(std::string_view, std::string_view typeName = "element");
 
@@ -155,7 +155,7 @@ namespace babelwires {
 } // namespace babelwires
 
 struct babelwires::Deserializer::BaseIterator {
-    void operator++();
+    Result advance();
     bool isValid() const;
 
     BaseIterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer,
@@ -165,7 +165,7 @@ struct babelwires::Deserializer::BaseIterator {
     ~BaseIterator();
 
   protected:
-    void checkFinished();
+    Result checkFinished();
 
   protected:
     std::unique_ptr<AbstractIterator> m_impl;

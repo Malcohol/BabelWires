@@ -16,16 +16,16 @@ babelwires::Deserializer::~Deserializer() {
     assert(((std::uncaught_exceptions() > 0) || m_wasFinalized) && "The deserializer was not finalized");
 }
 
-void babelwires::Deserializer::BaseIterator::operator++() {
+babelwires::Result babelwires::Deserializer::BaseIterator::advance() {
     assert(isValid());
     ++(*m_impl);
     if (!m_typeName.empty() && isValid()) {
         if (m_deserializer.getCurrentTypeName() != m_typeName) {
-            throw ParseException() << "Not expecting an object of type \"" << m_deserializer.getCurrentTypeName()
-                                   << "\"";
+            return Error() << "Not expecting an object of type \"" << m_deserializer.getCurrentTypeName() << "\"";
         }
     }
-    checkFinished();
+    DO_OR_ERROR(checkFinished());
+    return {};
 }
 
 bool babelwires::Deserializer::BaseIterator::isValid() const {
@@ -44,11 +44,12 @@ babelwires::Deserializer::BaseIterator::~BaseIterator() {
     checkFinished();
 }
 
-void babelwires::Deserializer::BaseIterator::checkFinished() {
+babelwires::Result babelwires::Deserializer::BaseIterator::checkFinished() {
     if (!m_finished && m_impl && !isValid()) {
-        m_deserializer.popArray();
+        DO_OR_ERROR(m_deserializer.popArray());
         m_finished = true;
     }
+    return {};
 }
 
 babelwires::Result babelwires::Deserializer::initialize() {
