@@ -379,7 +379,8 @@ TEST(IdentifierTest, identifierRegistrySerializationDeserialization) {
 
     {
         babelwires::AutomaticDeserializationRegistry deserializationReg;
-        babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
         auto fieldNameRegPtrResult = deserializer.deserializeObject<babelwires::IdentifierRegistry>();
         ASSERT_TRUE(fieldNameRegPtrResult);
         auto fieldNameRegPtr = std::move(*fieldNameRegPtrResult);

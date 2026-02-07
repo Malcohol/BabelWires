@@ -34,7 +34,8 @@ TEST(StringValueTest, serialization) {
     }
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
+    babelwires::XmlDeserializer deserializer(deserializationReg, log);
+    ASSERT_TRUE(deserializer.parse(serializedContents));
     auto dataPtrResult = deserializer.deserializeObject<babelwires::StringValue>();
     ASSERT_TRUE(dataPtrResult);
     auto dataPtr = std::move(*dataPtrResult);

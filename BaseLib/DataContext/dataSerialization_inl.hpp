@@ -12,7 +12,8 @@ babelwires::DataSerialization<BUNDLE>::loadFromStream(std::istream& is, const Da
                                                       const std::filesystem::path& pathToFile, UserLogger& userLogger) {
     std::string str((std::istreambuf_iterator<char>(is)), std::istreambuf_iterator<char>());
 
-    XmlDeserializer deserializer(str, context.m_deserializationReg, userLogger);
+    XmlDeserializer deserializer(context.m_deserializationReg, userLogger);
+    DO_OR_ERROR(deserializer.parse(str));
     try {
         auto projectBundleResult = deserializer.deserializeObject<BUNDLE>(BUNDLE::serializationType);
         if (!projectBundleResult) {

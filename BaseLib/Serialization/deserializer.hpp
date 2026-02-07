@@ -116,7 +116,7 @@ namespace babelwires {
 
       protected:
         /// Subclass must call this before the Deserializer interface is used.
-        void initialize();
+        Result initialize();
 
         /// Subclass must call this before the contents are considered finalized.
         Result finalize();

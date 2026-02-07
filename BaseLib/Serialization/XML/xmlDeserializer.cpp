@@ -55,13 +55,15 @@ babelwires::ResultT<bool> babelwires::XmlDeserializer::getIntValue(const tinyxml
     return true;
 }
 
-babelwires::XmlDeserializer::XmlDeserializer(std::string_view xmlText,
-                                             const DeserializationRegistry& deserializationRegistry,
+babelwires::XmlDeserializer::XmlDeserializer(const DeserializationRegistry& deserializationRegistry,
                                              UserLogger& userLogger)
     : Deserializer(userLogger, deserializationRegistry) {
-    m_doc.Parse(xmlText.data(), xmlText.size());
     m_xmlContext.emplace_back();
-    initialize();
+}
+
+babelwires::Result babelwires::XmlDeserializer::parse(std::string_view xmlText) {
+    m_doc.Parse(xmlText.data(), xmlText.size());
+    return initialize();
 }
 
 const tinyxml2::XMLElement* babelwires::XmlDeserializer::getCurrentElement() const {

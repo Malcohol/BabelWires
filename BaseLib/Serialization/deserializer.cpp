@@ -1,8 +1,9 @@
 /**
- * The Deserializer supports the loading of serialized data, where the particular representation (e.g. XML) of data is abstracted.
+ * The Deserializer supports the loading of serialized data, where the particular representation (e.g. XML) of data is
+ * abstracted.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BaseLib/Serialization/deserializer.hpp>
@@ -20,8 +21,8 @@ void babelwires::Deserializer::BaseIterator::operator++() {
     ++(*m_impl);
     if (!m_typeName.empty() && isValid()) {
         if (m_deserializer.getCurrentTypeName() != m_typeName) {
-            throw ParseException()
-                << "Not expecting an object of type \"" << m_deserializer.getCurrentTypeName() << "\"";
+            throw ParseException() << "Not expecting an object of type \"" << m_deserializer.getCurrentTypeName()
+                                   << "\"";
         }
     }
     checkFinished();
@@ -50,11 +51,12 @@ void babelwires::Deserializer::BaseIterator::checkFinished() {
     }
 }
 
-void babelwires::Deserializer::initialize() {
+babelwires::Result babelwires::Deserializer::initialize() {
     if (!pushObject("contents")) {
-        throw ParseException() << "The element \"contents\" is missing";
+        return Error() << "The element \"contents\" is missing";
     }
-    deserializeMetadata(*this, m_userLogger, m_deserializationRegistry);
+    DO_OR_ERROR(deserializeMetadata(*this, m_userLogger, m_deserializationRegistry));
+    return {};
 }
 
 babelwires::Result babelwires::Deserializer::finalize() {
@@ -62,7 +64,8 @@ babelwires::Result babelwires::Deserializer::finalize() {
     return popObject();
 }
 
-babelwires::ResultT<std::unique_ptr<babelwires::Serializable>> babelwires::Deserializer::deserializeCurrentObject(const void* tagOfTypeSought) {
+babelwires::ResultT<std::unique_ptr<babelwires::Serializable>>
+babelwires::Deserializer::deserializeCurrentObject(const void* tagOfTypeSought) {
     const std::string_view currentTypeName = getCurrentTypeName();
     if (const DeserializationRegistry::Entry* entry = m_deserializationRegistry.findEntry(currentTypeName)) {
         const void* entryTag = entry->m_baseClassTag;

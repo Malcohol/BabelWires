@@ -52,7 +52,8 @@ TEST(SerializationTest, values) {
     {
         TestLog log;
         AutomaticDeserializationRegistry deserializationReg;
-        babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
         auto APtrResult = deserializer.deserializeObject<A>();
         ASSERT_TRUE(APtrResult);
         auto APtr = std::move(*APtrResult);
@@ -111,7 +112,8 @@ TEST(SerializationTest, objects) {
     {
         TestLog log;
         AutomaticDeserializationRegistry deserializationReg;
-        babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
         auto BPtrResult = deserializer.deserializeObject<B>();
         ASSERT_TRUE(BPtrResult);
         auto BPtr = std::move(*BPtrResult);
@@ -207,7 +209,8 @@ TEST(SerializationTest, versioningOld) {
     {
         TestLog log;
         AutomaticDeserializationRegistry deserializationReg;
-        babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
         auto CPtrResult = deserializer.deserializeObject<current::C>();
         ASSERT_TRUE(CPtrResult);
         auto CPtr = std::move(*CPtrResult);
@@ -236,7 +239,8 @@ TEST(SerializationTest, versioningCurrent) {
     {
         TestLog log;
         AutomaticDeserializationRegistry deserializationReg;
-        babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
         auto CPtrResult = deserializer.deserializeObject<current::C>();
         ASSERT_TRUE(CPtrResult);
         auto CPtr = std::move(*CPtrResult);
@@ -372,7 +376,8 @@ TEST(SerializationTest, polymorphism) {
     {
         TestLog log;
         AutomaticDeserializationRegistry deserializationReg;
-        babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
         auto MainPtrResult = deserializer.deserializeObject<Main>();
         ASSERT_TRUE(MainPtrResult);
         auto MainPtr = std::move(*MainPtrResult);
@@ -427,7 +432,8 @@ TEST(SerializationTest, polymorphismFail) {
         {
             TestLog log;
             AutomaticDeserializationRegistry deserializationReg;
-            babelwires::XmlDeserializer deserializer(serializedContents2, deserializationReg, log);
+            babelwires::XmlDeserializer deserializer(deserializationReg, log);
+            ASSERT_TRUE(deserializer.parse(serializedContents2));
             auto MainPtrResult = deserializer.deserializeObject<Main>();
             EXPECT_FALSE(MainPtrResult);
             EXPECT_NE(std::string_view(MainPtrResult.error().toString()).find(t), std::string_view::npos);

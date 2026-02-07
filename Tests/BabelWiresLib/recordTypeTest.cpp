@@ -668,7 +668,8 @@ TEST(RecordTypeTest, typeExpSerialization) {
     }
 
     babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, testEnvironment.m_log);
+    babelwires::XmlDeserializer deserializer(deserializationReg, testEnvironment.m_log);
+    ASSERT_TRUE(deserializer.parse(serializedContents));
     auto deserializedTypeExpResult = deserializer.deserializeObject<babelwires::TypeExp>();
     ASSERT_TRUE(deserializedTypeExpResult);
     auto deserializedTypeExp = std::move(*deserializedTypeExpResult);
