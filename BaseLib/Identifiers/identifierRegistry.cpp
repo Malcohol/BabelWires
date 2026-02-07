@@ -134,12 +134,12 @@ babelwires::IdentifierRegistry::getInstanceData(LongId identifier) const {
     return nullptr;
 }
 
-babelwires::IdentifierRegistry::ValueType
+babelwires::ResultT<babelwires::IdentifierRegistry::ValueType>
 babelwires::IdentifierRegistry::getDeserializedIdentifierData(LongId identifier) const {
     if (const babelwires::IdentifierRegistry::InstanceData* data = getInstanceData(identifier)) {
         return ValueType{identifier, &data->m_fieldName, &data->m_uuid};
     }
-    throw ParseException() << "Identifier \"" << identifier
+    return Error() << "Identifier \"" << identifier
                            << "\" not found in the identifier metadata. Note that unregistered fields (those with no "
                               "discriminator) are allowed";
 }

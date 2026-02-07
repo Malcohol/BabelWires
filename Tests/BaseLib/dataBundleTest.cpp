@@ -130,8 +130,11 @@ TEST(DataBundleTest, identifiers) {
             "mediumId", "other medium", "66666666-1111-2222-3333-000000000001",
             babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
-        TestBundlePayload targetPayload =
+        const babelwires::ResultT<TestBundlePayload> targetPayloadResult =
             std::move(bundle).resolveAgainstCurrentContext(dataContext, std::filesystem::current_path(), testLog);
+
+        ASSERT_TRUE(targetPayloadResult);
+        const TestBundlePayload& targetPayload = *targetPayloadResult;
 
         EXPECT_EQ(targetPayload.m_contents, 15);
         EXPECT_EQ(targetPayload.m_shortId.getDiscriminator(), 3);
@@ -209,8 +212,11 @@ TEST(DataBundleTest, filePathResolution) {
             babelwires::AutomaticDeserializationRegistry deserializationReg;
             babelwires::DataContext dataContext{deserializationReg};
 
-            TestBundlePayload targetPayload =
+            const babelwires::ResultT<TestBundlePayload> targetPayloadResult =
                 std::move(bundle).resolveAgainstCurrentContext(dataContext, scenario.m_newBase, log);
+
+            ASSERT_TRUE(targetPayloadResult);
+            const TestBundlePayload& targetPayload = *targetPayloadResult;
 
             EXPECT_EQ(targetPayload.m_contents, 44);
             EXPECT_EQ(targetPayload.m_filePath, scenario.m_expectedResolvedPath);

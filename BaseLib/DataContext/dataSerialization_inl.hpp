@@ -14,18 +14,14 @@ babelwires::DataSerialization<BUNDLE>::loadFromStream(std::istream& is, const Da
 
     XmlDeserializer deserializer(context.m_deserializationReg, userLogger);
     DO_OR_ERROR(deserializer.parse(str));
-    try {
-        auto projectBundleResult = deserializer.deserializeObject<BUNDLE>(BUNDLE::serializationType);
-        if (!projectBundleResult) {
-            deserializer.augmentResultWithContext(projectBundleResult);
-            return projectBundleResult.error();
-        }
-        auto projectBundle = std::move(*projectBundleResult);
-        DO_OR_ERROR(deserializer.finalize());
-        return std::move(*projectBundle).resolveAgainstCurrentContext(context, pathToFile, userLogger);
-    } catch (ParseException& e) {
-        throw;
+    auto projectBundleResult = deserializer.deserializeObject<BUNDLE>(BUNDLE::serializationType);
+    if (!projectBundleResult) {
+        deserializer.augmentResultWithContext(projectBundleResult);
+        return projectBundleResult.error();
     }
+    auto projectBundle = std::move(*projectBundleResult);
+    DO_OR_ERROR(deserializer.finalize());
+    return std::move(*projectBundle).resolveAgainstCurrentContext(context, pathToFile, userLogger);
 }
 
 template <typename BUNDLE>

@@ -80,7 +80,7 @@ namespace babelwires {
 
         /// Extract the information about an identifier from a local IdentifierRegistry.
         /// This can throw a ParseException if the contents are invalid.
-        ValueType getDeserializedIdentifierData(LongId identifier) const;
+        ResultT<ValueType> getDeserializedIdentifierData(LongId identifier) const;
 
       public:
         // Singleton stuff:
