@@ -18,7 +18,7 @@ babelwires::Deserializer::~Deserializer() {
 
 babelwires::Result babelwires::Deserializer::BaseIterator::advance() {
     assert(isValid());
-    ++(*m_impl);
+    DO_OR_ERROR(m_impl->advance());
     if (!m_typeName.empty() && isValid()) {
         if (m_deserializer.getCurrentTypeName() != m_typeName) {
             return Error() << "Not expecting an object of type \"" << m_deserializer.getCurrentTypeName() << "\"";
@@ -41,6 +41,8 @@ babelwires::Deserializer::BaseIterator::BaseIterator(std::unique_ptr<AbstractIte
 }
 
 babelwires::Deserializer::BaseIterator::~BaseIterator() {
+    // We cannot know if the client code has already encountered an error and is just unwinding the stack.
+    // The best we can do is to check if the iterator was already finished, and if not, try to finish it.
     checkFinished();
 }
 

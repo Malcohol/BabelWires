@@ -129,7 +129,7 @@ namespace babelwires {
         struct BaseIterator;
         struct AbstractIterator {
             virtual ~AbstractIterator() = default;
-            virtual void operator++() = 0;
+            virtual Result advance() = 0;
             virtual bool isValid() const = 0;
         };
 

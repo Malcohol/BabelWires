@@ -39,7 +39,7 @@ namespace babelwires {
         struct IteratorImpl : Deserializer::AbstractIterator {
             IteratorImpl(XmlDeserializer& deserializer, const tinyxml2::XMLElement* arrayElement);
 
-            void operator++() override;
+            Result advance() override;
             bool isValid() const override;
 
             XmlDeserializer& m_deserializer;

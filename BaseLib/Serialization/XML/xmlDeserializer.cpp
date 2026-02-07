@@ -62,7 +62,10 @@ babelwires::XmlDeserializer::XmlDeserializer(const DeserializationRegistry& dese
 }
 
 babelwires::Result babelwires::XmlDeserializer::parse(std::string_view xmlText) {
-    m_doc.Parse(xmlText.data(), xmlText.size());
+    const tinyxml2::XMLError parseError = m_doc.Parse(xmlText.data(), xmlText.size());
+    if (parseError != tinyxml2::XML_SUCCESS) {
+        return Error() << "XML parsing failed: " << m_doc.ErrorStr();
+    }
     return initialize();
 }
 
@@ -217,14 +220,14 @@ babelwires::XmlDeserializer::IteratorImpl::IteratorImpl(XmlDeserializer& deseria
     }
 }
 
-void babelwires::XmlDeserializer::IteratorImpl::operator++() {
+babelwires::Result babelwires::XmlDeserializer::IteratorImpl::advance() {
     assert(isValid());
-    // TODO RESULT
-    m_deserializer.contextPop();
+    DO_OR_ERROR(m_deserializer.contextPop());
     m_currentElement = m_currentElement->NextSiblingElement();
     if (m_currentElement) {
         m_deserializer.contextPush(m_currentElement->Name(), m_currentElement, false);
     }
+    return {};
 }
 
 bool babelwires::XmlDeserializer::IteratorImpl::isValid() const {
