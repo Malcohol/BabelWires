@@ -324,9 +324,12 @@ void babelwires::MapEditor::loadMapFromFile() {
             try {
                 std::string filePathStr = filePath.toStdString();
                 getUserLogger().logInfo() << "Load map from \"" << filePathStr << '"';
-                MapValue mapValue =
+                ResultT<MapValue> mapValueResult =
                     MapSerialization::loadFromFile(filePathStr, getProjectGraphModel().getContext(), getUserLogger());
-                setEditorMap(mapValue);
+                if (!mapValueResult) {
+                    throw FileIoException() << mapValueResult.error().toString();
+                }
+                setEditorMap(*mapValueResult);
                 m_lastSaveFilePath = filePath;
                 return;
             } catch (FileIoException& e) {

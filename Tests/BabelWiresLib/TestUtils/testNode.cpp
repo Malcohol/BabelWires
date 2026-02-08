@@ -27,7 +27,7 @@ std::unique_ptr<babelwires::Node> testUtils::TestNodeData::doCreateNode(
 
 void testUtils::TestNodeData::serializeContents(babelwires::Serializer& serializer) const {}
 
-void testUtils::TestNodeData::deserializeContents(babelwires::Deserializer& deserializer) {}
+babelwires::Result testUtils::TestNodeData::deserializeContents(babelwires::Deserializer& deserializer) { return {}; }
 
 testUtils::TestNode::TestNode(const babelwires::ProjectContext& context)
     : TestNode(context, TestNodeData(), 10) {}

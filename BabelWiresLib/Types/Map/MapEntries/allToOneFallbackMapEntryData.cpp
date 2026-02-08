@@ -57,8 +57,10 @@ void babelwires::AllToOneFallbackMapEntryData::serializeContents(Serializer& ser
     serializer.serializeObject(m_targetValue->getAsEditableValue(), "target");
 }
 
-void babelwires::AllToOneFallbackMapEntryData::deserializeContents(Deserializer& deserializer) {
-    m_targetValue = uniquePtrCast<Value>(deserializer.deserializeObject<EditableValue>("target"));
+babelwires::Result babelwires::AllToOneFallbackMapEntryData::deserializeContents(Deserializer& deserializer) {
+    ASSIGN_OR_ERROR(auto targetPtr, deserializer.deserializeObject<EditableValue>("target"));
+    m_targetValue = uniquePtrCast<Value>(std::move(targetPtr));
+    return {};
 }
 
 void babelwires::AllToOneFallbackMapEntryData::visitIdentifiers(IdentifierVisitor& visitor) {
@@ -72,9 +74,9 @@ void babelwires::AllToOneFallbackMapEntryData::visitFilePaths(FilePathVisitor& v
 babelwires::Result babelwires::AllToOneFallbackMapEntryData::doValidate(const TypeSystem& typeSystem, const Type& sourceType, const Type& targetType) const  {
     const bool targetTypeIsValid = targetType.isValidValue(typeSystem, *m_targetValue);
     if (!targetTypeIsValid) {
-        return "The target value isn't valid.";
+        return Error() << "The target value isn't valid.";
     }
-    return Result::success;
+    return {};
 }
 
 babelwires::MapEntryData::Kind babelwires::AllToOneFallbackMapEntryData::getKind() const {

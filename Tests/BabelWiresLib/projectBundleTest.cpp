@@ -159,8 +159,11 @@ TEST(ProjectBundleTest, factoryMetadata) {
     EXPECT_EQ(bundle.getFactoryMetadata().find(testDomain::TestProcessor::getFactoryIdentifier())->second, 2);
     EXPECT_EQ(bundle.getFactoryMetadata().find(testDomain::TestSourceFileFormat::getThisIdentifier())->second, 3);
 
-    babelwires::ProjectData resolvedData = std::move(bundle).resolveAgainstCurrentContext(
+    babelwires::ResultT<babelwires::ProjectData> resolvedDataResult = std::move(bundle).resolveAgainstCurrentContext(
         testEnvironment.m_projectContext, std::filesystem::current_path(), testEnvironment.m_log);
+
+    ASSERT_TRUE(resolvedDataResult);
+    const babelwires::ProjectData& resolvedData = *resolvedDataResult;
 
     EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase(
         "Data for the factory \"Test Target File Format\" (TestTargetFormat) corresponds to an old version (1)"));
@@ -232,9 +235,11 @@ TEST(ProjectBundleTest, filePathResolution) {
             bundle = babelwires::ProjectBundle(scenario.m_oldBase, std::move(projectData));
         }
 
-        babelwires::ProjectData projectData;
-        projectData =
+        const babelwires::ResultT<babelwires::ProjectData> projectDataResult =
             std::move(bundle).resolveAgainstCurrentContext(testEnvironment.m_projectContext, scenario.m_newBase, log);
+
+        ASSERT_TRUE(projectDataResult);
+        const babelwires::ProjectData& projectData = *projectDataResult;
 
         ASSERT_EQ(projectData.m_nodes.size(), 2);
         {

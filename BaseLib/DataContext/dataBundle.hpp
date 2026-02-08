@@ -43,11 +43,11 @@ namespace babelwires {
 
         /// Returns the contained data, modified so it corresponds the current system.
         /// This object is invalidated after calling this.
-        DATA resolveAgainstCurrentContext(const DataContext& context, const std::filesystem::path& pathToFile,
+        ResultT<DATA> resolveAgainstCurrentContext(const DataContext& context, const std::filesystem::path& pathToFile,
                                           UserLogger& userLogger) &&;
 
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        Result deserializeContents(Deserializer& deserializer) override;
 
         const DATA& getData() const { return m_data; }
         DATA& getData() { return m_data; }
@@ -66,7 +66,7 @@ namespace babelwires {
         virtual void serializeAdditionalMetadata(Serializer& serializer) const {}
 
         /// Allows the subclass to put additional metadata at the same level as the metadata handled by this class.
-        virtual void deserializeAdditionalMetadata(Deserializer& deserializer) {}
+        virtual Result deserializeAdditionalMetadata(Deserializer& deserializer) { return {}; }
 
       private:
         /// Ensure the identifiers in the data refer to the context independent m_identifierRegistry.
@@ -76,7 +76,7 @@ namespace babelwires {
         void interpretFilePathsInCurrentProjectPath();
 
         /// Ensure the identifiers in the data refer to the global IdentifierRegistry.
-        void resolveIdentifiersAgainstCurrentContext();
+        Result resolveIdentifiersAgainstCurrentContext();
 
         /// Update the filePaths in the data, in terms of the given pathToProjectFile.
         void resolveFilePathsAgainstCurrentProjectPath(const std::filesystem::path& pathToFile,
@@ -84,7 +84,7 @@ namespace babelwires {
 
         /// Convert identifiers, relative to the sourceReg, to identifiers, relative to the targetReg.
         template <typename SOURCE_REG, typename TARGET_REG>
-        void convertIdentifiers(SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
+        Result convertIdentifiers(SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
                          babelwires::IdentifierRegistry::Authority authority);
 
       private:

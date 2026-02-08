@@ -64,12 +64,14 @@ void babelwires::TupleValue::serializeContents(Serializer& serializer) const {
     serializer.serializeArray("componentValues", arrayToSerialize);
 }
 
-void babelwires::TupleValue::deserializeContents(Deserializer& deserializer) {
-    auto typeIt = deserializer.deserializeArray<EditableValue>("componentValues", Deserializer::IsOptional::Optional);
+babelwires::Result babelwires::TupleValue::deserializeContents(Deserializer& deserializer) {
+    ASSIGN_OR_ERROR(auto typeIt, deserializer.deserializeArray<EditableValue>("componentValues"));
     while (typeIt.isValid()) {
-        m_componentValues.emplace_back(uniquePtrCast<Value>(typeIt.getObject()));
-        ++typeIt;
+        ASSIGN_OR_ERROR(auto result, typeIt.getObject());
+        m_componentValues.emplace_back(uniquePtrCast<Value>(std::move(result)));
+        DO_OR_ERROR(typeIt.advance());
     }
+    return {};
 }
 
 void babelwires::TupleValue::visitIdentifiers(IdentifierVisitor& visitor) {

@@ -39,8 +39,9 @@ void babelwires::DataLocation::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("path", m_pathToValue);
 }
 
-void babelwires::DataLocation::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_pathToValue);
+babelwires::Result babelwires::DataLocation::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.deserializeValue("path", m_pathToValue));
+    return {};
 }
 
 void babelwires::DataLocation::visitIdentifiers(IdentifierVisitor& visitor) {

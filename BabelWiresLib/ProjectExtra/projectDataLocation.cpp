@@ -42,7 +42,8 @@ void babelwires::ProjectDataLocation::serializeContents(Serializer& serializer) 
     serializer.serializeValue("id", m_nodeId);
 }
 
-void babelwires::ProjectDataLocation::deserializeContents(Deserializer& deserializer) {
-    DataLocation::deserializeContents(deserializer);
-    deserializer.deserializeValue("id", m_nodeId);
+babelwires::Result babelwires::ProjectDataLocation::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(DataLocation::deserializeContents(deserializer));
+    DO_OR_ERROR(deserializer.deserializeValue("id", m_nodeId));
+    return {};
 }

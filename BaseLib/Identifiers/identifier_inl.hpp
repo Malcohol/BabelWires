@@ -58,27 +58,27 @@ template <unsigned int NUM_BLOCKS> babelwires::IdentifierBase<NUM_BLOCKS>::Ident
 }
 
 template <unsigned int NUM_BLOCKS>
-babelwires::IdentifierBase<NUM_BLOCKS>
+babelwires::ResultT<babelwires::IdentifierBase<NUM_BLOCKS>>
 babelwires::IdentifierBase<NUM_BLOCKS>::deserializeFromString(std::string_view str) {
     Discriminator discriminator = 0;
     std::size_t idEnd = str.find(s_discriminatorDelimiter);
     if (idEnd != std::string_view::npos) {
         std::from_chars_result result = std::from_chars(str.data() + idEnd + 1, str.data() + str.size(), discriminator);
         if (result.ec != std::errc()) {
-            throw ParseException() << "The disciminator part of \"" << str << "\" could not be parsed";
+            return Error() << "The disciminator part of \"" << str << "\" could not be parsed";
         }
         str.remove_suffix(str.size() - idEnd);
     } else {
         idEnd = str.size();
     }
     if (idEnd > N) {
-        throw ParseException() << "The string \"" << str << "\" is too long for an identifier";
+        return Error() << "The string \"" << str << "\" is too long for an identifier";
     }
     if (!validate(str.data(), str.size())) {
-        throw ParseException() << "The string \"" << str << "\" is not a valid identifier";
+        return Error() << "The string \"" << str << "\" is not a valid identifier";
     }
     if (discriminator > c_maxDiscriminator) {
-        throw ParseException() << "The string \"" << str << "\" has a discriminator which is too large";
+        return Error() << "The string \"" << str << "\" has a discriminator which is too large";
     }
     IdentifierBase<NUM_BLOCKS> f(str);
     f.setDiscriminator(discriminator);

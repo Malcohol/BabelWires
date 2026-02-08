@@ -46,9 +46,10 @@ namespace {
             serializer.serializeValue("version", m_version);
         }
 
-        void deserializeContents(babelwires::Deserializer& deserializer) override {
-            deserializer.deserializeValue("type", m_type);
-            deserializer.deserializeValue("version", m_version);
+        babelwires::Result deserializeContents(babelwires::Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeValue("type", m_type));
+            DO_OR_ERROR(deserializer.deserializeValue("version", m_version));
+            return {};
         }
     };
 } // namespace
@@ -61,26 +62,27 @@ void babelwires::SerializerDeserializerCommon::serializeMetadata(Serializer& ser
     serializer.serializeArray("serializationMetadata", metadata);
 }
 
-void babelwires::SerializerDeserializerCommon::deserializeMetadata(
+babelwires::Result babelwires::SerializerDeserializerCommon::deserializeMetadata(
     Deserializer& deserializer, UserLogger& userLogger, const DeserializationRegistry& deserializationRegistry) {
-    for (auto it = deserializer.deserializeArray<SerializationMetadata>("serializationMetadata",
-                                                                        Deserializer::IsOptional::Optional);
-         it.isValid(); ++it) {
-        auto ptr = it.getObject();
+    ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<SerializationMetadata>("serializationMetadata"));
+    while (it.isValid()) {
+        ASSIGN_OR_ERROR(auto ptr, it.getObject());
         const auto [_, wasInserted] = m_serializationVersions.insert(std::pair(ptr->m_type, ptr->m_version));
         if (!wasInserted) {
-            throw ParseException() << "The type \"" << ptr->m_type << "\" already has a version";
+            return Error() << "The type \"" << ptr->m_type << "\" already has a version";
         }
         if (ptr->m_version == 0) {
-            throw ParseException() << "The type \"" << ptr->m_type
-                                   << "\" has version 0, but this is not a meaningful version.";
+            return Error() << "The type \"" << ptr->m_type
+                                << "\" has version 0, but this is not a meaningful version.";
         }
         const DeserializationRegistry::Entry* entry = deserializationRegistry.findEntry(ptr->m_type);
         if (entry && entry->m_version < ptr->m_version) {
             userLogger.logWarning() << "The type \"" << ptr->m_type << "\" being loaded has version " << ptr->m_version
                                     << ", but the latest version known to this software is " << entry->m_version
                                     << ". The data was possibly created by a newer version of this software, and it "
-                                       "may not load correctly.";
+                                        "may not load correctly.";
         }
+        DO_OR_ERROR(it.advance());
     }
+    return {};
 }

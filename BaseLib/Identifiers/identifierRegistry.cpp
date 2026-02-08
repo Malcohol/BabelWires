@@ -34,11 +34,12 @@ void babelwires::IdentifierRegistry::InstanceData::serializeContents(Serializer&
     serializer.serializeValue("uuid", m_uuid);
 }
 
-void babelwires::IdentifierRegistry::InstanceData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("id", m_identifier);
-    deserializer.deserializeValue("name", m_fieldName);
-    deserializer.deserializeValue("uuid", m_uuid);
+babelwires::Result babelwires::IdentifierRegistry::InstanceData::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.deserializeValue("id", m_identifier));
+    DO_OR_ERROR(deserializer.deserializeValue("name", m_fieldName));
+    DO_OR_ERROR(deserializer.deserializeValue("uuid", m_uuid));
     m_authority = Authority::isProvisional;
+    return {};
 }
 
 babelwires::LongId babelwires::IdentifierRegistry::addLongIdWithMetadata(babelwires::LongId identifier,
@@ -133,12 +134,12 @@ babelwires::IdentifierRegistry::getInstanceData(LongId identifier) const {
     return nullptr;
 }
 
-babelwires::IdentifierRegistry::ValueType
+babelwires::ResultT<babelwires::IdentifierRegistry::ValueType>
 babelwires::IdentifierRegistry::getDeserializedIdentifierData(LongId identifier) const {
     if (const babelwires::IdentifierRegistry::InstanceData* data = getInstanceData(identifier)) {
         return ValueType{identifier, &data->m_fieldName, &data->m_uuid};
     }
-    throw ParseException() << "Identifier \"" << identifier
+    return Error() << "Identifier \"" << identifier
                            << "\" not found in the identifier metadata. Note that unregistered fields (those with no "
                               "discriminator) are allowed";
 }
@@ -240,10 +241,10 @@ void babelwires::IdentifierRegistry::serializeContents(Serializer& serializer) c
     serializer.serializeArray("identifiers", contents);
 }
 
-void babelwires::IdentifierRegistry::deserializeContents(Deserializer& deserializer) {
-    for (auto it = deserializer.deserializeArray<InstanceData>("identifiers", Deserializer::IsOptional::Optional);
-         it.isValid(); ++it) {
-        std::unique_ptr<InstanceData> instanceDataPtr = it.getObject();
+babelwires::Result babelwires::IdentifierRegistry::deserializeContents(Deserializer& deserializer) {
+    ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<InstanceData>("identifiers"));
+    while (it.isValid()) {
+        ASSIGN_OR_ERROR(std::unique_ptr<InstanceData> instanceDataPtr, it.getObject());
         InstanceData* instanceData = instanceDataPtr.get();
 
         const ShortId::Discriminator discriminator = instanceDataPtr->m_identifier.getDiscriminator();
@@ -262,10 +263,12 @@ void babelwires::IdentifierRegistry::deserializeContents(Deserializer& deseriali
         data.m_instanceDatas.resize(discriminator);
         if (data.m_instanceDatas[discriminator - 1]) {
             throw ParseException() << "The identifier registry already has an identifier \""
-                                   << instanceData->m_identifier << "\"";
+                                    << instanceData->m_identifier << "\"";
         }
         data.m_instanceDatas[discriminator - 1] = uit->second.get();
+        DO_OR_ERROR(it.advance());
     }
+    return {};
 }
 
 babelwires::IdentifierRegistryScope::IdentifierRegistryScope()

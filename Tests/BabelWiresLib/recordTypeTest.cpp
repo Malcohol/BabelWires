@@ -14,6 +14,9 @@
 #include <Domains/TestDomain/testRecordType.hpp>
 #include <Domains/TestDomain/testRecordTypeHierarchy.hpp>
 
+#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
+#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 #include <Tests/TestUtils/equalSets.hpp>
@@ -89,9 +92,9 @@ namespace {
 
         EXPECT_NE(recordValue->getValue(testDomain::TestComplexRecordType::getInt0Id())->tryAs<babelwires::IntValue>(),
                   nullptr);
-        EXPECT_NE(
-            recordValue->getValue(testDomain::TestComplexRecordType::getSubrecordId())->tryAs<babelwires::RecordValue>(),
-            nullptr);
+        EXPECT_NE(recordValue->getValue(testDomain::TestComplexRecordType::getSubrecordId())
+                      ->tryAs<babelwires::RecordValue>(),
+                  nullptr);
         EXPECT_NE(recordValue->getValue(testDomain::TestComplexRecordType::getInt1Id())->tryAs<babelwires::IntValue>(),
                   nullptr);
 
@@ -103,9 +106,9 @@ namespace {
             ++numOptionals;
         }
         if (isOpRecActive) {
-            EXPECT_NE(
-                recordValue->getValue(testDomain::TestComplexRecordType::getOpRecId())->tryAs<babelwires::RecordValue>(),
-                nullptr);
+            EXPECT_NE(recordValue->getValue(testDomain::TestComplexRecordType::getOpRecId())
+                          ->tryAs<babelwires::RecordValue>(),
+                      nullptr);
             ++numOptionals;
         }
         if (isOpIntOnActive) {
@@ -638,4 +641,39 @@ TEST(RecordTypeTest, constructorName) {
         babelwires::StringType::getThisIdentifier());
 
     EXPECT_EQ(recordTypeExp.toString(), "Record{a, b, c : String, Integer, String}");
+}
+
+TEST(RecordTypeTest, typeExpSerialization) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeExp recordTypeExp(
+    babelwires::RecordTypeConstructor::getThisIdentifier(),
+    babelwires::TypeConstructorArguments{
+        {babelwires::DefaultIntType::getThisIdentifier(), babelwires::StringType::getThisIdentifier(),
+            babelwires::DefaultIntType::getThisIdentifier()},
+        {babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("int0")),
+            babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("str0"),
+                                    babelwires::RecordType::Optionality::optionalDefaultInactive),
+            babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("int1"),
+                                    babelwires::RecordType::Optionality::optionalDefaultActive)}});
+
+    std::string serializedContents;
+    {
+
+        babelwires::XmlSerializer serializer;
+        serializer.serializeObject(recordTypeExp);
+        std::ostringstream os;
+        serializer.write(os);
+        serializedContents = std::move(os.str());
+    }
+
+    babelwires::AutomaticDeserializationRegistry deserializationReg;
+    babelwires::XmlDeserializer deserializer(deserializationReg, testEnvironment.m_log);
+    ASSERT_TRUE(deserializer.parse(serializedContents));
+    auto deserializedTypeExpResult = deserializer.deserializeObject<babelwires::TypeExp>();
+    ASSERT_TRUE(deserializedTypeExpResult);
+    auto deserializedTypeExp = std::move(*deserializedTypeExpResult);
+    deserializer.finalize();
+
+    EXPECT_EQ(recordTypeExp, *deserializedTypeExp);
 }

@@ -149,15 +149,16 @@ void babelwires::MapValue::serializeContents(Serializer& serializer) const {
     serializer.serializeArray("entries", m_mapEntries);
 }
 
-void babelwires::MapValue::deserializeContents(Deserializer& deserializer) {
-    m_sourceTypeExp = std::move(*deserializer.deserializeObject<TypeExp>("sourceType"));
-    m_targetTypeExp = std::move(*deserializer.deserializeObject<TypeExp>("targetType"));
-    auto it = deserializer.deserializeArray<MapEntryData>("entries", Deserializer::IsOptional::Optional);
+babelwires::Result babelwires::MapValue::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.deserializeObjectByValue<TypeExp>(m_sourceTypeExp, "sourceType"));
+    DO_OR_ERROR(deserializer.deserializeObjectByValue<TypeExp>(m_targetTypeExp, "targetType"));
+    ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<MapEntryData>("entries"));
     while (it.isValid()) {
-        std::unique_ptr<MapEntryData> newEntry = it.getObject();
+        ASSIGN_OR_ERROR(std::unique_ptr<MapEntryData> newEntry, it.getObject());
         m_mapEntries.emplace_back(std::move(newEntry));
-        ++it;
+        DO_OR_ERROR(it.advance());
     }
+    return {};
 }
 
 void babelwires::MapValue::visitIdentifiers(IdentifierVisitor& visitor) {

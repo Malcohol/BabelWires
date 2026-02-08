@@ -33,7 +33,7 @@ namespace {
 TEST(ModifierTest, basicStuff) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::Path path = babelwires::Path::deserializeFromString("aa/bb");
+    babelwires::Path path = *babelwires::Path::deserializeFromString("aa/bb");
 
     auto intModData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(198));
     intModData->m_targetPath = path;
@@ -61,7 +61,7 @@ TEST(ModifierTest, basicStuff) {
 }
 
 TEST(ModifierTest, clone) {
-    babelwires::Path path = babelwires::Path::deserializeFromString("aa/bb");
+    babelwires::Path path = *babelwires::Path::deserializeFromString("aa/bb");
 
     auto intModData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::IntValue(198));
     intModData->m_targetPath = path;
@@ -268,8 +268,8 @@ TEST(ModifierTest, connectionModifierTargetPathFailure) {
                                                        testDomain::TestSimpleRecordType::getThisIdentifier());
     targetRecordFeature.setToDefault();
 
-    const babelwires::Path sourcePath = babelwires::Path::deserializeFromString("aa");
-    const babelwires::Path targetPath = babelwires::Path::deserializeFromString("xx");
+    const babelwires::Path sourcePath = *babelwires::Path::deserializeFromString("aa");
+    const babelwires::Path targetPath = *babelwires::Path::deserializeFromString("xx");
 
     auto assignFromData = std::make_unique<babelwires::ConnectionModifierData>();
     assignFromData->m_targetPath = targetPath;
@@ -298,7 +298,7 @@ TEST(ModifierTest, connectionModifierSourceIdFailure) {
                                                        testDomain::TestSimpleRecordType::getThisIdentifier());
     targetRecordFeature.setToDefault();
 
-    const babelwires::Path sourcePath = babelwires::Path::deserializeFromString("aa");
+    const babelwires::Path sourcePath = *babelwires::Path::deserializeFromString("aa");
     babelwires::Path targetPath;
     targetPath.pushStep(testDomain::TestSimpleRecordType::getInt0Id());
 
@@ -343,7 +343,7 @@ TEST(ModifierTest, connectionModifierSourcePathFailure) {
 
     auto assignFromData = std::make_unique<babelwires::ConnectionModifierData>();
     assignFromData->m_targetPath = targetPath;
-    assignFromData->m_sourcePath = babelwires::Path::deserializeFromString("xx");
+    assignFromData->m_sourcePath = *babelwires::Path::deserializeFromString("xx");
     assignFromData->m_sourceId = sourceId;
 
     babelwires::ConnectionModifier connectionMod(std::move(assignFromData));

@@ -136,7 +136,7 @@ TEST(DeactivateOptionalsCommandTest, failSafelyNoRecord) {
     babelwires::ShortId opId("flerm");
     opId.setDiscriminator(1);
     babelwires::DeactivateOptionalCommand command("Test command", 51,
-                                                  babelwires::Path::deserializeFromString("qqq/zzz"), opId);
+                                                  *babelwires::Path::deserializeFromString("qqq/zzz"), opId);
 
     babelwires::ValueNodeData elementData(testDomain::TestComplexRecordType::getThisIdentifier());
     elementData.m_id = 51;

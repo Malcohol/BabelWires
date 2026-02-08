@@ -247,7 +247,7 @@ TEST(SetArraySizeCommandTest, executeAndUndoArrayNoPriorModifier) {
 
 TEST(SetArraySizeCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::SetArraySizeCommand command("Test command", 51, babelwires::Path::deserializeFromString("qqq/zzz"), 4);
+    babelwires::SetArraySizeCommand command("Test command", 51, *babelwires::Path::deserializeFromString("qqq/zzz"), 4);
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
@@ -259,7 +259,7 @@ TEST(SetArraySizeCommandTest, failSafelyNoArray) {
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(testDomain::TestSimpleRecordElementData());
 
     babelwires::SetArraySizeCommand command("Test command", elementId,
-                                            babelwires::Path::deserializeFromString("qqq/zzz"), 4);
+                                            *babelwires::Path::deserializeFromString("qqq/zzz"), 4);
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
