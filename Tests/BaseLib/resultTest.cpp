@@ -55,6 +55,14 @@ namespace {
         return {};
     }
 
+    babelwires::Result functionUsingAssignOrError2(int& successValue, int& errorValue) {
+        ASSIGN_OR_ERROR(int x, functionThatReturnsSuccessWithValue());
+        successValue = x;
+        ASSIGN_OR_ERROR(int y, functionThatReturnsErrorWithValue());
+        errorValue = y;
+        return {};
+    }
+
     babelwires::Result functionUsingAssignOrErrorWithOnError(int& successValue, int& errorValue, bool& onErrorCalled) {
         ON_ERROR(onErrorCalled = true);
         ASSIGN_OR_ERROR(successValue, functionThatReturnsSuccessWithValue());
@@ -121,6 +129,15 @@ TEST(ResultTest, assignOrError) {
     int successValue = 0;
     int errorValue = 0;
     const babelwires::Result result = functionUsingAssignOrError(successValue, errorValue);
+    EXPECT_FALSE(result);
+    EXPECT_EQ(successValue, 42);
+    EXPECT_EQ(errorValue, 0);
+}
+
+TEST(ResultTest, assignOrError2) {
+    int successValue = 0;
+    int errorValue = 0;
+    const babelwires::Result result = functionUsingAssignOrError2(successValue, errorValue);
     EXPECT_FALSE(result);
     EXPECT_EQ(successValue, 42);
     EXPECT_EQ(errorValue, 0);
