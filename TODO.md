@@ -22,6 +22,11 @@ Things to check:
 * The complex types used by the ChordMap function (in BabelWires-Music) suggest that my attempt at flexible maps wasn't successful
   - The types and function are doing work I thought the framework would do.
   - Review the map system: Perhaps I should just simplify it.
+* Add a unit test for an identifier being modified after data serialized with same UUID. And then:
+  1. Loading into project where the new identifier is already registered. Does updated identifier get saved?
+  2. Or new identifier registered after identifier loaded. Does updated identifier get saved?
+  See TODO in DataBundle_inl.hpp
+
 
 Compound Data Flow:
 1. Consider replacing NewValueHolder by a unique_ptr variant inside ValueHolder. This might allow unique ownership to last a bit longer and avoid some unnecessary clones. (Threading probably means we can never return to this state after sharing.)
