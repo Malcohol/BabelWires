@@ -75,24 +75,46 @@ namespace babelwires {
 
 } // namespace babelwires
 
+// Helper macros for working with Results. These are designed to be used in functions that return a Result or ResultT,
+// and allow for easy propagation of errors without needing to write boilerplate code. See tests for examples.
+
+/// By default, this on-error function is called.
+/// It must be in the global namespace, because it is intended to get shadowed by a local variable when ON_ERROR is
+/// used.
+inline void babelwiresOnError() {}
+
+/// Evaluate the expression, and if it returns an error, call babelwiresOnError and return the error.
 #define DO_OR_ERROR(EXPRESSION_THAT_RETURNS_RESULT)                                                                    \
     {                                                                                                                  \
         const auto doOrErrorResult = EXPRESSION_THAT_RETURNS_RESULT;                                                   \
         if (!doOrErrorResult) {                                                                                        \
+            babelwiresOnError();                                                                                       \
             return std::unexpected(doOrErrorResult.error());                                                           \
         }                                                                                                              \
     }
 
+// Helper macros
 #define BW_UNIQUE_NAME(X, Y) BW_COMBINE_HELPER(X, Y)
 #define BW_COMBINE_HELPER(X, Y) X##Y
 
+/// Assign TARGET_EXPRESSION from the EXPRESSION_THAT_RETURNS_RESULTT, which must return a ResultT.
+/// If the result is an error, call babelwiresOnError and return the error.
 // We can't use a scope in this case since it would enclose the target expression.
 // Instead use a file-unique variable name. That requires the whole statement to be placed on one
 // line of code.
 // clang-format off
 #define ASSIGN_OR_ERROR(TARGET_EXPRESSION, EXPRESSION_THAT_RETURNS_RESULTT)                                            \
-    auto BW_UNIQUE_NAME(assignOrErrorResult, __LINE__) = EXPRESSION_THAT_RETURNS_RESULTT; if (!BW_UNIQUE_NAME(assignOrErrorResult, __LINE__)) { return std::unexpected(BW_UNIQUE_NAME(assignOrErrorResult, __LINE__).error()); } TARGET_EXPRESSION = std::move(*BW_UNIQUE_NAME(assignOrErrorResult, __LINE__));
+    auto BW_UNIQUE_NAME(assignOrErrorResult, __LINE__) = EXPRESSION_THAT_RETURNS_RESULTT; if (!BW_UNIQUE_NAME(assignOrErrorResult, __LINE__)) { babelwiresOnError(); return std::unexpected(BW_UNIQUE_NAME(assignOrErrorResult, __LINE__).error()); } TARGET_EXPRESSION = std::move(*BW_UNIQUE_NAME(assignOrErrorResult, __LINE__));
 // clang-format on
+
+/// Perform the code if an error occurs with the scope.
+/// This cannot be used twice in the same scope, but you can introduce a new scope to work around that.
+#define ON_ERROR(CODE_TO_DO_ON_ERROR)                                                                                  \
+    const auto babelwiresOnError2 = babelwiresOnError;                                                                 \
+    const auto babelwiresOnError = [&]() {                                                                             \
+        CODE_TO_DO_ON_ERROR;                                                                                           \
+        babelwiresOnError2();                                                                                          \
+    };
 
 // Transition helper
 #define THROW_ON_ERROR(RESULT, EXCEPTION_TYPE)                                                                         \
