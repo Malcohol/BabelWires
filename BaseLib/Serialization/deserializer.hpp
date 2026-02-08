@@ -113,11 +113,6 @@ namespace babelwires {
         template <typename T>
         void augmentResultWithContext(ResultT<T>& result) const;
 
-        enum class ErrorState {
-            NoError,
-            Error
-        };
-
         /// Subclass must call this before the destructor is called.
         virtual Result finalize(ErrorState errorState = ErrorState::NoError);
 

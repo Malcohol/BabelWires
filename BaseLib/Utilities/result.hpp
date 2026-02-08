@@ -73,6 +73,9 @@ namespace babelwires {
         std::ostringstream m_os;
     };
 
+    /// Common functionality.
+    enum class ErrorState { NoError, Error };
+
 } // namespace babelwires
 
 // Helper macros for working with Results. These are designed to be used in functions that return a Result or ResultT,
@@ -117,6 +120,32 @@ inline void babelwiresOnError() {}
         CODE_TO_DO_ON_ERROR;                                                                                           \
         babelwiresOnError2();                                                                                          \
     };
+
+namespace babelwires {
+    namespace Detail {
+        /// Helper class for running code at the end of a scope.
+        template <typename F> struct Finally {
+            F m_func;
+            explicit Finally(F f)
+                : m_func(std::move(f)) {}
+            ~Finally() { m_func(); }
+            Finally(const Finally&) = delete;
+            Finally& operator=(const Finally&) = delete;
+        };
+    } // namespace Detail
+} // namespace babelwires
+
+/// Run the code at the end of the scope.
+#define FINALLY(CODE_TO_RUN)                                                                                           \
+    const auto BW_UNIQUE_NAME(babelwiresFinally_, __LINE__) = ::babelwires::Detail::Finally([&]() { CODE_TO_RUN; });
+
+/// Run the code at the end of the scope. The code can query a variable called errorState to determine whether the scope
+/// is being exited due to an error or not.
+#define FINALLY_WITH_ERRORSTATE(CODE_TO_RUN)                                                                           \
+    babelwires::ErrorState BW_UNIQUE_NAME(babelwiresFinallyErrorState_, __LINE__) = babelwires::ErrorState::NoError;   \
+    ON_ERROR(BW_UNIQUE_NAME(babelwiresFinallyErrorState_, __LINE__) = babelwires::ErrorState::Error);                  \
+    const auto BW_UNIQUE_NAME(babelwiresFinally_, __LINE__) = ::babelwires::Detail::Finally(                           \
+        [&, &errorState = BW_UNIQUE_NAME(babelwiresFinallyErrorState_, __LINE__)]() { CODE_TO_RUN; });
 
 // Transition helper
 #define THROW_ON_ERROR(RESULT, EXCEPTION_TYPE)                                                                         \

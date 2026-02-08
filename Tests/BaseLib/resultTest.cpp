@@ -2,7 +2,6 @@
 
 #include <BaseLib/Utilities/result.hpp>
 
-
 namespace {
     const char expectedErrorPrefix[] = "An error occurred";
 
@@ -70,6 +69,29 @@ namespace {
         return {};
     }
 
+    babelwires::Result functionThatUsesFinallyWithSuccess(bool& wasFinallyRun) {
+        FINALLY(wasFinallyRun = true);
+        DO_OR_ERROR(functionThatReturnsSuccess());
+        return {};
+    }
+
+    babelwires::Result functionThatUsesFinallyWithError(bool& wasFinallyRun) {
+        FINALLY(wasFinallyRun = true);
+        DO_OR_ERROR(functionThatReturnsError());
+        return {};
+    }
+
+    babelwires::Result functionThatUsesFinallyWithErrorStateWithSuccess(bool& wasFinallyRun, babelwires::ErrorState& capturedErrorState) {
+        FINALLY_WITH_ERRORSTATE(wasFinallyRun = true; capturedErrorState = errorState);
+        DO_OR_ERROR(functionThatReturnsSuccess());
+        return {};
+    }
+
+    babelwires::Result functionThatUsesFinallyWithErrorStateWithError(bool& wasFinallyRun, babelwires::ErrorState& capturedErrorState) {
+        FINALLY_WITH_ERRORSTATE(wasFinallyRun = true; capturedErrorState = errorState);
+        DO_OR_ERROR(functionThatReturnsError());
+        return {};
+    }
 } // namespace
 
 TEST(ResultTest, resultSuccess) {
@@ -152,4 +174,37 @@ TEST(ResultTest, assignOrErrorWithOnError) {
     EXPECT_EQ(successValue, 42);
     EXPECT_EQ(errorValue, 0);
     EXPECT_TRUE(onErrorCalled);
+}
+
+TEST(ResultTest, finallyWithSuccess) {
+    bool wasFinallyRun = false;
+    const babelwires::Result result = functionThatUsesFinallyWithSuccess(wasFinallyRun);
+    EXPECT_TRUE(result);
+    EXPECT_TRUE(wasFinallyRun);
+}
+
+TEST(ResultTest, finallyWithError) {
+    bool wasFinallyRun = false;
+    const babelwires::Result result = functionThatUsesFinallyWithError(wasFinallyRun);
+    EXPECT_FALSE(result);
+    EXPECT_TRUE(wasFinallyRun);
+}
+
+TEST(ResultTest, finallyWithErrorStateWithSuccess) {
+    bool wasFinallyRun = false;
+    babelwires::ErrorState capturedErrorState = babelwires::ErrorState::NoError;
+    const babelwires::Result result =
+        functionThatUsesFinallyWithErrorStateWithSuccess(wasFinallyRun, capturedErrorState);
+    EXPECT_TRUE(result);
+    EXPECT_TRUE(wasFinallyRun);
+    EXPECT_EQ(capturedErrorState, babelwires::ErrorState::NoError);
+}
+
+TEST(ResultTest, finallyWithErrorStateWithError) {
+    bool wasFinallyRun = false;
+    babelwires::ErrorState capturedErrorState = babelwires::ErrorState::NoError;
+    const babelwires::Result result = functionThatUsesFinallyWithErrorStateWithError(wasFinallyRun, capturedErrorState);
+    EXPECT_FALSE(result);
+    EXPECT_TRUE(wasFinallyRun);
+    EXPECT_EQ(capturedErrorState, babelwires::ErrorState::Error);
 }
