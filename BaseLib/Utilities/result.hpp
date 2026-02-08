@@ -100,12 +100,14 @@ inline void babelwiresOnError() {}
 /// Assign TARGET_EXPRESSION from the EXPRESSION_THAT_RETURNS_RESULTT, which must return a ResultT.
 /// If the result is an error, call babelwiresOnError and return the error.
 // We can't use a scope in this case since it would enclose the target expression.
-// Instead use a file-unique variable name. That requires the whole statement to be placed on one
-// line of code.
-// clang-format off
+// Instead use a file-unique variable name.
 #define ASSIGN_OR_ERROR(TARGET_EXPRESSION, EXPRESSION_THAT_RETURNS_RESULTT)                                            \
-    auto BW_UNIQUE_NAME(assignOrErrorResult, __LINE__) = EXPRESSION_THAT_RETURNS_RESULTT; if (!BW_UNIQUE_NAME(assignOrErrorResult, __LINE__)) { babelwiresOnError(); return std::unexpected(BW_UNIQUE_NAME(assignOrErrorResult, __LINE__).error()); } TARGET_EXPRESSION = std::move(*BW_UNIQUE_NAME(assignOrErrorResult, __LINE__));
-// clang-format on
+    auto BW_UNIQUE_NAME(assignOrErrorResult, __LINE__) = EXPRESSION_THAT_RETURNS_RESULTT;                              \
+    if (!BW_UNIQUE_NAME(assignOrErrorResult, __LINE__)) {                                                              \
+        babelwiresOnError();                                                                                           \
+        return std::unexpected(BW_UNIQUE_NAME(assignOrErrorResult, __LINE__).error());                                 \
+    }                                                                                                                  \
+    TARGET_EXPRESSION = std::move(*BW_UNIQUE_NAME(assignOrErrorResult, __LINE__));
 
 /// Perform the code if an error occurs with the scope.
 /// This cannot be used twice in the same scope, but you can introduce a new scope to work around that.
