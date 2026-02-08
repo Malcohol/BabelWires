@@ -108,18 +108,22 @@ namespace babelwires {
         template <typename T>
         ResultT<ValueIterator<T>> deserializeValueArray(std::string_view, std::string_view typeName = "element");
 
-
         /// Get a description of the current parsing location which can be used in errors and warnings (e.g. a line
         /// number).
         template <typename T>
         void augmentResultWithContext(ResultT<T>& result) const;
 
+        enum class ErrorState {
+            NoError,
+            Error
+        };
+
+        /// Subclass must call this before the destructor is called.
+        virtual Result finalize(ErrorState errorState = ErrorState::NoError);
+
       protected:
         /// Subclass must call this before the Deserializer interface is used.
         Result initialize();
-
-        /// Subclass must call this before the contents are considered finalized.
-        Result finalize();
 
       protected:
         template <typename T> ResultT<std::unique_ptr<T>> deserializeCurrentObject();

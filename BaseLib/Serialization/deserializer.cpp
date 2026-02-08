@@ -13,7 +13,44 @@ babelwires::Deserializer::Deserializer(UserLogger& userLogger, const Deserializa
     , m_deserializationRegistry(deserializationRegistry) {}
 
 babelwires::Deserializer::~Deserializer() {
-    assert(((std::uncaught_exceptions() > 0) || m_wasFinalized) && "The deserializer was not finalized");
+    assert(m_wasFinalized && "The deserializer was not finalized");
+}
+
+babelwires::Result babelwires::Deserializer::initialize() {
+    if (!pushObject("contents")) {
+        return Error() << "The element \"contents\" is missing";
+    }
+    DO_OR_ERROR(deserializeMetadata(*this, m_userLogger, m_deserializationRegistry));
+    return {};
+}
+
+babelwires::Result babelwires::Deserializer::finalize(ErrorState errorState) {
+    m_wasFinalized = true;
+    if (errorState == ErrorState::Error) {
+        // We are unwinding the stack due to an error, so don't do any additional work.
+        return {};
+    } else {
+        return popObject();
+    }
+}
+
+babelwires::ResultT<std::unique_ptr<babelwires::Serializable>>
+babelwires::Deserializer::deserializeCurrentObject(const void* tagOfTypeSought) {
+    const std::string_view currentTypeName = getCurrentTypeName();
+    if (const DeserializationRegistry::Entry* entry = m_deserializationRegistry.findEntry(currentTypeName)) {
+        const void* entryTag = entry->m_baseClassTag;
+        // The tags form a path up the type tree, so search for a match for T.
+        while (entryTag && (tagOfTypeSought != entryTag)) {
+            entryTag = *static_cast<const void* const*>(entryTag);
+        }
+        if (entryTag) {
+            // The registered entry is a subtype of the type we're trying to deserialize.
+            return entry->m_factory(*this);
+        } else {
+            return Error() << "The type \"" << currentTypeName << "\" was not expected here";
+        }
+    }
+    return Error() << "Unknown type \"" << currentTypeName << "\"";
 }
 
 babelwires::Result babelwires::Deserializer::BaseIterator::advance() {
@@ -52,36 +89,4 @@ babelwires::Result babelwires::Deserializer::BaseIterator::checkFinished() {
         m_finished = true;
     }
     return {};
-}
-
-babelwires::Result babelwires::Deserializer::initialize() {
-    if (!pushObject("contents")) {
-        return Error() << "The element \"contents\" is missing";
-    }
-    DO_OR_ERROR(deserializeMetadata(*this, m_userLogger, m_deserializationRegistry));
-    return {};
-}
-
-babelwires::Result babelwires::Deserializer::finalize() {
-    m_wasFinalized = true;
-    return popObject();
-}
-
-babelwires::ResultT<std::unique_ptr<babelwires::Serializable>>
-babelwires::Deserializer::deserializeCurrentObject(const void* tagOfTypeSought) {
-    const std::string_view currentTypeName = getCurrentTypeName();
-    if (const DeserializationRegistry::Entry* entry = m_deserializationRegistry.findEntry(currentTypeName)) {
-        const void* entryTag = entry->m_baseClassTag;
-        // The tags form a path up the type tree, so search for a match for T.
-        while (entryTag && (tagOfTypeSought != entryTag)) {
-            entryTag = *static_cast<const void* const*>(entryTag);
-        }
-        if (entryTag) {
-            // The registered entry is a subtype of the type we're trying to deserialize.
-            return entry->m_factory(*this);
-        } else {
-            return Error() << "The type \"" << currentTypeName << "\" was not expected here";
-        }
-    }
-    return Error() << "Unknown type \"" << currentTypeName << "\"";
 }

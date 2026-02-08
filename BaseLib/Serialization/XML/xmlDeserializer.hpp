@@ -32,9 +32,6 @@ namespace babelwires {
         ResultT<bool> tryDeserializeValue(std::string_view key, std::int16_t& value) override;
         ResultT<bool> tryDeserializeValue(std::string_view key, std::int8_t& value) override;
 
-        /// Client code must call this before this object is destroyed.
-        using Deserializer::finalize;
-
       protected:
         struct IteratorImpl : Deserializer::AbstractIterator {
             IteratorImpl(XmlDeserializer& deserializer, const tinyxml2::XMLElement* arrayElement);
