@@ -7,26 +7,36 @@
  **/
 #include <BaseLib/IO/fileDataSource.hpp>
 
-#include <BaseLib/exceptions.hpp>
-
 #include <cassert>
 
-babelwires::FileDataSource::FileDataSource(const std::filesystem::path& fileName) {
-    m_fileStream.open(fileName, std::ios_base::in | std::ios_base::binary);
-    if (m_fileStream.fail()) {
-        throw IoException() << "Cannot open file " << fileName << " for reading";
+babelwires::ResultT<babelwires::FileDataSource> babelwires::FileDataSource::open(const std::filesystem::path& fileName) {
+    FileDataSource dataSource;
+    dataSource.m_fileStream.open(fileName, std::ios_base::in | std::ios_base::binary);
+    if (dataSource.m_fileStream.fail()) {
+        return Error() << "Cannot open file " << fileName << " for reading";
     }
+    return dataSource;
+}
+
+babelwires::Result babelwires::FileDataSource::close(ErrorState errorState) {
+    if (m_fileStream.is_open()) {
+        m_fileStream.close();
+        if (m_fileStream.fail() && (errorState == ErrorState::NoError)) {
+            return Error() << "Failed to close file";
+        }
+    }
+    return {};
 }
 
 bool babelwires::FileDataSource::doIsEof() {
     return m_fileStream.peek() == std::istream::traits_type::eof();
 }
 
-babelwires::Byte babelwires::FileDataSource::doGetNextByte() {
+babelwires::ResultT<babelwires::Byte> babelwires::FileDataSource::doGetNextByte() {
     assert(!doIsEof());
     int c = m_fileStream.get();
     if (m_fileStream.fail()) {
-        throw IoException() << "Cannot read file";
+        return Error() << "Cannot read file";
     }
-    return c;
+    return static_cast<Byte>(c);
 }

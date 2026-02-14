@@ -7,8 +7,6 @@
  **/
 #include <BaseLib/IO/dataSource.hpp>
 
-#include <BaseLib/exceptions.hpp>
-
 #include <cassert>
 
 babelwires::DataSource::DataSource()
@@ -25,13 +23,13 @@ bool babelwires::DataSource::isEof() {
     return doIsEof();
 }
 
-babelwires::Byte babelwires::DataSource::getNextByte() {
+babelwires::ResultT<babelwires::Byte> babelwires::DataSource::getNextByte() {
     if (getRemainingBufferSize() > 0) {
         babelwires::Byte b = m_buffer[m_indexInBuffer];
         ++m_indexInBuffer;
         return b;
     } else if (doIsEof()) {
-        throw IoException() << "End of file reached when trying to get byte " << m_positionOfCursorOrBuffer
+        return Error() << "End of file reached when trying to get byte " << m_positionOfCursorOrBuffer
                             << " from data source";
     } else {
         if (m_buffer.size()) {
@@ -44,16 +42,19 @@ babelwires::Byte babelwires::DataSource::getNextByte() {
     }
 }
 
-babelwires::Byte babelwires::DataSource::peekNextByte() {
+babelwires::ResultT<babelwires::Byte> babelwires::DataSource::peekNextByte() {
     if (getRemainingBufferSize() == 0) {
-        setRewindPoint(1);
+        ASSIGN_OR_ERROR(const int numBytes, setRewindPoint(1));
+        if (numBytes == 0) {
+            return Error() << "End of file reached when trying to peek byte from data source";
+        }
         return m_buffer[0];
     } else {
         return m_buffer[m_indexInBuffer];
     }
 }
 
-int babelwires::DataSource::setRewindPoint(int numBytes) {
+babelwires::ResultT<int> babelwires::DataSource::setRewindPoint(int numBytes) {
     m_buffer.reserve(numBytes);
     int numExtraBytesToRead = numBytes;
     const int remainingBufferSize = getRemainingBufferSize();
@@ -72,7 +73,7 @@ int babelwires::DataSource::setRewindPoint(int numBytes) {
             break;
         }
         ++numBytesRead;
-        m_buffer.push_back(doGetNextByte());
+        ASSIGN_OR_ERROR(m_buffer.emplace_back(), doGetNextByte());
     }
     m_positionOfCursorOrBuffer += m_indexInBuffer;
     m_indexInBuffer = 0;
