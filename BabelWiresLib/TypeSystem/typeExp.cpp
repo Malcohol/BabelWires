@@ -156,7 +156,8 @@ babelwires::Result babelwires::TypeExp::deserializeContents(Deserializer& deseri
     RegisteredTypeId typeId;
     TypeConstructorId typeConstructorId;
     ASSIGN_OR_ERROR(const bool typeIdResult, deserializer.tryDeserializeValue("typeId", typeId));
-    ASSIGN_OR_ERROR(const bool typeConstructorIdResult, deserializer.tryDeserializeValue("typeConstructorId", typeConstructorId));
+    ASSIGN_OR_ERROR(const bool typeConstructorIdResult,
+                    deserializer.tryDeserializeValue("typeConstructorId", typeConstructorId));
     if (typeIdResult && typeConstructorIdResult) {
         return Error() << "TypeExp cannot have both typeId and typeConstructorId";
     } else if (typeIdResult) {
@@ -195,6 +196,10 @@ void babelwires::TypeExp::visitIdentifiers(IdentifierVisitor& visitor) {
             auto& arguments = std::get<1>(higherOrderData).getTypeArguments();
             std::for_each(arguments.begin(), arguments.end(),
                           [this](TypeExp& arg) { arg.visitIdentifiers(m_visitor); });
+            auto& valueArguments = std::get<1>(higherOrderData).getValueArguments();
+            std::for_each(valueArguments.begin(), valueArguments.end(), [this](ValueHolder& valueArg) {
+                valueArg.copyContentsAndGetNonConst().getAsEditableValue().visitIdentifiers(m_visitor);
+            });
         }
         IdentifierVisitor& m_visitor;
     } visitorMethods{visitor};
