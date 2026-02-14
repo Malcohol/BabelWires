@@ -79,7 +79,7 @@ namespace babelwires {
 } // namespace babelwires
 
 // Helper macros for working with Results. These are designed to be used in functions that return a Result or ResultT,
-// and allow for easy propagation of errors without needing to write boilerplate code. See tests for examples.
+// and allow for easy propagation of errors without needing to write boilerplate code. See ResultTests.cpp for examples.
 
 /// By default, this on-error function is called.
 /// It must be in the global namespace, because it is intended to get shadowed by a local variable when ON_ERROR is
