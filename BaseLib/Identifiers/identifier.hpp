@@ -96,6 +96,7 @@ namespace babelwires {
         IdentifierBase(std::string_view str);
 
         /// Short to long constructor. Always succeeds.
+        /// See makeFrom or tryMakeFrom for the generic identifier-to-identifier conversions.
         template <unsigned int OTHER_NUM_BLOCKS, typename std::enable_if_t<(OTHER_NUM_BLOCKS <= NUM_BLOCKS), int> = 0>
         IdentifierBase(const IdentifierBase<OTHER_NUM_BLOCKS>& other) {
             constexpr unsigned int M = (OTHER_NUM_BLOCKS * sizeof(std::uint64_t)) - 2;
@@ -103,18 +104,6 @@ namespace babelwires {
             m_data.m_discriminator = other.m_data.m_discriminator;
             std::copy(other.m_data.m_chars, other.m_data.m_chars + M, m_data.m_chars + D);
             std::fill(m_data.m_chars, m_data.m_chars + D, 0);
-        }
-
-        /// Long to short constructor. Can throw a parse exception if the contents are too long.
-        template <unsigned int OTHER_NUM_BLOCKS, typename std::enable_if_t<(OTHER_NUM_BLOCKS > NUM_BLOCKS), int> = 0>
-        explicit IdentifierBase(const IdentifierBase<OTHER_NUM_BLOCKS>& other) {
-            constexpr unsigned int M = (OTHER_NUM_BLOCKS * sizeof(std::uint64_t)) - 2;
-            constexpr unsigned int D = M - N;
-            if (other.m_data.m_chars[D - 1] != '\0') {
-                throw ParseException() << "The contents of identifier '" << other << "' are too long";
-            }
-            m_data.m_discriminator = other.m_data.m_discriminator;
-            std::copy(other.m_data.m_chars + D, other.m_data.m_chars + M, m_data.m_chars);
         }
 
         /// Return a human-readable version of the identifier, not including the disciminator.
@@ -131,6 +120,35 @@ namespace babelwires {
         template <int T = NUM_BLOCKS, typename std::enable_if_t<(T == 1), std::nullptr_t> = nullptr>
         std::uint64_t toCode() const {
             return getDataAsCode<0>();
+        }
+
+        /// Try to create an identifier from an identifier of a different size.
+        template <unsigned int OTHER_NUM_BLOCKS, typename std::enable_if_t<(OTHER_NUM_BLOCKS <= NUM_BLOCKS), int> = 0>
+        static IdentifierBase makeFrom(const IdentifierBase<OTHER_NUM_BLOCKS>& other) {
+            return IdentifierBase(other);
+        }
+
+        /// Try to create an identifier from an identifier of a different size. (This function can assert.)
+        template <unsigned int OTHER_NUM_BLOCKS, typename std::enable_if_t<(OTHER_NUM_BLOCKS > NUM_BLOCKS), int> = 0>
+        static IdentifierBase makeFrom(const IdentifierBase<OTHER_NUM_BLOCKS>& other) {
+            return IdentifierBase(other);
+        }
+
+        /// Try to create an identifier from an identifier of a different size.
+        template <unsigned int OTHER_NUM_BLOCKS, typename std::enable_if_t<(OTHER_NUM_BLOCKS <= NUM_BLOCKS), int> = 0>
+        static ResultT<IdentifierBase> tryMakeFrom(const IdentifierBase<OTHER_NUM_BLOCKS>& other) {
+            return IdentifierBase(other);
+        }
+
+        /// Try to create an identifier from an identifier of a different size.
+        template <unsigned int OTHER_NUM_BLOCKS, typename std::enable_if_t<(OTHER_NUM_BLOCKS > NUM_BLOCKS), int> = 0>
+        static ResultT<IdentifierBase> tryMakeFrom(const IdentifierBase<OTHER_NUM_BLOCKS>& other) {
+            constexpr unsigned int M = (OTHER_NUM_BLOCKS * sizeof(std::uint64_t)) - 2;
+            constexpr unsigned int D = M - N;
+            if (other.m_data.m_chars[D - 1] != '\0') {
+                return Error() << "The contents of identifier '" << other << "' are too long";
+            }
+            return IdentifierBase(other);
         }
 
       public:
@@ -217,6 +235,16 @@ namespace babelwires {
 
         /// Helper method to build a hash out of the codes.
         template <size_t... INSEQ> std::size_t getHashFromIndexSequence(std::index_sequence<INSEQ...>) const;
+
+        /// Private long to short constructor. Assert if the contents are too long.
+        template <unsigned int OTHER_NUM_BLOCKS, typename std::enable_if_t<(OTHER_NUM_BLOCKS > NUM_BLOCKS), int> = 0>
+        explicit IdentifierBase(const IdentifierBase<OTHER_NUM_BLOCKS>& other) {
+            constexpr unsigned int M = (OTHER_NUM_BLOCKS * sizeof(std::uint64_t)) - 2;
+            constexpr unsigned int D = M - N;
+            assert ((other.m_data.m_chars[D - 1] == '\0') && "The contents of identifier are too long");
+            m_data.m_discriminator = other.m_data.m_discriminator;
+            std::copy(other.m_data.m_chars + D, other.m_data.m_chars + M, m_data.m_chars);
+        }
 
       private:
         friend struct std::hash<babelwires::IdentifierBase<NUM_BLOCKS>>;

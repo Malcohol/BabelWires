@@ -92,13 +92,13 @@ babelwires::LongId babelwires::IdentifierRegistry::addLongIdWithMetadata(babelwi
 babelwires::MediumId babelwires::IdentifierRegistry::addMediumIdWithMetadata(babelwires::MediumId identifier,
                                                                              const std::string& name, const Uuid& uuid,
                                                                              Authority authority) {
-    return MediumId(addLongIdWithMetadata(identifier, name, uuid, authority));
+    return MediumId::makeFrom(addLongIdWithMetadata(identifier, name, uuid, authority));
 }
 
 babelwires::ShortId babelwires::IdentifierRegistry::addShortIdWithMetadata(babelwires::ShortId identifier,
                                                                            const std::string& name, const Uuid& uuid,
                                                                            Authority authority) {
-    return ShortId(addLongIdWithMetadata(identifier, name, uuid, authority));
+    return ShortId::makeFrom(addLongIdWithMetadata(identifier, name, uuid, authority));
 }
 
 const babelwires::IdentifierRegistry::InstanceData*

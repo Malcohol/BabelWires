@@ -21,7 +21,7 @@ namespace babelwires {
                         const auto& fieldData = *fieldDataResult;
                         newId = m_targetReg->addIdentifierWithMetadata(newId, *std::get<1>(fieldData),
                                                                        *std::get<2>(fieldData), m_authority);
-                        // TODO Shouldn't this be sourceId = newId?
+                        // TODO Shouldn't this be sourceId = IDENTIFIER::tryMakeFrom(newId)?
                         sourceId.setDiscriminator(newId.getDiscriminator());
                     } else {
                         // In the saving case (isTemporary) an unregistered identifier means something is broken.

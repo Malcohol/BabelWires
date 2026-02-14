@@ -430,7 +430,7 @@ TEST(TypeExpTest, visitIdentifiers) {
             m_seen.emplace(identifier);
             identifier.setDiscriminator(24);
         }
-        std::set<babelwires::ShortId> m_seen;
+        std::set<babelwires::LongId> m_seen;
     } visitor1, visitor2;
 
     typeExp.visitIdentifiers(visitor1);

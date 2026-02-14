@@ -256,19 +256,43 @@ TEST(IdentifierTest, shortToLongIdentifiers) {
     EXPECT_EQ(hello2.getDiscriminator(), 12);
 }
 
-TEST(IdentifierTest, longToShortIdentifiers) {
+TEST(IdentifierTest, makeFrom) {
     babelwires::LongId hello = "Helloo";
-    const babelwires::ShortId hello1(hello);
+    const babelwires::ShortId hello1 = babelwires::ShortId::makeFrom(hello);
     EXPECT_EQ(hello, hello1);
 
     hello.setDiscriminator(12);
-    const babelwires::ShortId hello2(hello);
+    const babelwires::ShortId hello2 = babelwires::ShortId::makeFrom(hello);
     EXPECT_EQ(hello, hello2);
     EXPECT_EQ(hello2.getDiscriminator(), 12);
 
-    const babelwires::LongId longHello = "Hellooo";
-    EXPECT_THROW(babelwires::ShortId shortHello(longHello), babelwires::ParseException);
+    babelwires::ShortId shortHello = "Hello";
+    const babelwires::LongId hello3 = babelwires::LongId::makeFrom(shortHello);
+    EXPECT_EQ(shortHello, hello3);
 }
+
+TEST(IdentifierTest, tryMakeFrom) {
+    babelwires::LongId hello = "Helloo";
+    const auto hello1 = babelwires::ShortId::tryMakeFrom(hello);
+    ASSERT_TRUE(hello1.has_value());
+    EXPECT_EQ(hello, *hello1);
+
+    hello.setDiscriminator(12);
+    const auto hello2 = babelwires::ShortId::tryMakeFrom(hello);
+    ASSERT_TRUE(hello2.has_value());
+    EXPECT_EQ(hello, *hello2);
+    EXPECT_EQ((*hello2).getDiscriminator(), 12);
+
+    babelwires::ShortId shortHello = "Hello";
+    const auto hello3 = babelwires::LongId::tryMakeFrom(shortHello);
+    ASSERT_TRUE(hello3.has_value());
+    EXPECT_EQ(shortHello, *hello3);
+
+    babelwires::LongId longHello = "Hello_incredible_world";
+    const auto hello4 = babelwires::ShortId::tryMakeFrom(longHello);
+    ASSERT_FALSE(hello4.has_value());
+}
+
 
 TEST(IdentifierTest, identifierRegistrySameNames) {
     testUtils::TestLog log;
