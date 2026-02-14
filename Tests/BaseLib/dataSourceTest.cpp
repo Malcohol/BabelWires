@@ -34,6 +34,7 @@ TEST(DataSource, getNextByte) {
             EXPECT_EQ(*byteResult, testContents[i]);
         }
         EXPECT_TRUE(foo.isEof());
+        EXPECT_TRUE(foo.close());
     }
 }
 
@@ -64,6 +65,7 @@ TEST(DataSource, peekNextByte) {
             EXPECT_EQ(foo.getAbsolutePosition(), i);
         }
         EXPECT_TRUE(foo.isEof());
+        EXPECT_TRUE(foo.close());
     }
 }
 
@@ -152,6 +154,7 @@ TEST(DataSource, rewind) {
             EXPECT_EQ(foo.getAbsolutePosition(), 6 + i);
         }
         EXPECT_TRUE(foo.isEof());
+        EXPECT_TRUE(foo.close());
     }
 }
 
@@ -206,5 +209,6 @@ TEST(DataSource, peekAndRewind) {
             EXPECT_EQ(foo.getAbsolutePosition(), 16 + i);
         }
         EXPECT_TRUE(foo.isEof());
+        EXPECT_TRUE(foo.close());
     }
 }

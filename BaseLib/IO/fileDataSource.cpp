@@ -20,12 +20,18 @@ babelwires::ResultT<babelwires::FileDataSource> babelwires::FileDataSource::open
 
 babelwires::Result babelwires::FileDataSource::close(ErrorState errorState) {
     if (m_fileStream.is_open()) {
+        // Clear the error state so that close() will succeed even if we are at EOF or have had a read error.
+        m_fileStream.clear();
         m_fileStream.close();
         if (m_fileStream.fail() && (errorState == ErrorState::NoError)) {
             return Error() << "Failed to close file";
         }
     }
     return {};
+}
+
+babelwires::FileDataSource::~FileDataSource() {
+    assert(!m_fileStream.is_open() && "Close must be called on the FileDataSource before it is destroyed");
 }
 
 bool babelwires::FileDataSource::doIsEof() {
