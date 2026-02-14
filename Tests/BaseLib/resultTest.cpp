@@ -20,78 +20,6 @@ namespace {
     babelwires::ResultT<int> functionThatReturnsErrorWithValue() {
         return babelwires::Error() << expectedErrorPrefix << " with code " << 123;
     }
-
-    babelwires::Result functionThatCallsOtherFunction(bool& afterSuccess, bool& afterError) {
-        DO_OR_ERROR(functionThatReturnsSuccess());
-        afterSuccess = true;
-        DO_OR_ERROR(functionThatReturnsError());
-        afterError = true;
-        return {};
-    }
-
-    babelwires::Result functionThatCallsOtherFunctionWithOnError(bool& afterSuccess, bool& afterError,
-                                                                 bool& onErrorCalled, bool& onErrorCalled2) {
-        ON_ERROR(onErrorCalled = true);
-        {
-            ON_ERROR(onErrorCalled2 = true);
-            DO_OR_ERROR(functionThatReturnsSuccess());
-            afterSuccess = true;
-            DO_OR_ERROR(functionThatReturnsError());
-            afterError = true;
-            return {};
-        }
-    }
-
-    babelwires::Result functionWithOnErrorButNoError(bool& onErrorCalled) {
-        ON_ERROR(onErrorCalled = true);
-        DO_OR_ERROR(functionThatReturnsSuccess());
-        return {};
-    }
-
-    babelwires::Result functionUsingAssignOrError(int& successValue, int& errorValue) {
-        ASSIGN_OR_ERROR(successValue, functionThatReturnsSuccessWithValue());
-        ASSIGN_OR_ERROR(errorValue, functionThatReturnsErrorWithValue());
-        return {};
-    }
-
-    babelwires::Result functionUsingAssignOrError2(int& successValue, int& errorValue) {
-        ASSIGN_OR_ERROR(int x, functionThatReturnsSuccessWithValue());
-        successValue = x;
-        ASSIGN_OR_ERROR(int y, functionThatReturnsErrorWithValue());
-        errorValue = y;
-        return {};
-    }
-
-    babelwires::Result functionUsingAssignOrErrorWithOnError(int& successValue, int& errorValue, bool& onErrorCalled) {
-        ON_ERROR(onErrorCalled = true);
-        ASSIGN_OR_ERROR(successValue, functionThatReturnsSuccessWithValue());
-        ASSIGN_OR_ERROR(errorValue, functionThatReturnsErrorWithValue());
-        return {};
-    }
-
-    babelwires::Result functionThatUsesFinallyWithSuccess(bool& wasFinallyRun) {
-        FINALLY(wasFinallyRun = true);
-        DO_OR_ERROR(functionThatReturnsSuccess());
-        return {};
-    }
-
-    babelwires::Result functionThatUsesFinallyWithError(bool& wasFinallyRun) {
-        FINALLY(wasFinallyRun = true);
-        DO_OR_ERROR(functionThatReturnsError());
-        return {};
-    }
-
-    babelwires::Result functionThatUsesFinallyWithErrorStateWithSuccess(bool& wasFinallyRun, babelwires::ErrorState& capturedErrorState) {
-        FINALLY_WITH_ERRORSTATE(wasFinallyRun = true; capturedErrorState = errorState);
-        DO_OR_ERROR(functionThatReturnsSuccess());
-        return {};
-    }
-
-    babelwires::Result functionThatUsesFinallyWithErrorStateWithError(bool& wasFinallyRun, babelwires::ErrorState& capturedErrorState) {
-        FINALLY_WITH_ERRORSTATE(wasFinallyRun = true; capturedErrorState = errorState);
-        DO_OR_ERROR(functionThatReturnsError());
-        return {};
-    }
 } // namespace
 
 TEST(ResultTest, resultSuccess) {
@@ -118,6 +46,14 @@ TEST(ResultTest, resultTError) {
 }
 
 TEST(ResultTest, compositeFunctions) {
+    auto functionThatCallsOtherFunction = [](bool& afterSuccess, bool& afterError) -> babelwires::Result {
+        DO_OR_ERROR(functionThatReturnsSuccess());
+        afterSuccess = true;
+        DO_OR_ERROR(functionThatReturnsError());
+        afterError = true;
+        return {};
+    };
+
     bool afterSuccess = false;
     bool afterError = false;
     const babelwires::Result result = functionThatCallsOtherFunction(afterSuccess, afterError);
@@ -127,6 +63,19 @@ TEST(ResultTest, compositeFunctions) {
 }
 
 TEST(ResultTest, onErrorMacroWithNestedOnError) {
+    auto functionThatCallsOtherFunctionWithOnError = [](bool& afterSuccess, bool& afterError,
+                                                        bool& onErrorCalled, bool& onErrorCalled2) -> babelwires::Result {
+        ON_ERROR(onErrorCalled = true);
+        {
+            ON_ERROR(onErrorCalled2 = true);
+            DO_OR_ERROR(functionThatReturnsSuccess());
+            afterSuccess = true;
+            DO_OR_ERROR(functionThatReturnsError());
+            afterError = true;
+            return {};
+        }
+    };
+
     bool afterSuccess = false;
     bool afterError = false;
     bool onErrorCalled = false;
@@ -141,6 +90,12 @@ TEST(ResultTest, onErrorMacroWithNestedOnError) {
 }
 
 TEST(ResultTest, onErrorMacroWithoutError) {
+    auto functionWithOnErrorButNoError = [](bool& onErrorCalled) -> babelwires::Result {
+        ON_ERROR(onErrorCalled = true);
+        DO_OR_ERROR(functionThatReturnsSuccess());
+        return {};
+    };
+
     bool onErrorCalled = false;
     const babelwires::Result result = functionWithOnErrorButNoError(onErrorCalled);
     EXPECT_TRUE(result);
@@ -148,6 +103,12 @@ TEST(ResultTest, onErrorMacroWithoutError) {
 }
 
 TEST(ResultTest, assignOrError) {
+    auto functionUsingAssignOrError = [](int& successValue, int& errorValue) -> babelwires::Result {
+        ASSIGN_OR_ERROR(successValue, functionThatReturnsSuccessWithValue());
+        ASSIGN_OR_ERROR(errorValue, functionThatReturnsErrorWithValue());
+        return {};
+    };
+
     int successValue = 0;
     int errorValue = 0;
     const babelwires::Result result = functionUsingAssignOrError(successValue, errorValue);
@@ -157,6 +118,14 @@ TEST(ResultTest, assignOrError) {
 }
 
 TEST(ResultTest, assignOrError2) {
+    auto functionUsingAssignOrError2 = [](int& successValue, int& errorValue) -> babelwires::Result {
+        ASSIGN_OR_ERROR(int x, functionThatReturnsSuccessWithValue());
+        successValue = x;
+        ASSIGN_OR_ERROR(int y, functionThatReturnsErrorWithValue());
+        errorValue = y;
+        return {};
+    };
+
     int successValue = 0;
     int errorValue = 0;
     const babelwires::Result result = functionUsingAssignOrError2(successValue, errorValue);
@@ -166,6 +135,13 @@ TEST(ResultTest, assignOrError2) {
 }
 
 TEST(ResultTest, assignOrErrorWithOnError) {
+    auto functionUsingAssignOrErrorWithOnError = [](int& successValue, int& errorValue, bool& onErrorCalled) -> babelwires::Result {
+        ON_ERROR(onErrorCalled = true);
+        ASSIGN_OR_ERROR(successValue, functionThatReturnsSuccessWithValue());
+        ASSIGN_OR_ERROR(errorValue, functionThatReturnsErrorWithValue());
+        return {};
+    };
+
     int successValue = 0;
     int errorValue = 0;
     bool onErrorCalled = false;
@@ -177,6 +153,12 @@ TEST(ResultTest, assignOrErrorWithOnError) {
 }
 
 TEST(ResultTest, finallyWithSuccess) {
+    auto functionThatUsesFinallyWithSuccess = [](bool& wasFinallyRun) -> babelwires::Result {
+        FINALLY(wasFinallyRun = true);
+        DO_OR_ERROR(functionThatReturnsSuccess());
+        return {};
+    };
+
     bool wasFinallyRun = false;
     const babelwires::Result result = functionThatUsesFinallyWithSuccess(wasFinallyRun);
     EXPECT_TRUE(result);
@@ -184,6 +166,12 @@ TEST(ResultTest, finallyWithSuccess) {
 }
 
 TEST(ResultTest, finallyWithError) {
+    auto functionThatUsesFinallyWithError = [](bool& wasFinallyRun) -> babelwires::Result {
+        FINALLY(wasFinallyRun = true);
+        DO_OR_ERROR(functionThatReturnsError());
+        return {};
+    };
+
     bool wasFinallyRun = false;
     const babelwires::Result result = functionThatUsesFinallyWithError(wasFinallyRun);
     EXPECT_FALSE(result);
@@ -191,6 +179,12 @@ TEST(ResultTest, finallyWithError) {
 }
 
 TEST(ResultTest, finallyWithErrorStateWithSuccess) {
+    auto functionThatUsesFinallyWithErrorStateWithSuccess = [](bool& wasFinallyRun, babelwires::ErrorState& capturedErrorState) -> babelwires::Result {
+        FINALLY_WITH_ERRORSTATE(wasFinallyRun = true; capturedErrorState = errorState);
+        DO_OR_ERROR(functionThatReturnsSuccess());
+        return {};
+    };
+
     bool wasFinallyRun = false;
     babelwires::ErrorState capturedErrorState = babelwires::ErrorState::NoError;
     const babelwires::Result result =
@@ -201,6 +195,12 @@ TEST(ResultTest, finallyWithErrorStateWithSuccess) {
 }
 
 TEST(ResultTest, finallyWithErrorStateWithError) {
+    auto functionThatUsesFinallyWithErrorStateWithError = [](bool& wasFinallyRun, babelwires::ErrorState& capturedErrorState) -> babelwires::Result {
+        FINALLY_WITH_ERRORSTATE(wasFinallyRun = true; capturedErrorState = errorState);
+        DO_OR_ERROR(functionThatReturnsError());
+        return {};
+    };
+
     bool wasFinallyRun = false;
     babelwires::ErrorState capturedErrorState = babelwires::ErrorState::NoError;
     const babelwires::Result result = functionThatUsesFinallyWithErrorStateWithError(wasFinallyRun, capturedErrorState);
