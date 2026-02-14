@@ -79,7 +79,6 @@ namespace babelwires {
         using ValueType = std::tuple<LongId, const std::string*, const Uuid*>;
 
         /// Extract the information about an identifier from a local IdentifierRegistry.
-        /// This can throw a ParseException if the contents are invalid.
         ResultT<ValueType> getDeserializedIdentifierData(LongId identifier) const;
 
       public:

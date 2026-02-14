@@ -92,31 +92,13 @@ babelwires::LongId babelwires::IdentifierRegistry::addLongIdWithMetadata(babelwi
 babelwires::MediumId babelwires::IdentifierRegistry::addMediumIdWithMetadata(babelwires::MediumId identifier,
                                                                              const std::string& name, const Uuid& uuid,
                                                                              Authority authority) {
-#ifndef NDEBUG
-    try {
-#endif
-        return MediumId(addLongIdWithMetadata(identifier, name, uuid, authority));
-#ifndef NDEBUG
-    } catch (const ParseException&) {
-        assert(false && "Another identifier was previously registered with this uuid");
-        return {};
-    }
-#endif
+    return MediumId(addLongIdWithMetadata(identifier, name, uuid, authority));
 }
 
 babelwires::ShortId babelwires::IdentifierRegistry::addShortIdWithMetadata(babelwires::ShortId identifier,
                                                                            const std::string& name, const Uuid& uuid,
                                                                            Authority authority) {
-#ifndef NDEBUG
-    try {
-#endif
-        return ShortId(addLongIdWithMetadata(identifier, name, uuid, authority));
-#ifndef NDEBUG
-    } catch (const ParseException&) {
-        assert(false && "Another identifier was previously registered with this uuid");
-        return {};
-    }
-#endif
+    return ShortId(addLongIdWithMetadata(identifier, name, uuid, authority));
 }
 
 const babelwires::IdentifierRegistry::InstanceData*
@@ -140,8 +122,8 @@ babelwires::IdentifierRegistry::getDeserializedIdentifierData(LongId identifier)
         return ValueType{identifier, &data->m_fieldName, &data->m_uuid};
     }
     return Error() << "Identifier \"" << identifier
-                           << "\" not found in the identifier metadata. Note that unregistered fields (those with no "
-                              "discriminator) are allowed";
+                   << "\" not found in the identifier metadata. Note that unregistered fields (those with no "
+                      "discriminator) are allowed";
 }
 
 std::string babelwires::IdentifierRegistry::getName(LongId identifier) const {
@@ -249,21 +231,21 @@ babelwires::Result babelwires::IdentifierRegistry::deserializeContents(Deseriali
 
         const ShortId::Discriminator discriminator = instanceDataPtr->m_identifier.getDiscriminator();
         if (discriminator == 0) {
-            throw ParseException() << "An identifier in the identifier metadata had no discriminator";
+            return Error() << "An identifier in the identifier metadata had no discriminator";
         }
 
         auto [uit, wasInserted] = m_uuidToInstanceDataMap.insert(
             std::pair<Uuid, std::unique_ptr<InstanceData>>(instanceData->m_uuid, std::move(instanceDataPtr)));
         if (!wasInserted) {
-            throw ParseException() << "An identifier with uuid \"" << uit->first << "\" was duplicated";
+            return Error() << "An identifier with uuid \"" << uit->first << "\" was duplicated";
         }
 
         Data& data = m_instanceDatasFromIdentifier[instanceData->m_identifier.withoutDiscriminator()];
 
         data.m_instanceDatas.resize(discriminator);
         if (data.m_instanceDatas[discriminator - 1]) {
-            throw ParseException() << "The identifier registry already has an identifier \""
-                                    << instanceData->m_identifier << "\"";
+            return Error() << "The identifier registry already has an identifier \"" << instanceData->m_identifier
+                           << "\"";
         }
         data.m_instanceDatas[discriminator - 1] = uit->second.get();
         DO_OR_ERROR(it.advance());
