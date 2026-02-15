@@ -136,7 +136,8 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
         fileFeature->setToDefault();
         testDomain::TestSimpleRecordType::Instance instance{fileFeature->getChild(0)->as<babelwires::ValueTreeNode>()};
         instance.getintR0().set(14);
-        targetFileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log, *fileFeature, tempFilePath);
+        EXPECT_TRUE(targetFileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log,
+                              *fileFeature, tempFilePath));
     }
 
     // Create sourceFileData which expect to be able to load the file.

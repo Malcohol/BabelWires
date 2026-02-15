@@ -7,7 +7,9 @@ SET( COMMON_SRCS
 	Cloning/cloneable.cpp
 	Registry/registry.cpp
 	Registry/fileTypeRegistry.cpp
+	IO/dataSink.cpp
 	IO/dataSource.cpp
+	IO/fileDataSink.cpp
 	IO/fileDataSource.cpp
 	IO/outFileStream.cpp
 	Math/rational.cpp

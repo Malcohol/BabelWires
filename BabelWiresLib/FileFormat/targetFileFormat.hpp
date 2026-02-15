@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BaseLib/Registry/fileTypeRegistry.hpp>
+#include <BaseLib/Utilities/result.hpp>
 #include <BaseLib/productInfo.hpp>
 
 #include <filesystem>
@@ -28,8 +29,8 @@ namespace babelwires {
       public:
         TargetFileFormat(LongId identifier, VersionNumber version, Extensions extensions);
         virtual std::unique_ptr<ValueTreeRoot> createNewValue(const ProjectContext& projectContext) const = 0;
-        virtual void writeToFile(const ProjectContext& projectContext, UserLogger& userLogger,
-                                 const ValueTreeRoot& contents, const std::filesystem::path& path) const = 0;
+        virtual Result writeToFile(const ProjectContext& projectContext, UserLogger& userLogger,
+                                   const ValueTreeRoot& contents, const std::filesystem::path& path) const = 0;
     };
 
     /// Registry of TargetFileFactories.

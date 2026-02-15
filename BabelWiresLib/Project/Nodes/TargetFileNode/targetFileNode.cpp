@@ -107,19 +107,20 @@ bool babelwires::TargetFileNode::save(const ProjectContext& context, UserLogger&
                               << data.m_id << ")";
         return false;
     }
-    try {
-        const TargetFileFormat* format = context.m_targetFileFormatReg.getEntryByIdentifier(data.m_factoryIdentifier);
-        assert(format && "FileFeature with unregistered file format");
-        format->writeToFile(context, userLogger, *m_valueTreeRoot, data.m_filePath);
-        if (m_saveHashWhenSaved != m_saveHash) {
-            setChanged(Changes::NodeLabelChanged);
-            m_saveHashWhenSaved = m_saveHash;
-        }
-        return true;
-    } catch (const std::exception& e) {
-        userLogger.logError() << "Failed to write output for TargetFileNode (id=" << data.m_id << "): " << e.what();
+    const TargetFileFormat* format = context.m_targetFileFormatReg.getEntryByIdentifier(data.m_factoryIdentifier);
+    assert(format && "FileFeature with unregistered file format");
+    const auto writeResult = format->writeToFile(context, userLogger, *m_valueTreeRoot, data.m_filePath);
+    if (!writeResult) {
+        userLogger.logError() << "Failed to write output for TargetFileNode (id=" << data.m_id
+                              << "): " << writeResult.error().toString();
+        return false;
     }
-    return false;
+
+    if (m_saveHashWhenSaved != m_saveHash) {
+        setChanged(Changes::NodeLabelChanged);
+        m_saveHashWhenSaved = m_saveHash;
+    }
+    return true;
 }
 
 void babelwires::TargetFileNode::doProcess(UserLogger& userLogger) {

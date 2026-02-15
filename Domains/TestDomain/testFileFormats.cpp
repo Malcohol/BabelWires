@@ -111,11 +111,18 @@ testDomain::TestTargetFileFormat::createNewValue(const babelwires::ProjectContex
     return std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, getTestFileType());
 }
 
-void testDomain::TestTargetFileFormat::writeToFile(const babelwires::ProjectContext& projectContext,
-                                                  babelwires::UserLogger& userLogger,
-                                                  const babelwires::ValueTreeRoot& contents,
-                                                  const std::filesystem::path& path) const {
-    std::ofstream os(path);    
+babelwires::Result testDomain::TestTargetFileFormat::writeToFile(const babelwires::ProjectContext& projectContext,
+                                                                  babelwires::UserLogger& userLogger,
+                                                                  const babelwires::ValueTreeRoot& contents,
+                                                                  const std::filesystem::path& path) const {
+    std::ofstream os(path);
+    if (!os.is_open()) {
+        return babelwires::Error() << "Failed to open file at " << path << " for writing";
+    }
     TestSimpleRecordType::ConstInstance instance{contents.getChild(0)->as<babelwires::ValueTreeNode>()};
-    TestSourceFileFormat::writeToTestFile(path, instance.getintR0().get(), instance.getintR1().get());
+    os << s_fileFormat << " " << instance.getintR0().get() << " " << instance.getintR1().get() << "\n";
+    if (!os.good()) {
+        return babelwires::Error() << "Failed to write file at " << path;
+    }
+    return {};
 }

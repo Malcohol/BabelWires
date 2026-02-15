@@ -24,7 +24,8 @@ namespace {
         fileFeature->setToDefault();
         testDomain::TestSimpleRecordType::Instance instance{fileFeature->getChild(0)->as<babelwires::ValueTreeNode>()};
         instance.getintR0().set(value);
-        fileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log, *fileFeature, path);
+        EXPECT_TRUE(fileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log,
+                                            *fileFeature, path));
     }
 } // namespace
 

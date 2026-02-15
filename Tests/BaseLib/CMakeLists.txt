@@ -4,6 +4,7 @@ SET( COMMON_TESTS_SRCS
    commonTests.cpp
    dataBundleTest.cpp
    dataSourceTest.cpp
+   fileDataSinkTest.cpp
    filePathTest.cpp
    enumFlagsTest.cpp
    exceptionTest.cpp
