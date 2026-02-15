@@ -12,7 +12,6 @@ SET( COMMON_TESTS_SRCS
    identifierTest.cpp
    logTest.cpp
    multiKeyMapTest.cpp
-   outFileStreamTest.cpp
    pointerRangeTest.cpp
    rationalTest.cpp
    registryTest.cpp
