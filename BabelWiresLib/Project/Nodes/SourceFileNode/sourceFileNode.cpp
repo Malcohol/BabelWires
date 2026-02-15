@@ -88,11 +88,20 @@ bool babelwires::SourceFileNode::reload(const ProjectContext& context, UserLogge
             throw ModelException() << "No file name";
         }
 
-        setValueTreeRoot(format.loadFromFile(data.m_filePath, context, userLogger));
+        auto result = format.loadFromFile(data.m_filePath, context, userLogger);
+        if (!result) {
+            userLogger.logError() << "Source File Node id=" << data.m_id << " could not be loaded: " << result.error().toString();
+            setInternalFailure(result.error().toString());
+            auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier());
+            failure->setToDefault();
+            setValueTreeRoot(std::move(failure));
+            return false;
+        }
+        setValueTreeRoot(std::move(*result));
         clearInternalFailure();
         return true;
     } catch (const RegistryException& e) {
-        userLogger.logError() << "Could not create Source File Feature id=" << data.m_id << ": " << e.what();
+        userLogger.logError() << "Could not create Source File Node id=" << data.m_id << ": " << e.what();
         setFactoryName(data.m_factoryIdentifier);
         setInternalFailure(e.what());
         // A dummy root
@@ -100,7 +109,7 @@ bool babelwires::SourceFileNode::reload(const ProjectContext& context, UserLogge
         failure->setToDefault();
         setValueTreeRoot(std::move(failure));
     } catch (const BaseException& e) {
-        userLogger.logError() << "Source File Feature id=" << data.m_id << " could not be loaded: " << e.what();
+        userLogger.logError() << "Source File Node id=" << data.m_id << " could not be loaded: " << e.what();
         setInternalFailure(e.what());
         // A dummy file root which allows the user to change the file via the context menu.
         auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier());

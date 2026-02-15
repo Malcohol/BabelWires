@@ -8,6 +8,7 @@
 #include <BaseLib/IO/fileDataSource.hpp>
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <BaseLib/Identifiers/registeredIdentifier.hpp>
+#include <BaseLib/Utilities/result.hpp>
 #include <BaseLib/exceptions.hpp>
 
 #include <Domains/TestDomain/testRecordType.hpp>
@@ -55,27 +56,32 @@ void testDomain::TestSourceFileFormat::writeToTestFile(const std::filesystem::pa
     fs << s_fileFormat << " " << r0 << " " << r1 << "\n";
 }
 
-std::tuple<int, int> testDomain::TestSourceFileFormat::getFileData(const std::filesystem::path& path) {
+babelwires::ResultT<std::tuple<int, int>> testDomain::TestSourceFileFormat::getFileData(const std::filesystem::path& path) {
+    std::ifstream is(path);
+    if (!is.is_open()) {
+        return babelwires::Error() << "Failed to open file at " << path;
+    }
+    
     std::string formatId;
     int r0, r1;
-    try {
-        std::ifstream is(path);
-        is.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-        is >> formatId >> r0 >> r1;
-    } catch (...) {
-        throw babelwires::ParseException() << "Failed to parse file at " << path;
+    
+    if (!(is >> formatId >> r0 >> r1)) {
+        return babelwires::Error() << "Failed to parse file at " << path;
     }
+    
     if (formatId != s_fileFormat) {
-        throw babelwires::ParseException() << "File at " << path << " was not in the expected format";
+        return babelwires::Error() << "File at " << path << " was not in the expected format";
     }
-    return {r0, r1};
+    
+    return std::tuple{r0, r1};
 }
 
-std::unique_ptr<babelwires::ValueTreeRoot>
+babelwires::ResultT<std::unique_ptr<babelwires::ValueTreeRoot>>
 testDomain::TestSourceFileFormat::loadFromFile(const std::filesystem::path& path,
                                               const babelwires::ProjectContext& projectContext,
                                               babelwires::UserLogger& userLogger) const {
-    auto [r0, r1] = getFileData(path);
+    ASSIGN_OR_ERROR(auto result, getFileData(path));
+    auto [r0, r1] = result;
     auto newFeature = std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, getTestFileType());
     newFeature->setToDefault();
     TestSimpleRecordType::Instance instance{newFeature->getChild(0)->as<babelwires::ValueTreeNode>()};

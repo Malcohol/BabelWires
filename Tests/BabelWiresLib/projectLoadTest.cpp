@@ -34,7 +34,9 @@ TEST(ProjectLoadTest, loadAndProcessTestProject) {
     project.tryToSaveAllTargets();
 
     ASSERT_TRUE(std::filesystem::exists(testTargetFile));
-    const auto [r0, r1] = testDomain::TestSourceFileFormat::getFileData(testTargetFile);
+    const auto fileDataResult = testDomain::TestSourceFileFormat::getFileData(testTargetFile);
+    ASSERT_TRUE(fileDataResult.has_value());
+    const auto [r0, r1] = *fileDataResult;
     EXPECT_EQ(r0, 7);
     EXPECT_EQ(r1, 0);
 }

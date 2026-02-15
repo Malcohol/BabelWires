@@ -21,11 +21,11 @@ namespace testDomain {
         TestSourceFileFormat();
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
-        std::unique_ptr<babelwires::ValueTreeRoot> loadFromFile(const std::filesystem::path& path,
+        babelwires::ResultT<std::unique_ptr<babelwires::ValueTreeRoot>> loadFromFile(const std::filesystem::path& path,
                                                               const babelwires::ProjectContext& projectContext,
                                                               babelwires::UserLogger& userLogger) const override;
 
-        static std::tuple<int, int> getFileData(const std::filesystem::path& path);
+        static babelwires::ResultT<std::tuple<int, int>> getFileData(const std::filesystem::path& path);
         static void writeToTestFile(const std::filesystem::path& path, int r0 = 0, int r1 = 0);
     };
 

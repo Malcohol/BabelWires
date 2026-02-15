@@ -443,21 +443,27 @@ TEST(ProjectTest, saveTarget) {
     testEnvironment.m_project.tryToSaveTarget(elementId);
 
     {
-        auto [r0, r1] = testDomain::TestSourceFileFormat::getFileData(tempFilePath);
+        auto fileDataResult0 = testDomain::TestSourceFileFormat::getFileData(tempFilePath);
+        ASSERT_TRUE(fileDataResult0.has_value());
+        auto [r0, r1] = *fileDataResult0;
         EXPECT_EQ(r0, 47);
     }
 
     instance.getintR0().set(30);
     testEnvironment.m_project.tryToSaveTarget(elementId);
     {
-        auto [r0, r1] = testDomain::TestSourceFileFormat::getFileData(tempFilePath);
+        auto fileDataResult1 = testDomain::TestSourceFileFormat::getFileData(tempFilePath);
+        ASSERT_TRUE(fileDataResult1.has_value());
+        auto [r0, r1] = *fileDataResult1;
         EXPECT_EQ(r0, 30);
     }
 
     instance.getintR0().set(79);
     testEnvironment.m_project.tryToSaveAllTargets();
     {
-        auto [r0, r1] = testDomain::TestSourceFileFormat::getFileData(tempFilePath);
+        auto fileDataResult2 = testDomain::TestSourceFileFormat::getFileData(tempFilePath);
+        ASSERT_TRUE(fileDataResult2.has_value());
+        auto [r0, r1] = *fileDataResult2;
         EXPECT_EQ(r0, 79);
     }
 
