@@ -48,7 +48,6 @@ namespace babelwires {
     class IoException : public ExceptionWithStream<IoException> {};
     class AudioIoException : public ExceptionWithStream<AudioIoException, IoException> {};
     class FileIoException : public ExceptionWithStream<FileIoException, IoException> {};
-    class ParseException : public ExceptionWithStream<ParseException, FileIoException> {};
 
     class MathException : public ExceptionWithStream<MathException> {};
 
