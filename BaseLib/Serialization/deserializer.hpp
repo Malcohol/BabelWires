@@ -160,7 +160,6 @@ struct babelwires::Deserializer::BaseIterator {
     BaseIterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer,
                  std::string typeName = std::string());
     BaseIterator(BaseIterator&&) = default;
-    BaseIterator& operator=(BaseIterator&&) = default;
     ~BaseIterator();
 
   protected:
