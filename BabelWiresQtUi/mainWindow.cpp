@@ -311,20 +311,20 @@ void babelwires::MainWindow::openProject() {
 
 bool babelwires::MainWindow::trySaveProject(const QString& filePath) {
     while (1) {
-        try {
-            std::string filePathStr = filePath.toStdString();
-            m_userLogger.logInfo() << "Save project to \"" << filePathStr << '"';
-            ModifyModelScope scope(m_projectGraphModel);
-            ProjectSerialization::saveToFile(filePathStr, scope.getProject().extractProjectData());
+        std::string filePathStr = filePath.toStdString();
+        m_userLogger.logInfo() << "Save project to \"" << filePathStr << '"';
+        ModifyModelScope scope(m_projectGraphModel);
+        auto saveResult = ProjectSerialization::saveToFile(filePathStr, scope.getProject().extractProjectData());
+        if (saveResult) {
             scope.getCommandManager().setCursor();
             return true;
-        } catch (FileIoException& e) {
-            m_userLogger.logError() << "The project could not be saved: " << e.what();
-            if (showErrorMessageBox(this, tr("The project could not be saved."), e.what(),
-                                    (QMessageBox::Retry | QMessageBox::Cancel),
-                                    QMessageBox::Retry) == QMessageBox::Cancel) {
-                return false;
-            }
+        }
+
+        m_userLogger.logError() << "The project could not be saved: " << saveResult.error().toString();
+        if (showErrorMessageBox(this, tr("The project could not be saved."), saveResult.error().toString().c_str(),
+                                (QMessageBox::Retry | QMessageBox::Cancel),
+                                QMessageBox::Retry) == QMessageBox::Cancel) {
+            return false;
         }
     }
 }

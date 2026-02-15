@@ -56,14 +56,15 @@ void babelwires::DataSerialization<BUNDLE>::saveToStream(std::ostream& os, const
 }
 
 template <typename BUNDLE>
-void babelwires::DataSerialization<BUNDLE>::saveToFile(const std::filesystem::path& pathToFile, Data data) {
-    try {
-        OutFileStream os(pathToFile);
-        saveToStream(os, pathToFile, std::move(data));
-        os.close();
-    } catch (const std::exception&) {
-        throw FileIoException() << "Failed to save the project to: " << pathToFile;
+babelwires::Result babelwires::DataSerialization<BUNDLE>::saveToFile(const std::filesystem::path& pathToFile,
+                                                                      Data data) {
+    std::ofstream os(pathToFile);
+    saveToStream(os, pathToFile, std::move(data));
+    os.close();
+    if (!os.good()) {
+        return Error() << "Failed to save data to: " << pathToFile;
     }
+    return {};
 }
 
 template <typename BUNDLE>

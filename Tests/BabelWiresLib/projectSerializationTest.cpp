@@ -62,7 +62,7 @@ TEST(ProjectSerializationTest, saveLoadFile) {
         testUtils::TestProjectData testProjectData;
         testProjectData.resolvePathsInCurrentContext(testEnvironment.m_projectContext);
 
-        babelwires::ProjectSerialization::saveToFile(tempFile, std::move(testProjectData));
+        EXPECT_TRUE(babelwires::ProjectSerialization::saveToFile(tempFile, std::move(testProjectData)));
     }
 
     {

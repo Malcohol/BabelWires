@@ -8,10 +8,8 @@
 #pragma once
 
 #include <BaseLib/DataContext/dataContext.hpp>
-#include <BaseLib/IO/outFileStream.hpp>
 #include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
 #include <BaseLib/Serialization/XML/xmlSerializer.hpp>
-#include <BaseLib/exceptions.hpp>
 
 #include <filesystem>
 #include <fstream>
@@ -32,8 +30,8 @@ namespace babelwires {
         static ResultT<Data> loadFromFile(const std::filesystem::path& pathToFile, const DataContext& context,
                                  UserLogger& userLogger);
 
-        /// Throws a FileIoException on failure.
-        static void saveToFile(const std::filesystem::path& pathToFile, Data data);
+        /// Returns an error on failure.
+        static Result saveToFile(const std::filesystem::path& pathToFile, Data data);
 
         /// Load the data from the given string, resolving the data in the given context and pathToFile.
         /// pathToFile may be empty, in which case only absolute file paths in the data can be resolved.
