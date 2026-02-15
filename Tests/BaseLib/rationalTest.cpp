@@ -223,3 +223,96 @@ TEST(RationalTest, divmod) {
         EXPECT_EQ(std::get<1>(divmod), -Rational(1, 6));
     }
 }
+
+TEST(RationalTest, continuedFractionApproximation) {
+    using ComponentType = Rational::ComponentType;
+    const ComponentType maxComp = std::numeric_limits<ComponentType>::max();
+
+    // Helper: check that a result's value (as double) is close to expected.
+    auto expectClose = [](Rational result, double expected, double relTol = 1e-8) {
+        double actual = static_cast<double>(result.getNumerator()) /
+                        static_cast<double>(result.getDenominator());
+        EXPECT_NEAR(actual, expected, std::abs(expected) * relTol);
+    };
+
+    // GCD reduction avoids approximation entirely.
+    // setComponents(2 * maxComp, 3 * maxComp) reduces to 2/3 exactly.
+    {
+        Rational result = Rational(maxComp, 3) * Rational(2, maxComp);
+        EXPECT_EQ(result, Rational(2, 3));
+    }
+
+    // Denominator overflow, known exact result.
+    // Rational(3, 7) * Rational(maxComp, maxComp - 1) calls
+    // setComponents(3 * maxComp, 7 * (maxComp - 1)).
+    // After GCD reduction by 3: setComponents(maxComp, 5010795174).
+    // The CF converges to 920350134 / 2147483645 (verified by hand-tracing).
+    {
+        Rational result = Rational(3, 7) * Rational(maxComp, maxComp - 1);
+        EXPECT_EQ(result, Rational(920350134, 2147483645));
+        expectClose(result, 3.0 / 7.0, 1e-9);
+    }
+
+    // Same as above but negative: sign should be preserved.
+    {
+        Rational result = Rational(-3, 7) * Rational(maxComp, maxComp - 1);
+        EXPECT_EQ(result, Rational(-920350134, 2147483645));
+        EXPECT_LT(result.getNumerator(), 0);
+        EXPECT_GT(result.getDenominator(), 0);
+    }
+
+    // Large numerator with small denominator (exercises the p-bound on k).
+    // Rational(maxComp, 3) + Rational(maxComp, 5) calls
+    // setComponents(8 * maxComp, 15). After GCD = 1: 17179869176 / 15.
+    // CF: [1145324611; 1, 2, ...]. The convergent 1145324612/1 fits;
+    // the next one (3435973835/3) does not, and the p-bound forces k=0
+    // so the result stays at 1145324612.
+    {
+        Rational result = Rational(maxComp, 3) + Rational(maxComp, 5);
+        EXPECT_EQ(result, Rational(1145324612));
+        expectClose(result, 8.0 * maxComp / 15.0, 1e-6);
+    }
+
+    // Integer overflow: value exceeds maxComp (exercises the q1=0 path).
+    // Rational(maxComp, 1) * Rational(2, 1) calls setComponents(2 * maxComp, 1).
+    // The integer part (2 * maxComp) exceeds maxComp on the first CF iteration.
+    // Best possible approximation: clamp to maxComp / 1.
+    {
+        Rational result = Rational(maxComp, 1) * Rational(2, 1);
+        EXPECT_EQ(result, Rational(maxComp));
+    }
+
+    // Squaring values near sqrt(maxComp) causes both numerator and
+    // denominator to overflow. 46341^2 = 2147486281 > maxComp,
+    // 46340^2 = 2147393600 < maxComp. True value ≈ 1.0000432.
+    {
+        Rational result = Rational(46341, 46340) * Rational(46341, 46340);
+        EXPECT_GT(result.getNumerator(), 0);
+        EXPECT_GT(result.getDenominator(), 0);
+        EXPECT_LE(result.getNumerator(), maxComp);
+        EXPECT_LE(result.getDenominator(), maxComp);
+        double trueValue = (46341.0 / 46340.0) * (46341.0 / 46340.0);
+        expectClose(result, trueValue, 1e-8);
+    }
+
+    // Both components massively overflow (product of two large primes).
+    // 2147483629 and 2147483587 are primes, so no GCD reduction occurs.
+    // Result should be close to their ratio ≈ 1.0000000196.
+    {
+        Rational result = Rational(2147483629, 2147483587) *
+                          Rational(2147483629, 2147483587);
+        EXPECT_GT(result.getDenominator(), 0);
+        EXPECT_LE(result.getNumerator(), maxComp);
+        EXPECT_LE(result.getDenominator(), maxComp);
+        double trueValue = (2147483629.0 / 2147483587.0) *
+                           (2147483629.0 / 2147483587.0);
+        expectClose(result, trueValue, 1e-6);
+    }
+
+    // Division creating extreme values: (maxComp-1)*(maxComp-2) / 6
+    // is far beyond maxComp, so the value clamps to maxComp / 1.
+    {
+        Rational result = Rational(maxComp - 1, 2) / Rational(3, maxComp - 2);
+        EXPECT_EQ(result, Rational(maxComp));
+    }
+}

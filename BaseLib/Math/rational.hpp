@@ -30,7 +30,7 @@ namespace babelwires {
         ComponentType getNumerator() const { return m_numerator; }
         ComponentType getDenominator() const { return m_denominator; }
 
-        /// These can throw a MathException if the result is not representable.
+        /// These approximate if the result is not representable.
         Rational operator*(const Rational& other) const;
         Rational operator/(const Rational& other) const;
         Rational operator+(const Rational& other) const;
