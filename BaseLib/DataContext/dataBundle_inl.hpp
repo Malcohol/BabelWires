@@ -1,6 +1,8 @@
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 
+#include <vector>
+
 namespace babelwires {
     namespace Detail {
 
@@ -15,13 +17,19 @@ namespace babelwires {
                 if (sourceId.getDiscriminator() != 0) {
                     IDENTIFIER newId = sourceId;
                     newId.setDiscriminator(0);
-                    // This can throw, but an exception here is only meaningful in the loading case.
-                    // In the saving case, the exception is caught and triggers an assertion.
-                    const babelwires::IdentifierRegistry::ValueType fieldData =
-                        m_sourceReg->getDeserializedIdentifierData(sourceId);
-                    newId = m_targetReg->addIdentifierWithMetadata(newId, *std::get<1>(fieldData),
-                                                                   *std::get<2>(fieldData), m_authority);
-                    sourceId.setDiscriminator(newId.getDiscriminator());
+                    if (const auto fieldDataResult = m_sourceReg->getDeserializedIdentifierData(sourceId)) {
+                        const auto& fieldData = *fieldDataResult;
+                        newId = m_targetReg->addIdentifierWithMetadata(newId, *std::get<1>(fieldData),
+                                                                       *std::get<2>(fieldData), m_authority);
+                        // TODO Shouldn't this be sourceId = IDENTIFIER::tryMakeFrom(newId)?
+                        sourceId.setDiscriminator(newId.getDiscriminator());
+                    } else {
+                        // In the saving case (isTemporary) an unregistered identifier means something is broken.
+                        assert((m_authority != babelwires::IdentifierRegistry::Authority::isTemporary) &&
+                               "A field with a discriminator did not resolve.");
+                        // In the loading case (isProvisional), log the identifier so we can issue an error later.
+                        m_unresolvedIdentifiers.emplace_back(sourceId);
+                    }
                 }
             }
 
@@ -29,9 +37,22 @@ namespace babelwires {
             void operator()(babelwires::MediumId& identifier) override { visit(identifier); }
             void operator()(babelwires::LongId& identifier) override { visit(identifier); }
 
+            Result getResult() const {
+                if (!m_unresolvedIdentifiers.empty()) {
+                    Error error; 
+                    error << "The following identifiers with discriminators did not resolve: ";
+                    for (const auto& id : m_unresolvedIdentifiers) {
+                        error << id << " ";
+                    }
+                    return error;
+                }
+                return {};
+            }
+
             const SOURCE_REG& m_sourceReg;
             TARGET_REG& m_targetReg;
             babelwires::IdentifierRegistry::Authority m_authority;
+            std::vector<LongId> m_unresolvedIdentifiers;
         };
     } // namespace Detail
 } // namespace babelwires
@@ -39,21 +60,19 @@ namespace babelwires {
 template <typename DATA>
 babelwires::DataBundle<DATA>::DataBundle(std::filesystem::path pathToFile, DATA&& data)
     : m_data(std::move(data))
-    , m_pathToFile(pathToFile) {
-}
+    , m_pathToFile(pathToFile) {}
 
-template <typename DATA>
-void babelwires::DataBundle<DATA>::interpretInCurrentContext() {
+template <typename DATA> void babelwires::DataBundle<DATA>::interpretInCurrentContext() {
     interpretIdentifiersInCurrentContext();
     interpretFilePathsInCurrentProjectPath();
     interpretAdditionalMetadataInCurrentContext();
 }
 
 template <typename DATA>
-DATA babelwires::DataBundle<DATA>::resolveAgainstCurrentContext(const DataContext& context,
-                                                                      const std::filesystem::path& pathToFile,
-                                                                      UserLogger& userLogger) && {
-    resolveIdentifiersAgainstCurrentContext();
+babelwires::ResultT<DATA> babelwires::DataBundle<DATA>::resolveAgainstCurrentContext(const DataContext& context,
+                                                                const std::filesystem::path& pathToFile,
+                                                                UserLogger& userLogger) && {
+    DO_OR_ERROR(resolveIdentifiersAgainstCurrentContext());
     resolveFilePathsAgainstCurrentProjectPath(pathToFile, userLogger);
     adaptDataToAdditionalMetadata(context, userLogger);
     return std::move(m_data);
@@ -61,19 +80,21 @@ DATA babelwires::DataBundle<DATA>::resolveAgainstCurrentContext(const DataContex
 
 template <typename DATA>
 template <typename SOURCE_REG, typename TARGET_REG>
-void babelwires::DataBundle<DATA>::convertIdentifiers(SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
-                    babelwires::IdentifierRegistry::Authority authority) {
+babelwires::Result babelwires::DataBundle<DATA>::convertIdentifiers(SOURCE_REG&& sourceReg, TARGET_REG&& targetReg,
+                                                      babelwires::IdentifierRegistry::Authority authority) {
     Detail::IdentifierVisitor<SOURCE_REG, TARGET_REG> visitor(sourceReg, targetReg, authority);
     visitIdentifiers(visitor);
+    return visitor.getResult();
 }
 
 template <typename DATA> void babelwires::DataBundle<DATA>::interpretIdentifiersInCurrentContext() {
     IdentifierRegistry::ReadAccess sourceRegistry = IdentifierRegistry::read();
-    try {
-        convertIdentifiers(sourceRegistry, &m_identifierRegistry, IdentifierRegistry::Authority::isTemporary);
-    } catch (const ParseException&) {
-        assert(false && "A field with a discriminator did not resolve.");
-    }
+#ifndef NDEBUG
+    auto result = 
+#endif
+    convertIdentifiers(sourceRegistry, &m_identifierRegistry, IdentifierRegistry::Authority::isTemporary);
+    // This problem should be caught by an earlier assert, but we check it here just in case.
+    assert(result && "The current context's IdentifierRegistry is missing identifiers that are present in the data");
 }
 
 template <typename DATA> void babelwires::DataBundle<DATA>::interpretFilePathsInCurrentProjectPath() {
@@ -86,16 +107,15 @@ template <typename DATA> void babelwires::DataBundle<DATA>::interpretFilePathsIn
     }
 }
 
-template <typename DATA> void babelwires::DataBundle<DATA>::resolveIdentifiersAgainstCurrentContext() {
+template <typename DATA> babelwires::Result babelwires::DataBundle<DATA>::resolveIdentifiersAgainstCurrentContext() {
     IdentifierRegistry::WriteAccess targetRegistry = IdentifierRegistry::write();
-    convertIdentifiers(&m_identifierRegistry, targetRegistry, IdentifierRegistry::Authority::isProvisional);
+    return convertIdentifiers(&m_identifierRegistry, targetRegistry, IdentifierRegistry::Authority::isProvisional);
 }
 
 template <typename DATA>
 void babelwires::DataBundle<DATA>::resolveFilePathsAgainstCurrentProjectPath(const std::filesystem::path& pathToFile,
-                                                                       UserLogger& userLogger) {
-    const std::filesystem::path newBase =
-        pathToFile.empty() ? std::filesystem::path() : pathToFile.parent_path();
+                                                                             UserLogger& userLogger) {
+    const std::filesystem::path newBase = pathToFile.empty() ? std::filesystem::path() : pathToFile.parent_path();
     const std::filesystem::path oldBase =
         m_pathToFile.empty() ? std::filesystem::path() : std::filesystem::path(m_pathToFile).parent_path();
     babelwires::FilePathVisitor visitor = [&](FilePath& filePath) {
@@ -111,10 +131,12 @@ template <typename DATA> void babelwires::DataBundle<DATA>::serializeContents(Se
     serializer.serializeObject(m_identifierRegistry);
 }
 
-template <typename DATA> void babelwires::DataBundle<DATA>::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("filePath", m_pathToFile, babelwires::Deserializer::IsOptional::Optional);
-    m_data = std::move(*deserializer.deserializeObject<DATA>(DATA::serializationType));
-    deserializeAdditionalMetadata(deserializer);
-    m_identifierRegistry =
-        std::move(*deserializer.deserializeObject<IdentifierRegistry>(IdentifierRegistry::serializationType));
+template <typename DATA>
+babelwires::Result babelwires::DataBundle<DATA>::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.tryDeserializeValue("filePath", m_pathToFile));
+    DO_OR_ERROR(deserializer.deserializeObjectByValue<DATA>(m_data, DATA::serializationType));
+    DO_OR_ERROR(deserializeAdditionalMetadata(deserializer));
+    DO_OR_ERROR(deserializer.deserializeObjectByValue<IdentifierRegistry>(m_identifierRegistry,
+                                                                          IdentifierRegistry::serializationType));
+    return {};
 }

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BaseLib/common.hpp>
+#include <BaseLib/Utilities/result.hpp>
 
 namespace babelwires {
 
@@ -19,12 +20,12 @@ namespace babelwires {
         virtual ~DataSource();
 
         /// Consume a byte.
-        /// Throws if there are no more bytes.
-        Byte getNextByte();
+        /// Returns an error if there are no more bytes.
+        ResultT<Byte> getNextByte();
 
         /// Peek at the next byte without consuming it.
-        /// Throws if there are no more bytes.
-        Byte peekNextByte();
+        /// Returns an error if there are no more bytes.
+        ResultT<Byte> peekNextByte();
 
         /// Return the position, within the whole source, of the last byte read.
         int getAbsolutePosition() const;
@@ -34,7 +35,7 @@ namespace babelwires {
 
         /// Set rewind point.
         /// If you set a new rewind point, read or peek more than numBytes, the rewind point is discarded.
-        int setRewindPoint(int numBytes);
+        ResultT<int> setRewindPoint(int numBytes);
 
         /// Reset the stream to the last rewind point.
         void rewind();
@@ -42,7 +43,7 @@ namespace babelwires {
       protected:
         virtual bool doIsEof() = 0;
 
-        virtual babelwires::Byte doGetNextByte() = 0;
+        virtual ResultT<babelwires::Byte> doGetNextByte() = 0;
 
       private:
         int getRemainingBufferSize() const;

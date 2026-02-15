@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 
 babelwires::MapProjectEntry::MapProjectEntry(std::unique_ptr<MapEntryData> data)
-    : m_data(std::move(data)), m_validityOfEntry(Result::success) {}
+    : m_data(std::move(data)), m_validityOfEntry() {}
 
 babelwires::MapProjectEntry::MapProjectEntry(const MapProjectEntry& other)
     : m_data(other.m_data->clone())
@@ -29,11 +29,11 @@ babelwires::Result babelwires::MapProjectEntry::getValidity() const {
 void babelwires::MapProjectEntry::validate(const TypeSystem& typeSystem, const TypePtr& sourceType,
                                            const TypePtr& targetType, bool isLastEntry) {
     if (!sourceType) {
-        m_validityOfEntry = "Source type is invalid.";
+        m_validityOfEntry = Error() << "Source type is invalid.";
         return;
     }
     if (!targetType) {
-        m_validityOfEntry = "Target type is invalid.";
+        m_validityOfEntry = Error() << "Target type is invalid.";
         return;
     }
     m_validityOfEntry = getData().validate(typeSystem, *sourceType, *targetType, isLastEntry);

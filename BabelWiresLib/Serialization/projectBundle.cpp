@@ -50,9 +50,10 @@ namespace {
             serializer.serializeValue("id", m_factoryIdentifier);
             serializer.serializeValue("version", m_factoryVersion);
         }
-        void deserializeContents(babelwires::Deserializer& deserializer) override {
-            deserializer.deserializeValue("id", m_factoryIdentifier);
-            deserializer.deserializeValue("version", m_factoryVersion);
+        babelwires::Result deserializeContents(babelwires::Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeValue("id", m_factoryIdentifier));
+            DO_OR_ERROR(deserializer.deserializeValue("version", m_factoryVersion));
+            return {};
         }
     };
 } // namespace
@@ -68,11 +69,14 @@ void babelwires::ProjectBundle::serializeAdditionalMetadata(Serializer& serializ
     serializer.serializeArray("factoryMetadata", factoryMetadata);
 }
 
-void babelwires::ProjectBundle::deserializeAdditionalMetadata(Deserializer& deserializer) {
-    for (auto it = deserializer.deserializeArray<FactoryInfoPair>("factoryMetadata"); it.isValid(); ++it) {
-        auto fm = it.getObject();
+babelwires::Result babelwires::ProjectBundle::deserializeAdditionalMetadata(Deserializer& deserializer) {
+    ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<FactoryInfoPair>("factoryMetadata"));
+    while (it.isValid()) {
+        ASSIGN_OR_ERROR(auto fm, it.getObject());
         m_factoryMetadata.insert(std::make_pair(std::move(fm->m_factoryIdentifier), fm->m_factoryVersion));
+        DO_OR_ERROR(it.advance());
     }
+    return {};
 }
 
 void babelwires::ProjectBundle::visitIdentifiers(IdentifierVisitor& visitor) {

@@ -14,6 +14,7 @@
 #include <random>
 
 #include <BaseLib/Hash/hash.hpp>
+#include <BaseLib/Utilities/result.hpp>
 
 namespace babelwires {
 
@@ -42,11 +43,10 @@ namespace babelwires {
 
         std::string serializeToString() const;
 
-        /// This throws a parse exception if the uuidText is not in the correct form:
+        /// Returns an error if the uuidText is not of the correct form:
         /// xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-        static Uuid deserializeFromString(std::string_view uuidText);
-
-        /// Write the UUID in textual form to the stream.
+        static ResultT<Uuid> deserializeFromString(std::string_view uuidText);
+        
         friend std::ostream& operator<<(std::ostream& os, const Uuid& uuid) { return os << uuid.serializeToString(); }
 
         friend bool operator==(const Uuid& a, const Uuid& b) { return (a.m_high == b.m_high) && (a.m_low == b.m_low); }

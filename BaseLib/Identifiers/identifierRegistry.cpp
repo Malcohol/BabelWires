@@ -34,11 +34,12 @@ void babelwires::IdentifierRegistry::InstanceData::serializeContents(Serializer&
     serializer.serializeValue("uuid", m_uuid);
 }
 
-void babelwires::IdentifierRegistry::InstanceData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("id", m_identifier);
-    deserializer.deserializeValue("name", m_fieldName);
-    deserializer.deserializeValue("uuid", m_uuid);
+babelwires::Result babelwires::IdentifierRegistry::InstanceData::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.deserializeValue("id", m_identifier));
+    DO_OR_ERROR(deserializer.deserializeValue("name", m_fieldName));
+    DO_OR_ERROR(deserializer.deserializeValue("uuid", m_uuid));
     m_authority = Authority::isProvisional;
+    return {};
 }
 
 babelwires::LongId babelwires::IdentifierRegistry::addLongIdWithMetadata(babelwires::LongId identifier,
@@ -91,31 +92,13 @@ babelwires::LongId babelwires::IdentifierRegistry::addLongIdWithMetadata(babelwi
 babelwires::MediumId babelwires::IdentifierRegistry::addMediumIdWithMetadata(babelwires::MediumId identifier,
                                                                              const std::string& name, const Uuid& uuid,
                                                                              Authority authority) {
-#ifndef NDEBUG
-    try {
-#endif
-        return MediumId(addLongIdWithMetadata(identifier, name, uuid, authority));
-#ifndef NDEBUG
-    } catch (const ParseException&) {
-        assert(false && "Another identifier was previously registered with this uuid");
-        return {};
-    }
-#endif
+    return MediumId::makeFrom(addLongIdWithMetadata(identifier, name, uuid, authority));
 }
 
 babelwires::ShortId babelwires::IdentifierRegistry::addShortIdWithMetadata(babelwires::ShortId identifier,
                                                                            const std::string& name, const Uuid& uuid,
                                                                            Authority authority) {
-#ifndef NDEBUG
-    try {
-#endif
-        return ShortId(addLongIdWithMetadata(identifier, name, uuid, authority));
-#ifndef NDEBUG
-    } catch (const ParseException&) {
-        assert(false && "Another identifier was previously registered with this uuid");
-        return {};
-    }
-#endif
+    return ShortId::makeFrom(addLongIdWithMetadata(identifier, name, uuid, authority));
 }
 
 const babelwires::IdentifierRegistry::InstanceData*
@@ -133,14 +116,14 @@ babelwires::IdentifierRegistry::getInstanceData(LongId identifier) const {
     return nullptr;
 }
 
-babelwires::IdentifierRegistry::ValueType
+babelwires::ResultT<babelwires::IdentifierRegistry::ValueType>
 babelwires::IdentifierRegistry::getDeserializedIdentifierData(LongId identifier) const {
     if (const babelwires::IdentifierRegistry::InstanceData* data = getInstanceData(identifier)) {
         return ValueType{identifier, &data->m_fieldName, &data->m_uuid};
     }
-    throw ParseException() << "Identifier \"" << identifier
-                           << "\" not found in the identifier metadata. Note that unregistered fields (those with no "
-                              "discriminator) are allowed";
+    return Error() << "Identifier \"" << identifier
+                   << "\" not found in the identifier metadata. Note that unregistered fields (those with no "
+                      "discriminator) are allowed";
 }
 
 std::string babelwires::IdentifierRegistry::getName(LongId identifier) const {
@@ -240,32 +223,34 @@ void babelwires::IdentifierRegistry::serializeContents(Serializer& serializer) c
     serializer.serializeArray("identifiers", contents);
 }
 
-void babelwires::IdentifierRegistry::deserializeContents(Deserializer& deserializer) {
-    for (auto it = deserializer.deserializeArray<InstanceData>("identifiers", Deserializer::IsOptional::Optional);
-         it.isValid(); ++it) {
-        std::unique_ptr<InstanceData> instanceDataPtr = it.getObject();
+babelwires::Result babelwires::IdentifierRegistry::deserializeContents(Deserializer& deserializer) {
+    ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<InstanceData>("identifiers"));
+    while (it.isValid()) {
+        ASSIGN_OR_ERROR(std::unique_ptr<InstanceData> instanceDataPtr, it.getObject());
         InstanceData* instanceData = instanceDataPtr.get();
 
         const ShortId::Discriminator discriminator = instanceDataPtr->m_identifier.getDiscriminator();
         if (discriminator == 0) {
-            throw ParseException() << "An identifier in the identifier metadata had no discriminator";
+            return Error() << "An identifier in the identifier metadata had no discriminator";
         }
 
         auto [uit, wasInserted] = m_uuidToInstanceDataMap.insert(
             std::pair<Uuid, std::unique_ptr<InstanceData>>(instanceData->m_uuid, std::move(instanceDataPtr)));
         if (!wasInserted) {
-            throw ParseException() << "An identifier with uuid \"" << uit->first << "\" was duplicated";
+            return Error() << "An identifier with uuid \"" << uit->first << "\" was duplicated";
         }
 
         Data& data = m_instanceDatasFromIdentifier[instanceData->m_identifier.withoutDiscriminator()];
 
         data.m_instanceDatas.resize(discriminator);
         if (data.m_instanceDatas[discriminator - 1]) {
-            throw ParseException() << "The identifier registry already has an identifier \""
-                                   << instanceData->m_identifier << "\"";
+            return Error() << "The identifier registry already has an identifier \"" << instanceData->m_identifier
+                           << "\"";
         }
         data.m_instanceDatas[discriminator - 1] = uit->second.get();
+        DO_OR_ERROR(it.advance());
     }
+    return {};
 }
 
 babelwires::IdentifierRegistryScope::IdentifierRegistryScope()

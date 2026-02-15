@@ -16,29 +16,81 @@
 
 void babelwires::Rational::setComponents(BigType numerator, BigType denominator) {
     assert(denominator != 0);
+    
+    // Handle sign
     BigType sign = 1;
     if ((numerator * denominator) < 0) {
         sign = -1;
-        numerator = -numerator;
     }
+    numerator = (numerator < 0) ? -numerator : numerator;
+    denominator = (denominator < 0) ? -denominator : denominator;
+    
+    // Handle zero
     if (numerator == 0) {
-        numerator = 0;
-        denominator = 1;
-    } else {
-        BigType g = gcd(numerator, denominator);
-        numerator = numerator / g;
-        denominator = denominator / g;
+        m_numerator = 0;
+        m_denominator = 1;
+        return;
     }
-    numerator *= sign;
+    
+    // Reduce to lowest terms
+    BigType g = gcd(numerator, denominator);
+    numerator = numerator / g;
+    denominator = denominator / g;
+    
     assert(denominator > 0);
-    if ((numerator > std::numeric_limits<ComponentType>::max()) ||
-        (denominator > std::numeric_limits<ComponentType>::max()) ||
-        (numerator < std::numeric_limits<ComponentType>::min())) {
-        // TODO: Consider approximating the result, when possible.
-        throw MathException() << "Unrepresentable rational";
+    
+    const BigType maxComponent = std::numeric_limits<ComponentType>::max();
+    const BigType minComponent = std::numeric_limits<ComponentType>::min();
+    
+    // Check if it fits without approximation
+    if ((numerator <= maxComponent) && (denominator <= maxComponent) && 
+        (sign * numerator >= minComponent)) {
+        m_numerator = static_cast<ComponentType>(sign * numerator);
+        m_denominator = static_cast<ComponentType>(denominator);
+        return;
     }
-    m_numerator = static_cast<ComponentType>(numerator);
-    m_denominator = static_cast<ComponentType>(denominator);
+    
+    // Use continued fractions to find the best approximation
+    // Find p/q where q <= maxComponent and p/q is closest to numerator/denominator
+    BigType p0 = 0, q0 = 1;  // Previous convergent
+    BigType p1 = 1, q1 = 0;  // Previous previous convergent
+    BigType n = numerator;
+    BigType d = denominator;
+    
+    while (d != 0) {
+        BigType a = n / d;  // Integer part (next term in continued fraction)
+        
+        // Compute next convergent: p = a * p1 + p0, q = a * q1 + q0
+        BigType p = a * p1 + p0;
+        BigType q = a * q1 + q0;
+        
+        // Check if this convergent fits in our component type
+        if ((q > maxComponent) || (p > maxComponent)) {
+            // This convergent is too large. Find the largest partial
+            // multiplier k such that both k*p1+p0 and k*q1+q0 fit.
+            BigType kq = (q1 > 0) ? (maxComponent - q0) / q1 : maxComponent;
+            BigType kp = (p1 > 0) ? (maxComponent - p0) / p1 : maxComponent;
+            BigType k = std::min(kq, kp);
+            if (k > 0) {
+                p1 = k * p1 + p0;
+                q1 = k * q1 + q0;
+            }
+            break;
+        }
+        
+        // Move to next iteration
+        p0 = p1; q0 = q1;
+        p1 = p; q1 = q;
+        
+        // Continue with remainder: n/d -> d/(n - a*d)
+        BigType remainder = n - a * d;
+        n = d;
+        d = remainder;
+    }
+    
+    // Use the last valid convergent
+    m_numerator = static_cast<ComponentType>(sign * p1);
+    m_denominator = static_cast<ComponentType>(q1);
 }
 
 babelwires::Rational::Rational(ComponentType numerator, ComponentType denominator) {
@@ -61,8 +113,8 @@ babelwires::Rational babelwires::Rational::operator/(const Rational& other) cons
 }
 
 babelwires::Rational& babelwires::Rational::operator+=(const Rational& other) {
-    BigType numerator = (m_numerator * other.m_denominator) + (m_denominator * other.m_numerator);
-    BigType denominator = m_denominator * other.m_denominator;
+    BigType numerator = (static_cast<BigType>(m_numerator) * other.m_denominator) + (static_cast<BigType>(m_denominator) * other.m_numerator);
+    BigType denominator = static_cast<BigType>(m_denominator) * other.m_denominator;
     setComponents(numerator, denominator);
     return *this;
 }
@@ -291,15 +343,15 @@ babelwires::Rational::PartialParseResult babelwires::Rational::partialParse(std:
     return PartialParseResult::Success;
 }
 
-babelwires::Rational babelwires::Rational::parseString(std::string_view str) {
+babelwires::ResultT<babelwires::Rational> babelwires::Rational::deserializeFromString(std::string_view str) {
     Rational value;
     switch (partialParse(str, value)) {
         case PartialParseResult::Success:
             return value;
         case PartialParseResult::Failure:
-            throw ParseException() << "Could not parse \"" << str << "\" as a rational number";
+            return Error() << "Could not parse \"" << str << "\" as a rational number";
         case PartialParseResult::Truncated:
-            throw ParseException() << "Could not parse \"" << str << "\" as a rational number. Possible truncation";
+            return Error() << "Could not parse \"" << str << "\" as a rational number. Possible truncation";
     }
     return value;
 }

@@ -66,9 +66,8 @@ babelwires::ValueHolder babelwires::RationalValueModel::createValueFromEditorIfD
     assert(lineEditor && "Unexpected editor");
 
     Rational newValue = currentValue;
-    try {
-        newValue = Rational::parseString(lineEditor->text().toStdString());
-    } catch (ParseException& ) {
+    if (const auto parsedValue = Rational::deserializeFromString(lineEditor->text().toStdString())) {
+        newValue = *parsedValue;
     }
 
     if (newValue != currentValue) {

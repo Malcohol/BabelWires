@@ -21,17 +21,20 @@ TEST(DataSource, getNextByte) {
     }
 
     {
-        try {
-            FileDataSource foo(fooPath);
-            EXPECT_EQ(foo.peekNextByte(), 'a');
-            for (int i = 0; i < 26; ++i) {
-                EXPECT_EQ(foo.getAbsolutePosition(), i - 1);
-                EXPECT_EQ(foo.getNextByte(), testContents[i]);
-            }
-            EXPECT_TRUE(foo.isEof());
-        } catch (const std::exception&) {
-            EXPECT_TRUE(false);
+        auto fooResult = FileDataSource::open(fooPath);
+        ASSERT_TRUE(fooResult.has_value());
+        auto foo = std::move(*fooResult);
+        auto peekResult = foo.peekNextByte();
+        ASSERT_TRUE(peekResult.has_value());
+        EXPECT_EQ(*peekResult, 'a');
+        for (int i = 0; i < 26; ++i) {
+            EXPECT_EQ(foo.getAbsolutePosition(), i - 1);
+            auto byteResult = foo.getNextByte();
+            ASSERT_TRUE(byteResult.has_value());
+            EXPECT_EQ(*byteResult, testContents[i]);
         }
+        EXPECT_TRUE(foo.isEof());
+        EXPECT_TRUE(foo.close());
     }
 }
 
@@ -43,21 +46,26 @@ TEST(DataSource, peekNextByte) {
     }
 
     {
-        try {
-            FileDataSource foo(fooPath);
-            for (int i = 0; i < 26; ++i) {
-                EXPECT_EQ(foo.getAbsolutePosition(), i - 1);
-                EXPECT_EQ(foo.peekNextByte(), testContents[i]);
-                EXPECT_EQ(foo.getAbsolutePosition(), i - 1);
-                EXPECT_EQ(foo.peekNextByte(), testContents[i]);
-                EXPECT_EQ(foo.getAbsolutePosition(), i - 1);
-                EXPECT_EQ(foo.getNextByte(), testContents[i]);
-                EXPECT_EQ(foo.getAbsolutePosition(), i);
-            }
-            EXPECT_TRUE(foo.isEof());
-        } catch (const std::exception&) {
-            EXPECT_TRUE(false);
+        auto fooResult = FileDataSource::open(fooPath);
+        ASSERT_TRUE(fooResult.has_value());
+        auto foo = std::move(*fooResult);
+        for (int i = 0; i < 26; ++i) {
+            EXPECT_EQ(foo.getAbsolutePosition(), i - 1);
+            auto peekResult1 = foo.peekNextByte();
+            ASSERT_TRUE(peekResult1.has_value());
+            EXPECT_EQ(*peekResult1, testContents[i]);
+            EXPECT_EQ(foo.getAbsolutePosition(), i - 1);
+            auto peekResult2 = foo.peekNextByte();
+            ASSERT_TRUE(peekResult2.has_value());
+            EXPECT_EQ(*peekResult2, testContents[i]);
+            EXPECT_EQ(foo.getAbsolutePosition(), i - 1);
+            auto byteResult = foo.getNextByte();
+            ASSERT_TRUE(byteResult.has_value());
+            EXPECT_EQ(*byteResult, testContents[i]);
+            EXPECT_EQ(foo.getAbsolutePosition(), i);
         }
+        EXPECT_TRUE(foo.isEof());
+        EXPECT_TRUE(foo.close());
     }
 }
 
@@ -69,58 +77,84 @@ TEST(DataSource, rewind) {
     }
 
     {
-        try {
-            FileDataSource foo(fooPath);
-            EXPECT_EQ(foo.peekNextByte(), 'a');
-            foo.setRewindPoint(10);
-            for (int i = 0; i < 5; ++i) {
-                EXPECT_EQ(foo.getNextByte(), testContents[i]);
-                EXPECT_EQ(foo.getAbsolutePosition(), i);
-            }
-            foo.rewind();
-            for (int i = 0; i < 10; ++i) {
-                EXPECT_EQ(foo.getNextByte(), testContents[i]);
-                EXPECT_EQ(foo.getAbsolutePosition(), i);
-            }
-            foo.rewind();
-            for (int i = 0; i < 5; ++i) {
-                EXPECT_EQ(foo.getNextByte(), testContents[i]);
-                EXPECT_EQ(foo.getAbsolutePosition(), i);
-            }
-            foo.setRewindPoint(10);
-            for (int i = 0; i < 10; ++i) {
-                EXPECT_EQ(foo.getNextByte(), testContents[5 + i]);
-                EXPECT_EQ(foo.getAbsolutePosition(), 5 + i);
-            }
-            foo.rewind();
-            foo.setRewindPoint(5);
-            for (int i = 0; i < 5; ++i) {
-                EXPECT_EQ(foo.getNextByte(), testContents[5 + i]);
-                EXPECT_EQ(foo.getAbsolutePosition(), 5 + i);
-            }
-            foo.rewind();
-            EXPECT_EQ(foo.getNextByte(), testContents[5]);
-            foo.setRewindPoint(3);
-            for (int i = 0; i < 3; ++i) {
-                EXPECT_EQ(foo.getNextByte(), testContents[6 + i]);
-                EXPECT_EQ(foo.getAbsolutePosition(), 6 + i);
-            }
-            foo.rewind();
-            foo.setRewindPoint(20);
-            for (int i = 0; i < 20; ++i) {
-                EXPECT_EQ(foo.getNextByte(), testContents[6 + i]);
-                EXPECT_EQ(foo.getAbsolutePosition(), 6 + i);
-            }
-            EXPECT_TRUE(foo.isEof());
-            foo.rewind();
-            for (int i = 0; i < 20; ++i) {
-                EXPECT_EQ(foo.getNextByte(), testContents[6 + i]);
-                EXPECT_EQ(foo.getAbsolutePosition(), 6 + i);
-            }
-            EXPECT_TRUE(foo.isEof());
-        } catch (const std::exception&) {
-            EXPECT_TRUE(false);
+        auto fooResult = FileDataSource::open(fooPath);
+        ASSERT_TRUE(fooResult.has_value());
+        auto foo = std::move(*fooResult);
+        auto peekResult = foo.peekNextByte();
+        ASSERT_TRUE(peekResult.has_value());
+        EXPECT_EQ(*peekResult, 'a');
+        auto rwResult = foo.setRewindPoint(10);
+        ASSERT_TRUE(rwResult.has_value());
+        for (int i = 0; i < 5; ++i) {
+            auto byteResult = foo.getNextByte();
+            ASSERT_TRUE(byteResult.has_value());
+            EXPECT_EQ(*byteResult, testContents[i]);
+            EXPECT_EQ(foo.getAbsolutePosition(), i);
         }
+        foo.rewind();
+        for (int i = 0; i < 10; ++i) {
+            auto byteResult = foo.getNextByte();
+            ASSERT_TRUE(byteResult.has_value());
+            EXPECT_EQ(*byteResult, testContents[i]);
+            EXPECT_EQ(foo.getAbsolutePosition(), i);
+        }
+        foo.rewind();
+        for (int i = 0; i < 5; ++i) {
+            auto byteResult = foo.getNextByte();
+            ASSERT_TRUE(byteResult.has_value());
+            EXPECT_EQ(*byteResult, testContents[i]);
+            EXPECT_EQ(foo.getAbsolutePosition(), i);
+        }
+        rwResult = foo.setRewindPoint(10);
+        ASSERT_TRUE(rwResult.has_value());
+        for (int i = 0; i < 10; ++i) {
+            auto byteResult = foo.getNextByte();
+            ASSERT_TRUE(byteResult.has_value());
+            EXPECT_EQ(*byteResult, testContents[5 + i]);
+            EXPECT_EQ(foo.getAbsolutePosition(), 5 + i);
+        }
+        foo.rewind();
+        rwResult = foo.setRewindPoint(5);
+        ASSERT_TRUE(rwResult.has_value());
+        for (int i = 0; i < 5; ++i) {
+            auto byteResult = foo.getNextByte();
+            ASSERT_TRUE(byteResult.has_value());
+            EXPECT_EQ(*byteResult, testContents[5 + i]);
+            EXPECT_EQ(foo.getAbsolutePosition(), 5 + i);
+        }
+        foo.rewind();
+        {
+            auto byteResult = foo.getNextByte();
+            ASSERT_TRUE(byteResult.has_value());
+            EXPECT_EQ(*byteResult, testContents[5]);
+        }
+        rwResult = foo.setRewindPoint(3);
+        ASSERT_TRUE(rwResult.has_value());
+        for (int i = 0; i < 3; ++i) {
+            auto byteResult = foo.getNextByte();
+            ASSERT_TRUE(byteResult.has_value());
+            EXPECT_EQ(*byteResult, testContents[6 + i]);
+            EXPECT_EQ(foo.getAbsolutePosition(), 6 + i);
+        }
+        foo.rewind();
+        rwResult = foo.setRewindPoint(20);
+        ASSERT_TRUE(rwResult.has_value());
+        for (int i = 0; i < 20; ++i) {
+            auto byteResult = foo.getNextByte();
+            ASSERT_TRUE(byteResult.has_value());
+            EXPECT_EQ(*byteResult, testContents[6 + i]);
+            EXPECT_EQ(foo.getAbsolutePosition(), 6 + i);
+        }
+        EXPECT_TRUE(foo.isEof());
+        foo.rewind();
+        for (int i = 0; i < 20; ++i) {
+            auto byteResult = foo.getNextByte();
+            ASSERT_TRUE(byteResult.has_value());
+            EXPECT_EQ(*byteResult, testContents[6 + i]);
+            EXPECT_EQ(foo.getAbsolutePosition(), 6 + i);
+        }
+        EXPECT_TRUE(foo.isEof());
+        EXPECT_TRUE(foo.close());
     }
 }
 
@@ -132,33 +166,49 @@ TEST(DataSource, peekAndRewind) {
     }
 
     {
-        try {
-            FileDataSource foo(fooPath);
-            EXPECT_EQ(foo.peekNextByte(), 'a');
-            for (int i = 0; i < 10; ++i) {
-                EXPECT_EQ(foo.getNextByte(), testContents[i]);
-                EXPECT_EQ(foo.getAbsolutePosition(), i);
-            }
-            foo.setRewindPoint(10);
-            EXPECT_EQ(foo.peekNextByte(), 'k');
-            for (int i = 0; i < 10; ++i) {
-                EXPECT_EQ(foo.getNextByte(), testContents[10 + i]);
-                EXPECT_EQ(foo.getAbsolutePosition(), 10 + i);
-            }
-            foo.rewind();
-            EXPECT_EQ(foo.peekNextByte(), 'k');
-            for (int i = 0; i < 6; ++i) {
-                EXPECT_EQ(foo.getNextByte(), testContents[10 + i]);
-                EXPECT_EQ(foo.getAbsolutePosition(), 10 + i);
-            }
-            EXPECT_EQ(foo.peekNextByte(), 'q');
-            for (int i = 0; i < 10; ++i) {
-                EXPECT_EQ(foo.getNextByte(), testContents[16 + i]);
-                EXPECT_EQ(foo.getAbsolutePosition(), 16 + i);
-            }
-            EXPECT_TRUE(foo.isEof());
-        } catch (const std::exception&) {
-            EXPECT_TRUE(false);
+        auto fooResult = FileDataSource::open(fooPath);
+        ASSERT_TRUE(fooResult.has_value());
+        auto foo = std::move(*fooResult);
+        auto peekResult = foo.peekNextByte();
+        ASSERT_TRUE(peekResult.has_value());
+        EXPECT_EQ(*peekResult, 'a');
+        for (int i = 0; i < 10; ++i) {
+            auto byteResult = foo.getNextByte();
+            ASSERT_TRUE(byteResult.has_value());
+            EXPECT_EQ(*byteResult, testContents[i]);
+            EXPECT_EQ(foo.getAbsolutePosition(), i);
         }
+        auto rwResult = foo.setRewindPoint(10);
+        ASSERT_TRUE(rwResult.has_value());
+        peekResult = foo.peekNextByte();
+        ASSERT_TRUE(peekResult.has_value());
+        EXPECT_EQ(*peekResult, 'k');
+        for (int i = 0; i < 10; ++i) {
+            auto byteResult = foo.getNextByte();
+            ASSERT_TRUE(byteResult.has_value());
+            EXPECT_EQ(*byteResult, testContents[10 + i]);
+            EXPECT_EQ(foo.getAbsolutePosition(), 10 + i);
+        }
+        foo.rewind();
+        peekResult = foo.peekNextByte();
+        ASSERT_TRUE(peekResult.has_value());
+        EXPECT_EQ(*peekResult, 'k');
+        for (int i = 0; i < 6; ++i) {
+            auto byteResult = foo.getNextByte();
+            ASSERT_TRUE(byteResult.has_value());
+            EXPECT_EQ(*byteResult, testContents[10 + i]);
+            EXPECT_EQ(foo.getAbsolutePosition(), 10 + i);
+        }
+        peekResult = foo.peekNextByte();
+        ASSERT_TRUE(peekResult.has_value());
+        EXPECT_EQ(*peekResult, 'q');
+        for (int i = 0; i < 10; ++i) {
+            auto byteResult = foo.getNextByte();
+            ASSERT_TRUE(byteResult.has_value());
+            EXPECT_EQ(*byteResult, testContents[16 + i]);
+            EXPECT_EQ(foo.getAbsolutePosition(), 16 + i);
+        }
+        EXPECT_TRUE(foo.isEof());
+        EXPECT_TRUE(foo.close());
     }
 }

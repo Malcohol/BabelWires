@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BaseLib/Registry/fileTypeRegistry.hpp>
+#include <BaseLib/Utilities/result.hpp>
 #include <BaseLib/productInfo.hpp>
 
 #include <istream>
@@ -27,7 +28,7 @@ namespace babelwires {
     class SourceFileFormat : public FileTypeEntry, ProductInfo {
       public:
         SourceFileFormat(LongId identifier, VersionNumber version, Extensions extensions);
-        virtual std::unique_ptr<babelwires::ValueTreeRoot> loadFromFile(const std::filesystem::path& path, const ProjectContext& projectContext,
+        virtual ResultT<std::unique_ptr<babelwires::ValueTreeRoot>> loadFromFile(const std::filesystem::path& path, const ProjectContext& projectContext,
                                                                       UserLogger& userLogger) const = 0;
     };
 

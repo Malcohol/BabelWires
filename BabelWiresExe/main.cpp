@@ -48,71 +48,74 @@
 using namespace babelwires;
 
 int main(int argc, char* argv[]) {
-    try {
-        ProgramOptions options(argc, argv);
-
-        if (options.m_mode == ProgramOptions::MODE_PRINT_HELP) {
-            writeHelp(argv[0], std::cout);
-            return EXIT_SUCCESS;
-        }
-
-        babelwires::IdentifierRegistryScope identifierRegistry;
-
-        babelwires::OStreamLogListener::Features features = babelwires::OStreamLogListener::Features::none;
-#ifndef NDEBUG
-        features = features | babelwires::OStreamLogListener::Features::logDebugMessages |
-                   babelwires::OStreamLogListener::Features::timestamp;
-#endif
-        babelwires::UnifiedLog log;
-        babelwires::DebugLogger::swapGlobalDebugLogger(&log);
-        babelwires::OStreamLogListener logToCout(std::cout, log, features);
-
-        SourceFileFormatRegistry sourceFileFormatReg;
-        TargetFileFormatRegistry targetFileFormatReg;
-        ProcessorFactoryRegistry processorReg;
-        babelwires::AutomaticDeserializationRegistry deserializationRegistry;
-        babelwires::ValueModelRegistry valueModelRegistry;
-        babelwires::TypeSystem typeSystem;
-
-        const unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
-        babelwires::logDebug() << "The random seed was " << seed;
-        std::default_random_engine randomEngine(seed);
-
-        babelwires::UiProjectContext context{
-            deserializationRegistry, sourceFileFormatReg, targetFileFormatReg, processorReg, typeSystem, randomEngine,
-            valueModelRegistry};
-
-        context.m_applicationIdentity.m_applicationTitle = "BabelWires";
-        context.m_applicationIdentity.m_projectExtension = ".babelwires";
-
-        // register factories, etc.
-        babelwires::registerLib(context);
-        bw_music::registerLib(context);
-        bw_musicUi::registerLib(context);
-        smf::registerLib(context);
-
-        // Uncomment to enable a domain of testing data.
-        //bw_music_testplugin::registerLib(context);
-        //testDomain::registerLib(context);
-
-        if (options.m_mode == ProgramOptions::MODE_RUN_PROJECT) {
-            Project project(context, log);
-            ProjectData projectData = ProjectSerialization::loadFromFile(options.m_inputFileName.c_str(), context, log);
-            project.setProjectData(projectData);
-            project.tryToSaveAllTargets();
-            return EXIT_SUCCESS;
-        } else {
-            Ui ui(argc, argv, context, log);
-            if (argc > 1) {
-                throw babelwires::OptionError() << "Unexpected arguments";
-            }
-            ui.runMainLoop();
-        }
-    } catch (const babelwires::OptionError& e) {
-        std::cerr << e.what() << std::endl;
+    auto options = ProgramOptions::parse(argc, argv);
+    if (!options) {
+        std::cerr << options.error().toString() << std::endl;
         writeUsage(argv[0], std::cerr);
-    } catch (const babelwires::BaseException& e) {
-        std::cerr << e.what() << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    if (options->m_mode == ProgramOptions::MODE_PRINT_HELP) {
+        writeHelp(argv[0], std::cout);
+        return EXIT_SUCCESS;
+    }
+
+    babelwires::IdentifierRegistryScope identifierRegistry;
+
+    babelwires::OStreamLogListener::Features features = babelwires::OStreamLogListener::Features::none;
+#ifndef NDEBUG
+    features = features | babelwires::OStreamLogListener::Features::logDebugMessages |
+                babelwires::OStreamLogListener::Features::timestamp;
+#endif
+    babelwires::UnifiedLog log;
+    babelwires::DebugLogger::swapGlobalDebugLogger(&log);
+    babelwires::OStreamLogListener logToCout(std::cout, log, features);
+
+    SourceFileFormatRegistry sourceFileFormatReg;
+    TargetFileFormatRegistry targetFileFormatReg;
+    ProcessorFactoryRegistry processorReg;
+    babelwires::AutomaticDeserializationRegistry deserializationRegistry;
+    babelwires::ValueModelRegistry valueModelRegistry;
+    babelwires::TypeSystem typeSystem;
+
+    const unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
+    babelwires::logDebug() << "The random seed was " << seed;
+    std::default_random_engine randomEngine(seed);
+
+    babelwires::UiProjectContext context{
+        deserializationRegistry, sourceFileFormatReg, targetFileFormatReg, processorReg, typeSystem, randomEngine,
+        valueModelRegistry};
+
+    context.m_applicationIdentity.m_applicationTitle = "BabelWires";
+    context.m_applicationIdentity.m_projectExtension = ".babelwires";
+
+    // register factories, etc.
+    babelwires::registerLib(context);
+    bw_music::registerLib(context);
+    bw_musicUi::registerLib(context);
+    smf::registerLib(context);
+
+    // Uncomment to enable a domain of testing data.
+    //bw_music_testplugin::registerLib(context);
+    //testDomain::registerLib(context);
+
+    if (options->m_mode == ProgramOptions::MODE_RUN_PROJECT) {
+        Project project(context, log);
+        ResultT<ProjectData> projectDataResult = ProjectSerialization::loadFromFile(options->m_inputFileName.c_str(), context, log);
+        if (!projectDataResult) {
+            throw FileIoException() << projectDataResult.error().toString();
+        }
+        project.setProjectData(std::move(*projectDataResult));
+        project.tryToSaveAllTargets();
+        return EXIT_SUCCESS;
+    } else {
+        Ui ui(argc, argv, context, log);
+        if (argc > 1) {
+            std::cerr << "Unexpected arguments";
+            writeUsage(argv[0], std::cerr);
+            return EXIT_FAILURE;
+        }
+        ui.runMainLoop();
     }
     return EXIT_FAILURE;
 }

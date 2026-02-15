@@ -288,9 +288,12 @@ void babelwires::MainWindow::openProject() {
                     std::string filePathStr = filePath.toStdString();
                     m_userLogger.logInfo() << "Open project \"" << filePathStr << '"';
                     ModifyModelScope scope(m_projectGraphModel);
-                    ProjectData projectData =
+                    ResultT<ProjectData> projectData =
                         ProjectSerialization::loadFromFile(filePathStr, m_projectGraphModel.getContext(), m_userLogger);
-                    scope.getProject().setProjectData(projectData);
+                    if (!projectData) {
+                        throw FileIoException() << projectData.error().toString();
+                    }
+                    scope.getProject().setProjectData(*projectData);
                     setCurrentFilePath(filePath);
                     return;
                 } catch (FileIoException& e) {
@@ -308,20 +311,20 @@ void babelwires::MainWindow::openProject() {
 
 bool babelwires::MainWindow::trySaveProject(const QString& filePath) {
     while (1) {
-        try {
-            std::string filePathStr = filePath.toStdString();
-            m_userLogger.logInfo() << "Save project to \"" << filePathStr << '"';
-            ModifyModelScope scope(m_projectGraphModel);
-            ProjectSerialization::saveToFile(filePathStr, scope.getProject().extractProjectData());
+        std::string filePathStr = filePath.toStdString();
+        m_userLogger.logInfo() << "Save project to \"" << filePathStr << '"';
+        ModifyModelScope scope(m_projectGraphModel);
+        auto saveResult = ProjectSerialization::saveToFile(filePathStr, scope.getProject().extractProjectData());
+        if (saveResult) {
             scope.getCommandManager().setCursor();
             return true;
-        } catch (FileIoException& e) {
-            m_userLogger.logError() << "The project could not be saved: " << e.what();
-            if (showErrorMessageBox(this, tr("The project could not be saved."), e.what(),
-                                    (QMessageBox::Retry | QMessageBox::Cancel),
-                                    QMessageBox::Retry) == QMessageBox::Cancel) {
-                return false;
-            }
+        }
+
+        m_userLogger.logError() << "The project could not be saved: " << saveResult.error().toString();
+        if (showErrorMessageBox(this, tr("The project could not be saved."), saveResult.error().toString().c_str(),
+                                (QMessageBox::Retry | QMessageBox::Cancel),
+                                QMessageBox::Retry) == QMessageBox::Cancel) {
+            return false;
         }
     }
 }
@@ -443,20 +446,19 @@ void babelwires::MainWindow::paste() {
     QByteArray contents = mimedata->data(getClipboardMimetype());
     std::string asString(contents.data(), contents.length());
 
-    try {
-        ProjectData projectData = ProjectSerialization::loadFromString(asString, m_projectGraphModel.getContext(),
+    ResultT<ProjectData> projectData = ProjectSerialization::loadFromString(asString, m_projectGraphModel.getContext(),
                                                                        getFullFilePath().toStdString(), m_userLogger);
+    if (projectData)  {
         {
             auto* flowView = dynamic_cast<QtNodes::GraphicsView*>(centralWidget());
             assert(flowView && "Unexpected central widget");
             const QPointF centre = flowView->sceneRect().center();
             UiPosition offset{static_cast<UiCoord>(centre.x()), static_cast<UiCoord>(centre.y())};
-            projectUtilities::translate(offset, projectData);
+            projectUtilities::translate(offset, *projectData);
         }
-
-        auto command = std::make_unique<PasteNodesCommand>("Paste elements", std::move(projectData));
+        auto command = std::make_unique<PasteNodesCommand>("Paste elements", std::move(*projectData));
         m_projectGraphModel.scheduleCommand(std::move(command));
-    } catch (std::exception&) {
+    } else {
         // When using a specific mime-type, log a debug message?
         m_userLogger.logWarning() << "Failed to paste from clipboard";
     }

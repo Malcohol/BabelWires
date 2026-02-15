@@ -79,7 +79,7 @@ namespace babelwires {
         TypeIdSet getTaggedRegisteredTypes(Type::Tag tag) const;
 
       protected:
-        void addRegisteredType(LongId typeId, VersionNumber version, TypePtr newType);
+        void addRegisteredType(RegisteredTypeId typeId, VersionNumber version, TypePtr newType);
         TypeConstructor* addTypeConstructorInternal(TypeConstructorId typeConstructorId, VersionNumber version,
                                                     std::unique_ptr<TypeConstructor> newTypeConstructor);
 

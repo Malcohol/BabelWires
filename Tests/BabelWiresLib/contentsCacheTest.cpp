@@ -533,7 +533,7 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     // Adding a hidden failed modifier whose parent is logically the root requires us to present
     // a root entry to the user, so the UI functionality for failed modifiers has somewhere to live.
     testUtils::TestNode owner(testEnvironment.m_projectContext);
-    auto modifierPtr = createIntModifier(babelwires::Path::deserializeFromString("flarg"), &owner);
+    auto modifierPtr = createIntModifier(*babelwires::Path::deserializeFromString("flarg"), &owner);
     modifierPtr->simulateFailure();
     auto modifier = modifierPtr.get();
     editTree.addModifier(std::move(modifierPtr));
@@ -699,7 +699,7 @@ namespace {
         // In this case, there's already an entry for the root, so no new
         // artificial entry need be added.
         testUtils::TestNode owner(context);
-        auto modifierPtr = createIntModifier(babelwires::Path::deserializeFromString("flarg"), &owner);
+        auto modifierPtr = createIntModifier(*babelwires::Path::deserializeFromString("flarg"), &owner);
         modifierPtr->simulateFailure();
         auto modifier = modifierPtr.get();
         editTree.addModifier(std::move(modifierPtr));

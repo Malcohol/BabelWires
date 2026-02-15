@@ -37,7 +37,7 @@ namespace babelwires {
     struct UiData : Serializable {
         SERIALIZABLE(UiData, "uiData", void, 1);
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        Result deserializeContents(Deserializer& deserializer) override;
 
         /// The position this Node is at in the UI.
         UiPosition m_uiPosition;
@@ -105,15 +105,15 @@ namespace babelwires {
 
         /// For use when serializing subclasses.
         void addCommonKeyValuePairs(Serializer& serializer) const;
-        void getCommonKeyValuePairs(Deserializer& deserializer);
+        Result getCommonKeyValuePairs(Deserializer& deserializer);
 
         /// For use when serializing subclasses.
         void serializeModifiers(Serializer& serializer) const;
-        void deserializeModifiers(Deserializer& serializer);
+        Result deserializeModifiers(Deserializer& serializer);
 
         /// For use when serializing subclasses.
         void serializeUiData(Serializer& serializer) const;
-        void deserializeUiData(Deserializer& deserializer);
+        Result deserializeUiData(Deserializer& deserializer);
 
         /// Look up the ID in the reg, and issue a warning if there are version incompatibilities.
         template<typename REGISTRY>

@@ -17,8 +17,8 @@
 
 babelwires::MapProject::MapProject(const ProjectContext& projectContext)
     : m_projectContext(projectContext)
-    , m_sourceTypeValidity(Result::Success())
-    , m_targetTypeValidity(Result::Success()) {}
+    , m_sourceTypeValidity()
+    , m_targetTypeValidity() {}
 
 babelwires::MapProject::~MapProject() = default;
 
@@ -53,14 +53,14 @@ void babelwires::MapProject::setCurrentSourceTypeExp(const TypeExp& sourceId) {
     TypePtr type = sourceId.tryResolve(typeSystem);
     if (!type) {
         // TODO Add type name.
-        m_sourceTypeValidity = "The source type is not recognized.";
+        m_sourceTypeValidity = Error() << "The source type is not recognized.";
         m_currentSourceType = nullptr;
     } else if (!m_allowedSourceTypeExps.isRelatedToSome(typeSystem, sourceId)) {
         // TODO Add type name.
-        m_sourceTypeValidity = "The source type is not valid here.";
+        m_sourceTypeValidity = Error() << "The source type is not valid here.";
         m_currentSourceType = nullptr;
     } else {
-        m_sourceTypeValidity = Result::Success();
+        m_sourceTypeValidity = Result();
         m_currentSourceType = type;
     }
 
@@ -76,14 +76,14 @@ void babelwires::MapProject::setCurrentTargetTypeExp(const TypeExp& targetId) {
     TypePtr type = targetId.tryResolve(typeSystem);
     if (!type) {
         // TODO Add type name.
-        m_targetTypeValidity = "The target type is not recognized.";
+        m_targetTypeValidity = Error() << "The target type is not recognized.";
         m_currentTargetType = nullptr;
     } else if (!m_allowedTargetTypeExps.isSubtypeOfSome(typeSystem, targetId)) {
         // TODO Add type name.
-        m_targetTypeValidity = "The target type is not valid here.";
+        m_targetTypeValidity = Error() << "The target type is not valid here.";
         m_currentTargetType = nullptr;
     } else {
-        m_targetTypeValidity = Result::Success();
+        m_targetTypeValidity = Result();
         m_currentTargetType = type;
     }
 

@@ -32,7 +32,7 @@ namespace {
             , m_canContainFilePaths(other.m_canContainFilePaths) {}
 
         void serializeContents(babelwires::Serializer& serializer) const override {}
-        void deserializeContents(babelwires::Deserializer& deserializer) override {}
+        babelwires::Result deserializeContents(babelwires::Deserializer& deserializer) override { return {}; }
         void visitIdentifiers(babelwires::IdentifierVisitor& visitor) override {
             if (m_canContainIdentifiers) {
                 visitor(m_id);

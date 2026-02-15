@@ -10,8 +10,8 @@
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
-#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
 #include <BaseLib/Serialization/deserializer.hpp>
@@ -26,10 +26,11 @@ void babelwires::UiData::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("width", m_uiSize.m_width);
 }
 
-void babelwires::UiData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("x", m_uiPosition.m_x);
-    deserializer.deserializeValue("y", m_uiPosition.m_y);
-    deserializer.deserializeValue("width", m_uiSize.m_width);
+babelwires::Result babelwires::UiData::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.deserializeValue("x", m_uiPosition.m_x));
+    DO_OR_ERROR(deserializer.deserializeValue("y", m_uiPosition.m_y));
+    DO_OR_ERROR(deserializer.deserializeValue("width", m_uiSize.m_width));
+    return {};
 }
 
 babelwires::NodeData::NodeData(const NodeData& other, ShallowCloneContext)
@@ -48,8 +49,7 @@ babelwires::NodeData::NodeData(const NodeData& other)
 }
 
 std::unique_ptr<babelwires::Node> babelwires::NodeData::createNode(const ProjectContext& context,
-                                                                                          UserLogger& userLogger,
-                                                                                          NodeId newId) const {
+                                                                   UserLogger& userLogger, NodeId newId) const {
     std::unique_ptr<babelwires::Node> newNode = doCreateNode(context, userLogger, newId);
     newNode->applyLocalModifiers(userLogger);
     return newNode;
@@ -61,21 +61,24 @@ void babelwires::NodeData::addCommonKeyValuePairs(Serializer& serializer) const 
     // Factory versions are handled by the projectBundle.
 }
 
-void babelwires::NodeData::getCommonKeyValuePairs(Deserializer& deserializer) {
-    deserializer.deserializeValue("id", m_id);
-    deserializer.deserializeValue("factory", m_factoryIdentifier);
+babelwires::Result babelwires::NodeData::getCommonKeyValuePairs(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.deserializeValue("id", m_id));
+    DO_OR_ERROR(deserializer.deserializeValue("factory", m_factoryIdentifier));
     // Factory versions are handled by the projectBundle.
+    return {};
 }
 
 void babelwires::NodeData::serializeModifiers(Serializer& serializer) const {
     serializer.serializeArray("modifiers", m_modifiers);
 }
 
-void babelwires::NodeData::deserializeModifiers(Deserializer& deserializer) {
-    for (auto it = deserializer.deserializeArray<ModifierData>("modifiers", Deserializer::IsOptional::Optional);
-         it.isValid(); ++it) {
-        m_modifiers.emplace_back(it.getObject());
+babelwires::Result babelwires::NodeData::deserializeModifiers(Deserializer& deserializer) {
+    ASSIGN_OR_ERROR(auto it, deserializer.tryDeserializeArray<ModifierData>("modifiers"));
+    while (it.isValid()) {
+        ASSIGN_OR_ERROR(m_modifiers.emplace_back(), it.getObject());
+        DO_OR_ERROR(it.advance());
     }
+    return {};
 }
 
 void babelwires::NodeData::serializeUiData(Serializer& serializer) const {
@@ -83,16 +86,14 @@ void babelwires::NodeData::serializeUiData(Serializer& serializer) const {
     serializer.serializeValueArray("expandedPaths", m_expandedPaths, "path");
 }
 
-void babelwires::NodeData::deserializeUiData(Deserializer& deserializer) {
-    if (auto uiData =
-            deserializer.deserializeObject<UiData>(UiData::serializationType, Deserializer::IsOptional::Optional)) {
-        m_uiData = *uiData;
+babelwires::Result babelwires::NodeData::deserializeUiData(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.tryDeserializeObjectByValue<UiData>(m_uiData));
+    ASSIGN_OR_ERROR(auto it, deserializer.tryDeserializeValueArray<Path>("expandedPaths", "path"));
+    while (it.isValid()) {
+        ASSIGN_OR_ERROR(m_expandedPaths.emplace_back(), it.deserializeValue());
+        DO_OR_ERROR(it.advance());
     }
-    for (auto it = deserializer.deserializeValueArray<Path>("expandedPaths", Deserializer::IsOptional::Optional,
-                                                                   "path");
-         it.isValid(); ++it) {
-        m_expandedPaths.emplace_back(std::move(it.deserializeValue()));
-    }
+    return {};
 }
 
 void babelwires::NodeData::visitIdentifiers(IdentifierVisitor& visitor) {

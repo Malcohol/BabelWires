@@ -15,25 +15,27 @@ namespace {
     const char s_uiString[] = "ui";
 } // namespace
 
-ProgramOptions::ProgramOptions(int argc, char* argv[]) {
+babelwires::ResultT<ProgramOptions> ProgramOptions::parse(int argc, char* argv[]) {
+    ProgramOptions options;
     if (argc == 1) {
         // UI mode.
-        return;
+        return options;
     }
 
     const std::string modeArg = argv[1];
 
     if ((modeArg == s_helpString) || (modeArg == "-h") || (modeArg == "--help")) {
-        m_mode = MODE_PRINT_HELP;
+        options.m_mode = ProgramOptions::MODE_PRINT_HELP;
     } else if (modeArg == s_runString) {
         if (argc != 3) {
-            throw babelwires::OptionError() << "Wrong number of arguments for " << s_runString << " mode";
+            return babelwires::Error() << "Wrong number of arguments for " << s_runString << " mode";
         }
-        m_mode = MODE_RUN_PROJECT;
-        m_inputFileName = argv[2];
+        options.m_mode = ProgramOptions::MODE_RUN_PROJECT;
+        options.m_inputFileName = argv[2];
     } else if (modeArg != s_uiString) {
-        throw babelwires::OptionError() << "Unrecognized mode \"" << modeArg << "\" provided";
+        return babelwires::Error() << "Unrecognized mode \"" << modeArg << "\" provided";
     }
+    return options;
 }
 
 void writeUsage(const std::string& programName, std::ostream& stream) {

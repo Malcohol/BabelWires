@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BaseLib/Math/math.hpp>
+#include <BaseLib/Utilities/result.hpp>
 
 #include <cctype>
 #include <cstdint>
@@ -29,7 +30,7 @@ namespace babelwires {
         ComponentType getNumerator() const { return m_numerator; }
         ComponentType getDenominator() const { return m_denominator; }
 
-        /// These can throw a MathException if the result is not representable.
+        /// These approximate if the result is not representable.
         Rational operator*(const Rational& other) const;
         Rational operator/(const Rational& other) const;
         Rational operator+(const Rational& other) const;
@@ -57,12 +58,9 @@ namespace babelwires {
 
         static PartialParseResult partialParse(std::string_view str, Rational& valueOut);
 
-        /// Throws a ParseException if the string is not a rational.
-        static Rational parseString(std::string_view str);
-
         /// Serialization
         std::string serializeToString() const { return toString(); }
-        static Rational deserializeFromString(const std::string_view str) { return parseString(str); }
+        static ResultT<Rational> deserializeFromString(std::string_view str);
 
         /// Get a hash value for the rational.
         std::size_t getHash() const;

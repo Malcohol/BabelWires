@@ -296,18 +296,18 @@ void babelwires::MapEditor::saveMapToFile() {
 
 bool babelwires::MapEditor::trySaveMapToFile(const QString& filePath) {
     while (1) {
-        try {
-            std::string filePathStr = filePath.toStdString();
-            getUserLogger().logInfo() << "Save map to \"" << filePathStr << '"';
-            MapSerialization::saveToFile(filePathStr, m_map.extractMapValue());
+        std::string filePathStr = filePath.toStdString();
+        getUserLogger().logInfo() << "Save map to \"" << filePathStr << '"';
+        auto saveResult = MapSerialization::saveToFile(filePathStr, m_map.extractMapValue());
+        if (saveResult) {
             return true;
-        } catch (FileIoException& e) {
-            getUserLogger().logError() << "The map could not be saved: " << e.what();
-            if (showErrorMessageBox(this, tr("The map could not be saved."), e.what(),
-                                    QMessageBox::Retry | QMessageBox::Cancel,
-                                    QMessageBox::Retry) == QMessageBox::Cancel) {
-                return false;
-            }
+        }
+
+        getUserLogger().logError() << "The map could not be saved: " << saveResult.error().toString();
+        if (showErrorMessageBox(this, tr("The map could not be saved."), saveResult.error().toString().c_str(),
+                                QMessageBox::Retry | QMessageBox::Cancel,
+                                QMessageBox::Retry) == QMessageBox::Cancel) {
+            return false;
         }
     }
 }
@@ -324,9 +324,12 @@ void babelwires::MapEditor::loadMapFromFile() {
             try {
                 std::string filePathStr = filePath.toStdString();
                 getUserLogger().logInfo() << "Load map from \"" << filePathStr << '"';
-                MapValue mapValue =
+                ResultT<MapValue> mapValueResult =
                     MapSerialization::loadFromFile(filePathStr, getProjectGraphModel().getContext(), getUserLogger());
-                setEditorMap(mapValue);
+                if (!mapValueResult) {
+                    throw FileIoException() << mapValueResult.error().toString();
+                }
+                setEditorMap(*mapValueResult);
                 m_lastSaveFilePath = filePath;
                 return;
             } catch (FileIoException& e) {

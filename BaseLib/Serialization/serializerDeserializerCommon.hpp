@@ -2,12 +2,14 @@
  * Functionality common to serialization and deserialization.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
 
+#include <BaseLib/Utilities/result.hpp>
 #include <BaseLib/common.hpp>
+
 #include <map>
 #include <string>
 #include <string_view>
@@ -33,8 +35,8 @@ namespace babelwires {
         void serializeMetadata(Serializer& serializer);
 
         /// Deserialize the type versions from the deserializer.
-        void deserializeMetadata(Deserializer& deserializer, UserLogger& userLogger,
-                                 const DeserializationRegistry& deserializationRegistry);
+        Result deserializeMetadata(Deserializer& deserializer, UserLogger& userLogger,
+                                   const DeserializationRegistry& deserializationRegistry);
 
       protected:
         /// Record the version for each type name, so it can be added to the file.

@@ -22,8 +22,8 @@ babelwires::MapEntryData::~MapEntryData() = default;
 babelwires::Result babelwires::MapEntryData::validate(const TypeSystem& typeSystem, const Type& sourceType,
                                                       const Type& targetType, bool isLastEntry) const {
     if (isLastEntry != isFallback(getKind())) {
-        return isLastEntry ? "The last entry must be a fallback entry"
-                           : "A fallback entry can only be at the end of a map";
+        return isLastEntry ? Error() << "The last entry must be a fallback entry"
+                           : Error() << "A fallback entry can only be at the end of a map";
     }
     return doValidate(typeSystem, sourceType, targetType);
 }

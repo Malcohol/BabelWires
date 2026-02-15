@@ -86,40 +86,40 @@ TEST(IdentifierTest, identifierSerialization) {
 }
 
 TEST(IdentifierTest, identifierDeserialization) {
-    const babelwires::ShortId hello = babelwires::ShortId::deserializeFromString("Hello");
+    const babelwires::ShortId hello = *babelwires::ShortId::deserializeFromString("Hello");
     EXPECT_EQ(hello, "Hello");
     EXPECT_EQ(hello.getDiscriminator(), 0);
 
-    const babelwires::ShortId hello1 = babelwires::ShortId::deserializeFromString("Hello'12");
+    const babelwires::ShortId hello1 = *babelwires::ShortId::deserializeFromString("Hello'12");
     EXPECT_EQ(hello1, "Hello");
     EXPECT_EQ(hello1.getDiscriminator(), 12);
 
-    EXPECT_NO_THROW(babelwires::ShortId::deserializeFromString("H"));
-    EXPECT_NO_THROW(babelwires::ShortId::deserializeFromString("H'1"));
-    EXPECT_NO_THROW(babelwires::ShortId::deserializeFromString("HE'11"));
-    EXPECT_NO_THROW(babelwires::ShortId::deserializeFromString("Hel'111"));
-    EXPECT_NO_THROW(babelwires::ShortId::deserializeFromString("Hell'111"));
-    EXPECT_NO_THROW(babelwires::ShortId::deserializeFromString("Hello'111"));
-    EXPECT_NO_THROW(babelwires::ShortId::deserializeFromString("Hell33"));
-    EXPECT_NO_THROW(babelwires::ShortId::deserializeFromString("He_33_'10"));
-    EXPECT_NO_THROW(babelwires::ShortId::deserializeFromString("Hello'255"));
-    EXPECT_NO_THROW(babelwires::ShortId::deserializeFromString("Helloo'65500"));
-    EXPECT_NO_THROW(babelwires::ShortId::deserializeFromString("_"));
-    EXPECT_NO_THROW(babelwires::ShortId::deserializeFromString("_o_o_"));
-    EXPECT_NO_THROW(babelwires::ShortId::deserializeFromString("___EE"));
-    EXPECT_NO_THROW(babelwires::ShortId::deserializeFromString("_o_o_'3"));
+    EXPECT_TRUE(babelwires::ShortId::deserializeFromString("H").has_value());
+    EXPECT_TRUE(babelwires::ShortId::deserializeFromString("H'1").has_value());
+    EXPECT_TRUE(babelwires::ShortId::deserializeFromString("HE'11").has_value());
+    EXPECT_TRUE(babelwires::ShortId::deserializeFromString("Hel'111").has_value());
+    EXPECT_TRUE(babelwires::ShortId::deserializeFromString("Hell'111").has_value());
+    EXPECT_TRUE(babelwires::ShortId::deserializeFromString("Hello'111").has_value());
+    EXPECT_TRUE(babelwires::ShortId::deserializeFromString("Hell33").has_value());
+    EXPECT_TRUE(babelwires::ShortId::deserializeFromString("He_33_'10").has_value());
+    EXPECT_TRUE(babelwires::ShortId::deserializeFromString("Hello'255").has_value());
+    EXPECT_TRUE(babelwires::ShortId::deserializeFromString("Helloo'65500").has_value());
+    EXPECT_TRUE(babelwires::ShortId::deserializeFromString("_").has_value());
+    EXPECT_TRUE(babelwires::ShortId::deserializeFromString("_o_o_").has_value());
+    EXPECT_TRUE(babelwires::ShortId::deserializeFromString("___EE").has_value());
+    EXPECT_TRUE(babelwires::ShortId::deserializeFromString("_o_o_'3").has_value());
 
-    EXPECT_THROW(babelwires::ShortId::deserializeFromString(""), babelwires::ParseException);
-    EXPECT_THROW(babelwires::ShortId::deserializeFromString("02"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::ShortId::deserializeFromString("12"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::ShortId::deserializeFromString("'12"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::ShortId::deserializeFromString("2Hello"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::ShortId::deserializeFromString("Hællo"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::ShortId::deserializeFromString("Hello`111"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::ShortId::deserializeFromString("Helloooo"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::ShortId::deserializeFromString("Helloo'65535"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::ShortId::deserializeFromString("Hell'100000"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::ShortId::deserializeFromString("^-.-^'3"), babelwires::ParseException);
+    EXPECT_FALSE(babelwires::ShortId::deserializeFromString("").has_value());
+    EXPECT_FALSE(babelwires::ShortId::deserializeFromString("02").has_value());
+    EXPECT_FALSE(babelwires::ShortId::deserializeFromString("12").has_value());
+    EXPECT_FALSE(babelwires::ShortId::deserializeFromString("'12").has_value());
+    EXPECT_FALSE(babelwires::ShortId::deserializeFromString("2Hello").has_value());
+    EXPECT_FALSE(babelwires::ShortId::deserializeFromString("Hællo").has_value());
+    EXPECT_FALSE(babelwires::ShortId::deserializeFromString("Hello`111").has_value());
+    EXPECT_FALSE(babelwires::ShortId::deserializeFromString("Helloooo").has_value());
+    EXPECT_FALSE(babelwires::ShortId::deserializeFromString("Helloo'65535").has_value());
+    EXPECT_FALSE(babelwires::ShortId::deserializeFromString("Hell'100000").has_value());
+    EXPECT_FALSE(babelwires::ShortId::deserializeFromString("^-.-^'3").has_value());
 }
 
 TEST(IdentifierTest, longIdentifiers) {
@@ -208,41 +208,41 @@ TEST(IdentifierTest, longIdentifierSerialization) {
 
 
 TEST(IdentifierTest, longIdentifierDeserialization) {
-    const babelwires::LongId hello = babelwires::LongId::deserializeFromString("Hello_world");
+    const babelwires::LongId hello = *babelwires::LongId::deserializeFromString("Hello_world");
     EXPECT_EQ(hello, "Hello_world");
     EXPECT_EQ(hello.getDiscriminator(), 0);
 
-    const babelwires::LongId hello1 = babelwires::LongId::deserializeFromString("Hello_world'12");
+    const babelwires::LongId hello1 = *babelwires::LongId::deserializeFromString("Hello_world'12");
     EXPECT_EQ(hello1, "Hello_world");
     EXPECT_EQ(hello1.getDiscriminator(), 12);
 
-    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("H"));
-    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("H'1"));
-    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("HE'11"));
-    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("Hel'111"));
-    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("Hell'111"));
-    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("Hello'111"));
-    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("Hell33"));
-    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("He_33_'10"));
-    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("Hello'255"));
-    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("Helloo'65500"));
-    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("Hello_incredible_world'65500"));
-    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("_"));
-    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("_o_o_"));
-    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("___EE"));
-    EXPECT_NO_THROW(babelwires::LongId::deserializeFromString("_o_o_'3"));
+    EXPECT_TRUE(babelwires::LongId::deserializeFromString("H").has_value());
+    EXPECT_TRUE(babelwires::LongId::deserializeFromString("H'1").has_value());
+    EXPECT_TRUE(babelwires::LongId::deserializeFromString("HE'11").has_value());
+    EXPECT_TRUE(babelwires::LongId::deserializeFromString("Hel'111").has_value());
+    EXPECT_TRUE(babelwires::LongId::deserializeFromString("Hell'111").has_value());
+    EXPECT_TRUE(babelwires::LongId::deserializeFromString("Hello'111").has_value());
+    EXPECT_TRUE(babelwires::LongId::deserializeFromString("Hell33").has_value());
+    EXPECT_TRUE(babelwires::LongId::deserializeFromString("He_33_'10").has_value());
+    EXPECT_TRUE(babelwires::LongId::deserializeFromString("Hello'255").has_value());
+    EXPECT_TRUE(babelwires::LongId::deserializeFromString("Helloo'65500").has_value());
+    EXPECT_TRUE(babelwires::LongId::deserializeFromString("Hello_incredible_world'65500").has_value());
+    EXPECT_TRUE(babelwires::LongId::deserializeFromString("_").has_value());
+    EXPECT_TRUE(babelwires::LongId::deserializeFromString("_o_o_").has_value());
+    EXPECT_TRUE(babelwires::LongId::deserializeFromString("___EE").has_value());
+    EXPECT_TRUE(babelwires::LongId::deserializeFromString("_o_o_'3").has_value());
 
-    EXPECT_THROW(babelwires::LongId::deserializeFromString(""), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongId::deserializeFromString("02"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongId::deserializeFromString("12"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongId::deserializeFromString("'12"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongId::deserializeFromString("2Hello"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongId::deserializeFromString("Hællo"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongId::deserializeFromString("Hello_incredible_world_"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongId::deserializeFromString("Hello_incredible_world`111"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongId::deserializeFromString("Helloo'65535"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongId::deserializeFromString("Hell'100000"), babelwires::ParseException);
-    EXPECT_THROW(babelwires::LongId::deserializeFromString("^-.-^'3"), babelwires::ParseException);
+    EXPECT_FALSE(babelwires::LongId::deserializeFromString("").has_value());
+    EXPECT_FALSE(babelwires::LongId::deserializeFromString("02").has_value());
+    EXPECT_FALSE(babelwires::LongId::deserializeFromString("12").has_value());
+    EXPECT_FALSE(babelwires::LongId::deserializeFromString("'12").has_value());
+    EXPECT_FALSE(babelwires::LongId::deserializeFromString("2Hello").has_value());
+    EXPECT_FALSE(babelwires::LongId::deserializeFromString("Hællo").has_value());
+    EXPECT_FALSE(babelwires::LongId::deserializeFromString("Hello_incredible_world_").has_value());
+    EXPECT_FALSE(babelwires::LongId::deserializeFromString("Hello_incredible_world`111").has_value());
+    EXPECT_FALSE(babelwires::LongId::deserializeFromString("Helloo'65535").has_value());
+    EXPECT_FALSE(babelwires::LongId::deserializeFromString("Hell'100000").has_value());
+    EXPECT_FALSE(babelwires::LongId::deserializeFromString("^-.-^'3").has_value());
 }
 
 TEST(IdentifierTest, shortToLongIdentifiers) {
@@ -256,19 +256,43 @@ TEST(IdentifierTest, shortToLongIdentifiers) {
     EXPECT_EQ(hello2.getDiscriminator(), 12);
 }
 
-TEST(IdentifierTest, longToShortIdentifiers) {
+TEST(IdentifierTest, makeFrom) {
     babelwires::LongId hello = "Helloo";
-    const babelwires::ShortId hello1(hello);
+    const babelwires::ShortId hello1 = babelwires::ShortId::makeFrom(hello);
     EXPECT_EQ(hello, hello1);
 
     hello.setDiscriminator(12);
-    const babelwires::ShortId hello2(hello);
+    const babelwires::ShortId hello2 = babelwires::ShortId::makeFrom(hello);
     EXPECT_EQ(hello, hello2);
     EXPECT_EQ(hello2.getDiscriminator(), 12);
 
-    const babelwires::LongId longHello = "Hellooo";
-    EXPECT_THROW(babelwires::ShortId shortHello(longHello), babelwires::ParseException);
+    babelwires::ShortId shortHello = "Hello";
+    const babelwires::LongId hello3 = babelwires::LongId::makeFrom(shortHello);
+    EXPECT_EQ(shortHello, hello3);
 }
+
+TEST(IdentifierTest, tryMakeFrom) {
+    babelwires::LongId hello = "Helloo";
+    const auto hello1 = babelwires::ShortId::tryMakeFrom(hello);
+    ASSERT_TRUE(hello1.has_value());
+    EXPECT_EQ(hello, *hello1);
+
+    hello.setDiscriminator(12);
+    const auto hello2 = babelwires::ShortId::tryMakeFrom(hello);
+    ASSERT_TRUE(hello2.has_value());
+    EXPECT_EQ(hello, *hello2);
+    EXPECT_EQ((*hello2).getDiscriminator(), 12);
+
+    babelwires::ShortId shortHello = "Hello";
+    const auto hello3 = babelwires::LongId::tryMakeFrom(shortHello);
+    ASSERT_TRUE(hello3.has_value());
+    EXPECT_EQ(shortHello, *hello3);
+
+    babelwires::LongId longHello = "Hello_incredible_world";
+    const auto hello4 = babelwires::ShortId::tryMakeFrom(longHello);
+    ASSERT_FALSE(hello4.has_value());
+}
+
 
 TEST(IdentifierTest, identifierRegistrySameNames) {
     testUtils::TestLog log;
@@ -379,8 +403,11 @@ TEST(IdentifierTest, identifierRegistrySerializationDeserialization) {
 
     {
         babelwires::AutomaticDeserializationRegistry deserializationReg;
-        babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-        auto fieldNameRegPtr = deserializer.deserializeObject<babelwires::IdentifierRegistry>();
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
+        auto fieldNameRegPtrResult = deserializer.deserializeObject<babelwires::IdentifierRegistry>();
+        ASSERT_TRUE(fieldNameRegPtrResult);
+        auto fieldNameRegPtr = std::move(*fieldNameRegPtrResult);
         ASSERT_NE(fieldNameRegPtr, nullptr);
         deserializer.finalize();
 

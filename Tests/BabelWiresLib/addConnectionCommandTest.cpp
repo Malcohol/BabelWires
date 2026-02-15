@@ -107,7 +107,7 @@ TEST(AddConnectionCommandTest, failSafelyNoTargetPath) {
     const babelwires::NodeId sourceNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisIdentifier()));
 
     babelwires::ConnectionModifierData connectionData;
-    connectionData.m_targetPath = babelwires::Path::deserializeFromString("qqq/zzz");
+    connectionData.m_targetPath = *babelwires::Path::deserializeFromString("qqq/zzz");
     connectionData.m_sourcePath = babelwires::Path();
     connectionData.m_sourceId = sourceNodeId;
     babelwires::AddConnectionCommand command("Test command", targetNodeId, connectionData.clone());
@@ -124,7 +124,7 @@ TEST(AddConnectionCommandTest, failSafelyNoSourcePath) {
 
     babelwires::ConnectionModifierData connectionData;
     connectionData.m_targetPath = babelwires::Path();
-    connectionData.m_sourcePath = babelwires::Path::deserializeFromString("qqq/zzz");
+    connectionData.m_sourcePath = *babelwires::Path::deserializeFromString("qqq/zzz");
     connectionData.m_sourceId = sourceNodeId;
     babelwires::AddConnectionCommand command("Test command", targetNodeId, connectionData.clone());
 

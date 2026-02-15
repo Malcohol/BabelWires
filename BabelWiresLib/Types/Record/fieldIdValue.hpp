@@ -26,7 +26,7 @@ namespace babelwires {
         void setOptionality(RecordType::Optionality isOptional) { m_optionality = isOptional; }
 
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        Result deserializeContents(Deserializer& deserializer) override;
         std::string toString() const override;
 
         std::size_t getHash() const override;

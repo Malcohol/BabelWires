@@ -2,53 +2,52 @@
  * Functions for saving and loading data.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 
 template <typename BUNDLE>
-typename babelwires::DataSerialization<BUNDLE>::Data babelwires::DataSerialization<BUNDLE>::loadFromStream(std::istream& is,
-                                                                         const DataContext& context,
-                                                                         const std::filesystem::path& pathToFile,
-                                                                         UserLogger& userLogger) {
+babelwires::ResultT<typename babelwires::DataSerialization<BUNDLE>::Data>
+babelwires::DataSerialization<BUNDLE>::loadFromStream(std::istream& is, const DataContext& context,
+                                                      const std::filesystem::path& pathToFile, UserLogger& userLogger) {
     std::string str((std::istreambuf_iterator<char>(is)), std::istreambuf_iterator<char>());
 
-    XmlDeserializer deserializer(str, context.m_deserializationReg, userLogger);
-    try {
-        auto projectBundle = deserializer.deserializeObject<BUNDLE>(BUNDLE::serializationType);
-        assert(projectBundle);
-        deserializer.finalize();
-        return std::move(*projectBundle).resolveAgainstCurrentContext(context, pathToFile, userLogger);
-    } catch (ParseException& e) {
-        deserializer.addContextDescription(e);
-        throw;
+    XmlDeserializer deserializer(context.m_deserializationReg, userLogger);
+    ON_ERROR(deserializer.finalize(ErrorState::Error));
+    DO_OR_ERROR(deserializer.parse(str));
+    auto projectBundleResult = deserializer.deserializeObject<BUNDLE>(BUNDLE::serializationType);
+    if (!projectBundleResult) {
+        deserializer.augmentResultWithContext(projectBundleResult);
+        return projectBundleResult.error();
     }
+    DO_OR_ERROR(deserializer.finalize());
+    auto projectBundle = std::move(*projectBundleResult);
+    return std::move(*projectBundle).resolveAgainstCurrentContext(context, pathToFile, userLogger);
 }
 
 template <typename BUNDLE>
-typename babelwires::DataSerialization<BUNDLE>::Data babelwires::DataSerialization<BUNDLE>::loadFromFile(const std::filesystem::path& pathToFile,
-                                                                       const DataContext& context,
-                                                                       UserLogger& userLogger) {
+babelwires::ResultT<typename babelwires::DataSerialization<BUNDLE>::Data>
+babelwires::DataSerialization<BUNDLE>::loadFromFile(const std::filesystem::path& pathToFile, const DataContext& context,
+                                                    UserLogger& userLogger) {
     std::ifstream is(pathToFile);
-    try {
-        return loadFromStream(is, context, pathToFile, userLogger);
-    } catch (ParseException& e) {
-        e << " when reading the file \"" << pathToFile << "\"";
-        throw;
+    auto result = loadFromStream(is, context, pathToFile, userLogger);
+    if (!result) {
+        return Error() << result.error() << " when reading the file \"" << pathToFile << "\"";
     }
+    return result;
 }
 
 template <typename BUNDLE>
-typename babelwires::DataSerialization<BUNDLE>::Data babelwires::DataSerialization<BUNDLE>::loadFromString(const std::string& string,
-                                                                         const DataContext& context,
-                                                                         const std::filesystem::path& pathToFile,
-                                                                         UserLogger& userLogger) {
+babelwires::ResultT<typename babelwires::DataSerialization<BUNDLE>::Data>
+babelwires::DataSerialization<BUNDLE>::loadFromString(const std::string& string, const DataContext& context,
+                                                      const std::filesystem::path& pathToFile, UserLogger& userLogger) {
     std::istringstream is(string);
     return loadFromStream(is, context, pathToFile, userLogger);
 }
 
 template <typename BUNDLE>
-void babelwires::DataSerialization<BUNDLE>::saveToStream(std::ostream& os, const std::filesystem::path& pathToFile, Data data) {
+void babelwires::DataSerialization<BUNDLE>::saveToStream(std::ostream& os, const std::filesystem::path& pathToFile,
+                                                         Data data) {
     XmlSerializer serializer;
     BUNDLE bundle(pathToFile, std::move(data));
     bundle.interpretInCurrentContext();
@@ -57,14 +56,15 @@ void babelwires::DataSerialization<BUNDLE>::saveToStream(std::ostream& os, const
 }
 
 template <typename BUNDLE>
-void babelwires::DataSerialization<BUNDLE>::saveToFile(const std::filesystem::path& pathToFile, Data data) {
-    try {
-        OutFileStream os(pathToFile);
-        saveToStream(os, pathToFile, std::move(data));
-        os.close();
-    } catch (const std::exception&) {
-        throw FileIoException() << "Failed to save the project to: " << pathToFile;
+babelwires::Result babelwires::DataSerialization<BUNDLE>::saveToFile(const std::filesystem::path& pathToFile,
+                                                                      Data data) {
+    std::ofstream os(pathToFile);
+    saveToStream(os, pathToFile, std::move(data));
+    os.close();
+    if (!os.good()) {
+        return Error() << "Failed to save data to: " << pathToFile;
     }
+    return {};
 }
 
 template <typename BUNDLE>
