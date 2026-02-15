@@ -7,12 +7,14 @@
  **/
 #pragma once
 
+#include <BaseLib/Utilities/result.hpp>
+
 #include <stdexcept>
 #include <string>
 #include <ostream>
 
 struct ProgramOptions {
-    ProgramOptions(int argc, char* argv[]);
+    static babelwires::ResultT<ProgramOptions> parse(int argc, char* argv[]);
 
     enum Mode { MODE_UI, MODE_DEFAULT = MODE_UI, MODE_PRINT_HELP, MODE_RUN_PROJECT };
 
@@ -25,8 +27,3 @@ struct ProgramOptions {
 
 void writeUsage(const std::string& programName, std::ostream& stream);
 void writeHelp(const std::string& programName, std::ostream& stream);
-
-struct OptionError : public std::runtime_error {
-    OptionError(const std::string& description)
-        : std::runtime_error(description) {}
-};
