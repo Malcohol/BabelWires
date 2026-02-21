@@ -283,24 +283,21 @@ void babelwires::MainWindow::openProject() {
                 scope.getCommandManager().clear();
                 setInitialFilePath();
             }
+            const std::string filePathStr = filePath.toStdString();
+            m_userLogger.logInfo() << "Open project \"" << filePathStr << '"';
             while (1) {
-                try {
-                    std::string filePathStr = filePath.toStdString();
-                    m_userLogger.logInfo() << "Open project \"" << filePathStr << '"';
-                    ModifyModelScope scope(m_projectGraphModel);
-                    ResultT<ProjectData> projectData =
-                        ProjectSerialization::loadFromFile(filePathStr, m_projectGraphModel.getContext(), m_userLogger);
-                    if (!projectData) {
-                        throw FileIoException() << projectData.error().toString();
-                    }
+                ModifyModelScope scope(m_projectGraphModel);
+                const ResultT<ProjectData> projectData =
+                    ProjectSerialization::loadFromFile(filePathStr, m_projectGraphModel.getContext(), m_userLogger);
+                if (projectData) {
                     scope.getProject().setProjectData(*projectData);
                     setCurrentFilePath(filePath);
                     return;
-                } catch (FileIoException& e) {
-                    m_userLogger.logError() << "The project could not be opened: " << e.what();
-                    if (showErrorMessageBox(this, tr("The project could not be opened."), e.what(),
-                                            (QMessageBox::Retry | QMessageBox::Cancel),
-                                            QMessageBox::Retry) == QMessageBox::Cancel) {
+                } else {
+                    m_userLogger.logError() << "The project could not be opened: " << projectData.error().toString();
+                    if (showErrorMessageBox(
+                            this, tr("The project could not be opened."), projectData.error().toString().c_str(),
+                            (QMessageBox::Retry | QMessageBox::Cancel), QMessageBox::Retry) == QMessageBox::Cancel) {
                         return;
                     }
                 }
@@ -446,9 +443,9 @@ void babelwires::MainWindow::paste() {
     QByteArray contents = mimedata->data(getClipboardMimetype());
     std::string asString(contents.data(), contents.length());
 
-    ResultT<ProjectData> projectData = ProjectSerialization::loadFromString(asString, m_projectGraphModel.getContext(),
-                                                                       getFullFilePath().toStdString(), m_userLogger);
-    if (projectData)  {
+    ResultT<ProjectData> projectData = ProjectSerialization::loadFromString(
+        asString, m_projectGraphModel.getContext(), getFullFilePath().toStdString(), m_userLogger);
+    if (projectData) {
         {
             auto* flowView = dynamic_cast<QtNodes::GraphicsView*>(centralWidget());
             assert(flowView && "Unexpected central widget");
@@ -472,9 +469,9 @@ bool babelwires::MainWindow::maybeSave() {
     AccessModelScope scope(m_projectGraphModel);
     if (!scope.getCommandManager().isAtCursor()) {
         while (1) {
-            switch (showWarningMessageBox(this, tr("The project has unsaved changes."), tr("Do you want to save them now?"),
-                                          (QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel),
-                                          QMessageBox::Save)) {
+            switch (showWarningMessageBox(
+                this, tr("The project has unsaved changes."), tr("Do you want to save them now?"),
+                (QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel), QMessageBox::Save)) {
                 case QMessageBox::Save:
                     if (trySaveProject(getFullFilePath())) {
                         return true;

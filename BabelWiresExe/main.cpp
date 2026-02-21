@@ -103,7 +103,8 @@ int main(int argc, char* argv[]) {
         Project project(context, log);
         ResultT<ProjectData> projectDataResult = ProjectSerialization::loadFromFile(options->m_inputFileName.c_str(), context, log);
         if (!projectDataResult) {
-            throw FileIoException() << projectDataResult.error().toString();
+            std::cerr << "Error loading project: " << projectDataResult.error().toString() << std::endl;
+            return EXIT_FAILURE;
         }
         project.setProjectData(std::move(*projectDataResult));
         project.tryToSaveAllTargets();
