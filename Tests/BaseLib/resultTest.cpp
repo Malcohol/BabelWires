@@ -166,6 +166,27 @@ TEST(ResultTest, returnError) {
     EXPECT_TRUE(onErrorCalled);
 }
 
+// Experimental macro allowing the caller to disable the last ON_ERROR handler.
+// It requires a new scope and can only be used for the innermost ON_ERROR, so it's
+// not very ergonomic.
+#define DISABLE_LAST_ON_ERROR() const auto babelwiresOnError = babelwiresOnError2;
+
+TEST(ResultTest, disableTest) {
+    auto functionThatDisablesOnError = [](bool& onErrorCalled) -> babelwires::Result {
+        ON_ERROR(onErrorCalled = true);
+        {
+            DISABLE_LAST_ON_ERROR();
+            DO_OR_ERROR(functionThatReturnsError());
+            return {};
+        }
+    };
+
+    bool onErrorCalled = false;
+    const babelwires::Result result = functionThatDisablesOnError(onErrorCalled);
+    EXPECT_FALSE(result);
+    EXPECT_FALSE(onErrorCalled);
+}
+
 // This code has been removed from result.hpp while I decide whether it's helpful or harmful.
 // This concern is that the code passed to FINALLY_WITH_ERRORSTATE cannot itself return an error.
 // Code that ends up in finally clauses (e.g. close methods) often does encounter an error that (if no error has
