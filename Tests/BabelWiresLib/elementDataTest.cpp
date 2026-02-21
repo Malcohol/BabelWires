@@ -28,7 +28,7 @@ namespace {
         data.m_uiData.m_uiPosition.m_x = 12;
         data.m_uiData.m_uiPosition.m_y = -44;
         data.m_uiData.m_uiSize.m_width = 300;
-        data.m_expandedPaths.emplace_back(babelwires::Path::deserializeFromString("aa/bb"));
+        data.m_expandedPaths.emplace_back(*babelwires::Path::deserializeFromString("aa/bb"));
     }
 
     void checkCommonFields(const babelwires::NodeData& data, bool testExpandedPaths = true) {
@@ -38,7 +38,7 @@ namespace {
         EXPECT_EQ(data.m_uiData.m_uiSize.m_width, 300);
         if (testExpandedPaths) {
             ASSERT_EQ(data.m_expandedPaths.size(), 1);
-            EXPECT_EQ(data.m_expandedPaths[0], babelwires::Path::deserializeFromString("aa/bb"));
+            EXPECT_EQ(data.m_expandedPaths[0], *babelwires::Path::deserializeFromString("aa/bb"));
         } else {
             EXPECT_EQ(data.m_expandedPaths.size(), 0);
         }
@@ -110,8 +110,11 @@ TEST(ElementDataTest, sourceFileDataSerialize) {
 
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::SourceFileNodeData>();
+    babelwires::XmlDeserializer deserializer(deserializationReg, log);
+    ASSERT_TRUE(deserializer.parse(serializedContents));
+    auto dataPtrResult = deserializer.deserializeObject<babelwires::SourceFileNodeData>();
+    ASSERT_TRUE(dataPtrResult);
+    auto dataPtr = std::move(*dataPtrResult);
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
@@ -133,7 +136,8 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
         fileFeature->setToDefault();
         testDomain::TestSimpleRecordType::Instance instance{fileFeature->getChild(0)->as<babelwires::ValueTreeNode>()};
         instance.getintR0().set(14);
-        targetFileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log, *fileFeature, tempFilePath);
+        EXPECT_TRUE(targetFileFormat->writeToFile(testEnvironment.m_projectContext, testEnvironment.m_log,
+                              *fileFeature, tempFilePath));
     }
 
     // Create sourceFileData which expect to be able to load the file.
@@ -142,7 +146,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     data.m_factoryVersion = 1;
     data.m_filePath = tempFilePath;
 
-    const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
+    const babelwires::Path expandedPath = *babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::Node> node =
@@ -211,8 +215,11 @@ TEST(ElementDataTest, targetFileDataSerialize) {
 
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::TargetFileNodeData>();
+    babelwires::XmlDeserializer deserializer(deserializationReg, log);
+    ASSERT_TRUE(deserializer.parse(serializedContents));
+    auto dataPtrResult = deserializer.deserializeObject<babelwires::TargetFileNodeData>();
+    ASSERT_TRUE(dataPtrResult);
+    auto dataPtr = std::move(*dataPtrResult);
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
@@ -231,7 +238,7 @@ TEST(ElementDataTest, targetFileDataCreateElement) {
     setCommonFields(data);
     setModifiers(data, testDomain::getTestFileElementPathToInt0());
 
-    const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
+    const babelwires::Path expandedPath = *babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::Node> node =
@@ -295,8 +302,11 @@ TEST(ElementDataTest, processorDataSerialize) {
 
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::ProcessorNodeData>();
+    babelwires::XmlDeserializer deserializer(deserializationReg, log);
+    ASSERT_TRUE(deserializer.parse(serializedContents));
+    auto dataPtrResult = deserializer.deserializeObject<babelwires::ProcessorNodeData>();
+    ASSERT_TRUE(dataPtrResult);
+    auto dataPtr = std::move(*dataPtrResult);
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
@@ -313,7 +323,7 @@ TEST(ElementDataTest, processorDataCreateElement) {
     setCommonFields(data);
     setModifiers(data, testDomain::TestProcessorInputOutputType::s_intIdInitializer);
 
-    const babelwires::Path expandedPath = babelwires::Path::deserializeFromString("cc/dd");
+    const babelwires::Path expandedPath = *babelwires::Path::deserializeFromString("cc/dd");
     data.m_expandedPaths.emplace_back(expandedPath);
 
     std::unique_ptr<const babelwires::Node> node =

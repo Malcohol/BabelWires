@@ -7,9 +7,10 @@ SET( COMMON_SRCS
 	Cloning/cloneable.cpp
 	Registry/registry.cpp
 	Registry/fileTypeRegistry.cpp
+	IO/dataSink.cpp
 	IO/dataSource.cpp
+	IO/fileDataSink.cpp
 	IO/fileDataSource.cpp
-	IO/outFileStream.cpp
 	Math/rational.cpp
 	Log/log.cpp
 	Log/ostreamLogListener.cpp
@@ -24,7 +25,6 @@ SET( COMMON_SRCS
 	Serialization/XML/xmlDeserializer.cpp
 	Signal/signalSubscription.cpp
 	BlockStream/blockStream.cpp
-	Utilities/result.cpp
 	Utilities/unicodeUtils.cpp
    )
 

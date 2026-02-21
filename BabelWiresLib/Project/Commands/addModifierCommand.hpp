@@ -11,6 +11,7 @@
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
 namespace babelwires {
     class Project;

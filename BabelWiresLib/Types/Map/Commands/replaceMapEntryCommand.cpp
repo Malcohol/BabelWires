@@ -8,7 +8,6 @@
 
 #include <BabelWiresLib/Types/Map/Commands/replaceMapEntryCommand.hpp>
 
-#include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 

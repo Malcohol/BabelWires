@@ -7,7 +7,9 @@
  **/
 #pragma once
 
+#include <BaseLib/Result/resultDSL.hpp>
 #include <BaseLib/Serialization/automaticDeserializationRegistry.hpp>
+
 #include <cassert>
 #include <functional>
 #include <memory>
@@ -26,7 +28,7 @@ namespace babelwires {
         virtual void serializeContents(Serializer& serializer) const = 0;
 
         /// Concrete classes need to implement this, to deserialize their contents.
-        virtual void deserializeContents(Deserializer& deserializer) = 0;
+        virtual Result deserializeContents(Deserializer& deserializer) = 0;
 
         /// This is supplied automatically by both SERIALIZABLE macros.
         virtual std::string_view getSerializationType() const = 0;
@@ -62,11 +64,16 @@ namespace babelwires {
     static const babelwires::DeserializationRegistry::Entry* getDeserializationRegistryEntry() {                       \
         return &babelwires::Detail::SerializableConcrete<T>::s_registryEntry;                                          \
     }                                                                                                                  \
-    static T* deserializingFactory(babelwires::Deserializer& deserializer) {                                           \
+    static babelwires::ResultT<std::unique_ptr<babelwires::Serializable>> deserializingFactory(                        \
+        babelwires::Deserializer& deserializer) {                                                                      \
         /* make_unique requires a public default constructor. */                                                       \
         std::unique_ptr<T> newObject(new T());                                                                         \
-        newObject->deserializeContents(deserializer);                                                                  \
-        return newObject.release();                                                                                    \
+        auto result = newObject->deserializeContents(deserializer);                                                    \
+        if (!result) {                                                                                                 \
+            /* TODO Add context, e.g. ", when deserializing <TYPENAME>?" */                                            \
+            return result.error();                                                                                     \
+        }                                                                                                              \
+        return std::move(newObject);                                                                                   \
     }
 
     // Implementation details

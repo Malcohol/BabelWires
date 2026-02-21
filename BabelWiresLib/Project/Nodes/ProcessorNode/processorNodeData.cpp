@@ -16,7 +16,6 @@
 #include <BaseLib/Log/userLogger.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
-#include <BaseLib/exceptions.hpp>
 
 babelwires::ProcessorNodeData::ProcessorNodeData(const ProcessorNodeData& other, ShallowCloneContext c)
     : NodeData(other, c) {}
@@ -37,8 +36,9 @@ void babelwires::ProcessorNodeData::serializeContents(Serializer& serializer) co
     serializeUiData(serializer);
 }
 
-void babelwires::ProcessorNodeData::deserializeContents(Deserializer& deserializer) {
-    getCommonKeyValuePairs(deserializer);
-    deserializeModifiers(deserializer);
-    deserializeUiData(deserializer);
+babelwires::Result babelwires::ProcessorNodeData::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(getCommonKeyValuePairs(deserializer));
+    DO_OR_ERROR(deserializeModifiers(deserializer));
+    DO_OR_ERROR(deserializeUiData(deserializer));
+    return {};
 }

@@ -8,8 +8,8 @@
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 
 #include <BabelWiresLib/TypeSystem/Detail/typeNameFormatter.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <BaseLib/Hash/hash.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
@@ -33,7 +33,8 @@ std::size_t babelwires::TypeConstructorArguments::getHash() const {
     return hash;
 }
 
-bool babelwires::TypeConstructorArguments::equals(const TypeConstructorArguments& a, const TypeConstructorArguments& b) {
+bool babelwires::TypeConstructorArguments::equals(const TypeConstructorArguments& a,
+                                                  const TypeConstructorArguments& b) {
     return (a.m_typeArguments == b.m_typeArguments) && (a.m_valueArguments == b.m_valueArguments);
 }
 
@@ -48,9 +49,7 @@ babelwires::TypeExp::TypeExp(TypeConstructorId typeConstructorId, TypeConstructo
 babelwires::TypePtr babelwires::TypeExp::tryResolve(const TypeSystem& typeSystem) const {
     struct VisitorMethods {
         TypePtr operator()(std::monostate) { return {}; }
-        TypePtr operator()(RegisteredTypeId typeId) {
-            return m_typeSystem.tryGetRegisteredTypeById(typeId);
-        }
+        TypePtr operator()(RegisteredTypeId typeId) { return m_typeSystem.tryGetRegisteredTypeById(typeId); }
         TypePtr operator()(const ConstructedTypeData& higherOrderData) {
             try {
                 const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
@@ -70,9 +69,7 @@ babelwires::TypePtr babelwires::TypeExp::tryResolve(const TypeSystem& typeSystem
 
 babelwires::TypePtr babelwires::TypeExp::resolve(const TypeSystem& typeSystem) const {
     struct VisitorMethods {
-        TypePtr operator()(std::monostate) {
-            throw TypeSystemException() << "A null type cannot be resolved.";
-        }
+        TypePtr operator()(std::monostate) { throw TypeSystemException() << "A null type cannot be resolved."; }
         TypePtr operator()(RegisteredTypeId typeId) { return m_typeSystem.getRegisteredTypeById(typeId); }
         TypePtr operator()(const ConstructedTypeData& higherOrderData) {
             const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
@@ -155,32 +152,38 @@ void babelwires::TypeExp::serializeContents(Serializer& serializer) const {
     std::visit(visitorMethods, m_storage);
 }
 
-void babelwires::TypeExp::deserializeContents(Deserializer& deserializer) {
+babelwires::Result babelwires::TypeExp::deserializeContents(Deserializer& deserializer) {
     RegisteredTypeId typeId;
-    if (deserializer.deserializeValue("typeId", typeId, babelwires::Deserializer::IsOptional::Optional)) {
+    TypeConstructorId typeConstructorId;
+    ASSIGN_OR_ERROR(const bool typeIdResult, deserializer.tryDeserializeValue("typeId", typeId));
+    ASSIGN_OR_ERROR(const bool typeConstructorIdResult,
+                    deserializer.tryDeserializeValue("typeConstructorId", typeConstructorId));
+    if (typeIdResult && typeConstructorIdResult) {
+        return Error() << "TypeExp cannot have both typeId and typeConstructorId";
+    } else if (typeIdResult) {
         m_storage = typeId;
-    } else {
-        TypeConstructorId typeConstructorId;
-        if (deserializer.deserializeValue("typeConstructorId", typeConstructorId,
-                                          babelwires::Deserializer::IsOptional::Optional)) {
-            std::vector<TypeExp> typeArguments;
-            std::vector<ValueHolder> valueArguments;
-            auto typeIt = deserializer.deserializeArray<TypeExp>("typeArguments", Deserializer::IsOptional::Optional);
-            while (typeIt.isValid()) {
-                typeArguments.emplace_back(std::move(*typeIt.getObject()));
-                ++typeIt;
+    } else if (typeConstructorIdResult) {
+        std::vector<TypeExp> typeArguments;
+        std::vector<ValueHolder> valueArguments;
+        if (auto typeIt = deserializer.tryDeserializeArray<TypeExp>("typeArguments")) {
+            while (typeIt->isValid()) {
+                ASSIGN_OR_ERROR(auto result, typeIt->getObject());
+                typeArguments.emplace_back(std::move(*result));
+                DO_OR_ERROR(typeIt->advance());
             }
-            auto valueIt =
-                deserializer.deserializeArray<EditableValue>("valueArguments", Deserializer::IsOptional::Optional);
-            while (valueIt.isValid()) {
-                valueArguments.emplace_back(uniquePtrCast<Value>(valueIt.getObject()));
-                ++valueIt;
-            }
-            m_storage = ConstructedTypeData{typeConstructorId, {std::move(typeArguments), std::move(valueArguments)}};
-        } else {
-            m_storage = {};
         }
+        if (auto valueIt = deserializer.tryDeserializeArray<EditableValue>("valueArguments")) {
+            while (valueIt->isValid()) {
+                ASSIGN_OR_ERROR(auto result, valueIt->getObject());
+                valueArguments.emplace_back(uniquePtrCast<Value>(std::move(result)));
+                DO_OR_ERROR(valueIt->advance());
+            }
+        }
+        m_storage = ConstructedTypeData{typeConstructorId, {std::move(typeArguments), std::move(valueArguments)}};
+    } else {
+        m_storage = {};
     }
+    return {};
 }
 
 void babelwires::TypeExp::visitIdentifiers(IdentifierVisitor& visitor) {
@@ -193,6 +196,10 @@ void babelwires::TypeExp::visitIdentifiers(IdentifierVisitor& visitor) {
             auto& arguments = std::get<1>(higherOrderData).getTypeArguments();
             std::for_each(arguments.begin(), arguments.end(),
                           [this](TypeExp& arg) { arg.visitIdentifiers(m_visitor); });
+            auto& valueArguments = std::get<1>(higherOrderData).getValueArguments();
+            std::for_each(valueArguments.begin(), valueArguments.end(), [this](ValueHolder& valueArg) {
+                valueArg.copyContentsAndGetNonConst().getAsEditableValue().visitIdentifiers(m_visitor);
+            });
         }
         IdentifierVisitor& m_visitor;
     } visitorMethods{visitor};

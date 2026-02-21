@@ -1,7 +1,5 @@
 #include <BaseLib/uuid.hpp>
 
-#include <BaseLib/exceptions.hpp>
-
 #include <gtest/gtest.h>
 
 #include <array>
@@ -24,7 +22,7 @@ TEST(UuidTest, basicOperations) {
     }
     {
         std::string serialized = uuid.serializeToString();
-        Uuid uuidD = Uuid::deserializeFromString(serialized);
+        Uuid uuidD = *Uuid::deserializeFromString(serialized);
         EXPECT_EQ(uuid, uuidD);
     }
 }
@@ -33,7 +31,7 @@ TEST(UuidTest, badParsing) {
     for (const auto& s : std::array<std::string_view, 5>{
              "", "916d86a6-1d48-4bce-a83f-8deb375a955", "916d86a61d48-4bce-a83f-8deb375a9552",
              "916d86a6-1d48-4bce-a83f-8deb375x9552", "916d86a6-1d48-4bce-a83f-8deb375a955298"}) {
-        EXPECT_THROW(Uuid::deserializeFromString(s), ParseException);
+        EXPECT_FALSE(Uuid::deserializeFromString(s).has_value());
     }
 }
 

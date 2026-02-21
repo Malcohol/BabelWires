@@ -19,7 +19,7 @@ namespace testUtils {
 
         // Dummy implementations.
         void serializeContents(babelwires::Serializer& serializer) const override;
-        void deserializeContents(babelwires::Deserializer& deserializer) override;
+        babelwires::Result deserializeContents(babelwires::Deserializer& deserializer) override;
         bool checkFactoryVersion(const babelwires::ProjectContext& context,
                                  babelwires::UserLogger& userLogger) override;
 

@@ -29,8 +29,11 @@ TEST(ProjectDataTest, serialization) {
     }
 
     babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::ProjectData>();
+    babelwires::XmlDeserializer deserializer(deserializationReg, log);
+    ASSERT_TRUE(deserializer.parse(serializedContents));
+    auto dataPtrResult = deserializer.deserializeObject<babelwires::ProjectData>();
+    ASSERT_TRUE(dataPtrResult);
+    auto dataPtr = std::move(*dataPtrResult);
     deserializer.finalize();
 
     EXPECT_EQ(dataPtr->m_projectId, 1243);

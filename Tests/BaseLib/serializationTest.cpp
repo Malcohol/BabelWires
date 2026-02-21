@@ -19,12 +19,15 @@ namespace {
             serializer.serializeValueArray("array", m_array);
         }
 
-        void deserializeContents(Deserializer& deserializer) override {
-            deserializer.deserializeValue("x", m_x);
-            for (auto it = deserializer.deserializeValueArray<std::string>("array", Deserializer::IsOptional::Optional);
-                 it.isValid(); ++it) {
-                m_array.emplace_back(std::move(it.deserializeValue()));
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeValue("x", m_x));
+            if (auto it = deserializer.tryDeserializeValueArray<std::string>("array")) {
+                while (it->isValid()) {
+                    ASSIGN_OR_ERROR(m_array.emplace_back(), it->deserializeValue());
+                    DO_OR_ERROR(it->advance());
+                }
             }
+            return {};
         }
 
         int m_x = 0;
@@ -50,8 +53,11 @@ TEST(SerializationTest, values) {
     {
         TestLog log;
         AutomaticDeserializationRegistry deserializationReg;
-        babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-        auto APtr = deserializer.deserializeObject<A>();
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
+        auto APtrResult = deserializer.deserializeObject<A>();
+        ASSERT_TRUE(APtrResult);
+        auto APtr = std::move(*APtrResult);
         deserializer.finalize();
 
         EXPECT_EQ(APtr->m_x, 12);
@@ -70,13 +76,15 @@ namespace {
             serializer.serializeArray("arrayOfAs", m_arrayOfAs);
         }
 
-        void deserializeContents(Deserializer& deserializer) override {
-            if (std::unique_ptr<A> a = deserializer.deserializeObject<A>()) {
-                m_a = std::move(*a);
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeObjectByValue<A>(m_a));
+            ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<A>("arrayOfAs"));
+            while (it.isValid()) {
+                ASSIGN_OR_ERROR(auto result, it.getObject());
+                m_arrayOfAs.emplace_back(std::move(*result));
+                DO_OR_ERROR(it.advance());
             }
-            for (auto it = deserializer.deserializeArray<A>("arrayOfAs"); it.isValid(); ++it) {
-                m_arrayOfAs.emplace_back(std::move(*it.getObject()));
-            }
+            return {};
         }
 
         A m_a;
@@ -106,8 +114,11 @@ TEST(SerializationTest, objects) {
     {
         TestLog log;
         AutomaticDeserializationRegistry deserializationReg;
-        babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-        auto BPtr = deserializer.deserializeObject<B>();
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
+        auto BPtrResult = deserializer.deserializeObject<B>();
+        ASSERT_TRUE(BPtrResult);
+        auto BPtr = std::move(*BPtrResult);
         deserializer.finalize();
 
         EXPECT_EQ(BPtr->m_a.m_x, 12);
@@ -132,7 +143,10 @@ namespace {
 
             void serializeContents(Serializer& serializer) const override { serializer.serializeValue("x", m_x); }
 
-            void deserializeContents(Deserializer& deserializer) override { deserializer.deserializeValue("x", m_x); }
+            Result deserializeContents(Deserializer& deserializer) override {
+                DO_OR_ERROR(deserializer.deserializeValue("x", m_x));
+                return {};
+            }
 
             // A refactor will split this into a sign and an unsigened int.
             int m_x = 0;
@@ -150,20 +164,21 @@ namespace {
                 serializer.serializeValue("x", m_x);
             }
 
-            void deserializeContents(Deserializer& deserializer) override {
+            Result deserializeContents(Deserializer& deserializer) override {
                 const int version = deserializer.getTypeVersion("C");
                 if (version == 1) {
                     int oldInt = 0;
-                    deserializer.deserializeValue("x", oldInt);
+                    DO_OR_ERROR(deserializer.deserializeValue("x", oldInt));
                     m_isPositive = (oldInt >= 0);
                     m_x = std::abs(oldInt);
                 } else {
                     // Current versions.
                     // This case is also used for later versions and version 0, but the serialization system will have
                     // warned.
-                    deserializer.deserializeValue("isPositive", m_isPositive);
-                    deserializer.deserializeValue("x", m_x);
+                    DO_OR_ERROR(deserializer.deserializeValue("isPositive", m_isPositive));
+                    DO_OR_ERROR(deserializer.deserializeValue("x", m_x));
                 }
+                return {};
             }
 
             bool m_isPositive = true;
@@ -196,8 +211,11 @@ TEST(SerializationTest, versioningOld) {
     {
         TestLog log;
         AutomaticDeserializationRegistry deserializationReg;
-        babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-        auto CPtr = deserializer.deserializeObject<current::C>();
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
+        auto CPtrResult = deserializer.deserializeObject<current::C>();
+        ASSERT_TRUE(CPtrResult);
+        auto CPtr = std::move(*CPtrResult);
         deserializer.finalize();
 
         EXPECT_EQ(CPtr->m_isPositive, false);
@@ -223,8 +241,11 @@ TEST(SerializationTest, versioningCurrent) {
     {
         TestLog log;
         AutomaticDeserializationRegistry deserializationReg;
-        babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-        auto CPtr = deserializer.deserializeObject<current::C>();
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
+        auto CPtrResult = deserializer.deserializeObject<current::C>();
+        ASSERT_TRUE(CPtrResult);
+        auto CPtr = std::move(*CPtrResult);
         deserializer.finalize();
 
         EXPECT_EQ(CPtr->m_isPositive, false);
@@ -242,7 +263,10 @@ namespace {
 
         void serializeContents(Serializer& serializer) const override { serializer.serializeValue("x", m_x); }
 
-        void deserializeContents(Deserializer& deserializer) override { deserializer.deserializeValue("x", m_x); }
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeValue("x", m_x));
+            return {};
+        }
 
         int m_x = 0;
     };
@@ -258,7 +282,10 @@ namespace {
 
         void serializeContents(Serializer& serializer) const override { serializer.serializeValue("s", m_s); }
 
-        void deserializeContents(Deserializer& deserializer) override { deserializer.deserializeValue("s", m_s); }
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeValue("s", m_s));
+            return {};
+        }
 
         std::string m_s;
     };
@@ -270,9 +297,10 @@ namespace {
             serializer.serializeValue("u32", m_u32);
         }
 
-        void deserializeContents(Deserializer& deserializer) override {
-            Concrete1::deserializeContents(deserializer);
-            deserializer.deserializeValue("u32", m_u32);
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(Concrete1::deserializeContents(deserializer));
+            DO_OR_ERROR(deserializer.deserializeValue("u32", m_u32));
+            return {};
         }
 
         std::uint32_t m_u32;
@@ -300,21 +328,19 @@ namespace {
             serializer.serializeArray("objects", m_objects);
         }
 
-        void deserializeContents(Deserializer& deserializer) override {
-            m_base = deserializer.deserializeObject<Base>("base", babelwires::Deserializer::IsOptional::Optional);
-            m_concrete0 =
-                deserializer.deserializeObject<Concrete0>("concrete0", babelwires::Deserializer::IsOptional::Optional);
-            m_intermediate = deserializer.deserializeObject<Intermediate>(
-                "intermediate", babelwires::Deserializer::IsOptional::Optional);
-            m_concrete1 =
-                deserializer.deserializeObject<Concrete1>("concrete1", babelwires::Deserializer::IsOptional::Optional);
-            m_concrete2 =
-                deserializer.deserializeObject<Concrete2>("concrete2", babelwires::Deserializer::IsOptional::Optional);
-            for (auto it =
-                     deserializer.deserializeArray<Base>("objects", babelwires::Deserializer::IsOptional::Optional);
-                 it.isValid(); ++it) {
-                m_objects.emplace_back(it.getObject());
+        Result deserializeContents(Deserializer& deserializer) override {
+            ASSIGN_OR_ERROR(m_base, deserializer.tryDeserializeObject<Base>("base"));
+            ASSIGN_OR_ERROR(m_concrete0, deserializer.tryDeserializeObject<Concrete0>("concrete0"));
+            ASSIGN_OR_ERROR(m_intermediate, deserializer.tryDeserializeObject<Intermediate>("intermediate"));
+            ASSIGN_OR_ERROR(m_concrete1, deserializer.tryDeserializeObject<Concrete1>("concrete1"));
+            ASSIGN_OR_ERROR(m_concrete2, deserializer.tryDeserializeObject<Concrete2>("concrete2"));
+            ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<Base>("objects"));
+            while (it.isValid()) {
+                ASSIGN_OR_ERROR(auto ptr, it.getObject());
+                m_objects.emplace_back(std::move(ptr));
+                DO_OR_ERROR(it.advance());
             }
+            return {};
         }
 
         std::unique_ptr<Base> m_base;
@@ -353,8 +379,11 @@ TEST(SerializationTest, polymorphism) {
     {
         TestLog log;
         AutomaticDeserializationRegistry deserializationReg;
-        babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-        auto MainPtr = deserializer.deserializeObject<Main>();
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
+        auto MainPtrResult = deserializer.deserializeObject<Main>();
+        ASSERT_TRUE(MainPtrResult);
+        auto MainPtr = std::move(*MainPtrResult);
         deserializer.finalize();
 
         ASSERT_NE(MainPtr->m_base, nullptr);
@@ -391,8 +420,8 @@ TEST(SerializationTest, polymorphismFail) {
         serializedContents = std::move(os.str());
     }
 
-    // Replace Concrete2 by an unrelated type, a distanct relation and its parent type.
-    // All of these scenarios should throw, since they are not subtypes of Concrete2.
+    // Replace Concrete2 by an unrelated type, a distant relation and its parent type.
+    // All of these scenarios should fail, since they are not subtypes of Concrete2.
     for (const auto& t : std::array<std::string_view, 3>{"A", "Concrete0", "Concrete1"}) {
         std::string serializedContents2 = serializedContents;
 
@@ -406,15 +435,12 @@ TEST(SerializationTest, polymorphismFail) {
         {
             TestLog log;
             AutomaticDeserializationRegistry deserializationReg;
-            try {
-                babelwires::XmlDeserializer deserializer(serializedContents2, deserializationReg, log);
-                auto MainPtr = deserializer.deserializeObject<Main>();
-                deserializer.finalize();
-            } catch (const ParseException& e) {
-                EXPECT_NE(std::string_view(e.what()).find(t), std::string_view::npos);
-            } catch (...) {
-                EXPECT_TRUE(false);
-            }
+            babelwires::XmlDeserializer deserializer(deserializationReg, log);
+            ASSERT_TRUE(deserializer.parse(serializedContents2));
+            auto MainPtrResult = deserializer.deserializeObject<Main>();
+            EXPECT_FALSE(MainPtrResult);
+            EXPECT_NE(std::string_view(MainPtrResult.error().toString()).find(t), std::string_view::npos);
+            deserializer.finalize();
         }
     }
 }

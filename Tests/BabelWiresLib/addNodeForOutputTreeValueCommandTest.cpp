@@ -147,7 +147,7 @@ TEST_P(AddNodeForOutputTreeValueCommandTest, failSafelyNoSourceValue) {
     testEnvironment.m_project.setProjectData(projectData);
 
     babelwires::AddNodeForOutputTreeValueCommand command(
-        "test command", projectData.m_sourceNodeId, babelwires::Path::deserializeFromString("aaa/bbb"),
+        "test command", projectData.m_sourceNodeId, *babelwires::Path::deserializeFromString("aaa/bbb"),
         {-10, -20}, GetParam());
 
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));

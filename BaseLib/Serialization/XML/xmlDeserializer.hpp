@@ -16,30 +16,27 @@ namespace babelwires {
 
     class XmlDeserializer : public Deserializer {
       public:
-        XmlDeserializer(std::string_view xmlText, const DeserializationRegistry& deserializationRegistry,
-                        UserLogger& userLogger);
+        XmlDeserializer(const DeserializationRegistry& deserializationRegistry, UserLogger& userLogger);
 
-        bool deserializeValue(std::string_view key, bool& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::string& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::uint64_t& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::uint32_t& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::uint16_t& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::uint8_t& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::int64_t& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::int32_t& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::int16_t& value, IsOptional isOptional) override;
-        bool deserializeValue(std::string_view key, std::int8_t& value, IsOptional isOptional) override;
+        /// Parse the given XML text. Must be called before using the deserializer.
+        Result parse(std::string_view xmlText);
 
-        /// Client code must call this before this object is destroyed.
-        using Deserializer::finalize;
-
-        void addContextDescription(ParseException& e) const override;
+        ResultT<bool> tryDeserializeValue(std::string_view key, bool& value) override;
+        ResultT<bool> tryDeserializeValue(std::string_view key, std::string& value) override;
+        ResultT<bool> tryDeserializeValue(std::string_view key, std::uint64_t& value) override;
+        ResultT<bool> tryDeserializeValue(std::string_view key, std::uint32_t& value) override;
+        ResultT<bool> tryDeserializeValue(std::string_view key, std::uint16_t& value) override;
+        ResultT<bool> tryDeserializeValue(std::string_view key, std::uint8_t& value) override;
+        ResultT<bool> tryDeserializeValue(std::string_view key, std::int64_t& value) override;
+        ResultT<bool> tryDeserializeValue(std::string_view key, std::int32_t& value) override;
+        ResultT<bool> tryDeserializeValue(std::string_view key, std::int16_t& value) override;
+        ResultT<bool> tryDeserializeValue(std::string_view key, std::int8_t& value) override;
 
       protected:
         struct IteratorImpl : Deserializer::AbstractIterator {
             IteratorImpl(XmlDeserializer& deserializer, const tinyxml2::XMLElement* arrayElement);
 
-            void operator++() override;
+            Result advance() override;
             bool isValid() const override;
 
             XmlDeserializer& m_deserializer;
@@ -49,24 +46,25 @@ namespace babelwires {
         std::unique_ptr<AbstractIterator> getIteratorImpl() override;
 
         bool pushObject(std::string_view key) override;
-        void popObject() override;
+        Result popObject() override;
 
         bool pushArray(std::string_view key) override;
-        void popArray() override;
+        Result popArray() override;
 
         std::string_view getCurrentTypeName() override;
+
+        ErrorStorage addContextDescription(const ErrorStorage& e) const override;
 
       private:
         friend IteratorImpl;
         void contextPush(std::string_view key, const tinyxml2::XMLElement* element, bool isArray);
-        void contextPop();
+        Result contextPop();
         const tinyxml2::XMLElement* getCurrentElement() const;
         const tinyxml2::XMLNode* getCurrentNode() const;
         void keyWasQueried(std::string_view key);
 
         template <typename INT_TYPE>
-        bool getIntValue(const tinyxml2::XMLElement& element, std::string_view key, INT_TYPE& value,
-                         babelwires::Deserializer::IsOptional isOptional);
+        ResultT<bool> getIntValue(const tinyxml2::XMLElement& element, std::string_view key, INT_TYPE& value);
 
       private:
         tinyxml2::XMLDocument m_doc;

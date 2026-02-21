@@ -49,7 +49,7 @@ TEST(MoveNodeCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
-    modData.m_targetPath = babelwires::Path::deserializeFromString("qqq/zzz");
+    modData.m_targetPath = *babelwires::Path::deserializeFromString("qqq/zzz");
 
     babelwires::MoveNodeCommand command("Test command", 57, babelwires::UiPosition{100, 12});
 

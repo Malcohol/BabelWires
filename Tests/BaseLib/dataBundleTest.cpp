@@ -42,11 +42,12 @@ namespace {
             serializer.serializeValue("filePath", m_filePath);
         }
 
-        void deserializeContents(babelwires::Deserializer& deserializer) override {
-            deserializer.deserializeValue("shortId", m_shortId);
-            deserializer.deserializeValue("mediumId", m_mediumId);
-            deserializer.deserializeValue("longId", m_longId);
-            deserializer.deserializeValue("filePath", m_filePath);
+        babelwires::Result deserializeContents(babelwires::Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeValue("shortId", m_shortId));
+            DO_OR_ERROR(deserializer.deserializeValue("mediumId", m_mediumId));
+            DO_OR_ERROR(deserializer.deserializeValue("longId", m_longId));
+            DO_OR_ERROR(deserializer.deserializeValue("filePath", m_filePath));
+            return {};
         }
 
         int m_contents;
@@ -75,7 +76,7 @@ namespace {
 
         void serializeAdditionalMetadata(babelwires::Serializer& serializer) const override {}
 
-        void deserializeAdditionalMetadata(babelwires::Deserializer& deserializer) override {}
+        babelwires::Result deserializeAdditionalMetadata(babelwires::Deserializer& deserializer) override { return {}; }
     };
 } // namespace
 
@@ -129,8 +130,11 @@ TEST(DataBundleTest, identifiers) {
             "mediumId", "other medium", "66666666-1111-2222-3333-000000000001",
             babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
-        TestBundlePayload targetPayload =
+        const babelwires::ResultT<TestBundlePayload> targetPayloadResult =
             std::move(bundle).resolveAgainstCurrentContext(dataContext, std::filesystem::current_path(), testLog);
+
+        ASSERT_TRUE(targetPayloadResult);
+        const TestBundlePayload& targetPayload = *targetPayloadResult;
 
         EXPECT_EQ(targetPayload.m_contents, 15);
         EXPECT_EQ(targetPayload.m_shortId.getDiscriminator(), 3);
@@ -208,8 +212,11 @@ TEST(DataBundleTest, filePathResolution) {
             babelwires::AutomaticDeserializationRegistry deserializationReg;
             babelwires::DataContext dataContext{deserializationReg};
 
-            TestBundlePayload targetPayload =
+            const babelwires::ResultT<TestBundlePayload> targetPayloadResult =
                 std::move(bundle).resolveAgainstCurrentContext(dataContext, scenario.m_newBase, log);
+
+            ASSERT_TRUE(targetPayloadResult);
+            const TestBundlePayload& targetPayload = *targetPayloadResult;
 
             EXPECT_EQ(targetPayload.m_contents, 44);
             EXPECT_EQ(targetPayload.m_filePath, scenario.m_expectedResolvedPath);

@@ -5,6 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
+
 template <typename ENTRY>
 babelwires::Registry<ENTRY>::Registry(std::string registryName)
     : m_untypedRegistry(std::move(registryName)) {}
@@ -33,8 +34,10 @@ const ENTRY* babelwires::Registry<ENTRY>::getEntryByIdentifier(const LongId& ide
     return static_cast<const ENTRY*>(m_untypedRegistry.getEntryByIdentifier(identifier));
 }
 
-template <typename ENTRY> const ENTRY& babelwires::Registry<ENTRY>::getRegisteredEntry(const LongId& identifier) const {
-    return static_cast<const ENTRY&>(m_untypedRegistry.getRegisteredEntry(identifier));
+template <typename ENTRY>
+babelwires::ResultT<const ENTRY*> babelwires::Registry<ENTRY>::getRegisteredEntry(const LongId& identifier) const {
+    ASSIGN_OR_ERROR(const RegistryEntry* result, m_untypedRegistry.getRegisteredEntry(identifier));
+    return static_cast<const ENTRY*>(result);
 }
 
 template <typename ENTRY> class babelwires::Registry<ENTRY>::Iterator {

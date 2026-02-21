@@ -89,7 +89,7 @@ TEST(RemoveNodeCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueAssignmentData modData(babelwires::IntValue(86));
-    modData.m_targetPath = babelwires::Path::deserializeFromString("qqq/zzz");
+    modData.m_targetPath = *babelwires::Path::deserializeFromString("qqq/zzz");
 
     babelwires::RemoveNodeCommand command("Test command", 57);
 

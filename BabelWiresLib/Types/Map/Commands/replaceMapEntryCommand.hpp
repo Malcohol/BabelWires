@@ -9,6 +9,7 @@
 #pragma once
 
 #include <BabelWiresLib/Commands/commands.hpp>
+#include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 
 namespace babelwires {
     class MapProject;

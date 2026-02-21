@@ -296,18 +296,17 @@ void babelwires::MapEditor::saveMapToFile() {
 
 bool babelwires::MapEditor::trySaveMapToFile(const QString& filePath) {
     while (1) {
-        try {
-            std::string filePathStr = filePath.toStdString();
-            getUserLogger().logInfo() << "Save map to \"" << filePathStr << '"';
-            MapSerialization::saveToFile(filePathStr, m_map.extractMapValue());
+        std::string filePathStr = filePath.toStdString();
+        getUserLogger().logInfo() << "Save map to \"" << filePathStr << '"';
+        auto saveResult = MapSerialization::saveToFile(filePathStr, m_map.extractMapValue());
+        if (saveResult) {
             return true;
-        } catch (FileIoException& e) {
-            getUserLogger().logError() << "The map could not be saved: " << e.what();
-            if (showErrorMessageBox(this, tr("The map could not be saved."), e.what(),
-                                    QMessageBox::Retry | QMessageBox::Cancel,
-                                    QMessageBox::Retry) == QMessageBox::Cancel) {
-                return false;
-            }
+        }
+
+        getUserLogger().logError() << "The map could not be saved: " << saveResult.error().toString();
+        if (showErrorMessageBox(this, tr("The map could not be saved."), saveResult.error().toString().c_str(),
+                                QMessageBox::Retry | QMessageBox::Cancel, QMessageBox::Retry) == QMessageBox::Cancel) {
+            return false;
         }
     }
 }
@@ -320,20 +319,20 @@ void babelwires::MapEditor::loadMapFromFile() {
     QString dialogFormats = tr(MAP_FORMAT_STRING);
     QString filePath = QFileDialog::getOpenFileName(this, dialogCaption, m_lastSaveFilePath, dialogFormats);
     if (!filePath.isNull()) {
+        const std::string filePathStr = filePath.toStdString();
+        getUserLogger().logInfo() << "Load map from \"" << filePathStr << '"';
         while (1) {
-            try {
-                std::string filePathStr = filePath.toStdString();
-                getUserLogger().logInfo() << "Load map from \"" << filePathStr << '"';
-                MapValue mapValue =
-                    MapSerialization::loadFromFile(filePathStr, getProjectGraphModel().getContext(), getUserLogger());
-                setEditorMap(mapValue);
+            const ResultT<MapValue> mapValueResult =
+                MapSerialization::loadFromFile(filePathStr, getProjectGraphModel().getContext(), getUserLogger());
+            if (mapValueResult) {
+                setEditorMap(*mapValueResult);
                 m_lastSaveFilePath = filePath;
                 return;
-            } catch (FileIoException& e) {
-                getUserLogger().logError() << "The map could not be loaded: " << e.what();
-                if (showErrorMessageBox(this, tr("The map could not be loaded."), e.what(),
-                                        QMessageBox::Retry | QMessageBox::Cancel,
-                                        QMessageBox::Retry) == QMessageBox::Cancel) {
+            } else {
+                getUserLogger().logError() << "The map could not be loaded: " << mapValueResult.error().toString();
+                if (showErrorMessageBox(
+                        this, tr("The map could not be loaded."), mapValueResult.error().toString().c_str(),
+                        QMessageBox::Retry | QMessageBox::Cancel, QMessageBox::Retry) == QMessageBox::Cancel) {
                     return;
                 }
             }
@@ -350,8 +349,8 @@ QString babelwires::MapEditor::getTitle() const {
 void babelwires::MapEditor::warnThatMapNoLongerInProject(const std::string& operationDescription) {
     std::ostringstream contents;
     contents << "The map " << getDataLocation() << " is no longer in the project.\n" << operationDescription;
-    showWarningMessageBox(this, tr("The map is no longer in the project"), operationDescription.c_str(),
-                          QMessageBox::Ok, QMessageBox::Ok);
+    showWarningMessageBox(this, tr("The map is no longer in the project"), contents.str().c_str(), QMessageBox::Ok,
+                          QMessageBox::Ok);
 }
 
 void babelwires::MapEditor::onCustomContextMenuRequested(const QPoint& pos) {

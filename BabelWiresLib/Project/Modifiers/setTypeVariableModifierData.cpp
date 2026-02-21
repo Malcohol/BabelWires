@@ -19,13 +19,15 @@ void babelwires::SetTypeVariableModifierData::serializeContents(Serializer& seri
     serializer.serializeArray("typeAssignments", m_typeAssignments);
 }
 
-void babelwires::SetTypeVariableModifierData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_targetPath);
-    auto it = deserializer.deserializeArray<TypeExp>("typeAssignments");
+babelwires::Result babelwires::SetTypeVariableModifierData::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.deserializeValue("path", m_targetPath));
+    ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<TypeExp>("typeAssignments"));
     while (it.isValid()) {
-        m_typeAssignments.emplace_back(std::move(*it.getObject()));
-        ++it;
+        ASSIGN_OR_ERROR(auto result, it.getObject());
+        m_typeAssignments.emplace_back(std::move(*result));
+        DO_OR_ERROR(it.advance());
     }
+    return {};
 }
 
 void babelwires::SetTypeVariableModifierData::visitIdentifiers(IdentifierVisitor& visitor) {

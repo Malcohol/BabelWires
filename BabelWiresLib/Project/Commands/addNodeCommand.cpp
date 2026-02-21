@@ -11,7 +11,6 @@
 #include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <cassert>

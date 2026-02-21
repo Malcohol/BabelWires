@@ -27,16 +27,19 @@ babelwires::TargetFileNode::TargetFileNode(const ProjectContext& context, UserLo
     const NodeData& nodeData = getNodeData();
     try {
         setFactoryName(nodeData.m_factoryIdentifier);
-        const TargetFileFormat& factory =
-            context.m_targetFileFormatReg.getRegisteredEntry(nodeData.m_factoryIdentifier);
+        const auto factoryResult = context.m_targetFileFormatReg.getRegisteredEntry(nodeData.m_factoryIdentifier);
+        if (!factoryResult) {
+            setInternalFailure(factoryResult.error().toString());
+            setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier()));
+            userLogger.logError() << "Failed to create target id=" << nodeData.m_id
+                                  << ": " << factoryResult.error().toString();
+            return;
+        }
+        const TargetFileFormat& factory = **factoryResult;
         setFactoryName(factory.getName());
         auto newFeature = factory.createNewValue(context);
         newFeature->setToDefault();
         setValueTreeRoot(std::move(newFeature));
-    } catch (const RegistryException& e) {
-        setInternalFailure(e.what());
-        setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier()));
-        userLogger.logError() << "Failed to create target id=" << nodeData.m_id << ": " << e.what();
     } catch (const BaseException& e) {
         setInternalFailure(e.what());
         setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier()));
@@ -82,14 +85,11 @@ void babelwires::TargetFileNode::setFilePath(std::filesystem::path newFilePath) 
 
 const babelwires::FileTypeEntry*
 babelwires::TargetFileNode::getFileFormatInformation(const ProjectContext& context) const {
-    // TODO: tryGetRegisteredEntry
-    try {
-        const TargetFileFormat& format =
-            context.m_targetFileFormatReg.getRegisteredEntry(getNodeData().m_factoryIdentifier);
-        return &format;
-    } catch (const RegistryException&) {
+    const auto formatResult = context.m_targetFileFormatReg.getRegisteredEntry(getNodeData().m_factoryIdentifier);
+    if (!formatResult) {
+        return nullptr;
     }
-    return nullptr;
+    return *formatResult;
 }
 
 babelwires::FileNode::FileOperations babelwires::TargetFileNode::getSupportedFileOperations() const {
@@ -107,19 +107,20 @@ bool babelwires::TargetFileNode::save(const ProjectContext& context, UserLogger&
                               << data.m_id << ")";
         return false;
     }
-    try {
-        const TargetFileFormat* format = context.m_targetFileFormatReg.getEntryByIdentifier(data.m_factoryIdentifier);
-        assert(format && "FileFeature with unregistered file format");
-        format->writeToFile(context, userLogger, *m_valueTreeRoot, data.m_filePath);
-        if (m_saveHashWhenSaved != m_saveHash) {
-            setChanged(Changes::NodeLabelChanged);
-            m_saveHashWhenSaved = m_saveHash;
-        }
-        return true;
-    } catch (const std::exception& e) {
-        userLogger.logError() << "Failed to write output for TargetFileNode (id=" << data.m_id << "): " << e.what();
+    const TargetFileFormat* format = context.m_targetFileFormatReg.getEntryByIdentifier(data.m_factoryIdentifier);
+    assert(format && "FileFeature with unregistered file format");
+    const auto writeResult = format->writeToFile(context, userLogger, *m_valueTreeRoot, data.m_filePath);
+    if (!writeResult) {
+        userLogger.logError() << "Failed to write output for TargetFileNode (id=" << data.m_id
+                              << "): " << writeResult.error().toString();
+        return false;
     }
-    return false;
+
+    if (m_saveHashWhenSaved != m_saveHash) {
+        setChanged(Changes::NodeLabelChanged);
+        m_saveHashWhenSaved = m_saveHash;
+    }
+    return true;
 }
 
 void babelwires::TargetFileNode::doProcess(UserLogger& userLogger) {

@@ -114,7 +114,7 @@ TEST(RemoveEntryFromArrayCommandTest, executeAndUndoNonDefaultArray) {
 TEST(RemoveEntryFromArrayCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::RemoveEntryFromArrayCommand command("Test command", 51,
-                                                    babelwires::Path::deserializeFromString("qqq/zzz"), 1, 1);
+                                                    *babelwires::Path::deserializeFromString("qqq/zzz"), 1, 1);
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
@@ -126,7 +126,7 @@ TEST(RemoveEntryFromArrayCommandTest, failSafelyNoArray) {
         testEnvironment.m_project.addNode(testDomain::TestSimpleRecordElementData());
 
     babelwires::RemoveEntryFromArrayCommand command("Test command", elementId,
-                                                    babelwires::Path::deserializeFromString("qqq/zzz"), 1, 1);
+                                                    *babelwires::Path::deserializeFromString("qqq/zzz"), 1, 1);
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));

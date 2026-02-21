@@ -21,11 +21,11 @@ namespace testDomain {
         TestSourceFileFormat();
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
-        std::unique_ptr<babelwires::ValueTreeRoot> loadFromFile(const std::filesystem::path& path,
+        babelwires::ResultT<std::unique_ptr<babelwires::ValueTreeRoot>> loadFromFile(const std::filesystem::path& path,
                                                               const babelwires::ProjectContext& projectContext,
                                                               babelwires::UserLogger& userLogger) const override;
 
-        static std::tuple<int, int> getFileData(const std::filesystem::path& path);
+        static babelwires::ResultT<std::tuple<int, int>> getFileData(const std::filesystem::path& path);
         static void writeToTestFile(const std::filesystem::path& path, int r0 = 0, int r1 = 0);
     };
 
@@ -39,8 +39,10 @@ namespace testDomain {
         std::string getProductName() const override;
         std::unique_ptr<babelwires::ValueTreeRoot>
         createNewValue(const babelwires::ProjectContext& projectContext) const override;
-        void writeToFile(const babelwires::ProjectContext& projectContext, babelwires::UserLogger& userLogger,
-                         const babelwires::ValueTreeRoot& contents, const std::filesystem::path& path) const override;
+        babelwires::Result writeToFile(const babelwires::ProjectContext& projectContext,
+                           babelwires::UserLogger& userLogger,
+                           const babelwires::ValueTreeRoot& contents,
+                           const std::filesystem::path& path) const override;
     };
 
 } // namespace testDomain

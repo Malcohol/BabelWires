@@ -4,6 +4,7 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
 #include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
 #include <BaseLib/Serialization/XML/xmlSerializer.hpp>
@@ -148,8 +149,8 @@ TEST(TypeExpTest, tryResolveParallel) {
             if (vectorOfResolutions.size() >= maximumNumEntries) {
                 break;
             }
-            vectorOfResolutions.emplace_back(
-                Entry{babelwires::TypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(), vectorOfResolutions[j].m_typeExp)});
+            vectorOfResolutions.emplace_back(Entry{babelwires::TypeExp(
+                testUtils::TestUnaryTypeConstructor::getThisIdentifier(), vectorOfResolutions[j].m_typeExp)});
             for (unsigned int k = 0; k < currentSize; ++k) {
                 vectorOfResolutions.emplace_back(
                     Entry{babelwires::TypeExp(testUtils::TestBinaryTypeConstructor::getThisIdentifier(),
@@ -167,10 +168,8 @@ TEST(TypeExpTest, tryResolveParallel) {
     }
 
     // Resolve the TypeExps in parallel.
-    std::for_each(
-        std::execution::par,
-        vectorOfResolutions.begin(), vectorOfResolutions.end(),
-        [&typeSystem](auto& entry) { entry.m_typePtr = entry.m_typeExp.tryResolve(typeSystem); });
+    std::for_each(std::execution::par, vectorOfResolutions.begin(), vectorOfResolutions.end(),
+                  [&typeSystem](auto& entry) { entry.m_typePtr = entry.m_typeExp.tryResolve(typeSystem); });
 
     for (const auto& entry : vectorOfResolutions) {
         EXPECT_NE(entry.m_typePtr, nullptr);
@@ -399,8 +398,11 @@ TEST(TypeExpTest, serialization) {
         }
         testUtils::TestLog log;
         babelwires::AutomaticDeserializationRegistry deserializationReg;
-        babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-        auto typeExpPtr = deserializer.deserializeObject<babelwires::TypeExp>();
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
+        auto typeExpPtrResult = deserializer.deserializeObject<babelwires::TypeExp>();
+        ASSERT_TRUE(typeExpPtrResult);
+        auto typeExpPtr = std::move(*typeExpPtrResult);
         deserializer.finalize();
 
         ASSERT_NE(typeExpPtr, nullptr);
@@ -410,14 +412,17 @@ TEST(TypeExpTest, serialization) {
 
 TEST(TypeExpTest, visitIdentifiers) {
     babelwires::TypeExp typeExp(testUtils::getTestRegisteredMediumIdentifier("Foo", 2),
-                                testUtils::getTestRegisteredMediumIdentifier("Bar", 4),
-                                babelwires::TypeExp(testUtils::getTestRegisteredMediumIdentifier("Flerm", 1),
-                                                    testUtils::getTestRegisteredMediumIdentifier("Erm", 13)));
+                                {{testUtils::getTestRegisteredMediumIdentifier("Bar", 4),
+                                  babelwires::TypeExp(testUtils::getTestRegisteredMediumIdentifier("Flerm", 1),
+                                                      testUtils::getTestRegisteredMediumIdentifier("Erm", 13))},
+                                 {
+                                    babelwires::EnumValue(testUtils::getTestRegisteredIdentifier("Oom", 5)),
+                                 }});
 
     struct Visitor : babelwires::IdentifierVisitor {
         void operator()(babelwires::ShortId& identifier) {
             m_seen.emplace(identifier);
-            identifier.setDiscriminator(17);
+            identifier.setDiscriminator(18);
         }
         void operator()(babelwires::MediumId& identifier) {
             m_seen.emplace(identifier);
@@ -425,9 +430,9 @@ TEST(TypeExpTest, visitIdentifiers) {
         }
         void operator()(babelwires::LongId& identifier) {
             m_seen.emplace(identifier);
-            identifier.setDiscriminator(24);
+            identifier.setDiscriminator(18);
         }
-        std::set<babelwires::ShortId> m_seen;
+        std::set<babelwires::LongId> m_seen;
     } visitor1, visitor2;
 
     typeExp.visitIdentifiers(visitor1);
@@ -445,6 +450,9 @@ TEST(TypeExpTest, visitIdentifiers) {
     ++it;
     EXPECT_EQ(*it, "Foo");
     EXPECT_EQ(it->getDiscriminator(), 2);
+    ++it;
+    EXPECT_EQ(*it, "Oom");
+    EXPECT_EQ(it->getDiscriminator(), 5);
     ++it;
     EXPECT_EQ(it, visitor1.m_seen.end());
 

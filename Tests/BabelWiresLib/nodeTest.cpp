@@ -70,7 +70,7 @@ TEST(NodeTest, modifiers) {
     const babelwires::Path arrayElemPath = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
     const babelwires::Path arrayElemPath2 =
         testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
-    const babelwires::Path failedPath = babelwires::Path::deserializeFromString("foo/bar");
+    const babelwires::Path failedPath = *babelwires::Path::deserializeFromString("foo/bar");
 
     // Deliberately have modifiers in non-canonical order.
     {
@@ -170,7 +170,7 @@ TEST(NodeTest, expandedPaths) {
     const babelwires::Path arrayElemPath = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
     const babelwires::Path arrayElemPath2 =
         testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
-    const babelwires::Path fooBar = babelwires::Path::deserializeFromString("foo/bar");
+    const babelwires::Path fooBar = *babelwires::Path::deserializeFromString("foo/bar");
 
     featureElementData.m_expandedPaths.emplace_back(arrayElemPath);
     featureElementData.m_expandedPaths.emplace_back(arrayPath);
@@ -225,7 +225,7 @@ TEST(NodeTest, extractNodeData) {
     const babelwires::Path arrayElemPath = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
     const babelwires::Path arrayElemPath2 =
         testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(4);
-    const babelwires::Path failedPath = babelwires::Path::deserializeFromString("value/foo/bar");
+    const babelwires::Path failedPath = *babelwires::Path::deserializeFromString("value/foo/bar");
 
     // Deliberately have modifiers in non-canonical order.
     {
@@ -305,7 +305,7 @@ TEST(NodeTest, removedModifiers) {
 
     const babelwires::Path arrayPath = testDomain::TestComplexRecordElementData::getPathToRecordArray();
     const babelwires::Path arrayElemPath = testDomain::TestComplexRecordElementData::getPathToRecordArrayEntry(3);
-    const babelwires::Path failedPath = babelwires::Path::deserializeFromString("foo/bar");
+    const babelwires::Path failedPath = *babelwires::Path::deserializeFromString("foo/bar");
 
     // Deliberately have modifiers in non-canonical order.
     {

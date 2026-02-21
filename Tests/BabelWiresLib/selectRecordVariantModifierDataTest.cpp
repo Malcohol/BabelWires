@@ -66,7 +66,7 @@ TEST(SelectRecordVariantModifierDataTest, failureNotAUnion) {
 
 TEST(SelectRecordVariantModifierDataTest, clone) {
     babelwires::SelectRecordVariantModifierData data;
-    data.m_targetPath = babelwires::Path::deserializeFromString("foo/bar/boo");
+    data.m_targetPath = *babelwires::Path::deserializeFromString("foo/bar/boo");
     data.m_tagToSelect = "tag";
 
     auto clonePtr = data.clone();
@@ -79,7 +79,7 @@ TEST(SelectRecordVariantModifierDataTest, serialization) {
     std::string serializedContents;
     {
         babelwires::SelectRecordVariantModifierData data;
-        data.m_targetPath = babelwires::Path::deserializeFromString("foo/bar/boo");
+        data.m_targetPath = *babelwires::Path::deserializeFromString("foo/bar/boo");
         data.m_tagToSelect = "tag";
 
         babelwires::XmlSerializer serializer;
@@ -90,12 +90,15 @@ TEST(SelectRecordVariantModifierDataTest, serialization) {
     }
     testUtils::TestLog log;
     babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(serializedContents, deserializationReg, log);
-    auto dataPtr = deserializer.deserializeObject<babelwires::SelectRecordVariantModifierData>();
+    babelwires::XmlDeserializer deserializer(deserializationReg, log);
+    ASSERT_TRUE(deserializer.parse(serializedContents));
+    auto dataPtrResult = deserializer.deserializeObject<babelwires::SelectRecordVariantModifierData>();
+    ASSERT_TRUE(dataPtrResult);
+    auto dataPtr = std::move(*dataPtrResult);
     deserializer.finalize();
 
     ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr->m_targetPath, babelwires::Path::deserializeFromString("foo/bar/boo"));
+    EXPECT_EQ(dataPtr->m_targetPath, *babelwires::Path::deserializeFromString("foo/bar/boo"));
     EXPECT_EQ(dataPtr->m_tagToSelect, "tag");
 }
 

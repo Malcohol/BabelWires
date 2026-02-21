@@ -136,7 +136,7 @@ TEST(SelectRecordVariantCommandTest, failSafelyNoElement) {
 TEST(SelectRecordVariantCommandTest, failSafelyNoRecord) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::SelectRecordVariantCommand command("Test command", 51,
-                                                   babelwires::Path::deserializeFromString("qqq/zzz"), "tag");
+                                                   *babelwires::Path::deserializeFromString("qqq/zzz"), "tag");
 
     testDomain::TestRecordWithVariantsElementData elementData;
     elementData.m_id = 51;

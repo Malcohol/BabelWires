@@ -17,7 +17,7 @@ namespace babelwires {
         SERIALIZABLE(SetTypeVariableModifierData, "setTypeVariable", LocalModifierData, 1);
         virtual void apply(ValueTreeNode* target) const override;
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        Result deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
 
         std::vector<TypeExp> m_typeAssignments;

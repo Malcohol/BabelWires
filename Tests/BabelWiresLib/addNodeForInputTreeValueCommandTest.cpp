@@ -176,7 +176,7 @@ TEST_P(AddNodeForInputTreeValueCommandTest, failSafelyNoTargetValue) {
     testEnvironment.m_project.setProjectData(projectData);
 
     babelwires::AddNodeForInputTreeValueCommand command("test command", projectData.m_sourceNodeId,
-                                                        babelwires::Path::deserializeFromString("aaa/bbb"), {-10, -20},
+                                                        *babelwires::Path::deserializeFromString("aaa/bbb"), {-10, -20},
                                                         GetParam());
 
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));

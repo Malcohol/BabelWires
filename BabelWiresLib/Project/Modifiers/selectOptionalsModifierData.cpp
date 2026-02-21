@@ -21,8 +21,8 @@ namespace {
         void serializeContents(babelwires::Serializer& serializer) const {
             serializer.serializeValue("optional", m_optional);
         }
-        void deserializeContents(babelwires::Deserializer& deserializer) {
-            deserializer.deserializeValue("optional", m_optional);
+        babelwires::Result deserializeContents(babelwires::Deserializer& deserializer) {
+            return deserializer.deserializeValue("optional", m_optional);
         };
         babelwires::ShortId m_optional;
     };
@@ -48,20 +48,22 @@ void babelwires::SelectOptionalsModifierData::serializeContents(Serializer& seri
     serializer.serializeArray("optionals", temp);
 }
 
-void babelwires::SelectOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
-    deserializer.deserializeValue("path", m_targetPath);
-    for (auto it =
-             deserializer.deserializeArray<SerializableOptional>("optionals", Deserializer::IsOptional::Optional);
-         it.isValid(); ++it) {
-        const auto newObject = it.getObject();
-        if (newObject->tryAs<SerializableOptional_Activate>()) {
-            m_optionalsActivation[newObject->m_optional] = true;
-        } else if (newObject->tryAs<SerializableOptional_Deactivate>()) {
-            m_optionalsActivation[newObject->m_optional] = false;
-        } else {
-            throw ModelException() << "Problem deserializing activated/deactivated optional";
+babelwires::Result babelwires::SelectOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(deserializer.deserializeValue("path", m_targetPath));
+    if (auto it = deserializer.tryDeserializeArray<SerializableOptional>("optionals")) {
+        while (it->isValid()) {
+            ASSIGN_OR_ERROR(const auto newObject, it->getObject());
+            if (newObject->tryAs<SerializableOptional_Activate>()) {
+                m_optionalsActivation[newObject->m_optional] = true;
+            } else if (newObject->tryAs<SerializableOptional_Deactivate>()) {
+                m_optionalsActivation[newObject->m_optional] = false;
+            } else {
+                throw ModelException() << "Problem deserializing activated/deactivated optional";
+            }
+            DO_OR_ERROR(it->advance());
         }
     }
+    return {};
 }
 
 void babelwires::SelectOptionalsModifierData::apply(ValueTreeNode* target) const {

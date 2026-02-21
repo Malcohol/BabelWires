@@ -14,7 +14,6 @@
 #include <BaseLib/Log/userLogger.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
-#include <BaseLib/exceptions.hpp>
 
 babelwires::SourceFileNodeData::SourceFileNodeData(const SourceFileNodeData& other, ShallowCloneContext c)
     : NodeData(other, c)
@@ -37,11 +36,12 @@ void babelwires::SourceFileNodeData::serializeContents(Serializer& serializer) c
     serializeUiData(serializer);
 }
 
-void babelwires::SourceFileNodeData::deserializeContents(Deserializer& deserializer) {
-    getCommonKeyValuePairs(deserializer);
-    deserializer.deserializeValue("filePath", m_filePath);
-    deserializeModifiers(deserializer);
-    deserializeUiData(deserializer);
+babelwires::Result babelwires::SourceFileNodeData::deserializeContents(Deserializer& deserializer) {
+    DO_OR_ERROR(getCommonKeyValuePairs(deserializer));
+    DO_OR_ERROR(deserializer.deserializeValue("filePath", m_filePath));
+    DO_OR_ERROR(deserializeModifiers(deserializer));
+    DO_OR_ERROR(deserializeUiData(deserializer));
+    return {};
 }
 
 void babelwires::SourceFileNodeData::visitFilePaths(FilePathVisitor& visitor) {

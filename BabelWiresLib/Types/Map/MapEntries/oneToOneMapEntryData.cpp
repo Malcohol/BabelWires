@@ -75,10 +75,12 @@ void babelwires::OneToOneMapEntryData::serializeContents(Serializer& serializer)
     serializer.serializeObject(m_targetValue->getAsEditableValue(), "target");
 }
 
-void babelwires::OneToOneMapEntryData::deserializeContents(Deserializer& deserializer) {
-    // TODO: If refactoring to a constructor, can remove the null handling in == and clone.
-    m_sourceValue = uniquePtrCast<Value>(deserializer.deserializeObject<EditableValue>("source"));
-    m_targetValue = uniquePtrCast<Value>(deserializer.deserializeObject<EditableValue>("target"));
+babelwires::Result babelwires::OneToOneMapEntryData::deserializeContents(Deserializer& deserializer) {
+    ASSIGN_OR_ERROR(auto sourcePtr, deserializer.deserializeObject<EditableValue>("source"));
+    m_sourceValue = uniquePtrCast<Value>(std::move(sourcePtr));
+    ASSIGN_OR_ERROR(auto targetPtr, deserializer.deserializeObject<EditableValue>("target"));
+    m_targetValue = uniquePtrCast<Value>(std::move(targetPtr));
+    return {};
 }
 
 void babelwires::OneToOneMapEntryData::visitIdentifiers(IdentifierVisitor& visitor) {
@@ -95,13 +97,13 @@ babelwires::Result babelwires::OneToOneMapEntryData::doValidate(const TypeSystem
     const bool sourceTypeIsValid = sourceType.isValidValue(typeSystem, *m_sourceValue);
     const bool targetTypeIsValid = targetType.isValidValue(typeSystem, *m_targetValue);
     if (!sourceTypeIsValid && !targetTypeIsValid) {
-        return "Neither source nor target values are valid.";
+        return Error() << "Neither source nor target values are valid.";
     } else if (!sourceTypeIsValid) {
-        return "The source value isn't valid.";
+        return Error() << "The source value isn't valid.";
     } else if (!targetTypeIsValid) {
-        return "The target value isn't valid.";
+        return Error() << "The target value isn't valid.";
     }
-    return Result::success;
+    return {};
 }
 
 babelwires::MapEntryData::Kind babelwires::OneToOneMapEntryData::getKind() const {

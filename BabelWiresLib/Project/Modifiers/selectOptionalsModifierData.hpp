@@ -19,7 +19,7 @@ namespace babelwires {
         CLONEABLE(SelectOptionalsModifierData);
         SERIALIZABLE(SelectOptionalsModifierData, "selectOptionals", LocalModifierData, 1);
         void serializeContents(Serializer& serializer) const override;
-        void deserializeContents(Deserializer& deserializer) override;
+        Result deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;
 
         /// Select or deselect the given optional.

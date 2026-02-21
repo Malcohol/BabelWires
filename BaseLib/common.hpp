@@ -77,8 +77,8 @@ namespace babelwires {
         typedef typename std::conditional<std::is_const<T>::value, typename std::add_const<U>::type, U>::type type;
     };
 
-    template <typename BASE, typename DERIVED> std::unique_ptr<BASE> uniquePtrCast(std::unique_ptr<DERIVED> ptr) {
-        return std::unique_ptr<BASE>(ptr.release());
+    template <typename TO, typename FROM> std::unique_ptr<TO> uniquePtrCast(std::unique_ptr<FROM> ptr) {
+        return std::unique_ptr<TO>(static_cast<TO*>(ptr.release()));
     }
 
     /// Standard utilities to allow std::visit to use lambdas.
