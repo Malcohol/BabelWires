@@ -87,7 +87,7 @@ inline void babelwiresOnError() {}
 #define DO_OR_ERROR(EXPRESSION_THAT_RETURNS_RESULT)                                                                    \
     {                                                                                                                  \
         const auto doOrErrorResult = EXPRESSION_THAT_RETURNS_RESULT;                                                   \
-        if (!doOrErrorResult) {                                                                                        \
+        if (!doOrErrorResult) [[unlikely]] {                                                                                        \
             babelwiresOnError();                                                                                       \
             return std::unexpected(doOrErrorResult.error());                                                           \
         }                                                                                                              \
@@ -103,7 +103,7 @@ inline void babelwiresOnError() {}
 // Instead use a file-unique variable name.
 #define ASSIGN_OR_ERROR(TARGET_EXPRESSION, EXPRESSION_THAT_RETURNS_RESULTT)                                            \
     auto BW_UNIQUE_NAME(assignOrErrorResult, __LINE__) = EXPRESSION_THAT_RETURNS_RESULTT;                              \
-    if (!BW_UNIQUE_NAME(assignOrErrorResult, __LINE__)) {                                                              \
+    if (!BW_UNIQUE_NAME(assignOrErrorResult, __LINE__)) [[unlikely]] {                                                              \
         babelwiresOnError();                                                                                           \
         return std::unexpected(BW_UNIQUE_NAME(assignOrErrorResult, __LINE__).error());                                 \
     }                                                                                                                  \
