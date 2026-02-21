@@ -46,7 +46,9 @@ TEST(RegistryTest, base) {
     registry.addEntry<TestRegistryEntry>(entryId, 1, TestRegistryEntry::Extensions{"test"}, 15);
 
     ASSERT_NE(registry.getEntryByIdentifier("test"), nullptr);
-    EXPECT_NE(&registry.getRegisteredEntry("test"), nullptr);
+    const auto registeredTest = registry.getRegisteredEntry("test");
+    ASSERT_TRUE(registeredTest);
+    EXPECT_NE(*registeredTest, nullptr);
     EXPECT_EQ(registry.getEntryByIdentifier("test")->getName(), "Test");
     EXPECT_TRUE(testUtils::areEqualSets(registry.getFileExtensions(), TestRegistryEntry::Extensions{"test"}));
     ASSERT_NE(registry.getEntryByFileName("foo.test"), nullptr);
@@ -68,7 +70,9 @@ TEST(RegistryTest, base) {
         std::make_unique<TestRegistryEntry>(entryId2, 1, TestRegistryEntry::Extensions{"test2", "TEST_2"}, -144));
 
     ASSERT_NE(registry.getEntryByIdentifier("test2"), nullptr);
-    EXPECT_NE(&registry.getRegisteredEntry("test2"), nullptr);
+    const auto registeredTest2 = registry.getRegisteredEntry("test2");
+    ASSERT_TRUE(registeredTest2);
+    EXPECT_NE(*registeredTest2, nullptr);
     EXPECT_EQ(registry.getEntryByIdentifier("test2")->getName(), "Test2");
     EXPECT_TRUE(testUtils::areEqualSets(registry.getFileExtensions(),
                                         TestRegistryEntry::Extensions{"test", "test2", "test_2"}));
@@ -98,4 +102,16 @@ TEST(RegistryTest, base) {
     EXPECT_EQ(registry.getEntryByFileName("foo.test_2")->getName(), "Test2");
     ASSERT_NE(registry.getEntryByFileName("foo.fOo"), nullptr);
     EXPECT_EQ(registry.getEntryByFileName("foo.fOo")->getName(), "Test3");
+}
+
+TEST(RegistryTest, getRegisteredEntryMissing) {
+    babelwires::IdentifierRegistryScope identifierRegistry;
+    testUtils::TestLog log;
+
+    TestRegistry registry("Test registry");
+
+    const auto missing = registry.getRegisteredEntry("missing");
+    ASSERT_FALSE(missing);
+    EXPECT_NE(missing.error().toString().find("No entry called"), std::string::npos);
+    EXPECT_NE(missing.error().toString().find("missing"), std::string::npos);
 }

@@ -80,11 +80,11 @@ const babelwires::RegistryEntry* babelwires::UntypedRegistry::getEntryByName(std
     return nullptr;
 }
 
-const babelwires::RegistryEntry&
+babelwires::ResultT<const babelwires::RegistryEntry*>
 babelwires::UntypedRegistry::getRegisteredEntry(const LongId& identifier) const {
     const RegistryEntry* const entry = getEntryByIdentifier(identifier);
     if (!entry) {
-        throw RegistryException() << "No entry called \"" << identifier << "\" was found in the " << m_registryName;
+        return Error() << "No entry called \"" << identifier << "\" was found in the " << m_registryName;
     }
-    return *entry;
+    return entry;
 }

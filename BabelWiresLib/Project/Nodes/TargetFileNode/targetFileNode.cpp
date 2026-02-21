@@ -27,16 +27,19 @@ babelwires::TargetFileNode::TargetFileNode(const ProjectContext& context, UserLo
     const NodeData& nodeData = getNodeData();
     try {
         setFactoryName(nodeData.m_factoryIdentifier);
-        const TargetFileFormat& factory =
-            context.m_targetFileFormatReg.getRegisteredEntry(nodeData.m_factoryIdentifier);
+        const auto factoryResult = context.m_targetFileFormatReg.getRegisteredEntry(nodeData.m_factoryIdentifier);
+        if (!factoryResult) {
+            setInternalFailure(factoryResult.error().toString());
+            setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier()));
+            userLogger.logError() << "Failed to create target id=" << nodeData.m_id
+                                  << ": " << factoryResult.error().toString();
+            return;
+        }
+        const TargetFileFormat& factory = **factoryResult;
         setFactoryName(factory.getName());
         auto newFeature = factory.createNewValue(context);
         newFeature->setToDefault();
         setValueTreeRoot(std::move(newFeature));
-    } catch (const RegistryException& e) {
-        setInternalFailure(e.what());
-        setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier()));
-        userLogger.logError() << "Failed to create target id=" << nodeData.m_id << ": " << e.what();
     } catch (const BaseException& e) {
         setInternalFailure(e.what());
         setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier()));
@@ -82,14 +85,11 @@ void babelwires::TargetFileNode::setFilePath(std::filesystem::path newFilePath) 
 
 const babelwires::FileTypeEntry*
 babelwires::TargetFileNode::getFileFormatInformation(const ProjectContext& context) const {
-    // TODO: tryGetRegisteredEntry
-    try {
-        const TargetFileFormat& format =
-            context.m_targetFileFormatReg.getRegisteredEntry(getNodeData().m_factoryIdentifier);
-        return &format;
-    } catch (const RegistryException&) {
+    const auto formatResult = context.m_targetFileFormatReg.getRegisteredEntry(getNodeData().m_factoryIdentifier);
+    if (!formatResult) {
+        return nullptr;
     }
-    return nullptr;
+    return *formatResult;
 }
 
 babelwires::FileNode::FileOperations babelwires::TargetFileNode::getSupportedFileOperations() const {

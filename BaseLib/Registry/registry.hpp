@@ -7,8 +7,8 @@
  **/
 #pragma once
 
-#include <BaseLib/exceptions.hpp>
 #include <BaseLib/Identifiers/identifier.hpp>
+#include <BaseLib/Utilities/result.hpp>
 
 #include <BaseLib/common.hpp>
 #include <algorithm>
@@ -44,9 +44,6 @@ namespace babelwires {
         VersionNumber m_version;
     };
 
-    /// The exception issued by Registry::getRegisteredEntry when an expected entry is not found.
-    class RegistryException : public ExceptionWithStream<RegistryException> {};
-
     /// Provides the core functionality for a registry, but applies only to the RegistryEntry class.
     /// Since most use cases will want to register subclasses of RegistryEntry, they should use
     /// Registry, below.
@@ -68,8 +65,8 @@ namespace babelwires {
         const RegistryEntry* getEntryByIdentifierAndResolve(LongId& identifier) const;
 
         /// Find an entry which is expected to be present.
-        /// Will throw an RegistryException if the entry is not found.
-        const RegistryEntry& getRegisteredEntry(const LongId& identifier) const;
+        /// Returns an error if the entry is not found.
+        ResultT<const RegistryEntry*> getRegisteredEntry(const LongId& identifier) const;
 
       protected:
         const RegistryEntry* getEntryByName(std::string_view name) const;
@@ -114,19 +111,21 @@ namespace babelwires {
         const ENTRY* getEntryByIdentifier(const LongId& identifier) const;
 
         /// Find an entry which is expected to be present.
-        /// Will throw an RegistryException if the entry is not found.
+        /// Returns an error if the entry is not found.
         /// If the provided identifier is unresolved, it will be resolved by setting its (mutable) discriminator to
         /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
-        const ENTRY& getRegisteredEntry(const LongId& identifier) const;
+        ResultT<const ENTRY*> getRegisteredEntry(const LongId& identifier) const;
 
         /// If ENTRY_SUBTYPE has the common static method "getThisIdentifier", then you can look it up by type
         /// and get a typed reference back.
         template <typename ENTRY_SUBTYPE,
                   std::enable_if_t<std::is_base_of_v<ENTRY, ENTRY_SUBTYPE>, std::nullptr_t> = nullptr>
-        const ENTRY_SUBTYPE& getRegisteredType() const {
-            const ENTRY& entry = getRegisteredEntry(ENTRY_SUBTYPE::getThisIdentifier());
-            assert(dynamic_cast<const ENTRY_SUBTYPE*>(&entry) && "The registered type was not of the expected type");
-            return static_cast<const ENTRY_SUBTYPE&>(entry);
+        ResultT<const ENTRY_SUBTYPE*> getRegisteredType() const {
+          ASSIGN_OR_ERROR(const ENTRY* entry, getRegisteredEntry(ENTRY_SUBTYPE::getThisIdentifier()));
+          if (!dynamic_cast<const ENTRY_SUBTYPE*>(entry)) {
+            return Error() << "The registered type was not of the expected type in " << getRegistryName();
+          }
+          return static_cast<const ENTRY_SUBTYPE*>(entry);
         }
 
         /// This is called when entries are added and can be used to validate them, for example.
