@@ -7,6 +7,8 @@
  **/
 #include <BaseLib/IO/dataSource.hpp>
 
+#include <BaseLib/Result/resultDSL.hpp>
+
 #include <cassert>
 
 babelwires::DataSource::DataSource()

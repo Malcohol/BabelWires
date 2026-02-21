@@ -9,6 +9,7 @@
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <BaseLib/Identifiers/identifierVisitor.hpp>
+#include <BaseLib/Result/resultDSL.hpp>
 
 #include <charconv>
 #include <sstream>

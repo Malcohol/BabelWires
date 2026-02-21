@@ -5,6 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
+
 template <typename ENTRY>
 babelwires::Registry<ENTRY>::Registry(std::string registryName)
     : m_untypedRegistry(std::move(registryName)) {}

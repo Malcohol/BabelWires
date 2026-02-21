@@ -8,6 +8,8 @@
 #include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
 
 #include <BaseLib/Serialization/XML/xmlCommon.h>
+#include <BaseLib/Result/resultDSL.hpp>
+
 #include <cassert>
 #include <sstream>
 

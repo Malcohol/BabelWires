@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BaseLib/Utilities/result.hpp>
+#include <BaseLib/Result/resultDSL.hpp>
 
 namespace {
     const char expectedErrorPrefix[] = "An error occurred";

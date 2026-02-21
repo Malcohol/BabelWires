@@ -9,6 +9,7 @@
 
 #include <BaseLib/Log/userLogger.hpp>
 #include <BaseLib/common.hpp>
+#include <BaseLib/Result/resultDSL.hpp>
 
 #include <cassert>
 #include <cctype>

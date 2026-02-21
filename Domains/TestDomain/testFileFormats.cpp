@@ -8,7 +8,7 @@
 #include <BaseLib/IO/fileDataSource.hpp>
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <BaseLib/Identifiers/registeredIdentifier.hpp>
-#include <BaseLib/Utilities/result.hpp>
+#include <BaseLib/Result/result.hpp>
 
 #include <Domains/TestDomain/testRecordType.hpp>
 

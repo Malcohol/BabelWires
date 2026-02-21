@@ -7,6 +7,8 @@
  **/
 #include <BaseLib/IO/fileDataSource.hpp>
 
+#include <BaseLib/Result/resultDSL.hpp>
+
 #include <cassert>
 
 babelwires::ResultT<babelwires::FileDataSource> babelwires::FileDataSource::open(const std::filesystem::path& fileName) {

@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/Result/resultDSL.hpp>
+
 #include <type_traits>
 
 template <typename V>

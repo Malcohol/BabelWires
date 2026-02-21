@@ -8,6 +8,7 @@
 #include <BaseLib/Math/rational.hpp>
 
 #include <BaseLib/Hash/hash.hpp>
+#include <BaseLib/Result/resultDSL.hpp>
 
 #include <cassert>
 #include <functional>

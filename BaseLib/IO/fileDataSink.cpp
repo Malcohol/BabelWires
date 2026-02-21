@@ -7,6 +7,8 @@
  **/
 #include <BaseLib/IO/fileDataSink.hpp>
 
+#include <BaseLib/Result/resultDSL.hpp>
+
 #include <cassert>
 
 babelwires::ResultT<babelwires::FileDataSink>

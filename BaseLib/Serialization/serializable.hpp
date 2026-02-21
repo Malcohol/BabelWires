@@ -7,8 +7,9 @@
  **/
 #pragma once
 
+#include <BaseLib/Result/resultDSL.hpp>
 #include <BaseLib/Serialization/automaticDeserializationRegistry.hpp>
-#include <BaseLib/Utilities/result.hpp>
+
 #include <cassert>
 #include <functional>
 #include <memory>
@@ -67,7 +68,11 @@ namespace babelwires {
         babelwires::Deserializer& deserializer) {                                                                      \
         /* make_unique requires a public default constructor. */                                                       \
         std::unique_ptr<T> newObject(new T());                                                                         \
-        DO_OR_ERROR(newObject->deserializeContents(deserializer));                                                     \
+        auto result = newObject->deserializeContents(deserializer);                                                    \
+        if (!result) {                                                                                                 \
+            /* TODO Add context, e.g. ", when deserializing <TYPENAME>?" */                                            \
+            return result.error();                                                                                     \
+        }                                                                                                              \
         return std::move(newObject);                                                                                   \
     }
 

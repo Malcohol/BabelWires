@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BaseLib/Utilities/result.hpp>
+#include <BaseLib/Result/result.hpp>
 
 #include <stdexcept>
 #include <string>

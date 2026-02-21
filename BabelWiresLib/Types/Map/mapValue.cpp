@@ -14,6 +14,7 @@
 
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
+#include <BaseLib/Result/resultDSL.hpp>
 
 babelwires::MapValue::MapValue() = default;
 

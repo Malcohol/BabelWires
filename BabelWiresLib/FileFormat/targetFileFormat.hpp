@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BaseLib/Registry/fileTypeRegistry.hpp>
-#include <BaseLib/Utilities/result.hpp>
+#include <BaseLib/Result/result.hpp>
 #include <BaseLib/productInfo.hpp>
 
 #include <filesystem>

@@ -14,7 +14,7 @@
 #include <random>
 
 #include <BaseLib/Hash/hash.hpp>
-#include <BaseLib/Utilities/result.hpp>
+#include <BaseLib/Result/result.hpp>
 
 namespace babelwires {
 

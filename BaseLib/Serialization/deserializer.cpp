@@ -8,6 +8,8 @@
  **/
 #include <BaseLib/Serialization/deserializer.hpp>
 
+#include <BaseLib/Result/resultDSL.hpp>
+
 babelwires::Deserializer::Deserializer(UserLogger& userLogger, const DeserializationRegistry& deserializationRegistry)
     : m_userLogger(userLogger)
     , m_deserializationRegistry(deserializationRegistry) {}

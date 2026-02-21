@@ -7,6 +7,8 @@
  **/
 #include <BabelWiresExe/babelWiresOptions.hpp>
 
+#include <BaseLib/Result/resultDSL.hpp>
+
 namespace {
     const char s_helpString[] = "help";
     const char s_runString[] = "run";

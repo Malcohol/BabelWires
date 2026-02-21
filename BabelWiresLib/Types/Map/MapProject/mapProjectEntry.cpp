@@ -9,6 +9,8 @@
 
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 
+#include <BaseLib/Result/resultDSL.hpp>
+
 babelwires::MapProjectEntry::MapProjectEntry(std::unique_ptr<MapEntryData> data)
     : m_data(std::move(data)), m_validityOfEntry() {}
 

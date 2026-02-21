@@ -7,6 +7,7 @@
  **/
 #include <BaseLib/uuid.hpp>
 
+#include <BaseLib/Result/error.hpp>
 
 #include <algorithm>
 #include <cassert>

@@ -7,11 +7,12 @@
  **/
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 
-#include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
-#include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
+#include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
+#include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 
+#include <BaseLib/Result/resultDSL.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 
@@ -172,7 +173,6 @@ const babelwires::Result& babelwires::MapProject::getTargetTypeValidity() const 
     return m_targetTypeValidity;
 }
 
-
 bool babelwires::MapProject::AllowedTypes::isRelatedToSome(const TypeSystem& typeSystem, const TypeExp& typeExp) const {
     const TypePtr type = typeExp.tryResolve(typeSystem);
     if (!type) {
@@ -189,9 +189,8 @@ bool babelwires::MapProject::AllowedTypes::isSubtypeOfSome(const TypeSystem& typ
     if (!type) {
         return false;
     }
-    return std::any_of(m_typeExps.begin(), m_typeExps.end(),
-                                        [type, &typeSystem](const TypeExp& id) {
-                                            const TypePtr idType = id.tryResolve(typeSystem);
-                                            return idType && typeSystem.isSubType(*type, *idType);
-                                        });
+    return std::any_of(m_typeExps.begin(), m_typeExps.end(), [type, &typeSystem](const TypeExp& id) {
+        const TypePtr idType = id.tryResolve(typeSystem);
+        return idType && typeSystem.isSubType(*type, *idType);
+    });
 }

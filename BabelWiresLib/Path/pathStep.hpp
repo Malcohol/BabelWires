@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BaseLib/Identifiers/identifier.hpp>
-#include <BaseLib/Utilities/result.hpp>
+#include <BaseLib/Result/result.hpp>
 
 #include <ostream>
 

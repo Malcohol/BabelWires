@@ -7,6 +7,8 @@
  **/
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
 
+#include <BaseLib/Result/resultDSL.hpp>
+
 babelwires::SourceFileFormatRegistry::SourceFileFormatRegistry()
     : FileTypeRegistry("File Format Registry") {}
 
