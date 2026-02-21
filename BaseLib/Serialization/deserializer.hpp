@@ -20,6 +20,7 @@
 
 namespace babelwires {
 
+    /// Client code must call either finalize or finalizeOnError before the destructor is called.
     class Deserializer : public SerializerDeserializerCommon {
       public:
         Deserializer(UserLogger& userLogger, const DeserializationRegistry& deserializationRegistry);
@@ -112,8 +113,11 @@ namespace babelwires {
         template <typename T>
         void augmentResultWithContext(ResultT<T>& result) const;
 
-        /// Subclass must call this before the destructor is called.
-        virtual Result finalize(ErrorState errorState = ErrorState::NoError);
+        /// Finalize the deserializer.
+        virtual Result finalize();
+
+        /// Finalize when an error is being processed.
+        virtual void finalizeOnError();
 
       protected:
         /// Subclass must call this before the Deserializer interface is used.

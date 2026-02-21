@@ -15,6 +15,7 @@
 
 namespace babelwires {
 
+    /// Either close or closeOnError must be called before the FileDataSource is destroyed.
     class FileDataSource : public DataSource {
       public:
         ~FileDataSource() override;
@@ -22,9 +23,10 @@ namespace babelwires {
         /// Open a file for reading as a DataSource.
         static ResultT<FileDataSource> open(const std::filesystem::path& fileName);
 
-        /// Close the file. This must be called before the FileDataSource is destroyed. If errorState ==
-        /// ErrorState::Error, then this returns success.
-        Result close(ErrorState errorState = ErrorState::NoError);
+        /// Close the file.
+        Result close();
+        /// Close the file when an error is being processed.
+        void closeOnError();
 
         FileDataSource(FileDataSource&&) = default;
         FileDataSource& operator=(FileDataSource&&) = default;

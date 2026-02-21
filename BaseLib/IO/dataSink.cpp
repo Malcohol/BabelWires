@@ -24,7 +24,12 @@ babelwires::DataSink::~DataSink() {
 	assert(m_hasBeenClosed && "Close must be called on the DataSink before it is destroyed");
 }
 
-babelwires::Result babelwires::DataSink::close(ErrorState errorState) {
+babelwires::Result babelwires::DataSink::close() {
 	m_hasBeenClosed = true;
-	return doClose(errorState);
+	return doClose();
+}
+
+void babelwires::DataSink::closeOnError() {
+	m_hasBeenClosed = true;
+	doCloseOnError();
 }

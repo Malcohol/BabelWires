@@ -29,11 +29,14 @@ namespace babelwires {
         /// Access the stream used for writing.
         virtual std::ostream& stream() = 0;
 
-        /// Close the sink. If errorState == ErrorState::Error, then this returns success.
-        Result close(ErrorState errorState = ErrorState::NoError);
+        /// Close the sink.
+        Result close();
+        /// Close the sink when an error is being processed.
+        void closeOnError();
 
       protected:
-        virtual Result doClose(ErrorState errorState) = 0;
+        virtual Result doClose() = 0;
+        virtual void doCloseOnError() = 0;
 
       private:
         bool m_hasBeenClosed = false;

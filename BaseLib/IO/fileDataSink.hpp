@@ -28,7 +28,8 @@ namespace babelwires {
         FileDataSink& operator=(FileDataSink&&) = default;
 
       private:
-        Result doClose(ErrorState errorState) override;
+        Result doClose() override;
+        void doCloseOnError() override;
 
         FileDataSink() = default;
 

@@ -24,14 +24,13 @@ babelwires::Result babelwires::Deserializer::initialize() {
     return {};
 }
 
-babelwires::Result babelwires::Deserializer::finalize(ErrorState errorState) {
+babelwires::Result babelwires::Deserializer::finalize() {
     m_wasFinalized = true;
-    if (errorState == ErrorState::Error) {
-        // We are unwinding the stack due to an error, so don't do any additional work.
-        return {};
-    } else {
-        return popObject();
-    }
+    return popObject();
+}
+
+void babelwires::Deserializer::finalizeOnError() {
+    m_wasFinalized = true;
 }
 
 babelwires::ResultT<std::unique_ptr<babelwires::Serializable>>
