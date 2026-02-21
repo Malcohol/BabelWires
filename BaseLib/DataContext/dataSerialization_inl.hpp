@@ -18,7 +18,7 @@ babelwires::DataSerialization<BUNDLE>::loadFromStream(std::istream& is, const Da
     auto projectBundleResult = deserializer.deserializeObject<BUNDLE>(BUNDLE::serializationType);
     if (!projectBundleResult) {
         deserializer.augmentResultWithContext(projectBundleResult);
-        return projectBundleResult.error();
+        RETURN_ERROR_VALUE(projectBundleResult.error());
     }
     DO_OR_ERROR(deserializer.finalize());
     auto projectBundle = std::move(*projectBundleResult);

@@ -17,9 +17,10 @@ namespace babelwires {
     /// Result type which is either a T or an Error.
     template <typename T> using ResultT = std::expected<T, ErrorStorage>;
 
-    /// Simple result type for success/failure operations (replaces old Result class).
+    /// Simple result type for success/failure operations.
     using Result = ResultT<void>;
 
+    /// Class that stores an error message. This is the type used in the error part of a ResultT.
     class ErrorStorage {
       public:
         explicit ErrorStorage(std::string message)
@@ -34,7 +35,7 @@ namespace babelwires {
         std::string m_message;
     };
 
-    /// Class representing an error.
+    /// Class for building an error message. It implicitly converts to an ErrorStorage and a ResultT, so it can be returned from a function that returns a ResultT.
     class Error {
       public:
         Error() = default;
@@ -87,7 +88,7 @@ inline void babelwiresOnError() {}
 #define DO_OR_ERROR(EXPRESSION_THAT_RETURNS_RESULT)                                                                    \
     {                                                                                                                  \
         const auto doOrErrorResult = EXPRESSION_THAT_RETURNS_RESULT;                                                   \
-        if (!doOrErrorResult) [[unlikely]] {                                                                                        \
+        if (!doOrErrorResult) [[unlikely]] {                                                                           \
             babelwiresOnError();                                                                                       \
             return std::unexpected(doOrErrorResult.error());                                                           \
         }                                                                                                              \
@@ -103,7 +104,7 @@ inline void babelwiresOnError() {}
 // Instead use a file-unique variable name.
 #define ASSIGN_OR_ERROR(TARGET_EXPRESSION, EXPRESSION_THAT_RETURNS_RESULTT)                                            \
     auto BW_UNIQUE_NAME(assignOrErrorResult, __LINE__) = EXPRESSION_THAT_RETURNS_RESULTT;                              \
-    if (!BW_UNIQUE_NAME(assignOrErrorResult, __LINE__)) [[unlikely]] {                                                              \
+    if (!BW_UNIQUE_NAME(assignOrErrorResult, __LINE__)) [[unlikely]] {                                                 \
         babelwiresOnError();                                                                                           \
         return std::unexpected(BW_UNIQUE_NAME(assignOrErrorResult, __LINE__).error());                                 \
     }                                                                                                                  \
@@ -111,6 +112,9 @@ inline void babelwiresOnError() {}
 
 /// Perform the code if an error occurs with the scope.
 /// This cannot be used twice in the same scope, but you can introduce a new scope to work around that.
+/// Note: The error handlers are automatically called by DO_OR_ERROR and ASSIGN_OR_ERROR, but they won't
+/// be called by code that explicitly returns an error. The RETURN_ERROR_VALUE and RETURN_ERROR macros
+/// are provided as a standard way to return an error in such situations.
 #define ON_ERROR(CODE_TO_DO_ON_ERROR)                                                                                  \
     const auto babelwiresOnError2 = babelwiresOnError;                                                                 \
     const auto babelwiresOnError = [&]() {                                                                             \
@@ -118,12 +122,15 @@ inline void babelwiresOnError() {}
         babelwiresOnError2();                                                                                          \
     };
 
-/// Return an error with the given message and call any ON_ERROR handlers in the scope before returning.
-#define RETURN_ERROR() \
-    babelwiresOnError();     \
-    return babelwires::Error()
+/// Return an error value, calling any ON_ERROR handlers in the scope before returning.
+#define RETURN_ERROR_VALUE(ERROR)                                                                                            \
+    babelwiresOnError();                                                                                               \
+    return ERROR
 
-// Transition helper
+/// Return a newly constructed error, calling any ON_ERROR handlers in the scope before returning.
+#define RETURN_ERROR() RETURN_ERROR_VALUE(babelwires::Error())
+
+// Helper macro during the exception-to-result transition.
 #define THROW_ON_ERROR(RESULT, EXCEPTION_TYPE)                                                                         \
     do {                                                                                                               \
         if (!(RESULT)) {                                                                                               \
