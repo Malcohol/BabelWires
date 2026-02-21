@@ -9,7 +9,6 @@
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <BaseLib/Identifiers/identifierVisitor.hpp>
-#include <BaseLib/exceptions.hpp>
 
 #include <charconv>
 #include <sstream>

@@ -30,7 +30,6 @@
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 #include <BaseLib/Log/unifiedLog.hpp>
-#include <BaseLib/exceptions.hpp>
 
 #include <QtNodes/ConnectionStyle>
 #include <QtNodes/GraphicsView>

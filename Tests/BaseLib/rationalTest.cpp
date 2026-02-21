@@ -1,5 +1,4 @@
 #include <BaseLib/Math/rational.hpp>
-#include <BaseLib/exceptions.hpp>
 
 #include <gtest/gtest.h>
 

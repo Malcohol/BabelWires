@@ -12,7 +12,6 @@
 #include <BaseLib/Serialization/serializableValue.hpp>
 #include <BaseLib/Serialization/serializerDeserializerCommon.hpp>
 #include <BaseLib/Utilities/result.hpp>
-#include <BaseLib/exceptions.hpp>
 
 #include <cassert>
 #include <cstdint>

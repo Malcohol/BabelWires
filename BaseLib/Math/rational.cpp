@@ -8,7 +8,6 @@
 #include <BaseLib/Math/rational.hpp>
 
 #include <BaseLib/Hash/hash.hpp>
-#include <BaseLib/exceptions.hpp>
 
 #include <cassert>
 #include <functional>

@@ -1,7 +1,5 @@
 #include <BaseLib/uuid.hpp>
 
-#include <BaseLib/exceptions.hpp>
-
 #include <gtest/gtest.h>
 
 #include <array>

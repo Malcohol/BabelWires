@@ -9,6 +9,8 @@
 
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 
+#include <BaseLib/common.hpp>
+
 namespace babelwires {
 
     /// Swap IsSubtype and IsSupertype.

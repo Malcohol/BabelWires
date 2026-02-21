@@ -5,7 +5,6 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BaseLib/exceptions.hpp>
 
 #include <charconv>
 

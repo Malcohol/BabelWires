@@ -9,6 +9,7 @@
 
 #include <BaseLib/Cloning/cloneable.hpp>
 #include <BaseLib/Identifiers/identifier.hpp>
+#include <BaseLib/common.hpp>
 
 namespace babelwires {
     class Type;

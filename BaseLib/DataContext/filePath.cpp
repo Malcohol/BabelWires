@@ -8,7 +8,6 @@
 #include <BaseLib/DataContext/filePath.hpp>
 
 #include <BaseLib/Log/userLogger.hpp>
-#include <BaseLib/exceptions.hpp>
 #include <BaseLib/common.hpp>
 
 #include <cassert>

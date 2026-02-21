@@ -14,7 +14,6 @@
 #include <BaseLib/Log/userLogger.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
-#include <BaseLib/exceptions.hpp>
 
 babelwires::SourceFileNodeData::SourceFileNodeData(const SourceFileNodeData& other, ShallowCloneContext c)
     : NodeData(other, c)

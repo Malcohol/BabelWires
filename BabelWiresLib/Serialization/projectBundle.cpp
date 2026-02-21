@@ -12,8 +12,6 @@
 
 #include <BaseLib/DataContext/filePath.hpp>
 
-#include <BaseLib/exceptions.hpp>
-
 babelwires::ProjectBundle::ProjectBundle(std::filesystem::path pathToProjectFile, ProjectData&& projectData)
     : DataBundle(std::move(pathToProjectFile), std::move(projectData)) {
 }

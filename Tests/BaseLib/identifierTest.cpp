@@ -7,7 +7,6 @@
 #include <BaseLib/Log/unifiedLog.hpp>
 #include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
 #include <BaseLib/Serialization/XML/xmlSerializer.hpp>
-#include <BaseLib/exceptions.hpp>
 
 TEST(IdentifierTest, identifiers) {
     babelwires::ShortId hello("Hello");

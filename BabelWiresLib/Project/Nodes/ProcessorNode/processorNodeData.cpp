@@ -16,7 +16,6 @@
 #include <BaseLib/Log/userLogger.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
-#include <BaseLib/exceptions.hpp>
 
 babelwires::ProcessorNodeData::ProcessorNodeData(const ProcessorNodeData& other, ShallowCloneContext c)
     : NodeData(other, c) {}

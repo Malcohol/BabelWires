@@ -2,8 +2,6 @@
 
 #include <BaseLib/DataContext/filePath.hpp>
 
-#include <BaseLib/exceptions.hpp>
-
 #include <Tests/TestUtils/testLog.hpp>
 #include <Tests/TestUtils/tempFilePath.hpp>
 

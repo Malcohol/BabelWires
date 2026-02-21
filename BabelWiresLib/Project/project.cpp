@@ -28,7 +28,6 @@
 
 #include <BaseLib/IO/fileDataSource.hpp>
 #include <BaseLib/Log/userLogger.hpp>
-#include <BaseLib/exceptions.hpp>
 
 #include <algorithm>
 #include <cassert>

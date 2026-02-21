@@ -8,7 +8,6 @@
 #pragma once
 
 #include <BaseLib/Registry/registry.hpp>
-#include <BaseLib/exceptions.hpp>
 
 namespace babelwires {
 

@@ -10,7 +10,6 @@
 #include <BaseLib/Log/debugLogger.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
-#include <BaseLib/exceptions.hpp>
 
 babelwires::IdentifierRegistry::IdentifierRegistry() = default;
 babelwires::IdentifierRegistry::IdentifierRegistry(IdentifierRegistry&&) = default;
