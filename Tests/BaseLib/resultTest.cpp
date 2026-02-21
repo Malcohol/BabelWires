@@ -63,8 +63,8 @@ TEST(ResultTest, compositeFunctions) {
 }
 
 TEST(ResultTest, onErrorMacroWithNestedOnError) {
-    auto functionThatCallsOtherFunctionWithOnError = [](bool& afterSuccess, bool& afterError,
-                                                        bool& onErrorCalled, bool& onErrorCalled2) -> babelwires::Result {
+    auto functionThatCallsOtherFunctionWithOnError = [](bool& afterSuccess, bool& afterError, bool& onErrorCalled,
+                                                        bool& onErrorCalled2) -> babelwires::Result {
         ON_ERROR(onErrorCalled = true);
         {
             ON_ERROR(onErrorCalled2 = true);
@@ -135,7 +135,8 @@ TEST(ResultTest, assignOrError2) {
 }
 
 TEST(ResultTest, assignOrErrorWithOnError) {
-    auto functionUsingAssignOrErrorWithOnError = [](int& successValue, int& errorValue, bool& onErrorCalled) -> babelwires::Result {
+    auto functionUsingAssignOrErrorWithOnError = [](int& successValue, int& errorValue,
+                                                    bool& onErrorCalled) -> babelwires::Result {
         ON_ERROR(onErrorCalled = true);
         ASSIGN_OR_ERROR(successValue, functionThatReturnsSuccessWithValue());
         ASSIGN_OR_ERROR(errorValue, functionThatReturnsErrorWithValue());
@@ -151,6 +152,54 @@ TEST(ResultTest, assignOrErrorWithOnError) {
     EXPECT_EQ(errorValue, 0);
     EXPECT_TRUE(onErrorCalled);
 }
+
+TEST(ResultTest, returnError) {
+    auto functionUsingReturnErrorMacro = [](bool& onErrorCalled) -> babelwires::Result {
+        ON_ERROR(onErrorCalled = true);
+        RETURN_ERROR() << "Test";
+    };
+
+    bool onErrorCalled = false;
+    const babelwires::Result result = functionUsingReturnErrorMacro(onErrorCalled);
+    EXPECT_FALSE(result);
+    EXPECT_EQ(result.error().toString(), "Test");
+    EXPECT_TRUE(onErrorCalled);
+}
+
+// This code has been removed from result.hpp while I decide whether it's helpful or harmful.
+// This concern is that the code passed to FINALLY_WITH_ERRORSTATE cannot itself return an error.
+// Code that ends up in finally clauses (e.g. close methods) often does encounter an error that (if no error has
+// already occurred) should be passed back to the caller.
+
+namespace babelwires {
+    /// Common functionality.
+    enum class ErrorState { NoError, Error };
+
+    namespace Detail {
+        /// Helper class for running code at the end of a scope.
+        template <typename F> struct Finally {
+            F m_func;
+            explicit Finally(F f)
+                : m_func(std::move(f)) {}
+            ~Finally() { m_func(); }
+            Finally(const Finally&) = delete;
+            Finally& operator=(const Finally&) = delete;
+        };
+    } // namespace Detail
+} // namespace babelwires
+
+/// Run the code at the end of the scope.
+#define FINALLY(CODE_TO_RUN)                                                                                           \
+    const auto BW_UNIQUE_NAME(babelwiresFinally_, __LINE__) = ::babelwires::Detail::Finally([&]() { CODE_TO_RUN; });
+
+/// Run the code at the end of the scope. The code can query a variable called errorState to determine whether the scope
+/// is being exited due to an error or not. Since this uses ON_ERROR, it cannot be used in a scope that already uses
+/// ON_ERROR or FINALLY_WITH_ERRORSTATE, but you can introduce a new scope to work around that.
+#define FINALLY_WITH_ERRORSTATE(CODE_TO_RUN)                                                                           \
+    babelwires::ErrorState BW_UNIQUE_NAME(babelwiresFinallyErrorState_, __LINE__) = babelwires::ErrorState::NoError;   \
+    ON_ERROR(BW_UNIQUE_NAME(babelwiresFinallyErrorState_, __LINE__) = babelwires::ErrorState::Error);                  \
+    const auto BW_UNIQUE_NAME(babelwiresFinally_, __LINE__) = ::babelwires::Detail::Finally(                           \
+        [&, &errorState = BW_UNIQUE_NAME(babelwiresFinallyErrorState_, __LINE__)]() { CODE_TO_RUN; });
 
 TEST(ResultTest, finallyWithSuccess) {
     auto functionThatUsesFinallyWithSuccess = [](bool& wasFinallyRun) -> babelwires::Result {
@@ -179,7 +228,8 @@ TEST(ResultTest, finallyWithError) {
 }
 
 TEST(ResultTest, finallyWithErrorStateWithSuccess) {
-    auto functionThatUsesFinallyWithErrorStateWithSuccess = [](bool& wasFinallyRun, babelwires::ErrorState& capturedErrorState) -> babelwires::Result {
+    auto functionThatUsesFinallyWithErrorStateWithSuccess =
+        [](bool& wasFinallyRun, babelwires::ErrorState& capturedErrorState) -> babelwires::Result {
         FINALLY_WITH_ERRORSTATE(wasFinallyRun = true; capturedErrorState = errorState);
         DO_OR_ERROR(functionThatReturnsSuccess());
         return {};
@@ -195,7 +245,8 @@ TEST(ResultTest, finallyWithErrorStateWithSuccess) {
 }
 
 TEST(ResultTest, finallyWithErrorStateWithError) {
-    auto functionThatUsesFinallyWithErrorStateWithError = [](bool& wasFinallyRun, babelwires::ErrorState& capturedErrorState) -> babelwires::Result {
+    auto functionThatUsesFinallyWithErrorStateWithError =
+        [](bool& wasFinallyRun, babelwires::ErrorState& capturedErrorState) -> babelwires::Result {
         FINALLY_WITH_ERRORSTATE(wasFinallyRun = true; capturedErrorState = errorState);
         DO_OR_ERROR(functionThatReturnsError());
         return {};
