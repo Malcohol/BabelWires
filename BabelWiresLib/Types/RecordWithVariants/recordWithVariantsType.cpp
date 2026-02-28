@@ -27,7 +27,7 @@ babelwires::RecordWithVariantsType::RecordWithVariantsType(TypeExp&& typeExpOfTh
         m_tagToVariantCache[t] = {};
     }
     for (const auto& f : fields) {
-        m_fields.emplace_back(Field{f.m_identifier, f.m_type.resolve(typeSystem), std::move(f.m_tags)});
+        m_fields.emplace_back(Field{f.m_identifier, f.m_type.assertResolve(typeSystem), std::move(f.m_tags)});
     }
     for (const auto& f : m_fields) {
         if (f.m_tags.empty()) {

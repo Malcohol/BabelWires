@@ -226,15 +226,15 @@ TEST(SumTypeTest, compareSubtype2) {
     const babelwires::TypeExp ZdSExp = babelwires::SumTypeConstructor::makeTypeExp({ZdExp, SExp});
     const babelwires::TypeExp ZnZdExp = babelwires::SumTypeConstructor::makeTypeExp({ZnExp, ZdExp});
 
-    const babelwires::TypePtr Zn = ZnExp.resolve(testEnvironment.m_typeSystem);
-    const babelwires::TypePtr Zw = ZwExp.resolve(testEnvironment.m_typeSystem);
-    const babelwires::TypePtr ZnQn = ZnQnExp.resolve(testEnvironment.m_typeSystem);
-    const babelwires::TypePtr QnZn = QnZnExp.resolve(testEnvironment.m_typeSystem);
-    const babelwires::TypePtr ZwQn = ZwQnExp.resolve(testEnvironment.m_typeSystem);
-    const babelwires::TypePtr ZwQw = ZwQwExp.resolve(testEnvironment.m_typeSystem);
-    const babelwires::TypePtr ZnQnS = ZnQnSExp.resolve(testEnvironment.m_typeSystem);
-    const babelwires::TypePtr ZdS = ZdSExp.resolve(testEnvironment.m_typeSystem);
-    const babelwires::TypePtr ZnZd = ZnZdExp.resolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr Zn = ZnExp.assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr Zw = ZwExp.assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr ZnQn = ZnQnExp.assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr QnZn = QnZnExp.assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr ZwQn = ZwQnExp.assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr ZwQw = ZwQwExp.assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr ZnQnS = ZnQnSExp.assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr ZdS = ZdSExp.assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr ZnZd = ZnZdExp.assertResolve(testEnvironment.m_typeSystem);
 
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*ZnQn, *ZnQn), babelwires::SubtypeOrder::IsEquivalent);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*ZnQn, *QnZn), babelwires::SubtypeOrder::IsEquivalent);
@@ -270,8 +270,8 @@ TEST(SumTypeTest, subTypeAssociativity) {
     const babelwires::TypeExp Z_QS =
         babelwires::SumTypeConstructor::makeTypeExp({Z, babelwires::SumTypeConstructor::makeTypeExp({Q, S})});
 
-    const babelwires::TypePtr ZQ_S_ptr = ZQ_S.resolve(testEnvironment.m_typeSystem);
-    const babelwires::TypePtr Z_QS_ptr = Z_QS.resolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr ZQ_S_ptr = ZQ_S.assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr Z_QS_ptr = Z_QS.assertResolve(testEnvironment.m_typeSystem);
 
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*ZQ_S_ptr, *Z_QS_ptr), babelwires::SubtypeOrder::IsEquivalent);
 }

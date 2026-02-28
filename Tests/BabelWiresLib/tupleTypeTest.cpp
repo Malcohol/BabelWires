@@ -116,12 +116,12 @@ TEST(TupleTypeTest, compareSubtype) {
     const babelwires::TypeExp CABExp = babelwires::TupleTypeConstructor::makeTypeExp({testDomain::TestSubSubEnum1::getThisIdentifier(), testDomain::TestEnum::getThisIdentifier(), testDomain::TestSubEnum::getThisIdentifier()});
     const babelwires::TypeExp CXBExp = babelwires::TupleTypeConstructor::makeTypeExp({testDomain::TestSubSubEnum1::getThisIdentifier(), babelwires::DefaultIntType::getThisIdentifier(), testDomain::TestSubEnum::getThisIdentifier()});
 
-    const babelwires::TypePtr AAA = AAAExp.resolve(testEnvironment.m_typeSystem);
-    const babelwires::TypePtr AA = AAExp.resolve(testEnvironment.m_typeSystem);
-    const babelwires::TypePtr AAB = AABExp.resolve(testEnvironment.m_typeSystem);
-    const babelwires::TypePtr BAC = BACExp.resolve(testEnvironment.m_typeSystem);
-    const babelwires::TypePtr CAB = CABExp.resolve(testEnvironment.m_typeSystem);
-    const babelwires::TypePtr CXB = CXBExp.resolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr AAA = AAAExp.assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr AA = AAExp.assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr AAB = AABExp.assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr BAC = BACExp.assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr CAB = CABExp.assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr CXB = CXBExp.assertResolve(testEnvironment.m_typeSystem);
 
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*AAA, *AAA), babelwires::SubtypeOrder::IsEquivalent);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*AAA, *AAB), babelwires::SubtypeOrder::IsSupertype);

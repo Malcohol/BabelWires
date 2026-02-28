@@ -564,7 +564,7 @@ TEST(RecordTypeTest, constructorBasics) {
             {babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("int0")),
              babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("str0"))}});
 
-    babelwires::TypePtr type = recordTypeExp.resolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr type = recordTypeExp.assertResolve(testEnvironment.m_typeSystem);
     ASSERT_TRUE(type->tryAs<babelwires::RecordType>());
     const babelwires::RecordType& recordType = type->as<babelwires::RecordType>();
     EXPECT_EQ(recordType.getFields().size(), 2);
@@ -585,7 +585,7 @@ TEST(RecordTypeTest, constructorWithOptionals) {
              babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("str0"),
                                       babelwires::RecordType::Optionality::optionalDefaultInactive)}});
 
-    babelwires::TypePtr type = recordTypeExp.resolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr type = recordTypeExp.assertResolve(testEnvironment.m_typeSystem);
     ASSERT_TRUE(type->tryAs<babelwires::RecordType>());
     const babelwires::RecordType& recordType = type->as<babelwires::RecordType>();
     EXPECT_EQ(recordType.getFields().size(), 2);
@@ -624,7 +624,7 @@ TEST(RecordTypeTest, constructorMakeRef) {
         testUtils::getTestRegisteredIdentifier("int0"), babelwires::DefaultIntType::getThisIdentifier(),
         testUtils::getTestRegisteredIdentifier("str0"), babelwires::StringType::getThisIdentifier());
 
-    babelwires::TypePtr type = recordTypeExp.resolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr type = recordTypeExp.assertResolve(testEnvironment.m_typeSystem);
     ASSERT_TRUE(type->tryAs<babelwires::RecordType>());
     const babelwires::RecordType& recordType = type->as<babelwires::RecordType>();
     EXPECT_EQ(recordType.getFields().size(), 2);

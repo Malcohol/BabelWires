@@ -18,7 +18,7 @@ namespace {
                    const std::vector<babelwires::RecordType::FieldDefinition>& newFields) {
         for (const auto& f : newFields) {
             fields.emplace_back(
-                babelwires::RecordType::Field{f.m_identifier, f.m_type.resolve(typeSystem), f.m_optionality});
+                babelwires::RecordType::Field{f.m_identifier, f.m_type.assertResolve(typeSystem), f.m_optionality});
             assert(f.m_identifier.getDiscriminator() != 0 && "Field identifiers must be registered");
             if (f.m_optionality != babelwires::RecordType::Optionality::alwaysActive) {
                 optionalFieldIds.emplace_back(f.m_identifier);

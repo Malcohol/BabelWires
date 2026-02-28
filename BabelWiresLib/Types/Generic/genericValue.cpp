@@ -107,7 +107,7 @@ babelwires::TypeExp babelwires::GenericValue::buildInstantiatedType(const TypeEx
 }
 
 void babelwires::GenericValue::instantiate(const TypeSystem& typeSystem, const TypeExp& wrappedTypeExp) {
-    m_actualWrappedType = buildInstantiatedType(wrappedTypeExp).resolve(typeSystem);
+    m_actualWrappedType = buildInstantiatedType(wrappedTypeExp).assertResolve(typeSystem);
     // Updating the existing wrapped value by exploring it doesn't account for the fact that values may carry types in
     // non-obvious ways. In particular, GenericValue carries the m_actualWrappedType and typeAssignments, neither of
     // which would be updated if we encountered a nested generic type using exploration.
