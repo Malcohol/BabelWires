@@ -93,7 +93,7 @@ namespace babelwires {
 
         template<typename TYPE>
         TypePtrT<TYPE> resolveAs(const TypeSystem& typeSystem) const {
-          return typeAs<TYPE>(resolve(typeSystem));
+          return typeAs<TYPE>(assertResolve(typeSystem));
         }
 
         /// Return a human-readable version of the TypeExp.
