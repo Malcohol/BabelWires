@@ -18,7 +18,7 @@
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 const babelwires::ValueTreeNode* babelwires::tryGetGenericTypeFromVariable(const ValueTreeNode& valueTreeNode) {
-    auto variableData = TypeVariableData::isTypeVariable(valueTreeNode.getTypeExp());
+    auto variableData = TypeVariableData::isTypeVariable(valueTreeNode.getType()->getTypeExp());
     assert(variableData && "ValueTreeNode is not a type variable");
 
     unsigned int level = variableData->m_numGenericTypeLevels;
@@ -130,7 +130,7 @@ bool babelwires::containsUnassignedTypeVariable(const ValueTreeNode& valueTreeNo
     if (maximumHeight < 0) {
         return false;
     }
-    const int maximumHeightFound = typeExpContainsUnassignedTypeVariable(valueTreeNode.getTypeExp(), 0);
+    const int maximumHeightFound = typeExpContainsUnassignedTypeVariable(valueTreeNode.getType()->getTypeExp(), 0);
     return maximumHeightFound >= 0;
 }
 
@@ -140,7 +140,7 @@ int babelwires::getMaximumHeightOfUnassignedGenericType(const ValueTreeNode& val
     const int tmpMax = getMaximumPossibleHeightOfUnassignedGenericType(valueTreeNode);
     assert(maximumPossible == tmpMax);
 #endif
-    return typeExpContainsUnassignedTypeVariable(valueTreeNode.getTypeExp(), maximumPossible);
+    return typeExpContainsUnassignedTypeVariable(valueTreeNode.getType()->getTypeExp(), maximumPossible);
 }
 
 namespace {
@@ -282,8 +282,8 @@ babelwires::getTypeVariableAssignments(const ValueTreeNode& sourceValueTreeNode,
     assert(containsUnassignedTypeVariable(targetValueTreeNode) &&
            "Target ValueTreeNode has no unassigned type variables");
     const TypeSystem& typeSystem = sourceValueTreeNode.getTypeSystem();
-    const TypeExp& targetTypeExp = targetValueTreeNode.getTypeExp();
-    const TypeExp& sourceTypeExp = sourceValueTreeNode.getTypeExp();
+    const TypeExp& targetTypeExp = targetValueTreeNode.getType()->getTypeExp();
+    const TypeExp& sourceTypeExp = sourceValueTreeNode.getType()->getTypeExp();
     const ValueHolder& sourceValue = sourceValueTreeNode.getValue();
 
     TypeVariableAssignmentFinder finder{typeSystem, targetValueTreeNode};

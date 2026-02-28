@@ -18,6 +18,7 @@
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
+#include <BabelWiresLib/TypeSystem/type.hpp>
 
 babelwires::AddNodeForOutputTreeValueCommand::AddNodeForOutputTreeValueCommand(std::string commandName,
                                                                                NodeId originalNodeId, Path pathToValue,
@@ -59,7 +60,7 @@ void babelwires::AddNodeForOutputTreeValueCommand::execute(Project& project) con
     assert(nodeOutput);
     const ValueTreeNode& originalValue = followPath(m_pathToValue, *nodeOutput);
 
-    ValueNodeData newNodeData(originalValue.getTypeExp());
+    ValueNodeData newNodeData(originalValue.getType()->getTypeExp());
     newNodeData.m_id = m_newNodeId;
     newNodeData.m_uiData.m_uiPosition = m_positionForNewNode;
 

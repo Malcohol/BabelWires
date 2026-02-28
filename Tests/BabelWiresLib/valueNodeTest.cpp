@@ -40,7 +40,7 @@ TEST(ValueNodeTest, simpleType) {
     ASSERT_NE(output, nullptr);
     EXPECT_EQ(input, output);
 
-    EXPECT_EQ(input->getTypeExp(), babelwires::DefaultIntType::getThisIdentifier());
+    EXPECT_TRUE(input->getType()->tryAs<babelwires::DefaultIntType>());
     const babelwires::ValueHolder value = input->getValue();
     const babelwires::IntValue* intValue = value->tryAs<babelwires::IntValue>();
     ASSERT_NE(intValue, nullptr);

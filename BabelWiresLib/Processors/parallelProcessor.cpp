@@ -87,7 +87,7 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
                   const ValueTreeNode& outputEntry)
             : m_index(index)
             , m_inputEntry(inputEntry)
-            , m_outputEntry(std::make_unique<ValueTreeRoot>(typeSystem, outputEntry.getTypeExp())) {
+            , m_outputEntry(std::make_unique<ValueTreeRoot>(typeSystem, outputEntry.getType())) {
             m_outputEntry->setValue(outputEntry.getValue());
         }
 

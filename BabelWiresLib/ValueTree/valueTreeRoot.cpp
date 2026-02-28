@@ -53,13 +53,12 @@ void babelwires::ValueTreeRoot::doSetValue(const ValueHolder& newValue) {
         if (type.isValidValue(typeSystem, *newValue)) {
             reconcileChangesAndSynchronizeChildren(m_typeSystem, newValue);
         } else {
-            throw ModelException() << "The new value is not a valid instance of " << getTypeExp().toString();
+            throw ModelException() << "The new value is not a valid instance of " << getType()->getTypeExp().toString();
         }
     }
 }
 
 void babelwires::ValueTreeRoot::doSetToDefault() {
-    assert(getTypeExp() && "The type must be set to something non-trivial before doSetToDefault is called");
     const TypeSystem& typeSystem = getTypeSystem();
     const Type& type = *getType();
     auto [newValue, _] = type.createValue(typeSystem);

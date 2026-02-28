@@ -50,7 +50,7 @@ const babelwires::ValueTreeNode* babelwires::ValueNode::getOutput() const {
 }
 
 std::string babelwires::ValueNode::getRootLabel() const {
-    if (m_valueTreeRoot->getTypeExp() == FailureType::getThisIdentifier()) {
+    if (m_valueTreeRoot->getType()->getTypeExp() == FailureType::getThisIdentifier()) {
         return "Failed";
     } else {
         return "Value";
