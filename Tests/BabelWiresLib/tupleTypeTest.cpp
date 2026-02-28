@@ -7,7 +7,6 @@
 #include <BabelWiresLib/Types/Tuple/tupleType.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleValue.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleTypeConstructor.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>
 #include <Domains/TestDomain/testTupleType.hpp>

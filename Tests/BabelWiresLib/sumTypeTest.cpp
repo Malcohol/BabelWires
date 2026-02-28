@@ -8,7 +8,6 @@
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/Sum/sumType.hpp>
 #include <BabelWiresLib/Types/Sum/sumTypeConstructor.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 
 #include <Domains/TestDomain/testSumType.hpp>
 
