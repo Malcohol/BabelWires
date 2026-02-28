@@ -18,7 +18,7 @@ namespace babelwires {
         // Example: Record{a, b, c : String, Integer, String}
         TYPE_CONSTRUCTOR("Record", "Record{{[0|, ] : {0|, }}}", "295459cc-9485-4526-86ac-e8f27e4e7667", 1);
 
-        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
+        ResultT<TypePtr> constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                             const TypeConstructorArguments& arguments,
                                             const std::vector<TypePtr>& resolvedTypeArguments) const override;
 

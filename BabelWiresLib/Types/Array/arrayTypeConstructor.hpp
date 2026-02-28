@@ -16,7 +16,7 @@ namespace babelwires {
         /// Note that the default size is not represented in the name.
         TYPE_CONSTRUCTOR("Array", "Array<{0}>[[[0]..[1]]]", "3f8cac9a-2c0b-439f-97ed-bde16874b994", 1);
 
-        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,
+        ResultT<TypePtr> constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,
                                             const std::vector<TypePtr>& resolvedTypeArguments) const override;
 
         /// Convenience method.
@@ -25,7 +25,7 @@ namespace babelwires {
 
       private:
         /// Throws a TypeSystem exception if the arguments are not of the expected type.
-        static std::tuple<unsigned int, unsigned int, unsigned int>
+        static ResultT<std::tuple<unsigned int, unsigned int, unsigned int>>
         extractValueArguments(const std::vector<ValueHolder>& valueArguments);
     };
 } // namespace babelwires

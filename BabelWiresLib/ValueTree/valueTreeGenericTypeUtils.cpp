@@ -86,8 +86,12 @@ namespace {
                 if (constructorId == babelwires::GenericTypeConstructor::getThisIdentifier()) {
                     ++genericTypeDepth;
                 } else if (constructorId == babelwires::TypeVariableTypeConstructor::getThisIdentifier()) {
-                    const auto typeVarData =
+                    const auto typeVarDataResult =
                         babelwires::TypeVariableTypeConstructor::extractValueArguments(arguments.getValueArguments());
+                    if (!typeVarDataResult) {
+                        return false;
+                    }
+                    const auto& typeVarData = *typeVarDataResult;
 
                     const int excess = typeVarData.m_numGenericTypeLevels - genericTypeDepth;
                     if ((excess > m_maximumHeightFound) && arguments.getTypeArguments().empty()) {

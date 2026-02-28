@@ -86,16 +86,14 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
         // Still not found.
         // Only construct the type if the arity is correct.
         if (resolvedArguments.size() == arguments.getTypeArguments().size()) {
-            try {
-                TypePtr result = constructType(typeSystem, std::move(newTypeExp), arguments, resolvedArguments);
-                assert(result && "Returning a null pointer from a TypeConstructor is not permitted");
-                it.first->second = result;
-                return result;
-            } catch (TypeSystemException& e) {
-                ErrorStorage error(e.what());
-                it.first->second = error;
-                return error;
+            auto result = constructType(typeSystem, std::move(newTypeExp), arguments, resolvedArguments);
+            if (result) {
+                assert(*result && "Returning a null pointer from a TypeConstructor is not permitted");
+                it.first->second = *result;
+            } else {
+                it.first->second = std::unexpected(result.error());
             }
+            return result;
         } else {
             Error error;
             error << "Failed to construct a type because the following type arguments failed to resolve: ";

@@ -22,13 +22,13 @@ namespace babelwires {
       public:
         TYPE_CONSTRUCTOR("TVar", "TVar([0],[1],{0?-})", "33f14749-b652-4d53-808b-8d8c281c310f", 1);
 
-        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,
+        ResultT<TypePtr> constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,
                                             const std::vector<TypePtr>& resolvedTypeArguments) const override;
 
         /// Convenience method.
         static TypeExp makeTypeExp(unsigned int typeVariableIndex = 0, unsigned int numGenericTypeLevels = 0);
 
         /// Throws a TypeSystem exception if the arguments are not of the expected type.
-        static TypeVariableData extractValueArguments(const std::vector<ValueHolder>& valueArguments);
+        static ResultT<TypeVariableData> extractValueArguments(const std::vector<ValueHolder>& valueArguments);
     };
 } // namespace babelwires

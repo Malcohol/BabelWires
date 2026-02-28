@@ -10,18 +10,20 @@
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
 
-babelwires::TypePtr
+#include <BaseLib/Result/error.hpp>
+
+babelwires::ResultT<babelwires::TypePtr>
 babelwires::FileTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                const TypeConstructorArguments& arguments,
                                                const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 1) {
-        throw TypeSystemException() << "FileTypeConstructor expects a single type argument but got "
-                                    << arguments.getTypeArguments().size();
+        return Error() << "FileTypeConstructor expects a single type argument but got "
+                       << arguments.getTypeArguments().size();
     }
 
     if (arguments.getValueArguments().size() != 0) {
-        throw TypeSystemException() << "IntTypeConstructor does not expect any value arguments but got "
-                                    << arguments.getValueArguments().size();
+        return Error() << "IntTypeConstructor does not expect any value arguments but got "
+                       << arguments.getValueArguments().size();
     }
 
     return makeType<FileType>(std::move(newTypeExp), typeSystem, arguments.getTypeArguments()[0]);

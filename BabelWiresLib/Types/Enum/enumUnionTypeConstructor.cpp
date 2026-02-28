@@ -11,19 +11,21 @@
 #include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 
+#include <BaseLib/Result/error.hpp>
+
 #include <unordered_set>
 
-babelwires::TypePtr
+babelwires::ResultT<babelwires::TypePtr>
 babelwires::EnumUnionTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                     const TypeConstructorArguments& arguments,
                                                     const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() < 2) {
-        throw TypeSystemException() << "EnumUnionTypeConstructor expects two or more types as arguments, but got "
-                                    << arguments.getTypeArguments().size();
+        return Error() << "EnumUnionTypeConstructor expects two or more types as arguments, but got "
+                       << arguments.getTypeArguments().size();
     }
     if (arguments.getValueArguments().size() != 0) {
-        throw TypeSystemException() << "EnumUnionTypeConstructor does not expect value arguments, but got "
-                                    << arguments.getTypeArguments().size();
+        return Error() << "EnumUnionTypeConstructor does not expect value arguments, but got "
+                       << arguments.getTypeArguments().size();
     }
     // We build the unionOfValues in order, skipping duplicates when encountered.
     EnumType::ValueSet unionOfValues;
@@ -31,9 +33,9 @@ babelwires::EnumUnionTypeConstructor::constructType(const TypeSystem& typeSystem
     for (unsigned int i = 0; i < resolvedTypeArguments.size(); ++i) {
         const EnumType* const enumType = resolvedTypeArguments[i]->tryAs<EnumType>();
         if (!enumType) {
-            throw TypeSystemException() << "Argument number " << i
-                                        << " passed to EnumTypeConstructor was not an enum type ("
-                                        << arguments.getTypeArguments()[i] << ")";
+            return Error() << "Argument number " << i
+                           << " passed to EnumTypeConstructor was not an enum type ("
+                           << arguments.getTypeArguments()[i] << ")";
         }
         for (auto v : enumType->getValueSet()) {
             const auto [_, wasInserted] = setOfValuesSeen.insert(v);

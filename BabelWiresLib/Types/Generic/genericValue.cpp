@@ -70,8 +70,12 @@ babelwires::TypeExp babelwires::GenericValue::buildInstantiatedType(const TypeEx
         TypeExp operator()(const TypeConstructorId& constructorId,
                            const TypeConstructorArguments& constructorArguments) {
             if (constructorId == TypeVariableTypeConstructor::getThisIdentifier()) {
-                const TypeVariableData variableData =
+                auto variableDataResult =
                     TypeVariableTypeConstructor::extractValueArguments(constructorArguments.getValueArguments());
+                if (!variableDataResult) {
+                    return TypeExp(constructorId, constructorArguments);
+                }
+                const auto& variableData = *variableDataResult;
                 if (variableData.m_numGenericTypeLevels == m_level) {
                     const auto& typeAssignments = m_genericValue.m_typeVariableAssignments;
                     assert(variableData.m_typeVariableIndex <= typeAssignments.size());
@@ -129,10 +133,15 @@ bool babelwires::GenericValue::isActualVersionOf(const TypeExp& wrappedType) con
                 return false;
             }
             if (constructorIdRef == TypeVariableTypeConstructor::getThisIdentifier()) {
-                const TypeVariableData variableDataRef =
+                auto variableDataRefResult =
                     TypeVariableTypeConstructor::extractValueArguments(constructorArgumentsRef.getValueArguments());
-                const TypeVariableData variableDataAct =
+                auto variableDataActResult =
                     TypeVariableTypeConstructor::extractValueArguments(constructorArgumentsAct.getValueArguments());
+                if (!variableDataRefResult || !variableDataActResult) {
+                    return false;
+                }
+                const auto& variableDataRef = *variableDataRefResult;
+                const auto& variableDataAct = *variableDataActResult;
                 if ((variableDataRef.m_typeVariableIndex != variableDataAct.m_typeVariableIndex) ||
                     (variableDataRef.m_numGenericTypeLevels != variableDataAct.m_numGenericTypeLevels)) {
                     return false;

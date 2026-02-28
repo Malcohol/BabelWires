@@ -25,10 +25,12 @@ std::optional<babelwires::TypeVariableData> babelwires::TypeVariableData::isType
         std::optional<TypeVariableData> operator()(const TypeConstructorId& constructorId,
                                                    const TypeConstructorArguments& constructorArguments) {
             if (constructorId == TypeVariableTypeConstructor::getThisIdentifier()) {
-                return TypeVariableTypeConstructor::extractValueArguments(constructorArguments.getValueArguments());
-            } else {
-                return {};
+                auto result = TypeVariableTypeConstructor::extractValueArguments(constructorArguments.getValueArguments());
+                if (result) {
+                    return *result;
+                }
             }
+            return {};
         }
     } visitor;
     return typeExp.visit<Visitor, std::optional<TypeVariableData>>(visitor);
