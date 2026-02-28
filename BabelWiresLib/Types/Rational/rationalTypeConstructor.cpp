@@ -42,8 +42,7 @@ babelwires::RationalTypeConstructor::constructType(const TypeSystem& typeSystem,
         return Error() << "RationalTypeConstructor does not expect type arguments but got "
                        << arguments.getTypeArguments().size();
     }
-    ASSIGN_OR_ERROR(auto extracted, extractValueArguments(arguments.getValueArguments()));
-    auto [range, defaultValue] = extracted;
+    ASSIGN_OR_ERROR(auto [range, defaultValue], extractValueArguments(arguments.getValueArguments()));
     return makeType<RationalType>(std::move(newTypeExp), range, defaultValue);
 }
 

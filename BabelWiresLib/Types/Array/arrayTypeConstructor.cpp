@@ -58,8 +58,7 @@ babelwires::ArrayTypeConstructor::constructType(const TypeSystem& typeSystem, Ty
         return Error() << "ArrayTypeConstructor expects a single type arguments but got "
                        << arguments.getTypeArguments().size();
     }
-    ASSIGN_OR_ERROR(auto extracted, extractValueArguments(arguments.getValueArguments()));
-    auto [minimumSize, maximumSize, defaultSize] = extracted;
+    ASSIGN_OR_ERROR(auto [minimumSize, maximumSize, defaultSize], extractValueArguments(arguments.getValueArguments()));
 
     return makeType<ArrayType>(std::move(newTypeExp), resolvedTypeArguments[0],
                                                         minimumSize, maximumSize, defaultSize);
