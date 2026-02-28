@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
 #include <BaseLib/Result/error.hpp>

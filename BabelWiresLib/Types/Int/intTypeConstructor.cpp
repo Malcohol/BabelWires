@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
 
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 
 #include <BaseLib/Result/error.hpp>

@@ -8,7 +8,6 @@
 #include <BabelWiresLib/Types/Enum/enumAtomTypeConstructor.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 
 #include <BaseLib/Result/error.hpp>

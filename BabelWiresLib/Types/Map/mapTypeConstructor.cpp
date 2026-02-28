@@ -8,7 +8,6 @@
 #include <BabelWiresLib/Types/Map/mapTypeConstructor.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 #include <BabelWiresLib/Types/Map/mapType.hpp>
 

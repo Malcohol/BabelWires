@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 

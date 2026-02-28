@@ -8,7 +8,6 @@
 #include <BabelWiresLib/Types/Sum/sumTypeConstructor.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/Sum/sumType.hpp>
 

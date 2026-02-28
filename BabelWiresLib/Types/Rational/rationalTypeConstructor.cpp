@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Types/Rational/rationalTypeConstructor.hpp>
 
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
 

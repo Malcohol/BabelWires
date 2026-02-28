@@ -9,6 +9,7 @@
 #include <BabelWiresLib/Types/String/stringValue.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>
 #include <Domains/TestDomain/testRecordType.hpp>

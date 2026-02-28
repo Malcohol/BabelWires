@@ -8,7 +8,6 @@
 #include <BabelWiresLib/Types/Tuple/tupleTypeConstructor.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleType.hpp>
 
 #include <BaseLib/Result/error.hpp>

@@ -10,6 +10,7 @@
 #include <BabelWiresLib/TypeSystem/Detail/typeNameFormatter.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 
 #include <BaseLib/Hash/hash.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
@@ -51,16 +52,12 @@ babelwires::TypePtr babelwires::TypeExp::tryResolve(const TypeSystem& typeSystem
         TypePtr operator()(std::monostate) { return {}; }
         TypePtr operator()(RegisteredTypeId typeId) { return m_typeSystem.tryGetRegisteredTypeById(typeId); }
         TypePtr operator()(const ConstructedTypeData& higherOrderData) {
-            try {
-                const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
-                if (const TypeConstructor* const typeConstructor =
-                        m_typeSystem.tryGetTypeConstructorById(typeConstructorId)) {
-                    return typeConstructor->tryGetOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
-                }
-                return {};
-            } catch (babelwires::TypeSystemException&) {
-                return {};
+            const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
+            if (const TypeConstructor* const typeConstructor =
+                    m_typeSystem.tryGetTypeConstructorById(typeConstructorId)) {
+                return typeConstructor->tryGetOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
             }
+            return {};
         }
         const TypeSystem& m_typeSystem;
     } visitorMethods{typeSystem};
@@ -84,16 +81,9 @@ babelwires::TypePtr babelwires::TypeExp::resolve(const TypeSystem& typeSystem) c
 }
 
 babelwires::TypePtr babelwires::TypeExp::assertResolve(const TypeSystem& typeSystem) const {
-#ifndef NDEBUG
-    try {
-#endif
-        return resolve(typeSystem);
-#ifndef NDEBUG
-    } catch (TypeSystemException&) {
-        assert(false && "TypeSystemException thrown when resolving TypeExp");
-        return {};
-    }
-#endif
+    const auto typePtr = tryResolve(typeSystem);
+    assert(typePtr && "Cannot resolve typeExp");
+    return typePtr;
 }
 
 std::string babelwires::TypeExp::toStringHelper(babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const {

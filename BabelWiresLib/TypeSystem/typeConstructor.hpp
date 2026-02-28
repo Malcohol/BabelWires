@@ -33,7 +33,7 @@ namespace babelwires {
                                           const TypeConstructorArguments& arguments) const;
  
         /// Get the constructed type from the cache, or construct a new one.
-        /// Throws a TypeSystemException if the type cannot be constructed.
+        /// This can fail if the arguments are not correct, or a type argument did not resolve.
         ResultT<TypePtr> getOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
 
         /// This is supplied by the TYPE_CONSTRUCTOR macro.

@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Types/File/fileTypeConstructor.hpp>
 
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
 
 #include <BaseLib/Result/error.hpp>
