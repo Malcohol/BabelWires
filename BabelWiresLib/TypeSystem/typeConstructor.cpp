@@ -8,7 +8,6 @@
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 
 #include <BabelWiresLib/TypeSystem/type.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 
 #include <BaseLib/Result/error.hpp>
 
@@ -19,24 +18,15 @@ babelwires::TypeConstructor::~TypeConstructor() = default;
 babelwires::TypePtr
 babelwires::TypeConstructor::tryGetOrConstructType(const TypeSystem& typeSystem,
                                                    const TypeConstructorArguments& arguments) const {
-    const auto typeOrError = getOrConstructTypeInternal(typeSystem, arguments);
+    const auto typeOrError = getOrConstructType(typeSystem, arguments);
     if (typeOrError) {
         return *typeOrError;
     }
     return {};
 }
 
-babelwires::TypePtr babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
-                                                                    const TypeConstructorArguments& arguments) const {
-    const auto typeOrError = getOrConstructTypeInternal(typeSystem, arguments);
-    if (typeOrError) {
-        return *typeOrError;
-    }
-    throw TypeSystemException() << typeOrError.error().toString();
-}
-
 babelwires::ResultT<babelwires::TypePtr>
-babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSystem,
+babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
                                                         const TypeConstructorArguments& arguments) const {
     {
         // Phase 1: Try cache read-only

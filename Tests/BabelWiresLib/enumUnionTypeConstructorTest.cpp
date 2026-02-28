@@ -68,13 +68,10 @@ TEST(EnumUnionTypeConstructorTest, throwsOnFailure) {
 
     babelwires::EnumUnionTypeConstructor constructor;
 
-    EXPECT_THROW(constructor.getOrConstructType(testEnvironment.m_typeSystem, babelwires::TypeConstructorArguments{}),
-                 babelwires::TypeSystemException);
-    EXPECT_THROW(constructor.getOrConstructType(testEnvironment.m_typeSystem,
-                                                babelwires::TypeConstructorArguments{{}, {babelwires::IntValue()}}),
-                 babelwires::TypeSystemException);
-    EXPECT_THROW(constructor.getOrConstructType(
-                     testEnvironment.m_typeSystem,
-                     babelwires::TypeConstructorArguments{{babelwires::DefaultIntType::getThisIdentifier()}}),
-                 babelwires::TypeSystemException);
+    EXPECT_FALSE(constructor.getOrConstructType(testEnvironment.m_typeSystem, babelwires::TypeConstructorArguments{}));
+    EXPECT_FALSE(constructor.getOrConstructType(testEnvironment.m_typeSystem,
+                                                babelwires::TypeConstructorArguments{{}, {babelwires::IntValue()}}));
+    EXPECT_FALSE(constructor.getOrConstructType(
+        testEnvironment.m_typeSystem,
+        babelwires::TypeConstructorArguments{{babelwires::DefaultIntType::getThisIdentifier()}}));
 }

@@ -45,8 +45,8 @@ TEST(EnumAtomTypeConstructorTest, makeTypeExp) {
     babelwires::TypePtr newType = typeExp.tryResolve(testEnvironment.m_typeSystem);
 
     ASSERT_NE(newType, nullptr);
-    EXPECT_EQ(newType->getTypeExp(),
-              babelwires::TypeExp(babelwires::EnumAtomTypeConstructor::getThisIdentifier(), babelwires::EnumValue(foo)));
+    EXPECT_EQ(newType->getTypeExp(), babelwires::TypeExp(babelwires::EnumAtomTypeConstructor::getThisIdentifier(),
+                                                         babelwires::EnumValue(foo)));
 
     const babelwires::EnumType* const enumType = newType->tryAs<babelwires::EnumType>();
     ASSERT_NE(enumType, nullptr);
@@ -56,18 +56,15 @@ TEST(EnumAtomTypeConstructorTest, makeTypeExp) {
     EXPECT_EQ(valueSet[0], foo);
 }
 
-TEST(EnumAtomTypeConstructorTest, throwsOnFailure) {
+TEST(EnumAtomTypeConstructorTest, constructionFailure) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::EnumAtomTypeConstructor constructor;
 
-    EXPECT_THROW(constructor.getOrConstructType(testEnvironment.m_typeSystem, babelwires::TypeConstructorArguments{}),
-                 babelwires::TypeSystemException);
-    EXPECT_THROW(constructor.getOrConstructType(testEnvironment.m_typeSystem,
-                                                babelwires::TypeConstructorArguments{{}, {babelwires::IntValue()}}),
-                 babelwires::TypeSystemException);
-    EXPECT_THROW(constructor.getOrConstructType(
-                     testEnvironment.m_typeSystem,
-                     babelwires::TypeConstructorArguments{{babelwires::DefaultIntType::getThisIdentifier()}, {}}),
-                 babelwires::TypeSystemException);
+    EXPECT_FALSE(constructor.getOrConstructType(testEnvironment.m_typeSystem, babelwires::TypeConstructorArguments{}));
+    EXPECT_FALSE(constructor.getOrConstructType(testEnvironment.m_typeSystem,
+                                                babelwires::TypeConstructorArguments{{}, {babelwires::IntValue()}}));
+    EXPECT_FALSE(constructor.getOrConstructType(
+        testEnvironment.m_typeSystem,
+        babelwires::TypeConstructorArguments{{babelwires::DefaultIntType::getThisIdentifier()}, {}}));
 }

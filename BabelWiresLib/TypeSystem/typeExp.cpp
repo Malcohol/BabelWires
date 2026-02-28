@@ -74,7 +74,9 @@ babelwires::TypePtr babelwires::TypeExp::resolve(const TypeSystem& typeSystem) c
         TypePtr operator()(const ConstructedTypeData& higherOrderData) {
             const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
             const TypeConstructor& typeConstructor = m_typeSystem.getTypeConstructorById(typeConstructorId);
-            return typeConstructor.getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
+            auto result = typeConstructor.getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
+            THROW_ON_ERROR(result, babelwires::TypeSystemException);
+            return *result;
         }
         const TypeSystem& m_typeSystem;
     } visitorMethods{typeSystem};
