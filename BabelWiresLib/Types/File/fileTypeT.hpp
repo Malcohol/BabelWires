@@ -26,6 +26,10 @@ namespace babelwires {
             return babelwires::FileTypeConstructor::makeTypeExp(T::getThisIdentifier());
         }
 
+        static babelwires::TypePtr getType(const TypeSystem& typeSystem) {
+            return getThisIdentifier().assertResolve(typeSystem);
+        }
+
         /// Implementation Note: Cannot use FileType<T> here because the FileTypeConstructor does not construct
         /// instances of this template but instances of the parent FileType class.
         DECLARE_INSTANCE_BEGIN(FileType)
