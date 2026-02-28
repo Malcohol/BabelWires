@@ -12,19 +12,22 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 
 babelwires::ValueNode::ValueNode(const ProjectContext& context, UserLogger& userLogger,
                                        const ValueNodeData& data, NodeId newId)
     : Node(data, newId) {
     setFactoryName(data.getTypeExp().toString());
-    TypeExp typeExpForConstruction = data.getTypeExp();
-    if (!typeExpForConstruction.tryResolve(context.m_typeSystem)) {
-        typeExpForConstruction = FailureType::getThisIdentifier();
+    TypePtr nodeType;
+    try {
+        nodeType = data.getTypeExp().resolve(context.m_typeSystem);
+    } catch (const TypeSystemException& e) {
         std::ostringstream message;
-        message << "Type Reference " << data.getTypeExp().toString() << " could not be resolved";
+        message << "Type Reference " << data.getTypeExp().toString() << " could not be resolved: " << e.what();
         setInternalFailure(message.str());
+        nodeType = context.m_typeSystem.getRegisteredType<FailureType>();
     }
-    m_valueTreeRoot = std::make_unique<ValueTreeRoot>(context.m_typeSystem, typeExpForConstruction);
+    m_valueTreeRoot = std::make_unique<ValueTreeRoot>(context.m_typeSystem, std::move(nodeType));
 }
 
 babelwires::ValueNode::~ValueNode() = default;

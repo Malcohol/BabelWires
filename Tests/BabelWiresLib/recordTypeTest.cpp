@@ -439,7 +439,7 @@ TEST(RecordTypeTest, featureChanges) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot valueFeature(testEnvironment.m_typeSystem,
-                                           testDomain::TestComplexRecordType::getThisIdentifier());
+                                           testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
     valueFeature.setToDefault();
 
     const testDomain::TestComplexRecordType* recordType =

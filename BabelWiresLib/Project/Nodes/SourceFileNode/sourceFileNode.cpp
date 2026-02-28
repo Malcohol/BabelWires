@@ -15,6 +15,7 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <BaseLib/Log/userLogger.hpp>
 
@@ -85,7 +86,7 @@ bool babelwires::SourceFileNode::reload(const ProjectContext& context, UserLogge
                                   << ": " << formatResult.error().toString();
             setFactoryName(data.m_factoryIdentifier);
             setInternalFailure(formatResult.error().toString());
-            auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier());
+            auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, context.m_typeSystem.getRegisteredType<FailureType>());
             failure->setToDefault();
             setValueTreeRoot(std::move(failure));
             return false;
@@ -101,7 +102,7 @@ bool babelwires::SourceFileNode::reload(const ProjectContext& context, UserLogge
         if (!result) {
             userLogger.logError() << "Source File Node id=" << data.m_id << " could not be loaded: " << result.error().toString();
             setInternalFailure(result.error().toString());
-            auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier());
+            auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, context.m_typeSystem.getRegisteredType<FailureType>());
             failure->setToDefault();
             setValueTreeRoot(std::move(failure));
             return false;
@@ -113,7 +114,7 @@ bool babelwires::SourceFileNode::reload(const ProjectContext& context, UserLogge
         userLogger.logError() << "Source File Node id=" << data.m_id << " could not be loaded: " << e.what();
         setInternalFailure(e.what());
         // A dummy file root which allows the user to change the file via the context menu.
-        auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier());
+        auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, context.m_typeSystem.getRegisteredType<FailureType>());
         failure->setToDefault();
         setValueTreeRoot(std::move(failure));
     }

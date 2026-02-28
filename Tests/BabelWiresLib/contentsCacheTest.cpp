@@ -408,7 +408,7 @@ TEST(ContentsCacheTest, inputFeatureOnly) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
-                                           testDomain::TestComplexRecordType::getThisIdentifier());
+                                           testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
     inputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
 
@@ -423,7 +423,7 @@ TEST(ContentsCacheTest, outputFeatureOnly) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
-                                            testDomain::TestComplexRecordType::getThisIdentifier());
+                                           testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
 
@@ -437,9 +437,9 @@ TEST(ContentsCacheTest, inputAndOutputFeature) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
-                                           testDomain::TestComplexRecordType::getThisIdentifier());
+                                           testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
-                                            testDomain::TestComplexRecordType::getThisIdentifier());
+                                           testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
     inputFeature.setToDefault();
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
@@ -455,9 +455,9 @@ TEST(ContentsCacheTest, inputAndOutputDifferentFeatures) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
-                                           testDomain::TestComplexRecordType::getThisIdentifier());
+                                           testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
-                                            testDomain::TestComplexRecordType::getThisIdentifier());
+                                           testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
 
     inputFeature.setToDefault();
     outputFeature.setToDefault();
@@ -519,9 +519,9 @@ TEST(ContentsCacheTest, hiddenTopLevelModifiers) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_typeSystem,
-                                           testDomain::TestComplexRecordType::getThisIdentifier());
+                                           testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_typeSystem,
-                                            testDomain::TestComplexRecordType::getThisIdentifier());
+                                           testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
 
     inputFeature.setToDefault();
     outputFeature.setToDefault();
@@ -734,7 +734,7 @@ TEST(ContentsCacheTest, inputFileFeatureOnly) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_projectContext.m_typeSystem,
-                                           testDomain::getTestFileType());
+                                           testDomain::getTestFileType().assertResolve(testEnvironment.m_projectContext.m_typeSystem));
     inputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
 
@@ -750,7 +750,7 @@ TEST(ContentsCacheTest, outputFileFeatureOnly) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_projectContext.m_typeSystem,
-                                            testDomain::getTestFileType());
+                                           testDomain::getTestFileType().assertResolve(testEnvironment.m_projectContext.m_typeSystem));
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
 
@@ -765,9 +765,9 @@ TEST(ContentsCacheTest, inputAndOutputFileFeature) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot inputFeature(testEnvironment.m_projectContext.m_typeSystem,
-                                           testDomain::getTestFileType());
+                                           testDomain::getTestFileType().assertResolve(testEnvironment.m_projectContext.m_typeSystem));
     babelwires::ValueTreeRoot outputFeature(testEnvironment.m_projectContext.m_typeSystem,
-                                            testDomain::getTestFileType());
+                                           testDomain::getTestFileType().assertResolve(testEnvironment.m_projectContext.m_typeSystem));
     inputFeature.setToDefault();
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
@@ -784,7 +784,7 @@ TEST(ContentsCacheTest, unassignedTypeVariables_noAssignments) {
     babelwires::ContentsCache cache(editTree);
 
     babelwires::ValueTreeRoot valueTree(testEnvironment.m_projectContext.m_typeSystem,
-                                        testDomain::TestGenericType::getThisIdentifier());
+                                        testEnvironment.m_projectContext.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
     valueTree.setToDefault();
 
     babelwires::ValueTreeNode& nestedGenericTypeNode =

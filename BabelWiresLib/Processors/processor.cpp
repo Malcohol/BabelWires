@@ -14,19 +14,11 @@
 
 #include <BaseLib/Identifiers/registeredIdentifier.hpp>
 
-babelwires::Processor::Processor(const ProjectContext& projectContext, const TypeExp& inputTypeExp,
-                                 const TypeExp& outputTypeExp)
-    : m_inputValueTreeRoot(std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, inputTypeExp))
-    , m_outputValueTreeRoot(std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, outputTypeExp)) {
-    const TypePtr inputType = inputTypeExp.tryResolve(projectContext.m_typeSystem);
-    if (!inputType) {
-        throw ModelException() << "Input type reference " << inputTypeExp << " could not be resolved";
-    }
-    const TypePtr outputType = outputTypeExp.tryResolve(projectContext.m_typeSystem);
-    if (!outputType) {
-        throw ModelException() << "Output type reference " << outputTypeExp << " could not be resolved";
-    }
-}
+babelwires::Processor::Processor(const ProjectContext& projectContext, TypePtr inputType, TypePtr outputType)
+    : m_inputValueTreeRoot(
+          std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, std::move(inputType)))
+    , m_outputValueTreeRoot(
+          std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, std::move(outputType))) {}
 
 babelwires::Processor::~Processor() = default;
 

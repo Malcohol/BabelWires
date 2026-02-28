@@ -21,14 +21,6 @@ struct babelwires::ValueTreeRoot::ComplexConstructorArguments {
         m_value = newValue;
     }
 
-    ComplexConstructorArguments(const TypeSystem& typeSystem, TypeExp typeExp)
-        : m_typeSystem(typeSystem)
-        // TODO Do we need to handle failure here? Use tryResolve and possibly fall back to FailureType?
-        // Perhaps there should be no constructor from TypeExp?
-        , m_typePtr(typeExp.resolve(typeSystem)) {
-        auto [newValue, _] = m_typePtr->createValue(typeSystem);
-        m_value = newValue;
-    }
     const TypeSystem& m_typeSystem;
     TypePtr m_typePtr;
     ValueHolder m_value;
@@ -42,9 +34,6 @@ babelwires::ValueTreeRoot::ValueTreeRoot(ComplexConstructorArguments&& arguments
 
 babelwires::ValueTreeRoot::ValueTreeRoot(const TypeSystem& typeSystem, TypePtr typePtr)
     : ValueTreeRoot(ComplexConstructorArguments(typeSystem, std::move(typePtr))) {}
-
-babelwires::ValueTreeRoot::ValueTreeRoot(const TypeSystem& typeSystem, TypeExp typeExp)
-    : ValueTreeRoot(ComplexConstructorArguments(typeSystem, std::move(typeExp))) {}
 
 void babelwires::ValueTreeRoot::doSetValue(const ValueHolder& newValue) {
     if (getValue() != newValue) {

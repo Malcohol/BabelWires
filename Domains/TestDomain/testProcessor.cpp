@@ -2,6 +2,8 @@
 
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 #include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Project/projectContext.hpp>
 
 babelwires::ShortId testDomain::TestProcessorInputOutputType::getIntId() {
     return BW_SHORT_ID(s_intIdInitializer, s_intFieldName, s_intUuid);
@@ -20,11 +22,13 @@ babelwires::ShortId testDomain::TestProcessorInputOutputType::getRecordId() {
 }
 
 testDomain::TestProcessorInputOutputType::TestProcessorInputOutputType(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisIdentifier(), typeSystem, {{getIntId(), babelwires::DefaultIntType::getThisIdentifier()},
-                  {getOptIntId(), babelwires::DefaultIntType::getThisIdentifier(), Optionality::optionalDefaultInactive},
-                  {getArrayId(),
-                   babelwires::ArrayTypeConstructor::makeTypeExp(babelwires::DefaultIntType::getThisIdentifier(), 2, 8)},
-                  {getRecordId(), TestSimpleRecordType::getThisIdentifier()}}) {}
+    : RecordType(
+          getThisIdentifier(), typeSystem,
+          {{getIntId(), babelwires::DefaultIntType::getThisIdentifier()},
+           {getOptIntId(), babelwires::DefaultIntType::getThisIdentifier(), Optionality::optionalDefaultInactive},
+           {getArrayId(),
+            babelwires::ArrayTypeConstructor::makeTypeExp(babelwires::DefaultIntType::getThisIdentifier(), 2, 8)},
+           {getRecordId(), TestSimpleRecordType::getThisIdentifier()}}) {}
 
 const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToInt =
     *babelwires::Path::deserializeFromString("Int");
@@ -46,11 +50,11 @@ const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToInt2 =
     *babelwires::Path::deserializeFromString("Record/intR0");
 
 testDomain::TestProcessor::TestProcessor(const babelwires::ProjectContext& context)
-    : babelwires::Processor(context, testDomain::TestProcessorInputOutputType::getThisIdentifier(),
-                            testDomain::TestProcessorInputOutputType::getThisIdentifier()) {}
+    : babelwires::Processor(context, context.m_typeSystem.getRegisteredType<testDomain::TestProcessorInputOutputType>(),
+                            context.m_typeSystem.getRegisteredType<testDomain::TestProcessorInputOutputType>()) {}
 
 void testDomain::TestProcessor::processValue(babelwires::UserLogger& userLogger, const babelwires::ValueTreeNode& input,
-                                            babelwires::ValueTreeNode& output) const {
+                                             babelwires::ValueTreeNode& output) const {
     TestProcessorInputOutputType::ConstInstance in{input};
     TestProcessorInputOutputType::Instance out{output};
 

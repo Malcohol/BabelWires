@@ -44,19 +44,17 @@ babelwires::ParallelProcessorInputBase::ParallelProcessorInputBase(TypeExp&& typ
 babelwires::ParallelProcessorOutputBase::ParallelProcessorOutputBase(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, ShortId arrayId, TypeExp entryType)
     : RecordType(std::move(typeExpOfThis), typeSystem, {{arrayId, getParallelArray(std::move(entryType))}}) {}
 
-babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectContext, const TypeExp& parallelInput,
-                                                 const TypeExp& parallelOutput)
-    : Processor(projectContext, parallelInput, parallelOutput) {
+babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectContext, const TypeExp& parallelInputExp,
+                                                 const TypeExp& parallelOutputExp)
+    : Processor(projectContext, parallelInputExp.assertResolve(projectContext.m_typeSystem), parallelOutputExp.assertResolve(projectContext.m_typeSystem)) {
 #ifndef NDEBUG
-    auto inputType = parallelInput.resolveAs<ParallelProcessorInputBase>(projectContext.m_typeSystem);
-    assert(inputType && "The ParallelProcessor input type should be a ParallelProcessorInputBase");
-    auto outputType = parallelOutput.resolveAs<ParallelProcessorOutputBase>(projectContext.m_typeSystem);
-    assert(outputType && "The ParallelProcessor output type should be a ParallelProcessorOutputBase");
-    assert(inputType->getFields().size() >= 1);
-    assert(outputType->getFields().size() == 1);
+    auto inputType = getInput().getType()->as<ParallelProcessorInputBase>();
+    auto outputType = getOutput().getType()->as<ParallelProcessorOutputBase>();
+    assert(inputType.getFields().size() >= 1);
+    assert(outputType.getFields().size() == 1);
     // Note: The two IDs don't have to have the same distinguisher and can be registered separately.
-    assert((inputType->getFields()[inputType->getFields().size() - 1].m_identifier ==
-            outputType->getFields()[0].m_identifier) &&
+    assert((inputType.getFields()[inputType.getFields().size() - 1].m_identifier ==
+            outputType.getFields()[0].m_identifier) &&
            "The ParallelProcessor input and output IDs must agree");
 #endif
 }

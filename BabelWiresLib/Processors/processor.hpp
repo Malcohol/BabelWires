@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/TypeSystem/typePtr.hpp>
+
 #include <memory>
 
 namespace babelwires {
@@ -20,7 +22,7 @@ namespace babelwires {
     /// This should not store any state.
     class Processor {
       public:
-        Processor(const ProjectContext& projectContext, const TypeExp& inputTypeExp, const TypeExp& outputTypeExp);
+        Processor(const ProjectContext& projectContext, TypePtr inputTypeExp, TypePtr outputTypeExp);
         virtual ~Processor();
 
         /// Set values in the output based on values in the input.

@@ -120,9 +120,9 @@ void testUtils::TestProjectData::testProjectData(const babelwires::ProjectContex
 }
 
 void testUtils::TestProjectData::resolvePathsInCurrentContext(const babelwires::ProjectContext& context) {
-    babelwires::ValueTreeRoot testRecord(context.m_typeSystem, testDomain::TestProcessorInputOutputType::getThisIdentifier());
+    babelwires::ValueTreeRoot testRecord(context.m_typeSystem, context.m_typeSystem.getRegisteredType<testDomain::TestProcessorInputOutputType>());
     testRecord.setToDefault();
-    babelwires::ValueTreeRoot testFileFeature(context.m_typeSystem, testDomain::getTestFileType());
+    babelwires::ValueTreeRoot testFileFeature(context.m_typeSystem, testDomain::getTestFileType().assertResolve(context.m_typeSystem));
 
     // These have side-effects on the field discriminators in the paths.
     auto modData0 = m_nodes[0]->m_modifiers[0].get()->tryAs<babelwires::ConnectionModifierData>();

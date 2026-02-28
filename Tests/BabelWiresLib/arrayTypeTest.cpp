@@ -504,7 +504,7 @@ TEST(ArrayTypeTest, subtyping) {
 TEST(ArrayTypeTest, nodeChanges) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::ValueTreeRoot arrayNode(testEnvironment.m_typeSystem,
-                                           testDomain::TestSimpleArrayType::getThisIdentifier());
+                                           testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestSimpleArrayType>());
     arrayNode.setToDefault();
 
     const testDomain::TestSimpleArrayType* arrayType = arrayNode.getType()->tryAs<testDomain::TestSimpleArrayType>();

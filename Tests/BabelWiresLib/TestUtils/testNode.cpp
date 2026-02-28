@@ -1,8 +1,9 @@
 #include <Tests/BabelWiresLib/TestUtils/testNode.hpp>
 
-#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Domains/TestDomain/testRecordType.hpp>
 
@@ -11,32 +12,35 @@ testUtils::TestNodeData::TestNodeData() {
     m_factoryVersion = 1;
 }
 
-testUtils::TestNodeData::TestNodeData(const TestNodeData& other,
-                                                          babelwires::ShallowCloneContext context)
+testUtils::TestNodeData::TestNodeData(const TestNodeData& other, babelwires::ShallowCloneContext context)
     : NodeData(other, context) {}
 
 bool testUtils::TestNodeData::checkFactoryVersion(const babelwires::ProjectContext& context,
-                                                            babelwires::UserLogger& userLogger) {
+                                                  babelwires::UserLogger& userLogger) {
     return true;
 }
 
-std::unique_ptr<babelwires::Node> testUtils::TestNodeData::doCreateNode(
-    const babelwires::ProjectContext& context, babelwires::UserLogger& userLogger, babelwires::NodeId newId) const {
+std::unique_ptr<babelwires::Node> testUtils::TestNodeData::doCreateNode(const babelwires::ProjectContext& context,
+                                                                        babelwires::UserLogger& userLogger,
+                                                                        babelwires::NodeId newId) const {
     return std::make_unique<TestNode>(context, *this, newId);
 }
 
 void testUtils::TestNodeData::serializeContents(babelwires::Serializer& serializer) const {}
 
-babelwires::Result testUtils::TestNodeData::deserializeContents(babelwires::Deserializer& deserializer) { return {}; }
+babelwires::Result testUtils::TestNodeData::deserializeContents(babelwires::Deserializer& deserializer) {
+    return {};
+}
 
 testUtils::TestNode::TestNode(const babelwires::ProjectContext& context)
     : TestNode(context, TestNodeData(), 10) {}
 
-testUtils::TestNode::TestNode(const babelwires::ProjectContext& context,
-                                                  const TestNodeData& data, babelwires::NodeId newId)
+testUtils::TestNode::TestNode(const babelwires::ProjectContext& context, const TestNodeData& data,
+                              babelwires::NodeId newId)
     : Node(data, newId) {
     setFactoryName(data.m_factoryIdentifier);
-    m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, testDomain::TestComplexRecordType::getThisIdentifier());
+    m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(
+        context.m_typeSystem, context.m_typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
 }
 
 void testUtils::TestNode::doProcess(babelwires::UserLogger&) {}
@@ -59,11 +63,12 @@ babelwires::ValueTreeNode* testUtils::TestNode::doGetOutputNonConst() {
 
 void testUtils::TestNode::simulateFailure(const babelwires::ProjectContext& context) {
     setInternalFailure("Simulated failure");
-    m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem,
-                                                                 babelwires::FailureType::getThisIdentifier());
+    m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(
+        context.m_typeSystem, context.m_typeSystem.getRegisteredType<babelwires::FailureType>());
 }
 
 void testUtils::TestNode::simulateRecovery(const babelwires::ProjectContext& context) {
-    m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, testDomain::TestComplexRecordType::getThisIdentifier());
+    m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(
+        context.m_typeSystem, context.m_typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
     clearInternalFailure();
 }
