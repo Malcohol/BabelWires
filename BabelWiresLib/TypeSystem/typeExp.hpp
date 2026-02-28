@@ -80,7 +80,7 @@ namespace babelwires {
                 ValueHolder value2);
 
         /// Attempt to find the type in the TypeSystem that this TypeExp describes.
-        /// Returns null if this TypeExp does not resolve.
+        /// Returns an unassigned TypePtr if this TypeExp does not resolve.
         TypePtr tryResolve(const TypeSystem& typeSystem) const;
 
         /// Find the type in the TypeSystem that this TypeExp describes.
