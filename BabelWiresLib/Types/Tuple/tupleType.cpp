@@ -15,7 +15,7 @@ babelwires::TupleType::TupleType(TypeExp&& typeExpOfThis, const TypeSystem& type
     : Type(std::move(typeExpOfThis)) {
     m_componentTypes.reserve(components.size());
     for (const auto& c : components) {
-        m_componentTypes.emplace_back(c.resolve(typeSystem));
+        m_componentTypes.emplace_back(c.assertResolve(typeSystem));
     }
 }
 

@@ -8,7 +8,8 @@
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 
 #include <BabelWiresLib/TypeSystem/type.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
+
+#include <BaseLib/Result/error.hpp>
 
 #include <mutex>
 
@@ -17,26 +18,15 @@ babelwires::TypeConstructor::~TypeConstructor() = default;
 babelwires::TypePtr
 babelwires::TypeConstructor::tryGetOrConstructType(const TypeSystem& typeSystem,
                                                    const TypeConstructorArguments& arguments) const {
-    auto typeOrError = getOrConstructTypeInternal(typeSystem, arguments);
-    struct VisitorMethods {
-        babelwires::TypePtr operator()(const TypePtr& type) { return type; }
-        babelwires::TypePtr operator()(const std::string& error) { return {}; }
-    };
-    return std::visit(VisitorMethods(), typeOrError);
+    const auto typeOrError = getOrConstructType(typeSystem, arguments);
+    if (typeOrError) {
+        return *typeOrError;
+    }
+    return {};
 }
 
-babelwires::TypePtr babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
-                                                                    const TypeConstructorArguments& arguments) const {
-    auto typeOrError = getOrConstructTypeInternal(typeSystem, arguments);
-    struct VisitorMethods {
-        babelwires::TypePtr operator()(const TypePtr& type) { return type; }
-        babelwires::TypePtr operator()(const std::string& error) { throw TypeSystemException() << error; }
-    };
-    return std::visit(VisitorMethods(), typeOrError);
-}
-
-babelwires::TypeConstructor::TypeOrError
-babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSystem,
+babelwires::ResultT<babelwires::TypePtr>
+babelwires::TypeConstructor::getOrConstructType(const TypeSystem& typeSystem,
                                                         const TypeConstructorArguments& arguments) const {
     {
         // Phase 1: Try cache read-only
@@ -44,12 +34,12 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
 
         auto it = m_cache.find(arguments);
         if (it != m_cache.end()) {
-            if (const WeakTypePtr* const weakPtr = std::get_if<WeakTypePtr>(&it->second)) {
-                if (TypePtr owningPtr = weakPtr->lock()) {
+            if (it->second) {
+                if (TypePtr owningPtr = it->second->lock()) {
                     return owningPtr;
                 }
             } else {
-                return std::get<std::string>(it->second);
+                return std::unexpected(it->second.error());
             }
         }
     }
@@ -75,38 +65,35 @@ babelwires::TypeConstructor::getOrConstructTypeInternal(const TypeSystem& typeSy
         auto it = m_cache.emplace(std::pair{arguments, PerTypeStorage()});
         if (!it.second) {
             // There's an entry now. See if it's usable.
-            if (const WeakTypePtr* const weakPtr = std::get_if<WeakTypePtr>(&it.first->second)) {
-                if (TypePtr owningPtr = weakPtr->lock()) {
+            if (it.first->second) {
+                if (TypePtr owningPtr = it.first->second->lock()) {
                     return owningPtr;
                 }
             } else {
-                return std::get<std::string>(it.first->second);
+                return it.first->second.error();
             }
         }
         // Still not found.
         // Only construct the type if the arity is correct.
         if (resolvedArguments.size() == arguments.getTypeArguments().size()) {
-            try {
-                TypePtr result = constructType(typeSystem, std::move(newTypeExp), arguments, resolvedArguments);
-                assert(result && "Returning a null pointer from a TypeConstructor is not permitted");
-                it.first->second = result;
-                return result;
-            } catch (TypeSystemException& e) {
-                std::string result = e.what();
-                it.first->second = result;
-                return result;
+            auto result = constructType(typeSystem, std::move(newTypeExp), arguments, resolvedArguments);
+            if (result) {
+                assert(*result && "Returning a null pointer from a TypeConstructor is not permitted");
+                it.first->second = *result;
+            } else {
+                it.first->second = std::unexpected(result.error());
             }
+            return result;
         } else {
-            std::ostringstream os;
-            os << "Failed to construct a type because the following type arguments failed to resolve: ";
+            Error error;
+            error << "Failed to construct a type because the following type arguments failed to resolve: ";
             const char* sep = "";
             for (auto refString : unresolvedTypesString) {
-                os << sep << refString;
+                error << sep << refString;
                 sep = ", ";
             }
-            std::string result = os.str();
-            it.first->second = result;
-            return result;
+            it.first->second = error;
+            return error;
         }
     }
 }

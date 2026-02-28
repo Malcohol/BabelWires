@@ -18,6 +18,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <BaseLib/Log/userLogger.hpp>
 
@@ -31,7 +32,7 @@ babelwires::ProcessorNode::ProcessorNode(const ProjectContext& context, UserLogg
             setFactoryName(elementData.m_factoryIdentifier);
             setInternalFailure(factoryResult.error().toString());
             m_failedValueTree =
-                std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier());
+                std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, context.m_typeSystem.getRegisteredType<FailureType>());
             userLogger.logError() << "Failed to create processor id=" << elementData.m_id
                                   << ": " << factoryResult.error().toString();
             return;
@@ -46,7 +47,7 @@ babelwires::ProcessorNode::ProcessorNode(const ProjectContext& context, UserLogg
         setFactoryName(elementData.m_factoryIdentifier);
         setInternalFailure(e.what());
         m_failedValueTree =
-            std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier());
+            std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, context.m_typeSystem.getRegisteredType<FailureType>());
         userLogger.logError() << "Failed to create processor id=" << elementData.m_id << ": " << e.what();
     }
 }

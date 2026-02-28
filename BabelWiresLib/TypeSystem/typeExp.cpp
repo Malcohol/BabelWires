@@ -12,6 +12,7 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <BaseLib/Hash/hash.hpp>
+#include <BaseLib/Result/error.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 
@@ -51,30 +52,35 @@ babelwires::TypePtr babelwires::TypeExp::tryResolve(const TypeSystem& typeSystem
         TypePtr operator()(std::monostate) { return {}; }
         TypePtr operator()(RegisteredTypeId typeId) { return m_typeSystem.tryGetRegisteredTypeById(typeId); }
         TypePtr operator()(const ConstructedTypeData& higherOrderData) {
-            try {
-                const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
-                if (const TypeConstructor* const typeConstructor =
-                        m_typeSystem.tryGetTypeConstructorById(typeConstructorId)) {
-                    return typeConstructor->tryGetOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
-                }
-                return {};
-            } catch (babelwires::TypeSystemException&) {
-                return {};
+            const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
+            if (const TypeConstructor* const typeConstructor =
+                    m_typeSystem.tryGetTypeConstructorById(typeConstructorId)) {
+                return typeConstructor->tryGetOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
             }
+            return {};
         }
         const TypeSystem& m_typeSystem;
     } visitorMethods{typeSystem};
     return std::visit(visitorMethods, m_storage);
 }
 
-babelwires::TypePtr babelwires::TypeExp::resolve(const TypeSystem& typeSystem) const {
+babelwires::ResultT<babelwires::TypePtr> babelwires::TypeExp::resolve(const TypeSystem& typeSystem) const {
     struct VisitorMethods {
-        TypePtr operator()(std::monostate) { throw TypeSystemException() << "A null type cannot be resolved."; }
-        TypePtr operator()(RegisteredTypeId typeId) { return m_typeSystem.getRegisteredTypeById(typeId); }
-        TypePtr operator()(const ConstructedTypeData& higherOrderData) {
+        ResultT<TypePtr> operator()(std::monostate) { return Error() << "A null type cannot be resolved."; }
+        ResultT<TypePtr> operator()(RegisteredTypeId typeId) {
+            TypePtr result = m_typeSystem.tryGetRegisteredTypeById(typeId);
+            if (!result) {
+                return Error() << "Type \"" << typeId << "\" is not registered in the type system.";
+            }
+            return result;
+        }
+        ResultT<TypePtr> operator()(const ConstructedTypeData& higherOrderData) {
             const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
-            const TypeConstructor& typeConstructor = m_typeSystem.getTypeConstructorById(typeConstructorId);
-            return typeConstructor.getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
+            const TypeConstructor* typeConstructor = m_typeSystem.tryGetTypeConstructorById(typeConstructorId);
+            if (!typeConstructor) {
+                return Error() << "Type constructor \"" << typeConstructorId << "\" is not registered in the type system.";
+            }
+            return typeConstructor->getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
         }
         const TypeSystem& m_typeSystem;
     } visitorMethods{typeSystem};
@@ -82,16 +88,9 @@ babelwires::TypePtr babelwires::TypeExp::resolve(const TypeSystem& typeSystem) c
 }
 
 babelwires::TypePtr babelwires::TypeExp::assertResolve(const TypeSystem& typeSystem) const {
-#ifndef NDEBUG
-    try {
-#endif
-        return resolve(typeSystem);
-#ifndef NDEBUG
-    } catch (TypeSystemException&) {
-        assert(false && "TypeSystemException thrown when resolving TypeExp");
-        return {};
-    }
-#endif
+    const auto typePtr = tryResolve(typeSystem);
+    assert(typePtr && "Cannot resolve typeExp");
+    return typePtr;
 }
 
 std::string babelwires::TypeExp::toStringHelper(babelwires::IdentifierRegistry::ReadAccess& identifierRegistry) const {

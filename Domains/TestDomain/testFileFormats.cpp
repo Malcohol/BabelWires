@@ -1,8 +1,9 @@
 #include <Domains/TestDomain/testFileFormats.hpp>
 
 #include <BabelWiresLib/Project/projectContext.hpp>
-#include <BabelWiresLib/Types/File/fileTypeConstructor.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
+#include <BabelWiresLib/Types/File/fileTypeConstructor.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <BaseLib/IO/fileDataSource.hpp>
@@ -55,33 +56,34 @@ void testDomain::TestSourceFileFormat::writeToTestFile(const std::filesystem::pa
     fs << s_fileFormat << " " << r0 << " " << r1 << "\n";
 }
 
-babelwires::ResultT<std::tuple<int, int>> testDomain::TestSourceFileFormat::getFileData(const std::filesystem::path& path) {
+babelwires::ResultT<std::tuple<int, int>>
+testDomain::TestSourceFileFormat::getFileData(const std::filesystem::path& path) {
     std::ifstream is(path);
     if (!is.is_open()) {
         return babelwires::Error() << "Failed to open file at " << path;
     }
-    
+
     std::string formatId;
     int r0, r1;
-    
+
     if (!(is >> formatId >> r0 >> r1)) {
         return babelwires::Error() << "Failed to parse file at " << path;
     }
-    
+
     if (formatId != s_fileFormat) {
         return babelwires::Error() << "File at " << path << " was not in the expected format";
     }
-    
+
     return std::tuple{r0, r1};
 }
 
 babelwires::ResultT<std::unique_ptr<babelwires::ValueTreeRoot>>
 testDomain::TestSourceFileFormat::loadFromFile(const std::filesystem::path& path,
-                                              const babelwires::ProjectContext& projectContext,
-                                              babelwires::UserLogger& userLogger) const {
-    ASSIGN_OR_ERROR(auto result, getFileData(path));
-    auto [r0, r1] = result;
-    auto newFeature = std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, getTestFileType());
+                                               const babelwires::ProjectContext& projectContext,
+                                               babelwires::UserLogger& userLogger) const {
+    ASSIGN_OR_ERROR(auto [r0, r1], getFileData(path));
+    auto newFeature = std::make_unique<babelwires::ValueTreeRoot>(
+        projectContext.m_typeSystem, getTestFileType().assertResolve(projectContext.m_typeSystem));
     newFeature->setToDefault();
     TestSimpleRecordType::Instance instance{newFeature->getChild(0)->as<babelwires::ValueTreeNode>()};
     instance.getintR0().set(r0);
@@ -90,8 +92,7 @@ testDomain::TestSourceFileFormat::loadFromFile(const std::filesystem::path& path
 }
 
 testDomain::TestTargetFileFormat::TestTargetFileFormat()
-    : TargetFileFormat(getThisIdentifier(),
-                       3, {s_fileFormat}) {}
+    : TargetFileFormat(getThisIdentifier(), 3, {s_fileFormat}) {}
 
 babelwires::LongId testDomain::TestTargetFileFormat::getThisIdentifier() {
     return BW_LONG_ID("TestTargetFormat", "Test Target File Format", "0e0bf791-c161-41d0-9690-223d05a057bd");
@@ -107,13 +108,14 @@ std::string testDomain::TestTargetFileFormat::getProductName() const {
 
 std::unique_ptr<babelwires::ValueTreeRoot>
 testDomain::TestTargetFileFormat::createNewValue(const babelwires::ProjectContext& projectContext) const {
-    return std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, getTestFileType());
+    return std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem,
+                                                       getTestFileType().assertResolve(projectContext.m_typeSystem));
 }
 
 babelwires::Result testDomain::TestTargetFileFormat::writeToFile(const babelwires::ProjectContext& projectContext,
-                                                                  babelwires::UserLogger& userLogger,
-                                                                  const babelwires::ValueTreeRoot& contents,
-                                                                  const std::filesystem::path& path) const {
+                                                                 babelwires::UserLogger& userLogger,
+                                                                 const babelwires::ValueTreeRoot& contents,
+                                                                 const std::filesystem::path& path) const {
     std::ofstream os(path);
     if (!os.is_open()) {
         return babelwires::Error() << "Failed to open file at " << path << " for writing";

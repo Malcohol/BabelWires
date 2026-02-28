@@ -7,15 +7,17 @@
  **/
 #include <BabelWiresLib/Types/Rational/rationalTypeConstructor.hpp>
 
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
 
-std::tuple<babelwires::Range<babelwires::Rational>, babelwires::Rational>
+#include <BaseLib/Result/error.hpp>
+#include <BaseLib/Result/resultDSL.hpp>
+
+babelwires::ResultT<std::tuple<babelwires::Range<babelwires::Rational>, babelwires::Rational>>
 babelwires::RationalTypeConstructor::extractValueArguments(const std::vector<ValueHolder>& valueArguments) {
     if (valueArguments.size() != 3) {
-        throw TypeSystemException() << "RationalTypeConstructor expects 3 value arguments but got "
-                                    << valueArguments.size();
+        return Error() << "RationalTypeConstructor expects 3 value arguments but got "
+                       << valueArguments.size();
     }
 
     Rational args[3];
@@ -23,23 +25,23 @@ babelwires::RationalTypeConstructor::extractValueArguments(const std::vector<Val
         if (const RationalValue* intValue = valueArguments[i]->tryAs<RationalValue>()) {
             args[i] = intValue->get();
         } else {
-            throw TypeSystemException() << "Argument " << i
-                                        << " given to RationalTypeConstructor was not an RationalValue";
+            return Error() << "Argument " << i
+                           << " given to RationalTypeConstructor was not an RationalValue";
         }
     }
 
-    return {{args[0], args[1]}, args[2]};
+    return std::tuple{Range<Rational>{args[0], args[1]}, args[2]};
 }
 
-babelwires::TypePtr
+babelwires::ResultT<babelwires::TypePtr>
 babelwires::RationalTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                    const TypeConstructorArguments& arguments,
                                                    const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 0) {
-        throw TypeSystemException() << "RationalTypeConstructor does not expect type arguments but got "
-                                    << arguments.getTypeArguments().size();
+        return Error() << "RationalTypeConstructor does not expect type arguments but got "
+                       << arguments.getTypeArguments().size();
     }
-    auto [range, defaultValue] = extractValueArguments(arguments.getValueArguments());
+    ASSIGN_OR_ERROR(auto [range, defaultValue], extractValueArguments(arguments.getValueArguments()));
     return makeType<RationalType>(std::move(newTypeExp), range, defaultValue);
 }
 

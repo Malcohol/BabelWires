@@ -42,9 +42,9 @@ TEST(TypeTest, typePtrTest)
 
     babelwires::WeakTypePtr weakTypePtr;
     {
-        babelwires::TypePtr typePtr = arrayOfStringsExp.resolve(typeSystem);
+        babelwires::TypePtr typePtr = *arrayOfStringsExp.resolve(typeSystem);
         EXPECT_TRUE(typePtr);
-        babelwires::TypePtr typePtr2 = arrayOfStringsExp.resolve(typeSystem);
+        babelwires::TypePtr typePtr2 = *arrayOfStringsExp.resolve(typeSystem);
         // Constructing the same type twice gives the same pointer.
         EXPECT_EQ(typePtr, typePtr2);
         weakTypePtr = typePtr;
@@ -55,7 +55,7 @@ TEST(TypeTest, typePtrTest)
 
     {
         // Confirm that the type can be recreated.
-        babelwires::TypePtr typePtr = arrayOfStringsExp.resolve(typeSystem);
+        babelwires::TypePtr typePtr = *arrayOfStringsExp.resolve(typeSystem);
         EXPECT_TRUE(typePtr);
         weakTypePtr = typePtr;
         EXPECT_FALSE(weakTypePtr.expired());

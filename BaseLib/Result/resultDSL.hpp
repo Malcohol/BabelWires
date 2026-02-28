@@ -11,9 +11,8 @@
 // Assume that code that needs these macros needs wants Error too.
 #include <BaseLib/Result/error.hpp>
 
-// Helper macros
-#define BW_UNIQUE_NAME(X, Y) BW_COMBINE_HELPER(X, Y)
-#define BW_COMBINE_HELPER(X, Y) X##Y
+// Helper macros.
+#include <BaseLib/Result/resultDSLDetail.hpp>
 
 // Helper macros for working with Results. These are designed to be used in functions that return a Result or ResultT,
 // and allow for easy propagation of errors without needing to write boilerplate code. See ResultTests.cpp for examples.
@@ -30,15 +29,10 @@
 
 /// Assign TARGET_EXPRESSION from the EXPRESSION_THAT_RETURNS_RESULTT, which must return a ResultT.
 /// If the result is an error, call babelwiresOnError and return the error.
-// We can't use a scope in this case since it would enclose the target expression.
-// Instead use a file-unique variable name.
-#define ASSIGN_OR_ERROR(TARGET_EXPRESSION, EXPRESSION_THAT_RETURNS_RESULTT)                                            \
-    auto BW_UNIQUE_NAME(assignOrErrorResult, __LINE__) = EXPRESSION_THAT_RETURNS_RESULTT;                              \
-    if (!BW_UNIQUE_NAME(assignOrErrorResult, __LINE__)) [[unlikely]] {                                                 \
-        babelwiresOnError();                                                                                           \
-        return std::unexpected(BW_UNIQUE_NAME(assignOrErrorResult, __LINE__).error());                                 \
-    }                                                                                                                  \
-    TARGET_EXPRESSION = std::move(*BW_UNIQUE_NAME(assignOrErrorResult, __LINE__));
+/// The target expression may contain commas (e.g. structured bindings like auto [a, b]), since the
+/// macro is variadic: the last argument is the expression, and all preceding arguments form the target.
+#define ASSIGN_OR_ERROR(...)                                                                                           \
+    BW_CONCAT(BW_ASSIGN_, BW_ARG_COUNT(__VA_ARGS__))(__VA_ARGS__)
 
 /// Perform the code if an error occurs with the scope.
 /// This cannot be used twice in the same scope, but you can introduce a new scope to work around that.

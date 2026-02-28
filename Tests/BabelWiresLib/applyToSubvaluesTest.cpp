@@ -14,8 +14,8 @@ class ApplyToSubvaluesTest : public ::testing::Test {
         babelwires::TypeSystem& typeSystem = m_testEnvironment.m_typeSystem;
 
         // Use a ValueTreeNode and Instance as a convenient way to set up a value
-        babelwires::ValueTreeRoot recordValueTreeNode(typeSystem,
-                                                        testDomain::TestComplexRecordType::getThisIdentifier());
+        babelwires::ValueTreeRoot recordValueTreeNode(
+            typeSystem, typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
         testDomain::TestComplexRecordType::Instance recordInstance(recordValueTreeNode);
         recordInstance.getintR0().set(5);
         recordInstance.getintR1().set(-3);
@@ -33,8 +33,8 @@ class ApplyToSubvaluesTest : public ::testing::Test {
     void testValues(int offset) {
         // Use a ValueTreeNode and Instance as a convenient way to test the value
         babelwires::TypeSystem& typeSystem = m_testEnvironment.m_typeSystem;
-        babelwires::ValueTreeRoot recordValueTreeNode(typeSystem,
-                                                        testDomain::TestComplexRecordType::getThisIdentifier());
+        babelwires::ValueTreeRoot recordValueTreeNode(
+            typeSystem, typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
         recordValueTreeNode.setValue(m_recordValue);
         testDomain::TestComplexRecordType::Instance recordInstance(recordValueTreeNode);
         EXPECT_EQ(recordInstance.getintR0().get(), 5 + offset);
@@ -56,8 +56,7 @@ class ApplyToSubvaluesTest : public ::testing::Test {
 
 TEST_F(ApplyToSubvaluesTest, applyToSubvalues) {
     babelwires::TypeSystem& typeSystem = m_testEnvironment.m_typeSystem;
-    const auto& testComplexRecordType =
-        typeSystem.getRegisteredType<testDomain::TestComplexRecordType>();
+    const auto& testComplexRecordType = typeSystem.getRegisteredType<testDomain::TestComplexRecordType>();
 
     // Apply a function to increment all IntType subvalues by 1
     babelwires::applyToSubvalues(
@@ -73,13 +72,11 @@ TEST_F(ApplyToSubvaluesTest, applyToSubvalues) {
 
 TEST_F(ApplyToSubvaluesTest, applyToSubvaluesOfType) {
     babelwires::TypeSystem& typeSystem = m_testEnvironment.m_typeSystem;
-    const auto& testComplexRecordType =
-        typeSystem.getRegisteredType<testDomain::TestComplexRecordType>();
+    const auto& testComplexRecordType = typeSystem.getRegisteredType<testDomain::TestComplexRecordType>();
 
     // Apply a function to increment all IntType subvalues by 1
     babelwires::applyToSubvaluesOfType<babelwires::IntType>(
-        typeSystem, *testComplexRecordType, m_recordValue,
-        [](const babelwires::Type& type, babelwires::Value& value) {
+        typeSystem, *testComplexRecordType, m_recordValue, [](const babelwires::Type& type, babelwires::Value& value) {
             auto& intValue = value.getAsEditableValue().as<babelwires::IntValue>();
             intValue.set(intValue.get() + 1);
         });

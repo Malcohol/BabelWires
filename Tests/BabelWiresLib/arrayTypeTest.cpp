@@ -76,7 +76,7 @@ TEST(ArrayTypeTest, isValidValueArrayCanBeEmpty) {
 
     testDomain::TestSimpleArrayType arrayType(testEnvironment.m_typeSystem);
     const babelwires::TypePtr& entryType =
-        testDomain::TestSimpleArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
+        testDomain::TestSimpleArrayType::getEntryTypeStatic().assertResolve(testEnvironment.m_typeSystem);
 
     for (unsigned int i = testDomain::TestSimpleArrayType::s_minimumSize;
          i <= testDomain::TestSimpleArrayType::s_maximumSize; ++i) {
@@ -108,7 +108,7 @@ TEST(ArrayTypeTest, isValidValueArrayCannotBeEmpty) {
 
     testDomain::TestCompoundArrayType arrayType(testEnvironment.m_typeSystem);
     const babelwires::TypePtr& entryType =
-        testDomain::TestCompoundArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
+        testDomain::TestCompoundArrayType::getEntryTypeStatic().assertResolve(testEnvironment.m_typeSystem);
 
     for (unsigned int i = testDomain::TestCompoundArrayType::s_minimumSize;
          i <= testDomain::TestCompoundArrayType::s_maximumSize; ++i) {
@@ -134,7 +134,7 @@ TEST(ArrayTypeTest, setSizeArrayCanBeEmpty) {
 
     testDomain::TestSimpleArrayType arrayType(testEnvironment.m_typeSystem);
     const babelwires::TypePtr& entryType =
-        testDomain::TestSimpleArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
+        testDomain::TestSimpleArrayType::getEntryTypeStatic().assertResolve(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder valueHolder =
         babelwires::ValueHolder::makeValue<babelwires::ArrayValue>(testEnvironment.m_typeSystem, *entryType, 0);
@@ -166,7 +166,7 @@ TEST(ArrayTypeTest, setSizeArrayCannotBeEmpty) {
 
     testDomain::TestCompoundArrayType arrayType(testEnvironment.m_typeSystem);
     const babelwires::TypePtr& entryType =
-        testDomain::TestCompoundArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
+        testDomain::TestCompoundArrayType::getEntryTypeStatic().assertResolve(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder valueHolder = babelwires::ValueHolder::makeValue<babelwires::ArrayValue>(
         testEnvironment.m_typeSystem, *entryType, testDomain::TestCompoundArrayType::s_maximumSize);
@@ -198,7 +198,7 @@ TEST(ArrayTypeTest, insertEntries) {
 
     testDomain::TestSimpleArrayType arrayType(testEnvironment.m_typeSystem);
     const babelwires::TypePtr& entryType =
-        testDomain::TestSimpleArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
+        testDomain::TestSimpleArrayType::getEntryTypeStatic().assertResolve(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder valueHolder;
     {
@@ -244,7 +244,7 @@ TEST(ArrayTypeTest, removeEntriesArrayCanBeEmpty) {
 
     testDomain::TestSimpleArrayType arrayType(testEnvironment.m_typeSystem);
     const babelwires::TypePtr& entryType =
-        testDomain::TestSimpleArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
+        testDomain::TestSimpleArrayType::getEntryTypeStatic().assertResolve(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder valueHolder;
     {
@@ -295,7 +295,7 @@ TEST(ArrayTypeTest, removeEntriesArrayCannotBeEmpty) {
 
     testDomain::TestCompoundArrayType arrayType(testEnvironment.m_typeSystem);
     const babelwires::TypePtr& entryType =
-        testDomain::TestCompoundArrayType::getEntryTypeStatic().resolve(testEnvironment.m_typeSystem);
+        testDomain::TestCompoundArrayType::getEntryTypeStatic().assertResolve(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder valueHolder(babelwires::ArrayValue(testEnvironment.m_typeSystem, *entryType, 4));
 
@@ -386,7 +386,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
                 {babelwires::IntValue(1), babelwires::IntValue(5), babelwires::IntValue(3)}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
-        EXPECT_THROW(arrayTypeExp.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+        EXPECT_FALSE(arrayTypeExp.resolve(testEnvironment.m_typeSystem));
     }
     {
         babelwires::TypeExp arrayTypeExp(
@@ -394,7 +394,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
             babelwires::TypeConstructorArguments{{babelwires::StringType::getThisIdentifier()}, {}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
-        EXPECT_THROW(arrayTypeExp.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+        EXPECT_FALSE(arrayTypeExp.resolve(testEnvironment.m_typeSystem));
     }
     {
         babelwires::TypeExp arrayTypeExp(
@@ -404,7 +404,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
                 {babelwires::IntValue(-1), babelwires::IntValue(5), babelwires::IntValue(3)}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
-        EXPECT_THROW(arrayTypeExp.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+        EXPECT_FALSE(arrayTypeExp.resolve(testEnvironment.m_typeSystem));
     }
     {
         babelwires::TypeExp arrayTypeExp(
@@ -414,7 +414,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
                 {babelwires::IntValue(6), babelwires::IntValue(2), babelwires::IntValue(7)}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
-        EXPECT_THROW(arrayTypeExp.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+        EXPECT_FALSE(arrayTypeExp.resolve(testEnvironment.m_typeSystem));
     }
     {
         babelwires::TypeExp arrayTypeExp(
@@ -424,7 +424,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
                 {babelwires::IntValue(6), babelwires::IntValue(10), babelwires::IntValue(3)}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
-        EXPECT_THROW(arrayTypeExp.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+        EXPECT_FALSE(arrayTypeExp.resolve(testEnvironment.m_typeSystem));
     }
     {
         babelwires::TypeExp arrayTypeExp(
@@ -434,7 +434,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
                 {babelwires::IntValue(6), babelwires::IntValue(10), babelwires::IntValue(12)}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
-        EXPECT_THROW(arrayTypeExp.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+        EXPECT_FALSE(arrayTypeExp.resolve(testEnvironment.m_typeSystem));
     }
 }
 
@@ -470,11 +470,11 @@ TEST(ArrayTypeTest, subtyping) {
             {babelwires::StringType::getThisIdentifier()},
             {babelwires::IntValue(8), babelwires::IntValue(10), babelwires::IntValue(8)}});
 
-    babelwires::TypePtr arrayType = arrayTypeExp.resolve(testEnvironment.m_typeSystem);
-    babelwires::TypePtr biggerArrayType = biggerArrayTypeExp.resolve(testEnvironment.m_typeSystem);
-    babelwires::TypePtr arrayOfSupertypeType = arrayOfSupertypeTypeExp.resolve(testEnvironment.m_typeSystem);
-    babelwires::TypePtr arrayOfDifferentType = arrayOfDifferentTypeExp.resolve(testEnvironment.m_typeSystem);
-    babelwires::TypePtr arrayOfDisjointLengthType = arrayOfDisjointLength.resolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr arrayType = arrayTypeExp.assertResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr biggerArrayType = biggerArrayTypeExp.assertResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr arrayOfSupertypeType = arrayOfSupertypeTypeExp.assertResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr arrayOfDifferentType = arrayOfDifferentTypeExp.assertResolve(testEnvironment.m_typeSystem);
+    babelwires::TypePtr arrayOfDisjointLengthType = arrayOfDisjointLength.assertResolve(testEnvironment.m_typeSystem);
 
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*arrayType, *arrayType),
               babelwires::SubtypeOrder::IsEquivalent);
@@ -503,7 +503,7 @@ TEST(ArrayTypeTest, subtyping) {
 TEST(ArrayTypeTest, nodeChanges) {
     testUtils::TestEnvironment testEnvironment;
     babelwires::ValueTreeRoot arrayNode(testEnvironment.m_typeSystem,
-                                           testDomain::TestSimpleArrayType::getThisIdentifier());
+                                           testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestSimpleArrayType>());
     arrayNode.setToDefault();
 
     const testDomain::TestSimpleArrayType* arrayType = arrayNode.getType()->tryAs<testDomain::TestSimpleArrayType>();

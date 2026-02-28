@@ -27,7 +27,7 @@ TEST(ModifierDataTest, arrayInitializationApply) {
     babelwires::ArraySizeModifierData data;
     data.m_size = testDomain::TestSimpleArrayType::s_nonDefaultSize;
 
-    babelwires::ValueTreeRoot arrayFeature(testEnvironment.m_typeSystem, testDomain::TestSimpleArrayType::getThisIdentifier());
+    babelwires::ValueTreeRoot arrayFeature(testEnvironment.m_typeSystem, testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestSimpleArrayType>());
     arrayFeature.setToDefault();
 
     EXPECT_EQ(arrayFeature.getNumChildren(), testDomain::TestSimpleArrayType::s_defaultSize);
@@ -35,7 +35,7 @@ TEST(ModifierDataTest, arrayInitializationApply) {
     data.apply(&arrayFeature);
     EXPECT_EQ(arrayFeature.getNumChildren(), testDomain::TestSimpleArrayType::s_nonDefaultSize);
 
-    babelwires::ValueTreeRoot notArrayFeature(testEnvironment.m_typeSystem, babelwires::DefaultIntType::getThisIdentifier());
+    babelwires::ValueTreeRoot notArrayFeature(testEnvironment.m_typeSystem, testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultIntType>());
     EXPECT_THROW(data.apply(&notArrayFeature), babelwires::ModelException);
 }
 
@@ -80,9 +80,9 @@ TEST(ModifierDataTest, assignFromFeatureApply) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot srcFeature{testEnvironment.m_typeSystem,
-                                              babelwires::DefaultIntType::getThisIdentifier()};
+                                              testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultIntType>()};
     babelwires::ValueTreeRoot targetFeature{testEnvironment.m_typeSystem,
-                                                 babelwires::DefaultIntType::getThisIdentifier()};
+                                                 testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultIntType>()};
 
     srcFeature.setToDefault();
     targetFeature.setToDefault();
@@ -120,9 +120,9 @@ TEST(ModifierDataTest, assignFromFeatureBadConnectionApply) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot srcFeature{testEnvironment.m_typeSystem,
-                                              babelwires::DefaultIntType::getThisIdentifier()};
+                                              testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultIntType>()};
     babelwires::ValueTreeRoot targetFeature{testEnvironment.m_typeSystem,
-                                                 babelwires::StringType::getThisIdentifier()};
+                                                 testEnvironment.m_typeSystem.getRegisteredType<babelwires::StringType>()};
 
     srcFeature.setToDefault();
     targetFeature.setToDefault();

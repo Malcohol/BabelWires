@@ -20,7 +20,7 @@
 
 TEST(SetTypeVariableModifierDataTest, setSingleTypeVariable) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisIdentifier());
+    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
     valueTree.setToDefault();
 
     const auto* const type = valueTree.getType()->tryAs<testDomain::TestGenericType>();
@@ -75,7 +75,7 @@ TEST(SetTypeVariableModifierDataTest, failureNotAGenericType) {
     data.m_typeAssignments.resize(1);
     data.m_typeAssignments[0] = babelwires::StringType::getThisIdentifier();
 
-    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testDomain::TestSimpleRecordType::getThisIdentifier());
+    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestSimpleRecordType>());
 
     valueTree.setToDefault();
 
@@ -89,7 +89,7 @@ TEST(SetTypeVariableModifierDataTest, failureTooFewTypeVariables) {
     data.m_typeAssignments.resize(1);
     data.m_typeAssignments[0] = babelwires::StringType::getThisIdentifier();
 
-    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisIdentifier());
+    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
 
     valueTree.setToDefault();
 
@@ -106,7 +106,7 @@ TEST(SetTypeVariableModifierDataTest, failureTooManyTypeVariables) {
     data.m_typeAssignments[1] = babelwires::StringType::getThisIdentifier();
     data.m_typeAssignments[2] = babelwires::StringType::getThisIdentifier();
 
-    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisIdentifier());
+    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
 
     valueTree.setToDefault();
 

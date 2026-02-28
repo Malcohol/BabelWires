@@ -9,19 +9,21 @@
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 
-TEST(EnumFeatureTest, enumFeature) { 
+TEST(EnumFeatureTest, enumFeature) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::ValueTreeRoot enumFeature{testEnvironment.m_typeSystem, testDomain::TestEnum::getThisIdentifier()};
+    babelwires::ValueTreeRoot enumFeature{testEnvironment.m_typeSystem,
+                                          testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestEnum>()};
     babelwires::Instance<testDomain::TestEnum> enumInstance{enumFeature};
- 
+
     enumFeature.setToDefault();
     EXPECT_EQ(enumInstance.get(), testDomain::TestEnum::Value::Bar);
 
     enumInstance.set(testDomain::TestEnum::Value::Boo);
     EXPECT_EQ(enumInstance.get(), testDomain::TestEnum::Value::Boo);
 
-    babelwires::ValueTreeRoot enumFeature2{testEnvironment.m_typeSystem, testDomain::TestEnum::getThisIdentifier()};
+    babelwires::ValueTreeRoot enumFeature2{testEnvironment.m_typeSystem,
+                                           testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestEnum>()};
     babelwires::Instance<testDomain::TestEnum> enumInstance2{enumFeature2};
 
     enumFeature2.setToDefault();
@@ -32,9 +34,10 @@ TEST(EnumFeatureTest, enumFeature) {
 TEST(EnumFeatureTest, enumFeatureChanges) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::ValueTreeRoot enumFeature{testEnvironment.m_typeSystem, testDomain::TestEnum::getThisIdentifier()};
+    babelwires::ValueTreeRoot enumFeature{testEnvironment.m_typeSystem,
+                                          testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestEnum>()};
     babelwires::Instance<testDomain::TestEnum> enumInstance{enumFeature};
-    
+
     // After construction, everything has changed.
     EXPECT_TRUE(enumFeature.isChanged(babelwires::ValueTreeNode::Changes::SomethingChanged));
     EXPECT_TRUE(enumFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
@@ -64,7 +67,8 @@ TEST(EnumFeatureTest, enumFeatureChanges) {
 TEST(EnumFeatureTest, enumFeatureHash) {
     testUtils::TestEnvironment testEnvironment;
 
-    babelwires::ValueTreeRoot enumFeature{testEnvironment.m_typeSystem, testDomain::TestEnum::getThisIdentifier()};
+    babelwires::ValueTreeRoot enumFeature{testEnvironment.m_typeSystem,
+                                          testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestEnum>()};
     babelwires::Instance<testDomain::TestEnum> enumInstance{enumFeature};
 
     enumInstance.set(testDomain::TestEnum::Value::Boo);

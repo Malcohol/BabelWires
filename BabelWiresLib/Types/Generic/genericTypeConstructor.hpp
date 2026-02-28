@@ -15,14 +15,14 @@ namespace babelwires {
       public:
         TYPE_CONSTRUCTOR("Gen", "Gen<[0]>{{{0}}}", "56ff5848-9be4-4288-a893-eec7ef15e675", 1);
 
-        TypePtr constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,
+        ResultT<TypePtr> constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,
                                             const std::vector<TypePtr>& resolvedTypeArguments) const override;
 
         /// Convenience method.
         static TypeExp makeTypeExp(TypeExp wrappedType, unsigned int numVariables = 1);
 
         /// Throws a TypeSystem exception if the arguments are not of the expected type.
-        static unsigned int
+        static ResultT<unsigned int>
         extractValueArguments(const std::vector<ValueHolder>& valueArguments);
     };
 } // namespace babelwires

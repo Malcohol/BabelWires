@@ -8,6 +8,8 @@
 #pragma once
 
 #include <memory>
+#include <cassert>
+
 namespace babelwires {
     class Type;
 
@@ -21,9 +23,9 @@ namespace babelwires {
         return std::make_shared<TYPE>(std::forward<ARGS>(args)...);
     }
 
-    template<typename TYPE, typename SOURCE_PTR>
-    TypePtrT<TYPE> typeAs(SOURCE_PTR&& source) {
-      return std::static_pointer_cast<const TYPE>(std::forward<SOURCE_PTR>(source));
+    template <typename TYPE, typename SOURCE_PTR> TypePtrT<TYPE> typeAs(SOURCE_PTR&& source) {
+        assert(source->template tryAs<TYPE>());
+        return std::static_pointer_cast<const TYPE>(std::forward<SOURCE_PTR>(source));
     }
 
 } // namespace babelwires

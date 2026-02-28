@@ -7,13 +7,15 @@
  **/
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
 
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 
-std::tuple<babelwires::Range<babelwires::IntValue::NativeType>, babelwires::IntValue::NativeType>
+#include <BaseLib/Result/error.hpp>
+#include <BaseLib/Result/resultDSL.hpp>
+
+babelwires::ResultT<std::tuple<babelwires::Range<babelwires::IntValue::NativeType>, babelwires::IntValue::NativeType>>
 babelwires::IntTypeConstructor::extractValueArguments(const std::vector<ValueHolder>& valueArguments) {
     if (valueArguments.size() != 3) {
-        throw TypeSystemException() << "IntTypeConstructor expects 3 value arguments but got " << valueArguments.size();
+        return Error() << "IntTypeConstructor expects 3 value arguments but got " << valueArguments.size();
     }
 
     IntValue::NativeType args[3];
@@ -21,22 +23,22 @@ babelwires::IntTypeConstructor::extractValueArguments(const std::vector<ValueHol
         if (const IntValue* intValue = valueArguments[i]->tryAs<IntValue>()) {
             args[i] = intValue->get();
         } else {
-            throw TypeSystemException() << "Argument " << i << " given to IntTypeConstructor was not an IntValue";
+            return Error() << "Argument " << i << " given to IntTypeConstructor was not an IntValue";
         }
     }
 
-    return {{args[0], args[1]}, args[2]};
+    return std::tuple{Range<IntValue::NativeType>{args[0], args[1]}, args[2]};
 }
 
-babelwires::TypePtr
+babelwires::ResultT<babelwires::TypePtr>
 babelwires::IntTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                               const TypeConstructorArguments& arguments,
                                               const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 0) {
-        throw TypeSystemException() << "IntTypeConstructor does not expect type arguments but got "
-                                    << arguments.getTypeArguments().size();
+        return Error() << "IntTypeConstructor does not expect type arguments but got "
+                       << arguments.getTypeArguments().size();
     }
-    auto [range, defaultValue] = extractValueArguments(arguments.getValueArguments());
+    ASSIGN_OR_ERROR(auto [range, defaultValue], extractValueArguments(arguments.getValueArguments()));
     return makeType<IntType>(std::move(newTypeExp), range, defaultValue);
 }
 

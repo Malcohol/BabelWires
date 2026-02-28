@@ -7,16 +7,18 @@
  **/
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
-std::tuple<unsigned int, unsigned int, unsigned int>
+#include <BaseLib/Result/error.hpp>
+#include <BaseLib/Result/resultDSL.hpp>
+
+babelwires::ResultT<std::tuple<unsigned int, unsigned int, unsigned int>>
 babelwires::ArrayTypeConstructor::extractValueArguments(const std::vector<ValueHolder>& valueArguments) {
     // TODO default size should be optional.
     if (valueArguments.size() != 3) {
-        throw TypeSystemException() << "ArrayTypeConstructor expects 3 value arguments but got "
-                                    << valueArguments.size();
+        return Error() << "ArrayTypeConstructor expects 3 value arguments but got "
+                       << valueArguments.size();
     }
 
     IntValue::NativeType args[3];
@@ -24,39 +26,39 @@ babelwires::ArrayTypeConstructor::extractValueArguments(const std::vector<ValueH
         if (const IntValue* intValue = valueArguments[i]->tryAs<IntValue>()) {
             const IntValue::NativeType nativeValue = intValue->get();
             if (nativeValue < 0) {
-                throw TypeSystemException() << "Value argument " << i << " given to ArrayTypeConstructor was negative";
+                return Error() << "Value argument " << i << " given to ArrayTypeConstructor was negative";
             }
             if (nativeValue > std::numeric_limits<unsigned int>::max()) {
-                throw TypeSystemException() << "Value argument " << i << "given to ArrayTypeConstructor was too large";
+                return Error() << "Value argument " << i << "given to ArrayTypeConstructor was too large";
             }
             args[i] = intValue->get();
         } else {
-            throw TypeSystemException() << "Value argument " << i
-                                        << " given to ArrayTypeConstructor was not an IntValue";
+            return Error() << "Value argument " << i
+                           << " given to ArrayTypeConstructor was not an IntValue";
         }
     }
 
     if (args[1] < args[0]) {
-        throw TypeSystemException() << "Trying to construct an array with a maximum size smaller than its minimum size";
+        return Error() << "Trying to construct an array with a maximum size smaller than its minimum size";
     }
 
     if ((args[2] < args[0]) || (args[2] > args[1])) {
-        throw TypeSystemException()
+        return Error()
             << "Trying to construct an array with a default size outside its allowed size range";
     }
 
-    return {static_cast<unsigned int>(args[0]), static_cast<unsigned int>(args[1]), static_cast<unsigned int>(args[2])};
+    return std::tuple{static_cast<unsigned int>(args[0]), static_cast<unsigned int>(args[1]), static_cast<unsigned int>(args[2])};
 }
 
-babelwires::TypePtr
+babelwires::ResultT<babelwires::TypePtr>
 babelwires::ArrayTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                 const TypeConstructorArguments& arguments,
                                                 const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 1) {
-        throw TypeSystemException() << "ArrayTypeConstructor expects a single type arguments but got "
-                                    << arguments.getTypeArguments().size();
+        return Error() << "ArrayTypeConstructor expects a single type arguments but got "
+                       << arguments.getTypeArguments().size();
     }
-    auto [minimumSize, maximumSize, defaultSize] = extractValueArguments(arguments.getValueArguments());
+    ASSIGN_OR_ERROR(auto [minimumSize, maximumSize, defaultSize], extractValueArguments(arguments.getValueArguments()));
 
     return makeType<ArrayType>(std::move(newTypeExp), resolvedTypeArguments[0],
                                                         minimumSize, maximumSize, defaultSize);

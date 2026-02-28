@@ -7,17 +7,18 @@
  **/
 #include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
-babelwires::TypePtr
+#include <BaseLib/Result/error.hpp>
+
+babelwires::ResultT<babelwires::TypePtr>
 babelwires::RecordTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                  const TypeConstructorArguments& arguments,
                                                  const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != arguments.getValueArguments().size()) {
-        throw TypeSystemException() << "RecordTypeConstructor requires the same number of types and values, but got "
-                                    << arguments.getTypeArguments().size() << " and "
-                                    << arguments.getValueArguments().size() << " respectively";
+        return Error() << "RecordTypeConstructor requires the same number of types and values, but got "
+                       << arguments.getTypeArguments().size() << " and "
+                       << arguments.getValueArguments().size() << " respectively";
     }
 
     std::vector<RecordType::Field> fields;
@@ -26,7 +27,7 @@ babelwires::RecordTypeConstructor::constructType(const TypeSystem& typeSystem, T
             fields.emplace_back(
                 RecordType::Field{fieldId->get(), resolvedTypeArguments[i], fieldId->getOptionality()});
         } else {
-            throw TypeSystemException() << "RecordTypeConstructor value argument " << i << " was not a FieldIdValue";
+            return Error() << "RecordTypeConstructor value argument " << i << " was not a FieldIdValue";
         }
     }
 

@@ -122,7 +122,7 @@ namespace babelwires {
                     if (numChildren == TypeVariableType::c_numChildren) {
                         if (valueTreeNode->getType()->tryAs<TypeVariableType>()) {
                             const auto typeVarData =
-                                TypeVariableData::isTypeVariable(valueTreeNode->getTypeExp());
+                                TypeVariableData::isTypeVariable(valueTreeNode->getType()->getTypeExp());
                             assert(typeVarData);
                             unsigned int currentRowIndex = getParentRowIndex(m_rows.size() - 1);
                             markRowsWithUnassignedTypeVariables<isInput>(currentRowIndex,

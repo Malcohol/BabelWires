@@ -17,6 +17,7 @@
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
+#include <BabelWiresLib/TypeSystem/type.hpp>
 
 babelwires::AddNodeForInputTreeValueCommand::AddNodeForInputTreeValueCommand(std::string commandName,
                                                                              NodeId originalNodeId, Path pathToValue,
@@ -55,7 +56,7 @@ void babelwires::AddNodeForInputTreeValueCommand::execute(Project& project) cons
     assert(nodeInput);
     const ValueTreeNode& originalValue = followPath(m_pathToValue, *nodeInput);
 
-    ValueNodeData newNodeData(originalValue.getTypeExp());
+    ValueNodeData newNodeData(originalValue.getType()->getTypeExp());
     newNodeData.m_id = m_newNodeId;
     newNodeData.m_uiData.m_uiPosition = m_positionForNewNode;
 

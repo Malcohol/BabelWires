@@ -12,8 +12,8 @@
 
 babelwires::MapType::MapType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, TypeExp sourceTypeExp, TypeExp targetTypeExp, MapEntryData::Kind defaultFallbackKind)
     : Type(std::move(typeExpOfThis))
-    , m_sourceType(sourceTypeExp.resolve(typeSystem))
-    , m_targetType(targetTypeExp.resolve(typeSystem))
+    , m_sourceType(sourceTypeExp.assertResolve(typeSystem))
+    , m_targetType(targetTypeExp.assertResolve(typeSystem))
     , m_defaultFallbackKind(defaultFallbackKind) {
     assert(MapEntryData::isFallback(defaultFallbackKind) && "Only a fallback kind is expected here");
 }

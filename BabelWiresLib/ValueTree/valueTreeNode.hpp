@@ -58,8 +58,8 @@ namespace babelwires {
         /// Note: The hash is not required to distinguish the contents of values of different types.
         std::size_t getHash() const;
 
-        /// Get the TypeExp which describes the type of the value.
-        TypeExp getTypeExp() const;
+        /// Get the type of the value carried by this node.
+        const TypePtr& getType() const;
 
         /// Get the value currently held by this node.
         const ValueHolder& getValue() const;
@@ -69,10 +69,6 @@ namespace babelwires {
 
         /// The root of a ValueTree carries a reference to the TypeSystem, so it can be found from any node.
         const TypeSystem& getTypeSystem() const;
-
-        /// This is a convenience method which resolves the typeExp in the context of the TypeSystem
-        /// carried by the root.
-        const TypePtr& getType() const;
 
         /// This is a convenience method which calls getType()->getFlavour().
         /// The need for nodes to provide a string description is not fundamental to the data model:

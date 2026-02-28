@@ -15,6 +15,7 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <BaseLib/Hash/hash.hpp>
 #include <BaseLib/Log/userLogger.hpp>
@@ -30,7 +31,7 @@ babelwires::TargetFileNode::TargetFileNode(const ProjectContext& context, UserLo
         const auto factoryResult = context.m_targetFileFormatReg.getRegisteredEntry(nodeData.m_factoryIdentifier);
         if (!factoryResult) {
             setInternalFailure(factoryResult.error().toString());
-            setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier()));
+            setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, context.m_typeSystem.getRegisteredType<FailureType>()));
             userLogger.logError() << "Failed to create target id=" << nodeData.m_id
                                   << ": " << factoryResult.error().toString();
             return;
@@ -42,7 +43,7 @@ babelwires::TargetFileNode::TargetFileNode(const ProjectContext& context, UserLo
         setValueTreeRoot(std::move(newFeature));
     } catch (const BaseException& e) {
         setInternalFailure(e.what());
-        setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, FailureType::getThisIdentifier()));
+        setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, context.m_typeSystem.getRegisteredType<FailureType>()));
         userLogger.logError() << "Failed to create target \"" << nodeData.m_factoryIdentifier
                               << "\": " << e.what();
     }

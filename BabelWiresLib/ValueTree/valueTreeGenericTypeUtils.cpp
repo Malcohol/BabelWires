@@ -18,7 +18,7 @@
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 const babelwires::ValueTreeNode* babelwires::tryGetGenericTypeFromVariable(const ValueTreeNode& valueTreeNode) {
-    auto variableData = TypeVariableData::isTypeVariable(valueTreeNode.getTypeExp());
+    auto variableData = TypeVariableData::isTypeVariable(valueTreeNode.getType()->getTypeExp());
     assert(variableData && "ValueTreeNode is not a type variable");
 
     unsigned int level = variableData->m_numGenericTypeLevels;
@@ -86,8 +86,12 @@ namespace {
                 if (constructorId == babelwires::GenericTypeConstructor::getThisIdentifier()) {
                     ++genericTypeDepth;
                 } else if (constructorId == babelwires::TypeVariableTypeConstructor::getThisIdentifier()) {
-                    const auto typeVarData =
+                    const auto typeVarDataResult =
                         babelwires::TypeVariableTypeConstructor::extractValueArguments(arguments.getValueArguments());
+                    if (!typeVarDataResult) {
+                        return false;
+                    }
+                    const auto& typeVarData = *typeVarDataResult;
 
                     const int excess = typeVarData.m_numGenericTypeLevels - genericTypeDepth;
                     if ((excess > m_maximumHeightFound) && arguments.getTypeArguments().empty()) {
@@ -126,7 +130,7 @@ bool babelwires::containsUnassignedTypeVariable(const ValueTreeNode& valueTreeNo
     if (maximumHeight < 0) {
         return false;
     }
-    const int maximumHeightFound = typeExpContainsUnassignedTypeVariable(valueTreeNode.getTypeExp(), 0);
+    const int maximumHeightFound = typeExpContainsUnassignedTypeVariable(valueTreeNode.getType()->getTypeExp(), 0);
     return maximumHeightFound >= 0;
 }
 
@@ -136,7 +140,7 @@ int babelwires::getMaximumHeightOfUnassignedGenericType(const ValueTreeNode& val
     const int tmpMax = getMaximumPossibleHeightOfUnassignedGenericType(valueTreeNode);
     assert(maximumPossible == tmpMax);
 #endif
-    return typeExpContainsUnassignedTypeVariable(valueTreeNode.getTypeExp(), maximumPossible);
+    return typeExpContainsUnassignedTypeVariable(valueTreeNode.getType()->getTypeExp(), maximumPossible);
 }
 
 namespace {
@@ -194,7 +198,7 @@ namespace {
                 }
                 return findAssignments(childType->getTypeExp(), sourceChildType->getTypeExp(), *sourceChildValuePtr, extraGenericTypeDepth);
             };
-            babelwires::TypePtr targetType = targetTypeExp.resolve(m_typeSystem);
+            babelwires::TypePtr targetType = targetTypeExp.assertResolve(m_typeSystem);
             if (!targetType->visitValue(m_typeSystem, *sourceValue, childValueVisitor)) {
                 return false;
             }
@@ -278,8 +282,8 @@ babelwires::getTypeVariableAssignments(const ValueTreeNode& sourceValueTreeNode,
     assert(containsUnassignedTypeVariable(targetValueTreeNode) &&
            "Target ValueTreeNode has no unassigned type variables");
     const TypeSystem& typeSystem = sourceValueTreeNode.getTypeSystem();
-    const TypeExp& targetTypeExp = targetValueTreeNode.getTypeExp();
-    const TypeExp& sourceTypeExp = sourceValueTreeNode.getTypeExp();
+    const TypeExp& targetTypeExp = targetValueTreeNode.getType()->getTypeExp();
+    const TypeExp& sourceTypeExp = sourceValueTreeNode.getType()->getTypeExp();
     const ValueHolder& sourceValue = sourceValueTreeNode.getValue();
 
     TypeVariableAssignmentFinder finder{typeSystem, targetValueTreeNode};

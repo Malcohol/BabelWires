@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 
+#include <BabelWiresLib/Project/Modifiers/setTypeVariableModifierData.hpp>
+#include <BabelWiresLib/Types/Int/intType.hpp>
+#include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeGenericTypeUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
-#include <BabelWiresLib/Types/Int/intType.hpp>
-#include <BabelWiresLib/Project/Modifiers/setTypeVariableModifierData.hpp>
 
 #include <Domains/TestDomain/testGenericType.hpp>
 #include <Domains/TestDomain/testRecordType.hpp>
@@ -14,7 +14,8 @@
 
 TEST(ValueTreeGenericTypeUtilsTest, tryGetGenericTypeFromVariable) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisIdentifier());
+    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem,
+                                        testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
     valueTree.setToDefault();
 
     auto checkForVariable = [&](const babelwires::Path& pathToGenericType, const babelwires::Path& pathToVariable) {
@@ -41,7 +42,8 @@ TEST(ValueTreeGenericTypeUtilsTest, tryGetGenericTypeFromVariable) {
 
 TEST(ValueTreeGenericTypeUtilsTest, containsUnassignedTypeVariable) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisIdentifier());
+    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem,
+                                        testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
     valueTree.setToDefault();
 
     const testDomain::TestGenericType* const genericType = valueTree.getType()->tryAs<testDomain::TestGenericType>();
@@ -140,10 +142,10 @@ TEST(ValueTreeGenericTypeUtilsTest, containsUnassignedTypeVariable) {
     EXPECT_EQ(checkForVariable(testDomain::TestGenericType::getPathToArray0()), false);
 }
 
-
 TEST(ValueTreeGenericTypeUtilsTest, getMaximumHeightOfUnassignedGenericType) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisIdentifier());
+    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem,
+                                        testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
     valueTree.setToDefault();
 
     const testDomain::TestGenericType* const genericType = valueTree.getType()->tryAs<testDomain::TestGenericType>();
@@ -229,18 +231,20 @@ TEST(ValueTreeGenericTypeUtilsTest, getMaximumHeightOfUnassignedGenericType) {
 
 TEST(ValueTreeGenericTypeUtilsTest, getTypeVariableAssignments) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::ValueTreeRoot targetTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisIdentifier());
-    targetTree.setToDefault();   
+    babelwires::ValueTreeRoot targetTree(testEnvironment.m_typeSystem,
+                                         testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
+    targetTree.setToDefault();
 
-    babelwires::ValueTreeRoot sourceTree(testEnvironment.m_typeSystem, testDomain::TestSimpleCompoundType::getThisIdentifier());
+    babelwires::ValueTreeRoot sourceTree(
+        testEnvironment.m_typeSystem,
+        testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestSimpleCompoundType>());
     sourceTree.setToDefault();
 
     babelwires::ValueTreeNode& targetNode =
         babelwires::followPath(testDomain::TestGenericType::getPathToNestedWrappedType(), targetTree);
 
-    const auto assignments =
-        babelwires::getTypeVariableAssignments(sourceTree, targetNode);
-    
+    const auto assignments = babelwires::getTypeVariableAssignments(sourceTree, targetNode);
+
     ASSERT_TRUE(assignments.has_value());
     ASSERT_EQ(assignments->size(), 2);
     {
@@ -257,17 +261,19 @@ TEST(ValueTreeGenericTypeUtilsTest, getTypeVariableAssignments) {
 
 TEST(ValueTreeGenericTypeUtilsTest, getTypeVariableAssignmentsFail) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::ValueTreeRoot targetTree(testEnvironment.m_typeSystem, testDomain::TestGenericType::getThisIdentifier());
-    targetTree.setToDefault();   
+    babelwires::ValueTreeRoot targetTree(testEnvironment.m_typeSystem,
+                                         testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
+    targetTree.setToDefault();
 
-    babelwires::ValueTreeRoot sourceTree(testEnvironment.m_typeSystem, testDomain::TestSimpleRecordType::getThisIdentifier());
+    babelwires::ValueTreeRoot sourceTree(
+        testEnvironment.m_typeSystem,
+        testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestSimpleRecordType>());
     sourceTree.setToDefault();
 
     babelwires::ValueTreeNode& targetNode =
         babelwires::followPath(testDomain::TestGenericType::getPathToNestedWrappedType(), targetTree);
 
-    const auto assignments =
-        babelwires::getTypeVariableAssignments(sourceTree, targetNode);
-    
+    const auto assignments = babelwires::getTypeVariableAssignments(sourceTree, targetNode);
+
     ASSERT_FALSE(assignments.has_value());
 }

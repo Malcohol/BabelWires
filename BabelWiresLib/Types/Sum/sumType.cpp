@@ -15,7 +15,7 @@ babelwires::SumType::SumType(TypeExp&& typeExpOfThis, const TypeSystem& typeSyst
     , m_indexOfDefaultSummand(indexOfDefaultSummand) {
     m_summands.reserve(summands.size());
     for (const auto& s : summands) {
-        m_summands.emplace_back(s.resolve(typeSystem));
+        m_summands.emplace_back(s.assertResolve(typeSystem));
     }
     assert(indexOfDefaultSummand < m_summands.size());
 }

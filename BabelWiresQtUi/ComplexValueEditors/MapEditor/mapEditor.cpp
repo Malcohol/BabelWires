@@ -90,7 +90,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectGraphModel& projectGrap
             const UiProjectContext& context = projectGraphModel.getContext();
             const TypeSystem& typeSystem = context.m_typeSystem;
             const ValueTreeNode& mapTreeNode = getMapTreeNode(scope);
-            m_typeExp = mapTreeNode.getTypeExp();
+            m_typeExp = mapTreeNode.getType()->getTypeExp();
             const MapValue& mapValue = getMapValueFromProject(scope);
             if (mapTreeNode.getType()->tryAs<MapType>()) {
                 m_map.setAllowedSourceTypeExps(

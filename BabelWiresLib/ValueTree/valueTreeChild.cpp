@@ -28,7 +28,7 @@ void babelwires::ValueTreeChild::doSetValue(const ValueHolder& newValue) {
             auto rootAndPath = getRootAndPathTo(*this);
             rootAndPath.m_root.setDescendentValue(rootAndPath.m_pathFromRoot, newValue);
         } else {
-            throw ModelException() << "The new value is not a valid instance of " << getTypeExp().toString();
+            throw ModelException() << "The new value is not a valid instance of " << getType()->getTypeExp().toString();
         }
     }
 }

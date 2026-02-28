@@ -133,10 +133,6 @@ const babelwires::ValueTreeNode& babelwires::ValueTreeNode::getChildFromStep(con
     }
 }
 
-babelwires::TypeExp babelwires::ValueTreeNode::getTypeExp() const {
-    return m_typePtr->getTypeExp();
-}
-
 const babelwires::ValueHolder& babelwires::ValueTreeNode::getValue() const {
     assert(m_value && "The ValueTreeRoot has not been initialized");
     return m_value;
@@ -262,7 +258,7 @@ void babelwires::ValueTreeNode::reconcileChangesAndSynchronizeChildren(const Typ
                 std::unique_ptr<ValueTreeChild> temp;
                 temp.swap(*currentIt->second);
                 // Types may change, e.g. when a type variable is assigned.
-                if (temp->getTypeExp() != otherIt->second.m_typePtr->getTypeExp()) {
+                if (temp->getType()->getTypeExp() != otherIt->second.m_typePtr->getTypeExp()) {
                     temp->m_typePtr = otherIt->second.m_typePtr;
                     // This ensures the UI updates the connectivity of the node, since a type variable may have been
                     // assigned, allowing connections at compound nodes, or reset, disallowing them.

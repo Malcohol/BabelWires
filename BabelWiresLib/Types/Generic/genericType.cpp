@@ -43,7 +43,7 @@ namespace {
 
 babelwires::GenericType::GenericType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, const TypeExp& wrappedType,
                                      unsigned int numVariables)
-    : GenericType(std::move(typeExpOfThis), wrappedType.resolve(typeSystem), numVariables) {}
+    : GenericType(std::move(typeExpOfThis), wrappedType.assertResolve(typeSystem), numVariables) {}
 
 babelwires::GenericType::GenericType(TypeExp&& typeExpOfThis, const TypePtr& wrappedType, unsigned int numVariables)
     : CompoundType(std::move(typeExpOfThis))

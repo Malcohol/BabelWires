@@ -8,25 +8,26 @@
 #include <BabelWiresLib/Types/Enum/enumAtomTypeConstructor.hpp>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 
-babelwires::TypePtr
+#include <BaseLib/Result/error.hpp>
+
+babelwires::ResultT<babelwires::TypePtr>
 babelwires::EnumAtomTypeConstructor::constructType(const TypeSystem& typeSystem, TypeExp newTypeExp,
                                                    const TypeConstructorArguments& arguments,
                                                    const std::vector<TypePtr>& resolvedTypeArguments) const {
     if (arguments.getTypeArguments().size() != 0) {
-        throw TypeSystemException() << "EnumAtomTypeConstructor does not expect any type arguments but got "
-                                    << arguments.getTypeArguments().size();
+        return Error() << "EnumAtomTypeConstructor does not expect any type arguments but got "
+                       << arguments.getTypeArguments().size();
     }
     if (arguments.getValueArguments().size() != 1) {
-        throw TypeSystemException() << "EnumAtomTypeConstructor expects a single value argument but got "
-                                    << arguments.getValueArguments().size();
+        return Error() << "EnumAtomTypeConstructor expects a single value argument but got "
+                       << arguments.getValueArguments().size();
     }
     const EnumValue* const enumValue = arguments.getValueArguments()[0]->tryAs<EnumValue>();
     if (!enumValue) {
-        throw TypeSystemException() << "Non-EnumValue argument << " << arguments.getValueArguments()[0]
-                                    << " provided to EnumAtomTypeConstructor";
+        return Error() << "Non-EnumValue argument << " << arguments.getValueArguments()[0]
+                       << " provided to EnumAtomTypeConstructor";
     }
     return makeType<EnumType>(std::move(newTypeExp), EnumType::ValueSet{enumValue->get()}, 0);
 }
