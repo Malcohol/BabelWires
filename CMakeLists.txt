@@ -8,6 +8,11 @@ PROJECT( BabelWires )
 
 SET(CMAKE_CXX_STANDARD 23)
 
+# MSVC's legacy preprocessor has bugs with variadic macros.
+if(MSVC)
+    add_compile_options(/Zc:preprocessor)
+endif()
+
 # Lots of work will be required to support shared libs. Waiting to see whether C++ Modules will help.
 set(BUILD_SHARED_LIBS OFF)
 # Ensure that submodules (e.g. nodeeditor) respect the BUILD_SHARED_LIBS setting.
