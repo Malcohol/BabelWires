@@ -13,9 +13,9 @@
 
 #include <BaseLib/Identifiers/identifier.hpp>
 #include <BaseLib/Identifiers/registeredIdentifier.hpp>
+#include <BaseLib/Result/result.hpp>
 
 #include <shared_mutex>
-#include <variant>
 
 namespace babelwires {
 
@@ -28,10 +28,10 @@ namespace babelwires {
         virtual ~TypeConstructor();
 
         /// Get the constructed type from the cache, or construct a new one.
-        /// Returns null if the type cannot be constructed.
+        /// Returns an unassigned TypePtr if the type cannot be constructed.
         TypePtr tryGetOrConstructType(const TypeSystem& typeSystem,
                                           const TypeConstructorArguments& arguments) const;
-
+ 
         /// Get the constructed type from the cache, or construct a new one.
         /// Throws a TypeSystemException if the type cannot be constructed.
         TypePtr getOrConstructType(const TypeSystem& typeSystem, const TypeConstructorArguments& arguments) const;
@@ -51,9 +51,7 @@ namespace babelwires {
                                                     const std::vector<TypePtr>& resolvedTypeArguments) const = 0;
 
       private:
-        using TypeOrError = std::variant<TypePtr, std::string>;
-        
-        TypeOrError getOrConstructTypeInternal(const TypeSystem& typeSystem,
+        ResultT<TypePtr> getOrConstructTypeInternal(const TypeSystem& typeSystem,
                                                          const TypeConstructorArguments& arguments) const;
 
       private:
@@ -62,7 +60,7 @@ namespace babelwires {
         // same TypeExp.
         mutable std::shared_mutex m_mutexForCache;
 
-        using PerTypeStorage = std::variant<WeakTypePtr, std::string>;
+        using PerTypeStorage = ResultT<WeakTypePtr>;
 
         /// A cache which stops the system ending up with multiple copies of the same constructed type.
         mutable std::unordered_map<TypeConstructorArguments, PerTypeStorage> m_cache;
