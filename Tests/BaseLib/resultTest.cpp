@@ -18,7 +18,15 @@ namespace {
     }
 
     babelwires::ResultT<int> functionThatReturnsErrorWithValue() {
-        return babelwires::Error() << expectedErrorPrefix << " with code " << 123;
+        return babelwires::Error() << expectedErrorPrefix << " with code " << 234;
+    }
+
+    babelwires::ResultT<std::tuple<int, int, int>> functionThatReturnsSuccessfulTuple() {
+        return std::tuple{1, 2, 3};
+    }
+
+    babelwires::ResultT<std::tuple<int, int, int>> functionThatReturnsFailureTuple() {
+        return babelwires::Error() << expectedErrorPrefix << " with code " << 345;
     }
 } // namespace
 
@@ -152,6 +160,38 @@ TEST(ResultTest, assignOrErrorWithOnError) {
     EXPECT_EQ(errorValue, 0);
     EXPECT_TRUE(onErrorCalled);
 }
+
+TEST(ResultTest, assignOrErrorWithStructuredBinding) {
+    auto functionUsingStructuredBinding = []() -> babelwires::Result {
+        ASSIGN_OR_ERROR(auto [a, b, c], functionThatReturnsSuccessfulTuple());
+        EXPECT_EQ(a, 1);
+        EXPECT_EQ(b, 2);
+        EXPECT_EQ(c, 3);
+        return {};
+    };
+
+    const babelwires::Result result = functionUsingStructuredBinding();
+    EXPECT_TRUE(result);
+}
+
+TEST(ResultTest, assignOrErrorWithStructuredBindingError) {
+    auto functionUsingStructuredBinding = [](bool& afterAssign, bool& onErrorCalled) -> babelwires::Result {
+        ON_ERROR(onErrorCalled = true);
+        ASSIGN_OR_ERROR(auto [a, b, c], functionThatReturnsFailureTuple());
+        afterAssign = true;
+        return {};
+    };
+
+    bool afterAssign = false;
+    bool onErrorCalled = false;
+    const babelwires::Result result = functionUsingStructuredBinding(afterAssign, onErrorCalled);
+    EXPECT_FALSE(result);
+    EXPECT_FALSE(afterAssign);
+    EXPECT_TRUE(onErrorCalled);
+    EXPECT_EQ(result.error().toString().find(expectedErrorPrefix), 0);
+}
+
+
 
 TEST(ResultTest, returnError) {
     auto functionUsingReturnErrorMacro = [](bool& onErrorCalled) -> babelwires::Result {

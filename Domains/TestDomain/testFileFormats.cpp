@@ -79,8 +79,7 @@ babelwires::ResultT<std::unique_ptr<babelwires::ValueTreeRoot>>
 testDomain::TestSourceFileFormat::loadFromFile(const std::filesystem::path& path,
                                               const babelwires::ProjectContext& projectContext,
                                               babelwires::UserLogger& userLogger) const {
-    ASSIGN_OR_ERROR(auto result, getFileData(path));
-    auto [r0, r1] = result;
+    ASSIGN_OR_ERROR(auto [r0, r1], getFileData(path));
     auto newFeature = std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, getTestFileType());
     newFeature->setToDefault();
     TestSimpleRecordType::Instance instance{newFeature->getChild(0)->as<babelwires::ValueTreeNode>()};
