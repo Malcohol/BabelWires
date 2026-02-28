@@ -31,7 +31,7 @@
 /// Assign TARGET_EXPRESSION from the EXPRESSION_THAT_RETURNS_RESULTT, which must return a ResultT.
 /// If the result is an error, call babelwiresOnError and return the error.
 // We can't use a scope in this case since it would enclose the target expression.
-// Instead use a file-unique variable name.
+// Instead it uses a file-unique variable name.
 #define ASSIGN_OR_ERROR(TARGET_EXPRESSION, EXPRESSION_THAT_RETURNS_RESULTT)                                            \
     auto BW_UNIQUE_NAME(assignOrErrorResult, __LINE__) = EXPRESSION_THAT_RETURNS_RESULTT;                              \
     if (!BW_UNIQUE_NAME(assignOrErrorResult, __LINE__)) [[unlikely]] {                                                 \
