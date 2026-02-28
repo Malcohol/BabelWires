@@ -387,7 +387,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
                 {babelwires::IntValue(1), babelwires::IntValue(5), babelwires::IntValue(3)}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
-        EXPECT_THROW(arrayTypeExp.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+        EXPECT_FALSE(arrayTypeExp.resolve(testEnvironment.m_typeSystem));
     }
     {
         babelwires::TypeExp arrayTypeExp(
@@ -395,7 +395,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
             babelwires::TypeConstructorArguments{{babelwires::StringType::getThisIdentifier()}, {}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
-        EXPECT_THROW(arrayTypeExp.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+        EXPECT_FALSE(arrayTypeExp.resolve(testEnvironment.m_typeSystem));
     }
     {
         babelwires::TypeExp arrayTypeExp(
@@ -405,7 +405,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
                 {babelwires::IntValue(-1), babelwires::IntValue(5), babelwires::IntValue(3)}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
-        EXPECT_THROW(arrayTypeExp.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+        EXPECT_FALSE(arrayTypeExp.resolve(testEnvironment.m_typeSystem));
     }
     {
         babelwires::TypeExp arrayTypeExp(
@@ -415,7 +415,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
                 {babelwires::IntValue(6), babelwires::IntValue(2), babelwires::IntValue(7)}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
-        EXPECT_THROW(arrayTypeExp.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+        EXPECT_FALSE(arrayTypeExp.resolve(testEnvironment.m_typeSystem));
     }
     {
         babelwires::TypeExp arrayTypeExp(
@@ -425,7 +425,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
                 {babelwires::IntValue(6), babelwires::IntValue(10), babelwires::IntValue(3)}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
-        EXPECT_THROW(arrayTypeExp.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+        EXPECT_FALSE(arrayTypeExp.resolve(testEnvironment.m_typeSystem));
     }
     {
         babelwires::TypeExp arrayTypeExp(
@@ -435,7 +435,7 @@ TEST(ArrayTypeTest, arrayTypeConstructorFail) {
                 {babelwires::IntValue(6), babelwires::IntValue(10), babelwires::IntValue(12)}});
 
         EXPECT_EQ(arrayTypeExp.tryResolve(testEnvironment.m_typeSystem), nullptr);
-        EXPECT_THROW(arrayTypeExp.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+        EXPECT_FALSE(arrayTypeExp.resolve(testEnvironment.m_typeSystem));
     }
 }
 

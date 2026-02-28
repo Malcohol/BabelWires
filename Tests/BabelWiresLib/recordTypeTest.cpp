@@ -605,7 +605,7 @@ TEST(RecordTypeTest, constructorBadArgs) {
         babelwires::TypeExp recordTypeExp(
             babelwires::RecordTypeConstructor::getThisIdentifier(),
             babelwires::TypeConstructorArguments{{babelwires::DefaultIntType::getThisIdentifier()}, {/* No value */}});
-        EXPECT_THROW(recordTypeExp.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+        EXPECT_FALSE(recordTypeExp.resolve(testEnvironment.m_typeSystem));
     }
     {
         babelwires::TypeExp recordTypeExp(
@@ -613,7 +613,7 @@ TEST(RecordTypeTest, constructorBadArgs) {
             babelwires::TypeConstructorArguments{
                 {babelwires::DefaultIntType::getThisIdentifier(), babelwires::StringType::getThisIdentifier()},
                 {babelwires::FieldIdValue("int0"), babelwires::IntValue(42)}});
-        EXPECT_THROW(recordTypeExp.resolve(testEnvironment.m_typeSystem), babelwires::TypeSystemException);
+        EXPECT_FALSE(recordTypeExp.resolve(testEnvironment.m_typeSystem));
     }
 }
 

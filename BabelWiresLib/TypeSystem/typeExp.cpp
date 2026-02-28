@@ -10,9 +10,9 @@
 #include <BabelWiresLib/TypeSystem/Detail/typeNameFormatter.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystemException.hpp>
 
 #include <BaseLib/Hash/hash.hpp>
+#include <BaseLib/Result/error.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 
@@ -64,16 +64,23 @@ babelwires::TypePtr babelwires::TypeExp::tryResolve(const TypeSystem& typeSystem
     return std::visit(visitorMethods, m_storage);
 }
 
-babelwires::TypePtr babelwires::TypeExp::resolve(const TypeSystem& typeSystem) const {
+babelwires::ResultT<babelwires::TypePtr> babelwires::TypeExp::resolve(const TypeSystem& typeSystem) const {
     struct VisitorMethods {
-        TypePtr operator()(std::monostate) { throw TypeSystemException() << "A null type cannot be resolved."; }
-        TypePtr operator()(RegisteredTypeId typeId) { return m_typeSystem.getRegisteredTypeById(typeId); }
-        TypePtr operator()(const ConstructedTypeData& higherOrderData) {
+        ResultT<TypePtr> operator()(std::monostate) { return Error() << "A null type cannot be resolved."; }
+        ResultT<TypePtr> operator()(RegisteredTypeId typeId) {
+            TypePtr result = m_typeSystem.tryGetRegisteredTypeById(typeId);
+            if (!result) {
+                return Error() << "Type \"" << typeId << "\" is not registered in the type system.";
+            }
+            return result;
+        }
+        ResultT<TypePtr> operator()(const ConstructedTypeData& higherOrderData) {
             const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
-            const TypeConstructor& typeConstructor = m_typeSystem.getTypeConstructorById(typeConstructorId);
-            auto result = typeConstructor.getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
-            THROW_ON_ERROR(result, babelwires::TypeSystemException);
-            return *result;
+            const TypeConstructor* typeConstructor = m_typeSystem.tryGetTypeConstructorById(typeConstructorId);
+            if (!typeConstructor) {
+                return Error() << "Type constructor \"" << typeConstructorId << "\" is not registered in the type system.";
+            }
+            return typeConstructor->getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
         }
         const TypeSystem& m_typeSystem;
     } visitorMethods{typeSystem};

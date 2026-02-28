@@ -91,19 +91,17 @@ TEST(TupleTypeTest, tupleTypeConstructorMalformed) {
     testUtils::TestEnvironment testEnvironment;
 
     // Unresolved argument
-    EXPECT_THROW(babelwires::TypeExp(babelwires::TupleTypeConstructor::getThisIdentifier(),
+    EXPECT_FALSE(babelwires::TypeExp(babelwires::TupleTypeConstructor::getThisIdentifier(),
                                      {{babelwires::DefaultIntType::getThisIdentifier(),
                                        babelwires::TypeExp(babelwires::MediumId("abcdef"))}})
-                     .resolve(testEnvironment.m_typeSystem),
-                 babelwires::TypeSystemException);
+                     .resolve(testEnvironment.m_typeSystem));
 
     // Unexpected value argument
-    EXPECT_THROW(babelwires::TypeExp(babelwires::TupleTypeConstructor::getThisIdentifier(),
+    EXPECT_FALSE(babelwires::TypeExp(babelwires::TupleTypeConstructor::getThisIdentifier(),
                                      {{babelwires::DefaultIntType::getThisIdentifier(),
                                        babelwires::DefaultRationalType::getThisIdentifier()},
                                       {babelwires::RationalValue(1)}})
-                     .resolve(testEnvironment.m_typeSystem),
-                 babelwires::TypeSystemException);
+                     .resolve(testEnvironment.m_typeSystem));
 }
 
 TEST(TupleTypeTest, compareSubtype) {

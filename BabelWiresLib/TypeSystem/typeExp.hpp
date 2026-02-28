@@ -8,12 +8,13 @@
 #pragma once
 
 #include <BabelWiresLib/Project/projectVisitable.hpp>
+#include <BabelWiresLib/TypeSystem/typePtr.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
-#include <BabelWiresLib/TypeSystem/typePtr.hpp>
 
 #include <BaseLib/Identifiers/identifier.hpp>
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Result/result.hpp>
 #include <BaseLib/Serialization/serializable.hpp>
 
 #include <variant>
@@ -56,7 +57,7 @@ namespace babelwires {
         std::vector<ValueHolder> m_valueArguments;
     };
 
-    /// A TypeExp is an expression that describes a type. 
+    /// A TypeExp is an expression that describes a type.
     /// It either stores an Id for registered types, or stores the id of a constructor and its arguments.
     class TypeExp : public ProjectVisitable, public Serializable {
       public:
@@ -76,24 +77,22 @@ namespace babelwires {
         TypeExp(TypeConstructorId typeConstructorId, TypeExp typeExp0, TypeExp typeExp1);
         TypeExp(TypeConstructorId typeConstructorId, ValueHolder value0);
         TypeExp(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1);
-        TypeExp(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1,
-                ValueHolder value2);
+        TypeExp(TypeConstructorId typeConstructorId, ValueHolder value0, ValueHolder value1, ValueHolder value2);
 
         /// Attempt to find the type in the TypeSystem that this TypeExp describes.
         /// Returns an unassigned TypePtr if this TypeExp does not resolve.
         TypePtr tryResolve(const TypeSystem& typeSystem) const;
 
         /// Find the type in the TypeSystem that this TypeExp describes.
-        /// Throws an exception if this TypeExp does not resolve.
-        TypePtr resolve(const TypeSystem& typeSystem) const;
+        /// Returns an error if this TypeExp does not resolve.
+        ResultT<TypePtr> resolve(const TypeSystem& typeSystem) const;
 
         /// Find the type in the TypeSystem that this TypeExp describes.
         /// Asserts that this TypeExp resolves.
         TypePtr assertResolve(const TypeSystem& typeSystem) const;
 
-        template<typename TYPE>
-        TypePtrT<TYPE> resolveAs(const TypeSystem& typeSystem) const {
-          return typeAs<TYPE>(assertResolve(typeSystem));
+        template <typename TYPE> TypePtrT<TYPE> resolveAs(const TypeSystem& typeSystem) const {
+            return typeAs<TYPE>(assertResolve(typeSystem));
         }
 
         /// Return a human-readable version of the TypeExp.

@@ -107,34 +107,30 @@ TEST(SumTypeTest, sumTypeConstructorMalformed) {
     testUtils::TestEnvironment testEnvironment;
 
     // Just one summand
-    EXPECT_THROW(babelwires::TypeExp(babelwires::SumTypeConstructor::getThisIdentifier(),
+    EXPECT_FALSE(babelwires::TypeExp(babelwires::SumTypeConstructor::getThisIdentifier(),
                                      babelwires::DefaultIntType::getThisIdentifier())
-                     .resolve(testEnvironment.m_typeSystem),
-                 babelwires::TypeSystemException);
+                     .resolve(testEnvironment.m_typeSystem));
 
     // Wrong value argument
-    EXPECT_THROW(babelwires::TypeExp(
+    EXPECT_FALSE(babelwires::TypeExp(
                      babelwires::SumTypeConstructor::getThisIdentifier(),
                      {{babelwires::DefaultIntType::getThisIdentifier(), babelwires::DefaultRationalType::getThisIdentifier()},
                       {babelwires::RationalValue(1)}})
-                     .resolve(testEnvironment.m_typeSystem),
-                 babelwires::TypeSystemException);
+                     .resolve(testEnvironment.m_typeSystem));
 
     // Too many value arguments
-    EXPECT_THROW(babelwires::TypeExp(
+    EXPECT_FALSE(babelwires::TypeExp(
                      babelwires::SumTypeConstructor::getThisIdentifier(),
                      {{babelwires::DefaultIntType::getThisIdentifier(), babelwires::DefaultRationalType::getThisIdentifier()},
                       {babelwires::IntValue(1), babelwires::IntValue(1)}})
-                     .resolve(testEnvironment.m_typeSystem),
-                 babelwires::TypeSystemException);
+                     .resolve(testEnvironment.m_typeSystem));
 
     // value argument out of range
-    EXPECT_THROW(babelwires::TypeExp(
+    EXPECT_FALSE(babelwires::TypeExp(
                      babelwires::SumTypeConstructor::getThisIdentifier(),
                      {{babelwires::DefaultIntType::getThisIdentifier(), babelwires::DefaultRationalType::getThisIdentifier()},
                       {babelwires::IntValue(2)}})
-                     .resolve(testEnvironment.m_typeSystem),
-                 babelwires::TypeSystemException);
+                     .resolve(testEnvironment.m_typeSystem));
 }
 
 TEST(SumTypeTest, compareSubtype) {

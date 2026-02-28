@@ -87,12 +87,12 @@ TEST(TypeExpTest, resolve) {
 
     babelwires::TypeExp typeExp(testUtils::TestType::getThisIdentifier());
 
-    EXPECT_EQ(testType.get(), typeExp.resolve(typeSystem).get());
+    EXPECT_EQ(testType.get(), typeExp.resolve(typeSystem)->get());
     babelwires::TypeExp constructedTypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
                                            testUtils::TestType::getThisIdentifier());
-    babelwires::TypePtr newType = constructedTypeExp.resolve(typeSystem);
+    babelwires::TypePtr newType = *constructedTypeExp.resolve(typeSystem);
     EXPECT_EQ(newType->getTypeExp(), constructedTypeExp);
-    EXPECT_EQ(constructedTypeExp.resolve(typeSystem).get(), constructedTypeExp.resolve(typeSystem).get());
+    EXPECT_EQ(constructedTypeExp.resolve(typeSystem)->get(), constructedTypeExp.resolve(typeSystem)->get());
 }
 
 TEST(TypeExpTest, tryResolveSuccess) {
@@ -194,7 +194,7 @@ TEST(TypeExpTest, tryResolveMixed) {
                               testUtils::TestType::getThisIdentifier())},
          {babelwires::StringValue(" is this string")}});
 
-    babelwires::TypePtr constructedTestType = constructedTestTypeExp.resolve(typeSystem);
+    babelwires::TypePtr constructedTestType = *constructedTestTypeExp.resolve(typeSystem);
     const testUtils::TestType* const newTestType = constructedTestType->tryAs<testUtils::TestType>();
     ASSERT_NE(newTestType, nullptr);
     EXPECT_EQ(newTestType->m_defaultValue, "Default value is this string");
