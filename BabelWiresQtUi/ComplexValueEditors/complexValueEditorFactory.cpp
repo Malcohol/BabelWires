@@ -16,7 +16,7 @@
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
-babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEditor(QWidget* parent, ProjectGraphModel& projectGraphModel, UserLogger& userLogger, const ProjectDataLocation& data) {
+babelwires::ResultT<babelwires::ComplexValueEditor*> babelwires::ComplexValueEditorFactory::createEditor(QWidget* parent, ProjectGraphModel& projectGraphModel, UserLogger& userLogger, const ProjectDataLocation& data) {
     AccessModelScope scope(projectGraphModel);
     const ValueTreeNode& valueTreeNode = ComplexValueEditor::getValueTreeNodeOrThrow(scope, data);
     const Type& type = *valueTreeNode.getType();
@@ -27,5 +27,5 @@ babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEdi
         return new MapEditor(nullptr, projectGraphModel, userLogger, data);
     }
 
-    throw ModelException() << "There is no known editor for that type of value.";
+    return Error() << "There is no known editor for that type of value.";
 }

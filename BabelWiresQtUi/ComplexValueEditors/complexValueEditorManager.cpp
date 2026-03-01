@@ -11,18 +11,21 @@
 
 #include <BaseLib/Log/userLogger.hpp>
 
-void babelwires::ComplexValueEditorManager::openEditorForValue(QWidget* parent, ProjectGraphModel& projectGraphModel, UserLogger& userLogger, const ProjectDataLocation& data) {
-    auto it = std::find_if(m_openValueEditors.begin(), m_openValueEditors.end(), [&data](const ComplexValueEditor* editor){ return data == editor->getDataLocation(); });
+void babelwires::ComplexValueEditorManager::openEditorForValue(QWidget* parent, ProjectGraphModel& projectGraphModel,
+                                                               UserLogger& userLogger,
+                                                               const ProjectDataLocation& data) {
+    auto it = std::find_if(m_openValueEditors.begin(), m_openValueEditors.end(),
+                           [&data](const ComplexValueEditor* editor) { return data == editor->getDataLocation(); });
     if (it == m_openValueEditors.end()) {
-        try {
-            ComplexValueEditor* newEditor = m_valueEditorFactory.createEditor(parent, projectGraphModel, userLogger, data);
+        if (ResultT<ComplexValueEditor*> result =
+                m_valueEditorFactory.createEditor(parent, projectGraphModel, userLogger, data)) {
+            ComplexValueEditor* newEditor = *result;
             m_openValueEditors.emplace_back(newEditor);
             it = m_openValueEditors.end() - 1;
-            QObject::connect(newEditor, &ComplexValueEditor::editorClosing, this, &ComplexValueEditorManager::onValueEditorClose);
-        }
-        catch (ModelException& e) {
-            // TODO: Depends on context. A failed user action should report an error.
-            userLogger.logWarning() << "Could not open an editor for " << data << ": " << e.what();
+            QObject::connect(newEditor, &ComplexValueEditor::editorClosing, this,
+                             &ComplexValueEditorManager::onValueEditorClose);
+        } else {
+            userLogger.logWarning() << "Could not open an editor for " << data << ": " << result.error().toString();
             return;
         }
     }
@@ -33,7 +36,7 @@ void babelwires::ComplexValueEditorManager::onValueEditorClose() {
     ComplexValueEditor* editorWhichIsClosing = qobject_cast<ComplexValueEditor*>(sender());
     assert((editorWhichIsClosing != nullptr) && "Received an editorClosing signal with no appropriate sender");
     auto it = std::find(m_openValueEditors.begin(), m_openValueEditors.end(), editorWhichIsClosing);
-    assert((it != m_openValueEditors.end())  && "Received an editorClosing signal from an unknown sender");
+    assert((it != m_openValueEditors.end()) && "Received an editorClosing signal from an unknown sender");
     m_openValueEditors.erase(it);
 }
 

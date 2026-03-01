@@ -7,9 +7,11 @@
  **/
 #pragma once
 
-#include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
+#include <BaseLib/Result/result.hpp>
 
 #include <BabelWiresLib/Project/projectIds.hpp>
+
+#include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 
 namespace babelwires {
     class UnifiedLog;
@@ -19,7 +21,7 @@ namespace babelwires {
     /// Constructs the correct type of editor to open.
     class ComplexValueEditorFactory {
       public:
-        /// This will throw a ModelException if it does not make sense to open an editor for the value at data.
-        ComplexValueEditor* createEditor(QWidget* parent, ProjectGraphModel& projectGraphModel, UserLogger& userLogger, const ProjectDataLocation& data);
+        /// This will return an error if it does not make sense to open an editor for the value at data.
+        ResultT<ComplexValueEditor*> createEditor(QWidget* parent, ProjectGraphModel& projectGraphModel, UserLogger& userLogger, const ProjectDataLocation& data);
     };
 }
