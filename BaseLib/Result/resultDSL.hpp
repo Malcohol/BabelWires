@@ -31,8 +31,7 @@
 /// If the result is an error, call babelwiresOnError and return the error.
 /// The target expression may contain commas (e.g. structured bindings like auto [a, b]), since the
 /// macro is variadic: the last argument is the expression, and all preceding arguments form the target.
-#define ASSIGN_OR_ERROR(...)                                                                                           \
-    BW_CONCAT(BW_ASSIGN_, BW_ARG_COUNT(__VA_ARGS__))(__VA_ARGS__)
+#define ASSIGN_OR_ERROR(...) BW_CONCAT(BW_ASSIGN_, BW_ARG_COUNT(__VA_ARGS__))(__VA_ARGS__)
 
 /// Perform the code if an error occurs with the scope.
 /// This cannot be used twice in the same scope, but you can introduce a new scope to work around that.

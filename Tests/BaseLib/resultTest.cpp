@@ -28,6 +28,29 @@ namespace {
     babelwires::ResultT<std::tuple<int, int, int>> functionThatReturnsFailureTuple() {
         return babelwires::Error() << expectedErrorPrefix << " with code " << 345;
     }
+
+    struct Foo { 
+        int x = 0; 
+        void setX(int newX) { x = newX; }
+    };
+
+    babelwires::ResultT<Foo&> functionThatReturnsSuccessWithReference(Foo& foo) {
+        return foo;
+    }
+
+    babelwires::ResultT<Foo&> functionThatReturnsErrorWithReference(Foo& /*foo*/) {
+        return babelwires::Error() << expectedErrorPrefix << " with code " << 456;
+    }
+
+        babelwires::ResultT<const Foo&> functionThatReturnsSuccessWithConstReference(const Foo& foo) {
+        return foo;
+    }
+
+    babelwires::ResultT<const Foo&> functionThatReturnsErrorWithConstReference(const Foo& /*foo*/) {
+        return babelwires::Error() << expectedErrorPrefix << " with code " << 456;
+    }
+   
+
 } // namespace
 
 TEST(ResultTest, resultSuccess) {
@@ -191,7 +214,53 @@ TEST(ResultTest, assignOrErrorWithStructuredBindingError) {
     EXPECT_EQ(result.error().toString().find(expectedErrorPrefix), 0);
 }
 
+TEST(ResultTest, assignOrErrorWithReference) {
+    auto functionUsingAssignOrErrorWithReference = [](Foo& foo, int& successValue, int& errorValue,
+                                                     bool& onErrorCalled) -> babelwires::Result {
+        ON_ERROR(onErrorCalled = true);
+        ASSIGN_OR_ERROR(Foo& val0, functionThatReturnsSuccessWithReference(foo));
+        successValue = val0.x;
+        val0.setX(100);
+        ASSIGN_OR_ERROR(Foo& val1, functionThatReturnsErrorWithReference(foo));
+        errorValue = val1.x;
+        return {};
+    };
 
+    Foo foo{42};
+    int successValue = 0;
+    int errorValue = 0;
+    bool onErrorCalled = false;
+    const babelwires::Result result =
+        functionUsingAssignOrErrorWithReference(foo, successValue, errorValue, onErrorCalled);
+    EXPECT_FALSE(result);
+    EXPECT_EQ(successValue, 42);
+    EXPECT_EQ(errorValue, 0);
+    EXPECT_EQ(foo.x, 100);
+    EXPECT_TRUE(onErrorCalled);
+}
+
+TEST(ResultTest, assignOrErrorWithConstReference) {
+    auto functionUsingAssignOrErrorWithConstReference = [](const Foo& foo, int& successValue, int& errorValue,
+                                                           bool& onErrorCalled) -> babelwires::Result {
+        ON_ERROR(onErrorCalled = true);
+        ASSIGN_OR_ERROR(const Foo& val0, functionThatReturnsSuccessWithConstReference(foo));
+        successValue = val0.x;
+        ASSIGN_OR_ERROR(const Foo& val1, functionThatReturnsErrorWithConstReference(foo));
+        errorValue = val1.x;
+        return {};
+    };
+
+    const Foo foo{42};
+    int successValue = 0;
+    int errorValue = 0;
+    bool onErrorCalled = false;
+    const babelwires::Result result =
+        functionUsingAssignOrErrorWithConstReference(foo, successValue, errorValue, onErrorCalled);
+    EXPECT_FALSE(result);
+    EXPECT_EQ(successValue, 42);
+    EXPECT_EQ(errorValue, 0);
+    EXPECT_TRUE(onErrorCalled);
+}
 
 TEST(ResultTest, returnError) {
     auto functionUsingReturnErrorMacro = [](bool& onErrorCalled) -> babelwires::Result {
