@@ -63,9 +63,9 @@ babelwires::RootAndPath<babelwires::ValueTreeRoot> babelwires::getRootAndPathTo(
 
 namespace {
 
-    template <typename T> T& followPathImpl(T& start, const babelwires::Path& p, int& index) {
+    template <typename T> babelwires::ResultT<T&> followPathImpl(T& start, const babelwires::Path& p, int& index) {
         if (index < p.getNumSteps()) {
-            T& child = start.getChildFromStep(p.getStep(index));
+            ASSIGN_OR_ERROR(T & child, start.getChildFromStep(p.getStep(index)));
             ++index;
             return followPathImpl(child, p, index);
         } else {
@@ -73,23 +73,25 @@ namespace {
         }
     }
 
-    template <typename T> T& followPathImpl(T& start, const babelwires::Path& p) {
+    template <typename T> babelwires::ResultT<T&> followPathImpl(T& start, const babelwires::Path& p) {
         int index = 0;
-        try {
-            return followPathImpl(start, p, index);
-        } catch (const std::exception& e) {
-            throw babelwires::ModelException()
-                << e.what() << "; when trying to follow step #" << index + 1 << " in path \"" << p << '\"';
+        const auto result = followPathImpl(start, p, index);
+        if (result) {
+            return result;
+        } else {
+            return babelwires::Error() << result.error() << "; when trying to follow step #" << index + 1 << " in path \""
+                                       << p << '\"';
         }
     }
 
 } // namespace
 
-babelwires::ValueTreeNode& babelwires::followPath(const Path& path, ValueTreeNode& start) {
+babelwires::ResultT<babelwires::ValueTreeNode&> babelwires::followPath(const Path& path, ValueTreeNode& start) {
     return followPathImpl<ValueTreeNode>(start, path);
 }
 
-const babelwires::ValueTreeNode& babelwires::followPath(const Path& path, const ValueTreeNode& start) {
+babelwires::ResultT<const babelwires::ValueTreeNode&> babelwires::followPath(const Path& path,
+                                                                             const ValueTreeNode& start) {
     return followPathImpl<const ValueTreeNode>(start, path);
 }
 
@@ -112,4 +114,16 @@ babelwires::ValueTreeNode* babelwires::tryFollowPath(const Path& path, ValueTree
 
 const babelwires::ValueTreeNode* babelwires::tryFollowPath(const Path& path, const ValueTreeNode& start) {
     return tryFollowPathImpl<const ValueTreeNode>(&start, path);
+}
+
+babelwires::ValueTreeNode& babelwires::assertFollowPath(const Path& path, ValueTreeNode& start) {
+    ValueTreeNode* node = tryFollowPath(path, start);
+    assert(node && "Path cannot be followed");
+    return *node;
+}
+
+const babelwires::ValueTreeNode& babelwires::assertFollowPath(const Path& path, const ValueTreeNode& start) {
+    const ValueTreeNode* node = tryFollowPath(path, start);
+    assert(node && "Path cannot be followed");
+    return *node;
 }

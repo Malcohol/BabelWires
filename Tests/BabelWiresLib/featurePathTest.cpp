@@ -126,13 +126,13 @@ TEST(FeaturePathTest, pathFollow) {
 
     testDomain::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
-    EXPECT_EQ(&followPath(info.m_pathToRecord, testRecordFeature), &testRecordFeature);
-    EXPECT_EQ(&followPath(info.m_pathToInt, testRecordFeature), &info.m_int);
-    EXPECT_EQ(&followPath(info.m_pathToArray, testRecordFeature), &info.m_array);
-    EXPECT_EQ(&followPath(info.m_pathToElem0, testRecordFeature), &info.m_elem0);
-    EXPECT_EQ(&followPath(info.m_pathToElem1, testRecordFeature), &info.m_elem1);
-    EXPECT_EQ(&followPath(info.m_pathToSubRecord, testRecordFeature), &info.m_subRecord);
-    EXPECT_EQ(&followPath(info.m_pathToSubRecordInt, testRecordFeature), &info.m_subRecordInt);
+    EXPECT_EQ(tryFollowPath(info.m_pathToRecord, testRecordFeature), &testRecordFeature);
+    EXPECT_EQ(tryFollowPath(info.m_pathToInt, testRecordFeature), &info.m_int);
+    EXPECT_EQ(tryFollowPath(info.m_pathToArray, testRecordFeature), &info.m_array);
+    EXPECT_EQ(tryFollowPath(info.m_pathToElem0, testRecordFeature), &info.m_elem0);
+    EXPECT_EQ(tryFollowPath(info.m_pathToElem1, testRecordFeature), &info.m_elem1);
+    EXPECT_EQ(tryFollowPath(info.m_pathToSubRecord, testRecordFeature), &info.m_subRecord);
+    EXPECT_EQ(tryFollowPath(info.m_pathToSubRecordInt, testRecordFeature), &info.m_subRecordInt);
 
     EXPECT_EQ(info.m_pathToRecord.getNumSteps(), 0);
 
@@ -193,12 +193,12 @@ TEST(FeaturePathTest, pathResolve) {
     testDomain::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
     // The paths should work even though they didn't use registered field identifiers.
-    EXPECT_EQ(&followPath(pathToInt, testRecordFeature), &info.m_int);
-    EXPECT_EQ(&followPath(pathToArray, testRecordFeature), &info.m_array);
-    EXPECT_EQ(&followPath(pathToElem0, testRecordFeature), &info.m_elem0);
-    EXPECT_EQ(&followPath(pathToElem1, testRecordFeature), &info.m_elem1);
-    EXPECT_EQ(&followPath(pathToSubRecord, testRecordFeature), &info.m_subRecord);
-    EXPECT_EQ(&followPath(pathToInt2, testRecordFeature), &info.m_subRecordInt);
+    EXPECT_EQ(tryFollowPath(pathToInt, testRecordFeature), &info.m_int);
+    EXPECT_EQ(tryFollowPath(pathToArray, testRecordFeature), &info.m_array);
+    EXPECT_EQ(tryFollowPath(pathToElem0, testRecordFeature), &info.m_elem0);
+    EXPECT_EQ(tryFollowPath(pathToElem1, testRecordFeature), &info.m_elem1);
+    EXPECT_EQ(tryFollowPath(pathToSubRecord, testRecordFeature), &info.m_subRecord);
+    EXPECT_EQ(tryFollowPath(pathToInt2, testRecordFeature), &info.m_subRecordInt);
 }
 
 TEST(FeaturePathTest, pathTryFollow) {

@@ -42,7 +42,7 @@ TEST(AddConnectionCommandTest, addConnection) {
         const babelwires::ValueTreeNode* const targetInput = targetNode->getInput();
         ASSERT_NE(targetInput, nullptr);
 
-        const babelwires::ValueTreeNode& intTreeNode = babelwires::followPath(testDomain::TestSimpleRecordElementData().getPathToRecordInt1(), *targetInput);
+        const babelwires::ValueTreeNode& intTreeNode = babelwires::assertFollowPath(testDomain::TestSimpleRecordElementData().getPathToRecordInt1(), *targetInput);
         const babelwires::IntValue* const intValue = intTreeNode.getValue()->tryAs<babelwires::IntValue>();
         ASSERT_NE(intValue, nullptr);
 

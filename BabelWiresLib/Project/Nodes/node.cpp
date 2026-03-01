@@ -306,31 +306,6 @@ void babelwires::Node::setModifierMoving(const babelwires::Modifier& modifierAbo
     m_removedModifiers.emplace_back(modifierAboutToMove.clone());
 }
 
-namespace {
-
-    babelwires::ValueTreeNode* tryFollowPathToValue(babelwires::ValueTreeNode* start, const babelwires::Path& p,
-                                                    int index) {
-        if ((index < p.getNumSteps()) && !start->tryAs<babelwires::ValueTreeRoot>()) {
-            if (auto* compound = start) {
-                babelwires::ValueTreeNode& child = compound->getChildFromStep(p.getStep(index));
-                return tryFollowPathToValue(&child, p, index + 1);
-            } else {
-                return nullptr;
-            }
-        } else {
-            return start;
-        }
-    }
-
-    babelwires::ValueTreeNode* tryFollowPathToValueSafe(babelwires::ValueTreeNode* start, const babelwires::Path& p) {
-        try {
-            return tryFollowPathToValue(start, p, 0);
-        } catch (...) {
-            return nullptr;
-        }
-    }
-} // namespace
-
 void babelwires::Node::modifyValueAt(ValueTreeNode* input, const Path& path) {
     assert((input != nullptr) && "Trying to modify a node with no input feature");
 

@@ -17,6 +17,8 @@
 #include <BabelWiresLib/ValueTree/valueTreeChild.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
+#include <BaseLib/Result/error.hpp>
+
 #include <map>
 
 babelwires::ValueTreeNode::ValueTreeNode(TypePtr typePtr, ValueHolder value)
@@ -117,20 +119,32 @@ const babelwires::ValueTreeNode* babelwires::ValueTreeNode::tryGetChildFromStep(
     return tryGetChildFromStepT(this, step);
 }
 
-babelwires::ValueTreeNode& babelwires::ValueTreeNode::getChildFromStep(const PathStep& step) {
+babelwires::ResultT<babelwires::ValueTreeNode&> babelwires::ValueTreeNode::getChildFromStep(const PathStep& step) {
     if (ValueTreeNode* f = tryGetChildFromStep(step)) {
         return *f;
     } else {
-        throw babelwires::ModelException() << "Compound has no child at step \"" << step << "\"";
+        return babelwires::Error() << "Compound has no child at step \"" << step << "\"";
     }
 }
 
-const babelwires::ValueTreeNode& babelwires::ValueTreeNode::getChildFromStep(const PathStep& step) const {
+babelwires::ResultT<const babelwires::ValueTreeNode&> babelwires::ValueTreeNode::getChildFromStep(const PathStep& step) const {
     if (const ValueTreeNode* f = tryGetChildFromStep(step)) {
         return *f;
     } else {
-        throw babelwires::ModelException() << "Compound has no child at step \"" << step << "\"";
+        return babelwires::Error() << "Compound has no child at step \"" << step << "\"";
     }
+}
+
+babelwires::ValueTreeNode& babelwires::ValueTreeNode::assertGetChildFromStep(const PathStep& step) {
+    ValueTreeNode* f = tryGetChildFromStep(step);
+    assert(f && "Compound has no child at step");
+    return *f;
+}
+
+const babelwires::ValueTreeNode& babelwires::ValueTreeNode::assertGetChildFromStep(const PathStep& step) const {
+    const ValueTreeNode* f = tryGetChildFromStep(step);
+    assert(f && "Compound has no child at step");
+    return *f;
 }
 
 const babelwires::ValueHolder& babelwires::ValueTreeNode::getValue() const {

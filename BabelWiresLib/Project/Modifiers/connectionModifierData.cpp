@@ -40,11 +40,12 @@ const babelwires::ValueTreeNode* babelwires::ConnectionModifierData::getSourceTr
             << "The connection source (node with id=" << m_sourceId << ") has no outputs";
     }
 
-    try {
-        return &followPath(m_sourcePath, *output);
-    } catch (const std::exception& e) {
-        throw babelwires::ModelException() << e.what() << "; when looking for source in node with id=" << m_sourceId;
+    const auto result = followPath(m_sourcePath, *output);
+    if (!result) {
+        throw babelwires::ModelException()
+            << result.error().toString() << "; when looking for source in node with id=" << m_sourceId;
     }
+    return &*result;
 }
 
 void babelwires::ConnectionModifierData::apply(const ValueTreeNode* source, ValueTreeNode* target,

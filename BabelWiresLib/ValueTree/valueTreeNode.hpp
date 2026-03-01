@@ -7,9 +7,10 @@
  **/
 #pragma once
 
+#include <BaseLib/Result/result.hpp>
 #include <BaseLib/Utilities/enumFlags.hpp>
-#include <BaseLib/multiKeyMap.hpp>
 #include <BaseLib/common.hpp>
+#include <BaseLib/multiKeyMap.hpp>
 
 #include <BabelWiresLib/Path/pathStep.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
@@ -88,17 +89,23 @@ namespace babelwires {
 
         PathStep getStepToChild(const ValueTreeNode* child) const;
 
-        /// Should return nullptr if the step does not lead to a child.
+        /// Returns nullptr if the step does not lead to a child.
         ValueTreeNode* tryGetChildFromStep(const PathStep& step);
 
-        /// Should return nullptr if the step does not lead to a child.
+        /// Returns nullptr if the step does not lead to a child.
         const ValueTreeNode* tryGetChildFromStep(const PathStep& step) const;
 
-        /// Throws a ModelException if the step does not lead to a child.
-        ValueTreeNode& getChildFromStep(const PathStep& step);
+        /// Returns an error if the step does not lead to a child.
+        ResultT<ValueTreeNode&> getChildFromStep(const PathStep& step);
 
-        /// Throws a ModelException if the step does not lead to a child.
-        const ValueTreeNode& getChildFromStep(const PathStep& step) const;
+        /// Returns an error if the step does not lead to a child.
+        ResultT<const ValueTreeNode&> getChildFromStep(const PathStep& step) const;
+
+        /// Asserts if the step does not lead to a child.
+        ValueTreeNode& assertGetChildFromStep(const PathStep& step);
+
+        /// Asserts if the step does not lead to a child.
+        const ValueTreeNode& assertGetChildFromStep(const PathStep& step) const;
 
         /// Returns -1 if not found.
         /// Sets the descriminator of identifier on a match.
@@ -115,10 +122,12 @@ namespace babelwires {
 
         /// Update change flags and ensure the children match the value in other.
         /// In this special case, the changes are known to lie at the end of path p.
-        void reconcileChangesAndSynchronizeChildren(const TypeSystem& typeSystem, const ValueHolder& other, const Path& path);
+        void reconcileChangesAndSynchronizeChildren(const TypeSystem& typeSystem, const ValueHolder& other,
+                                                    const Path& path);
 
       private:
-        void reconcileChangesAndSynchronizeChildren(const TypeSystem& typeSystem, const ValueHolder& other, const Path& path, unsigned int pathIndex);
+        void reconcileChangesAndSynchronizeChildren(const TypeSystem& typeSystem, const ValueHolder& other,
+                                                    const Path& path, unsigned int pathIndex);
 
       protected:
         /// Set the isChanged flag and that of all parents.
@@ -137,7 +146,7 @@ namespace babelwires {
         /// The type at this ValueTreeNode.
         TypePtr m_typePtr;
 
-        /// The value at this ValueTreeNode. 
+        /// The value at this ValueTreeNode.
         /// Note: This should not be modified directly: all modifications should be managed via the ValueTreeRoot.
         ValueHolder m_value;
 

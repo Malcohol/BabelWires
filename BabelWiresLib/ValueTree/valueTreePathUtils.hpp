@@ -22,9 +22,21 @@ namespace babelwires
     RootAndPath<const ValueTreeRoot> getRootAndPathTo(const ValueTreeNode& valueTreeNode);
     RootAndPath<ValueTreeRoot> getRootAndPathTo(ValueTreeNode& valueTreeNode);
 
-    ValueTreeNode& followPath(const Path& path, ValueTreeNode& start);
-    const ValueTreeNode& followPath(const Path& path, const ValueTreeNode& start);
+    /// Follow the path, returns an error if it cannot be followed.
+    ResultT<ValueTreeNode&> followPath(const Path& path, ValueTreeNode& start);
 
+    /// Follow the path, returns an error if it cannot be followed.
+    ResultT<const ValueTreeNode&> followPath(const Path& path, const ValueTreeNode& start);
+
+    /// Follow the path, returns nullptr if it cannot be followed.
     ValueTreeNode* tryFollowPath(const Path& path, ValueTreeNode& start);
+
+    /// Follow the path, returns nullptr if it cannot be followed.
     const ValueTreeNode* tryFollowPath(const Path& path, const ValueTreeNode& start);
+
+    /// Follow the path, asserts if it cannot be followed.
+    ValueTreeNode& assertFollowPath(const Path& path, ValueTreeNode& start);
+
+    /// Follow the path, asserts if it cannot be followed.
+    const ValueTreeNode& assertFollowPath(const Path& path, const ValueTreeNode& start);
 }

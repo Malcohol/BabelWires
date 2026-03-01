@@ -44,7 +44,6 @@ namespace babelwires {
         virtual bool initializeAndExecute(COMMAND_TARGET& target) = 0;
 
         /// Perform the command.
-        /// Note: A command should not modify feature contents directly. Instead, it should add or remove modifiers to achieve that effect.
         virtual void execute(COMMAND_TARGET& target) const = 0;
 
         /// When the system is in the state just after the execution of the command,

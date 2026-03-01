@@ -36,7 +36,7 @@ void testDomain::TestParallelProcessor::processEntry(babelwires::UserLogger& use
     babelwires::Instance<babelwires::IntType> entryOut{outputEntry};
 
     const babelwires::ValueTreeNode& intValueTreeNode =
-        input.getChildFromStep(babelwires::PathStep("intVal")).as<babelwires::ValueTreeNode>();
+        input.assertGetChildFromStep(babelwires::PathStep("intVal"));
 
     entryOut.set(entryIn.get() + intValueTreeNode.getValue()->as<babelwires::IntValue>().get());
 }

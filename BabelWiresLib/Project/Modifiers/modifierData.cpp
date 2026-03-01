@@ -14,12 +14,15 @@
 #include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 
 babelwires::ValueTreeNode* babelwires::ModifierData::getTarget(ValueTreeNode* container) const {
-    return &followPath(m_targetPath, *container);
+    const auto result = followPath(m_targetPath, *container);
+    THROW_ON_ERROR(result, ModelException);
+    return &*result;
 }
 
 void babelwires::ModifierData::visitIdentifiers(IdentifierVisitor& visitor) {
