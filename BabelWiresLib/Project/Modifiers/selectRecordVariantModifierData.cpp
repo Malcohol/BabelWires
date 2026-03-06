@@ -29,7 +29,7 @@ void babelwires::SelectRecordVariantModifierData::apply(ValueTreeNode* target) c
     if (auto recordType = target->getType()->tryAs<RecordWithVariantsType>()) {
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
-        recordType->selectTag(typeSystem, newValue, m_tagToSelect);
+        THROW_ON_ERROR(recordType->selectTag(typeSystem, newValue, m_tagToSelect), ModelException);
         target->setValue(newValue);
         return;
     }

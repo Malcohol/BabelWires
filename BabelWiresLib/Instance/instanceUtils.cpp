@@ -70,7 +70,7 @@ void babelwires::InstanceUtils::selectTag(ValueTreeNode& valueTreeNode, ShortId 
     ValueHolder value = valueTreeNode.getValue();
     if (tag != type.getSelectedTag(value)) {
         const babelwires::TypeSystem& typeSystem = valueTreeNode.getTypeSystem();
-        type.selectTag(typeSystem, value, tag);
+        type.assertSelectTag(typeSystem, value, tag);
         valueTreeNode.setValue(value);
     }
 }

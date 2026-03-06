@@ -10,7 +10,8 @@
 #include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+
+#include <BaseLib/Result/error.hpp>
 
 babelwires::RecordWithVariantsType::RecordWithVariantsType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, Tags tags, std::vector<FieldWithTags> fields,
                                                            unsigned int defaultTagIndex)
@@ -55,19 +56,17 @@ const babelwires::RecordWithVariantsType::Tags& babelwires::RecordWithVariantsTy
     return m_tags;
 }
 
-unsigned int babelwires::RecordWithVariantsType::getIndexOfTag(ShortId tag) const {
-    const auto it = std::find(m_tags.begin(), m_tags.end(), tag);
-    if (it == m_tags.end()) {
-        throw ModelException() << "The tag " << tag << " is not a tag of the type " << getTypeExp();
-    }
-    return std::distance(m_tags.begin(), it);
-}
-
 bool babelwires::RecordWithVariantsType::isTag(ShortId tag) const {
     return std::find(m_tags.begin(), m_tags.end(), tag) != m_tags.end();
 }
 
-void babelwires::RecordWithVariantsType::selectTag(const TypeSystem& typeSystem, ValueHolder& value,
+unsigned int babelwires::RecordWithVariantsType::getIndexOfTag(ShortId tag) const {
+    assert(isTag(tag) && "getIndexOfTag called with tag which is not a tag of this type");
+    const auto it = std::find(m_tags.begin(), m_tags.end(), tag);
+    return std::distance(m_tags.begin(), it);
+}
+
+void babelwires::RecordWithVariantsType::assertSelectTag(const TypeSystem& typeSystem, ValueHolder& value,
                                                    ShortId tag) const {
     const ShortId currentTag = getSelectedTag(value);
     const FieldChanges changes = getFieldChanges(currentTag, tag);
@@ -81,6 +80,14 @@ void babelwires::RecordWithVariantsType::selectTag(const TypeSystem& typeSystem,
     recordValue.setTag(tag);
 }
 
+babelwires::Result babelwires::RecordWithVariantsType::selectTag(const TypeSystem& typeSystem, ValueHolder& value, ShortId tag) const {
+    if (!isTag(tag)) {
+        return Error() << "Tag " << tag << " is not a tag of type " << getTypeExp().toString();
+    }
+    assertSelectTag(typeSystem, value, tag);
+    return {};
+}
+
 babelwires::ShortId babelwires::RecordWithVariantsType::getSelectedTag(const ValueHolder& value) const {
     const auto& recordValue = value->as<RecordWithVariantsValue>();
     assert(isTag(recordValue.getTag()) && "RecordWithVariant has unrecognized tag");
@@ -89,6 +96,7 @@ babelwires::ShortId babelwires::RecordWithVariantsType::getSelectedTag(const Val
 
 babelwires::RecordWithVariantsType::FieldChanges
 babelwires::RecordWithVariantsType::getFieldChanges(ShortId currentTag, ShortId proposedTag) const {
+    assert(isTag(proposedTag) && "proposed tag is not a tag of this type");
     FieldChanges fieldChanges;
     for (unsigned int i = 0; i < m_fields.size(); ++i) {
         const Field& f = m_fields[i];
