@@ -23,7 +23,7 @@ namespace babelwires {
         /// Convenience method.
         static TypeExp makeTypeExp(IntValue::NativeType min, IntValue::NativeType max, IntValue::NativeType defaultValue = 0);
       private:
-        /// Throws a TypeSystem exception if the arguments are not of the expected type.
+        /// Returns an error if the arguments are not of the expected type.
         static ResultT<std::tuple<Range<IntValue::NativeType>, IntValue::NativeType>>
         extractValueArguments(const std::vector<ValueHolder>& valueArguments);
     };

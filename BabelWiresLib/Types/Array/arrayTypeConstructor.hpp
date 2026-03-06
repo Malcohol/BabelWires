@@ -24,7 +24,7 @@ namespace babelwires {
         static TypeExp makeTypeExp(TypeExp entryType, unsigned int minSize, unsigned int maxSize, unsigned int defaultSize = 0);
 
       private:
-        /// Throws a TypeSystem exception if the arguments are not of the expected type.
+        /// Returns an error if the arguments are not of the expected type.
         static ResultT<std::tuple<unsigned int, unsigned int, unsigned int>>
         extractValueArguments(const std::vector<ValueHolder>& valueArguments);
     };

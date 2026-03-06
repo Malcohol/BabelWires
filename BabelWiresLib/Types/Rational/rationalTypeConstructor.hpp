@@ -26,7 +26,7 @@ namespace babelwires {
         static TypeExp makeTypeExp(Rational min, Rational max, Rational defaultValue = 0);
 
       private:
-        /// Throws a TypeSystem exception if the arguments are not of the expect type.
+        /// Returns an error if the arguments are not of the expect type.
         static ResultT<std::tuple<Range<Rational>, Rational>>
         extractValueArguments(const std::vector<ValueHolder>& valueArguments);
     };

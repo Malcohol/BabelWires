@@ -28,7 +28,7 @@ namespace babelwires {
         /// Convenience method.
         static TypeExp makeTypeExp(unsigned int typeVariableIndex = 0, unsigned int numGenericTypeLevels = 0);
 
-        /// Throws a TypeSystem exception if the arguments are not of the expected type.
+        /// Returns an error if the arguments are not of the expected type.
         static ResultT<TypeVariableData> extractValueArguments(const std::vector<ValueHolder>& valueArguments);
     };
 } // namespace babelwires
