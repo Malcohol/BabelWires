@@ -28,6 +28,7 @@ namespace babelwires {
         static babelwires::ShortId getStepToValue();
 
         /// Instantiate the type variables using the given type type assignment.
+        /// The number of type variable assignments must not greater than the number of variables in this GenericType.
         void setTypeVariableAssignmentAndInstantiate(const TypeSystem& typeSystem, ValueHolder& genericValue,
                                                      const std::vector<TypeExp>& typeVariableAssignments) const;
 
