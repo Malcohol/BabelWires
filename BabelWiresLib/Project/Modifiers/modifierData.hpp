@@ -30,8 +30,8 @@ namespace babelwires {
         /// Identifies the ValueTreeNode being modified.
         Path m_targetPath;
 
-        /// Find the target ValueTreeNode within the container, or throw.
-        ValueTreeNode* getTarget(ValueTreeNode* container) const;
+        /// Find the target ValueTreeNode within the container.
+        ResultT<ValueTreeNode&> getTarget(ValueTreeNode* container) const;
 
         /// A factory method constructing the appropriate modifier.
         virtual std::unique_ptr<Modifier> createModifier() const = 0;

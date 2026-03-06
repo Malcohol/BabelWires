@@ -49,7 +49,13 @@ void babelwires::ConnectionModifier::applyConnection(const Project& project, Use
 
     try {
         const babelwires::ConnectionModifierData& data = getModifierData();
-        target = data.getTarget(container);
+        const auto targetResult = data.getTarget(container);
+        if (!targetResult) {
+            userLogger.logError() << "Failed to apply operation: " << targetResult.error().toString();
+            setFailed(state, targetResult.error().toString());
+            return;
+        }
+        target = &*targetResult;
         state = State::SourceMissing;
         const ValueTreeNode* source = data.getSourceTreeNode(project);
         state = State::ApplicationFailed;

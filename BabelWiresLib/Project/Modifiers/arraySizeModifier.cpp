@@ -33,44 +33,44 @@ bool babelwires::ArraySizeModifier::addArrayEntries(UserLogger& userLogger, Valu
                                                     int numEntriesToAdd) {
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
     State state = State::TargetMissing;
-    try {
-        ArraySizeModifierData& data = getModifierData();
-        ValueTreeNode* target = data.getTarget(container);
-        state = State::ApplicationFailed;
-        const auto result = data.addEntries(target, indexOfNewElement, numEntriesToAdd);
-        if (!result) {
-            userLogger.logError() << "Failed to add entries to an array: " << result.error().toString();
-            setFailed(state, result.error().toString());
-            return false;
-        }
-        setSucceeded();
-        return true;
-    } catch (const BaseException& e) {
-        userLogger.logError() << "Failed to add entries to an array: " << e.what();
-        setFailed(state, e.what());
+    ArraySizeModifierData& data = getModifierData();
+    const auto targetResult = data.getTarget(container);
+    if (!targetResult) {
+        userLogger.logError() << "Failed to add entries to an array: " << targetResult.error().toString();
+        setFailed(state, targetResult.error().toString());
         return false;
     }
+    ValueTreeNode* target = &*targetResult;
+    state = State::ApplicationFailed;
+    const auto result = data.addEntries(target, indexOfNewElement, numEntriesToAdd);
+    if (!result) {
+        userLogger.logError() << "Failed to add entries to an array: " << result.error().toString();
+        setFailed(state, result.error().toString());
+        return false;
+    }
+    setSucceeded();
+    return true;
 }
 
 bool babelwires::ArraySizeModifier::removeArrayEntries(UserLogger& userLogger, ValueTreeNode* container,
                                                        int indexOfElementToRemove, int numEntriesToRemove) {
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
     State state = State::TargetMissing;
-    try {
-        ArraySizeModifierData& data = getModifierData();
-        ValueTreeNode* target = data.getTarget(container);
-        state = State::ApplicationFailed;
-        const auto result = data.removeEntries(target, indexOfElementToRemove, numEntriesToRemove);
-        if (!result) {
-            userLogger.logError() << "Failed to remove entries from an array: " << result.error().toString();
-            setFailed(state, result.error().toString());
-            return false;
-        }
-        setSucceeded();
-        return true;
-    } catch (const BaseException& e) {
-        userLogger.logError() << "Failed to remove entries from an array: " << e.what();
-        setFailed(state, e.what());
+    ArraySizeModifierData& data = getModifierData();
+    const auto targetResult = data.getTarget(container);
+    if (!targetResult) {
+        userLogger.logError() << "Failed to remove entries from an array: " << targetResult.error().toString();
+        setFailed(state, targetResult.error().toString());
         return false;
     }
+    ValueTreeNode* target = &*targetResult;
+    state = State::ApplicationFailed;
+    const auto result = data.removeEntries(target, indexOfElementToRemove, numEntriesToRemove);
+    if (!result) {
+        userLogger.logError() << "Failed to remove entries from an array: " << result.error().toString();
+        setFailed(state, result.error().toString());
+        return false;
+    }
+    setSucceeded();
+    return true;
 }
