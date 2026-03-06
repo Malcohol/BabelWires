@@ -6,7 +6,6 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Domains/TestDomain/testArrayType.hpp>
@@ -151,9 +150,8 @@ TEST(ArrayTypeTest, setSizeArrayCanBeEmpty) {
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 0);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
-    EXPECT_THROW(arrayType.setSize(testEnvironment.m_typeSystem, valueHolder,
-                                   testDomain::TestSimpleArrayType::s_maximumSize + 1),
-                 babelwires::ModelException);
+    EXPECT_FALSE(arrayType.setSize(testEnvironment.m_typeSystem, valueHolder,
+                                   testDomain::TestSimpleArrayType::s_maximumSize + 1));
 }
 
 TEST(ArrayTypeTest, setSizeArrayCannotBeEmpty) {
@@ -184,9 +182,8 @@ TEST(ArrayTypeTest, setSizeArrayCannotBeEmpty) {
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), testDomain::TestCompoundArrayType::s_maximumSize);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
-    EXPECT_THROW(arrayType.setSize(testEnvironment.m_typeSystem, valueHolder,
-                                   testDomain::TestCompoundArrayType::s_minimumSize - 1),
-                 babelwires::ModelException);
+    EXPECT_FALSE(arrayType.setSize(testEnvironment.m_typeSystem, valueHolder,
+                                   testDomain::TestCompoundArrayType::s_minimumSize - 1));
 }
 
 TEST(ArrayTypeTest, insertEntries) {
@@ -220,7 +217,7 @@ TEST(ArrayTypeTest, insertEntries) {
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 7);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
-    EXPECT_THROW(arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 5, 4), babelwires::ModelException);
+    EXPECT_FALSE(arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 5, 4));
 
     arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 7, 3);
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 10);
@@ -232,7 +229,7 @@ TEST(ArrayTypeTest, insertEntries) {
         }
     }
 
-    EXPECT_THROW(arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 5, 1), babelwires::ModelException);
+    EXPECT_FALSE(arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 5, 1));
 }
 
 TEST(ArrayTypeTest, removeEntriesArrayCanBeEmpty) {
@@ -276,10 +273,10 @@ TEST(ArrayTypeTest, removeEntriesArrayCanBeEmpty) {
         }
     }
 
-    EXPECT_THROW(arrayType.removeEntries(valueHolder, 4, 1), babelwires::ModelException);
-    EXPECT_THROW(arrayType.removeEntries(valueHolder, 3, 1), babelwires::ModelException);
-    EXPECT_THROW(arrayType.removeEntries(valueHolder, 2, 2), babelwires::ModelException);
-    EXPECT_THROW(arrayType.removeEntries(valueHolder, 0, 4), babelwires::ModelException);
+    EXPECT_FALSE(arrayType.removeEntries(valueHolder, 4, 1));
+    EXPECT_FALSE(arrayType.removeEntries(valueHolder, 3, 1));
+    EXPECT_FALSE(arrayType.removeEntries(valueHolder, 2, 2));
+    EXPECT_FALSE(arrayType.removeEntries(valueHolder, 0, 4));
 
     arrayType.removeEntries(valueHolder, 0, 3);
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 0);
@@ -302,19 +299,19 @@ TEST(ArrayTypeTest, removeEntriesArrayCannotBeEmpty) {
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 4);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
-    EXPECT_THROW(arrayType.removeEntries(valueHolder, 0, 3), babelwires::ModelException);
+    EXPECT_FALSE(arrayType.removeEntries(valueHolder, 0, 3));
 
     arrayType.removeEntries(valueHolder, 0, 1);
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 3);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
-    EXPECT_THROW(arrayType.removeEntries(valueHolder, 0, 2), babelwires::ModelException);
+    EXPECT_FALSE(arrayType.removeEntries(valueHolder, 0, 2));
 
     arrayType.removeEntries(valueHolder, 0, 1);
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 2);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
-    EXPECT_THROW(arrayType.removeEntries(valueHolder, 0, 1), babelwires::ModelException);
+    EXPECT_FALSE(arrayType.removeEntries(valueHolder, 0, 1));
 }
 
 TEST(ArrayTypeTest, arrayTypeConstructorSucceed) {
@@ -577,25 +574,23 @@ TEST(ArrayTypeTest, valueHash) {
     EXPECT_EQ(value0->getHash(), value1->getHash());
 }
 
-TEST(ArrayTypeTest, exceptions) {
+TEST(ArrayTypeTest, errors) {
     testUtils::TestEnvironment testEnvironment;
     testDomain::TestCompoundArrayType arrayType(testEnvironment.m_typeSystem);
 
     babelwires::ValueHolder value = arrayType.createValue(testEnvironment.m_typeSystem);
     EXPECT_TRUE(value);
 
-    EXPECT_THROW(
-        arrayType.setSize(testEnvironment.m_typeSystem, value, testDomain::TestCompoundArrayType::s_maximumSize + 1),
-        babelwires::ModelException);
-    EXPECT_THROW(
-        arrayType.setSize(testEnvironment.m_typeSystem, value, testDomain::TestCompoundArrayType::s_minimumSize - 1),
-        babelwires::ModelException);
+    EXPECT_FALSE(
+        arrayType.setSize(testEnvironment.m_typeSystem, value, testDomain::TestCompoundArrayType::s_maximumSize + 1));
+    EXPECT_FALSE(
+        arrayType.setSize(testEnvironment.m_typeSystem, value, testDomain::TestCompoundArrayType::s_minimumSize - 1));
 
-    EXPECT_NO_THROW(
+    EXPECT_TRUE(
         arrayType.setSize(testEnvironment.m_typeSystem, value, testDomain::TestCompoundArrayType::s_maximumSize));
-    EXPECT_THROW(arrayType.insertEntries(testEnvironment.m_typeSystem, value, 0, 1), babelwires::ModelException);
+    EXPECT_FALSE(arrayType.insertEntries(testEnvironment.m_typeSystem, value, 0, 1));
 
-    EXPECT_NO_THROW(
+    EXPECT_TRUE(
         arrayType.setSize(testEnvironment.m_typeSystem, value, testDomain::TestCompoundArrayType::s_minimumSize));
-    EXPECT_THROW(arrayType.removeEntries(value, 0, 1), babelwires::ModelException);
+    EXPECT_FALSE(arrayType.removeEntries(value, 0, 1));
 }

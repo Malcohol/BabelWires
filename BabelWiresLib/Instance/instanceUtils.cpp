@@ -10,6 +10,7 @@
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 const babelwires::ValueTreeNode& babelwires::InstanceUtils::getChild(const babelwires::ValueTreeNode& recordTreeNode,
                                                             babelwires::ShortId id) {
@@ -82,7 +83,8 @@ void babelwires::InstanceUtils::setArraySize(babelwires::ValueTreeNode& arrayTre
     const auto& typeSystem = arrayTreeNode.getTypeSystem();
     babelwires::ValueHolder value = arrayTreeNode.getValue();
     value.copyContentsAndGetNonConst();
-    type.setSize(typeSystem, value, newSize);
+    const auto result = type.setSize(typeSystem, value, newSize);
+    THROW_ON_ERROR(result, ModelException);
     arrayTreeNode.setValue(value);
 }
 

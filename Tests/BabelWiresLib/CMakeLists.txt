@@ -24,7 +24,7 @@ SET( LIB_TESTS_SRCS
     enumUnionTypeConstructorTest.cpp
     nodeConnectionTest.cpp
     nodeTest.cpp
-    featurePathTest.cpp
+    valueTreeNodePathTest.cpp
     editTreeTest.cpp
     genericTypeTest.cpp
     intValueTest.cpp
