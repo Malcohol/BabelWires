@@ -17,8 +17,9 @@
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <algorithm>
 #include <array>
@@ -30,23 +31,30 @@ namespace {
         return babelwires::ArrayTypeConstructor::makeTypeExp(std::move(entryType), 1, 16);
     }
 
-    std::vector<babelwires::RecordType::FieldDefinition>&& addArray(std::vector<babelwires::RecordType::FieldDefinition>&& commonData,
-                                                          babelwires::ShortId arrayId, babelwires::TypeExp entryType) {
-        commonData.emplace_back(babelwires::RecordType::FieldDefinition{arrayId, getParallelArray(std::move(entryType))});
+    std::vector<babelwires::RecordType::FieldDefinition>&&
+    addArray(std::vector<babelwires::RecordType::FieldDefinition>&& commonData, babelwires::ShortId arrayId,
+             babelwires::TypeExp entryType) {
+        commonData.emplace_back(
+            babelwires::RecordType::FieldDefinition{arrayId, getParallelArray(std::move(entryType))});
         return std::move(commonData);
     }
 } // namespace
 
-babelwires::ParallelProcessorInputBase::ParallelProcessorInputBase(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, std::vector<RecordType::FieldDefinition> commonData,
+babelwires::ParallelProcessorInputBase::ParallelProcessorInputBase(TypeExp&& typeExpOfThis,
+                                                                   const TypeSystem& typeSystem,
+                                                                   std::vector<RecordType::FieldDefinition> commonData,
                                                                    ShortId arrayId, TypeExp entryType)
     : RecordType(std::move(typeExpOfThis), typeSystem, addArray(std::move(commonData), arrayId, entryType)) {}
 
-babelwires::ParallelProcessorOutputBase::ParallelProcessorOutputBase(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, ShortId arrayId, TypeExp entryType)
+babelwires::ParallelProcessorOutputBase::ParallelProcessorOutputBase(TypeExp&& typeExpOfThis,
+                                                                     const TypeSystem& typeSystem, ShortId arrayId,
+                                                                     TypeExp entryType)
     : RecordType(std::move(typeExpOfThis), typeSystem, {{arrayId, getParallelArray(std::move(entryType))}}) {}
 
 babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectContext, const TypeExp& parallelInputExp,
                                                  const TypeExp& parallelOutputExp)
-    : Processor(projectContext, parallelInputExp.assertResolve(projectContext.m_typeSystem), parallelOutputExp.assertResolve(projectContext.m_typeSystem)) {
+    : Processor(projectContext, parallelInputExp.assertResolve(projectContext.m_typeSystem),
+                parallelOutputExp.assertResolve(projectContext.m_typeSystem)) {
 #ifndef NDEBUG
     auto inputType = getInput().getType()->as<ParallelProcessorInputBase>();
     auto outputType = getOutput().getType()->as<ParallelProcessorOutputBase>();

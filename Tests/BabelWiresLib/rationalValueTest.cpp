@@ -2,8 +2,6 @@
 
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
-
 #include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
 #include <BaseLib/Serialization/XML/xmlSerializer.hpp>
 

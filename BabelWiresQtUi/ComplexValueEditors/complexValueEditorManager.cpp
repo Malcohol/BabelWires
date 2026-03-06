@@ -7,8 +7,6 @@
  **/
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditorManager.hpp>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
-
 #include <BaseLib/Log/userLogger.hpp>
 
 void babelwires::ComplexValueEditorManager::openEditorForValue(QWidget* parent, ProjectGraphModel& projectGraphModel,

@@ -8,7 +8,6 @@
 #include <BabelWiresLib/Path/path.hpp>
 
 #include <BabelWiresLib/Path/pathStep.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
