@@ -16,7 +16,7 @@
 
 #include <Tests/TestUtils/testLog.hpp>
 
-TEST(FeaturePathTest, pathConstructFromSteps) {
+TEST(ValueTreeNodePathTest, pathConstructFromSteps) {
     std::vector<babelwires::PathStep> steps = {*babelwires::PathStep::deserializeFromString("Hello'2"), 13,
                                                *babelwires::PathStep::deserializeFromString("Hello'3"),
                                                *babelwires::PathStep::deserializeFromString("World'1")};
@@ -36,7 +36,7 @@ TEST(FeaturePathTest, pathConstructFromSteps) {
     EXPECT_EQ(path.getStep(3).asField()->getDiscriminator(), 1);
 }
 
-TEST(FeaturePathTest, pathOps) {
+TEST(ValueTreeNodePathTest, pathOps) {
     babelwires::Path path1;
 
     path1.pushStep(babelwires::PathStep("Forb"));
@@ -69,7 +69,7 @@ TEST(FeaturePathTest, pathOps) {
     EXPECT_EQ(path2.getNumSteps(), 0);
 }
 
-TEST(FeaturePathTest, append) {
+TEST(ValueTreeNodePathTest, append) {
     babelwires::Path path0(
         std::vector<babelwires::PathStep>{*babelwires::PathStep::deserializeFromString("Hello'2"), 13});
     babelwires::Path path1(
@@ -87,7 +87,7 @@ TEST(FeaturePathTest, append) {
     }
 }
 
-TEST(FeaturePathTest, removePrefix) {
+TEST(ValueTreeNodePathTest, removePrefix) {
     babelwires::Path path(
         std::vector<babelwires::PathStep>{*babelwires::PathStep::deserializeFromString("Hello'2"), 13,
                                           *babelwires::PathStep::deserializeFromString("Hello'3"),
@@ -100,7 +100,7 @@ TEST(FeaturePathTest, removePrefix) {
     }
 }
 
-TEST(FeaturePathTest, pathIteration) {
+TEST(ValueTreeNodePathTest, pathIteration) {
     babelwires::Path path1;
 
     path1.pushStep(babelwires::PathStep("Forb"));
@@ -116,7 +116,7 @@ TEST(FeaturePathTest, pathIteration) {
 }
 
 
-TEST(FeaturePathTest, pathFollow) {
+TEST(ValueTreeNodePathTest, pathFollow) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot testRecordFeature(testEnvironment.m_typeSystem,
@@ -157,7 +157,7 @@ TEST(FeaturePathTest, pathFollow) {
     EXPECT_EQ(info.m_pathToSubRecordInt.getStep(1).getField(), testDomain::TestSimpleRecordType::getInt0Id());
 }
 
-TEST(FeaturePathTest, pathResolve) {
+TEST(ValueTreeNodePathTest, pathResolve) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::Path pathToInt;
@@ -200,7 +200,7 @@ TEST(FeaturePathTest, pathResolve) {
     EXPECT_EQ(tryFollowPath(pathToInt2, testRecordFeature), &info.m_subRecordInt);
 }
 
-TEST(FeaturePathTest, pathTryFollow) {
+TEST(ValueTreeNodePathTest, pathTryFollow) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot testRecordFeature(testEnvironment.m_typeSystem,
@@ -218,7 +218,7 @@ TEST(FeaturePathTest, pathTryFollow) {
     EXPECT_EQ(tryFollowPath(info.m_pathToSubRecordInt, testRecordFeature), &info.m_subRecordInt);
 }
 
-TEST(FeaturePathTest, pathFollowFail) {
+TEST(ValueTreeNodePathTest, pathFollowFail) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::Path pathToNonField;
@@ -255,7 +255,7 @@ TEST(FeaturePathTest, pathFollowFail) {
     EXPECT_EQ(tryFollowPath(pathValueAsArray, testRecordFeature), nullptr);
 }
 
-TEST(FeaturePathTest, pathSerialization) {
+TEST(ValueTreeNodePathTest, pathSerialization) {
     babelwires::Path path;
 
     EXPECT_EQ(path.serializeToString(), "");
@@ -272,7 +272,7 @@ TEST(FeaturePathTest, pathSerialization) {
     EXPECT_EQ(path.serializeToString(), "Forb'2/Erm'4/12");
 }
 
-TEST(FeaturePathTest, pathDeserialization) {
+TEST(ValueTreeNodePathTest, pathDeserialization) {
     EXPECT_EQ(babelwires::Path::deserializeFromString("").value().getNumSteps(), 0);
 
     babelwires::Path path1;
@@ -313,7 +313,7 @@ TEST(FeaturePathTest, pathDeserialization) {
     EXPECT_FALSE(babelwires::Path::deserializeFromString("Foo/Erm/").has_value());
 }
 
-TEST(FeaturePathTest, pathHash) {
+TEST(ValueTreeNodePathTest, pathHash) {
     babelwires::Path path;
     const std::size_t hashWhenEmpty = path.getHash();
 
