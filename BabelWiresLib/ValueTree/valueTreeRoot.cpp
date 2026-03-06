@@ -58,7 +58,7 @@ void babelwires::ValueTreeRoot::doSetToDefault() {
 
 void babelwires::ValueTreeRoot::setDescendentValue(const Path& path, const ValueHolder& newValue) {
     ValueHolder newRootValue = getValue();
-    auto [_, valueInCopy] = followPathNonConst(m_typeSystem, *getType(), path, newRootValue);
+    auto [_, valueInCopy] = assertFollowPathNonConst(m_typeSystem, *getType(), path, newRootValue);
     valueInCopy = newValue;
     reconcileChangesAndSynchronizeChildren(m_typeSystem, newRootValue, path);
 }
