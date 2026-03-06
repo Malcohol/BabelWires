@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+// See error.hpp and resultDSL.hpp for user-friendly ways to create and handle results.
+
 #include <concepts>
 #include <expected>
 #include <string>
