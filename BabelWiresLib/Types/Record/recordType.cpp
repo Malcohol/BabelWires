@@ -10,7 +10,8 @@
 #include <BabelWiresLib/TypeSystem/subtypeUtils.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Record/recordValue.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+
+#include <BaseLib/Result/resultDSL.hpp>
 
 namespace {
     void addFields(const babelwires::TypeSystem& typeSystem, std::vector<babelwires::RecordType::Field>& fields,
@@ -57,24 +58,25 @@ std::string babelwires::RecordType::getFlavour() const {
     return "record";
 }
 
-const babelwires::RecordType::Field& babelwires::RecordType::getField(ShortId fieldId) const {
+const babelwires::RecordType::Field* babelwires::RecordType::tryGetField(ShortId fieldId) const {
     for (const auto& f : m_fields) {
         if (f.m_identifier == fieldId) {
-            return f;
+            return &f;
         }
     }
-    throw ModelException() << "Field " << fieldId << " not found in " << getTypeExp();
+    return nullptr;
+}
+
+const babelwires::RecordType::Field& babelwires::RecordType::getField(ShortId fieldId) const {
+    const Field* f = tryGetField(fieldId);
+    assert(f && "Field not found");
+    return *f;
 }
 
 void babelwires::RecordType::activateField(const TypeSystem& typeSystem, ValueHolder& value, ShortId fieldId) const {
     const Field& field = getField(fieldId);
-
-    if (field.m_optionality == Optionality::alwaysActive) {
-        throw ModelException() << "Field " << fieldId << " is not an optional and cannot be activated";
-    }
-    if (isActivated(value, fieldId)) {
-        throw ModelException() << "Field " << fieldId << " is already activated";
-    }
+    assert((field.m_optionality != Optionality::alwaysActive) && "Attempt to activate a non-optional field");
+    assert(!isActivated(value, fieldId) && "Attempt to activate a field that is already activated");
 
     RecordValue& recordValue = value.copyContentsAndGetNonConst().as<RecordValue>();
     // If the value happens to be already there, it gets overridden.
@@ -83,21 +85,16 @@ void babelwires::RecordType::activateField(const TypeSystem& typeSystem, ValueHo
 
 void babelwires::RecordType::deactivateField(ValueHolder& value, ShortId fieldId) const {
     const Field& field = getField(fieldId);
-
-    if (field.m_optionality == Optionality::alwaysActive) {
-        throw ModelException() << "Field " << fieldId << " is not an optional and cannot be deactivated";
-    }
-    if (!isActivated(value, fieldId)) {
-        throw ModelException() << "Field " << fieldId << " is not activated";
-    }
+    assert((field.m_optionality != Optionality::alwaysActive) && "Attempt to deactivate a non-optional field");
+    assert(isActivated(value, fieldId) && "Attempt to deactivate a field that is not activated");
 
     RecordValue& recordValue = value.copyContentsAndGetNonConst().as<RecordValue>();
     recordValue.removeValue(field.m_identifier);
 }
 
-void babelwires::RecordType::selectOptionals(const TypeSystem& typeSystem, ValueHolder& value,
+babelwires::Result babelwires::RecordType::selectOptionals(const TypeSystem& typeSystem, ValueHolder& value,
                                              const std::map<ShortId, bool>& optionalsState) const {
-    // Avoid modifying the value if we throw after partially processing the fields.
+    // Avoid modifying the value if we return an error after partially processing the fields.
     ValueHolder temp = value;
     RecordValue& recordValue = temp.copyContentsAndGetNonConst().as<RecordValue>();
 
@@ -125,9 +122,16 @@ void babelwires::RecordType::selectOptionals(const TypeSystem& typeSystem, Value
         }
     }
     if (count < optionalsState.size()) {
-        throw ModelException() << "Trying to set the state of an optional field which is not present in the record";
+        return Error() << "Trying to set the state of an optional field which is not present in the record";
     }
     value = temp;
+    return {};
+}
+
+void babelwires::RecordType::assertSelectOptionals(const TypeSystem& typeSystem, ValueHolder& value,
+                                                  const std::map<ShortId, bool>& optionalsState) const {
+    [[maybe_unused]] Result result = selectOptionals(typeSystem, value, optionalsState);
+    assert(result && "Failed to select optionals");
 }
 
 bool babelwires::RecordType::isOptional(ShortId fieldId) const {

@@ -70,7 +70,7 @@ void babelwires::SelectOptionalsModifierData::apply(ValueTreeNode* target) const
     if (auto recordType = target->getType()->tryAs<RecordType>()) {
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
-        recordType->selectOptionals(typeSystem, newValue, m_optionalsActivation);
+        THROW_ON_ERROR(recordType->selectOptionals(typeSystem, newValue, m_optionalsActivation), ModelException);
         target->setValue(newValue);
         return;
     }
