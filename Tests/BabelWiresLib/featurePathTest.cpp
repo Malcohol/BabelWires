@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Path/path.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
@@ -243,11 +242,11 @@ TEST(FeaturePathTest, pathFollowFail) {
 
     testDomain::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
-    EXPECT_THROW(followPath(pathToNonField, testRecordFeature), babelwires::ModelException);
-    EXPECT_THROW(followPath(pathToNonIndex, testRecordFeature), babelwires::ModelException);
-    EXPECT_THROW(followPath(pathOffEndOfArray, testRecordFeature), babelwires::ModelException);
-    EXPECT_THROW(followPath(pathValueAsRecord, testRecordFeature), babelwires::ModelException);
-    EXPECT_THROW(followPath(pathValueAsArray, testRecordFeature), babelwires::ModelException);
+    EXPECT_FALSE(followPath(pathToNonField, testRecordFeature));
+    EXPECT_FALSE(followPath(pathToNonIndex, testRecordFeature));
+    EXPECT_FALSE(followPath(pathOffEndOfArray, testRecordFeature));
+    EXPECT_FALSE(followPath(pathValueAsRecord, testRecordFeature));
+    EXPECT_FALSE(followPath(pathValueAsArray, testRecordFeature));
 
     EXPECT_EQ(tryFollowPath(pathToNonField, testRecordFeature), nullptr);
     EXPECT_EQ(tryFollowPath(pathToNonIndex, testRecordFeature), nullptr);
