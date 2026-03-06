@@ -79,7 +79,7 @@ TEST(SetTypeVariableModifierDataTest, failureNotAGenericType) {
 
     valueTree.setToDefault();
 
-    EXPECT_THROW(data.apply(&valueTree), babelwires::ModelException);
+    EXPECT_FALSE(data.apply(&valueTree));
 }
 
 TEST(SetTypeVariableModifierDataTest, failureTooFewTypeVariables) {
@@ -93,7 +93,7 @@ TEST(SetTypeVariableModifierDataTest, failureTooFewTypeVariables) {
 
     valueTree.setToDefault();
 
-    EXPECT_THROW(data.apply(&valueTree), babelwires::ModelException);
+    EXPECT_FALSE(data.apply(&valueTree));
 }
 
 
@@ -110,7 +110,7 @@ TEST(SetTypeVariableModifierDataTest, failureTooManyTypeVariables) {
 
     valueTree.setToDefault();
 
-    EXPECT_THROW(data.apply(&valueTree), babelwires::ModelException);
+    EXPECT_FALSE(data.apply(&valueTree));
 }
 
 TEST(SetTypeVariableModifierDataTest, clone) {

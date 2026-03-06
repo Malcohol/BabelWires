@@ -37,7 +37,12 @@ bool babelwires::ArraySizeModifier::addArrayEntries(UserLogger& userLogger, Valu
         ArraySizeModifierData& data = getModifierData();
         ValueTreeNode* target = data.getTarget(container);
         state = State::ApplicationFailed;
-        data.addEntries(target, indexOfNewElement, numEntriesToAdd);
+        const auto result = data.addEntries(target, indexOfNewElement, numEntriesToAdd);
+        if (!result) {
+            userLogger.logError() << "Failed to add entries to an array: " << result.error().toString();
+            setFailed(state, result.error().toString());
+            return false;
+        }
         setSucceeded();
         return true;
     } catch (const BaseException& e) {
@@ -55,7 +60,12 @@ bool babelwires::ArraySizeModifier::removeArrayEntries(UserLogger& userLogger, V
         ArraySizeModifierData& data = getModifierData();
         ValueTreeNode* target = data.getTarget(container);
         state = State::ApplicationFailed;
-        data.removeEntries(target, indexOfElementToRemove, numEntriesToRemove);
+        const auto result = data.removeEntries(target, indexOfElementToRemove, numEntriesToRemove);
+        if (!result) {
+            userLogger.logError() << "Failed to remove entries from an array: " << result.error().toString();
+            setFailed(state, result.error().toString());
+            return false;
+        }
         setSucceeded();
         return true;
     } catch (const BaseException& e) {

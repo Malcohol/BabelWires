@@ -11,23 +11,22 @@
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
+#include <BaseLib/Result/resultDSL.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 
-void babelwires::ArraySizeModifierData::apply(ValueTreeNode* target) const {
+babelwires::Result babelwires::ArraySizeModifierData::apply(ValueTreeNode* target) const {
     if (const ArrayType* arrayType = target->getType()->tryAs<ArrayType>()) {
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
-        const auto result = arrayType->setSize(typeSystem, newValue, m_size);
-        THROW_ON_ERROR(result, ModelException);
+        DO_OR_ERROR(arrayType->setSize(typeSystem, newValue, m_size));
         target->setValue(newValue);
-        return;
+        return {};
     }
 
-    throw babelwires::ModelException() << "Cannot initialize size of non-array";
+    return babelwires::Error() << "Cannot initialize size of non-array";
 }
 
 std::unique_ptr<babelwires::Modifier> babelwires::ArraySizeModifierData::createModifier() const {
@@ -45,7 +44,7 @@ babelwires::Result babelwires::ArraySizeModifierData::deserializeContents(Deseri
     return {};
 }
 
-void babelwires::ArraySizeModifierData::addEntries(ValueTreeNode* target, int indexOfNewElement,
+babelwires::Result babelwires::ArraySizeModifierData::addEntries(ValueTreeNode* target, int indexOfNewElement,
                                                      int numEntriesToAdd) {
     assert((numEntriesToAdd > 0) && "numEntriesToAdd must be strictly positive");
     m_size += numEntriesToAdd;
@@ -53,16 +52,15 @@ void babelwires::ArraySizeModifierData::addEntries(ValueTreeNode* target, int in
     if (const ArrayType* arrayType = target->getType()->tryAs<ArrayType>()) {
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
-        const auto result = arrayType->insertEntries(typeSystem, newValue, indexOfNewElement, numEntriesToAdd);
-        THROW_ON_ERROR(result, ModelException);
+        DO_OR_ERROR(arrayType->insertEntries(typeSystem, newValue, indexOfNewElement, numEntriesToAdd));
         target->setValue(newValue);
-        return;
+        return {};
     }
 
-    throw babelwires::ModelException() << "Cannot resize non-array";
+    return babelwires::Error() << "Cannot resize non-array";
 }
 
-void babelwires::ArraySizeModifierData::removeEntries(ValueTreeNode* target, int indexOfElementToRemove,
+babelwires::Result babelwires::ArraySizeModifierData::removeEntries(ValueTreeNode* target, int indexOfElementToRemove,
                                                         int numEntriesToRemove) {
     assert((numEntriesToRemove > 0) && "numEntriesToRemove must be strictly positive");
     assert((m_size >= numEntriesToRemove) && "You can't have ArraySizeModifierData with negative size");
@@ -70,11 +68,10 @@ void babelwires::ArraySizeModifierData::removeEntries(ValueTreeNode* target, int
     
     if (const ArrayType* arrayType = target->getType()->tryAs<ArrayType>()) {
         ValueHolder newValue = target->getValue();
-        const auto result = arrayType->removeEntries(newValue, indexOfElementToRemove, numEntriesToRemove);
-        THROW_ON_ERROR(result, ModelException);
+        DO_OR_ERROR(arrayType->removeEntries(newValue, indexOfElementToRemove, numEntriesToRemove));
         target->setValue(newValue);
-        return;
+        return {};
     }
 
-    throw babelwires::ModelException() << "Cannot resize non-array";
+    return babelwires::Error() << "Cannot resize non-array";
 }

@@ -50,7 +50,7 @@ TEST(SelectRecordVariantModifierDataTest, failureNotATag) {
 
     valueFeature.setToDefault();
 
-    EXPECT_THROW(data.apply(&valueFeature), babelwires::ModelException);
+    EXPECT_FALSE(data.apply(&valueFeature));
 }
 
 TEST(SelectRecordVariantModifierDataTest, failureNotAUnion) {
@@ -61,7 +61,7 @@ TEST(SelectRecordVariantModifierDataTest, failureNotAUnion) {
     babelwires::ValueTreeRoot notARecordWithVariants(
         testEnvironment.m_typeSystem, testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultIntType>());
 
-    EXPECT_THROW(data.apply(&notARecordWithVariants), babelwires::ModelException);
+    EXPECT_FALSE(data.apply(&notARecordWithVariants));
 }
 
 TEST(SelectRecordVariantModifierDataTest, clone) {

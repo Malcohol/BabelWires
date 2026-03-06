@@ -7,10 +7,10 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/selectOptionalsModifierData.hpp>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
+#include <BaseLib/Result/resultDSL.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 
@@ -58,7 +58,7 @@ babelwires::Result babelwires::SelectOptionalsModifierData::deserializeContents(
             } else if (newObject->tryAs<SerializableOptional_Deactivate>()) {
                 m_optionalsActivation[newObject->m_optional] = false;
             } else {
-                throw ModelException() << "Problem deserializing activated/deactivated optional";
+                return Error() << "Problem deserializing activated/deactivated optional";
             }
             DO_OR_ERROR(it->advance());
         }
@@ -66,15 +66,15 @@ babelwires::Result babelwires::SelectOptionalsModifierData::deserializeContents(
     return {};
 }
 
-void babelwires::SelectOptionalsModifierData::apply(ValueTreeNode* target) const {
+babelwires::Result babelwires::SelectOptionalsModifierData::apply(ValueTreeNode* target) const {
     if (auto recordType = target->getType()->tryAs<RecordType>()) {
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
-        THROW_ON_ERROR(recordType->selectOptionals(typeSystem, newValue, m_optionalsActivation), ModelException);
+        DO_OR_ERROR(recordType->selectOptionals(typeSystem, newValue, m_optionalsActivation));
         target->setValue(newValue);
-        return;
+        return {};
     }
-    throw ModelException() << "Cannot activate optionals from a value which does not have optionals";
+    return Error() << "Cannot activate optionals from a value which does not have optionals";
 }
 
 void babelwires::SelectOptionalsModifierData::visitIdentifiers(IdentifierVisitor& visitor) {

@@ -56,7 +56,7 @@ TEST(SelectOptionalsModifierDataTest, failureNotOptionals) {
     data.setOptionalActivation(testDomain::TestComplexRecordType::getOpIntId(), true);
     data.setOptionalActivation("foo", true);
 
-    EXPECT_THROW(data.apply(&valueFeature), babelwires::ModelException);
+    EXPECT_FALSE(data.apply(&valueFeature));
 
     EXPECT_EQ(before, valueFeature.getValue());
 }
@@ -70,7 +70,7 @@ TEST(SelectOptionalsModifierDataTest, failureNotARecordWithOptionals) {
     babelwires::SelectOptionalsModifierData data;
     data.setOptionalActivation("op", true);
 
-    EXPECT_THROW(data.apply(&valueFeature), babelwires::ModelException);
+    EXPECT_FALSE(data.apply(&valueFeature));
 }
 
 TEST(SelectOptionalsModifierDataTest, clone) {

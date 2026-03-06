@@ -26,8 +26,9 @@ babelwires::ValueAssignmentData::ValueAssignmentData(ValueHolder value)
     assert(m_value->tryGetAsEditableValue());
 }
 
-void babelwires::ValueAssignmentData::apply(ValueTreeNode* target) const {
+babelwires::Result babelwires::ValueAssignmentData::apply(ValueTreeNode* target) const {
     target->setValue(m_value);
+    return {};
 }
 
 void babelwires::ValueAssignmentData::serializeContents(Serializer& serializer) const {

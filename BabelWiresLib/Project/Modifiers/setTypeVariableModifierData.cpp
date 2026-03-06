@@ -8,9 +8,9 @@
 #include <BabelWiresLib/Project/Modifiers/setTypeVariableModifierData.hpp>
 
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
+#include <BaseLib/Result/resultDSL.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 
@@ -37,17 +37,18 @@ void babelwires::SetTypeVariableModifierData::visitIdentifiers(IdentifierVisitor
     }
 }
 
-void babelwires::SetTypeVariableModifierData::apply(ValueTreeNode* target) const {
+babelwires::Result babelwires::SetTypeVariableModifierData::apply(ValueTreeNode* target) const {
     if (auto genericType = target->getType()->tryAs<GenericType>()) {
         ValueHolder newValue = target->getValue();
         if (m_typeAssignments.size() != genericType->getNumVariables()) {
-            throw ModelException()
+            return Error()
                 << "SetTypeVariable modifier has incorrect number of type assignments for Generic Type";
         }
         genericType->setTypeVariableAssignmentAndInstantiate(target->getTypeSystem(), newValue, m_typeAssignments);
         target->setValue(newValue);
+        return {};
     } else {
-        throw ModelException()
+        return Error()
             << "SetTypeVariable modifier applied to ValueTreeNode which does not have a Generic Type";
     }
 }

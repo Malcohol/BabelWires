@@ -36,7 +36,7 @@ TEST(ModifierDataTest, arrayInitializationApply) {
     EXPECT_EQ(arrayFeature.getNumChildren(), testDomain::TestSimpleArrayType::s_nonDefaultSize);
 
     babelwires::ValueTreeRoot notArrayFeature(testEnvironment.m_typeSystem, testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultIntType>());
-    EXPECT_THROW(data.apply(&notArrayFeature), babelwires::ModelException);
+    EXPECT_FALSE(data.apply(&notArrayFeature));
 }
 
 TEST(ModifierDataTest, arrayInitializationClone) {

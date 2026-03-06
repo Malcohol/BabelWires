@@ -15,7 +15,7 @@ namespace babelwires {
     struct SetTypeVariableModifierData : LocalModifierData {
         CLONEABLE(SetTypeVariableModifierData);
         SERIALIZABLE(SetTypeVariableModifierData, "setTypeVariable", LocalModifierData, 1);
-        virtual void apply(ValueTreeNode* target) const override;
+        virtual Result apply(ValueTreeNode* target) const override;
         void serializeContents(Serializer& serializer) const override;
         Result deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;

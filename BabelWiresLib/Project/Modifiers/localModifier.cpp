@@ -41,7 +41,13 @@ void babelwires::LocalModifier::applyIfLocal(UserLogger& userLogger, ValueTreeNo
         const LocalModifierData& data = getModifierData();
         target = data.getTarget(container);
         state = State::ApplicationFailed;
-        data.apply(target);
+        const auto result = data.apply(target);
+        if (!result) {
+            userLogger.logError() << "Failed to apply operation: " << result.error().toString();
+            target->setToDefault();
+            setFailed(state, result.error().toString());
+            return;
+        }
         setSucceeded();
     } catch (const BaseException& e) {
         userLogger.logError() << "Failed to apply operation: " << e.what();
