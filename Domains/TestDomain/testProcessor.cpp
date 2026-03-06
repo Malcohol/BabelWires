@@ -2,6 +2,7 @@
 
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 #include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
@@ -67,7 +68,7 @@ void testDomain::TestProcessor::processValue(babelwires::UserLogger& userLogger,
     } else {
         out.deactivateOpInt();
     }
-    out.getArray().setSize(2 + inputValue);
+    THROW_ON_ERROR(out.getArray().setSize(2 + inputValue), babelwires::ModelException);
     for (int i = 0; i < out.getArray().getSize(); ++i) {
         out.getArray().getEntry(i).set(in.getInt().get() + i);
     }

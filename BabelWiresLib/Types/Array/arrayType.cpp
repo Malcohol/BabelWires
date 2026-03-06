@@ -44,6 +44,13 @@ babelwires::Result babelwires::ArrayType::setSize(const TypeSystem& typeSystem, 
     return {};
 }
 
+void babelwires::ArrayType::assertSetSize(const TypeSystem& typeSystem, ValueHolder& value, unsigned int newSize) const {
+    assert((newSize >= m_minimumSize) && "The new array size is below the minimum");
+    assert((newSize <= m_maximumSize) && "The new array size is above the maximum");
+    ArrayValue& arrayValue = value.copyContentsAndGetNonConst().as<ArrayValue>();
+    arrayValue.setSize(typeSystem, *m_entryType, newSize);
+}
+
 babelwires::Result babelwires::ArrayType::insertEntries(const TypeSystem& typeSystem, ValueHolder& value, unsigned int indexOfNewElement, unsigned int numEntriesToAdd) const {
     assert((numEntriesToAdd > 0) && "insertEntries must actually add entries");
     const ArrayValue& current = value->as<ArrayValue>();

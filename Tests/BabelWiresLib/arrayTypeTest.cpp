@@ -142,11 +142,11 @@ TEST(ArrayTypeTest, setSizeArrayCanBeEmpty) {
     // contained value.
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 0);
 
-    arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, 1);
+    ASSERT_TRUE(arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, 1));
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 1);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
-    arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, 0);
+    ASSERT_TRUE(arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, 0));
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 0);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
@@ -173,12 +173,12 @@ TEST(ArrayTypeTest, setSizeArrayCannotBeEmpty) {
     // contained value.
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), testDomain::TestCompoundArrayType::s_maximumSize);
 
-    arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, testDomain::TestCompoundArrayType::s_maximumSize - 1);
+    ASSERT_TRUE(arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, testDomain::TestCompoundArrayType::s_maximumSize - 1));
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(),
               testDomain::TestCompoundArrayType::s_maximumSize - 1);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
-    arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, testDomain::TestCompoundArrayType::s_maximumSize);
+    ASSERT_TRUE(arrayType.setSize(testEnvironment.m_typeSystem, valueHolder, testDomain::TestCompoundArrayType::s_maximumSize));
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), testDomain::TestCompoundArrayType::s_maximumSize);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
@@ -209,17 +209,17 @@ TEST(ArrayTypeTest, insertEntries) {
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 4);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
-    arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 0, 1);
+    ASSERT_TRUE(arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 0, 1));
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 5);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
-    arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 2, 2);
+    ASSERT_TRUE(arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 2, 2));
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 7);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
     EXPECT_FALSE(arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 5, 4));
 
-    arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 7, 3);
+    ASSERT_TRUE(arrayType.insertEntries(testEnvironment.m_typeSystem, valueHolder, 7, 3));
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 10);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
     {
@@ -255,15 +255,15 @@ TEST(ArrayTypeTest, removeEntriesArrayCanBeEmpty) {
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 8);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
-    arrayType.removeEntries(valueHolder, 0, 1);
+    ASSERT_TRUE(arrayType.removeEntries(valueHolder, 0, 1));
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 7);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
-    arrayType.removeEntries(valueHolder, 2, 2);
+    ASSERT_TRUE(arrayType.removeEntries(valueHolder, 2, 2));
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 5);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
-    arrayType.removeEntries(valueHolder, 3, 2);
+    ASSERT_TRUE(arrayType.removeEntries(valueHolder, 3, 2));
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 3);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
     {
@@ -278,7 +278,7 @@ TEST(ArrayTypeTest, removeEntriesArrayCanBeEmpty) {
     EXPECT_FALSE(arrayType.removeEntries(valueHolder, 2, 2));
     EXPECT_FALSE(arrayType.removeEntries(valueHolder, 0, 4));
 
-    arrayType.removeEntries(valueHolder, 0, 3);
+    ASSERT_TRUE(arrayType.removeEntries(valueHolder, 0, 3));
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 0);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 }
@@ -301,13 +301,13 @@ TEST(ArrayTypeTest, removeEntriesArrayCannotBeEmpty) {
 
     EXPECT_FALSE(arrayType.removeEntries(valueHolder, 0, 3));
 
-    arrayType.removeEntries(valueHolder, 0, 1);
+    ASSERT_TRUE(arrayType.removeEntries(valueHolder, 0, 1));
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 3);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
     EXPECT_FALSE(arrayType.removeEntries(valueHolder, 0, 2));
 
-    arrayType.removeEntries(valueHolder, 0, 1);
+    ASSERT_TRUE(arrayType.removeEntries(valueHolder, 0, 1));
     EXPECT_EQ(valueHolder->as<babelwires::ArrayValue>().getSize(), 2);
     EXPECT_TRUE(arrayType.isValidValue(testEnvironment.m_typeSystem, *valueHolder));
 
@@ -510,7 +510,7 @@ TEST(ArrayTypeTest, nodeChanges) {
     EXPECT_FALSE(arrayNode.isChanged(babelwires::ValueTreeNode::Changes::SomethingChanged));
     {
         babelwires::ValueHolder value = arrayNode.getValue();
-        arrayType->setSize(testEnvironment.m_typeSystem, value, testDomain::TestSimpleArrayType::s_nonDefaultSize);
+        ASSERT_TRUE(arrayType->setSize(testEnvironment.m_typeSystem, value, testDomain::TestSimpleArrayType::s_nonDefaultSize));
         arrayNode.setValue(value);
     }
     EXPECT_TRUE(arrayNode.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
@@ -535,10 +535,10 @@ TEST(ArrayTypeTest, valueEquality) {
     EXPECT_TRUE(value0);
     EXPECT_EQ(value0, value1);
 
-    arrayType.setSize(testEnvironment.m_typeSystem, value0, testDomain::TestSimpleArrayType::s_nonDefaultSize);
+    ASSERT_TRUE(arrayType.setSize(testEnvironment.m_typeSystem, value0, testDomain::TestSimpleArrayType::s_nonDefaultSize));
     EXPECT_NE(value0, value1);
 
-    arrayType.setSize(testEnvironment.m_typeSystem, value1, testDomain::TestSimpleArrayType::s_nonDefaultSize);
+    ASSERT_TRUE(arrayType.setSize(testEnvironment.m_typeSystem, value1, testDomain::TestSimpleArrayType::s_nonDefaultSize));
     EXPECT_EQ(value0, value1);
 
     const auto& [childValue0, step0, typeExp0] = arrayType.getChildNonConst(value0, 2);
@@ -559,10 +559,10 @@ TEST(ArrayTypeTest, valueHash) {
     EXPECT_TRUE(value0);
     EXPECT_EQ(value0->getHash(), value1->getHash());
 
-    arrayType.setSize(testEnvironment.m_typeSystem, value0, testDomain::TestSimpleArrayType::s_nonDefaultSize);
+    ASSERT_TRUE(arrayType.setSize(testEnvironment.m_typeSystem, value0, testDomain::TestSimpleArrayType::s_nonDefaultSize));
     EXPECT_NE(value0->getHash(), value1->getHash());
 
-    arrayType.setSize(testEnvironment.m_typeSystem, value1, testDomain::TestSimpleArrayType::s_nonDefaultSize);
+    ASSERT_TRUE(arrayType.setSize(testEnvironment.m_typeSystem, value1, testDomain::TestSimpleArrayType::s_nonDefaultSize));
     EXPECT_EQ(value0->getHash(), value1->getHash());
 
     const auto& [childValue0, step0, typeExp0] = arrayType.getChildNonConst(value0, 2);

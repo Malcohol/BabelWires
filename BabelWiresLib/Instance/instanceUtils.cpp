@@ -10,7 +10,8 @@
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
+
+#include <BaseLib/Result/resultDSL.hpp>
 
 const babelwires::ValueTreeNode& babelwires::InstanceUtils::getChild(const babelwires::ValueTreeNode& recordTreeNode,
                                                             babelwires::ShortId id) {
@@ -78,14 +79,22 @@ unsigned int babelwires::InstanceUtils::getArraySize(const babelwires::ValueTree
     return arrayTreeNode.getNumChildren();
 }
 
-void babelwires::InstanceUtils::setArraySize(babelwires::ValueTreeNode& arrayTreeNode, unsigned int newSize) {
+babelwires::Result babelwires::InstanceUtils::setArraySize(babelwires::ValueTreeNode& arrayTreeNode, unsigned int newSize) {
     const auto& type = arrayTreeNode.getType()->as<babelwires::ArrayType>();
     const auto& typeSystem = arrayTreeNode.getTypeSystem();
     babelwires::ValueHolder value = arrayTreeNode.getValue();
     value.copyContentsAndGetNonConst();
-    const auto result = type.setSize(typeSystem, value, newSize);
-    THROW_ON_ERROR(result, ModelException);
+    DO_OR_ERROR(type.setSize(typeSystem, value, newSize));
     arrayTreeNode.setValue(value);
+    return {};
+}
+
+void babelwires::InstanceUtils::assertSetArraySize(babelwires::ValueTreeNode& arrayTreeNode, unsigned int newSize) {
+#ifndef NDEBUG
+    const auto result = 
+#endif
+    setArraySize(arrayTreeNode, newSize);
+    assert(result && "assertSetArraySize failed");
 }
 
 const babelwires::ValueTreeNode& babelwires::InstanceUtils::getChild(const babelwires::ValueTreeNode& arrayTreeNode, unsigned int index) {

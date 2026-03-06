@@ -24,8 +24,12 @@ namespace babelwires {
 
         unsigned int getSize() const { return InstanceUtils::getArraySize(this->m_valueTreeNode); }
         template <typename VALUE_TREE_NODE_M = VALUE_TREE_NODE>
-        std::enable_if_t<!std::is_const_v<VALUE_TREE_NODE_M>, void> setSize(unsigned int newSize) {
-            InstanceUtils::setArraySize(this->m_valueTreeNode, newSize);
+        std::enable_if_t<!std::is_const_v<VALUE_TREE_NODE_M>, Result> setSize(unsigned int newSize) {
+            return InstanceUtils::setArraySize(this->m_valueTreeNode, newSize);
+        }
+        template <typename VALUE_TREE_NODE_M = VALUE_TREE_NODE>
+        std::enable_if_t<!std::is_const_v<VALUE_TREE_NODE_M>, void> assertSetSize(unsigned int newSize) {
+            InstanceUtils::assertSetArraySize(this->m_valueTreeNode, newSize);
         }
         ConstInstance<ENTRY_TYPE> getEntry(unsigned int index) const {
             return InstanceUtils::getChild(this->m_valueTreeNode, index);

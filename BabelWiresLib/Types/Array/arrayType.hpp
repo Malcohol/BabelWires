@@ -31,6 +31,8 @@ namespace babelwires {
         std::string getFlavour() const override;
 
         Result setSize(const TypeSystem& typeSystem, ValueHolder& value, unsigned int newSize) const;
+        void assertSetSize(const TypeSystem& typeSystem, ValueHolder& value, unsigned int newSize) const;
+
         Result insertEntries(const TypeSystem& typeSystem, ValueHolder& value, unsigned int indexOfNewElement,
                            unsigned int numEntriesToAdd) const;
         Result removeEntries(ValueHolder& value, unsigned int indexOfElementToRemove,

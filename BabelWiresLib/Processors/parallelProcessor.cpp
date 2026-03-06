@@ -77,7 +77,7 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
         // In the old feature system I was able to maintain a mapping between input and output entries
         // to avoid this inefficiency. Perhaps that can be done with values too.
         shouldProcessAll = true;
-        InstanceUtils::setArraySize(arrayOutput, arrayInput.getNumChildren());
+        InstanceUtils::assertSetArraySize(arrayOutput, arrayInput.getNumChildren());
     }
 
     struct EntryData {
