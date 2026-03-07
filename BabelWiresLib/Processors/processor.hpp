@@ -9,6 +9,8 @@
 
 #include <BabelWiresLib/TypeSystem/typePtr.hpp>
 
+#include <BaseLib/Result/result.hpp>
+
 #include <memory>
 
 namespace babelwires {
@@ -36,9 +38,9 @@ namespace babelwires {
 
       protected:
         /// Note: Implementations do not need to worry about backing-up or resolving changes in the output.
-        virtual void processValue(UserLogger& userLogger, const ValueTreeNode& input, ValueTreeNode& output) const = 0;
+        virtual Result processValue(UserLogger& userLogger, const ValueTreeNode& input, ValueTreeNode& output) const = 0;
 
-        /// If an exception is thrown by processValue, then this is called.
+        /// If processValue returns a failure Result, then this is called.
         /// The default implementation sets the output to a default value of its type.
         /// This can be overridden if you want to report failure but have a more subtle effect on the output.
         virtual void onFailure() const;

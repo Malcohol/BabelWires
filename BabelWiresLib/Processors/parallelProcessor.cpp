@@ -17,14 +17,16 @@
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
+
+#include <BaseLib/Result/error.hpp>
 
 #include <algorithm>
 #include <array>
 #include <execution>
 #include <numeric>
+#include <sstream>
 
 namespace {
     babelwires::TypeExp getParallelArray(babelwires::TypeExp&& entryType) {
@@ -67,8 +69,8 @@ babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectCo
 #endif
 }
 
-void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const ValueTreeNode& input,
-                                                 ValueTreeNode& output) const {
+babelwires::Result babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const ValueTreeNode& input,
+                                                               ValueTreeNode& output) const {
     bool shouldProcessAll = false;
     // Iterate through all features _except_ for the array, look for changes to the common input.
     for (unsigned int i = 0; i < input.getNumChildren() - 1; ++i) {
@@ -130,16 +132,16 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
 
     if (isFailed) {
         // TODO: Need a more precise way to signal failure.
-        ModelException compositeException;
+        Error compositeError;
         const char* newline = "";
         for (const auto& entry : entriesToProcess) {
             if (!entry.m_failureString.empty()) {
-                compositeException << newline << "Failure processing entry " << getPathTo(&entry.m_inputEntry) << ": "
-                                   << entry.m_failureString;
+                compositeError << newline << "Failure processing entry " << getPathTo(&entry.m_inputEntry)
+                               << ": " << entry.m_failureString;
                 newline = "\n";
             }
         }
-        throw compositeException;
+        return std::move(compositeError);
     }
 
     ArrayValue newOutput = arrayOutput.getValue()->as<ArrayValue>();
@@ -147,4 +149,5 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
         newOutput.setValue(data.m_index, data.m_outputEntry->getValue());
     }
     arrayOutput.assertSetValue(std::move(newOutput));
+    return {};
 }

@@ -46,7 +46,7 @@ namespace babelwires {
                           const TypeExp& parallelOutput);
 
       protected:
-        void processValue(UserLogger& userLogger, const ValueTreeNode& input,
+        Result processValue(UserLogger& userLogger, const ValueTreeNode& input,
                           ValueTreeNode& output) const override final;
 
         virtual Result processEntry(UserLogger& userLogger, const ValueTreeNode& input,
