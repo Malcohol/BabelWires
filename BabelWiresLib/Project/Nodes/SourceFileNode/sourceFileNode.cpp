@@ -7,20 +7,19 @@
  **/
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNode.hpp>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
-#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
+#include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
-#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <BaseLib/Log/userLogger.hpp>
 
 babelwires::SourceFileNode::SourceFileNode(const ProjectContext& context, UserLogger& userLogger,
-                                                 const SourceFileNodeData& data, NodeId newId)
+                                           const SourceFileNodeData& data, NodeId newId)
     : FileNode(data, newId) {
     reload(context, userLogger);
 }
@@ -79,44 +78,40 @@ babelwires::FileNode::FileOperations babelwires::SourceFileNode::getSupportedFil
 bool babelwires::SourceFileNode::reload(const ProjectContext& context, UserLogger& userLogger) {
     const SourceFileNodeData& data = getNodeData();
 
-    try {
-        const auto formatResult = context.m_sourceFileFormatReg.getRegisteredEntry(data.m_factoryIdentifier);
-        if (!formatResult) {
-            userLogger.logError() << "Could not create Source File Node id=" << data.m_id
-                                  << ": " << formatResult.error().toString();
-            setFactoryName(data.m_factoryIdentifier);
-            setInternalFailure(formatResult.error().toString());
-            auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, context.m_typeSystem.getRegisteredType<FailureType>());
-            failure->setToDefault();
-            setValueTreeRoot(std::move(failure));
-            return false;
-        }
-        const SourceFileFormat& format = **formatResult;
-        setFactoryName(format.getName());
-
-        if (data.m_filePath.empty()) {
-            throw ModelException() << "No file name";
-        }
-
-        auto result = format.loadFromFile(data.m_filePath, context, userLogger);
-        if (!result) {
-            userLogger.logError() << "Source File Node id=" << data.m_id << " could not be loaded: " << result.error().toString();
-            setInternalFailure(result.error().toString());
-            auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, context.m_typeSystem.getRegisteredType<FailureType>());
-            failure->setToDefault();
-            setValueTreeRoot(std::move(failure));
-            return false;
-        }
-        setValueTreeRoot(std::move(*result));
-        clearInternalFailure();
-        return true;
-    } catch (const BaseException& e) {
-        userLogger.logError() << "Source File Node id=" << data.m_id << " could not be loaded: " << e.what();
-        setInternalFailure(e.what());
+    const auto onFailure = [this, context](std::string error) {
+        setInternalFailure(std::move(error));
         // A dummy file root which allows the user to change the file via the context menu.
-        auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem, context.m_typeSystem.getRegisteredType<FailureType>());
+        auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem,
+                                                       context.m_typeSystem.getRegisteredType<FailureType>());
         failure->setToDefault();
         setValueTreeRoot(std::move(failure));
+    };
+
+    const auto formatResult = context.m_sourceFileFormatReg.getRegisteredEntry(data.m_factoryIdentifier);
+    if (!formatResult) {
+        userLogger.logError() << "Could not create Source File Node id=" << data.m_id << ": "
+                              << formatResult.error().toString();
+        setFactoryName(data.m_factoryIdentifier);
+        onFailure(formatResult.error().toString());
+        return false;
     }
-    return false;
+    const SourceFileFormat& format = **formatResult;
+    setFactoryName(format.getName());
+
+    if (data.m_filePath.empty()) {
+        userLogger.logError() << "Source File Node id=" << data.m_id << " could not be loaded: " << "No file name";
+        onFailure("No file name");
+        return false;
+    }
+
+    auto loadResult = format.loadFromFile(data.m_filePath, context, userLogger);
+    if (!loadResult) {
+        userLogger.logError() << "Source File Node id=" << data.m_id
+                              << " could not be loaded: " << loadResult.error().toString();
+        onFailure(loadResult.error().toString());
+        return false;
+    }
+    setValueTreeRoot(std::move(*loadResult));
+    clearInternalFailure();
+    return true;
 }
