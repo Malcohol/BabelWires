@@ -25,7 +25,7 @@ namespace babelwires {
         }
         template <typename VALUE_TREE_NODE_M = VALUE_TREE_NODE>
         std::enable_if_t<!std::is_const_v<VALUE_TREE_NODE_M>, void> set(typename IntValue::NativeType newValue) {
-            this->m_valueTreeNode.setValue(IntValue(newValue));
+            this->m_valueTreeNode.assertSetValue(IntValue(newValue));
         }
     };
 

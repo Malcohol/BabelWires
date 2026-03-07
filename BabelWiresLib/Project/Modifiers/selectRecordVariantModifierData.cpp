@@ -30,7 +30,7 @@ babelwires::Result babelwires::SelectRecordVariantModifierData::apply(ValueTreeN
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
         DO_OR_ERROR(recordType->selectTag(typeSystem, newValue, m_tagToSelect));
-        target->setValue(newValue);
+        target->assertSetValue(newValue);
         return {};
     }
     return Error() << "Select variant modifier applied to ValueTreeNode which does not have variants";

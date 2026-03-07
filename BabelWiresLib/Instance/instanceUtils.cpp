@@ -44,7 +44,7 @@ babelwires::ValueTreeNode& babelwires::InstanceUtils::activateAndGetChild(babelw
     if (!recordType.isActivated(recordValue, id)) {
         const babelwires::TypeSystem& typeSystem = recordTreeNode.getTypeSystem();
         recordType.activateField(typeSystem, recordValue, id);
-        recordTreeNode.setValue(recordValue);
+        recordTreeNode.assertSetValue(recordValue);
     }
     return getChild(recordTreeNode, id);
 }
@@ -55,7 +55,7 @@ void babelwires::InstanceUtils::deactivateChild(babelwires::ValueTreeNode& recor
     babelwires::ValueHolder recordValue = recordTreeNode.getValue();
     if (recordType.isActivated(recordValue, id)) {
         recordType.deactivateField(recordValue, id);
-        recordTreeNode.setValue(recordValue);
+        recordTreeNode.assertSetValue(recordValue);
     }
 }
 
@@ -71,7 +71,7 @@ void babelwires::InstanceUtils::selectTag(ValueTreeNode& valueTreeNode, ShortId 
     if (tag != type.getSelectedTag(value)) {
         const babelwires::TypeSystem& typeSystem = valueTreeNode.getTypeSystem();
         type.assertSelectTag(typeSystem, value, tag);
-        valueTreeNode.setValue(value);
+        valueTreeNode.assertSetValue(value);
     }
 }
 
@@ -85,7 +85,7 @@ babelwires::Result babelwires::InstanceUtils::setArraySize(babelwires::ValueTree
     babelwires::ValueHolder value = arrayTreeNode.getValue();
     value.copyContentsAndGetNonConst();
     DO_OR_ERROR(type.setSize(typeSystem, value, newSize));
-    arrayTreeNode.setValue(value);
+    arrayTreeNode.assertSetValue(value);
     return {};
 }
 

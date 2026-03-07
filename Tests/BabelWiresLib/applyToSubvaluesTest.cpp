@@ -35,7 +35,7 @@ class ApplyToSubvaluesTest : public ::testing::Test {
         babelwires::TypeSystem& typeSystem = m_testEnvironment.m_typeSystem;
         babelwires::ValueTreeRoot recordValueTreeNode(
             typeSystem, typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
-        recordValueTreeNode.setValue(m_recordValue);
+        ASSERT_TRUE(recordValueTreeNode.setValue(m_recordValue));
         testDomain::TestComplexRecordType::Instance recordInstance(recordValueTreeNode);
         EXPECT_EQ(recordInstance.getintR0().get(), 5 + offset);
         EXPECT_EQ(recordInstance.getintR1().get(), -3 + offset);

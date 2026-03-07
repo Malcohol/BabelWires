@@ -30,7 +30,7 @@ namespace babelwires {
 
       protected:
         void doSetToDefault() override;
-        void doSetValue(const ValueHolder& newValue) override;
+        Result doSetValue(const ValueHolder& newValue) override;
 
       private:
         struct ComplexConstructorArguments;

@@ -129,7 +129,7 @@ TEST(ModifierDataTest, assignFromFeatureBadConnectionApply) {
 
     babelwires::ConnectionModifierData data;
 
-    EXPECT_THROW(data.apply(&srcFeature, &targetFeature, false), babelwires::ModelException);
+    EXPECT_FALSE(data.apply(&srcFeature, &targetFeature, false));
 }
 
 TEST(ModifierDataTest, assignFromFeatureClone) {

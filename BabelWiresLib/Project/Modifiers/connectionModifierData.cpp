@@ -49,13 +49,13 @@ babelwires::ResultT<const babelwires::ValueTreeNode&> babelwires::ConnectionModi
     return *result;
 }
 
-void babelwires::ConnectionModifierData::apply(const ValueTreeNode* source, ValueTreeNode* target,
+babelwires::Result babelwires::ConnectionModifierData::apply(const ValueTreeNode* source, ValueTreeNode* target,
                                                bool applyEvenIfSourceUnchanged) const {
     if (!(applyEvenIfSourceUnchanged || source->isChanged(ValueTreeNode::Changes::SomethingChanged))) {
-        return;
+        return {};
     }
 
-    target->assign(*source);
+    return target->assign(*source);
 }
 
 void babelwires::ConnectionModifierData::serializeContents(Serializer& serializer) const {

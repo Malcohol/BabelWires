@@ -27,7 +27,7 @@ TEST(EnumFeatureTest, enumFeature) {
     babelwires::Instance<testDomain::TestEnum> enumInstance2{enumFeature2};
 
     enumFeature2.setToDefault();
-    enumFeature2.assign(enumFeature);
+    ASSERT_TRUE(enumFeature2.assign(enumFeature));
     EXPECT_EQ(enumInstance2.get(), testDomain::TestEnum::Value::Boo);
 }
 

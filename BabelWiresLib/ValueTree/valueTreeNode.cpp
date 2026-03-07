@@ -152,12 +152,17 @@ const babelwires::ValueHolder& babelwires::ValueTreeNode::getValue() const {
     return m_value;
 }
 
-void babelwires::ValueTreeNode::setValue(const ValueHolder& newValue) {
-    doSetValue(newValue);
+babelwires::Result babelwires::ValueTreeNode::setValue(const ValueHolder& newValue) {
+    return doSetValue(newValue);
 }
 
-void babelwires::ValueTreeNode::assign(const ValueTreeNode& other) {
-    setValue(other.getValue());
+void babelwires::ValueTreeNode::assertSetValue(const ValueHolder& newValue) {
+    const auto result = setValue(newValue);
+    assert(result && "setValue failed");
+}
+
+babelwires::Result babelwires::ValueTreeNode::assign(const ValueTreeNode& other) {
+    return setValue(other.getValue());
 }
 
 std::string babelwires::ValueTreeNode::getFlavour() const {

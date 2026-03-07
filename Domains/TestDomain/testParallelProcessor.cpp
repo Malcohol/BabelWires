@@ -1,5 +1,6 @@
 #include <Domains/TestDomain/testParallelProcessor.hpp>
 
+#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 namespace {
@@ -38,5 +39,8 @@ void testDomain::TestParallelProcessor::processEntry(babelwires::UserLogger& use
     const babelwires::ValueTreeNode& intValueTreeNode =
         input.assertGetChildFromStep(babelwires::PathStep("intVal"));
 
-    entryOut.set(entryIn.get() + intValueTreeNode.getValue()->as<babelwires::IntValue>().get());
+    // TODO Should be able to express the assignment with failure more naturally.
+
+    const auto sum = entryIn.get() + intValueTreeNode.getValue()->as<babelwires::IntValue>().get();
+    THROW_ON_ERROR(outputEntry.setValue(babelwires::IntValue(sum)), babelwires::ModelException);
 }

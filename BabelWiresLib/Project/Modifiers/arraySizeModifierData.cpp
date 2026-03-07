@@ -22,7 +22,7 @@ babelwires::Result babelwires::ArraySizeModifierData::apply(ValueTreeNode* targe
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
         DO_OR_ERROR(arrayType->setSize(typeSystem, newValue, m_size));
-        target->setValue(newValue);
+        target->assertSetValue(newValue);
         return {};
     }
 
@@ -53,7 +53,7 @@ babelwires::Result babelwires::ArraySizeModifierData::addEntries(ValueTreeNode* 
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
         DO_OR_ERROR(arrayType->insertEntries(typeSystem, newValue, indexOfNewElement, numEntriesToAdd));
-        target->setValue(newValue);
+        target->assertSetValue(newValue);
         return {};
     }
 
@@ -69,7 +69,7 @@ babelwires::Result babelwires::ArraySizeModifierData::removeEntries(ValueTreeNod
     if (const ArrayType* arrayType = target->getType()->tryAs<ArrayType>()) {
         ValueHolder newValue = target->getValue();
         DO_OR_ERROR(arrayType->removeEntries(newValue, indexOfElementToRemove, numEntriesToRemove));
-        target->setValue(newValue);
+        target->assertSetValue(newValue);
         return {};
     }
 

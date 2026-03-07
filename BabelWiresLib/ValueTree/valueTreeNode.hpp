@@ -66,7 +66,10 @@ namespace babelwires {
         const ValueHolder& getValue() const;
 
         /// Set this node to hold a new value.
-        void setValue(const ValueHolder& newValue);
+        Result setValue(const ValueHolder& newValue);
+
+        /// Set this node to hold the new value. Assert if the new value the operation cannot be performed.
+        void assertSetValue(const ValueHolder& newValue);
 
         /// The root of a ValueTree carries a reference to the TypeSystem, so it can be found from any node.
         const TypeSystem& getTypeSystem() const;
@@ -78,8 +81,7 @@ namespace babelwires {
         std::string getFlavour() const;
 
         /// Set this to hold the same value as other.
-        /// This will throw a ModelException if the assignment failed.
-        void assign(const ValueTreeNode& other);
+        Result assign(const ValueTreeNode& other);
 
       public:
         int getNumChildren() const;
@@ -135,7 +137,7 @@ namespace babelwires {
 
       protected:
         virtual void doSetToDefault() = 0;
-        virtual void doSetValue(const ValueHolder& newValue) = 0;
+        virtual Result doSetValue(const ValueHolder& newValue) = 0;
 
       private:
         // For now.

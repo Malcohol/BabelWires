@@ -22,7 +22,7 @@ namespace babelwires {
         ValueTreeChild(TypePtr typePtr, const ValueHolder& valueHolder, ValueTreeNode* owner);
 
       protected:
-        void doSetValue(const ValueHolder& newValue) override;
+        Result doSetValue(const ValueHolder& newValue) override;
         void doSetToDefault() override;
     };
 } // namespace babelwires

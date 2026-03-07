@@ -71,7 +71,7 @@ babelwires::Result babelwires::SelectOptionalsModifierData::apply(ValueTreeNode*
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
         DO_OR_ERROR(recordType->selectOptionals(typeSystem, newValue, m_optionalsActivation));
-        target->setValue(newValue);
+        target->assertSetValue(newValue);
         return {};
     }
     return Error() << "Cannot activate optionals from a value which does not have optionals";

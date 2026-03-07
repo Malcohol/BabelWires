@@ -27,7 +27,7 @@ babelwires::ValueAssignmentData::ValueAssignmentData(ValueHolder value)
 }
 
 babelwires::Result babelwires::ValueAssignmentData::apply(ValueTreeNode* target) const {
-    target->setValue(m_value);
+    DO_OR_ERROR(target->setValue(m_value));
     return {};
 }
 

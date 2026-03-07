@@ -409,7 +409,7 @@ TEST(RecordWithVariantsTypeTest, featureChanges) {
         babelwires::ValueHolder value = valueFeature.getValue();
         ASSERT_TRUE(recordWithVariantsType->selectTag(testEnvironment.m_typeSystem, value,
                                           testDomain::TestRecordWithVariantsType::getTagAId()));
-        valueFeature.setValue(value);
+        valueFeature.assertSetValue(value);
     }
     EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
     EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
@@ -419,7 +419,7 @@ TEST(RecordWithVariantsTypeTest, featureChanges) {
         babelwires::ValueHolder value = valueFeature.getValue();
         ASSERT_TRUE(recordWithVariantsType->selectTag(testEnvironment.m_typeSystem, value,
                                           testDomain::TestRecordWithVariantsType::getTagDId()));
-        valueFeature.setValue(value);
+        valueFeature.assertSetValue(value);
     }
     EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
     EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));

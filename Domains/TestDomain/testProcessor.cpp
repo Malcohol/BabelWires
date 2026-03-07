@@ -62,7 +62,7 @@ void testDomain::TestProcessor::processValue(babelwires::UserLogger& userLogger,
     const unsigned int inputValue = in.getInt().get();
 
     out.getInt().set(inputValue);
-    out.getRecord()->setValue(in.getRecord()->getValue());
+    THROW_ON_ERROR(out.getRecord()->setValue(in.getRecord()->getValue()), babelwires::ModelException);
     if (in.tryGetOpInt()) {
         out.activateAndGetOpInt().set(in.tryGetOpInt()->get());
     } else {

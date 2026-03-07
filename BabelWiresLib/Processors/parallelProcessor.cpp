@@ -94,7 +94,7 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
             : m_index(index)
             , m_inputEntry(inputEntry)
             , m_outputEntry(std::make_unique<ValueTreeRoot>(typeSystem, outputEntry.getType())) {
-            m_outputEntry->setValue(outputEntry.getValue());
+            m_outputEntry->assertSetValue(outputEntry.getValue());
         }
 
         const unsigned int m_index;
@@ -147,5 +147,5 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
     for (EntryData& data : entriesToProcess) {
         newOutput.setValue(data.m_index, data.m_outputEntry->getValue());
     }
-    arrayOutput.setValue(std::move(newOutput));
+    arrayOutput.assertSetValue(std::move(newOutput));
 }

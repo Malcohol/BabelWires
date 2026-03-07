@@ -511,7 +511,7 @@ TEST(ArrayTypeTest, nodeChanges) {
     {
         babelwires::ValueHolder value = arrayNode.getValue();
         ASSERT_TRUE(arrayType->setSize(testEnvironment.m_typeSystem, value, testDomain::TestSimpleArrayType::s_nonDefaultSize));
-        arrayNode.setValue(value);
+        arrayNode.assertSetValue(value);
     }
     EXPECT_TRUE(arrayNode.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
     EXPECT_FALSE(arrayNode.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));

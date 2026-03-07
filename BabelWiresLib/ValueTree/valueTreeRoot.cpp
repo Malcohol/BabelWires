@@ -13,6 +13,8 @@
 #include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
+#include <BaseLib/Result/error.hpp>
+
 struct babelwires::ValueTreeRoot::ComplexConstructorArguments {
     ComplexConstructorArguments(const TypeSystem& typeSystem, TypePtr typePtr)
         : m_typeSystem(typeSystem)
@@ -35,16 +37,17 @@ babelwires::ValueTreeRoot::ValueTreeRoot(ComplexConstructorArguments&& arguments
 babelwires::ValueTreeRoot::ValueTreeRoot(const TypeSystem& typeSystem, TypePtr typePtr)
     : ValueTreeRoot(ComplexConstructorArguments(typeSystem, std::move(typePtr))) {}
 
-void babelwires::ValueTreeRoot::doSetValue(const ValueHolder& newValue) {
+babelwires::Result babelwires::ValueTreeRoot::doSetValue(const ValueHolder& newValue) {
     if (getValue() != newValue) {
         const TypeSystem& typeSystem = getTypeSystem();
         const Type& type = *getType();
         if (type.isValidValue(typeSystem, *newValue)) {
             reconcileChangesAndSynchronizeChildren(m_typeSystem, newValue);
         } else {
-            throw ModelException() << "The new value is not a valid instance of " << getType()->getTypeExp().toString();
+            return Error() << "The new value is not a valid instance of " << getType()->getTypeExp().toString();
         }
     }
+    return {};
 }
 
 void babelwires::ValueTreeRoot::doSetToDefault() {

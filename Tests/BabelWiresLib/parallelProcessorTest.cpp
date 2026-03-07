@@ -56,7 +56,7 @@ TEST(ParallelProcessorTest, updateOutputOnChanges) {
     EXPECT_EQ(outputArray.getEntry(0).get(), 0);
 
     processor.getInput().clearChanges();
-    intValueTreeNode.setValue(babelwires::IntValue(1));
+    intValueTreeNode.assertSetValue(babelwires::IntValue(1));
     processor.process(testEnvironment.m_log);
     EXPECT_EQ(outputArray.getEntry(0).get(), 1);
 
@@ -105,7 +105,7 @@ TEST(ParallelProcessorTest, noUnnecessaryWorkDone) {
 
     processor.getInput().clearChanges();
     {
-        intValueTreeNode.setValue(babelwires::IntValue(4));
+        intValueTreeNode.assertSetValue(babelwires::IntValue(4));
         inputArray.setSize(2);
         inputArray.getEntry(0).set(5);
         inputArray.getEntry(1).set(6);
@@ -178,7 +178,7 @@ TEST(ParallelProcessorTest, testFailure) {
     EXPECT_EQ(outputArray.getEntry(0).get(), 0);
 
     processor.getInput().clearChanges();
-    intValueTreeNode.setValue(babelwires::IntValue(4));
+    intValueTreeNode.assertSetValue(babelwires::IntValue(4));
     inputArray.setSize(2);
     inputArray.getEntry(0).set(17);
     inputArray.getEntry(1).set(6);

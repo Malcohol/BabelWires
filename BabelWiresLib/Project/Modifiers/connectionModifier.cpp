@@ -68,7 +68,15 @@ void babelwires::ConnectionModifier::applyConnection(const Project& project, Use
         }
         const ValueTreeNode* source = &*sourceResult;
         state = State::ApplicationFailed;
-        data.apply(source, target, shouldForce);
+        const auto applyResult = data.apply(source, target, shouldForce);
+        if (!applyResult) {
+            userLogger.logError() << "Failed to apply operation: " << applyResult.error().toString();
+            if (target) {
+                target->setToDefault();
+            }
+            setFailed(state, applyResult.error().toString());
+            return;
+        }
         setSucceeded();
     } catch (const BaseException& e) {
         userLogger.logError() << "Failed to apply operation: " << e.what();

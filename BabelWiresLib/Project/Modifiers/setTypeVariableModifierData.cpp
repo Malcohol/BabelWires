@@ -45,7 +45,7 @@ babelwires::Result babelwires::SetTypeVariableModifierData::apply(ValueTreeNode*
                 << "SetTypeVariable modifier has incorrect number of type assignments for Generic Type";
         }
         genericType->setTypeVariableAssignmentAndInstantiate(target->getTypeSystem(), newValue, m_typeAssignments);
-        target->setValue(newValue);
+        target->assertSetValue(newValue);
         return {};
     } else {
         return Error()

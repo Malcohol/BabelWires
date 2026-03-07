@@ -16,7 +16,7 @@ namespace babelwires {
         ResultT<const ValueTreeNode&> getSourceTreeNode(const Project& project) const;
 
         /// Apply the source value to the target ValueTreeNode.
-        void apply(const ValueTreeNode* source, ValueTreeNode* target, bool applyEvenIfSourceUnchanged) const;
+        Result apply(const ValueTreeNode* source, ValueTreeNode* target, bool applyEvenIfSourceUnchanged) const;
 
         std::unique_ptr<Modifier> createModifier() const override;
 

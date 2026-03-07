@@ -449,7 +449,7 @@ TEST(RecordTypeTest, featureChanges) {
     {
         babelwires::ValueHolder value = valueFeature.getValue();
         recordType->activateField(testEnvironment.m_typeSystem, value, testDomain::TestComplexRecordType::getOpRecId());
-        valueFeature.setValue(value);
+        valueFeature.assertSetValue(value);
     }
     EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
     EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
@@ -468,7 +468,7 @@ TEST(RecordTypeTest, featureChanges) {
     {
         babelwires::ValueHolder value = valueFeature.getValue();
         recordType->deactivateField(value, testDomain::TestComplexRecordType::getOpRecId());
-        valueFeature.setValue(value);
+        valueFeature.assertSetValue(value);
     }
     EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
     EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
