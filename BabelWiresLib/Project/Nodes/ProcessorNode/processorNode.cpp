@@ -106,15 +106,15 @@ std::string babelwires::ProcessorNode::getRootLabel() const {
 void babelwires::ProcessorNode::doProcess(UserLogger& userLogger) {
     if (m_processor) {
         if (getInput()->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
-            try {
-                m_processor->process(userLogger);
+            Result result = m_processor->process(userLogger);
+            if (result) {
                 if (isFailed()) {
                     clearInternalFailure();
                 }
-            } catch (const BaseException& e) {
+            } else {
                 userLogger.logError() << "Processor id=" << getNodeId()
-                                      << " failed to process correctly: " << e.what();
-                setInternalFailure(e.what());
+                                      << " failed to process correctly: " << result.error().toString();
+                setInternalFailure(result.error().toString());
             }
         }
         if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {

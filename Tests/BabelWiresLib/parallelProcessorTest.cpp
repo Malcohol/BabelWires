@@ -7,7 +7,6 @@
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 
@@ -183,13 +182,8 @@ TEST(ParallelProcessorTest, testFailure) {
     inputArray.getEntry(0).set(17);
     inputArray.getEntry(1).set(6);
 
-    try {
-        processor.process(testEnvironment.m_log);
-        EXPECT_FALSE(true);
-    } catch (const babelwires::ModelException& e) {
-        EXPECT_TRUE(findPath(e.what(), *inputArray.getEntry(0)));
-        EXPECT_FALSE(findPath(e.what(), *inputArray.getEntry(1)));
-    } catch (...) {
-        ASSERT_FALSE(false);
-    }
+    babelwires::Result result = processor.process(testEnvironment.m_log);
+    ASSERT_FALSE(result);
+    EXPECT_TRUE(findPath(result.error().toString(), *inputArray.getEntry(0)));
+    EXPECT_FALSE(findPath(result.error().toString(), *inputArray.getEntry(1)));
 }
