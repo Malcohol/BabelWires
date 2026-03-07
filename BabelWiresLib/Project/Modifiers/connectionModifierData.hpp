@@ -12,8 +12,8 @@
 namespace babelwires {
     /// Data used to assign a value within a container to a value from another node.
     struct ConnectionModifierData : ModifierData {
-        /// Find the source ValueTreeNode in the project, or throw.
-        const ValueTreeNode* getSourceTreeNode(const Project& project) const;
+        /// Find the source ValueTreeNode in the project.
+        ResultT<const ValueTreeNode&> getSourceTreeNode(const Project& project) const;
 
         /// Apply the source value to the target ValueTreeNode.
         void apply(const ValueTreeNode* source, ValueTreeNode* target, bool applyEvenIfSourceUnchanged) const;
