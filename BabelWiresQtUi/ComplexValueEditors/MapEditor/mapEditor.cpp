@@ -193,7 +193,7 @@ void babelwires::MapEditor::applyMapToProject() {
 }
 
 const babelwires::ValueTreeNode& babelwires::MapEditor::getMapTreeNode(const AccessModelScope& scope) const {
-    const ValueTreeNode& mapTreeNode = ComplexValueEditor::getValueTreeNode(scope, getDataLocation());
+    const ValueTreeNode& mapTreeNode = ComplexValueEditor::assertGetValueTreeNode(scope, getDataLocation());
     assert(mapTreeNode.getType()->tryAs<MapType>() || mapTreeNode.getType()->tryAs<SumOfMapsType>());
     return mapTreeNode;
 }
