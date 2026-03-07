@@ -121,10 +121,9 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
         std::execution::par,
 #endif
         entriesToProcess.begin(), entriesToProcess.end(), [this, &input, &userLogger, &isFailed](EntryData& data) {
-            try {
-                processEntry(userLogger, input, data.m_inputEntry, *(data.m_outputEntry));
-            } catch (const BaseException& e) {
-                data.m_failureString = e.what();
+            Result result = processEntry(userLogger, input, data.m_inputEntry, *(data.m_outputEntry));
+            if (!result) {
+                data.m_failureString = result.error().toString();
                 isFailed = true;
             }
         });
