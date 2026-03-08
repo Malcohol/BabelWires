@@ -10,6 +10,8 @@
 
 #include <BaseLib/Result/result.hpp>
 
+#include <cassert>
+
 namespace babelwires {
     namespace Detail {
         /// When extracting from a ResultT<T>, we want to move the value out.

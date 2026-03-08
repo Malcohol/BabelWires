@@ -1,5 +1,7 @@
 #include <BaseLib/Math/rational.hpp>
 
+#include <BaseLib/Result/resultDSL.hpp>
+
 #include <gtest/gtest.h>
 
 #include <unordered_set>
@@ -160,7 +162,7 @@ TEST(RationalTest, deserializeFromString) {
 
 TEST(RationalTest, serializeDeserialize) {
     const auto serializeAndDeserialize = [](Rational r) {
-        return Rational::deserializeFromString(r.serializeToString()) == r;
+        return ASSERT_NO_ERROR(Rational::deserializeFromString(r.serializeToString())) == r;
     };
 
     EXPECT_TRUE(serializeAndDeserialize(Rational(0)));
