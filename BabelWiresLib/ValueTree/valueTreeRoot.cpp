@@ -11,7 +11,6 @@
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 #include <BaseLib/Result/error.hpp>
 

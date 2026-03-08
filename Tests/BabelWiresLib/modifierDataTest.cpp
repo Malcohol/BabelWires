@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>

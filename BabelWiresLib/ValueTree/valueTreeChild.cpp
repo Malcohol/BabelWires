@@ -9,7 +9,6 @@
 
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 

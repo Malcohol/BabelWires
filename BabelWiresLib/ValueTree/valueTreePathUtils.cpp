@@ -12,7 +12,6 @@
 #include <BabelWiresLib/Types/Generic/typeVariableData.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 babelwires::Path babelwires::getPathTo(const ValueTreeNode* valueTreeNode) {

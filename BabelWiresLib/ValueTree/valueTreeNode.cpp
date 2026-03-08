@@ -13,7 +13,6 @@
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeChild.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
