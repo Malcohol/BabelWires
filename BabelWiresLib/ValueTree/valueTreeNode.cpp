@@ -68,18 +68,9 @@ std::size_t babelwires::ValueTreeNode::getHash() const {
     return hash::mixtureOf(m_typePtr, m_value);
 }
 
-namespace {
-    void checkIndex(const babelwires::ValueTreeNode* f, int i) {
-        if ((i < 0) || (i >= f->getNumChildren())) {
-            throw babelwires::ModelException()
-                << "Compound with " << f->getNumChildren() << " children queried by index " << i;
-        }
-    }
-
-} // namespace
-
 babelwires::ValueTreeNode* babelwires::ValueTreeNode::getChild(int i) {
-    checkIndex(this, i);
+    assert((i >= 0) && "Negative child index");
+    assert((i < getNumChildren()) && "Child index out of range");
     const auto it = m_children.find1(i);
     if (it != m_children.end()) {
         return it.getValue().get();
@@ -88,7 +79,8 @@ babelwires::ValueTreeNode* babelwires::ValueTreeNode::getChild(int i) {
 }
 
 const babelwires::ValueTreeNode* babelwires::ValueTreeNode::getChild(int i) const {
-    checkIndex(this, i);
+    assert((i >= 0) && "Negative child index");
+    assert((i < getNumChildren()) && "Child index out of range");
     const auto it = m_children.find1(i);
     if (it != m_children.end()) {
         return it.getValue().get();
@@ -195,7 +187,7 @@ babelwires::PathStep babelwires::ValueTreeNode::getStepToChild(const ValueTreeNo
             return it.getKey0();
         }
     }
-    throw ModelException() << "Child not found in owner";
+    assert(false && "Child not found in owner");
 }
 
 int babelwires::ValueTreeNode::getChildIndexFromStep(const PathStep& step) const {

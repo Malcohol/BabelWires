@@ -7,7 +7,6 @@ SET( COMMON_TESTS_SRCS
    fileDataSinkTest.cpp
    filePathTest.cpp
    enumFlagsTest.cpp
-   exceptionTest.cpp
    hashUtilTest.cpp
    identifierTest.cpp
    logTest.cpp

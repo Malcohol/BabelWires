@@ -86,9 +86,13 @@ namespace babelwires {
       public:
         int getNumChildren() const;
 
+        /// Asserts that i is in range.
         ValueTreeNode* getChild(int i);
+        
+        /// Asserts that i is in range.
         const ValueTreeNode* getChild(int i) const;
 
+        /// Asserts that the given value is a child of this node. 
         PathStep getStepToChild(const ValueTreeNode* child) const;
 
         /// Returns nullptr if the step does not lead to a child.

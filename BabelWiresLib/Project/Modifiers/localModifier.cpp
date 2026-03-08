@@ -11,7 +11,6 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
-#include <BaseLib/exceptions.hpp>
 #include <BaseLib/Log/userLogger.hpp>
 
 #include <cassert>
