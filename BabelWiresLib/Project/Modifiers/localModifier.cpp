@@ -45,18 +45,12 @@ void babelwires::LocalModifier::applyIfLocal(UserLogger& userLogger, ValueTreeNo
     }
     ValueTreeNode& target = *targetResult;
     state = State::ApplicationFailed;
-    try {
-        const auto result = data.apply(&target);
-        if (!result) {
-            userLogger.logError() << "Failed to apply operation: " << result.error().toString();
-            target.setToDefault();
-            setFailed(state, result.error().toString());
-            return;
-        }
-        setSucceeded();
-    } catch (const BaseException& e) {
-        userLogger.logError() << "Failed to apply operation: " << e.what();
+    const auto result = data.apply(&target);
+    if (!result) {
+        userLogger.logError() << "Failed to apply operation: " << result.error().toString();
         target.setToDefault();
-        setFailed(state, e.what());
+        setFailed(state, result.error().toString());
+        return;
     }
+    setSucceeded();
 }

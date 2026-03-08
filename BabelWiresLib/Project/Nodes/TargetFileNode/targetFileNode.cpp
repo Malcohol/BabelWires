@@ -26,27 +26,20 @@ babelwires::TargetFileNode::TargetFileNode(const ProjectContext& context, UserLo
                                                  const TargetFileNodeData& data, NodeId newId)
     : FileNode(data, newId) {
     const NodeData& nodeData = getNodeData();
-    try {
-        setFactoryName(nodeData.m_factoryIdentifier);
-        const auto factoryResult = context.m_targetFileFormatReg.getRegisteredEntry(nodeData.m_factoryIdentifier);
-        if (!factoryResult) {
-            setInternalFailure(factoryResult.error().toString());
-            setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, context.m_typeSystem.getRegisteredType<FailureType>()));
-            userLogger.logError() << "Failed to create target id=" << nodeData.m_id
-                                  << ": " << factoryResult.error().toString();
-            return;
-        }
-        const TargetFileFormat& factory = **factoryResult;
-        setFactoryName(factory.getName());
-        auto newFeature = factory.createNewValue(context);
-        newFeature->setToDefault();
-        setValueTreeRoot(std::move(newFeature));
-    } catch (const BaseException& e) {
-        setInternalFailure(e.what());
+    setFactoryName(nodeData.m_factoryIdentifier);
+    const auto factoryResult = context.m_targetFileFormatReg.getRegisteredEntry(nodeData.m_factoryIdentifier);
+    if (!factoryResult) {
+        setInternalFailure(factoryResult.error().toString());
         setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.m_typeSystem, context.m_typeSystem.getRegisteredType<FailureType>()));
-        userLogger.logError() << "Failed to create target \"" << nodeData.m_factoryIdentifier
-                              << "\": " << e.what();
+        userLogger.logError() << "Failed to create target id=" << nodeData.m_id
+                                << ": " << factoryResult.error().toString();
+        return;
     }
+    const TargetFileFormat& factory = **factoryResult;
+    setFactoryName(factory.getName());
+    auto newFeature = factory.createNewValue(context);
+    newFeature->setToDefault();
+    setValueTreeRoot(std::move(newFeature));
 }
 
 babelwires::TargetFileNode::~TargetFileNode() = default;
