@@ -10,19 +10,24 @@
 
 #include <BaseLib/Result/result.hpp>
 
-namespace babelwires::detail {
-    /// When extracting from a ResultT<T>, we want to move the value out.
-    /// When extracting from a ResultT<T&>, we want to return the reference as-is.
-    template <typename T>
-    decltype(auto) extractValue(ResultT<T>& result) {
-        return std::move(*result);
-    }
+namespace babelwires {
+    namespace Detail {
+        /// When extracting from a ResultT<T>, we want to move the value out.
+        /// When extracting from a ResultT<T&>, we want to return the reference as-is.
+        template <typename T> decltype(auto) extractValue(ResultT<T>& result) {
+            return std::move(*result);
+        }
 
-    template <typename T>
-    T& extractValue(ResultT<T&>& result) {
-        return *result;
-    }
-}
+        template <typename T> T& extractValue(ResultT<T&>& result) {
+            return *result;
+        }
+
+        template <typename T> T assertNoError(const ResultT<T>& result) {
+            assert(result.has_value() && "No error expected");
+            return *result;
+        }
+    } // namespace Detail
+} // namespace babelwires
 
 // Helper macros
 
@@ -49,4 +54,4 @@ namespace babelwires::detail {
         babelwiresOnError();                                                                                           \
         return std::unexpected(BW_UNIQUE_NAME(assignOrErrorResult, __LINE__).error());                                 \
     }                                                                                                                  \
-    __VA_ARGS__ = ::babelwires::detail::extractValue(BW_UNIQUE_NAME(assignOrErrorResult, __LINE__));
+    __VA_ARGS__ = ::babelwires::Detail::extractValue(BW_UNIQUE_NAME(assignOrErrorResult, __LINE__));

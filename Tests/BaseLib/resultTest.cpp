@@ -275,6 +275,12 @@ TEST(ResultTest, returnError) {
     EXPECT_TRUE(onErrorCalled);
 }
 
+TEST(ResultTest, assertNoError) {
+    ASSERT_NO_ERROR(functionThatReturnsSuccess());
+    const int i = ASSERT_NO_ERROR(functionThatReturnsSuccessWithValue());
+    EXPECT_EQ(i, 42);
+}
+
 // Experimental macro allowing the caller to disable the last ON_ERROR handler.
 // It requires a new scope and can only be used for the innermost ON_ERROR, so it's
 // not very ergonomic.

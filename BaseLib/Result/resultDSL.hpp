@@ -53,6 +53,10 @@
 /// Return a newly constructed error, calling any ON_ERROR handlers in the scope before returning.
 #define RETURN_ERROR() RETURN_ERROR_VALUE(babelwires::Error())
 
+/// Unwraps an expression that returns a result and assert that the result is not an error.
+#define ASSERT_NO_ERROR(EXPRESSION_THAT_RETURNS_RESULT)                                                                \
+    babelwires::Detail::assertNoError(EXPRESSION_THAT_RETURNS_RESULT)
+
 /// The default error handler, which does nothing. It must be in the global namespace, because it is
 /// intended to get shadowed by a local variable when ON_ERROR is used.
 inline void babelwiresOnError() {}
