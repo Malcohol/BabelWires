@@ -13,12 +13,12 @@
 #include <BaseLib/Result/resultDSL.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
-#include <BaseLib/Utilities/downcastableHierarchy.hpp>
+#include <BaseLib/Utilities/downcastable.hpp>
 
 namespace {
     struct SerializableOptional : babelwires::Serializable {
         SERIALIZABLE_ABSTRACT(SerializableOptional, void);
-        DOWNCASTABLE_TYPE_HIERARCHY(SerializableOptional);
+        DOWNCASTABLE_BASE(SerializableOptional);
         void serializeContents(babelwires::Serializer& serializer) const {
             serializer.serializeValue("optional", m_optional);
         }
@@ -29,9 +29,11 @@ namespace {
     };
 
     struct SerializableOptional_Activate : SerializableOptional {
+        DOWNCASTABLE(SerializableOptional_Activate, SerializableOptional);
         SERIALIZABLE(SerializableOptional_Activate, "activate", SerializableOptional, 1);
     };
     struct SerializableOptional_Deactivate : SerializableOptional {
+        DOWNCASTABLE(SerializableOptional_Deactivate, SerializableOptional);
         SERIALIZABLE(SerializableOptional_Deactivate, "deactivate", SerializableOptional, 1);
     };
 }

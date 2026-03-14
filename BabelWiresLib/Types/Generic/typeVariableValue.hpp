@@ -14,6 +14,7 @@ namespace babelwires {
     /// A dummy value constructed by TypeVariableType.
     class TypeVariableValue : public Value {
       public:
+        DOWNCASTABLE(TypeVariableValue, Value);
         CLONEABLE(TypeVariableValue);
 
         TypeVariableValue() = default;

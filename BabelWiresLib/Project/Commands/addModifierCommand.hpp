@@ -20,6 +20,7 @@ namespace babelwires {
     /// Add a modifier to a Node.
     class AddModifierCommand : public CompoundCommand<Project> {
       public:
+        DOWNCASTABLE(AddModifierCommand, CompoundCommand<Project>);
         CLONEABLE(AddModifierCommand);
         AddModifierCommand(std::string commandName, NodeId targetId, std::unique_ptr<ModifierData> modifierToAdd);
         AddModifierCommand(const AddModifierCommand& other);

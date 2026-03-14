@@ -14,7 +14,7 @@
 #include <BaseLib/Cloning/cloneable.hpp>
 #include <BaseLib/Result/result.hpp>
 #include <BaseLib/Serialization/serializable.hpp>
-#include <BaseLib/Utilities/downcastableHierarchy.hpp>
+#include <BaseLib/Utilities/downcastable.hpp>
 
 namespace babelwires {
     class TypeSystem;
@@ -37,7 +37,7 @@ namespace babelwires {
 
     class MapEntryData : public Serializable, public Cloneable, public ProjectVisitable {
       public:
-        DOWNCASTABLE_TYPE_HIERARCHY(MapEntryData);
+        DOWNCASTABLE_BASE(MapEntryData);
         CLONEABLE_ABSTRACT(MapEntryData);
         SERIALIZABLE_ABSTRACT(MapEntryData, void);
 

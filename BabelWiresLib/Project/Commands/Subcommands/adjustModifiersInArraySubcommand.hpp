@@ -17,6 +17,7 @@ namespace babelwires {
     /// Adjust modifiers and connections which point into an array to adapt to shifted array elements.
     class AdjustModifiersInArraySubcommand : public CompoundCommand<Project> {
       public:
+        DOWNCASTABLE(AdjustModifiersInArraySubcommand, CompoundCommand<Project>);
         CLONEABLE(AdjustModifiersInArraySubcommand);
 
         /// If adjustments is negative, then the range startIndex to (startIndex - adjustment) is considered as being

@@ -19,6 +19,7 @@ namespace babelwires {
     /// Change the source file of a FileNode.
     class ChangeFileCommand : public SimpleCommand<Project> {
       public:
+        DOWNCASTABLE(ChangeFileCommand, SimpleCommand<Project>);
         CLONEABLE(ChangeFileCommand);
         ChangeFileCommand(std::string commandName, NodeId nodeId, std::filesystem::path newFilePath);
 

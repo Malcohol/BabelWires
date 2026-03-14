@@ -17,6 +17,7 @@ namespace babelwires {
     /// The command which pastes content into a project.
     class PasteNodesCommand : public SimpleCommand<Project> {
       public:
+        DOWNCASTABLE(PasteNodesCommand, SimpleCommand<Project>);
         CLONEABLE(PasteNodesCommand);
         PasteNodesCommand(std::string commandName, ProjectData dataToPaste);
 

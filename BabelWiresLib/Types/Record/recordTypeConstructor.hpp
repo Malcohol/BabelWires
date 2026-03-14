@@ -15,6 +15,7 @@ namespace babelwires {
     /// Construct a simple record from types and fieldIds.
     class RecordTypeConstructor : public TypeConstructor {
       public:
+        DOWNCASTABLE(RecordTypeConstructor, TypeConstructor);
         // Example: Record{a, b, c : String, Integer, String}
         TYPE_CONSTRUCTOR("Record", "Record{{[0|, ] : {0|, }}}", "295459cc-9485-4526-86ac-e8f27e4e7667", 1);
 

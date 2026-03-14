@@ -17,6 +17,7 @@ namespace babelwires {
     /// Remove an element from an array.
     class RemoveEntryFromArrayCommand : public CompoundCommand<Project> {
       public:
+        DOWNCASTABLE(RemoveEntryFromArrayCommand, CompoundCommand<Project>);
         CLONEABLE(RemoveEntryFromArrayCommand);
         RemoveEntryFromArrayCommand(std::string commandName, NodeId nodeId, Path featurePath,
                                     unsigned int indexOfEntryToRemove, unsigned int numEntriesToRemove);

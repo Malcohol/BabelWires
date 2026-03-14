@@ -20,6 +20,8 @@ namespace babelwires {
     /// supertype relationship).
     class MapType : public Type {
       public:
+        DOWNCASTABLE(MapType, Type);
+
         MapType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, TypeExp sourceTypeExp, TypeExp targetTypeExp,
                 MapEntryData::Kind defaultFallbackKind = MapEntryData::Kind::All21);
 

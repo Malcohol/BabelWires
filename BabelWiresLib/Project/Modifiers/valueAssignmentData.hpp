@@ -16,6 +16,7 @@ namespace babelwires {
     /// Data used to assign a Value within a container to a certain value.
     class ValueAssignmentData : public LocalModifierData {
       public:
+        DOWNCASTABLE(ValueAssignmentData, LocalModifierData);
         CLONEABLE(ValueAssignmentData);
         SERIALIZABLE(ValueAssignmentData, "assign", LocalModifierData, 1);
         

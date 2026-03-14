@@ -18,6 +18,7 @@ namespace babelwires {
     /// Add an element to an array.
     class ChangeEntryKindCommand : public SimpleCommand<MapProject> {
       public:
+        DOWNCASTABLE(ChangeEntryKindCommand, SimpleCommand<MapProject>);
         CLONEABLE(ChangeEntryKindCommand);
         ChangeEntryKindCommand(std::string commandName, MapEntryData::Kind kind, unsigned int indexOfEntry);
         ChangeEntryKindCommand(const ChangeEntryKindCommand& other);

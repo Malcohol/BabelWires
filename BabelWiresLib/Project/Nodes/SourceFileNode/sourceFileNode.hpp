@@ -23,6 +23,7 @@ namespace babelwires {
     /// SourceFileNodes are Nodes which correspond to a source file.
     class SourceFileNode : public FileNode {
       public:
+        DOWNCASTABLE(SourceFileNode, FileNode);
         SourceFileNode(const ProjectContext& context, UserLogger& userLogger, const SourceFileNodeData& data,
                           NodeId newId);
 

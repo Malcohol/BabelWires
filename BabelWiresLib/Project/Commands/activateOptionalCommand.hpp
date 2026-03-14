@@ -18,6 +18,7 @@ namespace babelwires {
     /// Activate an optional in a RecordType
     class ActivateOptionalCommand : public SimpleCommand<Project> {
       public:
+        DOWNCASTABLE(ActivateOptionalCommand, SimpleCommand<Project>);
         CLONEABLE(ActivateOptionalCommand);
         ActivateOptionalCommand(std::string commandName, NodeId nodeId, Path pathToRecord, ShortId optional);
 

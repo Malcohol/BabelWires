@@ -20,6 +20,7 @@ namespace babelwires {
 
     class ResizeNodeCommand : public SimpleCommand<Project> {
       public:
+        DOWNCASTABLE(ResizeNodeCommand, SimpleCommand<Project>);
         CLONEABLE(ResizeNodeCommand);
         ResizeNodeCommand(std::string commandName, NodeId nodeId, UiSize newSize);
 

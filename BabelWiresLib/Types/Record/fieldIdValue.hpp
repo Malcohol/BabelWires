@@ -16,6 +16,7 @@ namespace babelwires {
     /// This allows field identifiers to be made available to the RecordTypeConstructor.
     class FieldIdValue : public IdentifierValueBase<ShortId> {
       public:
+        DOWNCASTABLE(FieldIdValue, IdentifierValueBase<ShortId>);
         CLONEABLE(FieldIdValue);
         SERIALIZABLE(FieldIdValue, "fieldId", EditableValue, 1);
 

@@ -17,6 +17,8 @@ namespace babelwires {
     /// Common between RationalTypes constructed with a range and/or default.
     class RationalType : public Type {
       public:
+        DOWNCASTABLE(RationalType, Type);
+
         RationalType(TypeExp&& typeExpOfThis, Range<Rational> range = Range<Rational>(), Rational defaultValue = 0);
 
         /// Get the range of valid values.
@@ -39,6 +41,8 @@ namespace babelwires {
     /// The standard Int type which has a default of zero and allows the full range of IntValue::NativeType.
     class DefaultRationalType : public RationalType {
       public:
+        DOWNCASTABLE(DefaultRationalType, RationalType);
+
         DefaultRationalType();
 
         REGISTERED_TYPE("rational", "Rational", "995624d6-6f1d-4407-babd-66ec74989c07", 1);

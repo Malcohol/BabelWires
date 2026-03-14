@@ -12,6 +12,7 @@
 namespace babelwires {
     /// Describes the construction of a processor.
     struct ProcessorNodeData : NodeData {
+        DOWNCASTABLE(ProcessorNodeData, NodeData);
         CLONEABLE(ProcessorNodeData);
         CUSTOM_CLONEABLE(ProcessorNodeData);
         SERIALIZABLE(ProcessorNodeData, "processor", NodeData, 1);

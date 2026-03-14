@@ -18,6 +18,7 @@
 namespace babelwires {
     /// Describes the construction of a SourceFileFeature.
     struct SourceFileNodeData : NodeData {
+        DOWNCASTABLE(SourceFileNodeData, NodeData);
         CLONEABLE(SourceFileNodeData);
         CUSTOM_CLONEABLE(SourceFileNodeData);
         SERIALIZABLE(SourceFileNodeData, "sourceFile", NodeData, 1);

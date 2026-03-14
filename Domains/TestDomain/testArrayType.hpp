@@ -5,6 +5,8 @@
 namespace testDomain {
     class TestSimpleArrayType : public babelwires::ArrayType {
       public:
+        DOWNCASTABLE(TestSimpleArrayType, babelwires::ArrayType);
+
         TestSimpleArrayType(const babelwires::TypeSystem& typeSystem);
 
         static constexpr unsigned int s_minimumSize = 0;
@@ -19,6 +21,8 @@ namespace testDomain {
 
     class TestCompoundArrayType : public babelwires::ArrayType {
       public:
+        DOWNCASTABLE(TestCompoundArrayType, babelwires::ArrayType);
+
         TestCompoundArrayType(const babelwires::TypeSystem& typeSystem);
 
         static constexpr unsigned int s_minimumSize = 2;
@@ -33,6 +37,7 @@ namespace testDomain {
     /// ValueNodeData which creates an element carrying a simple array.
     class TestArrayElementData : public babelwires::ValueNodeData {
       public:
+        DOWNCASTABLE(TestArrayElementData, babelwires::ValueNodeData);
         TestArrayElementData();
 
         static babelwires::Path getPathToArray();

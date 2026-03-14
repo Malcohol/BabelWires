@@ -18,6 +18,7 @@ namespace babelwires {
     /// Add an element to an array.
     class ReplaceMapEntryCommand : public SimpleCommand<MapProject> {
       public:
+        DOWNCASTABLE(ReplaceMapEntryCommand, SimpleCommand<MapProject>);
         CLONEABLE(ReplaceMapEntryCommand);
         ReplaceMapEntryCommand(std::string commandName, std::unique_ptr<MapEntryData> newEntry, unsigned int indexOfReplacement);
         ReplaceMapEntryCommand(const ReplaceMapEntryCommand& other);

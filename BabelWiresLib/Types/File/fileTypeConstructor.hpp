@@ -14,6 +14,7 @@ namespace babelwires {
     /// Construct a new IntType from three IntValues: min, max and default.
     class FileTypeConstructor : public TypeConstructor {
       public:
+        DOWNCASTABLE(FileTypeConstructor, TypeConstructor);
         /// Note that the we don't represent the default in the name.
         TYPE_CONSTRUCTOR("File", "{{{0}}}", "a1fb6071-1a75-4568-b0fa-dce4e1d26610", 1);
 

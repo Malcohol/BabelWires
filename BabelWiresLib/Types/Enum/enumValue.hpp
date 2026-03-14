@@ -13,6 +13,7 @@ namespace babelwires {
 
     class EnumValue : public IdentifierValueBase<ShortId> {
       public:
+        DOWNCASTABLE(EnumValue, IdentifierValueBase<ShortId>);
         CLONEABLE(EnumValue);
         SERIALIZABLE(EnumValue, "enum", EditableValue, 1);
 

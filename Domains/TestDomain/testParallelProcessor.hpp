@@ -11,6 +11,7 @@ namespace testDomain {
 
     class TestParallelProcessorInput : public babelwires::ParallelProcessorInputBase {
       public:
+        DOWNCASTABLE(TestParallelProcessorInput, babelwires::ParallelProcessorInputBase);
         REGISTERED_TYPE("TestProcIn", "TestProcIn", "2b414a3b-fe41-41dc-894f-889e8e15f0ff", 1);
 
         TestParallelProcessorInput(const babelwires::TypeSystem& typeSystem);
@@ -18,6 +19,7 @@ namespace testDomain {
 
     class TestParallelProcessorOutput : public babelwires::ParallelProcessorOutputBase {
       public:
+        DOWNCASTABLE(TestParallelProcessorOutput, babelwires::ParallelProcessorOutputBase);
         REGISTERED_TYPE("TestProcOut", "TestProcOut", "b61c5cf6-cada-416e-8fca-57f360c346e9", 1);
 
         TestParallelProcessorOutput(const babelwires::TypeSystem& typeSystem);

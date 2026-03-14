@@ -16,6 +16,7 @@
 namespace {
     class TestSumOfMapsType : public babelwires::SumOfMapsType {
       public:
+        DOWNCASTABLE(TestSumOfMapsType, babelwires::SumOfMapsType);
         REGISTERED_TYPE_WITH_REGISTERED_ID(testUtils::getTestRegisteredMediumIdentifier("TestSumOfMaps"), 1);
         TestSumOfMapsType(const babelwires::TypeSystem& typeSystem)
             : babelwires::SumOfMapsType(getThisIdentifier(),

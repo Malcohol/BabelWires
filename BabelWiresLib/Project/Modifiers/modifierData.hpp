@@ -14,7 +14,7 @@
 #include <BaseLib/Cloning/cloneable.hpp>
 #include <BaseLib/Result/result.hpp>
 #include <BaseLib/Serialization/serializable.hpp>
-#include <BaseLib/Utilities/downcastableHierarchy.hpp>
+#include <BaseLib/Utilities/downcastable.hpp>
 
 namespace babelwires {
 
@@ -26,7 +26,7 @@ namespace babelwires {
     struct ModifierData : Cloneable, Serializable, ProjectVisitable {
         CLONEABLE_ABSTRACT(ModifierData);
         SERIALIZABLE_ABSTRACT(ModifierData, void);
-        DOWNCASTABLE_TYPE_HIERARCHY(ModifierData);
+        DOWNCASTABLE_BASE(ModifierData);
 
         /// Identifies the ValueTreeNode being modified.
         Path m_targetPath;
@@ -49,6 +49,7 @@ namespace babelwires {
 
     /// Base class for ModifierData which construct LocalModifiers.
     struct LocalModifierData : ModifierData {
+        DOWNCASTABLE(LocalModifierData, ModifierData);
         CLONEABLE_ABSTRACT(LocalModifierData);
         SERIALIZABLE_ABSTRACT(LocalModifierData, ModifierData);
 

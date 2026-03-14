@@ -16,6 +16,7 @@ namespace babelwires {
 
     class SetExpandedCommand : public SimpleCommand<Project> {
       public:
+        DOWNCASTABLE(SetExpandedCommand, SimpleCommand<Project>);
         CLONEABLE(SetExpandedCommand);
         SetExpandedCommand(std::string commandName, NodeId nodeId, Path pathToCompound, bool expanded);
 

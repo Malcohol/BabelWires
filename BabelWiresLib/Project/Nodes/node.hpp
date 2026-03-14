@@ -12,7 +12,7 @@
 #include <BabelWiresLib/Project/Nodes/editTree.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 
-#include <BaseLib/Utilities/downcastableHierarchy.hpp>
+#include <BaseLib/Utilities/downcastable.hpp>
 #include <BaseLib/Utilities/enumFlags.hpp>
 #include <BaseLib/Utilities/pointerRange.hpp>
 
@@ -35,7 +35,7 @@ namespace babelwires {
     /// Nodes expose input and output Features, and carry edits.
     class Node {
       public:
-        DOWNCASTABLE_TYPE_HIERARCHY(Node);
+        DOWNCASTABLE_BASE(Node);
 
         Node(const NodeData& data, NodeId newId);
         virtual ~Node();

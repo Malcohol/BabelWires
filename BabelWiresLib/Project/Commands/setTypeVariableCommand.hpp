@@ -18,6 +18,7 @@ namespace babelwires {
     /// Set the size of an array.
     class SetTypeVariableCommand : public CompoundCommand<Project> {
       public:
+        DOWNCASTABLE(SetTypeVariableCommand, CompoundCommand<Project>);
         CLONEABLE(SetTypeVariableCommand);
         SetTypeVariableCommand(std::string commandName, NodeId nodeId, Path pathToGenericType, unsigned int variableIndex,
                                     TypeExp newType);

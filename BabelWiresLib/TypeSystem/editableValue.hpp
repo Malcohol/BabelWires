@@ -19,6 +19,7 @@ namespace babelwires {
     /// Since EditableValues can be created directly, BabelWires must be able to serialize them.
     class EditableValue : public Value, public Serializable, public ProjectVisitable {
       public:
+        DOWNCASTABLE(EditableValue, Value);
         SERIALIZABLE_ABSTRACT(EditableValue, void);
         CLONEABLE_ABSTRACT(EditableValue);
 
@@ -41,6 +42,7 @@ namespace babelwires {
     /// A base class for Values that are always editable.
     class AlwaysEditableValue : public EditableValue {
       public:
+        DOWNCASTABLE(AlwaysEditableValue, EditableValue);
         SERIALIZABLE_ABSTRACT(AlwaysEditableValue, EditableValue);
         CLONEABLE_ABSTRACT(AlwaysEditableValue);
 

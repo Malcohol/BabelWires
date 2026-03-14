@@ -16,6 +16,8 @@ namespace babelwires {
     /// Common between IntTypes constructed with a range and/or default.
     class IntType : public Type {
       public:
+        DOWNCASTABLE(IntType, Type);
+
         IntType(TypeExp&& typeExpOfThis, Range<IntValue::NativeType> range = Range<IntValue::NativeType>(),
                 IntValue::NativeType defaultValue = 0);
 
@@ -39,6 +41,8 @@ namespace babelwires {
     /// The standard Int type which has a default of zero and allows the full range of IntValue::NativeType.
     class DefaultIntType : public IntType {
       public:
+        DOWNCASTABLE(DefaultIntType, IntType);
+
         DefaultIntType();
 
         REGISTERED_TYPE("int", "Integer", "90ed4c0c-2fa1-4373-9b67-e711358af824", 1);
@@ -47,6 +51,8 @@ namespace babelwires {
     /// An Int type which covers the range between 0 and the maximum NativeInt value.
     class NonNegativeIntType : public IntType {
       public:
+        DOWNCASTABLE(NonNegativeIntType, IntType);
+
         NonNegativeIntType();
 
         REGISTERED_TYPE("NonNegInt", "Non-Negative Integer", "33d35b26-d8ab-4af9-bc63-958ffb37b261", 1);

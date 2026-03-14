@@ -13,6 +13,7 @@ namespace babelwires {
 
     class IntValue : public AlwaysEditableValue {
       public:
+        DOWNCASTABLE(IntValue, AlwaysEditableValue);
         CLONEABLE(IntValue);
         SERIALIZABLE(IntValue, "int", EditableValue, 1);
 

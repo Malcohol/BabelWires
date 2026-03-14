@@ -23,6 +23,8 @@ namespace babelwires {
     /// processor's ProcessEntry call provides direct access.
     class ParallelProcessorInputBase : public RecordType {
       public:
+        DOWNCASTABLE(ParallelProcessorInputBase, RecordType);
+
         ParallelProcessorInputBase(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, std::vector<RecordType::FieldDefinition> commonInput, ShortId arrayId, TypeExp entryType);
     };
 
@@ -34,6 +36,8 @@ namespace babelwires {
     /// not be directly addressed in a versioning system. Have a think about whether that matters.
     class ParallelProcessorOutputBase : public RecordType {
       public:
+        DOWNCASTABLE(ParallelProcessorOutputBase, RecordType);
+
         ParallelProcessorOutputBase(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, ShortId arrayId, TypeExp entryType);
     };
 

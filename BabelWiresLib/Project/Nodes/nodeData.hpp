@@ -13,7 +13,7 @@
 
 #include <BaseLib/Cloning/cloneable.hpp>
 #include <BaseLib/Serialization/serializable.hpp>
-#include <BaseLib/Utilities/downcastableHierarchy.hpp>
+#include <BaseLib/Utilities/downcastable.hpp>
 #include <BaseLib/common.hpp>
 #include <BaseLib/Log/userLogger.hpp>
 
@@ -54,7 +54,7 @@ namespace babelwires {
         CLONEABLE_ABSTRACT(NodeData);
         CUSTOM_CLONEABLE_ABSTRACT(NodeData);
         SERIALIZABLE_ABSTRACT(NodeData, void);
-        DOWNCASTABLE_TYPE_HIERARCHY(NodeData);
+        DOWNCASTABLE_BASE(NodeData);
 
         NodeData() = default;
 

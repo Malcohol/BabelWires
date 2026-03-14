@@ -14,7 +14,7 @@
 #include <BaseLib/Identifiers/identifier.hpp>
 #include <BaseLib/Identifiers/registeredIdentifier.hpp>
 #include <BaseLib/Result/result.hpp>
-#include <BaseLib/Utilities/downcastableHierarchy.hpp>
+#include <BaseLib/Utilities/downcastable.hpp>
 
 #include <shared_mutex>
 
@@ -24,7 +24,7 @@ namespace babelwires {
     /// A mutable cache ensures that each type is only constructed once.
     class TypeConstructor {
       public:
-        DOWNCASTABLE_TYPE_HIERARCHY(TypeConstructor);
+        DOWNCASTABLE_BASE(TypeConstructor);
 
         virtual ~TypeConstructor();
 

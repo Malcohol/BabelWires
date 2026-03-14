@@ -16,6 +16,8 @@ namespace babelwires {
     /// The type always has a single child, which is the type it wraps.
     class GenericType : public CompoundType {
       public:
+        DOWNCASTABLE(GenericType, CompoundType);
+
         /// Create a generic type with the given number of variables.
         GenericType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, const TypeExp& wrappedType,
                     unsigned int numVariables);

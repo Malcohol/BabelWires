@@ -21,7 +21,7 @@ namespace babelwires {
     class AddNodeForTreeValueCommandBase : public Command<Project> {
       public:
         CLONEABLE_ABSTRACT(AddNodeForTreeValueCommandBase);
-
+        DOWNCASTABLE(AddNodeForTreeValueCommandBase, Command<Project>);
         AddNodeForTreeValueCommandBase(std::string commandName, NodeId originalNodeId, Path pathToValue, UiPosition positionForNewNode);
 
         /// For use after addition.

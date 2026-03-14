@@ -13,6 +13,7 @@ namespace babelwires {
     /// Construct a GenericType from a TypeExp and a number of type variables.
     class GenericTypeConstructor : public TypeConstructor {
       public:
+        DOWNCASTABLE(GenericTypeConstructor, TypeConstructor);
         TYPE_CONSTRUCTOR("Gen", "Gen<[0]>{{{0}}}", "56ff5848-9be4-4288-a893-eec7ef15e675", 1);
 
         ResultT<TypePtr> constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,

@@ -19,6 +19,7 @@
 namespace babelwires {
     /// Describes the construction of a TargetFileFeature.
     struct TargetFileNodeData : NodeData {
+        DOWNCASTABLE(TargetFileNodeData, NodeData);
         CLONEABLE(TargetFileNodeData);
         CUSTOM_CLONEABLE(TargetFileNodeData);
         SERIALIZABLE(TargetFileNodeData, "targetFile", NodeData, 1);

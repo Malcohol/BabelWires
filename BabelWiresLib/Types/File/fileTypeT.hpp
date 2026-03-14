@@ -19,6 +19,8 @@ namespace babelwires {
     /// for T (see instance.hpp). 
     template <typename T> class FileTypeT : public FileType {
       public:
+        DOWNCASTABLE(FileTypeT, FileType);
+
         FileTypeT()
             : FileType(T::getThisIdentifier()) {}
 

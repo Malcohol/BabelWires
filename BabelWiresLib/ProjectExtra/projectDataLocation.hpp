@@ -13,6 +13,7 @@ namespace babelwires {
 
     class ProjectDataLocation : public DataLocation {
       public:
+        DOWNCASTABLE(ProjectDataLocation, DataLocation);
         CLONEABLE(ProjectDataLocation);
         SERIALIZABLE(ProjectDataLocation, "projectLocation", void, 1);
 

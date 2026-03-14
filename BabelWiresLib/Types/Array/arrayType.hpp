@@ -16,6 +16,8 @@ namespace babelwires {
     /// ArrayTypes have values which contain a dynamically-sized sequence of child values.
     class ArrayType : public CompoundType {
       public:
+        DOWNCASTABLE(ArrayType, CompoundType);
+
         /// An initialSize of -1 means the initial size is the minimum size.
         ArrayType(TypeExp&& typeExpOfThis, TypePtr entryType, unsigned int minimumSize, unsigned int maximumSize,
                   int initialSize = -1);

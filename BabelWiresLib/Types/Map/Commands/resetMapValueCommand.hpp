@@ -21,8 +21,7 @@
      /// Reset the value back to a default value of the given type.
      /// This can be used to change the summand of a SumType.
      class ResetMapValueCommand : public SimpleCommand<MapProject> {
-       public:
-         CLONEABLE(ResetMapValueCommand);
+       public:        DOWNCASTABLE(ResetMapValueCommand, SimpleCommand<MapProject>);         CLONEABLE(ResetMapValueCommand);
          ResetMapValueCommand(std::string commandName, MapProjectDataLocation loc, TypeExp type);
  
          virtual bool initialize(const MapProject& map) override;
