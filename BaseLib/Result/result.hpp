@@ -118,11 +118,3 @@ namespace babelwires {
 
     using Result = ResultT<void>;
 } // namespace babelwires
-
-// Helper macro during the exception-to-result transition.
-#define THROW_ON_ERROR(RESULT, EXCEPTION_TYPE)                                                                         \
-    do {                                                                                                               \
-        if (!(RESULT)) {                                                                                               \
-            throw EXCEPTION_TYPE() << (RESULT).error().toString();                                                     \
-        }                                                                                                              \
-    } while (0);
