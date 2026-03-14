@@ -10,9 +10,8 @@
 #include <BabelWiresLib/Path/pathStep.hpp>
 
 #include <BaseLib/Cloning/cloneable.hpp>
+#include <BaseLib/Utilities/downcastableHierarchy.hpp>
 #include <BaseLib/Utilities/enumFlags.hpp>
-#include <BaseLib/common.hpp>
-
 
 #include <memory>
 

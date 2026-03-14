@@ -12,9 +12,9 @@
 #include <BabelWiresLib/Types/Enum/enumWithCppEnum.hpp>
 
 #include <BaseLib/Cloning/cloneable.hpp>
-#include <BaseLib/Serialization/serializable.hpp>
 #include <BaseLib/Result/result.hpp>
-#include <BaseLib/common.hpp>
+#include <BaseLib/Serialization/serializable.hpp>
+#include <BaseLib/Utilities/downcastableHierarchy.hpp>
 
 namespace babelwires {
     class TypeSystem;

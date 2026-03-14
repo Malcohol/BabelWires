@@ -13,6 +13,7 @@
 #include <BaseLib/Result/resultDSL.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
+#include <BaseLib/Utilities/downcastableHierarchy.hpp>
 
 namespace {
     struct SerializableOptional : babelwires::Serializable {

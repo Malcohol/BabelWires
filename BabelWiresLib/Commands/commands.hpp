@@ -9,13 +9,14 @@
 
 #include <BabelWiresLib/Commands/commandTimestamp.hpp>
 
-#include <BaseLib/common.hpp>
 #include <BaseLib/Cloning/cloneable.hpp>
+#include <BaseLib/Utilities/downcastableHierarchy.hpp>
 
 #include <chrono>
 #include <memory>
 #include <ostream>
 #include <string>
+#include <vector>
 #include <algorithm>
 #include <cassert>
 

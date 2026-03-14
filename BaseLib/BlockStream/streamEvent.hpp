@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BaseLib/Utilities/downcastableHierarchy.hpp>
 #include <BaseLib/common.hpp>
 
 #include <cassert>

@@ -11,6 +11,7 @@
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 #include <BaseLib/Identifiers/identifier.hpp>
+#include <BaseLib/Utilities/downcastableHierarchy.hpp>
 #include <BabelWiresLib/Path/pathStep.hpp>
 
 #include <optional>

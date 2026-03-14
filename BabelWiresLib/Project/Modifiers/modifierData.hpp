@@ -14,6 +14,7 @@
 #include <BaseLib/Cloning/cloneable.hpp>
 #include <BaseLib/Result/result.hpp>
 #include <BaseLib/Serialization/serializable.hpp>
+#include <BaseLib/Utilities/downcastableHierarchy.hpp>
 
 namespace babelwires {
 

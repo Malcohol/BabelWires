@@ -13,6 +13,7 @@
 
 #include <BaseLib/Cloning/cloneable.hpp>
 #include <BaseLib/Serialization/serializable.hpp>
+#include <BaseLib/Utilities/downcastableHierarchy.hpp>
 
 namespace babelwires {
     /// A DataLocation identifies some data within the system.

@@ -14,6 +14,7 @@
 #include <BaseLib/Identifiers/identifier.hpp>
 #include <BaseLib/Identifiers/registeredIdentifier.hpp>
 #include <BaseLib/Result/result.hpp>
+#include <BaseLib/Utilities/downcastableHierarchy.hpp>
 
 #include <shared_mutex>
 

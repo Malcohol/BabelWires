@@ -8,8 +8,8 @@
 #pragma once
 
 #include <BaseLib/Result/result.hpp>
+#include <BaseLib/Utilities/downcastableHierarchy.hpp>
 #include <BaseLib/Utilities/enumFlags.hpp>
-#include <BaseLib/common.hpp>
 #include <BaseLib/multiKeyMap.hpp>
 
 #include <BabelWiresLib/Path/pathStep.hpp>

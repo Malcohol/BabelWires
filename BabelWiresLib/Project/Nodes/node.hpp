@@ -12,6 +12,7 @@
 #include <BabelWiresLib/Project/Nodes/editTree.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 
+#include <BaseLib/Utilities/downcastableHierarchy.hpp>
 #include <BaseLib/Utilities/enumFlags.hpp>
 #include <BaseLib/Utilities/pointerRange.hpp>
 
