@@ -131,7 +131,7 @@ babelwires::Result babelwires::ParallelProcessor::processValue(UserLogger& userL
         });
 
     if (isFailed) {
-        // TODO: Need a more precise way to signal failure.
+        // TODO: Would be much nicer to have per-entry way to signal failure.
         Error compositeError;
         const char* newline = "";
         for (const auto& entry : entriesToProcess) {
