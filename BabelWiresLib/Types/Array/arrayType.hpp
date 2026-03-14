@@ -9,6 +9,8 @@
 
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
+#include <BaseLib/Result/result.hpp>
+
 namespace babelwires {
 
     /// ArrayTypes have values which contain a dynamically-sized sequence of child values.
@@ -28,10 +30,12 @@ namespace babelwires {
 
         std::string getFlavour() const override;
 
-        void setSize(const TypeSystem& typeSystem, ValueHolder& value, unsigned int newSize) const;
-        void insertEntries(const TypeSystem& typeSystem, ValueHolder& value, unsigned int indexOfNewElement,
+        Result setSize(const TypeSystem& typeSystem, ValueHolder& value, unsigned int newSize) const;
+        void assertSetSize(const TypeSystem& typeSystem, ValueHolder& value, unsigned int newSize) const;
+
+        Result insertEntries(const TypeSystem& typeSystem, ValueHolder& value, unsigned int indexOfNewElement,
                            unsigned int numEntriesToAdd) const;
-        void removeEntries(ValueHolder& value, unsigned int indexOfElementToRemove,
+        Result removeEntries(ValueHolder& value, unsigned int indexOfElementToRemove,
                            unsigned int numEntriesToRemove) const;
 
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;

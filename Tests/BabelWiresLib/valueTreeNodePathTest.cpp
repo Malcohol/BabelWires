@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Path/path.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
@@ -17,7 +16,7 @@
 
 #include <Tests/TestUtils/testLog.hpp>
 
-TEST(FeaturePathTest, pathConstructFromSteps) {
+TEST(ValueTreeNodePathTest, pathConstructFromSteps) {
     std::vector<babelwires::PathStep> steps = {*babelwires::PathStep::deserializeFromString("Hello'2"), 13,
                                                *babelwires::PathStep::deserializeFromString("Hello'3"),
                                                *babelwires::PathStep::deserializeFromString("World'1")};
@@ -37,7 +36,7 @@ TEST(FeaturePathTest, pathConstructFromSteps) {
     EXPECT_EQ(path.getStep(3).asField()->getDiscriminator(), 1);
 }
 
-TEST(FeaturePathTest, pathOps) {
+TEST(ValueTreeNodePathTest, pathOps) {
     babelwires::Path path1;
 
     path1.pushStep(babelwires::PathStep("Forb"));
@@ -70,7 +69,7 @@ TEST(FeaturePathTest, pathOps) {
     EXPECT_EQ(path2.getNumSteps(), 0);
 }
 
-TEST(FeaturePathTest, append) {
+TEST(ValueTreeNodePathTest, append) {
     babelwires::Path path0(
         std::vector<babelwires::PathStep>{*babelwires::PathStep::deserializeFromString("Hello'2"), 13});
     babelwires::Path path1(
@@ -88,7 +87,7 @@ TEST(FeaturePathTest, append) {
     }
 }
 
-TEST(FeaturePathTest, removePrefix) {
+TEST(ValueTreeNodePathTest, removePrefix) {
     babelwires::Path path(
         std::vector<babelwires::PathStep>{*babelwires::PathStep::deserializeFromString("Hello'2"), 13,
                                           *babelwires::PathStep::deserializeFromString("Hello'3"),
@@ -101,7 +100,7 @@ TEST(FeaturePathTest, removePrefix) {
     }
 }
 
-TEST(FeaturePathTest, pathIteration) {
+TEST(ValueTreeNodePathTest, pathIteration) {
     babelwires::Path path1;
 
     path1.pushStep(babelwires::PathStep("Forb"));
@@ -117,7 +116,7 @@ TEST(FeaturePathTest, pathIteration) {
 }
 
 
-TEST(FeaturePathTest, pathFollow) {
+TEST(ValueTreeNodePathTest, pathFollow) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot testRecordFeature(testEnvironment.m_typeSystem,
@@ -126,13 +125,13 @@ TEST(FeaturePathTest, pathFollow) {
 
     testDomain::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
-    EXPECT_EQ(&followPath(info.m_pathToRecord, testRecordFeature), &testRecordFeature);
-    EXPECT_EQ(&followPath(info.m_pathToInt, testRecordFeature), &info.m_int);
-    EXPECT_EQ(&followPath(info.m_pathToArray, testRecordFeature), &info.m_array);
-    EXPECT_EQ(&followPath(info.m_pathToElem0, testRecordFeature), &info.m_elem0);
-    EXPECT_EQ(&followPath(info.m_pathToElem1, testRecordFeature), &info.m_elem1);
-    EXPECT_EQ(&followPath(info.m_pathToSubRecord, testRecordFeature), &info.m_subRecord);
-    EXPECT_EQ(&followPath(info.m_pathToSubRecordInt, testRecordFeature), &info.m_subRecordInt);
+    EXPECT_EQ(tryFollowPath(info.m_pathToRecord, testRecordFeature), &testRecordFeature);
+    EXPECT_EQ(tryFollowPath(info.m_pathToInt, testRecordFeature), &info.m_int);
+    EXPECT_EQ(tryFollowPath(info.m_pathToArray, testRecordFeature), &info.m_array);
+    EXPECT_EQ(tryFollowPath(info.m_pathToElem0, testRecordFeature), &info.m_elem0);
+    EXPECT_EQ(tryFollowPath(info.m_pathToElem1, testRecordFeature), &info.m_elem1);
+    EXPECT_EQ(tryFollowPath(info.m_pathToSubRecord, testRecordFeature), &info.m_subRecord);
+    EXPECT_EQ(tryFollowPath(info.m_pathToSubRecordInt, testRecordFeature), &info.m_subRecordInt);
 
     EXPECT_EQ(info.m_pathToRecord.getNumSteps(), 0);
 
@@ -158,7 +157,7 @@ TEST(FeaturePathTest, pathFollow) {
     EXPECT_EQ(info.m_pathToSubRecordInt.getStep(1).getField(), testDomain::TestSimpleRecordType::getInt0Id());
 }
 
-TEST(FeaturePathTest, pathResolve) {
+TEST(ValueTreeNodePathTest, pathResolve) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::Path pathToInt;
@@ -193,15 +192,15 @@ TEST(FeaturePathTest, pathResolve) {
     testDomain::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
     // The paths should work even though they didn't use registered field identifiers.
-    EXPECT_EQ(&followPath(pathToInt, testRecordFeature), &info.m_int);
-    EXPECT_EQ(&followPath(pathToArray, testRecordFeature), &info.m_array);
-    EXPECT_EQ(&followPath(pathToElem0, testRecordFeature), &info.m_elem0);
-    EXPECT_EQ(&followPath(pathToElem1, testRecordFeature), &info.m_elem1);
-    EXPECT_EQ(&followPath(pathToSubRecord, testRecordFeature), &info.m_subRecord);
-    EXPECT_EQ(&followPath(pathToInt2, testRecordFeature), &info.m_subRecordInt);
+    EXPECT_EQ(tryFollowPath(pathToInt, testRecordFeature), &info.m_int);
+    EXPECT_EQ(tryFollowPath(pathToArray, testRecordFeature), &info.m_array);
+    EXPECT_EQ(tryFollowPath(pathToElem0, testRecordFeature), &info.m_elem0);
+    EXPECT_EQ(tryFollowPath(pathToElem1, testRecordFeature), &info.m_elem1);
+    EXPECT_EQ(tryFollowPath(pathToSubRecord, testRecordFeature), &info.m_subRecord);
+    EXPECT_EQ(tryFollowPath(pathToInt2, testRecordFeature), &info.m_subRecordInt);
 }
 
-TEST(FeaturePathTest, pathTryFollow) {
+TEST(ValueTreeNodePathTest, pathTryFollow) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot testRecordFeature(testEnvironment.m_typeSystem,
@@ -219,7 +218,7 @@ TEST(FeaturePathTest, pathTryFollow) {
     EXPECT_EQ(tryFollowPath(info.m_pathToSubRecordInt, testRecordFeature), &info.m_subRecordInt);
 }
 
-TEST(FeaturePathTest, pathFollowFail) {
+TEST(ValueTreeNodePathTest, pathFollowFail) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::Path pathToNonField;
@@ -243,11 +242,11 @@ TEST(FeaturePathTest, pathFollowFail) {
 
     testDomain::TestComplexRecordTypeFeatureInfo info(testRecordFeature);
 
-    EXPECT_THROW(followPath(pathToNonField, testRecordFeature), babelwires::ModelException);
-    EXPECT_THROW(followPath(pathToNonIndex, testRecordFeature), babelwires::ModelException);
-    EXPECT_THROW(followPath(pathOffEndOfArray, testRecordFeature), babelwires::ModelException);
-    EXPECT_THROW(followPath(pathValueAsRecord, testRecordFeature), babelwires::ModelException);
-    EXPECT_THROW(followPath(pathValueAsArray, testRecordFeature), babelwires::ModelException);
+    EXPECT_FALSE(followPath(pathToNonField, testRecordFeature));
+    EXPECT_FALSE(followPath(pathToNonIndex, testRecordFeature));
+    EXPECT_FALSE(followPath(pathOffEndOfArray, testRecordFeature));
+    EXPECT_FALSE(followPath(pathValueAsRecord, testRecordFeature));
+    EXPECT_FALSE(followPath(pathValueAsArray, testRecordFeature));
 
     EXPECT_EQ(tryFollowPath(pathToNonField, testRecordFeature), nullptr);
     EXPECT_EQ(tryFollowPath(pathToNonIndex, testRecordFeature), nullptr);
@@ -256,7 +255,7 @@ TEST(FeaturePathTest, pathFollowFail) {
     EXPECT_EQ(tryFollowPath(pathValueAsArray, testRecordFeature), nullptr);
 }
 
-TEST(FeaturePathTest, pathSerialization) {
+TEST(ValueTreeNodePathTest, pathSerialization) {
     babelwires::Path path;
 
     EXPECT_EQ(path.serializeToString(), "");
@@ -273,7 +272,7 @@ TEST(FeaturePathTest, pathSerialization) {
     EXPECT_EQ(path.serializeToString(), "Forb'2/Erm'4/12");
 }
 
-TEST(FeaturePathTest, pathDeserialization) {
+TEST(ValueTreeNodePathTest, pathDeserialization) {
     EXPECT_EQ(babelwires::Path::deserializeFromString("").value().getNumSteps(), 0);
 
     babelwires::Path path1;
@@ -314,7 +313,7 @@ TEST(FeaturePathTest, pathDeserialization) {
     EXPECT_FALSE(babelwires::Path::deserializeFromString("Foo/Erm/").has_value());
 }
 
-TEST(FeaturePathTest, pathHash) {
+TEST(ValueTreeNodePathTest, pathHash) {
     babelwires::Path path;
     const std::size_t hashWhenEmpty = path.getHash();
 

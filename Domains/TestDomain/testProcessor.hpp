@@ -71,7 +71,7 @@ namespace testDomain {
 
         TestProcessor(const babelwires::ProjectContext& context);
 
-        void processValue(babelwires::UserLogger& userLogger, const babelwires::ValueTreeNode& input,
+        babelwires::Result processValue(babelwires::UserLogger& userLogger, const babelwires::ValueTreeNode& input,
                           babelwires::ValueTreeNode& output) const override;
     };
 

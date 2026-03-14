@@ -9,6 +9,8 @@
 
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
+#include <BaseLib/Result/result.hpp>
+
 #include <map>
 
 namespace babelwires {
@@ -47,15 +49,22 @@ namespace babelwires {
         std::string getFlavour() const override;
 
         /// Active the field, so it appears in the record.
+        /// Asserts if the field is not optional or is already activated.
         void activateField(const TypeSystem& typeSystem, ValueHolder& value, ShortId fieldId) const;
 
         /// Deactivate the field, so it does not appear in the record.
-        /// This operation sets the subfeature to its default state.
+        /// Asserts if the field is not optional or is already deactivated.
         void deactivateField(ValueHolder& value, ShortId fieldId) const;
 
         /// Ensure the optionals in the value have the state as specified in the arrays.
-        void selectOptionals(const TypeSystem& typeSystem, ValueHolder& value,
+        /// Returns an error if the operation cannot be performed.
+        Result selectOptionals(const TypeSystem& typeSystem, ValueHolder& value,
                              const std::map<ShortId, bool>& optionalsState) const;
+
+        /// Ensure the optionals in the value have the state as specified in the arrays.
+        /// Asserts if the operation cannot be performed.
+        void assertSelectOptionals(const TypeSystem& typeSystem, ValueHolder& value,
+                                  const std::map<ShortId, bool>& optionalsState) const;
 
         /// Is the given field an optional.
         bool isOptional(ShortId fieldId) const;
@@ -96,6 +105,7 @@ namespace babelwires {
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
 
       private:
+        const Field* tryGetField(ShortId fieldId) const;
         const Field& getField(ShortId fieldId) const;
         const Field& getFieldFromChildIndex(const ValueHolder& compoundValue, unsigned int i) const;
 

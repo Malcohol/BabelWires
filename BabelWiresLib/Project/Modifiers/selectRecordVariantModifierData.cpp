@@ -7,10 +7,10 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/selectRecordVariantModifierData.hpp>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
+#include <BaseLib/Result/resultDSL.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 
@@ -25,15 +25,15 @@ babelwires::Result babelwires::SelectRecordVariantModifierData::deserializeConte
     return {};
 }
 
-void babelwires::SelectRecordVariantModifierData::apply(ValueTreeNode* target) const {
+babelwires::Result babelwires::SelectRecordVariantModifierData::apply(ValueTreeNode* target) const {
     if (auto recordType = target->getType()->tryAs<RecordWithVariantsType>()) {
         const TypeSystem& typeSystem = target->getTypeSystem();
         ValueHolder newValue = target->getValue();
-        recordType->selectTag(typeSystem, newValue, m_tagToSelect);
-        target->setValue(newValue);
-        return;
+        DO_OR_ERROR(recordType->selectTag(typeSystem, newValue, m_tagToSelect));
+        target->assertSetValue(newValue);
+        return {};
     }
-    throw ModelException() << "Select variant modifier applied to ValueTreeNode which does not have variants";
+    return Error() << "Select variant modifier applied to ValueTreeNode which does not have variants";
 }
 
 void babelwires::SelectRecordVariantModifierData::visitIdentifiers(IdentifierVisitor& visitor) {

@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Processors/processor.hpp>
@@ -26,30 +25,22 @@ babelwires::ProcessorNode::ProcessorNode(const ProjectContext& context, UserLogg
                                                const ProcessorNodeData& data, NodeId newId)
     : Node(data, newId) {
     const NodeData& elementData = getNodeData();
-    try {
-        const auto factoryResult = context.m_processorReg.getRegisteredEntry(elementData.m_factoryIdentifier);
-        if (!factoryResult) {
-            setFactoryName(elementData.m_factoryIdentifier);
-            setInternalFailure(factoryResult.error().toString());
-            m_failedValueTree =
-                std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, context.m_typeSystem.getRegisteredType<FailureType>());
-            userLogger.logError() << "Failed to create processor id=" << elementData.m_id
-                                  << ": " << factoryResult.error().toString();
-            return;
-        }
-        const ProcessorFactory& factory = **factoryResult;
-        auto newProcessor = factory.createNewProcessor(context);
-        newProcessor->getInput().setToDefault();
-        newProcessor->getOutput().setToDefault();
-        setProcessor(std::move(newProcessor));
-        setFactoryName(factory.getName());
-    } catch (const BaseException& e) {
+    const auto factoryResult = context.m_processorReg.getRegisteredEntry(elementData.m_factoryIdentifier);
+    if (!factoryResult) {
         setFactoryName(elementData.m_factoryIdentifier);
-        setInternalFailure(e.what());
+        setInternalFailure(factoryResult.error().toString());
         m_failedValueTree =
             std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, context.m_typeSystem.getRegisteredType<FailureType>());
-        userLogger.logError() << "Failed to create processor id=" << elementData.m_id << ": " << e.what();
+        userLogger.logError() << "Failed to create processor id=" << elementData.m_id
+                                << ": " << factoryResult.error().toString();
+        return;
     }
+    const ProcessorFactory& factory = **factoryResult;
+    auto newProcessor = factory.createNewProcessor(context);
+    newProcessor->getInput().setToDefault();
+    newProcessor->getOutput().setToDefault();
+    setProcessor(std::move(newProcessor));
+    setFactoryName(factory.getName());
 }
 
 babelwires::ProcessorNode::~ProcessorNode() = default;
@@ -106,15 +97,15 @@ std::string babelwires::ProcessorNode::getRootLabel() const {
 void babelwires::ProcessorNode::doProcess(UserLogger& userLogger) {
     if (m_processor) {
         if (getInput()->isChanged(ValueTreeNode::Changes::SomethingChanged)) {
-            try {
-                m_processor->process(userLogger);
+            Result result = m_processor->process(userLogger);
+            if (result) {
                 if (isFailed()) {
                     clearInternalFailure();
                 }
-            } catch (const BaseException& e) {
+            } else {
                 userLogger.logError() << "Processor id=" << getNodeId()
-                                      << " failed to process correctly: " << e.what();
-                setInternalFailure(e.what());
+                                      << " failed to process correctly: " << result.error().toString();
+                setInternalFailure(result.error().toString());
             }
         }
         if (isChanged(Changes::FeatureStructureChanged | Changes::CompoundExpandedOrCollapsed)) {

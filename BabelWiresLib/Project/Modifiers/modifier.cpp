@@ -10,7 +10,6 @@
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
@@ -58,13 +57,10 @@ const babelwires::Path& babelwires::Modifier::getTargetPath() const {
 
 void babelwires::Modifier::unapply(ValueTreeNode* container) const {
     assert(!isFailed() && "Don't try to unapply a failed modifier.");
-    try {
-        ValueTreeNode& f = followPath(m_data->m_targetPath, *container);
-        // When undone, array size modifiers should not reset the remaining children.
-        f.setToDefault();
-    } catch (const BaseException& e) {
-        assert(!"It should always be possible to unapply a modifier.");
-    }
+    ValueTreeNode* f = tryFollowPath(m_data->m_targetPath, *container);
+    assert(f && "It should always be possible to unapply a modifier.");
+    // When undone, array size modifiers should not reset the remaining children.
+    f->setToDefault();
 }
 
 void babelwires::Modifier::applyIfLocal(UserLogger& userLogger, ValueTreeNode* container) {}

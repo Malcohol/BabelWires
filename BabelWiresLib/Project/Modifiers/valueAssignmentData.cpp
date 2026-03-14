@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
@@ -27,8 +26,9 @@ babelwires::ValueAssignmentData::ValueAssignmentData(ValueHolder value)
     assert(m_value->tryGetAsEditableValue());
 }
 
-void babelwires::ValueAssignmentData::apply(ValueTreeNode* target) const {
-    target->setValue(m_value);
+babelwires::Result babelwires::ValueAssignmentData::apply(ValueTreeNode* target) const {
+    DO_OR_ERROR(target->setValue(m_value));
+    return {};
 }
 
 void babelwires::ValueAssignmentData::serializeContents(Serializer& serializer) const {

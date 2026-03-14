@@ -13,12 +13,13 @@
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Types/Map/mapType.hpp>
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
-babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEditor(QWidget* parent, ProjectGraphModel& projectGraphModel, UserLogger& userLogger, const ProjectDataLocation& data) {
+#include <BaseLib/Result/resultDSL.hpp>
+
+babelwires::ResultT<babelwires::ComplexValueEditor*> babelwires::ComplexValueEditorFactory::createEditor(QWidget* parent, ProjectGraphModel& projectGraphModel, UserLogger& userLogger, const ProjectDataLocation& data) {
     AccessModelScope scope(projectGraphModel);
-    const ValueTreeNode& valueTreeNode = ComplexValueEditor::getValueTreeNodeOrThrow(scope, data);
+    ASSIGN_OR_ERROR(const ValueTreeNode& valueTreeNode, ComplexValueEditor::getValueTreeNode(scope, data));
     const Type& type = *valueTreeNode.getType();
 
     // TODO: For now, assume ComplexValueEditors are all built-in, so we don't need a registry.
@@ -27,5 +28,5 @@ babelwires::ComplexValueEditor* babelwires::ComplexValueEditorFactory::createEdi
         return new MapEditor(nullptr, projectGraphModel, userLogger, data);
     }
 
-    throw ModelException() << "There is no known editor for that type of value.";
+    return Error() << "There is no known editor for that type of value.";
 }

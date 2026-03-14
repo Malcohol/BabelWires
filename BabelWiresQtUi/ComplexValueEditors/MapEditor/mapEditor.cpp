@@ -27,7 +27,6 @@
 #include <BabelWiresLib/Types/Map/MapProject/mapSerialization.hpp>
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
 #include <BabelWiresLib/Types/Map/mapType.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 #include <QDialogButtonBox>
@@ -194,7 +193,7 @@ void babelwires::MapEditor::applyMapToProject() {
 }
 
 const babelwires::ValueTreeNode& babelwires::MapEditor::getMapTreeNode(const AccessModelScope& scope) const {
-    const ValueTreeNode& mapTreeNode = ComplexValueEditor::getValueTreeNode(scope, getDataLocation());
+    const ValueTreeNode& mapTreeNode = ComplexValueEditor::assertGetValueTreeNode(scope, getDataLocation());
     assert(mapTreeNode.getType()->tryAs<MapType>() || mapTreeNode.getType()->tryAs<SumOfMapsType>());
     return mapTreeNode;
 }

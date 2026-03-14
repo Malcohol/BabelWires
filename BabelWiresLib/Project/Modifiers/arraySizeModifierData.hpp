@@ -12,11 +12,11 @@
 namespace babelwires {
     /// Data used to set an array within a container to a certain size.
     struct ArraySizeModifierData : LocalModifierData {
-        void apply(ValueTreeNode* target) const override;
+        Result apply(ValueTreeNode* target) const override;
         std::unique_ptr<Modifier> createModifier() const override;
 
-        void addEntries(ValueTreeNode* target, int indexOfNewElement, int numEntriesToAdd);
-        void removeEntries(ValueTreeNode* target, int indexOfElementToRemove, int numEntriesToRemove);
+        Result addEntries(ValueTreeNode* target, int indexOfNewElement, int numEntriesToAdd);
+        Result removeEntries(ValueTreeNode* target, int indexOfElementToRemove, int numEntriesToRemove);
         CLONEABLE(ArraySizeModifierData);
 
         SERIALIZABLE(ArraySizeModifierData, "arraySize", LocalModifierData, 1);

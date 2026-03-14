@@ -9,10 +9,11 @@
 
 #include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
+
+#include <BaseLib/Result/error.hpp>
 
 #include <QCloseEvent>
 
@@ -45,24 +46,24 @@ void babelwires::ComplexValueEditor::closeEvent(QCloseEvent* event) {
     }
 }
 
-const babelwires::ValueTreeNode&
-babelwires::ComplexValueEditor::getValueTreeNodeOrThrow(const AccessModelScope& scope, const ProjectDataLocation& data) {
+babelwires::ResultT<const babelwires::ValueTreeNode&>
+babelwires::ComplexValueEditor::getValueTreeNode(const AccessModelScope& scope, const ProjectDataLocation& data) {
     const Project& project = scope.getProject();
 
     const Node* node = project.getNode(data.getNodeId());
 
     if (!node) {
-        throw ModelException() << "The node does not exist.";
+        return Error() << "The node does not exist.";
     }
 
     const ValueTreeNode* const input = node->getInput();
     if (!input) {
-        throw ModelException() << "The node does not have editable content.";
+        return Error() << "The node does not have editable content.";
     }
 
     const auto* const inputTreeNode = tryFollowPath(data.getPathToValue(), *input);
     if (!inputTreeNode) {
-        throw ModelException() << "There is no value at that location.";
+        return Error() << "There is no value at that location.";
     }
     return *inputTreeNode;
 }
@@ -89,7 +90,7 @@ const babelwires::ValueTreeNode* babelwires::ComplexValueEditor::tryGetValueTree
     return inputTreeNode;
 }
 
-const babelwires::ValueTreeNode& babelwires::ComplexValueEditor::getValueTreeNode(const AccessModelScope& scope,
+const babelwires::ValueTreeNode& babelwires::ComplexValueEditor::assertGetValueTreeNode(const AccessModelScope& scope,
                                                                                 const ProjectDataLocation& data) {
     const ValueTreeNode* const valueTreeNode = tryGetValueTreeNode(scope, data);
     assert(valueTreeNode && "There was no ValueTreeNode");

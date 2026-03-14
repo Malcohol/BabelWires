@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Project/Modifiers/selectRecordVariantModifierData.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
@@ -50,7 +49,7 @@ TEST(SelectRecordVariantModifierDataTest, failureNotATag) {
 
     valueFeature.setToDefault();
 
-    EXPECT_THROW(data.apply(&valueFeature), babelwires::ModelException);
+    EXPECT_FALSE(data.apply(&valueFeature));
 }
 
 TEST(SelectRecordVariantModifierDataTest, failureNotAUnion) {
@@ -61,7 +60,7 @@ TEST(SelectRecordVariantModifierDataTest, failureNotAUnion) {
     babelwires::ValueTreeRoot notARecordWithVariants(
         testEnvironment.m_typeSystem, testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultIntType>());
 
-    EXPECT_THROW(data.apply(&notARecordWithVariants), babelwires::ModelException);
+    EXPECT_FALSE(data.apply(&notARecordWithVariants));
 }
 
 TEST(SelectRecordVariantModifierDataTest, clone) {

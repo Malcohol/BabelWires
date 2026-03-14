@@ -9,6 +9,8 @@
 
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
+#include <BaseLib/Result/result.hpp>
+
 namespace babelwires {
     /// Out-of-line utility functions used by instance methods.
     namespace InstanceUtils {
@@ -32,7 +34,8 @@ namespace babelwires {
         // Utility functions for ArrayTypes
 
         unsigned int getArraySize(const ValueTreeNode& arrayTreeNode);
-        void setArraySize(ValueTreeNode& arrayTreeNode, unsigned int newSize);
+        Result setArraySize(ValueTreeNode& arrayTreeNode, unsigned int newSize);
+        void assertSetArraySize(ValueTreeNode& arrayTreeNode, unsigned int newSize);
 
         const ValueTreeNode& getChild(const ValueTreeNode& arrayTreeNode, unsigned int index);
         ValueTreeNode& getChild(ValueTreeNode& arrayTreeNode, unsigned int index);

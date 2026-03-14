@@ -9,7 +9,6 @@
 
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <BaseLib/Identifiers/registeredIdentifier.hpp>
@@ -38,13 +37,12 @@ const babelwires::ValueTreeRoot& babelwires::Processor::getOutput() const {
     return *m_outputValueTreeRoot;
 }
 
-void babelwires::Processor::process(UserLogger& userLogger) {
-    try {
-        processValue(userLogger, *m_inputValueTreeRoot, *m_outputValueTreeRoot);
-    } catch (...) {
+babelwires::Result babelwires::Processor::process(UserLogger& userLogger) {
+    Result result = processValue(userLogger, *m_inputValueTreeRoot, *m_outputValueTreeRoot);
+    if (!result) {
         onFailure();
-        throw;
     }
+    return result;
 }
 
 void babelwires::Processor::onFailure() const {

@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
@@ -36,18 +35,21 @@ const babelwires::ConnectionModifier* babelwires::LocalModifier::doAsConnectionM
 
 void babelwires::LocalModifier::applyIfLocal(UserLogger& userLogger, ValueTreeNode* container) {
     State state = State::TargetMissing;
-    ValueTreeNode* target = nullptr;
-    try {
-        const LocalModifierData& data = getModifierData();
-        target = data.getTarget(container);
-        state = State::ApplicationFailed;
-        data.apply(target);
-        setSucceeded();
-    } catch (const BaseException& e) {
-        userLogger.logError() << "Failed to apply operation: " << e.what();
-        if (target) {
-            target->setToDefault();
-        }
-        setFailed(state, e.what());
+    const LocalModifierData& data = getModifierData();
+    const auto targetResult = data.getTarget(container);
+    if (!targetResult) {
+        userLogger.logError() << "Failed to apply operation: " << targetResult.error().toString();
+        setFailed(state, targetResult.error().toString());
+        return;
     }
+    ValueTreeNode& target = *targetResult;
+    state = State::ApplicationFailed;
+    const auto result = data.apply(&target);
+    if (!result) {
+        userLogger.logError() << "Failed to apply operation: " << result.error().toString();
+        target.setToDefault();
+        setFailed(state, result.error().toString());
+        return;
+    }
+    setSucceeded();
 }

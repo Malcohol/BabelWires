@@ -58,7 +58,7 @@ void babelwires::AddNodeForOutputTreeValueCommand::execute(Project& project) con
     assert(originalNode);
     const ValueTreeNode* const nodeOutput = originalNode->getOutput();
     assert(nodeOutput);
-    const ValueTreeNode& originalValue = followPath(m_pathToValue, *nodeOutput);
+    const ValueTreeNode& originalValue = assertFollowPath(m_pathToValue, *nodeOutput);
 
     ValueNodeData newNodeData(originalValue.getType()->getTypeExp());
     newNodeData.m_id = m_newNodeId;

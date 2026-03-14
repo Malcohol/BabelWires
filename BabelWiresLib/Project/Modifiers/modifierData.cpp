@@ -18,8 +18,8 @@
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 
-babelwires::ValueTreeNode* babelwires::ModifierData::getTarget(ValueTreeNode* container) const {
-    return &followPath(m_targetPath, *container);
+babelwires::ResultT<babelwires::ValueTreeNode&> babelwires::ModifierData::getTarget(ValueTreeNode* container) const {
+    return followPath(m_targetPath, *container);
 }
 
 void babelwires::ModifierData::visitIdentifiers(IdentifierVisitor& visitor) {

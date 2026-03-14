@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
@@ -36,7 +35,7 @@ TEST(ModifierDataTest, arrayInitializationApply) {
     EXPECT_EQ(arrayFeature.getNumChildren(), testDomain::TestSimpleArrayType::s_nonDefaultSize);
 
     babelwires::ValueTreeRoot notArrayFeature(testEnvironment.m_typeSystem, testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultIntType>());
-    EXPECT_THROW(data.apply(&notArrayFeature), babelwires::ModelException);
+    EXPECT_FALSE(data.apply(&notArrayFeature));
 }
 
 TEST(ModifierDataTest, arrayInitializationClone) {
@@ -129,7 +128,7 @@ TEST(ModifierDataTest, assignFromFeatureBadConnectionApply) {
 
     babelwires::ConnectionModifierData data;
 
-    EXPECT_THROW(data.apply(&srcFeature, &targetFeature, false), babelwires::ModelException);
+    EXPECT_FALSE(data.apply(&srcFeature, &targetFeature, false));
 }
 
 TEST(ModifierDataTest, assignFromFeatureClone) {

@@ -24,7 +24,7 @@ namespace babelwires {
         static TypeExp makeTypeExp(TypeExp sourceTypeExp, TypeExp targetTypeExp, MapEntryData::Kind fallbackKind = MapEntryData::Kind::All21);
 
       private:
-        /// Throws a TypeSystem exception if the arguments are not of the expected type.
+        /// Returns an error if the arguments are not of the expected type.
         static ResultT<MapEntryData::Kind> extractValueArguments(const TypeSystem& typeSystem, const std::vector<ValueHolder>& valueArguments);
     };
 } // namespace babelwires

@@ -5,6 +5,8 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
 
+#include <BaseLib/Result/resultDSL.hpp>
+
 babelwires::ShortId testDomain::TestProcessorInputOutputType::getIntId() {
     return BW_SHORT_ID(s_intIdInitializer, s_intFieldName, s_intUuid);
 }
@@ -53,7 +55,7 @@ testDomain::TestProcessor::TestProcessor(const babelwires::ProjectContext& conte
     : babelwires::Processor(context, context.m_typeSystem.getRegisteredType<testDomain::TestProcessorInputOutputType>(),
                             context.m_typeSystem.getRegisteredType<testDomain::TestProcessorInputOutputType>()) {}
 
-void testDomain::TestProcessor::processValue(babelwires::UserLogger& userLogger, const babelwires::ValueTreeNode& input,
+babelwires::Result testDomain::TestProcessor::processValue(babelwires::UserLogger& userLogger, const babelwires::ValueTreeNode& input,
                                              babelwires::ValueTreeNode& output) const {
     TestProcessorInputOutputType::ConstInstance in{input};
     TestProcessorInputOutputType::Instance out{output};
@@ -61,14 +63,15 @@ void testDomain::TestProcessor::processValue(babelwires::UserLogger& userLogger,
     const unsigned int inputValue = in.getInt().get();
 
     out.getInt().set(inputValue);
-    out.getRecord()->setValue(in.getRecord()->getValue());
+    DO_OR_ERROR(out.getRecord()->setValue(in.getRecord()->getValue()));
     if (in.tryGetOpInt()) {
         out.activateAndGetOpInt().set(in.tryGetOpInt()->get());
     } else {
         out.deactivateOpInt();
     }
-    out.getArray().setSize(2 + inputValue);
+    DO_OR_ERROR(out.getArray().setSize(2 + inputValue));
     for (int i = 0; i < out.getArray().getSize(); ++i) {
         out.getArray().getEntry(i).set(in.getInt().get() + i);
     }
+    return {};
 }

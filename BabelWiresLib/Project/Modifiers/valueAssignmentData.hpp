@@ -24,7 +24,7 @@ namespace babelwires {
         ValueAssignmentData(std::unique_ptr<Value> value);
         ValueAssignmentData(ValueHolder value);
 
-        virtual void apply(ValueTreeNode* target) const override;
+        virtual Result apply(ValueTreeNode* target) const override;
         void serializeContents(Serializer& serializer) const override;
         Result deserializeContents(Deserializer& deserializer) override;
         void visitIdentifiers(IdentifierVisitor& visitor) override;

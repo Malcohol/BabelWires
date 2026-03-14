@@ -9,6 +9,8 @@
 
 #include <BabelWiresLib/TypeSystem/typePtr.hpp>
 
+#include <BaseLib/Result/result.hpp>
+
 #include <memory>
 
 namespace babelwires {
@@ -26,9 +28,9 @@ namespace babelwires {
         virtual ~Processor();
 
         /// Set values in the output based on values in the input.
-        /// Implementations of process are allowed to throw. If they do, the ProcessorNode will be marked as failed,
-        /// the exception will be logged and the output will usually be set to default (see onFailure).
-        void process(UserLogger& userLogger);
+        /// If processing fails, a failure Result is returned and the output will usually be set to default (see
+        /// onFailure).
+        Result process(UserLogger& userLogger);
         ValueTreeRoot& getInput();
         ValueTreeRoot& getOutput();
         const ValueTreeRoot& getInput() const;
@@ -36,9 +38,10 @@ namespace babelwires {
 
       protected:
         /// Note: Implementations do not need to worry about backing-up or resolving changes in the output.
-        virtual void processValue(UserLogger& userLogger, const ValueTreeNode& input, ValueTreeNode& output) const = 0;
+        virtual Result processValue(UserLogger& userLogger, const ValueTreeNode& input,
+                                    ValueTreeNode& output) const = 0;
 
-        /// If an exception is thrown by processValue, then this is called.
+        /// If processValue returns a failure Result, then this is called.
         /// The default implementation sets the output to a default value of its type.
         /// This can be overridden if you want to report failure but have a more subtle effect on the output.
         virtual void onFailure() const;

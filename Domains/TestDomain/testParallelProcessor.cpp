@@ -23,7 +23,7 @@ babelwires::ShortId testDomain::TestParallelProcessor::getCommonArrayId() {
     return BW_SHORT_ID("array", "array", "0eed9f2e-c22a-4b9b-a1f7-c8b02f9a86ed");
 }
 
-void testDomain::TestParallelProcessor::processEntry(babelwires::UserLogger& userLogger,
+babelwires::Result testDomain::TestParallelProcessor::processEntry(babelwires::UserLogger& userLogger,
                                                      const babelwires::ValueTreeNode& input,
                                                      const babelwires::ValueTreeNode& inputEntry,
                                                      babelwires::ValueTreeNode& outputEntry) const {
@@ -36,7 +36,8 @@ void testDomain::TestParallelProcessor::processEntry(babelwires::UserLogger& use
     babelwires::Instance<babelwires::IntType> entryOut{outputEntry};
 
     const babelwires::ValueTreeNode& intValueTreeNode =
-        input.getChildFromStep(babelwires::PathStep("intVal")).as<babelwires::ValueTreeNode>();
+        input.assertGetChildFromStep(babelwires::PathStep("intVal"));
 
-    entryOut.set(entryIn.get() + intValueTreeNode.getValue()->as<babelwires::IntValue>().get());
+    const auto sum = entryIn.get() + intValueTreeNode.getValue()->as<babelwires::IntValue>().get();
+    return outputEntry.setValue(babelwires::IntValue(sum));
 }

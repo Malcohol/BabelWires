@@ -9,6 +9,8 @@
 
 #include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
 
+#include <BaseLib/Result/result.hpp>
+
 #include <QWidget>
 
 namespace babelwires {
@@ -30,17 +32,17 @@ namespace babelwires {
 
             // TODO Why are these static?
 
+            /// Convenience Function: Get the ValueTreeNode referred to by the data, or return an error.
+            /// Note: This returns const because editors never modify the model directly.
+            static ResultT<const ValueTreeNode&> getValueTreeNode(const AccessModelScope& scope, const ProjectDataLocation& data);
+
             /// Convenience Function: Get the ValueTreeNode referred to by the data, or assert.
             /// Note: This returns const because editors never modify the model directly.
-            static const ValueTreeNode& getValueTreeNode(const AccessModelScope& scope, const ProjectDataLocation& data);
+            static const ValueTreeNode& assertGetValueTreeNode(const AccessModelScope& scope, const ProjectDataLocation& data);
 
             /// Convenience Function: Get the ValueTreeNode referred to by the data, or return nullptr.
             /// Note: This returns const because editors never modify the model directly.
             static const ValueTreeNode* tryGetValueTreeNode(const AccessModelScope& scope, const ProjectDataLocation& data);
-
-            /// Convenience Function: Get the ValueTreeNode referred to by the data, or throw a ModelException.
-            /// Note: This returns const because editors never modify the model directly.
-            static const ValueTreeNode& getValueTreeNodeOrThrow(const AccessModelScope& scope, const ProjectDataLocation& data);
 
         signals:
             void editorClosing();

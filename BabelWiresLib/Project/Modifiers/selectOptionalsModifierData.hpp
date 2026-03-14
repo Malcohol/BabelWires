@@ -15,7 +15,7 @@ namespace babelwires {
     /// SelectOptionalsModifierData is used to select a set of optionals in a RecordType
     class SelectOptionalsModifierData : public LocalModifierData {
       public:
-        virtual void apply(ValueTreeNode* target) const override;
+        virtual Result apply(ValueTreeNode* target) const override;
         CLONEABLE(SelectOptionalsModifierData);
         SERIALIZABLE(SelectOptionalsModifierData, "selectOptionals", LocalModifierData, 1);
         void serializeContents(Serializer& serializer) const override;

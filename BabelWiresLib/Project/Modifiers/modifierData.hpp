@@ -12,6 +12,7 @@
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 
 #include <BaseLib/Cloning/cloneable.hpp>
+#include <BaseLib/Result/result.hpp>
 #include <BaseLib/Serialization/serializable.hpp>
 
 namespace babelwires {
@@ -29,8 +30,8 @@ namespace babelwires {
         /// Identifies the ValueTreeNode being modified.
         Path m_targetPath;
 
-        /// Find the target ValueTreeNode within the container, or throw.
-        ValueTreeNode* getTarget(ValueTreeNode* container) const;
+        /// Find the target ValueTreeNode within the container.
+        ResultT<ValueTreeNode&> getTarget(ValueTreeNode* container) const;
 
         /// A factory method constructing the appropriate modifier.
         virtual std::unique_ptr<Modifier> createModifier() const = 0;
@@ -50,8 +51,8 @@ namespace babelwires {
         CLONEABLE_ABSTRACT(LocalModifierData);
         SERIALIZABLE_ABSTRACT(LocalModifierData, ModifierData);
 
-        /// Perform the modification on the target ValueTreeNode, or throw.
-        virtual void apply(ValueTreeNode* target) const = 0;
+        /// Perform the modification on the target ValueTreeNode.
+        virtual Result apply(ValueTreeNode* target) const = 0;
 
         virtual std::unique_ptr<Modifier> createModifier() const;
     };

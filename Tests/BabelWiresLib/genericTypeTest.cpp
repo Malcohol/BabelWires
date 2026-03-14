@@ -161,7 +161,7 @@ TEST(GenericTypeTest, instantiateNestedTypeVariable) {
     babelwires::ValueHolder valueHolder = genericType->createValue(typeSystem);
     ASSERT_TRUE(valueHolder);
 
-    auto [nestedType, nestedValue] = babelwires::followPathNonConst(
+    auto [nestedType, nestedValue] = babelwires::assertFollowPathNonConst(
         typeSystem, *genericType, testDomain::TestGenericType::getPathToNestedGenericType(), valueHolder);
     
     const babelwires::GenericType* const nestedGenericType = nestedType.tryAs<babelwires::GenericType>();

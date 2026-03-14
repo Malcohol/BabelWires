@@ -8,9 +8,10 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
+
+#include <BaseLib/Result/result.hpp>
 
 namespace babelwires {
     constexpr int s_maxParallelFeatures = 16;
@@ -45,11 +46,11 @@ namespace babelwires {
                           const TypeExp& parallelOutput);
 
       protected:
-        void processValue(UserLogger& userLogger, const ValueTreeNode& input,
+        Result processValue(UserLogger& userLogger, const ValueTreeNode& input,
                           ValueTreeNode& output) const override final;
 
-        virtual void processEntry(UserLogger& userLogger, const ValueTreeNode& input,
-                                  const ValueTreeNode& inputEntry, ValueTreeNode& outputEntry) const = 0;
+        virtual Result processEntry(UserLogger& userLogger, const ValueTreeNode& input,
+                                    const ValueTreeNode& inputEntry, ValueTreeNode& outputEntry) const = 0;
     };
 
 } // namespace babelwires

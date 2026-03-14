@@ -13,9 +13,10 @@
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeChild.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
+
+#include <BaseLib/Result/error.hpp>
 
 #include <map>
 
@@ -67,18 +68,9 @@ std::size_t babelwires::ValueTreeNode::getHash() const {
     return hash::mixtureOf(m_typePtr, m_value);
 }
 
-namespace {
-    void checkIndex(const babelwires::ValueTreeNode* f, int i) {
-        if ((i < 0) || (i >= f->getNumChildren())) {
-            throw babelwires::ModelException()
-                << "Compound with " << f->getNumChildren() << " children queried by index " << i;
-        }
-    }
-
-} // namespace
-
 babelwires::ValueTreeNode* babelwires::ValueTreeNode::getChild(int i) {
-    checkIndex(this, i);
+    assert((i >= 0) && "Negative child index");
+    assert((i < getNumChildren()) && "Child index out of range");
     const auto it = m_children.find1(i);
     if (it != m_children.end()) {
         return it.getValue().get();
@@ -87,7 +79,8 @@ babelwires::ValueTreeNode* babelwires::ValueTreeNode::getChild(int i) {
 }
 
 const babelwires::ValueTreeNode* babelwires::ValueTreeNode::getChild(int i) const {
-    checkIndex(this, i);
+    assert((i >= 0) && "Negative child index");
+    assert((i < getNumChildren()) && "Child index out of range");
     const auto it = m_children.find1(i);
     if (it != m_children.end()) {
         return it.getValue().get();
@@ -117,20 +110,32 @@ const babelwires::ValueTreeNode* babelwires::ValueTreeNode::tryGetChildFromStep(
     return tryGetChildFromStepT(this, step);
 }
 
-babelwires::ValueTreeNode& babelwires::ValueTreeNode::getChildFromStep(const PathStep& step) {
+babelwires::ResultT<babelwires::ValueTreeNode&> babelwires::ValueTreeNode::getChildFromStep(const PathStep& step) {
     if (ValueTreeNode* f = tryGetChildFromStep(step)) {
         return *f;
     } else {
-        throw babelwires::ModelException() << "Compound has no child at step \"" << step << "\"";
+        return babelwires::Error() << "Compound has no child at step \"" << step << "\"";
     }
 }
 
-const babelwires::ValueTreeNode& babelwires::ValueTreeNode::getChildFromStep(const PathStep& step) const {
+babelwires::ResultT<const babelwires::ValueTreeNode&> babelwires::ValueTreeNode::getChildFromStep(const PathStep& step) const {
     if (const ValueTreeNode* f = tryGetChildFromStep(step)) {
         return *f;
     } else {
-        throw babelwires::ModelException() << "Compound has no child at step \"" << step << "\"";
+        return babelwires::Error() << "Compound has no child at step \"" << step << "\"";
     }
+}
+
+babelwires::ValueTreeNode& babelwires::ValueTreeNode::assertGetChildFromStep(const PathStep& step) {
+    ValueTreeNode* f = tryGetChildFromStep(step);
+    assert(f && "Compound has no child at step");
+    return *f;
+}
+
+const babelwires::ValueTreeNode& babelwires::ValueTreeNode::assertGetChildFromStep(const PathStep& step) const {
+    const ValueTreeNode* f = tryGetChildFromStep(step);
+    assert(f && "Compound has no child at step");
+    return *f;
 }
 
 const babelwires::ValueHolder& babelwires::ValueTreeNode::getValue() const {
@@ -138,12 +143,17 @@ const babelwires::ValueHolder& babelwires::ValueTreeNode::getValue() const {
     return m_value;
 }
 
-void babelwires::ValueTreeNode::setValue(const ValueHolder& newValue) {
-    doSetValue(newValue);
+babelwires::Result babelwires::ValueTreeNode::setValue(const ValueHolder& newValue) {
+    return doSetValue(newValue);
 }
 
-void babelwires::ValueTreeNode::assign(const ValueTreeNode& other) {
-    setValue(other.getValue());
+void babelwires::ValueTreeNode::assertSetValue(const ValueHolder& newValue) {
+    const auto result = setValue(newValue);
+    assert(result && "setValue failed");
+}
+
+babelwires::Result babelwires::ValueTreeNode::assign(const ValueTreeNode& other) {
+    return setValue(other.getValue());
 }
 
 std::string babelwires::ValueTreeNode::getFlavour() const {
@@ -177,7 +187,7 @@ babelwires::PathStep babelwires::ValueTreeNode::getStepToChild(const ValueTreeNo
             return it.getKey0();
         }
     }
-    throw ModelException() << "Child not found in owner";
+    assert(false && "Child not found in owner");
 }
 
 int babelwires::ValueTreeNode::getChildIndexFromStep(const PathStep& step) const {

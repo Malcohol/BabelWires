@@ -7,7 +7,6 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/connectionModifier.hpp>
 
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
 #include <BabelWiresLib/Project/projectContext.hpp>
@@ -47,21 +46,36 @@ void babelwires::ConnectionModifier::applyConnection(const Project& project, Use
     State state = State::TargetMissing;
     ValueTreeNode* target = nullptr;
 
-    try {
-        const babelwires::ConnectionModifierData& data = getModifierData();
-        target = data.getTarget(container);
-        state = State::SourceMissing;
-        const ValueTreeNode* source = data.getSourceTreeNode(project);
-        state = State::ApplicationFailed;
-        data.apply(source, target, shouldForce);
-        setSucceeded();
-    } catch (const BaseException& e) {
-        userLogger.logError() << "Failed to apply operation: " << e.what();
+    const babelwires::ConnectionModifierData& data = getModifierData();
+    const auto targetResult = data.getTarget(container);
+    if (!targetResult) {
+        userLogger.logError() << "Failed to apply operation: " << targetResult.error().toString();
+        setFailed(state, targetResult.error().toString());
+        return;
+    }
+    target = &*targetResult;
+    state = State::SourceMissing;
+    const auto sourceResult = data.getSourceTreeNode(project);
+    if (!sourceResult) {
+        userLogger.logError() << "Failed to apply operation: " << sourceResult.error().toString();
         if (target) {
             target->setToDefault();
         }
-        setFailed(state, e.what());
+        setFailed(state, sourceResult.error().toString());
+        return;
     }
+    const ValueTreeNode* source = &*sourceResult;
+    state = State::ApplicationFailed;
+    const auto applyResult = data.apply(source, target, shouldForce);
+    if (!applyResult) {
+        userLogger.logError() << "Failed to apply operation: " << applyResult.error().toString();
+        if (target) {
+            target->setToDefault();
+        }
+        setFailed(state, applyResult.error().toString());
+        return;
+    }
+    setSucceeded();
 }
 
 bool babelwires::ConnectionModifier::isConnected() const {

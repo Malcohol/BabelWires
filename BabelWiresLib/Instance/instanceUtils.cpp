@@ -11,6 +11,8 @@
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 
+#include <BaseLib/Result/resultDSL.hpp>
+
 const babelwires::ValueTreeNode& babelwires::InstanceUtils::getChild(const babelwires::ValueTreeNode& recordTreeNode,
                                                             babelwires::ShortId id) {
     const int index = recordTreeNode.getChildIndexFromStep(id);
@@ -42,7 +44,7 @@ babelwires::ValueTreeNode& babelwires::InstanceUtils::activateAndGetChild(babelw
     if (!recordType.isActivated(recordValue, id)) {
         const babelwires::TypeSystem& typeSystem = recordTreeNode.getTypeSystem();
         recordType.activateField(typeSystem, recordValue, id);
-        recordTreeNode.setValue(recordValue);
+        recordTreeNode.assertSetValue(recordValue);
     }
     return getChild(recordTreeNode, id);
 }
@@ -53,7 +55,7 @@ void babelwires::InstanceUtils::deactivateChild(babelwires::ValueTreeNode& recor
     babelwires::ValueHolder recordValue = recordTreeNode.getValue();
     if (recordType.isActivated(recordValue, id)) {
         recordType.deactivateField(recordValue, id);
-        recordTreeNode.setValue(recordValue);
+        recordTreeNode.assertSetValue(recordValue);
     }
 }
 
@@ -68,8 +70,8 @@ void babelwires::InstanceUtils::selectTag(ValueTreeNode& valueTreeNode, ShortId 
     ValueHolder value = valueTreeNode.getValue();
     if (tag != type.getSelectedTag(value)) {
         const babelwires::TypeSystem& typeSystem = valueTreeNode.getTypeSystem();
-        type.selectTag(typeSystem, value, tag);
-        valueTreeNode.setValue(value);
+        type.assertSelectTag(typeSystem, value, tag);
+        valueTreeNode.assertSetValue(value);
     }
 }
 
@@ -77,13 +79,22 @@ unsigned int babelwires::InstanceUtils::getArraySize(const babelwires::ValueTree
     return arrayTreeNode.getNumChildren();
 }
 
-void babelwires::InstanceUtils::setArraySize(babelwires::ValueTreeNode& arrayTreeNode, unsigned int newSize) {
+babelwires::Result babelwires::InstanceUtils::setArraySize(babelwires::ValueTreeNode& arrayTreeNode, unsigned int newSize) {
     const auto& type = arrayTreeNode.getType()->as<babelwires::ArrayType>();
     const auto& typeSystem = arrayTreeNode.getTypeSystem();
     babelwires::ValueHolder value = arrayTreeNode.getValue();
     value.copyContentsAndGetNonConst();
-    type.setSize(typeSystem, value, newSize);
-    arrayTreeNode.setValue(value);
+    DO_OR_ERROR(type.setSize(typeSystem, value, newSize));
+    arrayTreeNode.assertSetValue(value);
+    return {};
+}
+
+void babelwires::InstanceUtils::assertSetArraySize(babelwires::ValueTreeNode& arrayTreeNode, unsigned int newSize) {
+#ifndef NDEBUG
+    const auto result = 
+#endif
+    setArraySize(arrayTreeNode, newSize);
+    assert(result && "assertSetArraySize failed");
 }
 
 const babelwires::ValueTreeNode& babelwires::InstanceUtils::getChild(const babelwires::ValueTreeNode& arrayTreeNode, unsigned int index) {

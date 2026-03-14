@@ -7,7 +7,6 @@
 #include <BabelWiresLib/Types/Record/recordValue.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>
@@ -215,37 +214,37 @@ TEST(RecordTypeTest, selectOptionals) {
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false, true);
 
-    recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
-                               {{testDomain::TestComplexRecordType::getOpIntId(), true}});
+    EXPECT_TRUE(recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
+                               {{testDomain::TestComplexRecordType::getOpIntId(), true}}));
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, false, true);
 
-    recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
+    EXPECT_TRUE(recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
                                {{testDomain::TestComplexRecordType::getOpIntId(), true},
                                 {testDomain::TestComplexRecordType::getOpRecId(), true},
-                                {testDomain::TestComplexRecordType::getOnOptId(), false}});
+                                {testDomain::TestComplexRecordType::getOnOptId(), false}}));
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, true, false);
 
-    recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
-                               {{testDomain::TestComplexRecordType::getOpRecId(), true}});
+    EXPECT_TRUE(recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
+                               {{testDomain::TestComplexRecordType::getOpRecId(), true}}));
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, true, true);
 
-    recordType.selectOptionals(testEnvironment.m_typeSystem, newValue, {});
+    EXPECT_TRUE(recordType.selectOptionals(testEnvironment.m_typeSystem, newValue, {}));
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false, true);
 
-    recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
+    EXPECT_TRUE(recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
                                {{testDomain::TestComplexRecordType::getOpIntId(), true},
                                 {testDomain::TestComplexRecordType::getOpRecId(), true},
-                                {testDomain::TestComplexRecordType::getOnOptId(), true}});
+                                {testDomain::TestComplexRecordType::getOnOptId(), true}}));
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, true, true, true);
 
-    recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
+    EXPECT_TRUE(recordType.selectOptionals(testEnvironment.m_typeSystem, newValue,
                                {{testDomain::TestComplexRecordType::getOpRecId(), false},
-                                {testDomain::TestComplexRecordType::getOnOptId(), false}});
+                                {testDomain::TestComplexRecordType::getOnOptId(), false}}));
 
     verifyComplexRecord(testEnvironment.m_typeSystem, recordType, newValue, false, false, false);
 }
@@ -450,7 +449,7 @@ TEST(RecordTypeTest, featureChanges) {
     {
         babelwires::ValueHolder value = valueFeature.getValue();
         recordType->activateField(testEnvironment.m_typeSystem, value, testDomain::TestComplexRecordType::getOpRecId());
-        valueFeature.setValue(value);
+        valueFeature.assertSetValue(value);
     }
     EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
     EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
@@ -469,7 +468,7 @@ TEST(RecordTypeTest, featureChanges) {
     {
         babelwires::ValueHolder value = valueFeature.getValue();
         recordType->deactivateField(value, testDomain::TestComplexRecordType::getOpRecId());
-        valueFeature.setValue(value);
+        valueFeature.assertSetValue(value);
     }
     EXPECT_TRUE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::StructureChanged));
     EXPECT_FALSE(valueFeature.isChanged(babelwires::ValueTreeNode::Changes::ValueChanged));
@@ -534,23 +533,6 @@ TEST(RecordTypeTest, valueHash) {
     std::get<0>(child)->operator=(babelwires::IntValue(43));
     const std::size_t hash4 = value->getHash();
     EXPECT_NE(hash0, hash4);
-}
-
-TEST(RecordTypeTest, exceptions) {
-    testUtils::TestEnvironment testEnvironment;
-    testDomain::TestComplexRecordType recordType(testEnvironment.m_typeSystem);
-
-    babelwires::ValueHolder value = recordType.createValue(testEnvironment.m_typeSystem);
-    EXPECT_TRUE(value);
-
-    EXPECT_THROW(recordType.deactivateField(value, testDomain::TestComplexRecordType::getOpIntId()),
-                 babelwires::ModelException);
-    EXPECT_NO_THROW(
-        recordType.activateField(testEnvironment.m_typeSystem, value, testDomain::TestComplexRecordType::getOpIntId()));
-    EXPECT_THROW(
-        recordType.activateField(testEnvironment.m_typeSystem, value, testDomain::TestComplexRecordType::getOpIntId()),
-        babelwires::ModelException);
-    EXPECT_THROW(recordType.activateField(testEnvironment.m_typeSystem, value, "foo"), babelwires::ModelException);
 }
 
 TEST(RecordTypeTest, constructorBasics) {

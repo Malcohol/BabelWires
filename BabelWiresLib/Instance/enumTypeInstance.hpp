@@ -34,7 +34,7 @@ namespace babelwires {
         template <typename VALUE_TREE_NODE_M = VALUE_TREE_NODE>
         std::enable_if_t<!std::is_const_v<VALUE_TREE_NODE_M>, void> set(typename ENUM_TYPE::Value newValue) {
             const ENUM_TYPE& enumType = this->m_valueTreeNode.getType()->template as<ENUM_TYPE>();
-            this->m_valueTreeNode.setValue(babelwires::EnumValue(enumType.getIdentifierFromValue(newValue)));
+            this->m_valueTreeNode.assertSetValue(babelwires::EnumValue(enumType.getIdentifierFromValue(newValue)));
         }
     };
 
@@ -53,7 +53,7 @@ namespace babelwires {
         template <typename VALUE_TREE_NODE_M = VALUE_TREE_NODE>
         std::enable_if_t<!std::is_const_v<VALUE_TREE_NODE_M>, void> set(EnumValue newValue) {
             const ENUM_TYPE& enumType = this->m_valueTreeNode.getType()->template as<ENUM_TYPE>();
-            this->m_valueTreeNode.setValue(std::move(newValue));
+            this->m_valueTreeNode.assertSetValue(std::move(newValue));
         }
     };
 } // namespace babelwires

@@ -17,36 +17,46 @@
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
-#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
+
+#include <BaseLib/Result/error.hpp>
 
 #include <algorithm>
 #include <array>
 #include <execution>
 #include <numeric>
+#include <sstream>
 
 namespace {
     babelwires::TypeExp getParallelArray(babelwires::TypeExp&& entryType) {
         return babelwires::ArrayTypeConstructor::makeTypeExp(std::move(entryType), 1, 16);
     }
 
-    std::vector<babelwires::RecordType::FieldDefinition>&& addArray(std::vector<babelwires::RecordType::FieldDefinition>&& commonData,
-                                                          babelwires::ShortId arrayId, babelwires::TypeExp entryType) {
-        commonData.emplace_back(babelwires::RecordType::FieldDefinition{arrayId, getParallelArray(std::move(entryType))});
+    std::vector<babelwires::RecordType::FieldDefinition>&&
+    addArray(std::vector<babelwires::RecordType::FieldDefinition>&& commonData, babelwires::ShortId arrayId,
+             babelwires::TypeExp entryType) {
+        commonData.emplace_back(
+            babelwires::RecordType::FieldDefinition{arrayId, getParallelArray(std::move(entryType))});
         return std::move(commonData);
     }
 } // namespace
 
-babelwires::ParallelProcessorInputBase::ParallelProcessorInputBase(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, std::vector<RecordType::FieldDefinition> commonData,
+babelwires::ParallelProcessorInputBase::ParallelProcessorInputBase(TypeExp&& typeExpOfThis,
+                                                                   const TypeSystem& typeSystem,
+                                                                   std::vector<RecordType::FieldDefinition> commonData,
                                                                    ShortId arrayId, TypeExp entryType)
     : RecordType(std::move(typeExpOfThis), typeSystem, addArray(std::move(commonData), arrayId, entryType)) {}
 
-babelwires::ParallelProcessorOutputBase::ParallelProcessorOutputBase(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, ShortId arrayId, TypeExp entryType)
+babelwires::ParallelProcessorOutputBase::ParallelProcessorOutputBase(TypeExp&& typeExpOfThis,
+                                                                     const TypeSystem& typeSystem, ShortId arrayId,
+                                                                     TypeExp entryType)
     : RecordType(std::move(typeExpOfThis), typeSystem, {{arrayId, getParallelArray(std::move(entryType))}}) {}
 
 babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectContext, const TypeExp& parallelInputExp,
                                                  const TypeExp& parallelOutputExp)
-    : Processor(projectContext, parallelInputExp.assertResolve(projectContext.m_typeSystem), parallelOutputExp.assertResolve(projectContext.m_typeSystem)) {
+    : Processor(projectContext, parallelInputExp.assertResolve(projectContext.m_typeSystem),
+                parallelOutputExp.assertResolve(projectContext.m_typeSystem)) {
 #ifndef NDEBUG
     auto inputType = getInput().getType()->as<ParallelProcessorInputBase>();
     auto outputType = getOutput().getType()->as<ParallelProcessorOutputBase>();
@@ -59,8 +69,8 @@ babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectCo
 #endif
 }
 
-void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const ValueTreeNode& input,
-                                                 ValueTreeNode& output) const {
+babelwires::Result babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const ValueTreeNode& input,
+                                                               ValueTreeNode& output) const {
     bool shouldProcessAll = false;
     // Iterate through all features _except_ for the array, look for changes to the common input.
     for (unsigned int i = 0; i < input.getNumChildren() - 1; ++i) {
@@ -77,7 +87,7 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
         // In the old feature system I was able to maintain a mapping between input and output entries
         // to avoid this inefficiency. Perhaps that can be done with values too.
         shouldProcessAll = true;
-        InstanceUtils::setArraySize(arrayOutput, arrayInput.getNumChildren());
+        InstanceUtils::assertSetArraySize(arrayOutput, arrayInput.getNumChildren());
     }
 
     struct EntryData {
@@ -86,7 +96,7 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
             : m_index(index)
             , m_inputEntry(inputEntry)
             , m_outputEntry(std::make_unique<ValueTreeRoot>(typeSystem, outputEntry.getType())) {
-            m_outputEntry->setValue(outputEntry.getValue());
+            m_outputEntry->assertSetValue(outputEntry.getValue());
         }
 
         const unsigned int m_index;
@@ -113,31 +123,31 @@ void babelwires::ParallelProcessor::processValue(UserLogger& userLogger, const V
         std::execution::par,
 #endif
         entriesToProcess.begin(), entriesToProcess.end(), [this, &input, &userLogger, &isFailed](EntryData& data) {
-            try {
-                processEntry(userLogger, input, data.m_inputEntry, *(data.m_outputEntry));
-            } catch (const BaseException& e) {
-                data.m_failureString = e.what();
+            Result result = processEntry(userLogger, input, data.m_inputEntry, *(data.m_outputEntry));
+            if (!result) {
+                data.m_failureString = result.error().toString();
                 isFailed = true;
             }
         });
 
     if (isFailed) {
-        // TODO: Need a more precise way to signal failure.
-        ModelException compositeException;
+        // TODO: Would be much nicer to have per-entry way to signal failure.
+        Error compositeError;
         const char* newline = "";
         for (const auto& entry : entriesToProcess) {
             if (!entry.m_failureString.empty()) {
-                compositeException << newline << "Failure processing entry " << getPathTo(&entry.m_inputEntry) << ": "
-                                   << entry.m_failureString;
+                compositeError << newline << "Failure processing entry " << getPathTo(&entry.m_inputEntry)
+                               << ": " << entry.m_failureString;
                 newline = "\n";
             }
         }
-        throw compositeException;
+        return std::move(compositeError);
     }
 
     ArrayValue newOutput = arrayOutput.getValue()->as<ArrayValue>();
     for (EntryData& data : entriesToProcess) {
         newOutput.setValue(data.m_index, data.m_outputEntry->getValue());
     }
-    arrayOutput.setValue(std::move(newOutput));
+    arrayOutput.assertSetValue(std::move(newOutput));
+    return {};
 }

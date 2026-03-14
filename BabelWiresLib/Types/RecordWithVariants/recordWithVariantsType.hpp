@@ -9,6 +9,8 @@
 
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
+#include <BaseLib/Result/result.hpp>
+
 namespace babelwires {
 
     /// RecordWithVariantsType is like a RecordType but has a number of variants.
@@ -37,14 +39,17 @@ namespace babelwires {
         /// Return the set of tags.
         const Tags& getTags() const;
 
-        /// Get the index of the given tag.
-        unsigned int getIndexOfTag(ShortId tag) const;
-
         /// Check whether the tag is a tag of this union.
         bool isTag(ShortId tag) const;
 
-        /// Select the tag.
-        void selectTag(const TypeSystem& typeSystem, ValueHolder& value, ShortId tag) const;
+        /// Get the index of the given tag.
+        unsigned int getIndexOfTag(ShortId tag) const;
+
+        /// Select the tag. This returns an error if the tag is not a tag of this type.
+        Result selectTag(const TypeSystem& typeSystem, ValueHolder& value, ShortId tag) const;
+
+        /// Select the tag. Asserts if the tag is not a tag of this type.
+        void assertSelectTag(const TypeSystem& typeSystem, ValueHolder& value, ShortId tag) const;
 
         /// Return the tag which is currently selected.
         ShortId getSelectedTag(const ValueHolder& value) const;

@@ -11,7 +11,6 @@
 #include <BabelWiresLib/Types/Generic/genericTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Generic/genericValue.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 #include <BaseLib/Identifiers/registeredIdentifier.hpp>
 
@@ -166,9 +165,7 @@ babelwires::ShortId babelwires::GenericType::getStepToValue() {
 void babelwires::GenericType::setTypeVariableAssignmentAndInstantiate(
     const TypeSystem& typeSystem, ValueHolder& genericValue,
     const std::vector<TypeExp>& typeVariableAssignments) const {
-    if (typeVariableAssignments.size() > m_numVariables) {
-        throw ModelException() << "Too many type variable assignments for GenericType";
-    }
+    assert (typeVariableAssignments.size() <= m_numVariables && "Too many type variable assignments for GenericType");
     const GenericValue& constGenericValue = genericValue->as<GenericValue>();
     const auto& currentAssignments = constGenericValue.getTypeAssignments();
 

@@ -9,7 +9,6 @@
 
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
-#include <BabelWiresLib/ValueTree/modelExceptions.hpp>
 
 #include <span>
 
@@ -37,27 +36,22 @@ namespace {
     }
 
     std::tuple<const babelwires::Type&, babelwires::ValueHolder&>
-    followNonConst(const babelwires::TypeSystem& typeSystem, const babelwires::Type& type,
+    assertFollowNonConst(const babelwires::TypeSystem& typeSystem, const babelwires::Type& type,
                    babelwires::ValueHolder& valueHolder, const babelwires::Path& p, int& index) {
         if (index < p.getNumSteps()) {
-            if (auto* compoundType = type.tryAs<babelwires::CompoundType>()) {
-                const int childIndex = compoundType->getChildIndexFromStep(valueHolder, p.getStep(index));
-                if (childIndex >= 0) {
-                    auto [childValue, _, childType] = compoundType->getChildNonConst(valueHolder, childIndex);
-                    ++index;
-                    return followNonConst(typeSystem, *childType, *childValue, p, index);
-                } else {
-                    throw babelwires::ModelException() << "No such child";
-                }
-            } else {
-                throw babelwires::ModelException() << "Tried to step into a non-compound Value";
-            }
+            auto* compoundType = type.tryAs<babelwires::CompoundType>();
+            assert(compoundType && "Tried to step into a non-compound Value");
+            const int childIndex = compoundType->getChildIndexFromStep(valueHolder, p.getStep(index));
+            assert((childIndex >= 0) && "No such child");
+            auto [childValue, _, childType] = compoundType->getChildNonConst(valueHolder, childIndex);
+            ++index;
+            return assertFollowNonConst(typeSystem, *childType, *childValue, p, index);
         } else {
             return {type, valueHolder};
         }
     }
 
-    void visitNonConst(const babelwires::TypeSystem& typeSystem, const babelwires::Type& type,
+    void assertVisitNonConst(const babelwires::TypeSystem& typeSystem, const babelwires::Type& type,
                        babelwires::ValueHolder& valueHolder, const std::span<const babelwires::Path*>& paths,
                        const std::function<void(const babelwires::Type&, babelwires::ValueHolder&)>& visitor,
                        unsigned int depth) {
@@ -76,7 +70,7 @@ namespace {
                     const int childIndex = compoundType->getChildIndexFromStep(valueHolder, currentStep);
                     assert((childIndex >= 0) && "Path could not be followed");
                     auto [childValue, _, childType] = compoundType->getChildNonConst(valueHolder, childIndex);
-                    visitNonConst(typeSystem, *childType, *childValue, childSpan, visitor, depth + 1);
+                    assertVisitNonConst(typeSystem, *childType, *childValue, childSpan, visitor, depth + 1);
                     left = next;
                 }
             } while (left != paths.end());
@@ -94,17 +88,12 @@ babelwires::tryFollowPath(const TypeSystem& typeSystem, const Type& type, const 
 }
 
 std::tuple<const babelwires::Type&, babelwires::ValueHolder&>
-babelwires::followPathNonConst(const TypeSystem& typeSystem, const Type& type, const Path& path, ValueHolder& start) {
+babelwires::assertFollowPathNonConst(const TypeSystem& typeSystem, const Type& type, const Path& path, ValueHolder& start) {
     int index = 0;
-    try {
-        return followNonConst(typeSystem, type, start, path, index);
-    } catch (const std::exception& e) {
-        throw babelwires::ModelException()
-            << e.what() << "; when trying to follow step #" << index + 1 << " in path \"" << path << '\"';
-    }
+    return assertFollowNonConst(typeSystem, type, start, path, index);
 }
 
-void babelwires::visitPathsNonConst(const TypeSystem& typeSystem, const Type& type, ValueHolder& value,
+void babelwires::assertVisitPathsNonConst(const TypeSystem& typeSystem, const Type& type, ValueHolder& value,
                                     const std::vector<Path>& paths,
                                     const std::function<void(const Type&, ValueHolder&)>& visitor) {
     std::vector<const Path*> sortedPathPointers;
@@ -113,5 +102,5 @@ void babelwires::visitPathsNonConst(const TypeSystem& typeSystem, const Type& ty
         sortedPathPointers.emplace_back(&path);
     }
     std::sort(sortedPathPointers.begin(), sortedPathPointers.end());
-    visitNonConst(typeSystem, type, value, sortedPathPointers, visitor, 0);
+    assertVisitNonConst(typeSystem, type, value, sortedPathPointers, visitor, 0);
 }
