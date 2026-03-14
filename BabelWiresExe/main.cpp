@@ -96,8 +96,8 @@ int main(int argc, char* argv[]) {
     smf::registerLib(context);
 
     // Uncomment to enable a domain of testing data.
-    bw_music_testplugin::registerLib(context);
-    testDomain::registerLib(context);
+    //bw_music_testplugin::registerLib(context);
+    //testDomain::registerLib(context);
 
     if (options->m_mode == ProgramOptions::MODE_RUN_PROJECT) {
         Project project(context, log);
