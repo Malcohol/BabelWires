@@ -48,8 +48,6 @@ TEST(CloneTest, basic) {
     }
 }
 
-#include <iostream>
-
 namespace {
     struct M : public Cloneable {
         CLONEABLE(M);
