@@ -17,6 +17,7 @@ namespace babelwires {
     /// Set the size of an array.
     class SetArraySizeCommand : public CompoundCommand<Project> {
       public:
+        DOWNCASTABLE(SetArraySizeCommand, CompoundCommand<Project>);
         CLONEABLE(SetArraySizeCommand);
         SetArraySizeCommand(std::string commandName, NodeId nodeId, Path featurePath,
                                     int newSize);

@@ -19,6 +19,7 @@ namespace babelwires {
     /// Add a modifier to a Node.
     class AddConnectionCommand : public CompoundCommand<Project> {
       public:
+        DOWNCASTABLE(AddConnectionCommand, CompoundCommand<Project>);
         ~AddConnectionCommand();
 
         CLONEABLE(AddConnectionCommand);

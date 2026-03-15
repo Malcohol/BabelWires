@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BaseLib/Utilities/downcastable.hpp>
 #include <BaseLib/common.hpp>
 
 #include <cassert>
@@ -58,7 +59,7 @@ namespace babelwires {
     class StreamEvent : public Streamable {
       public:
         STREAM_EVENT(StreamEvent);
-        DOWNCASTABLE_TYPE_HIERARCHY(StreamEvent);
+        DOWNCASTABLE_BASE(StreamEvent);
 
         StreamEvent() = default;
         StreamEvent(const StreamEvent& other)

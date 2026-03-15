@@ -13,6 +13,7 @@
 
 #include <BaseLib/Cloning/cloneable.hpp>
 #include <BaseLib/Serialization/serializable.hpp>
+#include <BaseLib/Utilities/downcastable.hpp>
 
 namespace babelwires {
     /// A DataLocation identifies some data within the system.
@@ -22,7 +23,7 @@ namespace babelwires {
     /// want to assume that will always be a possible or convenient option.
     class DataLocation : public Cloneable, public Serializable, public ProjectVisitable {
       public:
-        DOWNCASTABLE_TYPE_HIERARCHY(DataLocation);
+        DOWNCASTABLE_BASE(DataLocation);
         CLONEABLE_ABSTRACT(DataLocation);
 
         DataLocation(Path pathToValue);

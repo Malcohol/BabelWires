@@ -17,6 +17,8 @@ namespace babelwires {
     /// UI cannot know which type is intended and editing won't work properly.
     class SumType : public Type {
       public:
+        DOWNCASTABLE(SumType, Type);
+
         using SummandTypeExps = std::vector<TypeExp>;
 
         SumType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, SummandTypeExps summands,

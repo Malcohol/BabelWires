@@ -18,6 +18,7 @@ namespace babelwires {
 
     class ProcessorNode : public Node {
       public:
+        DOWNCASTABLE(ProcessorNode, Node);
         ProcessorNode(const ProjectContext& context, UserLogger& userLogger, const ProcessorNodeData& data,
                          NodeId newId);
         ~ProcessorNode();

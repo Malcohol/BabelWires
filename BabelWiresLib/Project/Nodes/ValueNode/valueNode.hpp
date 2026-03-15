@@ -17,6 +17,7 @@ namespace babelwires {
 
     class ValueNode : public Node {
       public:
+        DOWNCASTABLE(ValueNode, Node);
         ValueNode(const ProjectContext& context, UserLogger& userLogger, const ValueNodeData& data,
                          NodeId newId);
         ~ValueNode();

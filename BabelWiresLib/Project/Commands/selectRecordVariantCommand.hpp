@@ -19,6 +19,7 @@ namespace babelwires {
     /// Activate an optional in a RecordWithVariantType
     class SelectRecordVariantCommand : public CompoundCommand<Project> {
       public:
+        DOWNCASTABLE(SelectRecordVariantCommand, CompoundCommand<Project>);
         CLONEABLE(SelectRecordVariantCommand);
         SelectRecordVariantCommand(std::string commandName, NodeId nodeId, Path pathToRecord, ShortId tagToSelect);
         SelectRecordVariantCommand(const SelectRecordVariantCommand& other);

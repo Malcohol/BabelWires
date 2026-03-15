@@ -21,6 +21,8 @@ namespace babelwires {
     /// If the index is meaningful to the user, consider using an integer with with ValueNames.
     class EnumType : public Type {
       public:
+        DOWNCASTABLE(EnumType, Type);
+
         /// The set of values. We use Identifiers to get versionable serialization support.
         /// The ValueSet vector may not contain duplicates.
         /// Note: This matches the result of REGISTERED_ID_VECTOR.

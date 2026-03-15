@@ -21,6 +21,7 @@ namespace babelwires {
     /// By contrast with LocalModifiers, it application depends on context.
     class ConnectionModifier : public Modifier {
       public:
+        DOWNCASTABLE(ConnectionModifier, Modifier);
         ConnectionModifier(std::unique_ptr<ConnectionModifierData> modifierData);
         ConnectionModifier(const ConnectionModifier& other);
         CLONEABLE(ConnectionModifier);

@@ -40,7 +40,7 @@ QWidget* babelwires::RowModelDelegate::createEditor(QWidget* parent, const QStyl
         return 0;
     }
 
-    const NodeContentsModel* const model = dynamic_cast<const NodeContentsModel*>(index.model());
+    const NodeContentsModel* const model = qobject_cast<const NodeContentsModel*>(index.model());
     assert(model && "Unexpected model");
 
     AccessModelScope scope(m_projectGraphModel);
@@ -80,7 +80,7 @@ QWidget* babelwires::RowModelDelegate::createEditor(QWidget* parent, const QStyl
 }
 
 void babelwires::RowModelDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const {
-    const NodeContentsModel* model = dynamic_cast<const NodeContentsModel*>(index.model());
+    const NodeContentsModel* model = qobject_cast<const NodeContentsModel*>(index.model());
     assert(model && "Unexpected model");
 
     AccessModelScope scope(m_projectGraphModel);
@@ -107,7 +107,7 @@ void babelwires::RowModelDelegate::setEditorData(QWidget* editor, const QModelIn
 void babelwires::RowModelDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
                                                     const QModelIndex& index) const {
     AccessModelScope scope(m_projectGraphModel);
-    NodeContentsModel* nodeContentsModel = dynamic_cast<NodeContentsModel*>(model);
+    NodeContentsModel* nodeContentsModel = qobject_cast<NodeContentsModel*>(model);
     assert(model && "Unexpected model");
 
     const Node* node = nodeContentsModel->getNode(scope);
@@ -133,7 +133,7 @@ void babelwires::RowModelDelegate::paint(QPainter* painter, const QStyleOptionVi
                                              const QModelIndex& index) const {
     const int column = index.column();
     if (column == 1) {
-        const NodeContentsModel* nodeContentsModel = dynamic_cast<const NodeContentsModel*>(index.model());
+        const NodeContentsModel* nodeContentsModel = qobject_cast<const NodeContentsModel*>(index.model());
         assert(nodeContentsModel && "Unexpected model");
 
         AccessModelScope scope(m_projectGraphModel);
@@ -159,7 +159,7 @@ void babelwires::RowModelDelegate::paint(QPainter* painter, const QStyleOptionVi
 QSize babelwires::RowModelDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const {
     const int column = index.column();
     if (column == 1) {
-        const NodeContentsModel* nodeContentsModel = dynamic_cast<const NodeContentsModel*>(index.model());
+        const NodeContentsModel* nodeContentsModel = qobject_cast<const NodeContentsModel*>(index.model());
         assert(nodeContentsModel && "Unexpected model");
 
         AccessModelScope scope(m_projectGraphModel);
@@ -180,7 +180,7 @@ QSize babelwires::RowModelDelegate::sizeHint(const QStyleOptionViewItem& option,
 }
 
 bool babelwires::RowModelDelegate::eventFilter(QObject* object, QEvent* event) {
-    QComboBox* comboBox = dynamic_cast<QComboBox*>(object);
+    QComboBox* comboBox = qobject_cast<QComboBox*>(object);
     if (comboBox) {
         if (event->type() == QEvent::MouseButtonRelease) {
             // Hack: ensure the popup is shown.

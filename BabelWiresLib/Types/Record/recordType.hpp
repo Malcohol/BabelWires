@@ -18,6 +18,8 @@ namespace babelwires {
     /// RecordType carries a sequence of Fields (some of which are optional and can be inactive).
     class RecordType : public CompoundType {
       public:
+        DOWNCASTABLE(RecordType, CompoundType);
+
         enum class Optionality { alwaysActive, optionalDefaultInactive, optionalDefaultActive };
 
         struct FieldDefinition {

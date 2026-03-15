@@ -21,6 +21,7 @@ namespace babelwires {
     /// an array size modifier. See RemoveModifierCommand.
     class RemoveSimpleModifierSubcommand : public SimpleCommand<Project> {
       public:
+        DOWNCASTABLE(RemoveSimpleModifierSubcommand, SimpleCommand<Project>);
         CLONEABLE(RemoveSimpleModifierSubcommand);
         RemoveSimpleModifierSubcommand(NodeId targetId, Path featurePath);
         RemoveSimpleModifierSubcommand(const RemoveSimpleModifierSubcommand& other);

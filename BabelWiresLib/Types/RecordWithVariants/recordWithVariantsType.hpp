@@ -19,6 +19,8 @@ namespace babelwires {
     // MAYBEDO Find an efficient way to unite this with RecordType or implement support for type coercion.
     class RecordWithVariantsType : public CompoundType {
       public:
+        DOWNCASTABLE(RecordWithVariantsType, CompoundType);
+
         using Tags = std::vector<ShortId>;
 
         struct FieldWithTags {

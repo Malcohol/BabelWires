@@ -14,6 +14,7 @@ namespace babelwires {
     /// Creates an EnumType with a single value.
     class EnumAtomTypeConstructor : public TypeConstructor {
       public:
+        DOWNCASTABLE(EnumAtomTypeConstructor, TypeConstructor);
         TYPE_CONSTRUCTOR("EnumAtom", "[0]", "cb88eeac-92e6-4a77-aa73-04db08c0d628", 1);
 
         ResultT<TypePtr> constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,

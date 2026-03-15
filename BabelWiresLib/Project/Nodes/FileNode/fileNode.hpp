@@ -17,6 +17,7 @@ namespace babelwires {
     /// A base class for Nodes which represents the contents of a file.
     class FileNode : public Node {
       public:
+        DOWNCASTABLE(FileNode, Node);
         FileNode(const NodeData& data, NodeId newId);
 
         /// Return the file path to the file.

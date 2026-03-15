@@ -13,6 +13,7 @@ namespace babelwires {
     /// A MapProjectDataLocation identifies some data within a MapProject.
     class MapProjectDataLocation : public DataLocation {
       public:
+        DOWNCASTABLE(MapProjectDataLocation, DataLocation);
         CLONEABLE(MapProjectDataLocation);
         SERIALIZABLE(MapProjectDataLocation, "mapProjectLocation", void, 1);
 

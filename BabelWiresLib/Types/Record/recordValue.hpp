@@ -18,6 +18,7 @@ namespace babelwires {
     /// RecordValues are compound values containing a set of named children.
     class RecordValue : public Value {
       public:
+        DOWNCASTABLE(RecordValue, Value);
         CLONEABLE(RecordValue);
 
         ValueHolder& getValue(ShortId fieldId);

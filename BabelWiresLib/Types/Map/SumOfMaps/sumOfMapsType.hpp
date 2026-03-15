@@ -19,6 +19,8 @@ namespace babelwires {
     /// sure there is a much cleaner way of providing the same functionality, but this will have to do for now.
     class SumOfMapsType : public SumType {
       public:
+        DOWNCASTABLE(SumOfMapsType, SumType);
+
         SumOfMapsType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, SummandTypeExps sourceTypes, SummandTypeExps targetTypes,
                       unsigned int indexOfDefaultSourceType = 0, unsigned int indexOfDefaultTargetType = 0);
 

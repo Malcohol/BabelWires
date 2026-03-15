@@ -13,6 +13,7 @@ namespace babelwires {
 
     class StringValue : public AlwaysEditableValue {
       public:
+        DOWNCASTABLE(StringValue, AlwaysEditableValue);
         CLONEABLE(StringValue);
         SERIALIZABLE(StringValue, "string", EditableValue, 1);
 

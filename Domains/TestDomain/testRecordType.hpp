@@ -10,6 +10,8 @@ namespace testDomain {
 
     class TestSimpleRecordType : public babelwires::RecordType {
       public:
+        DOWNCASTABLE(TestSimpleRecordType, babelwires::RecordType);
+
         TestSimpleRecordType(const babelwires::TypeSystem& typeSystem);
 
         REGISTERED_TYPE("srecordT", "SimpleRecord", "ea96a409-6424-4924-aefe-ecbe66139f17", 1);
@@ -36,6 +38,8 @@ namespace testDomain {
 
     class TestComplexRecordType : public babelwires::RecordType {
       public:
+        DOWNCASTABLE(TestComplexRecordType, babelwires::RecordType);
+
         TestComplexRecordType(const babelwires::TypeSystem& typeSystem);
 
         REGISTERED_TYPE("crecordT", "ComplexRecord", "87291871-677d-41a1-81e7-bf1206b1d396", 1);
@@ -90,6 +94,7 @@ namespace testDomain {
     /// ValueNodeData which creates an element carrying a simple record type.
     class TestSimpleRecordElementData : public babelwires::ValueNodeData {
       public:
+        DOWNCASTABLE(TestSimpleRecordElementData, babelwires::ValueNodeData);
         TestSimpleRecordElementData();
 
         static babelwires::Path getPathToRecord();
@@ -99,6 +104,7 @@ namespace testDomain {
 
     class TestComplexRecordElementData : public babelwires::ValueNodeData {
       public:
+        DOWNCASTABLE(TestComplexRecordElementData, babelwires::ValueNodeData);
         TestComplexRecordElementData();
 
         static babelwires::Path getPathToRecord();

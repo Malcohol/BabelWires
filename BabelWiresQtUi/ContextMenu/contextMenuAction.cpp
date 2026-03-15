@@ -17,7 +17,7 @@ babelwires::ContextMenuAction::ContextMenuAction(const QString& text)
 
 void babelwires::ContextMenuAction::onTriggeredFired() {
     QWidget *const parentWidget = qobject_cast<QWidget*>(parent());
-    assert(dynamic_cast<ContextMenu*>(parentWidget) && "ContextMenuAction has unexpected parent widget");
+    assert(qobject_cast<ContextMenu*>(parentWidget) && "ContextMenuAction has unexpected parent widget");
     ContextMenu *const menu = static_cast<ContextMenu*>(parentWidget);
     actionTriggered(menu->getModel(), menu->getModelIndex());
     menu->close();

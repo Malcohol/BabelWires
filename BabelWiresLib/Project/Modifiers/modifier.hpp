@@ -10,9 +10,8 @@
 #include <BabelWiresLib/Path/pathStep.hpp>
 
 #include <BaseLib/Cloning/cloneable.hpp>
+#include <BaseLib/Utilities/downcastable.hpp>
 #include <BaseLib/Utilities/enumFlags.hpp>
-#include <BaseLib/common.hpp>
-
 
 #include <memory>
 
@@ -33,7 +32,7 @@ namespace babelwires {
     class Modifier : public Cloneable {
       public:
         CLONEABLE_ABSTRACT(Modifier);
-        DOWNCASTABLE_TYPE_HIERARCHY(Modifier);
+        DOWNCASTABLE_BASE(Modifier);
 
         Modifier(std::unique_ptr<ModifierData> modifierData);
         Modifier(const Modifier& other);

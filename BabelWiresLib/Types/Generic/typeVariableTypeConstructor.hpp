@@ -20,6 +20,7 @@ namespace babelwires {
     /// generic types to traverse upwards to find the generic type of which this is a variable.
     class TypeVariableTypeConstructor : public TypeConstructor {
       public:
+        DOWNCASTABLE(TypeVariableTypeConstructor, TypeConstructor);
         TYPE_CONSTRUCTOR("TVar", "TVar([0],[1],{0?-})", "33f14749-b652-4d53-808b-8d8c281c310f", 1);
 
         ResultT<TypePtr> constructType(const TypeSystem& typeSystem, TypeExp newTypeExp, const TypeConstructorArguments& arguments,

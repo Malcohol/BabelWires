@@ -20,6 +20,7 @@ namespace babelwires {
     /// Add an element to an array feature.
     class SetMapTargetTypeCommand : public SimpleCommand<MapProject> {
       public:
+        DOWNCASTABLE(SetMapTargetTypeCommand, SimpleCommand<MapProject>);
         CLONEABLE(SetMapTargetTypeCommand);
         SetMapTargetTypeCommand(std::string commandName, TypeExp newTargetTypeExp);
 

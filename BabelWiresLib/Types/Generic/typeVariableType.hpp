@@ -16,6 +16,8 @@ namespace babelwires {
     /// The information about the type variable is carried by the typeExp.
     class TypeVariableType : public Type {
       public:
+        DOWNCASTABLE(TypeVariableType, Type);
+
         TypeVariableType(TypeExp&& typeExpOfThis);
 
         std::string getFlavour() const override;

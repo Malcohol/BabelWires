@@ -13,6 +13,7 @@ namespace babelwires {
     /// FallbackMapEntries are the last entry in a map, and define what happens to previously unmapped source values.
     class FallbackMapEntryData : public MapEntryData {
       public:
+        DOWNCASTABLE(FallbackMapEntryData, MapEntryData);
         SERIALIZABLE_ABSTRACT(FallbackMapEntryData, MapEntryData);
     };
 } // namespace babelwires

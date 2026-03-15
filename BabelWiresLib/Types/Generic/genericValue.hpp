@@ -15,6 +15,7 @@
 namespace babelwires {
     class GenericValue : public Value {
       public:
+        DOWNCASTABLE(GenericValue, Value);
         CLONEABLE(GenericValue);
 
         GenericValue(const TypeSystem& typeSystem, const TypePtr& wrappedType, unsigned int numVariables);

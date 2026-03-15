@@ -21,6 +21,7 @@ namespace babelwires {
     /// TargetFileNodes are Nodes which correspond to a target file.
     class TargetFileNode : public FileNode {
       public:
+        DOWNCASTABLE(TargetFileNode, FileNode);
         TargetFileNode(const ProjectContext& context, UserLogger& userLogger, const TargetFileNodeData& data,
                           NodeId newId);
         ~TargetFileNode();

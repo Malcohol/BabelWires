@@ -18,6 +18,7 @@ namespace babelwires {
     /// Deactivate an optional in a RecordType
     class DeactivateOptionalCommand : public CompoundCommand<Project> {
       public:
+        DOWNCASTABLE(DeactivateOptionalCommand, CompoundCommand<Project>);
         CLONEABLE(DeactivateOptionalCommand);
         DeactivateOptionalCommand(std::string commandName, NodeId nodeId, Path featurePath,
                                ShortId optional);

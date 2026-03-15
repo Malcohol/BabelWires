@@ -16,6 +16,8 @@ namespace babelwires {
     /// Also: The parameter types are expected to have EditableValues.
     class TupleType : public Type {
       public:
+        DOWNCASTABLE(TupleType, Type);
+
         using ComponentTypesExps = std::vector<TypeExp>;
 
         TupleType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, ComponentTypesExps components);

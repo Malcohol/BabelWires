@@ -17,6 +17,7 @@
 namespace babelwires {
     class TupleValue : public AlwaysEditableValue {
       public:
+        DOWNCASTABLE(TupleValue, AlwaysEditableValue);
         CLONEABLE(TupleValue);
         SERIALIZABLE(TupleValue, "tuple", EditableValue, 1);
 

@@ -10,6 +10,7 @@
 namespace testUtils {
     class TestValue : public babelwires::EditableValue {
       public:
+        DOWNCASTABLE(TestValue, babelwires::EditableValue);
         CLONEABLE(TestValue);
         SERIALIZABLE(TestValue, "testValue", babelwires::EditableValue, 1);
         TestValue(std::string value = "The value");
@@ -29,6 +30,7 @@ namespace testUtils {
     /// The Type of TestValues.
     class TestType : public babelwires::Type {
       public:
+        DOWNCASTABLE(TestType, babelwires::Type);
         REGISTERED_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("TestType"), 1);
 
         /// 0 == unbounded.

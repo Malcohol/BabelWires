@@ -18,6 +18,7 @@ namespace babelwires {
     /// Remove all modifiers and expanded paths at and beneath a given TreeValueNode.
     class RemoveAllEditsSubcommand : public CompoundCommand<Project> {
       public:
+        DOWNCASTABLE(RemoveAllEditsSubcommand, CompoundCommand<Project>);
         CLONEABLE(RemoveAllEditsSubcommand);
         RemoveAllEditsSubcommand(NodeId elementId, Path path);
 

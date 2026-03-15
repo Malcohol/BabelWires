@@ -9,7 +9,7 @@
 
 #include <BaseLib/Cloning/cloneable.hpp>
 #include <BaseLib/Identifiers/identifier.hpp>
-#include <BaseLib/common.hpp>
+#include <BaseLib/Utilities/downcastable.hpp>
 
 namespace babelwires {
     class Type;
@@ -19,7 +19,7 @@ namespace babelwires {
     /// Value lifetimes are usually managed by the ValueHolder container.
     class Value : public Cloneable {
       public:
-        DOWNCASTABLE_TYPE_HIERARCHY(Value);
+        DOWNCASTABLE_BASE(Value);
         CLONEABLE_ABSTRACT(Value);
 
         virtual std::size_t getHash() const = 0;

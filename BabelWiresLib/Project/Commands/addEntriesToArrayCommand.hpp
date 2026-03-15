@@ -18,6 +18,7 @@ namespace babelwires {
     /// Add an element to an array.
     class AddEntriesToArrayCommand : public CompoundCommand<Project> {
       public:
+        DOWNCASTABLE(AddEntriesToArrayCommand, CompoundCommand<Project>);
         CLONEABLE(AddEntriesToArrayCommand);
         AddEntriesToArrayCommand(std::string commandName, NodeId nodeId, Path featurePath,
                                unsigned int indexOfNewEntries, unsigned int numEntriesToAdd = 1);

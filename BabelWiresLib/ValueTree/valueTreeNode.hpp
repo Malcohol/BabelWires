@@ -8,8 +8,8 @@
 #pragma once
 
 #include <BaseLib/Result/result.hpp>
+#include <BaseLib/Utilities/downcastable.hpp>
 #include <BaseLib/Utilities/enumFlags.hpp>
-#include <BaseLib/common.hpp>
 #include <BaseLib/multiKeyMap.hpp>
 
 #include <BabelWiresLib/Path/pathStep.hpp>
@@ -30,7 +30,7 @@ namespace babelwires {
     /// Note that the underlying values can be shared, so they cannot carry this data.
     class ValueTreeNode {
       public:
-        DOWNCASTABLE_TYPE_HIERARCHY(ValueTreeNode);
+        DOWNCASTABLE_BASE(ValueTreeNode);
 
         ValueTreeNode(TypePtr typePtr, ValueHolder value);
         virtual ~ValueTreeNode();

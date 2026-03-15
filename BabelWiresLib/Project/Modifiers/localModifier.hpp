@@ -20,6 +20,7 @@ namespace babelwires {
     /// A modifier which operates on the contents of a single Node, and is unaffected by context.
     class LocalModifier : public Modifier {
       public:
+        DOWNCASTABLE(LocalModifier, Modifier);
         LocalModifier(std::unique_ptr<LocalModifierData> modifierData);
         LocalModifier(const LocalModifier& other);
         CLONEABLE(LocalModifier);

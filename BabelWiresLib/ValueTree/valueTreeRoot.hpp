@@ -19,6 +19,8 @@ namespace babelwires {
     /// A ValueTreeRoot is a ValueTreeNode that owns its value.
     class ValueTreeRoot : public ValueTreeNode {
       public:
+        DOWNCASTABLE(ValueTreeRoot, ValueTreeNode);
+
         /// Construct a rooted ValueTreeNode which carries values of the given type.
         ValueTreeRoot(const TypeSystem& typeSystem, TypePtr typePtr);
 

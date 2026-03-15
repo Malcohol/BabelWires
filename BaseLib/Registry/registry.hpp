@@ -116,18 +116,6 @@ namespace babelwires {
         /// match that of the registered entry. Care should be taken to ensure the reference is not a temporary.
         ResultT<const ENTRY*> getRegisteredEntry(const LongId& identifier) const;
 
-        /// If ENTRY_SUBTYPE has the common static method "getThisIdentifier", then you can look it up by type
-        /// and get a typed reference back.
-        template <typename ENTRY_SUBTYPE,
-                  std::enable_if_t<std::is_base_of_v<ENTRY, ENTRY_SUBTYPE>, std::nullptr_t> = nullptr>
-        ResultT<const ENTRY_SUBTYPE*> getRegisteredType() const {
-          ASSIGN_OR_ERROR(const ENTRY* entry, getRegisteredEntry(ENTRY_SUBTYPE::getThisIdentifier()));
-          if (!dynamic_cast<const ENTRY_SUBTYPE*>(entry)) {
-            return Error() << "The registered type was not of the expected type in " << getRegistryName();
-          }
-          return static_cast<const ENTRY_SUBTYPE*>(entry);
-        }
-
         /// This is called when entries are added and can be used to validate them, for example.
         virtual void onEntryRegistered(ENTRY& newEntry) const {}
 

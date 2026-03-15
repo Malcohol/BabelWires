@@ -27,6 +27,7 @@ namespace babelwires {
     /// executed in a consistent way.
     class RemoveNodeCommand : public SimpleCommand<Project> {
       public:
+        DOWNCASTABLE(RemoveNodeCommand, SimpleCommand<Project>);
         CLONEABLE(RemoveNodeCommand);
         /// A default constructed object cannot be initiatialized until addNodeToRemove
         /// is called or it subsumes a command with data.

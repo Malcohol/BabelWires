@@ -14,6 +14,7 @@ namespace babelwires {
     /// Construct a new SumType from a pair of types.
     class SumTypeConstructor : public TypeConstructor {
       public:
+        DOWNCASTABLE(SumTypeConstructor, TypeConstructor);
         // SumTypes are variadic.
         TYPE_CONSTRUCTOR("Sum", "{0|+}", "e9978340-49d9-49f3-922a-3c367f5feaec", 1);
 

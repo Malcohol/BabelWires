@@ -13,6 +13,7 @@
 namespace babelwires {
     /// SetTypeVariableModifierData is used to assign specific types to type variables.
     struct SetTypeVariableModifierData : LocalModifierData {
+        DOWNCASTABLE(SetTypeVariableModifierData, LocalModifierData);
         CLONEABLE(SetTypeVariableModifierData);
         SERIALIZABLE(SetTypeVariableModifierData, "setTypeVariable", LocalModifierData, 1);
         virtual Result apply(ValueTreeNode* target) const override;

@@ -11,6 +11,7 @@
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 #include <BaseLib/Identifiers/identifier.hpp>
+#include <BaseLib/Utilities/downcastable.hpp>
 #include <BabelWiresLib/Path/pathStep.hpp>
 
 #include <optional>
@@ -25,7 +26,7 @@ namespace babelwires {
     /// Information about subtype relationships is managed by the TypeSystem.
     class Type {
       public:
-        DOWNCASTABLE_TYPE_HIERARCHY(Type);
+        DOWNCASTABLE_BASE(Type);
 
         /// A type carries the type expression that describes it and this must be supplied.
         /// Registered types can use getThisIdentifier() to obtain their TypeExp.

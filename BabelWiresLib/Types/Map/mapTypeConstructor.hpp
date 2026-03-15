@@ -14,6 +14,7 @@ namespace babelwires {
     /// Construct a new MapType from a source and target type and a default fallback kind.
     class MapTypeConstructor : public TypeConstructor {
       public:
+        DOWNCASTABLE(MapTypeConstructor, TypeConstructor);
         /// Note that the we don't represent the default in the name.
         TYPE_CONSTRUCTOR("Map", "{0}\u21C9{1}", "7b45de96-b355-4d87-a1b1-a6305b660716", 1);
 

@@ -8,6 +8,8 @@ namespace testDomain {
 
     class TestRecordWithVariantsType : public babelwires::RecordWithVariantsType {
       public:
+        DOWNCASTABLE(TestRecordWithVariantsType, babelwires::RecordWithVariantsType);
+
         TestRecordWithVariantsType(const babelwires::TypeSystem& typeSystem);
 
         REGISTERED_TYPE("vrecordT", "RecordWithVariants", "45442c6b-fa02-4a48-b7f8-9ca062c568ea", 1);

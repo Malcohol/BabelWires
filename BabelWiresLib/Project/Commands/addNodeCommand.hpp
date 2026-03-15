@@ -20,6 +20,7 @@ namespace babelwires {
     /// Add a Node to the project.
     class AddNodeCommand : public SimpleCommand<Project> {
       public:
+        DOWNCASTABLE(AddNodeCommand, SimpleCommand<Project>);
         CLONEABLE(AddNodeCommand);
         /// Create a command which adds the given node.
         /// NOTE: An expanded path entry is always added for the root path, so the constructor asserts it is not already present.

@@ -17,6 +17,7 @@ namespace babelwires {
     /// An ArrayValue can contain a dynamically-sized sequence of child values.
     class ArrayValue : public Value {
       public:
+        DOWNCASTABLE(ArrayValue, Value);
         CLONEABLE(ArrayValue);
         ArrayValue(const TypeSystem& typeSystem, const Type& entryType, unsigned int initialSize);
         ArrayValue(const ArrayValue& other);

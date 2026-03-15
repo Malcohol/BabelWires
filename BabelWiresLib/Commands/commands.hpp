@@ -9,13 +9,14 @@
 
 #include <BabelWiresLib/Commands/commandTimestamp.hpp>
 
-#include <BaseLib/common.hpp>
 #include <BaseLib/Cloning/cloneable.hpp>
+#include <BaseLib/Utilities/downcastable.hpp>
 
 #include <chrono>
 #include <memory>
 #include <ostream>
 #include <string>
+#include <vector>
 #include <algorithm>
 #include <cassert>
 
@@ -24,7 +25,7 @@ namespace babelwires {
     template<typename COMMAND_TARGET>
     class Command : public Cloneable {
       public:
-        DOWNCASTABLE_TYPE_HIERARCHY(Command);
+        DOWNCASTABLE_BASE(Command);
         CLONEABLE_ABSTRACT(Command);
 
         /// CommandName should be a displayable name
@@ -85,6 +86,8 @@ namespace babelwires {
     template<typename COMMAND_TARGET>
     class SimpleCommand : public Command<COMMAND_TARGET> {
       public:
+        DOWNCASTABLE(SimpleCommand, Command<COMMAND_TARGET>);
+
         SimpleCommand(std::string commandName);
 
         /// Call initialize and then execute.
@@ -99,6 +102,7 @@ namespace babelwires {
     template<typename COMMAND_TARGET>
     class CompoundCommand : public Command<COMMAND_TARGET> {
       public:
+        DOWNCASTABLE(CompoundCommand, Command<COMMAND_TARGET>);
         CLONEABLE(CompoundCommand);
         CompoundCommand(std::string commandName);
         CompoundCommand(const CompoundCommand& other);

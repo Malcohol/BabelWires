@@ -15,6 +15,7 @@ namespace babelwires {
     /// Describes the construction of a ValueNode.
     class ValueNodeData : public NodeData {
       public:
+        DOWNCASTABLE(ValueNodeData, NodeData);
         CLONEABLE(ValueNodeData);
         CUSTOM_CLONEABLE(ValueNodeData);
         SERIALIZABLE(ValueNodeData, "value", NodeData, 1);

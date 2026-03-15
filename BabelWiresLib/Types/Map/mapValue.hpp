@@ -29,6 +29,7 @@ namespace babelwires {
     /// However, an assignment of MapValue will fail if there are invalid entries.
     class MapValue : public AlwaysEditableValue {
       public:
+        DOWNCASTABLE(MapValue, AlwaysEditableValue);
         SERIALIZABLE(MapValue, "mapValue", EditableValue, 1);
         CLONEABLE(MapValue);
 

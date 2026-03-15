@@ -15,6 +15,7 @@ namespace babelwires {
     /// Construct a new TupleType from a vector of types.
     class TupleTypeConstructor : public TypeConstructor {
       public:
+        DOWNCASTABLE(TupleTypeConstructor, TypeConstructor);
         // TupleTypes are variadic.
         TYPE_CONSTRUCTOR("Tuple", "{0|*}", "e55f3a4d-9b62-4f54-964f-bca4a42e8f68", 1);
 
