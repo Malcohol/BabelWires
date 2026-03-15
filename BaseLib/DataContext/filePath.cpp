@@ -68,12 +68,7 @@ std::string babelwires::FilePath::serializeToString() const {
 }
 
 babelwires::ResultT<babelwires::FilePath> babelwires::FilePath::deserializeFromString(const std::string& string) {
-    std::filesystem::path path;
-    try {
-        path = std::filesystem::u8path(string);
-    }
-    catch (const std::exception&) {
-        return Error() << "Failed to parse \"" << string << "\" as a file path.";
-    }
-    return FilePath(path);
+    // TODO - validate the path string, and return an error if it is invalid.
+    // u8path only performs string construction and does not validate the path,
+    return FilePath(std::filesystem::u8path(string));
 }
