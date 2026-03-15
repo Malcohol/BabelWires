@@ -1,4 +1,7 @@
 #include <BaseLib/Cloning/cloneable.hpp>
+
+#include <BaseLib/Utilities/downcastable.hpp>
+
 #include <gtest/gtest.h>
 
 #include <algorithm>
@@ -7,9 +10,12 @@
 using namespace babelwires;
 
 namespace {
-    struct A : public Cloneable {};
+    struct A : public Cloneable {
+        DOWNCASTABLE_BASE(A);
+    };
 
     struct B : public A {
+        DOWNCASTABLE(B, A);
         CLONEABLE_ABSTRACT(B);
         B(int x)
             : m_x(x) {}
@@ -20,6 +26,7 @@ namespace {
     };
 
     struct C : public B {
+        DOWNCASTABLE(C, B);
         C(int x, int y)
             : B(x)
             , m_y(y) {}
@@ -42,7 +49,7 @@ TEST(CloneTest, basic) {
     {
         std::unique_ptr<B> clone = static_cast<B&>(c).clone();
         EXPECT_EQ(c.m_x, clone->m_x);
-        const C* cloneAsC = dynamic_cast<C*>(clone.get());
+        const C* cloneAsC = clone->tryAs<C>();
         EXPECT_NE(cloneAsC, nullptr);
         EXPECT_EQ(c.m_y, cloneAsC->m_y);
     }
@@ -87,6 +94,7 @@ namespace {
     };
 
     struct X : public CustomCloneable<CloneContext> {
+        DOWNCASTABLE_BASE(X);
         CUSTOM_CLONEABLE(X);
 
         X() = default;
@@ -114,6 +122,7 @@ namespace {
     };
 
     struct Y : public X, Patchable {
+        DOWNCASTABLE(Y, X);
         CUSTOM_CLONEABLE(Y);
 
         Y() = default;
@@ -159,9 +168,9 @@ namespace {
         root->m_leftChild->m_leftChild->m_parent = root->m_leftChild.get();
         root->m_rightChild->m_rightChild->m_parent = root->m_rightChild.get();
 
-        dynamic_cast<Y*>(root->m_leftChild->m_leftChild.get())->m_distantRelation =
+        root->m_leftChild->m_leftChild->as<Y>().m_distantRelation =
             root->m_rightChild->m_rightChild.get();
-        dynamic_cast<Y*>(root->m_rightChild->m_rightChild.get())->m_distantRelation =
+        root->m_rightChild->m_rightChild->as<Y>().m_distantRelation =
             root->m_leftChild->m_leftChild.get();
 
         return root;
@@ -185,12 +194,12 @@ TEST(CloneTest, customGraphCloningRoot) {
     EXPECT_EQ(clone->m_leftChild->m_leftChild->m_parent, clone->m_leftChild.get());
     EXPECT_EQ(clone->m_rightChild->m_rightChild->m_parent, clone->m_rightChild.get());
 
-    EXPECT_NE(dynamic_cast<Y*>(clone->m_leftChild->m_leftChild.get()), nullptr);
-    EXPECT_NE(dynamic_cast<Y*>(clone->m_rightChild->m_rightChild.get()), nullptr);
+    EXPECT_NE(clone->m_leftChild->m_leftChild->tryAs<Y>(), nullptr);
+    EXPECT_NE(clone->m_rightChild->m_rightChild->tryAs<Y>(), nullptr);
 
-    EXPECT_EQ(dynamic_cast<Y*>(clone->m_leftChild->m_leftChild.get())->m_distantRelation,
+    EXPECT_EQ(clone->m_leftChild->m_leftChild->as<Y>().m_distantRelation,
               clone->m_rightChild->m_rightChild.get());
-    EXPECT_EQ(dynamic_cast<Y*>(clone->m_rightChild->m_rightChild.get())->m_distantRelation,
+    EXPECT_EQ(clone->m_rightChild->m_rightChild->as<Y>().m_distantRelation,
               clone->m_leftChild->m_leftChild.get());
 }
 
@@ -204,6 +213,6 @@ TEST(CloneTest, customGraphCloningSubgraph) {
 
     EXPECT_EQ(clone->m_parent, root.get());
     EXPECT_EQ(clone->m_leftChild->m_parent, clone.get());
-    EXPECT_NE(dynamic_cast<Y*>(clone->m_leftChild.get()), nullptr);
-    EXPECT_EQ(dynamic_cast<Y*>(clone->m_leftChild.get())->m_distantRelation, root->m_rightChild->m_rightChild.get());
+    EXPECT_NE(clone->m_leftChild->tryAs<Y>(), nullptr);
+    EXPECT_EQ(clone->m_leftChild->as<Y>().m_distantRelation, root->m_rightChild->m_rightChild.get());
 }
