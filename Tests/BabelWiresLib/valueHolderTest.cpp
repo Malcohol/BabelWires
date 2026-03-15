@@ -9,7 +9,8 @@
 
 namespace {
     struct TestableValue : babelwires::AlwaysEditableValue {
-        SERIALIZABLE(TestableValue, "TestableValue", Value, 1);
+        DOWNCASTABLE(TestableValue, AlwaysEditableValue);
+        SERIALIZABLE(TestableValue, "TestableValue", AlwaysEditableValue, 1);
         CLONEABLE(TestableValue);
 
         TestableValue(int x = 0, bool canContainIdentifiers = false, bool canContainFilePaths = false)
@@ -140,7 +141,7 @@ TEST(ValueHolderTest, copyContentsAndGetNonConst) {
     }
     {
         babelwires::Value& copyOf2 = valueHolder2.copyContentsAndGetNonConst();
-        TestableValue& valueInHolder2NonConst = dynamic_cast<TestableValue&>(copyOf2);
+        TestableValue& valueInHolder2NonConst = copyOf2.as<TestableValue>();
         valueInHolder2NonConst.m_x = 23;
 
         const TestableValue* const valueInHolder = valueHolder->tryAs<TestableValue>();
