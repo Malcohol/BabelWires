@@ -1,6 +1,8 @@
 #include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
 #include <BaseLib/Serialization/XML/xmlSerializer.hpp>
 
+#include <BaseLib/Utilities/downcastable.hpp>
+
 #include <Tests/TestUtils/testLog.hpp>
 
 #include <gtest/gtest.h>
@@ -255,10 +257,12 @@ TEST(SerializationTest, versioningCurrent) {
 
 namespace {
     struct Base : babelwires::Serializable {
+        DOWNCASTABLE_BASE(Base);
         SERIALIZABLE_ABSTRACT(Base, void);
     };
 
     struct Concrete0 : Base {
+        DOWNCASTABLE(Concrete0, Base);
         SERIALIZABLE(Concrete0, "Concrete0", Base, 1)
 
         void serializeContents(Serializer& serializer) const override { serializer.serializeValue("x", m_x); }
@@ -272,12 +276,14 @@ namespace {
     };
 
     struct Intermediate : Base {
+        DOWNCASTABLE(Intermediate, Base);
         SERIALIZABLE_ABSTRACT(Intermediate, Base);
     };
 
     struct Intermediate2 : Intermediate {};
 
     struct Concrete1 : Intermediate2 {
+        DOWNCASTABLE(Concrete1, Intermediate);
         SERIALIZABLE(Concrete1, "Concrete1", Intermediate2, 1);
 
         void serializeContents(Serializer& serializer) const override { serializer.serializeValue("s", m_s); }
@@ -291,6 +297,7 @@ namespace {
     };
 
     struct Concrete2 : Concrete1 {
+        DOWNCASTABLE(Concrete2, Concrete1);
         SERIALIZABLE(Concrete2, "Concrete2", Concrete1, 1);
         void serializeContents(Serializer& serializer) const override {
             Concrete1::serializeContents(serializer);
@@ -387,21 +394,21 @@ TEST(SerializationTest, polymorphism) {
         deserializer.finalize();
 
         ASSERT_NE(MainPtr->m_base, nullptr);
-        EXPECT_NE(dynamic_cast<Concrete0*>(MainPtr->m_base.get()), nullptr);
-        EXPECT_EQ(dynamic_cast<Concrete0*>(MainPtr->m_base.get())->m_x, 32);
+        EXPECT_NE(MainPtr->m_base->tryAs<Concrete0>(), nullptr);
+        EXPECT_EQ(MainPtr->m_base->as<Concrete0>().m_x, 32);
         ASSERT_NE(MainPtr->m_concrete0, nullptr);
         EXPECT_EQ(MainPtr->m_concrete0->m_x, -13);
         EXPECT_NE(MainPtr->m_intermediate, nullptr);
-        ASSERT_NE(dynamic_cast<Concrete1*>(MainPtr->m_intermediate.get()), nullptr);
-        EXPECT_EQ(dynamic_cast<Concrete1*>(MainPtr->m_intermediate.get())->m_s, "Jump!");
+        ASSERT_NE(MainPtr->m_intermediate->tryAs<Concrete1>(), nullptr);
+        EXPECT_EQ(MainPtr->m_intermediate->as<Concrete1>().m_s, "Jump!");
         ASSERT_NE(MainPtr->m_concrete1, nullptr);
         EXPECT_EQ(MainPtr->m_concrete1->m_s, "Ergh");
         ASSERT_NE(MainPtr->m_concrete2, nullptr);
         EXPECT_EQ(MainPtr->m_concrete2->m_u32, 0x12345678);
 
         ASSERT_EQ(MainPtr->m_objects.size(), 1);
-        ASSERT_NE(dynamic_cast<Concrete1*>(MainPtr->m_objects[0].get()), nullptr);
-        EXPECT_EQ(dynamic_cast<Concrete1*>(MainPtr->m_objects[0].get())->m_s, "Tuesday");
+        ASSERT_NE(MainPtr->m_objects[0]->tryAs<Concrete1>(), nullptr);
+        EXPECT_EQ(MainPtr->m_objects[0]->as<Concrete1>().m_s, "Tuesday");
     }
 }
 
