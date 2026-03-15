@@ -28,7 +28,7 @@ void babelwires::TupleValueModel::setEditorData(QWidget* editor) const {
 }
 
 babelwires::ValueHolder babelwires::TupleValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
-    auto tupleEditor = dynamic_cast<const TupleValueEditor*>(editor);
+    auto tupleEditor = qobject_cast<const TupleValueEditor*>(editor);
     assert(tupleEditor && "Unexpected editor");
 
     const auto& currentValue = getValue()->as<TupleValue>();

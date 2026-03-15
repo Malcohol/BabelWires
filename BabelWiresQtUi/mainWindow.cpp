@@ -379,7 +379,7 @@ babelwires::ProjectData babelwires::MainWindow::getProjectDataFromSelection() {
     ProjectGraphicsScene::SelectedObjects selectedObjects = m_graphicsScene->getSelectedObjects();
     ProjectData projectData = m_projectGraphModel.getDataFromSelectedNodes(selectedObjects.m_nodeIds);
 
-    auto* flowView = dynamic_cast<QtNodes::GraphicsView*>(centralWidget());
+    auto* flowView = qobject_cast<QtNodes::GraphicsView*>(centralWidget());
     assert(flowView && "Unexpected central widget");
     const QPointF centre = flowView->sceneRect().center();
     UiPosition offset{static_cast<UiCoord>(-centre.x()), static_cast<UiCoord>(-centre.y())};
@@ -445,7 +445,7 @@ void babelwires::MainWindow::paste() {
         asString, m_projectGraphModel.getContext(), getFullFilePath().toStdString(), m_userLogger);
     if (projectData) {
         {
-            auto* flowView = dynamic_cast<QtNodes::GraphicsView*>(centralWidget());
+            auto* flowView = qobject_cast<QtNodes::GraphicsView*>(centralWidget());
             assert(flowView && "Unexpected central widget");
             const QPointF centre = flowView->sceneRect().center();
             UiPosition offset{static_cast<UiCoord>(centre.x()), static_cast<UiCoord>(centre.y())};
