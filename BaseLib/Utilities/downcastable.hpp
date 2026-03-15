@@ -10,19 +10,18 @@
 #include <cassert>
 #include <type_traits>
 
+// Helper macro
 #define DOWNCASTABLE_COMMON                                                                                            \
     static const void* getHierarchyIdStatic() {                                                                        \
         static const char id = 0;                                                                                      \
         return &id;                                                                                                    \
     }
 
-/// This macro is used in the base class of a hierarchy and provides support
-/// for downcasting between classes in the hierarchy.
-/// Adds "as" and "tryAs" methods to a hierarchy.
-/// "tryAs" provides a checked downcast within the hierarchy.
-/// foo.tryAs<BAR>() either returns a BAR* or nullptr.
-/// "as" asserts that the downcast is correct.
-/// Use of dynamic_cast (and other RTTI features) is not permitted in the codebase.
+/// This macro is used in the base class of a hierarchy and provides support for downcasting between classes in the
+/// hierarchy. Adds "as" and "tryAs" methods to a hierarchy.
+/// "tryAs" returns a pointer, nullptr if the cast is invalid.
+/// "as" returns a reference, asserting that the cast is correct.
+/// Use of RTTI features in not permitted in the codebase.
 #define DOWNCASTABLE_BASE(BASE)                                                                                        \
     DOWNCASTABLE_COMMON                                                                                                \
     virtual bool isA(const void* hierarchyId) const {                                                                  \
@@ -50,8 +49,7 @@
         return static_cast<const T&>(*this);                                                                           \
     }
 
-/// Every class in the hierarchy (except the base) should use this macro,
-/// passing the class itself and its parent classes as arguments.
+/// Every class in the hierarchy (except the base) should use this macro, passing the class itself and its parent classes as arguments.
 #define DOWNCASTABLE(CLASS, PARENT)                                                                                    \
     DOWNCASTABLE_COMMON                                                                                                \
     bool isA(const void* hierarchyId) const override {                                                                 \
