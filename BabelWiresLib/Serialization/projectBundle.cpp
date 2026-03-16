@@ -11,6 +11,7 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 
 #include <BaseLib/DataContext/filePath.hpp>
+#include <BaseLib/Serialization/deserializableClassScope.hpp>
 
 babelwires::ProjectBundle::ProjectBundle(std::filesystem::path pathToProjectFile, ProjectData&& projectData)
     : DataBundle(std::move(pathToProjectFile), std::move(projectData)) {

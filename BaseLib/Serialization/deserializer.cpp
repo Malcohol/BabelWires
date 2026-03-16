@@ -63,18 +63,6 @@ babelwires::Deserializer::deserializeCurrentObject(const void* tagOfTypeSought) 
     return Error() << "Unknown type \"" << currentTypeName << "\"";
 }
 
-babelwires::DeserializableClassScope::DeserializableClassScope(Deserializer& deserializer)
-    : m_deserializer(deserializer)
-    , m_previousRegistry(&deserializer.getDeserializationRegistry())
-    , m_overlayRegistry(*m_previousRegistry) {
-    m_deserializer.setDeserializationRegistry(m_overlayRegistry);
-}
-
-babelwires::DeserializableClassScope::~DeserializableClassScope() {
-    assert(m_previousRegistry && "The previous registry should always be set");
-    m_deserializer.setDeserializationRegistry(*m_previousRegistry);
-}
-
 babelwires::Result babelwires::Deserializer::BaseIterator::advance() {
     assert(isValid());
     DO_OR_ERROR(m_impl->advance());

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BaseLib/DataContext/dataContext.hpp>
+#include <BaseLib/Serialization/deserializationRegistry.hpp>
 #include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
 #include <BaseLib/Serialization/XML/xmlSerializer.hpp>
 

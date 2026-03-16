@@ -9,6 +9,7 @@
 
 #include <BaseLib/Log/userLogger.hpp>
 #include <BaseLib/Result/resultDSL.hpp>
+#include <BaseLib/Serialization/deserializableClassScope.hpp>
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>

@@ -8,6 +8,7 @@
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 #include <BaseLib/Log/debugLogger.hpp>
+#include <BaseLib/Serialization/deserializableClassScope.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 

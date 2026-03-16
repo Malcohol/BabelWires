@@ -7,10 +7,11 @@
  **/
 #include <BabelWiresLib/Project/Modifiers/selectOptionalsModifierData.hpp>
 
-#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
+#include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
 #include <BaseLib/Result/resultDSL.hpp>
+#include <BaseLib/Serialization/deserializableClassScope.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 #include <BaseLib/Utilities/downcastable.hpp>
@@ -36,7 +37,7 @@ namespace {
         DOWNCASTABLE(SerializableOptional_Deactivate, SerializableOptional);
         SERIALIZABLE(SerializableOptional_Deactivate, "deactivate", SerializableOptional, 1);
     };
-}
+} // namespace
 
 void babelwires::SelectOptionalsModifierData::serializeContents(Serializer& serializer) const {
     serializer.serializeValue("path", m_targetPath);
@@ -99,7 +100,7 @@ void babelwires::SelectOptionalsModifierData::visitIdentifiers(IdentifierVisitor
 
 void babelwires::SelectOptionalsModifierData::setOptionalActivation(ShortId optional, bool isActivate) {
     m_optionalsActivation[optional] = isActivate;
-} 
+}
 
 void babelwires::SelectOptionalsModifierData::resetOptionalActivation(ShortId optional) {
     m_optionalsActivation.erase(optional);
