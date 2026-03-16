@@ -224,8 +224,7 @@ void babelwires::IdentifierRegistry::serializeContents(Serializer& serializer) c
 }
 
 babelwires::Result babelwires::IdentifierRegistry::deserializeContents(Deserializer& deserializer) {
-    DeserializableClassScope instanceDataScope(deserializer);
-    instanceDataScope.registerClass<InstanceData>();
+    DeserializableClassScope<InstanceData> instanceDataScope(deserializer);
 
     ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<InstanceData>("identifiers"));
     while (it.isValid()) {

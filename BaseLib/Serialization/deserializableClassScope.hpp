@@ -1,4 +1,5 @@
 /**
+ * Temporarily register a class for deserialization.
  *
  * (C) 2026 Malcolm Tyrrell
  *
@@ -7,37 +8,32 @@
 #pragma once
 
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
 
 namespace babelwires {
 
-    class OverlayDeserializationRegistry : public DeserializationRegistryInterface {
+    /// Temporarily register a class for deserialization.
+    /// This is for use when instances of a known concrete class may be be deserialized.
+    template <typename T> class DeserializableClassScope : public DeserializationRegistryInterface {
       public:
-        explicit OverlayDeserializationRegistry(const DeserializationRegistryInterface& baseRegistry);
-
-        template <typename T> void registerClass() {
-            registerEntry(T::serializationType, T::getDeserializationRegistryEntry());
+        explicit DeserializableClassScope(Deserializer& deserializer)
+            : m_deserializer(deserializer)
+            , m_previousRegistry(&deserializer.getDeserializationRegistry()) {
+            m_deserializer.setDeserializationRegistry(*this);
         }
 
-        void registerEntry(std::string_view typeName, const Entry* entry);
+        ~DeserializableClassScope() { m_deserializer.setDeserializationRegistry(*m_previousRegistry); }
 
-        const Entry* findEntry(std::string_view typeName) const override;
-
-      private:
-        const DeserializationRegistryInterface& m_baseRegistry;
-        std::map<std::string, const Entry*, std::less<>> m_registeredEntries;
-    };
-
-    class DeserializableClassScope {
-      public:
-        explicit DeserializableClassScope(Deserializer& deserializer);
-        ~DeserializableClassScope();
-
-        template <typename T> void registerClass() { m_overlayRegistry.registerClass<T>(); }
+        const Entry* findEntry(std::string_view typeName) const override {
+            if (typeName == T::serializationType) {
+                return T::getDeserializationRegistryEntry();
+            }
+            return m_previousRegistry->findEntry(typeName);
+        }
 
       private:
         Deserializer& m_deserializer;
         const DeserializationRegistryInterface* m_previousRegistry = nullptr;
-        OverlayDeserializationRegistry m_overlayRegistry;
     };
 
 } // namespace babelwires

@@ -66,8 +66,7 @@ void babelwires::SerializerDeserializerCommon::serializeMetadata(Serializer& ser
 
 babelwires::Result babelwires::SerializerDeserializerCommon::deserializeMetadata(
     Deserializer& deserializer, UserLogger& userLogger) {
-    DeserializableClassScope metadataScope(deserializer);
-    metadataScope.registerClass<SerializationMetadata>();
+    DeserializableClassScope<SerializationMetadata> metadataScope(deserializer);
 
     ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<SerializationMetadata>("serializationMetadata"));
     while (it.isValid()) {

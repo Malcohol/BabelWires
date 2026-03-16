@@ -17,7 +17,6 @@ SET( COMMON_SRCS
 	Log/unifiedLog.cpp
 	Log/debugLogger.cpp
 	uuid.cpp
-	Serialization/deserializableClassScope.cpp
 	Serialization/deserializer.cpp
 	Serialization/serializer.cpp
 	Serialization/serializerDeserializerCommon.cpp
