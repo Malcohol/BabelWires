@@ -16,7 +16,9 @@ namespace babelwires {
 
     class DeserializationRegistry : public DeserializationRegistryInterface {
       public:
-        template <typename T> void registerClass();
+        template <typename T> void registerClass() {
+            registerEntry(T::serializationType, T::getDeserializationRegistryEntry());
+        }
 
         void registerEntry(std::string_view typeName, const Entry* entry);
 
@@ -26,11 +28,4 @@ namespace babelwires {
         std::map<std::string, const Entry*, std::less<>> m_registeredEntries;
     };
 
-
-
 } // namespace babelwires
-
-template <typename T>
-void babelwires::DeserializationRegistry::registerClass() {
-    registerEntry(T::serializationType, T::getDeserializationRegistryEntry());
-}

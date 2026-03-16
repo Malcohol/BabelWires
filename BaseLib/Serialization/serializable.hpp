@@ -57,7 +57,7 @@ namespace babelwires {
     static constexpr int serializationVersion = VERSION;                                                               \
     static_assert(VERSION != 0, "Version must be greater than 0");                                                     \
     babelwires::VersionNumber getSerializationVersion() const override {                                               \
-        return s_registryEntry.m_version;                                                                              \
+        return VERSION;                                                                                                \
     }                                                                                                                  \
     static const babelwires::DeserializationRegistryInterface::Entry* getDeserializationRegistryEntry() {              \
         return &s_registryEntry;                                                                                       \
@@ -73,7 +73,7 @@ namespace babelwires {
         }                                                                                                              \
         return std::move(newObject);                                                                                   \
     }                                                                                                                  \
-    inline static const babelwires::DeserializationRegistryInterface::Entry s_registryEntry{                          \
+    inline static const babelwires::DeserializationRegistryInterface::Entry s_registryEntry{                           \
         deserializingFactory, serializationType, serializationVersion, babelwires::Detail::getSerializationTag<T>()};
 
     // Implementation details

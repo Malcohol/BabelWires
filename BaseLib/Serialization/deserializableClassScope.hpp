@@ -13,8 +13,11 @@
 namespace babelwires {
 
     /// Temporarily register a class for deserialization.
-    /// This is for use when instances of a known concrete class may be be deserialized.
-    template <typename T> class DeserializableClassScope : public DeserializationRegistryInterface {
+    /// This is for use when instances of a locally-defined class may be deserialized.
+    /// Most classes should be registered in the global registry and that _must_ be true of
+    /// any class that is unknown to the deserializing code (e.g. a subclass coming from
+    /// a plugin).
+    template <typename T> class DeserializableClassScope final : public DeserializationRegistryInterface {
       public:
         explicit DeserializableClassScope(Deserializer& deserializer)
             : m_deserializer(deserializer)
