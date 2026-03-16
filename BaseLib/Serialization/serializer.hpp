@@ -17,8 +17,6 @@
 
 namespace babelwires {
 
-    template <typename T> class SerializableConcrete;
-
     /// An interface for serializers.
     class Serializer : public SerializerDeserializerCommon {
       public:
