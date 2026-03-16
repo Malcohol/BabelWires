@@ -8,10 +8,11 @@
  **/
 #pragma once
 
+#include <BaseLib/Result/result.hpp>
+#include <BaseLib/Serialization/deserializationRegistryInterface.hpp>
 #include <BaseLib/Serialization/serializable.hpp>
 #include <BaseLib/Serialization/serializableValue.hpp>
 #include <BaseLib/Serialization/serializerDeserializerCommon.hpp>
-#include <BaseLib/Result/result.hpp>
 
 #include <cassert>
 #include <cstdint>
@@ -23,7 +24,7 @@ namespace babelwires {
     /// Client code must call either finalize or finalizeOnError before the destructor is called.
     class Deserializer : public SerializerDeserializerCommon {
       public:
-        Deserializer(UserLogger& userLogger, const DeserializationRegistry& deserializationRegistry);
+        Deserializer(UserLogger& userLogger, const DeserializationRegistryInterface& deserializationRegistry);
         virtual ~Deserializer();
 
         /// Get a value from the current object.
@@ -69,13 +70,13 @@ namespace babelwires {
         /// Deserialize a child object of type T.
         /// Returns an error if the key is not found or if there is a parse error.
         /// The object is assigned by value, so any polymorphism is lost.
-        template<typename T>
+        template <typename T>
         babelwires::Result deserializeObjectByValue(T& object, std::string_view key = T::serializationType);
 
         /// Deserialize a child object of type T.
         /// If the key is not found, then false is returned and the object is not modified.
         /// The object is assigned by value, so any polymorphism is lost.
-        template<typename T>
+        template <typename T>
         babelwires::ResultT<bool> tryDeserializeObjectByValue(T& object, std::string_view key = T::serializationType);
 
         /// A non-standard iterator, which provides access to the deserialized objects of base type T in an array.
@@ -110,8 +111,13 @@ namespace babelwires {
 
         /// Get a description of the current parsing location which can be used in errors and warnings (e.g. a line
         /// number).
-        template <typename T>
-        void augmentResultWithContext(ResultT<T>& result) const;
+        template <typename T> void augmentResultWithContext(ResultT<T>& result) const;
+
+        /// Obtain the DeserializationRegistryInterface used by this Deserializer.
+        const DeserializationRegistryInterface& getDeserializationRegistry() const;
+
+        /// Set the Deserializer to use the given DeserializationRegistryInterface.
+        void setDeserializationRegistry(const DeserializationRegistryInterface& deserializationRegistry);
 
         /// Finalize the deserializer.
         virtual Result finalize();
@@ -151,7 +157,7 @@ namespace babelwires {
       protected:
         bool m_wasFinalized = false;
         UserLogger& m_userLogger;
-        const DeserializationRegistry& m_deserializationRegistry;
+        const DeserializationRegistryInterface* m_deserializationRegistry = nullptr;
     };
 
 } // namespace babelwires

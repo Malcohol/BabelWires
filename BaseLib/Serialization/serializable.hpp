@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BaseLib/Result/resultDSL.hpp>
-#include <BaseLib/Serialization/automaticDeserializationRegistry.hpp>
+#include <BaseLib/Serialization/deserializationRegistryInterface.hpp>
 
 #include <cassert>
 #include <functional>
@@ -57,12 +57,10 @@ namespace babelwires {
     static constexpr int serializationVersion = VERSION;                                                               \
     static_assert(VERSION != 0, "Version must be greater than 0");                                                     \
     babelwires::VersionNumber getSerializationVersion() const override {                                               \
-        /* This indirection may look unnecessary, but we need some function which mentions */                          \
-        /* the entry to stop it getting stripped. */                                                                   \
-        return babelwires::Detail::SerializableConcrete<T>::s_registryEntry.m_version;                                 \
+        return VERSION;                                                                                                \
     }                                                                                                                  \
-    static const babelwires::DeserializationRegistry::Entry* getDeserializationRegistryEntry() {                       \
-        return &babelwires::Detail::SerializableConcrete<T>::s_registryEntry;                                          \
+    static const babelwires::DeserializationRegistryInterface::Entry* getDeserializationRegistryEntry() {              \
+        return &s_registryEntry;                                                                                       \
     }                                                                                                                  \
     static babelwires::ResultT<std::unique_ptr<babelwires::Serializable>> deserializingFactory(                        \
         babelwires::Deserializer& deserializer) {                                                                      \
@@ -74,7 +72,9 @@ namespace babelwires {
             return result.error();                                                                                     \
         }                                                                                                              \
         return std::move(newObject);                                                                                   \
-    }
+    }                                                                                                                  \
+    inline static const babelwires::DeserializationRegistryInterface::Entry s_registryEntry{                           \
+        deserializingFactory, serializationType, serializationVersion, babelwires::Detail::getSerializationTag<T>()};
 
     // Implementation details
     namespace Detail {
@@ -115,16 +115,6 @@ namespace babelwires {
 
         template <typename T> const void* SerializableType<T>::s_serializationTag = getParentsSerializationTag<T>();
 
-        /// Supplies the registry entry necessary to find and correctly deserialize a type.
-        template <typename T> struct SerializableConcrete {
-            /// The automatic registration entry for T in the AutomaticDeserializationRegistry
-            static AutomaticDeserializationRegistry::AutomaticEntry s_registryEntry;
-        };
-
-        template <typename T>
-        AutomaticDeserializationRegistry::AutomaticEntry
-            SerializableConcrete<T>::s_registryEntry(T::deserializingFactory, T::serializationType,
-                                                     T::serializationVersion, getSerializationTag<T>());
     } // namespace Detail
 
 } // namespace babelwires

@@ -61,9 +61,8 @@ TEST(ModifierDataTest, arrayInitializationSerialization) {
         serializer.write(os);
         serializedContents = std::move(os.str());
     }
-    testUtils::TestLog log;
-    babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(deserializationReg, log);
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
     ASSERT_TRUE(deserializer.parse(serializedContents));
     auto dataPtrResult = deserializer.deserializeObject<babelwires::ArraySizeModifierData>();
     ASSERT_TRUE(dataPtrResult);
@@ -154,9 +153,8 @@ TEST(ModifierDataTest, assignFromFeatureSerialization) {
         serializer.write(os);
         serializedContents = std::move(os.str());
     }
-    testUtils::TestLog log;
-    babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(deserializationReg, log);
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
     ASSERT_TRUE(deserializer.parse(serializedContents));
     auto dataPtrResult = deserializer.deserializeObject<babelwires::ConnectionModifierData>();
     ASSERT_TRUE(dataPtrResult);

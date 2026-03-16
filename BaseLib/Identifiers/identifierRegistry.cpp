@@ -8,6 +8,7 @@
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 #include <BaseLib/Log/debugLogger.hpp>
+#include <BaseLib/Serialization/deserializableClassScope.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 
@@ -223,6 +224,8 @@ void babelwires::IdentifierRegistry::serializeContents(Serializer& serializer) c
 }
 
 babelwires::Result babelwires::IdentifierRegistry::deserializeContents(Deserializer& deserializer) {
+    DeserializableClassScope<InstanceData> instanceDataScope(deserializer);
+
     ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<InstanceData>("identifiers"));
     while (it.isValid()) {
         ASSIGN_OR_ERROR(std::unique_ptr<InstanceData> instanceDataPtr, it.getObject());

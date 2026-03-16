@@ -1,5 +1,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
+#include <BaseLib/libRegistration.hpp>
+
 #include <BabelWiresLib/libRegistration.hpp>
 
 #include <Domains/TestDomain/libRegistration.hpp>
@@ -13,6 +15,7 @@ testUtils::TestEnvironment::TestEnvironment()
                        m_processorReg,       m_typeSystem,          std::default_random_engine(0x123456789abcdeful)}
     , m_project(m_projectContext, m_log) {
 
+    babelwires::baseLib::registerLib(m_projectContext);
     babelwires::registerLib(m_projectContext);
     testDomain::registerLib(m_projectContext);
 

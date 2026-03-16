@@ -11,6 +11,7 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 
 #include <BaseLib/DataContext/filePath.hpp>
+#include <BaseLib/Serialization/deserializableClassScope.hpp>
 
 babelwires::ProjectBundle::ProjectBundle(std::filesystem::path pathToProjectFile, ProjectData&& projectData)
     : DataBundle(std::move(pathToProjectFile), std::move(projectData)) {
@@ -68,6 +69,8 @@ void babelwires::ProjectBundle::serializeAdditionalMetadata(Serializer& serializ
 }
 
 babelwires::Result babelwires::ProjectBundle::deserializeAdditionalMetadata(Deserializer& deserializer) {
+    DeserializableClassScope<FactoryInfoPair> factoryInfoScope(deserializer);
+
     ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<FactoryInfoPair>("factoryMetadata"));
     while (it.isValid()) {
         ASSIGN_OR_ERROR(auto fm, it.getObject());

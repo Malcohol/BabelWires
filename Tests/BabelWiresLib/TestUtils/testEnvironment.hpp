@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Tests/TestUtils/testDeserializationRegistry.hpp>
 #include <Tests/TestUtils/testLog.hpp>
 
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
@@ -10,6 +9,8 @@
 #include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
+#include <BaseLib/Serialization/deserializationRegistry.hpp>
+
 namespace testUtils {
     struct TestEnvironment {
         TestEnvironment();
@@ -17,7 +18,7 @@ namespace testUtils {
         babelwires::TargetFileFormatRegistry m_targetFileFormatReg;
         babelwires::SourceFileFormatRegistry m_sourceFileFormatReg;
         babelwires::ProcessorFactoryRegistry m_processorReg;
-        testUtils::TestDeserializationRegistry m_deserializationReg;
+        babelwires::DeserializationRegistry m_deserializationReg;
         babelwires::TypeSystem m_typeSystem;
 
         babelwires::ProjectContext m_projectContext;

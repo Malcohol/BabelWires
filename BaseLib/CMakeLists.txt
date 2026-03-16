@@ -3,6 +3,7 @@ SET( COMMON_SRCS
 	Identifiers/identifierRegistry.cpp
 	Identifiers/registeredIdentifier.cpp
 	common.cpp
+	libRegistration.cpp
 	Cloning/cloneable.cpp
 	Registry/registry.cpp
 	Registry/fileTypeRegistry.cpp
@@ -19,7 +20,7 @@ SET( COMMON_SRCS
 	Serialization/deserializer.cpp
 	Serialization/serializer.cpp
 	Serialization/serializerDeserializerCommon.cpp
-	Serialization/automaticDeserializationRegistry.cpp
+	Serialization/deserializationRegistry.cpp
 	Serialization/XML/xmlSerializer.cpp
 	Serialization/XML/xmlDeserializer.cpp
 	Signal/signalSubscription.cpp

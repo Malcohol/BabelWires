@@ -10,9 +10,9 @@
 
 #include <BaseLib/Result/resultDSL.hpp>
 
-babelwires::Deserializer::Deserializer(UserLogger& userLogger, const DeserializationRegistry& deserializationRegistry)
+babelwires::Deserializer::Deserializer(UserLogger& userLogger, const DeserializationRegistryInterface& deserializationRegistry)
     : m_userLogger(userLogger)
-    , m_deserializationRegistry(deserializationRegistry) {}
+    , m_deserializationRegistry(&deserializationRegistry) {}
 
 babelwires::Deserializer::~Deserializer() {
     assert(m_wasFinalized && "The deserializer was not finalized");
@@ -22,8 +22,17 @@ babelwires::Result babelwires::Deserializer::initialize() {
     if (!pushObject("contents")) {
         return Error() << "The element \"contents\" is missing";
     }
-    DO_OR_ERROR(deserializeMetadata(*this, m_userLogger, m_deserializationRegistry));
+    DO_OR_ERROR(deserializeMetadata(*this, m_userLogger));
     return {};
+}
+
+const babelwires::DeserializationRegistryInterface& babelwires::Deserializer::getDeserializationRegistry() const {
+    assert(m_deserializationRegistry && "The deserialization registry pointer was null");
+    return *m_deserializationRegistry;
+}
+
+void babelwires::Deserializer::setDeserializationRegistry(const DeserializationRegistryInterface& deserializationRegistry) {
+    m_deserializationRegistry = &deserializationRegistry;
 }
 
 babelwires::Result babelwires::Deserializer::finalize() {
@@ -38,7 +47,7 @@ void babelwires::Deserializer::finalizeOnError() {
 babelwires::ResultT<std::unique_ptr<babelwires::Serializable>>
 babelwires::Deserializer::deserializeCurrentObject(const void* tagOfTypeSought) {
     const std::string_view currentTypeName = getCurrentTypeName();
-    if (const DeserializationRegistry::Entry* entry = m_deserializationRegistry.findEntry(currentTypeName)) {
+    if (const DeserializationRegistryInterface::Entry* entry = getDeserializationRegistry().findEntry(currentTypeName)) {
         const void* entryTag = entry->m_baseClassTag;
         // The tags form a path up the type tree, so search for a match for T.
         while (entryTag && (tagOfTypeSought != entryTag)) {

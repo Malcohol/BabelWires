@@ -5,6 +5,7 @@
 #include <BaseLib/Identifiers/registeredIdentifier.hpp>
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <BaseLib/Log/unifiedLog.hpp>
+#include <BaseLib/Serialization/deserializationRegistry.hpp>
 #include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
 #include <BaseLib/Serialization/XML/xmlSerializer.hpp>
 
@@ -401,7 +402,8 @@ TEST(IdentifierTest, identifierRegistrySerializationDeserialization) {
     }
 
     {
-        babelwires::AutomaticDeserializationRegistry deserializationReg;
+        babelwires::DeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<babelwires::IdentifierRegistry>();
         babelwires::XmlDeserializer deserializer(deserializationReg, log);
         ASSERT_TRUE(deserializer.parse(serializedContents));
         auto fieldNameRegPtrResult = deserializer.deserializeObject<babelwires::IdentifierRegistry>();

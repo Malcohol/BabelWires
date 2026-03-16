@@ -25,6 +25,7 @@
 
 #include <BaseLib/IO/fileDataSource.hpp>
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/libRegistration.hpp>
 #include <BaseLib/Log/ostreamLogListener.hpp>
 #include <BaseLib/Log/unifiedLog.hpp>
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
@@ -74,7 +75,7 @@ int main(int argc, char* argv[]) {
     SourceFileFormatRegistry sourceFileFormatReg;
     TargetFileFormatRegistry targetFileFormatReg;
     ProcessorFactoryRegistry processorReg;
-    babelwires::AutomaticDeserializationRegistry deserializationRegistry;
+    babelwires::DeserializationRegistry deserializationRegistry;
     babelwires::ValueModelRegistry valueModelRegistry;
     babelwires::TypeSystem typeSystem;
 
@@ -90,6 +91,7 @@ int main(int argc, char* argv[]) {
     context.m_applicationIdentity.m_projectExtension = ".babelwires";
 
     // register factories, etc.
+    babelwires::baseLib::registerLib(context);
     babelwires::registerLib(context);
     bw_music::registerLib(context);
     bw_musicUi::registerLib(context);

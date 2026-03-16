@@ -4,6 +4,7 @@
 #include <BaseLib/DataContext/dataSerialization.hpp>
 #include <BaseLib/DataContext/dataVisitable.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/deserializationRegistry.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 
 #include <Tests/TestUtils/tempFilePath.hpp>
@@ -116,7 +117,9 @@ TEST(DataBundleTest, identifiers) {
     {
         testUtils::TestLog testLog;
         babelwires::IdentifierRegistryScope identifierRegistry;
-        babelwires::AutomaticDeserializationRegistry deserializationReg;
+        babelwires::DeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<TestBundlePayload>();
+        deserializationReg.registerClass<TestBundle>();
         babelwires::DataContext dataContext{deserializationReg};
 
         // Ensure we're not just testing in same context on both sides.
@@ -209,7 +212,9 @@ TEST(DataBundleTest, filePathResolution) {
         {
             testUtils::TestLog testLog;
             babelwires::IdentifierRegistryScope identifierRegistry;
-            babelwires::AutomaticDeserializationRegistry deserializationReg;
+            babelwires::DeserializationRegistry deserializationReg;
+            deserializationReg.registerClass<TestBundlePayload>();
+            deserializationReg.registerClass<TestBundle>();
             babelwires::DataContext dataContext{deserializationReg};
 
             const babelwires::ResultT<TestBundlePayload> targetPayloadResult =

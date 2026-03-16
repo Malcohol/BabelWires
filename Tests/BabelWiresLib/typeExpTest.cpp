@@ -11,6 +11,7 @@
 
 #include <Domains/TestDomain/testEnum.hpp>
 
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/BabelWiresLib/TestUtils/testTypeConstructor.hpp>
 
 #include <Tests/TestUtils/testIdentifiers.hpp>
@@ -369,6 +370,8 @@ TEST(TypeExpTest, toStringMalformed) {
 }
 
 TEST(TypeExpTest, serialization) {
+    testUtils::TestEnvironment testEnvironment;
+
     babelwires::TypeExp nullTypeExp;
     babelwires::TypeExp registeredTypeExp1(babelwires::RegisteredTypeId("Foo"));
     babelwires::TypeExp registeredTypeExp2(babelwires::RegisteredTypeId("Bar"));
@@ -396,9 +399,7 @@ TEST(TypeExpTest, serialization) {
             serializer.write(os);
             serializedContents = std::move(os.str());
         }
-        testUtils::TestLog log;
-        babelwires::AutomaticDeserializationRegistry deserializationReg;
-        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
         ASSERT_TRUE(deserializer.parse(serializedContents));
         auto typeExpPtrResult = deserializer.deserializeObject<babelwires::TypeExp>();
         ASSERT_TRUE(typeExpPtrResult);
