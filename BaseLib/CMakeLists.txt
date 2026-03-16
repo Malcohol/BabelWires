@@ -3,6 +3,7 @@ SET( COMMON_SRCS
 	Identifiers/identifierRegistry.cpp
 	Identifiers/registeredIdentifier.cpp
 	common.cpp
+	libRegistration.cpp
 	Cloning/cloneable.cpp
 	Registry/registry.cpp
 	Registry/fileTypeRegistry.cpp
