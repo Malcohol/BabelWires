@@ -1,6 +1,6 @@
 #include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
 #include <BaseLib/Serialization/XML/xmlSerializer.hpp>
-#include <BaseLib/Serialization/explicitDeserializationRegistry.hpp>
+#include <BaseLib/Serialization/deserializationRegistry.hpp>
 
 #include <BaseLib/Utilities/downcastable.hpp>
 
@@ -55,7 +55,7 @@ TEST(SerializationTest, values) {
 
     {
         TestLog log;
-        ExplicitDeserializationRegistry deserializationReg;
+        DeserializationRegistry deserializationReg;
         deserializationReg.registerClass<A>();
         babelwires::XmlDeserializer deserializer(deserializationReg, log);
         ASSERT_TRUE(deserializer.parse(serializedContents));
@@ -117,7 +117,7 @@ TEST(SerializationTest, objects) {
 
     {
         TestLog log;
-        ExplicitDeserializationRegistry deserializationReg;
+        DeserializationRegistry deserializationReg;
         deserializationReg.registerClass<A>();
         deserializationReg.registerClass<B>();
         babelwires::XmlDeserializer deserializer(deserializationReg, log);
@@ -216,7 +216,7 @@ TEST(SerializationTest, versioningOld) {
 
     {
         TestLog log;
-        ExplicitDeserializationRegistry deserializationReg;
+        DeserializationRegistry deserializationReg;
         deserializationReg.registerClass<current::C>();
         babelwires::XmlDeserializer deserializer(deserializationReg, log);
         ASSERT_TRUE(deserializer.parse(serializedContents));
@@ -247,7 +247,7 @@ TEST(SerializationTest, versioningCurrent) {
 
     {
         TestLog log;
-        ExplicitDeserializationRegistry deserializationReg;
+        DeserializationRegistry deserializationReg;
         deserializationReg.registerClass<current::C>();
         babelwires::XmlDeserializer deserializer(deserializationReg, log);
         ASSERT_TRUE(deserializer.parse(serializedContents));
@@ -391,7 +391,7 @@ TEST(SerializationTest, polymorphism) {
 
     {
         TestLog log;
-        ExplicitDeserializationRegistry deserializationReg;
+        DeserializationRegistry deserializationReg;
         deserializationReg.registerClass<A>();
         deserializationReg.registerClass<Main>();
         deserializationReg.registerClass<Concrete0>();
@@ -452,7 +452,7 @@ TEST(SerializationTest, polymorphismFail) {
 
         {
             TestLog log;
-            ExplicitDeserializationRegistry deserializationReg;
+            DeserializationRegistry deserializationReg;
             deserializationReg.registerClass<A>();
             deserializationReg.registerClass<Main>();
             deserializationReg.registerClass<Concrete0>();

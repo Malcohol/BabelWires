@@ -9,13 +9,10 @@
 
 #include <BaseLib/DataContext/dataContext.hpp>
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
-#include <BaseLib/Serialization/explicitDeserializationRegistry.hpp>
+#include <BaseLib/Serialization/deserializationRegistry.hpp>
 
 #include <cassert>
 
 void babelwires::baseLib::registerLib(DataContext& context) {
-    auto* deserializationRegistry = dynamic_cast<ExplicitDeserializationRegistry*>(&context.m_deserializationReg);
-    assert(deserializationRegistry && "baseLib::registerLib requires an ExplicitDeserializationRegistry");
-
-    deserializationRegistry->registerClass<IdentifierRegistry>();
+    context.m_deserializationReg.registerClass<IdentifierRegistry>();
 }

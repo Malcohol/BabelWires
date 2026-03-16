@@ -20,7 +20,7 @@ SET( COMMON_SRCS
 	Serialization/deserializer.cpp
 	Serialization/serializer.cpp
 	Serialization/serializerDeserializerCommon.cpp
-	Serialization/explicitDeserializationRegistry.cpp
+	Serialization/deserializationRegistry.cpp
 	Serialization/XML/xmlSerializer.cpp
 	Serialization/XML/xmlDeserializer.cpp
 	Signal/signalSubscription.cpp

@@ -57,7 +57,7 @@ babelwires::ResultT<bool> babelwires::XmlDeserializer::getIntValue(const tinyxml
     return true;
 }
 
-babelwires::XmlDeserializer::XmlDeserializer(const DeserializationRegistry& deserializationRegistry,
+babelwires::XmlDeserializer::XmlDeserializer(const DeserializationRegistryInterface& deserializationRegistry,
                                              UserLogger& userLogger)
     : Deserializer(userLogger, deserializationRegistry) {
     m_xmlContext.emplace_back();

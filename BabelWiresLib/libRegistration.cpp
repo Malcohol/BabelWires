@@ -56,14 +56,11 @@
 
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
-#include <BaseLib/Serialization/explicitDeserializationRegistry.hpp>
+#include <BaseLib/Serialization/deserializationRegistry.hpp>
 
 #include <cassert>
 
 void babelwires::registerLib(babelwires::ProjectContext& context) {
-    auto* deserializationRegistry = dynamic_cast<ExplicitDeserializationRegistry*>(&context.m_deserializationReg);
-    assert(deserializationRegistry && "registerLib requires an ExplicitDeserializationRegistry");
-
     context.m_typeSystem.addType<DefaultIntType>();
     context.m_typeSystem.addType<NonNegativeIntType>();
     context.m_typeSystem.addType<StringType>();
@@ -83,37 +80,31 @@ void babelwires::registerLib(babelwires::ProjectContext& context) {
     context.m_typeSystem.addTypeConstructor<GenericTypeConstructor>();
     context.m_typeSystem.addTypeConstructor<TypeVariableTypeConstructor>();
 
-    deserializationRegistry->registerClass<ProjectData>();
-    deserializationRegistry->registerClass<ProjectDataLocation>();
-    deserializationRegistry->registerClass<ProjectBundle>();
-
-    deserializationRegistry->registerClass<TypeExp>();
-
-    deserializationRegistry->registerClass<UiData>();
-    deserializationRegistry->registerClass<SourceFileNodeData>();
-    deserializationRegistry->registerClass<TargetFileNodeData>();
-    deserializationRegistry->registerClass<ProcessorNodeData>();
-    deserializationRegistry->registerClass<ValueNodeData>();
-
-    deserializationRegistry->registerClass<ArraySizeModifierData>();
-    deserializationRegistry->registerClass<ConnectionModifierData>();
-    deserializationRegistry->registerClass<ValueAssignmentData>();
-    deserializationRegistry->registerClass<SelectOptionalsModifierData>();
-    deserializationRegistry->registerClass<SelectRecordVariantModifierData>();
-    deserializationRegistry->registerClass<SetTypeVariableModifierData>();
-
-    deserializationRegistry->registerClass<IntValue>();
-    deserializationRegistry->registerClass<StringValue>();
-    deserializationRegistry->registerClass<RationalValue>();
-    deserializationRegistry->registerClass<EnumValue>();
-    deserializationRegistry->registerClass<TupleValue>();
-    deserializationRegistry->registerClass<MapValue>();
-    deserializationRegistry->registerClass<FieldIdValue>();
-
-    deserializationRegistry->registerClass<OneToOneMapEntryData>();
-    deserializationRegistry->registerClass<AllToOneFallbackMapEntryData>();
-    deserializationRegistry->registerClass<AllToSameFallbackMapEntryData>();
-
-    deserializationRegistry->registerClass<MapBundle>();
-    deserializationRegistry->registerClass<MapProjectDataLocation>();
+    context.m_deserializationReg.registerClass<ProjectData>();
+    context.m_deserializationReg.registerClass<ProjectDataLocation>();
+    context.m_deserializationReg.registerClass<ProjectBundle>();
+    context.m_deserializationReg.registerClass<TypeExp>();
+    context.m_deserializationReg.registerClass<UiData>();
+    context.m_deserializationReg.registerClass<SourceFileNodeData>();
+    context.m_deserializationReg.registerClass<TargetFileNodeData>();
+    context.m_deserializationReg.registerClass<ProcessorNodeData>();
+    context.m_deserializationReg.registerClass<ValueNodeData>();
+    context.m_deserializationReg.registerClass<ArraySizeModifierData>();
+    context.m_deserializationReg.registerClass<ConnectionModifierData>();
+    context.m_deserializationReg.registerClass<ValueAssignmentData>();
+    context.m_deserializationReg.registerClass<SelectOptionalsModifierData>();
+    context.m_deserializationReg.registerClass<SelectRecordVariantModifierData>();
+    context.m_deserializationReg.registerClass<SetTypeVariableModifierData>();
+    context.m_deserializationReg.registerClass<IntValue>();
+    context.m_deserializationReg.registerClass<StringValue>();
+    context.m_deserializationReg.registerClass<RationalValue>();
+    context.m_deserializationReg.registerClass<EnumValue>();
+    context.m_deserializationReg.registerClass<TupleValue>();
+    context.m_deserializationReg.registerClass<MapValue>();
+    context.m_deserializationReg.registerClass<FieldIdValue>();
+    context.m_deserializationReg.registerClass<OneToOneMapEntryData>();
+    context.m_deserializationReg.registerClass<AllToOneFallbackMapEntryData>();
+    context.m_deserializationReg.registerClass<AllToSameFallbackMapEntryData>();
+    context.m_deserializationReg.registerClass<MapBundle>();
+    context.m_deserializationReg.registerClass<MapProjectDataLocation>();
 }

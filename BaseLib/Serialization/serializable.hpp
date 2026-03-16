@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BaseLib/Result/resultDSL.hpp>
-#include <BaseLib/Serialization/deserializationRegistry.hpp>
+#include <BaseLib/Serialization/deserializationRegistryInterface.hpp>
 
 #include <cassert>
 #include <functional>
@@ -61,7 +61,7 @@ namespace babelwires {
         /* the entry to stop it getting stripped. */                                                                   \
         return babelwires::Detail::SerializableConcrete<T>::s_registryEntry.m_version;                                 \
     }                                                                                                                  \
-    static const babelwires::DeserializationRegistry::Entry* getDeserializationRegistryEntry() {                       \
+    static const babelwires::DeserializationRegistryInterface::Entry* getDeserializationRegistryEntry() {                       \
         return &babelwires::Detail::SerializableConcrete<T>::s_registryEntry;                                          \
     }                                                                                                                  \
     static babelwires::ResultT<std::unique_ptr<babelwires::Serializable>> deserializingFactory(                        \
@@ -117,11 +117,11 @@ namespace babelwires {
 
         /// Supplies the registry entry necessary to find and correctly deserialize a type.
         template <typename T> struct SerializableConcrete {
-            static const DeserializationRegistry::Entry s_registryEntry;
+            static const DeserializationRegistryInterface::Entry s_registryEntry;
         };
 
         template <typename T>
-        inline const DeserializationRegistry::Entry
+        inline const DeserializationRegistryInterface::Entry
             SerializableConcrete<T>::s_registryEntry(T::deserializingFactory, T::serializationType,
                                                      T::serializationVersion, getSerializationTag<T>());
     } // namespace Detail

@@ -19,7 +19,7 @@ namespace babelwires {
     struct UserLogger;
     class Serializer;
     class Deserializer;
-    class DeserializationRegistry;
+    class DeserializationRegistryInterface;
 
     /// Some common functionality shared by the serializer and the deserializer.
     class SerializerDeserializerCommon {

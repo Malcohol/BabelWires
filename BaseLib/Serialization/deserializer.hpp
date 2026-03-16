@@ -8,7 +8,7 @@
  **/
 #pragma once
 
-#include <BaseLib/Serialization/explicitDeserializationRegistry.hpp>
+#include <BaseLib/Serialization/deserializationRegistry.hpp>
 #include <BaseLib/Serialization/serializable.hpp>
 #include <BaseLib/Serialization/serializableValue.hpp>
 #include <BaseLib/Serialization/serializerDeserializerCommon.hpp>
@@ -24,7 +24,7 @@ namespace babelwires {
     /// Client code must call either finalize or finalizeOnError before the destructor is called.
     class Deserializer : public SerializerDeserializerCommon {
       public:
-        Deserializer(UserLogger& userLogger, const DeserializationRegistry& deserializationRegistry);
+        Deserializer(UserLogger& userLogger, const DeserializationRegistryInterface& deserializationRegistry);
         virtual ~Deserializer();
 
         /// Get a value from the current object.
@@ -114,9 +114,9 @@ namespace babelwires {
         template <typename T>
         void augmentResultWithContext(ResultT<T>& result) const;
 
-        const DeserializationRegistry& getDeserializationRegistry() const;
+        const DeserializationRegistryInterface& getDeserializationRegistry() const;
 
-        void setDeserializationRegistry(const DeserializationRegistry& deserializationRegistry);
+        void setDeserializationRegistry(const DeserializationRegistryInterface& deserializationRegistry);
 
         /// Finalize the deserializer.
         virtual Result finalize();
@@ -156,7 +156,7 @@ namespace babelwires {
       protected:
         bool m_wasFinalized = false;
         UserLogger& m_userLogger;
-        const DeserializationRegistry* m_deserializationRegistry = nullptr;
+        const DeserializationRegistryInterface* m_deserializationRegistry = nullptr;
     };
 
     class DeserializableClassScope {
@@ -168,7 +168,7 @@ namespace babelwires {
 
       private:
         Deserializer& m_deserializer;
-        const DeserializationRegistry* m_previousRegistry = nullptr;
+        const DeserializationRegistryInterface* m_previousRegistry = nullptr;
         OverlayDeserializationRegistry m_overlayRegistry;
     };
 

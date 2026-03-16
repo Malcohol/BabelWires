@@ -28,7 +28,7 @@
 #include <BaseLib/libRegistration.hpp>
 #include <BaseLib/Log/ostreamLogListener.hpp>
 #include <BaseLib/Log/unifiedLog.hpp>
-#include <BaseLib/Serialization/explicitDeserializationRegistry.hpp>
+#include <BaseLib/Serialization/deserializationRegistry.hpp>
 
 // "plugins"
 #include <Domains/Music/MusicLib/libRegistration.hpp>
@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
     SourceFileFormatRegistry sourceFileFormatReg;
     TargetFileFormatRegistry targetFileFormatReg;
     ProcessorFactoryRegistry processorReg;
-    babelwires::ExplicitDeserializationRegistry deserializationRegistry;
+    babelwires::DeserializationRegistry deserializationRegistry;
     babelwires::ValueModelRegistry valueModelRegistry;
     babelwires::TypeSystem typeSystem;
 
