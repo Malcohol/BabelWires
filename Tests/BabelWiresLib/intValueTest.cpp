@@ -5,6 +5,7 @@
 #include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
 #include <BaseLib/Serialization/XML/xmlSerializer.hpp>
 
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/TestUtils/testLog.hpp>
 
 TEST(IntValueTest, basics) {
@@ -30,9 +31,8 @@ TEST(IntValueTest, serialization) {
         serializer.write(os);
         serializedContents = std::move(os.str());
     }
-    testUtils::TestLog log;
-    babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(deserializationReg, log);
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
     ASSERT_TRUE(deserializer.parse(serializedContents));
     auto dataPtrResult = deserializer.deserializeObject<babelwires::IntValue>();
     ASSERT_TRUE(dataPtrResult);

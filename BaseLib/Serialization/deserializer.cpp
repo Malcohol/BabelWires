@@ -12,7 +12,7 @@
 
 babelwires::Deserializer::Deserializer(UserLogger& userLogger, const DeserializationRegistry& deserializationRegistry)
     : m_userLogger(userLogger)
-    , m_deserializationRegistry(deserializationRegistry) {}
+    , m_deserializationRegistry(&deserializationRegistry) {}
 
 babelwires::Deserializer::~Deserializer() {
     assert(m_wasFinalized && "The deserializer was not finalized");
@@ -22,8 +22,17 @@ babelwires::Result babelwires::Deserializer::initialize() {
     if (!pushObject("contents")) {
         return Error() << "The element \"contents\" is missing";
     }
-    DO_OR_ERROR(deserializeMetadata(*this, m_userLogger, m_deserializationRegistry));
+    DO_OR_ERROR(deserializeMetadata(*this, m_userLogger));
     return {};
+}
+
+const babelwires::DeserializationRegistry& babelwires::Deserializer::getDeserializationRegistry() const {
+    assert(m_deserializationRegistry && "The deserialization registry pointer was null");
+    return *m_deserializationRegistry;
+}
+
+void babelwires::Deserializer::setDeserializationRegistry(const DeserializationRegistry& deserializationRegistry) {
+    m_deserializationRegistry = &deserializationRegistry;
 }
 
 babelwires::Result babelwires::Deserializer::finalize() {
@@ -38,7 +47,7 @@ void babelwires::Deserializer::finalizeOnError() {
 babelwires::ResultT<std::unique_ptr<babelwires::Serializable>>
 babelwires::Deserializer::deserializeCurrentObject(const void* tagOfTypeSought) {
     const std::string_view currentTypeName = getCurrentTypeName();
-    if (const DeserializationRegistry::Entry* entry = m_deserializationRegistry.findEntry(currentTypeName)) {
+    if (const DeserializationRegistry::Entry* entry = getDeserializationRegistry().findEntry(currentTypeName)) {
         const void* entryTag = entry->m_baseClassTag;
         // The tags form a path up the type tree, so search for a match for T.
         while (entryTag && (tagOfTypeSought != entryTag)) {
@@ -52,6 +61,18 @@ babelwires::Deserializer::deserializeCurrentObject(const void* tagOfTypeSought) 
         }
     }
     return Error() << "Unknown type \"" << currentTypeName << "\"";
+}
+
+babelwires::DeserializableClassScope::DeserializableClassScope(Deserializer& deserializer)
+    : m_deserializer(deserializer)
+    , m_previousRegistry(&deserializer.getDeserializationRegistry())
+    , m_overlayRegistry(*m_previousRegistry) {
+    m_deserializer.setDeserializationRegistry(m_overlayRegistry);
+}
+
+babelwires::DeserializableClassScope::~DeserializableClassScope() {
+    assert(m_previousRegistry && "The previous registry should always be set");
+    m_deserializer.setDeserializationRegistry(*m_previousRegistry);
 }
 
 babelwires::Result babelwires::Deserializer::BaseIterator::advance() {

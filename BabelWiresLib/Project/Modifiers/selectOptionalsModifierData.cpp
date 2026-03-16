@@ -53,6 +53,10 @@ void babelwires::SelectOptionalsModifierData::serializeContents(Serializer& seri
 
 babelwires::Result babelwires::SelectOptionalsModifierData::deserializeContents(Deserializer& deserializer) {
     DO_OR_ERROR(deserializer.deserializeValue("path", m_targetPath));
+    DeserializableClassScope deserializationScope(deserializer);
+    deserializationScope.registerClass<SerializableOptional_Activate>();
+    deserializationScope.registerClass<SerializableOptional_Deactivate>();
+
     if (auto it = deserializer.tryDeserializeArray<SerializableOptional>("optionals")) {
         while (it->isValid()) {
             ASSIGN_OR_ERROR(const auto newObject, it->getObject());

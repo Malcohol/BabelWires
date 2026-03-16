@@ -64,7 +64,10 @@ void babelwires::SerializerDeserializerCommon::serializeMetadata(Serializer& ser
 }
 
 babelwires::Result babelwires::SerializerDeserializerCommon::deserializeMetadata(
-    Deserializer& deserializer, UserLogger& userLogger, const DeserializationRegistry& deserializationRegistry) {
+    Deserializer& deserializer, UserLogger& userLogger) {
+    DeserializableClassScope metadataScope(deserializer);
+    metadataScope.registerClass<SerializationMetadata>();
+
     ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<SerializationMetadata>("serializationMetadata"));
     while (it.isValid()) {
         ASSIGN_OR_ERROR(auto ptr, it.getObject());
@@ -76,7 +79,7 @@ babelwires::Result babelwires::SerializerDeserializerCommon::deserializeMetadata
             return Error() << "The type \"" << ptr->m_type
                                 << "\" has version 0, but this is not a meaningful version.";
         }
-        const DeserializationRegistry::Entry* entry = deserializationRegistry.findEntry(ptr->m_type);
+        const DeserializationRegistry::Entry* entry = deserializer.getDeserializationRegistry().findEntry(ptr->m_type);
         if (entry && entry->m_version < ptr->m_version) {
             userLogger.logWarning() << "The type \"" << ptr->m_type << "\" being loaded has version " << ptr->m_version
                                     << ", but the latest version known to this software is " << entry->m_version

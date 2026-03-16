@@ -68,6 +68,9 @@ void babelwires::ProjectBundle::serializeAdditionalMetadata(Serializer& serializ
 }
 
 babelwires::Result babelwires::ProjectBundle::deserializeAdditionalMetadata(Deserializer& deserializer) {
+    DeserializableClassScope factoryInfoScope(deserializer);
+    factoryInfoScope.registerClass<FactoryInfoPair>();
+
     ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<FactoryInfoPair>("factoryMetadata"));
     while (it.isValid()) {
         ASSIGN_OR_ERROR(auto fm, it.getObject());

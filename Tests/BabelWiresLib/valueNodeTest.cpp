@@ -65,9 +65,7 @@ TEST(ValueNodeTest, valueNodeDataSerialization) {
         serializer.write(os);
         serializedContents = std::move(os.str());
     }
-    testUtils::TestLog log;
-    babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(deserializationReg, log);
+    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
     ASSERT_TRUE(deserializer.parse(serializedContents));
     auto dataPtrResult = deserializer.deserializeObject<babelwires::ValueNodeData>();
     ASSERT_TRUE(dataPtrResult);

@@ -1,5 +1,6 @@
 #include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
 #include <BaseLib/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/Serialization/explicitDeserializationRegistry.hpp>
 
 #include <BaseLib/Utilities/downcastable.hpp>
 
@@ -54,7 +55,8 @@ TEST(SerializationTest, values) {
 
     {
         TestLog log;
-        AutomaticDeserializationRegistry deserializationReg;
+        ExplicitDeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<A>();
         babelwires::XmlDeserializer deserializer(deserializationReg, log);
         ASSERT_TRUE(deserializer.parse(serializedContents));
         auto APtrResult = deserializer.deserializeObject<A>();
@@ -115,7 +117,9 @@ TEST(SerializationTest, objects) {
 
     {
         TestLog log;
-        AutomaticDeserializationRegistry deserializationReg;
+        ExplicitDeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<A>();
+        deserializationReg.registerClass<B>();
         babelwires::XmlDeserializer deserializer(deserializationReg, log);
         ASSERT_TRUE(deserializer.parse(serializedContents));
         auto BPtrResult = deserializer.deserializeObject<B>();
@@ -212,7 +216,8 @@ TEST(SerializationTest, versioningOld) {
 
     {
         TestLog log;
-        AutomaticDeserializationRegistry deserializationReg;
+        ExplicitDeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<current::C>();
         babelwires::XmlDeserializer deserializer(deserializationReg, log);
         ASSERT_TRUE(deserializer.parse(serializedContents));
         auto CPtrResult = deserializer.deserializeObject<current::C>();
@@ -242,7 +247,8 @@ TEST(SerializationTest, versioningCurrent) {
 
     {
         TestLog log;
-        AutomaticDeserializationRegistry deserializationReg;
+        ExplicitDeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<current::C>();
         babelwires::XmlDeserializer deserializer(deserializationReg, log);
         ASSERT_TRUE(deserializer.parse(serializedContents));
         auto CPtrResult = deserializer.deserializeObject<current::C>();
@@ -385,7 +391,12 @@ TEST(SerializationTest, polymorphism) {
 
     {
         TestLog log;
-        AutomaticDeserializationRegistry deserializationReg;
+        ExplicitDeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<A>();
+        deserializationReg.registerClass<Main>();
+        deserializationReg.registerClass<Concrete0>();
+        deserializationReg.registerClass<Concrete1>();
+        deserializationReg.registerClass<Concrete2>();
         babelwires::XmlDeserializer deserializer(deserializationReg, log);
         ASSERT_TRUE(deserializer.parse(serializedContents));
         auto MainPtrResult = deserializer.deserializeObject<Main>();
@@ -441,7 +452,12 @@ TEST(SerializationTest, polymorphismFail) {
 
         {
             TestLog log;
-            AutomaticDeserializationRegistry deserializationReg;
+            ExplicitDeserializationRegistry deserializationReg;
+            deserializationReg.registerClass<A>();
+            deserializationReg.registerClass<Main>();
+            deserializationReg.registerClass<Concrete0>();
+            deserializationReg.registerClass<Concrete1>();
+            deserializationReg.registerClass<Concrete2>();
             babelwires::XmlDeserializer deserializer(deserializationReg, log);
             ASSERT_TRUE(deserializer.parse(serializedContents2));
             auto MainPtrResult = deserializer.deserializeObject<Main>();

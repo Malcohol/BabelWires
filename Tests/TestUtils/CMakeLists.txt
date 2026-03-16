@@ -1,7 +1,6 @@
 SET( TEST_UTILS_SRCS
    testLog.cpp
    tempFilePath.cpp
-   testDeserializationRegistry.cpp
    testIdentifiers.cpp
    )
 

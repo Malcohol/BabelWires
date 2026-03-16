@@ -12,11 +12,12 @@
 #include <Domains/TestDomain/testProcessor.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testProjectData.hpp>
+#include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 #include <Tests/TestUtils/testLog.hpp>
 
 TEST(ProjectDataTest, serialization) {
-    testUtils::TestLog log;
+    testUtils::TestEnvironment testEnvironment;
     std::string serializedContents;
     {
         testUtils::TestProjectData projectData;
@@ -28,8 +29,7 @@ TEST(ProjectDataTest, serialization) {
         serializedContents = std::move(os.str());
     }
 
-    babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(deserializationReg, log);
+    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
     ASSERT_TRUE(deserializer.parse(serializedContents));
     auto dataPtrResult = deserializer.deserializeObject<babelwires::ProjectData>();
     ASSERT_TRUE(dataPtrResult);

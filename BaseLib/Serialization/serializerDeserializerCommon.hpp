@@ -35,8 +35,7 @@ namespace babelwires {
         void serializeMetadata(Serializer& serializer);
 
         /// Deserialize the type versions from the deserializer.
-        Result deserializeMetadata(Deserializer& deserializer, UserLogger& userLogger,
-                                   const DeserializationRegistry& deserializationRegistry);
+        Result deserializeMetadata(Deserializer& deserializer, UserLogger& userLogger);
 
       protected:
         /// Record the version for each type name, so it can be added to the file.

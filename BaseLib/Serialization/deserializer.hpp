@@ -8,6 +8,7 @@
  **/
 #pragma once
 
+#include <BaseLib/Serialization/explicitDeserializationRegistry.hpp>
 #include <BaseLib/Serialization/serializable.hpp>
 #include <BaseLib/Serialization/serializableValue.hpp>
 #include <BaseLib/Serialization/serializerDeserializerCommon.hpp>
@@ -113,6 +114,10 @@ namespace babelwires {
         template <typename T>
         void augmentResultWithContext(ResultT<T>& result) const;
 
+        const DeserializationRegistry& getDeserializationRegistry() const;
+
+        void setDeserializationRegistry(const DeserializationRegistry& deserializationRegistry);
+
         /// Finalize the deserializer.
         virtual Result finalize();
 
@@ -151,7 +156,20 @@ namespace babelwires {
       protected:
         bool m_wasFinalized = false;
         UserLogger& m_userLogger;
-        const DeserializationRegistry& m_deserializationRegistry;
+        const DeserializationRegistry* m_deserializationRegistry = nullptr;
+    };
+
+    class DeserializableClassScope {
+      public:
+        explicit DeserializableClassScope(Deserializer& deserializer);
+        ~DeserializableClassScope();
+
+        template <typename T> void registerClass();
+
+      private:
+        Deserializer& m_deserializer;
+        const DeserializationRegistry* m_previousRegistry = nullptr;
+        OverlayDeserializationRegistry m_overlayRegistry;
     };
 
 } // namespace babelwires
@@ -188,5 +206,10 @@ template <typename T> struct babelwires::Deserializer::ValueIterator : BaseItera
 
     ValueIterator(std::unique_ptr<AbstractIterator> impl, Deserializer& deserializer, std::string_view typeName);
 };
+
+  template <typename T>
+  void babelwires::DeserializableClassScope::registerClass() {
+    m_overlayRegistry.registerClass<T>();
+  }
 
 #include <BaseLib/Serialization/deserializer_inl.hpp>

@@ -108,9 +108,8 @@ TEST(ElementDataTest, sourceFileDataSerialize) {
         serializedContents = std::move(os.str());
     }
 
-    testUtils::TestLog log;
-    babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(deserializationReg, log);
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
     ASSERT_TRUE(deserializer.parse(serializedContents));
     auto dataPtrResult = deserializer.deserializeObject<babelwires::SourceFileNodeData>();
     ASSERT_TRUE(dataPtrResult);
@@ -213,9 +212,8 @@ TEST(ElementDataTest, targetFileDataSerialize) {
         serializedContents = std::move(os.str());
     }
 
-    testUtils::TestLog log;
-    babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(deserializationReg, log);
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
     ASSERT_TRUE(deserializer.parse(serializedContents));
     auto dataPtrResult = deserializer.deserializeObject<babelwires::TargetFileNodeData>();
     ASSERT_TRUE(dataPtrResult);
@@ -300,9 +298,8 @@ TEST(ElementDataTest, processorDataSerialize) {
         serializedContents = std::move(os.str());
     }
 
-    testUtils::TestLog log;
-    babelwires::AutomaticDeserializationRegistry deserializationReg;
-    babelwires::XmlDeserializer deserializer(deserializationReg, log);
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
     ASSERT_TRUE(deserializer.parse(serializedContents));
     auto dataPtrResult = deserializer.deserializeObject<babelwires::ProcessorNodeData>();
     ASSERT_TRUE(dataPtrResult);

@@ -22,6 +22,8 @@ namespace babelwires {
       public:
         using Factory = std::function<ResultT<std::unique_ptr<Serializable>>(Deserializer& deserializer)>;
 
+                virtual ~DeserializationRegistry() = default;
+
         /// Instances of this object represent the registration of a single concrete class' deserializingFactory.
         struct Entry {
             Factory m_factory;

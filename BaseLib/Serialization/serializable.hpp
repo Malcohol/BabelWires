@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BaseLib/Result/resultDSL.hpp>
-#include <BaseLib/Serialization/automaticDeserializationRegistry.hpp>
+#include <BaseLib/Serialization/deserializationRegistry.hpp>
 
 #include <cassert>
 #include <functional>
@@ -117,12 +117,11 @@ namespace babelwires {
 
         /// Supplies the registry entry necessary to find and correctly deserialize a type.
         template <typename T> struct SerializableConcrete {
-            /// The automatic registration entry for T in the AutomaticDeserializationRegistry
-            static AutomaticDeserializationRegistry::AutomaticEntry s_registryEntry;
+            static const DeserializationRegistry::Entry s_registryEntry;
         };
 
         template <typename T>
-        AutomaticDeserializationRegistry::AutomaticEntry
+        inline const DeserializationRegistry::Entry
             SerializableConcrete<T>::s_registryEntry(T::deserializingFactory, T::serializationType,
                                                      T::serializationVersion, getSerializationTag<T>());
     } // namespace Detail
