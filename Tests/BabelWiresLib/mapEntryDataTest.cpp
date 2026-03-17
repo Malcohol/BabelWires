@@ -81,6 +81,7 @@ TEST(MapEntryDataTest, create) {
 }
 
 TEST(MapEntryDataTest, equalityByKind) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
     typeSystem.addType<testDomain::TestEnum>();
@@ -102,6 +103,7 @@ TEST(MapEntryDataTest, equalityByKind) {
 }
 
 TEST(MapEntryDataTest, oneToOneEqualitySameTypes) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
     typeSystem.addType<testDomain::TestEnum>();
@@ -130,6 +132,7 @@ TEST(MapEntryDataTest, oneToOneEqualitySameTypes) {
 }
 
 TEST(MapEntryDataTest, oneToOneEqualityDifferentTypes) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
     typeSystem.addType<testDomain::TestEnum>();
@@ -161,6 +164,7 @@ TEST(MapEntryDataTest, oneToOneEqualityDifferentTypes) {
 }
 
 TEST(MapEntryDataTest, allToOneEqualitySameTypes) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
     typeSystem.addType<testDomain::TestEnum>();
@@ -184,6 +188,7 @@ TEST(MapEntryDataTest, allToOneEqualitySameTypes) {
 }
 
 TEST(MapEntryDataTest, allToOneEqualityDifferentTypes) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
     typeSystem.addType<testDomain::TestEnum>();
@@ -200,6 +205,7 @@ TEST(MapEntryDataTest, allToOneEqualityDifferentTypes) {
 }
 
 TEST(MapEntryDataTest, hashByKind) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
     typeSystem.addType<testDomain::TestEnum>();
@@ -221,6 +227,7 @@ TEST(MapEntryDataTest, hashByKind) {
 }
 
 TEST(MapEntryDataTest, oneToOneHashSameTypes) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
     typeSystem.addType<testDomain::TestEnum>();
@@ -250,6 +257,7 @@ TEST(MapEntryDataTest, oneToOneHashSameTypes) {
 }
 
 TEST(MapEntryDataTest, oneToOneHashDifferentTypes) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
     typeSystem.addType<testDomain::TestEnum>();
@@ -281,6 +289,7 @@ TEST(MapEntryDataTest, oneToOneHashDifferentTypes) {
 }
 
 TEST(MapEntryDataTest, allToOneHashSameTypes) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
     typeSystem.addType<testDomain::TestEnum>();
@@ -303,6 +312,7 @@ TEST(MapEntryDataTest, allToOneHashSameTypes) {
 }
 
 TEST(MapEntryDataTest, allToOneHashDifferentTypes) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
     typeSystem.addType<testDomain::TestEnum>();
@@ -319,6 +329,7 @@ TEST(MapEntryDataTest, allToOneHashDifferentTypes) {
 }
 
 TEST(MapEntryDataTest, oneToOneValidate) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
     typeSystem.addType<testDomain::TestEnum>();
@@ -337,6 +348,7 @@ TEST(MapEntryDataTest, oneToOneValidate) {
 }
 
 TEST(MapEntryDataTest, allToOneValidate) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
     typeSystem.addType<testDomain::TestEnum>();
@@ -354,6 +366,7 @@ TEST(MapEntryDataTest, allToOneValidate) {
 }
 
 TEST(MapEntryDataTest, allToSameValidate) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
     typeSystem.addType<testDomain::TestEnum>();
@@ -371,6 +384,7 @@ TEST(MapEntryDataTest, allToSameValidate) {
 }
 
 TEST(MapEntryDataTest, oneToOneGetAndSetValues) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
     typeSystem.addType<testDomain::TestEnum>();
@@ -397,6 +411,7 @@ TEST(MapEntryDataTest, oneToOneGetAndSetValues) {
 }
 
 TEST(MapEntryDataTest, allToOneGetAndSetValues) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
     typeSystem.addType<testDomain::TestEnum>();
@@ -416,6 +431,7 @@ TEST(MapEntryDataTest, allToOneGetAndSetValues) {
 }
 
 TEST(MapEntryDataTest, oneToOneSerialize) {
+    testUtils::TestLog log;
     std::string serializedContents;
     {
         babelwires::TypeSystem typeSystem;
@@ -465,6 +481,7 @@ TEST(MapEntryDataTest, oneToOneSerialize) {
 }
 
 TEST(MapEntryDataTest, allToOneSerialize) {
+    testUtils::TestLog log;
     std::string serializedContents;
     {
         babelwires::TypeSystem typeSystem;
@@ -503,6 +520,7 @@ TEST(MapEntryDataTest, allToOneSerialize) {
 }
 
 TEST(MapEntryDataTest, allToSameSerialize) {
+    testUtils::TestLog log;
     std::string serializedContents;
     {
         babelwires::TypeSystem typeSystem;
@@ -528,6 +546,7 @@ TEST(MapEntryDataTest, allToSameSerialize) {
 }
 
 TEST(MapEntryDataTest, oneToOneClone) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
     typeSystem.addType<testDomain::TestEnum>();
@@ -564,6 +583,7 @@ TEST(MapEntryDataTest, oneToOneClone) {
 }
 
 TEST(MapEntryDataTest, allToOneClone) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
 
@@ -588,6 +608,7 @@ TEST(MapEntryDataTest, allToOneClone) {
 }
 
 TEST(MapEntryDataTest, allToSameClone) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     typeSystem.addType<babelwires::StringType>();
 

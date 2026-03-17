@@ -157,6 +157,7 @@ TEST(MapValueTest, equality) {
 }
 
 TEST(MapValueTest, getHash) {
+    testUtils::TestLog log;
     // NOTE: There's a small chance that this test will fail due a hash collision.
 
     babelwires::MapValue mapValue;
@@ -197,6 +198,7 @@ TEST(MapValueTest, getHash) {
 }
 
 TEST(MapValueTest, isInvalid_validMap) {
+    testUtils::TestLog log;
     babelwires::MapValue mapValue;
 
     babelwires::TypeSystem typeSystem;
@@ -216,6 +218,7 @@ TEST(MapValueTest, isInvalid_validMap) {
 }
 
 TEST(MapValueTest, isInvalid_outOfPlaceFallback) {
+    testUtils::TestLog log;
     babelwires::MapValue mapValue;
 
     babelwires::TypeSystem typeSystem;
@@ -231,6 +234,7 @@ TEST(MapValueTest, isInvalid_outOfPlaceFallback) {
 }
 
 TEST(MapValueTest, isInvalid_noFallback) {
+    testUtils::TestLog log;
     babelwires::MapValue mapValue;
 
     babelwires::TypeSystem typeSystem;
@@ -244,6 +248,7 @@ TEST(MapValueTest, isInvalid_noFallback) {
 }
 
 TEST(MapValueTest, isValid_typeMismatch) {
+    testUtils::TestLog log;
     babelwires::MapValue mapValue;
 
     babelwires::TypeSystem typeSystem;
@@ -258,6 +263,7 @@ TEST(MapValueTest, isValid_typeMismatch) {
 }
 
 TEST(MapValueTest, serializationTest) {
+    testUtils::TestEnvironment testEnvironment;
     std::string serializedContents;
     {
         babelwires::MapValue mapValue;
@@ -279,7 +285,7 @@ TEST(MapValueTest, serializationTest) {
         serializer.write(os);
         serializedContents = std::move(os.str());
     }
-    testUtils::TestEnvironment testEnvironment;
+
     babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
     ASSERT_TRUE(deserializer.parse(serializedContents));
     auto dataPtrResult = deserializer.deserializeObject<babelwires::MapValue>();
@@ -303,6 +309,7 @@ TEST(MapValueTest, serializationTest) {
 
 
 TEST(MapValueTest, cloneTest) {
+    testUtils::TestLog log;
     babelwires::MapValue mapValue;
     mapValue.setSourceTypeExp(testTypeId1);
     mapValue.setTargetTypeExp(testTypeId2);

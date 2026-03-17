@@ -8,6 +8,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(StringTypeTest, stringTypeCreateValue) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     babelwires::StringType stringType;
 
@@ -20,6 +21,7 @@ TEST(StringTypeTest, stringTypeCreateValue) {
 }
 
 TEST(StringTypeTest, stringTypeIsValidValue) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     babelwires::StringType stringType;
 
@@ -32,6 +34,7 @@ TEST(StringTypeTest, stringTypeIsValidValue) {
 }
 
 TEST(StringTypeTest, stringTypeGetKind) {
+    testUtils::TestLog log;
     babelwires::StringType stringType;
 
     EXPECT_FALSE(stringType.getFlavour().empty());

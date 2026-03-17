@@ -9,6 +9,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(IntTypeTest, defaultIntTypeCreateValue) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     babelwires::DefaultIntType intType;
 
@@ -21,6 +22,7 @@ TEST(IntTypeTest, defaultIntTypeCreateValue) {
 }
 
 TEST(IntTypeTest, defaultIntTypeGetRange) {
+    testUtils::TestLog log;
     babelwires::DefaultIntType intType;
 
     auto range = intType.getRange();
@@ -30,6 +32,7 @@ TEST(IntTypeTest, defaultIntTypeGetRange) {
 }
 
 TEST(IntTypeTest, defaultIntTypeIsValidValue) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     babelwires::DefaultIntType intType;
 
@@ -48,6 +51,7 @@ TEST(IntTypeTest, defaultIntTypeIsValidValue) {
 }
 
 TEST(IntTypeTest, defaultIntTypeGetKind) {
+    testUtils::TestLog log;
     babelwires::DefaultIntType intType;
 
     EXPECT_FALSE(intType.getFlavour().empty());

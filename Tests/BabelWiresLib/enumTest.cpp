@@ -65,6 +65,7 @@ TEST(EnumTest, enumWithCppEnum) {
 }
 
 TEST(EnumTest, createValue) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     testDomain::TestEnum testEnum;
 

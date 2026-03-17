@@ -9,6 +9,7 @@
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
 TEST(RationalTypeTest, defaultRationalTypeCreateValue) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     babelwires::DefaultRationalType rationalType;
 
@@ -21,6 +22,7 @@ TEST(RationalTypeTest, defaultRationalTypeCreateValue) {
 }
 
 TEST(RationalTypeTest, defaultRationalTypeGetRange) {
+    testUtils::TestLog log;
     babelwires::DefaultRationalType rationalType;
 
     auto range = rationalType.getRange();
@@ -30,6 +32,7 @@ TEST(RationalTypeTest, defaultRationalTypeGetRange) {
 }
 
 TEST(RationalTypeTest, defaultRationalTypeIsValidValue) {
+    testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     babelwires::DefaultRationalType rationalType;
     
@@ -48,6 +51,7 @@ TEST(RationalTypeTest, defaultRationalTypeIsValidValue) {
 }
 
 TEST(RationalTypeTest, defaultRationalTypeGetKind) {
+    testUtils::TestLog log;
     babelwires::DefaultRationalType rationalType;
 
     EXPECT_FALSE(rationalType.getFlavour().empty());

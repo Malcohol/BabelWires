@@ -167,6 +167,7 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
 }
 
 TEST(ElementDataTest, targetFileDataClone) {
+    testUtils::TestLog log;
     babelwires::TargetFileNodeData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
@@ -182,6 +183,7 @@ TEST(ElementDataTest, targetFileDataClone) {
 }
 
 TEST(ElementDataTest, targetFileDataCustomClone) {
+    testUtils::TestLog log;
     babelwires::TargetFileNodeData data;
     data.m_factoryIdentifier = "foo";
     data.m_factoryVersion = 14;
@@ -197,6 +199,8 @@ TEST(ElementDataTest, targetFileDataCustomClone) {
 }
 
 TEST(ElementDataTest, targetFileDataSerialize) {
+    testUtils::TestEnvironment testEnvironment;
+    
     std::string serializedContents;
     {
         babelwires::TargetFileNodeData data;
@@ -212,7 +216,6 @@ TEST(ElementDataTest, targetFileDataSerialize) {
         serializedContents = std::move(os.str());
     }
 
-    testUtils::TestEnvironment testEnvironment;
     babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
     ASSERT_TRUE(deserializer.parse(serializedContents));
     auto dataPtrResult = deserializer.deserializeObject<babelwires::TargetFileNodeData>();
