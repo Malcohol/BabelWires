@@ -8,6 +8,8 @@ PROJECT( BabelWires )
 
 SET(CMAKE_CXX_STANDARD 23)
 
+include(CTest)
+
 # MSVC's legacy preprocessor has bugs with variadic macros.
 if(MSVC)
     add_compile_options(/Zc:preprocessor)
@@ -61,6 +63,7 @@ add_subdirectory(extern/tinyxml2)
 INCLUDE_DIRECTORIES(${tinyxml2_INCLUDE_DIRS})
 
 add_subdirectory(extern/googletest)
+include(GoogleTest)
 # Workaround for a build system issue in libsndfile test.
 set(BUILD_TESTING OFF)
 add_subdirectory(extern/libsndfile)
