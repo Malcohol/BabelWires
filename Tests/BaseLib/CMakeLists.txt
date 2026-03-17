@@ -1,7 +1,7 @@
 SET( COMMON_TESTS_SRCS
    blockStreamTest.cpp
    cloneTest.cpp
-   commonTests.cpp
+   baseLibTests.cpp
    dataBundleTest.cpp
    dataSourceTest.cpp
    downcastableTest.cpp
@@ -23,9 +23,9 @@ SET( COMMON_TESTS_SRCS
    uuidTest.cpp
    )
 
-ADD_EXECUTABLE( commonTests ${COMMON_TESTS_SRCS} )
-TARGET_INCLUDE_DIRECTORIES( commonTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../.. )
-TARGET_LINK_LIBRARIES(commonTests BaseLib testUtils gtest)
+ADD_EXECUTABLE( baseLibTests ${COMMON_TESTS_SRCS} )
+TARGET_INCLUDE_DIRECTORIES( baseLibTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../.. )
+TARGET_LINK_LIBRARIES(baseLibTests BaseLib testUtils gtest)
 
 if(BUILD_TESTING)
    gtest_discover_tests(baseLibTests)
