@@ -21,6 +21,7 @@ SET( COMMON_TESTS_SRCS
    streamEventHolderTest.cpp
    commonTest.cpp
    uuidTest.cpp
+   resultExperiments.cpp
    )
 
 ADD_EXECUTABLE( commonTests ${COMMON_TESTS_SRCS} )
