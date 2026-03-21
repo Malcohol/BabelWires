@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED( VERSION 3.15 )
+CMAKE_MINIMUM_REQUIRED( VERSION 3.25 )
 
 ###############################################################################
 # Build the project
@@ -59,24 +59,29 @@ ENDIF( Qt6_FOUND )
 
 ADD_SUBDIRECTORY( BabelWiresQtUi )
 
-add_subdirectory(extern/tinyxml2)
-INCLUDE_DIRECTORIES(${tinyxml2_INCLUDE_DIRS})
+if(BUILD_TESTING)
+    add_subdirectory(extern/googletest)
+endif()
 
-add_subdirectory(extern/googletest)
-include(GoogleTest)
-# Workaround for a build system issue in libsndfile test.
-set(BUILD_TESTING OFF)
-add_subdirectory(extern/libsndfile)
-set(BUILD_TESTING ON)
+# Disable BUILD_TESTING for external libraries.
+block(SCOPE_FOR VARIABLES)
+    set(BUILD_TESTING OFF)
+    set(tinyxml2_BUILD_TESTING OFF)
+    add_subdirectory(extern/tinyxml2)
+    INCLUDE_DIRECTORIES(${tinyxml2_INCLUDE_DIRS})
+    add_subdirectory(extern/libsndfile)
+    add_subdirectory(extern/nodeeditor)
+endblock()
 
-add_subdirectory(extern/nodeeditor)
+if(BUILD_TESTING)
+    include(GoogleTest)
+    add_subdirectory(Tests/TestUtils)
+    add_subdirectory(Tests/BaseLib)
+    add_subdirectory(Tests/BabelWiresLib)
+    add_subdirectory(Tests/BabelWiresLib/TestUtils)
+endif()
 
-add_subdirectory(Tests/TestUtils)
-add_subdirectory(Tests/BaseLib)
-add_subdirectory(Tests/BabelWiresLib)
-add_subdirectory(Tests/BabelWiresLib/TestUtils)
-
+# This is useful even if not building the tests.
 add_subdirectory(Domains/TestDomain)
 add_subdirectory(Domains/Music )
-
 add_subdirectory(BabelWiresExe)
