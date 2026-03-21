@@ -15,8 +15,7 @@ if(MSVC)
     add_compile_options(/Zc:preprocessor)
 endif()
 
-# Lots of work will be required to support shared libs. Waiting to see whether C++ Modules will help.
-set(BUILD_SHARED_LIBS OFF)
+option(BUILD_SHARED_LIBS "Build all BabelWires libraries as shared libraries" OFF)
 # Ensure that submodules (e.g. nodeeditor) respect the BUILD_SHARED_LIBS setting.
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
@@ -60,11 +59,15 @@ ENDIF( Qt6_FOUND )
 ADD_SUBDIRECTORY( BabelWiresQtUi )
 
 if(BUILD_TESTING)
-    add_subdirectory(extern/googletest)
+    block(SCOPE_FOR VARIABLES)
+        set(BUILD_SHARED_LIBS OFF)
+        add_subdirectory(extern/googletest)
+    endblock()
 endif()
 
-# Disable BUILD_TESTING for external libraries.
+# Force external libraries to static and disable their tests.
 block(SCOPE_FOR VARIABLES)
+    set(BUILD_SHARED_LIBS OFF)
     set(BUILD_TESTING OFF)
     set(tinyxml2_BUILD_TESTING OFF)
     add_subdirectory(extern/tinyxml2)
