@@ -8,6 +8,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>
 
@@ -36,7 +37,7 @@ namespace babelwires {
     /// to keep itself consistent with the project. Therefore, the signals about
     /// connections describe paths which are truncated to the first collapsed
     /// compound.
-    class ProjectObserver {
+    class BABELWIRESLIB_API ProjectObserver {
       public:
         /// Construct a project observe to observe the given project.
         ProjectObserver(const Project& project);

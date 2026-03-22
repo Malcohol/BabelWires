@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/Detail/identifierValueBase.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
@@ -14,7 +15,7 @@ namespace babelwires {
 
     /// Holds the identifier of a field.
     /// This allows field identifiers to be made available to the RecordTypeConstructor.
-    class FieldIdValue : public IdentifierValueBase<ShortId> {
+    class BABELWIRESLIB_API FieldIdValue : public IdentifierValueBase<ShortId> {
       public:
         DOWNCASTABLE(FieldIdValue, IdentifierValueBase<ShortId>);
         CLONEABLE(FieldIdValue);

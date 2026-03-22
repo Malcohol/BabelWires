@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -16,7 +17,7 @@ namespace babelwires {
     struct ModifierData;
 
     /// Remove the modifier, and restore any other modifiers removed when an array's size changes.
-    class RemoveModifierCommand : public CompoundCommand<Project> {
+    class BABELWIRESLIB_API RemoveModifierCommand : public CompoundCommand<Project> {
       public:
         DOWNCASTABLE(RemoveModifierCommand, CompoundCommand<Project>);
         CLONEABLE(RemoveModifierCommand);

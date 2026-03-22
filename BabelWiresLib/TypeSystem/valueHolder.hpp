@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BaseLib/DataContext/filePathVisitor.hpp>
 #include <BaseLib/Identifiers/identifierVisitor.hpp>
 
@@ -21,7 +22,7 @@ namespace babelwires {
     /// A ValueHolder is a container which holds a single Value.
     /// The held value will be immutable throughout its lifetime.
     /// TODO in-place storage for small values.
-    class ValueHolder {
+    class BABELWIRESLIB_API ValueHolder {
       public:
         ValueHolder() = default;
         ValueHolder(const ValueHolder& other);

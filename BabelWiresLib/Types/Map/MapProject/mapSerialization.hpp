@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
 
 #include <BaseLib/DataContext/dataBundle.hpp>
@@ -15,7 +16,7 @@
 #include <filesystem>
 
 namespace babelwires {
-    class MapBundle : public DataBundle<MapValue> {
+    class BABELWIRESLIB_API MapBundle : public DataBundle<MapValue> {
       public:
         SERIALIZABLE(MapBundle, "map", void, 1);
         MapBundle() = default;
@@ -30,5 +31,5 @@ namespace babelwires {
         void visitFilePaths(FilePathVisitor& visitor) override;
     };
 
-    class MapSerialization : public DataSerialization<MapBundle> {};
+    class BABELWIRESLIB_API MapSerialization : public DataSerialization<MapBundle> {};
 } // namespace babelwires

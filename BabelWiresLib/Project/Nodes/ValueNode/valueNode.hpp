@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 
@@ -15,7 +16,7 @@ namespace babelwires {
     class ValueNodeData;
     class ValueTreeRoot;
 
-    class ValueNode : public Node {
+    class BABELWIRESLIB_API ValueNode : public Node {
       public:
         DOWNCASTABLE(ValueNode, Node);
         ValueNode(const ProjectContext& context, UserLogger& userLogger, const ValueNodeData& data,

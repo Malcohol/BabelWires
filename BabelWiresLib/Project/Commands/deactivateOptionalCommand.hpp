@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -16,7 +17,7 @@ namespace babelwires {
     class Project;
 
     /// Deactivate an optional in a RecordType
-    class DeactivateOptionalCommand : public CompoundCommand<Project> {
+    class BABELWIRESLIB_API DeactivateOptionalCommand : public CompoundCommand<Project> {
       public:
         DOWNCASTABLE(DeactivateOptionalCommand, CompoundCommand<Project>);
         CLONEABLE(DeactivateOptionalCommand);

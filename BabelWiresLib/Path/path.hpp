@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Path/pathStep.hpp>
 #include <BaseLib/Result/result.hpp>
 
@@ -21,7 +22,7 @@ namespace babelwires {
     class ValueTreeRoot;
 
     /// Describes the steps to follow within a ValueTree to reach a particular ValueTreeNode.
-    class Path {
+    class BABELWIRESLIB_API Path {
       public:
         /// Construct an empty path.
         Path();
@@ -102,7 +103,7 @@ namespace babelwires {
     };
 
     /// Write a path to an ostream.
-    std::ostream& operator<<(std::ostream& os, const Path& p);
+    BABELWIRESLIB_API std::ostream& operator<<(std::ostream& os, const Path& p);
 } // namespace babelwires
 
 namespace std {

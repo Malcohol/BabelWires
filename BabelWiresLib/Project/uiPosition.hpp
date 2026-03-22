@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <cstdint>
 #include <functional>
 
@@ -16,7 +17,7 @@ namespace babelwires {
 
     /// Defines the graphical position of a Node.
     /// We put this in the BabelWires library, because it simplifies serialization.
-    struct UiPosition {
+    struct BABELWIRESLIB_API UiPosition {
         UiCoord m_x = 0;
         UiCoord m_y = 0;
 
@@ -34,7 +35,7 @@ namespace babelwires {
         std::size_t getHash() const;
     };
 
-    struct UiSize {
+    struct BABELWIRESLIB_API UiSize {
         bool operator!=(const UiSize& other) const;
         bool operator==(const UiSize& other) const;
 

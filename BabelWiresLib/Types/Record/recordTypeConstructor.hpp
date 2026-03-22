@@ -7,13 +7,14 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 #include <BabelWiresLib/Types/Record/fieldIdValue.hpp>
 
 namespace babelwires {
 
     /// Construct a simple record from types and fieldIds.
-    class RecordTypeConstructor : public TypeConstructor {
+    class BABELWIRESLIB_API RecordTypeConstructor : public TypeConstructor {
       public:
         DOWNCASTABLE(RecordTypeConstructor, TypeConstructor);
         // Example: Record{a, b, c : String, Integer, String}
@@ -33,7 +34,7 @@ namespace babelwires {
             return TypeExp(getThisIdentifier(), {std::move(typeArguments), std::move(valueArguments)});
         }
 
-        struct Detail {
+        struct BABELWIRESLIB_API Detail {
             /// Construct a TypeExp for a record type with the given field names and types.
             /// The field names are given as ShortIds, and the types as TypeExps.
             static void addToArrays(std::vector<ValueHolder>& fieldNames, std::vector<TypeExp>& fieldTypes) {}

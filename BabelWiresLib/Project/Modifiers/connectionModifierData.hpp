@@ -7,11 +7,12 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
 namespace babelwires {
     /// Data used to assign a value within a container to a value from another node.
-    struct ConnectionModifierData : ModifierData {
+    struct BABELWIRESLIB_API ConnectionModifierData : ModifierData {
         DOWNCASTABLE(ConnectionModifierData, ModifierData);
         /// Find the source ValueTreeNode in the project.
         ResultT<const ValueTreeNode&> getSourceTreeNode(const Project& project) const;

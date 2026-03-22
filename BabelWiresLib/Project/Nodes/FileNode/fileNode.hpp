@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 
 #include <filesystem>
@@ -15,7 +16,7 @@ namespace babelwires {
     class FileTypeEntry;
 
     /// A base class for Nodes which represents the contents of a file.
-    class FileNode : public Node {
+    class BABELWIRESLIB_API FileNode : public Node {
       public:
         DOWNCASTABLE(FileNode, Node);
         FileNode(const NodeData& data, NodeId newId);

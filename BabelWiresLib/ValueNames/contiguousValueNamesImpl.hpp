@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/ValueNames/valueNames.hpp>
 
 #include <map>
@@ -15,7 +16,7 @@
 
 namespace babelwires {
 
-    class ContiguousValueNamesImpl : public ValueNames {
+    class BABELWIRESLIB_API ContiguousValueNamesImpl : public ValueNames {
       public:
         typedef std::vector<std::string> Names;
         typedef std::unordered_map<std::string, int> ValueFromNamesMap;

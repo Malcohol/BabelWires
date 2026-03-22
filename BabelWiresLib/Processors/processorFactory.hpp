@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BaseLib/Registry/registry.hpp>
 
 #include <memory>
@@ -20,7 +21,7 @@
         return BW_LONG_ID(LONG_ID, NAME, UUID);                                                                        \
     }                                                                                                                  \
     template <typename PROCESSOR_SUBTYPE>                                                                              \
-    struct ThisProcessorFactory : babelwires::CommonProcessorFactory<PROCESSOR_SUBTYPE> {                              \
+    struct BABELWIRESLIB_API ThisProcessorFactory : babelwires::CommonProcessorFactory<PROCESSOR_SUBTYPE> {                              \
         ThisProcessorFactory()                                                                                         \
             : babelwires::CommonProcessorFactory<PROCESSOR_SUBTYPE>(PROCESSOR_SUBTYPE::getFactoryIdentifier(), 1) {}   \
     };
@@ -31,7 +32,7 @@ namespace babelwires {
     struct ProjectContext;
 
     /// Objects which can create processors, and which can be registered in the ProcessFactoryRegistry.
-    class ProcessorFactory : public RegistryEntry {
+    class BABELWIRESLIB_API ProcessorFactory : public RegistryEntry {
       public:
         ProcessorFactory(LongId identifier, VersionNumber version);
 

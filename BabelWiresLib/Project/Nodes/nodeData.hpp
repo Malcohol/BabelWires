@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/Project/uiPosition.hpp>
@@ -30,12 +31,12 @@ namespace babelwires {
     class UntypedRegistry;
 
     /// Use the custom clone framework to do a shallow clone.
-    struct ShallowCloneContext {};
+    struct BABELWIRESLIB_API ShallowCloneContext {};
 
     /// Data of interest only to the UI, and has no bearing on the evaluation logic.
     /// Note: The expand/collapse logic could have been included here, but I decided to pack
     /// it into one EditTree with the modifiers.
-    struct UiData : Serializable {
+    struct BABELWIRESLIB_API UiData : Serializable {
         SERIALIZABLE(UiData, "uiData", void, 1);
         void serializeContents(Serializer& serializer) const override;
         Result deserializeContents(Deserializer& deserializer) override;
@@ -50,7 +51,7 @@ namespace babelwires {
     /// NodeDatas carry the data sufficient to reconstruct a Node.
     /// The class supports clone(), which returns a deep clone of the object,
     /// and customClone() which returns a clone with the array members unset.
-    struct NodeData : Cloneable, CustomCloneable<ShallowCloneContext>, Serializable, ProjectVisitable {
+    struct BABELWIRESLIB_API NodeData : Cloneable, CustomCloneable<ShallowCloneContext>, Serializable, ProjectVisitable {
         CLONEABLE_ABSTRACT(NodeData);
         CUSTOM_CLONEABLE_ABSTRACT(NodeData);
         SERIALIZABLE_ABSTRACT(NodeData, void);

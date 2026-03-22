@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
@@ -18,7 +19,7 @@ namespace babelwires {
     class MapEntryData;
 
     /// A MapProjectEntry wraps MapEntryData and augments it with features relevant for editing.
-    class MapProjectEntry : public Cloneable {
+    class BABELWIRESLIB_API MapProjectEntry : public Cloneable {
       public:
         CLONEABLE(MapProjectEntry);
         MapProjectEntry(std::unique_ptr<MapEntryData> data);

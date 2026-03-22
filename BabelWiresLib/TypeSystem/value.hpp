@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BaseLib/Cloning/cloneable.hpp>
 #include <BaseLib/Identifiers/identifier.hpp>
 #include <BaseLib/Utilities/downcastable.hpp>
@@ -17,7 +18,7 @@ namespace babelwires {
 
     /// A Value is an abstract class for objects which carry a single, usually simple value.
     /// Value lifetimes are usually managed by the ValueHolder container.
-    class Value : public Cloneable {
+    class BABELWIRESLIB_API Value : public Cloneable {
       public:
         DOWNCASTABLE_BASE(Value);
         CLONEABLE_ABSTRACT(Value);

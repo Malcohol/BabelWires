@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 
 #include <BaseLib/Cloning/cloneable.hpp>
@@ -15,7 +16,7 @@
 namespace babelwires {
 
     /// Carries data sufficient to reconstruct the project.
-    struct ProjectData : Serializable, ProjectVisitable {
+    struct BABELWIRESLIB_API ProjectData : Serializable, ProjectVisitable {
         SERIALIZABLE(ProjectData, "projectData", void, 1);
         ProjectData() = default;
         ProjectData(ProjectData&&) = default;

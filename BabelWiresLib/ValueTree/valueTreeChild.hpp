@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
@@ -16,7 +17,7 @@ namespace babelwires {
     class Value;
 
     /// A ValueTreeChild is a ValueTreeNode whose value is owned by an ancestor feature.
-    class ValueTreeChild : public ValueTreeNode {
+    class BABELWIRESLIB_API ValueTreeChild : public ValueTreeNode {
       public:
         DOWNCASTABLE(ValueTreeChild, ValueTreeNode);
 

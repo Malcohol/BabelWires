@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -18,7 +19,7 @@ namespace babelwires {
     struct NodeData;
 
     /// Add a Node to the project.
-    class AddNodeCommand : public SimpleCommand<Project> {
+    class BABELWIRESLIB_API AddNodeCommand : public SimpleCommand<Project> {
       public:
         DOWNCASTABLE(AddNodeCommand, SimpleCommand<Project>);
         CLONEABLE(AddNodeCommand);

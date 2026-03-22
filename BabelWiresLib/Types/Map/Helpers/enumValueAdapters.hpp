@@ -7,12 +7,13 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
 namespace babelwires {
     /// Convert an EnumValue to the identifier it carries.
-    struct EnumToIdentifierValueAdapter {
+    struct BABELWIRESLIB_API EnumToIdentifierValueAdapter {
         babelwires::ShortId operator() (const Value& value) const {
             const auto& enumValue = value.as<EnumValue>();
             return enumValue.get();
@@ -21,7 +22,7 @@ namespace babelwires {
 
     /// Convert an EnumValue to a unsigned int corresponding to the index of the enum entry.
     /// Note: Be very careful with this if the enum could change in the future.
-    struct EnumToIndexValueAdapter {
+    struct BABELWIRESLIB_API EnumToIndexValueAdapter {
         TypePtrT<EnumType> m_enum;
 
         unsigned int operator() (const Value& value) const {
@@ -32,7 +33,7 @@ namespace babelwires {
 
     /// Convert an EnumValue to a native enum value.
     template<typename ENUM>
-    struct EnumToValueValueAdapter {
+    struct BABELWIRESLIB_API EnumToValueValueAdapter {
         const ENUM& m_enum;
 
         typename ENUM::Value operator() (const Value& value) const {

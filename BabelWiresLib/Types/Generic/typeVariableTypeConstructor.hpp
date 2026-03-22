@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableData.hpp>
 
@@ -18,7 +19,7 @@ namespace babelwires {
     /// type constructor expression is a pure wrapper for the instantiated type.
     /// The two IntValues represent the index of the variable in the generic type and the number of
     /// generic types to traverse upwards to find the generic type of which this is a variable.
-    class TypeVariableTypeConstructor : public TypeConstructor {
+    class BABELWIRESLIB_API TypeVariableTypeConstructor : public TypeConstructor {
       public:
         DOWNCASTABLE(TypeVariableTypeConstructor, TypeConstructor);
         TYPE_CONSTRUCTOR("TVar", "TVar([0],[1],{0?-})", "33f14749-b652-4d53-808b-8d8c281c310f", 1);

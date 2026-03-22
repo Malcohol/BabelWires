@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/Commands/addNodeForTreeValueCommandBase.hpp>
@@ -19,7 +20,7 @@ namespace babelwires {
     struct NodeData;
 
     /// Create a new node using the data in an existing input row in the project,
-    class AddNodeForOutputTreeValueCommand : public AddNodeForTreeValueCommandBase {
+    class BABELWIRESLIB_API AddNodeForOutputTreeValueCommand : public AddNodeForTreeValueCommandBase {
       public:
         DOWNCASTABLE(AddNodeForOutputTreeValueCommand, AddNodeForTreeValueCommandBase);
         CLONEABLE(AddNodeForOutputTreeValueCommand);

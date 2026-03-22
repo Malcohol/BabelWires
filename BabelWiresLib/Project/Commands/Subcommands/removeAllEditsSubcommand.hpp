@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -16,7 +17,7 @@ namespace babelwires {
     struct ModifierData;
 
     /// Remove all modifiers and expanded paths at and beneath a given TreeValueNode.
-    class RemoveAllEditsSubcommand : public CompoundCommand<Project> {
+    class BABELWIRESLIB_API RemoveAllEditsSubcommand : public CompoundCommand<Project> {
       public:
         DOWNCASTABLE(RemoveAllEditsSubcommand, CompoundCommand<Project>);
         CLONEABLE(RemoveAllEditsSubcommand);
@@ -34,7 +35,7 @@ namespace babelwires {
 
         std::vector<Path> m_expandedPathsRemoved;
 
-        struct OutgoingConnection {
+        struct BABELWIRESLIB_API OutgoingConnection {
             Path m_pathInSource;
             NodeId m_targetId;
             Path m_pathInTarget;

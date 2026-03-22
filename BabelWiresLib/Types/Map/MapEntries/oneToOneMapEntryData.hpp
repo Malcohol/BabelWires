@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
@@ -16,7 +17,7 @@ namespace babelwires {
     class TypeSystem;
 
     /// A map entry with a single source value of discrete type.
-    class OneToOneMapEntryData : public MapEntryData {
+    class BABELWIRESLIB_API OneToOneMapEntryData : public MapEntryData {
       public:
         DOWNCASTABLE(OneToOneMapEntryData, MapEntryData);
         CLONEABLE(OneToOneMapEntryData);

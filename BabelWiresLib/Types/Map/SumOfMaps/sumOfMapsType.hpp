@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Types/Sum/sumType.hpp>
 
 namespace babelwires {
@@ -17,7 +18,7 @@ namespace babelwires {
     ///
     /// Implementation note: The sum has every combination of source and target types, which is a bit unfortunate. I'm
     /// sure there is a much cleaner way of providing the same functionality, but this will have to do for now.
-    class SumOfMapsType : public SumType {
+    class BABELWIRESLIB_API SumOfMapsType : public SumType {
       public:
         DOWNCASTABLE(SumOfMapsType, SumType);
 

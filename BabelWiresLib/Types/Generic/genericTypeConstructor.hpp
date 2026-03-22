@@ -7,11 +7,12 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 
 namespace babelwires {
     /// Construct a GenericType from a TypeExp and a number of type variables.
-    class GenericTypeConstructor : public TypeConstructor {
+    class BABELWIRESLIB_API GenericTypeConstructor : public TypeConstructor {
       public:
         DOWNCASTABLE(GenericTypeConstructor, TypeConstructor);
         TYPE_CONSTRUCTOR("Gen", "Gen<[0]>{{{0}}}", "56ff5848-9be4-4288-a893-eec7ef15e675", 1);

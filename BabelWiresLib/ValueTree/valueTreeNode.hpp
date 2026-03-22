@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BaseLib/Result/result.hpp>
 #include <BaseLib/Utilities/downcastable.hpp>
 #include <BaseLib/Utilities/enumFlags.hpp>
@@ -28,7 +29,7 @@ namespace babelwires {
     /// 2. Ownership (i.e. storing a parent pointer, which allows the paths to values to be constructed)
     /// 3. Convenient access to the TypeSystem.
     /// Note that the underlying values can be shared, so they cannot carry this data.
-    class ValueTreeNode {
+    class BABELWIRESLIB_API ValueTreeNode {
       public:
         DOWNCASTABLE_BASE(ValueTreeNode);
 

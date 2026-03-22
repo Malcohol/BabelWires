@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
 namespace babelwires {
@@ -15,7 +16,7 @@ namespace babelwires {
     /// A value of a sum type is just a bare values of one of the summands. 
     /// Be very careful when making a sumtype with overlapping summands, because the
     /// UI cannot know which type is intended and editing won't work properly.
-    class SumType : public Type {
+    class BABELWIRESLIB_API SumType : public Type {
       public:
         DOWNCASTABLE(SumType, Type);
 

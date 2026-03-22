@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 
@@ -18,7 +19,7 @@ namespace babelwires {
     /// are handled in the usual covariant way.
     /// In fact, we require source types to be at least "related" (i.e. in a subtype or
     /// supertype relationship).
-    class MapType : public Type {
+    class BABELWIRESLIB_API MapType : public Type {
       public:
         DOWNCASTABLE(MapType, Type);
 

@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
@@ -15,7 +16,7 @@
 
 namespace babelwires {
     /// An ArrayValue can contain a dynamically-sized sequence of child values.
-    class ArrayValue : public Value {
+    class BABELWIRESLIB_API ArrayValue : public Value {
       public:
         DOWNCASTABLE(ArrayValue, Value);
         CLONEABLE(ArrayValue);

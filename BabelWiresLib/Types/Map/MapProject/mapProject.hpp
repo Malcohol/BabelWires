@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
 
@@ -23,12 +24,12 @@ namespace babelwires {
     struct ProjectContext;
 
     /// The MapProject carries an enriched version of the data in a MapValue and has support for editing.
-    class MapProject {
+    class BABELWIRESLIB_API MapProject {
       public:
         MapProject(const ProjectContext& projectContext);
         virtual ~MapProject();
 
-        struct AllowedTypes {
+        struct BABELWIRESLIB_API AllowedTypes {
             std::vector<TypeExp> m_typeExps;
             unsigned int m_indexOfDefault = 0;
 

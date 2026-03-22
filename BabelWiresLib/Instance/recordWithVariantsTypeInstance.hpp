@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Instance/instanceTemplates.hpp>
 #include <BabelWiresLib/Instance/instanceUtils.hpp>
@@ -16,7 +17,7 @@ namespace babelwires {
     /// Provides some standard methods for instances of RecordForVariantType.
     template <typename VALUE_TREE_NODE, typename T>
         requires std::is_base_of_v<RecordWithVariantsType, T>
-    class InstanceParent<VALUE_TREE_NODE, T> : public InstanceCommonBase<VALUE_TREE_NODE, T> {
+    class BABELWIRESLIB_API InstanceParent<VALUE_TREE_NODE, T> : public InstanceCommonBase<VALUE_TREE_NODE, T> {
       public:
         InstanceParent(VALUE_TREE_NODE& valueFeature)
             : InstanceCommonBase<VALUE_TREE_NODE, T>(valueFeature) {}

@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
@@ -27,7 +28,7 @@ namespace babelwires {
     /// To support scenarios such as deserialization after an awkward versioning step, or copy and
     /// paste from similar but non-identical types, entries are not presumed to be valid.
     /// However, an assignment of MapValue will fail if there are invalid entries.
-    class MapValue : public AlwaysEditableValue {
+    class BABELWIRESLIB_API MapValue : public AlwaysEditableValue {
       public:
         DOWNCASTABLE(MapValue, AlwaysEditableValue);
         SERIALIZABLE(MapValue, "mapValue", EditableValue, 1);

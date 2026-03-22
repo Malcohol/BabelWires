@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/Project/projectVisitable.hpp>
@@ -23,7 +24,7 @@ namespace babelwires {
     class FilePath;
 
     /// ModifierData carry the data sufficient to reconstruct a Modifier.
-    struct ModifierData : Cloneable, Serializable, ProjectVisitable {
+    struct BABELWIRESLIB_API ModifierData : Cloneable, Serializable, ProjectVisitable {
         CLONEABLE_ABSTRACT(ModifierData);
         SERIALIZABLE_ABSTRACT(ModifierData, void);
         DOWNCASTABLE_BASE(ModifierData);
@@ -48,7 +49,7 @@ namespace babelwires {
     };
 
     /// Base class for ModifierData which construct LocalModifiers.
-    struct LocalModifierData : ModifierData {
+    struct BABELWIRESLIB_API LocalModifierData : ModifierData {
         DOWNCASTABLE(LocalModifierData, ModifierData);
         CLONEABLE_ABSTRACT(LocalModifierData);
         SERIALIZABLE_ABSTRACT(LocalModifierData, ModifierData);

@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 
 namespace babelwires {
@@ -19,7 +20,7 @@ namespace babelwires {
     struct ProjectContext;
 
     /// TargetFileNodes are Nodes which correspond to a target file.
-    class TargetFileNode : public FileNode {
+    class BABELWIRESLIB_API TargetFileNode : public FileNode {
       public:
         DOWNCASTABLE(TargetFileNode, FileNode);
         TargetFileNode(const ProjectContext& context, UserLogger& userLogger, const TargetFileNodeData& data,

@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 #include <BabelWiresLib/TypeSystem/typePtr.hpp>
@@ -15,7 +16,7 @@
 #include <BaseLib/Identifiers/identifier.hpp>
 
 namespace babelwires {
-    class TypeSystem {
+    class BABELWIRESLIB_API TypeSystem {
       public:
         TypeSystem();
         virtual ~TypeSystem();

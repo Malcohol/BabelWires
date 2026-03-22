@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
@@ -24,7 +25,7 @@ namespace babelwires {
     /// A type is a subtypes of another type when all its values are valid
     /// values of the other.
     /// Information about subtype relationships is managed by the TypeSystem.
-    class Type {
+    class BABELWIRESLIB_API Type {
       public:
         DOWNCASTABLE_BASE(Type);
 

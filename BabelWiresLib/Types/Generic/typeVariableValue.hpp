@@ -7,12 +7,13 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
 namespace babelwires {
 
     /// A dummy value constructed by TypeVariableType.
-    class TypeVariableValue : public Value {
+    class BABELWIRESLIB_API TypeVariableValue : public Value {
       public:
         DOWNCASTABLE(TypeVariableValue, Value);
         CLONEABLE(TypeVariableValue);

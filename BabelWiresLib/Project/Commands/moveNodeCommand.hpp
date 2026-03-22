@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Project/uiPosition.hpp>
 #include <BabelWiresLib/Path/path.hpp>
@@ -19,7 +20,7 @@ namespace babelwires {
     class Project;
 
     /// The command which changes the UiPosition of a Node.
-    class MoveNodeCommand : public SimpleCommand<Project> {
+    class BABELWIRESLIB_API MoveNodeCommand : public SimpleCommand<Project> {
       public:
         DOWNCASTABLE(MoveNodeCommand, SimpleCommand<Project>);
         CLONEABLE(MoveNodeCommand);

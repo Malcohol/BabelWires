@@ -8,6 +8,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Processors/processor.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
@@ -21,7 +22,7 @@ namespace babelwires {
     /// settings separate from the per-entry inputs. A subclass can use the Instance DSL to provide convenient access
     /// to the fields of the type. It should not be necessary to reference the array in the instance, since the
     /// processor's ProcessEntry call provides direct access.
-    class ParallelProcessorInputBase : public RecordType {
+    class BABELWIRESLIB_API ParallelProcessorInputBase : public RecordType {
       public:
         DOWNCASTABLE(ParallelProcessorInputBase, RecordType);
 
@@ -34,7 +35,7 @@ namespace babelwires {
     /// per-entry outputs. Support could be added if a use-case arises.
     /// TODO: We could automatically create these output types using a RecordTypeConstructor. However, such a type could
     /// not be directly addressed in a versioning system. Have a think about whether that matters.
-    class ParallelProcessorOutputBase : public RecordType {
+    class BABELWIRESLIB_API ParallelProcessorOutputBase : public RecordType {
       public:
         DOWNCASTABLE(ParallelProcessorOutputBase, RecordType);
 
@@ -44,7 +45,7 @@ namespace babelwires {
     /// A base class for a common shape of processor which performs the same operation on several input features,
     /// producing several output features. Organizing suitable processors this way should reduce the number of
     /// Nodes in the project.
-    class ParallelProcessor : public Processor {
+    class BABELWIRESLIB_API ParallelProcessor : public Processor {
       public:
         ParallelProcessor(const ProjectContext& projectContext, const TypeExp& parallelInput,
                           const TypeExp& parallelOutput);

@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
@@ -15,7 +16,7 @@ namespace babelwires {
     /// For record-style types it "dispatches to" (i.e. inherits from) a corresponding inner-class
     /// in the type's class. However, some types (e.g. built-ins) specialize the template instead.
     template <typename VALUE_TREE_NODE, typename VALUE_TYPE>
-    class InstanceImpl : public VALUE_TYPE::template InstanceImpl<VALUE_TREE_NODE> {
+    class BABELWIRESLIB_API InstanceImpl : public VALUE_TYPE::template InstanceImpl<VALUE_TREE_NODE> {
       public:
         InstanceImpl(VALUE_TREE_NODE& valueFeature)
             : VALUE_TYPE::template InstanceImpl<VALUE_TREE_NODE>(valueFeature) {}
@@ -47,7 +48,7 @@ namespace babelwires {
     /// Methods that should be available for every instance.
     /// Inner-class instances and specializations should always inherit from this.
     template <typename VALUE_TREE_NODE, typename VALUE_TYPE>
-    class InstanceCommonBase : public InstanceUntypedBase<VALUE_TREE_NODE> {
+    class BABELWIRESLIB_API InstanceCommonBase : public InstanceUntypedBase<VALUE_TREE_NODE> {
       public:
         InstanceCommonBase(VALUE_TREE_NODE& valueFeature)
             : InstanceUntypedBase<VALUE_TREE_NODE>(valueFeature) {
@@ -61,7 +62,7 @@ namespace babelwires {
     /// For example, RecordWithVariantType classes use this to have common methods (for variant handling) while having
     /// bespoke fields defined by the instanceDSL macros.
     template <typename VALUE_TREE_NODE, typename VALUE_TYPE>
-    class InstanceParent : public InstanceCommonBase<VALUE_TREE_NODE, VALUE_TYPE> {
+    class BABELWIRESLIB_API InstanceParent : public InstanceCommonBase<VALUE_TREE_NODE, VALUE_TYPE> {
       public:
         InstanceParent(VALUE_TREE_NODE& valueFeature)
             : InstanceCommonBase<VALUE_TREE_NODE, VALUE_TYPE>(valueFeature) {}

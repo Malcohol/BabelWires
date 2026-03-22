@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BaseLib/common.hpp>
 
@@ -20,7 +21,7 @@ namespace babelwires {
     /// Arranges edits (modifiers and expand/collapse) in a tree organized by paths.
     /// All tree data is stored in one compact block, so it should be cheap to traverse assuming EditTrees are small.
     /// Management of the changes of the expansion state is done explicitly within the tree.
-    class EditTree {
+    class BABELWIRESLIB_API EditTree {
       public:
         virtual ~EditTree();
 
@@ -94,7 +95,7 @@ namespace babelwires {
         struct RootedPath;
         struct RootedPathIterator;
 
-        struct FindNodeIndexResult {
+        struct BABELWIRESLIB_API FindNodeIndexResult {
             int m_nodeIndex = -1;
             /// If there is a missing child, this is the index where the missing child would be.
             int m_missingChildIndex = -1;
@@ -136,7 +137,7 @@ namespace babelwires {
 
       private:
         /// The data structure which carries the tree's data.
-        struct TreeNode {
+        struct BABELWIRESLIB_API TreeNode {
             /// Non-null for leaf nodes.
             std::unique_ptr<Modifier> m_modifier;
             /// The step to this node from its parent.

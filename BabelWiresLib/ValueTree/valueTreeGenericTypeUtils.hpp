@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 
 #include <optional>
@@ -17,10 +18,10 @@ namespace babelwires {
     class TypeExp;
 
     /// Given a node at a type variable, search up the tree for the GenericType that contains it.
-    const ValueTreeNode* tryGetGenericTypeFromVariable(const ValueTreeNode& valueTreeNode);
+    BABELWIRESLIB_API const ValueTreeNode* tryGetGenericTypeFromVariable(const ValueTreeNode& valueTreeNode);
 
     /// Check whether a node is between an unresolved type variables and the GenericType that contains it.
-    bool containsUnassignedTypeVariable(const ValueTreeNode& valueTreeNode);
+    BABELWIRESLIB_API bool containsUnassignedTypeVariable(const ValueTreeNode& valueTreeNode);
 
     /// Return the maximum level of generic types, above the ValueTreeNode, that any unassigned type variable in the node
     /// references. A return value of -1 means that no unassigned type variables in the ValueTreeNode reference any generic type
@@ -28,11 +29,11 @@ namespace babelwires {
     /// variable (i.e. in a well-formed type, the returned value won't exceed the maximumPossible).
     /// To emphasize: If the valueTreeNode holds a GenericType itself, that isn't counted for the result (and shouldn't be
     /// counted in the provided maximumPossible).
-    int getMaximumHeightOfUnassignedGenericType(const ValueTreeNode& valueTreeNode, int maximumPossible);
+    BABELWIRESLIB_API int getMaximumHeightOfUnassignedGenericType(const ValueTreeNode& valueTreeNode, int maximumPossible);
 
     /// If the target has type variables, determine what types they would get assigned if the source were used to
     /// instantiate them.
-    std::optional<std::map<std::tuple<Path, unsigned int>, TypeExp>> getTypeVariableAssignments(const ValueTreeNode& sourceValueTreeNode, const ValueTreeNode& targetValueTreeNode);
+    BABELWIRESLIB_API std::optional<std::map<std::tuple<Path, unsigned int>, TypeExp>> getTypeVariableAssignments(const ValueTreeNode& sourceValueTreeNode, const ValueTreeNode& targetValueTreeNode);
 
 
 } // namespace babelwires

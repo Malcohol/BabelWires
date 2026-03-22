@@ -7,12 +7,13 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 
 namespace babelwires {
     /// SetTypeVariableModifierData is used to assign specific types to type variables.
-    struct SetTypeVariableModifierData : LocalModifierData {
+    struct BABELWIRESLIB_API SetTypeVariableModifierData : LocalModifierData {
         DOWNCASTABLE(SetTypeVariableModifierData, LocalModifierData);
         CLONEABLE(SetTypeVariableModifierData);
         SERIALIZABLE(SetTypeVariableModifierData, "setTypeVariable", LocalModifierData, 1);

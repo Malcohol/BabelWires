@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
 #include <BaseLib/Result/result.hpp>
@@ -16,13 +17,13 @@
 namespace babelwires {
 
     /// RecordType carries a sequence of Fields (some of which are optional and can be inactive).
-    class RecordType : public CompoundType {
+    class BABELWIRESLIB_API RecordType : public CompoundType {
       public:
         DOWNCASTABLE(RecordType, CompoundType);
 
         enum class Optionality { alwaysActive, optionalDefaultInactive, optionalDefaultActive };
 
-        struct FieldDefinition {
+        struct BABELWIRESLIB_API FieldDefinition {
             ShortId m_identifier;
             TypeExp m_type;
             Optionality m_optionality = Optionality::alwaysActive;
@@ -39,7 +40,7 @@ namespace babelwires {
         RecordType(TypeExp&& typeExpOfThis, const TypeSystem& typeSystem, const RecordType& parent, const std::vector<FieldDefinition>& additionalFields);
 
         /// The storage type, which has a resolved TypePtr instead of a TypeExp.
-        struct Field {
+        struct BABELWIRESLIB_API Field {
             ShortId m_identifier;
             TypePtr m_type;
             Optionality m_optionality;

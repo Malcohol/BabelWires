@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
 
@@ -14,7 +15,7 @@ namespace babelwires {
     /// Specialized instance handling for RationalType.
     template <typename VALUE_TREE_NODE, typename RATIONAL_TYPE>
         requires std::is_base_of_v<RationalType, RATIONAL_TYPE>
-    class InstanceImpl<VALUE_TREE_NODE, RATIONAL_TYPE> : public InstanceCommonBase<VALUE_TREE_NODE, RATIONAL_TYPE> {
+    class BABELWIRESLIB_API InstanceImpl<VALUE_TREE_NODE, RATIONAL_TYPE> : public InstanceCommonBase<VALUE_TREE_NODE, RATIONAL_TYPE> {
       public:
         InstanceImpl(VALUE_TREE_NODE& valueFeature)
             : InstanceCommonBase<VALUE_TREE_NODE, RATIONAL_TYPE>(valueFeature) {}

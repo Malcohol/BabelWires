@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -15,7 +16,7 @@ namespace babelwires {
     class Project;
 
     /// Remove all failed modifiers at or beneath the given path.
-    class RemoveFailedModifiersCommand : public CompoundCommand<Project> {
+    class BABELWIRESLIB_API RemoveFailedModifiersCommand : public CompoundCommand<Project> {
       public:
         DOWNCASTABLE(RemoveFailedModifiersCommand, CompoundCommand<Project>);
         CLONEABLE(RemoveFailedModifiersCommand);

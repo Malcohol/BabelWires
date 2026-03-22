@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
 namespace babelwires {
@@ -14,7 +15,7 @@ namespace babelwires {
     /// Generic type (aka Parameterized Polymorphic Type, aka Template in C++) are types that wrap another type
     /// containing type variables that can be instantiated in different ways.
     /// The type always has a single child, which is the type it wraps.
-    class GenericType : public CompoundType {
+    class BABELWIRESLIB_API GenericType : public CompoundType {
       public:
         DOWNCASTABLE(GenericType, CompoundType);
 

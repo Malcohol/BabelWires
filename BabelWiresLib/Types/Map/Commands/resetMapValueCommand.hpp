@@ -12,6 +12,7 @@
  #include <BabelWiresLib/TypeSystem/typeExp.hpp>
  #include <BabelWiresLib/Types/Map/MapProject/mapProjectDataLocation.hpp>
  
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BaseLib/Identifiers/identifier.hpp>
 
  namespace babelwires {
@@ -20,7 +21,7 @@
  
      /// Reset the value back to a default value of the given type.
      /// This can be used to change the summand of a SumType.
-     class ResetMapValueCommand : public SimpleCommand<MapProject> {
+     class BABELWIRESLIB_API ResetMapValueCommand : public SimpleCommand<MapProject> {
        public:        DOWNCASTABLE(ResetMapValueCommand, SimpleCommand<MapProject>);         CLONEABLE(ResetMapValueCommand);
          ResetMapValueCommand(std::string commandName, MapProjectDataLocation loc, TypeExp type);
  

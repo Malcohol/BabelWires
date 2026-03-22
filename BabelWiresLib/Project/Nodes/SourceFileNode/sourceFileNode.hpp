@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
@@ -21,7 +22,7 @@ namespace babelwires {
     class ValueTreeRoot;
 
     /// SourceFileNodes are Nodes which correspond to a source file.
-    class SourceFileNode : public FileNode {
+    class BABELWIRESLIB_API SourceFileNode : public FileNode {
       public:
         DOWNCASTABLE(SourceFileNode, FileNode);
         SourceFileNode(const ProjectContext& context, UserLogger& userLogger, const SourceFileNodeData& data,

@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 
 namespace babelwires {
@@ -15,7 +16,7 @@ namespace babelwires {
 
     /// Extends local modifier with some array specific methods.
     // TODO This doesn't override any methods, so there's a bit of a code smell here.
-    class ArraySizeModifier : public LocalModifier {
+    class BABELWIRESLIB_API ArraySizeModifier : public LocalModifier {
       public:
         DOWNCASTABLE(ArraySizeModifier, LocalModifier);
         ArraySizeModifier(std::unique_ptr<ArraySizeModifierData> modifierData);
