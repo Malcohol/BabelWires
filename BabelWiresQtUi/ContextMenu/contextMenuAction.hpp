@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <QAction>
 #include <QAbstractItemModel>
 #include <QModelIndex>
@@ -18,7 +20,7 @@
 namespace babelwires {
 
     /// Base class of context menu items in the context menu.
-    class ContextMenuAction : public QAction {
+    class BABELWIRESQTUI_API ContextMenuAction : public QAction {
         Q_OBJECT
       public:
         ContextMenuAction(const QString& text);
@@ -33,7 +35,7 @@ namespace babelwires {
 
         /// Holds a group of actions, which will be added to the menu in a QActionGroup.
     /// By default, the actions will be exclusive.
-    class ContextMenuGroup {
+    class BABELWIRESQTUI_API ContextMenuGroup {
       public:
         ContextMenuGroup(QString name,
                                 QActionGroup::ExclusionPolicy policy = QActionGroup::ExclusionPolicy::Exclusive)

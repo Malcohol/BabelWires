@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <QVariant>
 
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
@@ -26,7 +28,7 @@ namespace babelwires {
     class DataLocation;
     class ValueModelRegistry;
 
-    class ValueModel {
+    class BABELWIRESQTUI_API ValueModel {
       public:
         /// For ValueModels which don't use custom painting and return QString the style hint can be ignored since
         /// it will be applied to the font.

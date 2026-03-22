@@ -3,6 +3,8 @@
  */
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
@@ -13,7 +15,7 @@
 namespace babelwires {
     class ProjectGraphModel;
 
-    class NodeFactory {
+    class BABELWIRESQTUI_API NodeFactory {
       public:
         virtual ~NodeFactory();
 

@@ -7,13 +7,15 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp>
 
 namespace babelwires {
 
     class ValueTreeNode;
 
-    class ValueRowModel : public RowModel {
+    class BABELWIRESQTUI_API ValueRowModel : public RowModel {
       public:
         void init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem) override;
 

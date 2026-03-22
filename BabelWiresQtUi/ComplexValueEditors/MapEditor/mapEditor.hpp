@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
@@ -25,7 +27,7 @@ namespace babelwires {
     class TypeWidget;
     class ProjectDataLocation;
 
-    class MapEditor : public ComplexValueEditor {
+    class BABELWIRESQTUI_API MapEditor : public ComplexValueEditor {
       Q_OBJECT
       public:
         /// data - Enough information to restore the state of a MapEditor.

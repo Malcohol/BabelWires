@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <QColor>
 
 namespace babelwires {
@@ -16,5 +18,5 @@ namespace babelwires {
         partialFailure
     };
     /// Get a background colour suitable for default editors.
-    QColor getBackgroundColour(BackgroundType type); 
+    BABELWIRESQTUI_API QColor getBackgroundColour(BackgroundType type); 
 }

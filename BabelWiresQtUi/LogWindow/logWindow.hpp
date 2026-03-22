@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BaseLib/Log/log.hpp>
 
 #include <QDockWidget>
@@ -15,7 +17,7 @@ class QPlainTextEdit;
 
 namespace babelwires {
 
-    class LogWindow : public QDockWidget {
+    class BABELWIRESQTUI_API LogWindow : public QDockWidget {
         Q_OBJECT
       public:
         LogWindow(QWidget* parent, Log& log);

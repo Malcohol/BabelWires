@@ -7,13 +7,15 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/nodeFactory.hpp>
 
 namespace babelwires {
     class TargetFileFormatRegistry;
     struct UiProjectContext;
 
-    class TargetFileNodeFactory : public NodeFactory {
+    class BABELWIRESQTUI_API TargetFileNodeFactory : public NodeFactory {
       public:
         TargetFileNodeFactory(const UiProjectContext& uiProjectContext);
 

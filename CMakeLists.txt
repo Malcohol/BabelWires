@@ -76,6 +76,17 @@ block(SCOPE_FOR VARIABLES)
     add_subdirectory(extern/nodeeditor)
 endblock()
 
+# In shared builds, QtNodes is still linked as a static archive into BabelWiresQtUi.
+# Hide QtNodes symbols at compile time (where supported) so they do not leak into
+# libBabelWiresQtUi's exported symbol surface.
+if(BUILD_SHARED_LIBS AND TARGET QtNodes)
+    if(NOT MSVC)
+        set_target_properties(QtNodes PROPERTIES
+            CXX_VISIBILITY_PRESET hidden
+            VISIBILITY_INLINES_HIDDEN ON)
+    endif()
+endif()
+
 if(BUILD_TESTING)
     include(GoogleTest)
     add_subdirectory(Tests/TestUtils)

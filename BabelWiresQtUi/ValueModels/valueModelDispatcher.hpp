@@ -7,12 +7,14 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ValueModels/valueModel.hpp>
 
 namespace babelwires {
     class ValueModelRegistry;
 
-    class ValueModelDispatcher {
+    class BABELWIRESQTUI_API ValueModelDispatcher {
       public:
         /// If isStructureEditable is true, then the value is derived from another value.
         /// This is used to prohibit array modification if an array is the target of a connection.

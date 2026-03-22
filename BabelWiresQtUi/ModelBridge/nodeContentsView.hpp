@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/Project/uiPosition.hpp>
 
@@ -27,7 +29,7 @@ namespace babelwires {
 
     class ProjectGraphModel;
 
-    class NodeContentsView : public QTableView {
+    class BABELWIRESQTUI_API NodeContentsView : public QTableView {
         Q_OBJECT
       public:
         NodeContentsView(NodeId elementId, ProjectGraphModel& projectGraphModel);
@@ -63,7 +65,7 @@ namespace babelwires {
         ProjectGraphModel& m_projectGraphModel;
         NodeId m_nodeId;
 
-        struct DragState {
+        struct BABELWIRESQTUI_API DragState {
             QPoint m_startPos;
             Qt::KeyboardModifiers m_modifiers;
             int m_leftEdgeWidgetPos;

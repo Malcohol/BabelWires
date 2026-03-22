@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
@@ -32,7 +34,7 @@ namespace babelwires {
 
     /// Base class of models corresponding to a row in a node of the flow graph.
     /// Such objects are created as temporaries, and should not have state.
-    class RowModel {
+    class BABELWIRESQTUI_API RowModel {
       public:
         // Note: No virtual destructor.
         virtual void init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem);

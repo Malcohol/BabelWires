@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp>
 
 #include <QLineEdit>
@@ -14,7 +16,7 @@
 namespace babelwires {
 
     /// A line editor QWidget which can be used for editing Values.
-    class LineEditValueEditor : public ValueEditorCommonBase<QLineEdit> {
+    class BABELWIRESQTUI_API LineEditValueEditor : public ValueEditorCommonBase<QLineEdit> {
         Q_OBJECT
       public:
         /// The arguments as provided to createEditor.

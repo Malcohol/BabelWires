@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 
@@ -14,7 +16,7 @@ namespace babelwires {
 
     /// Any changes to the model should be performed within the scope of an object of this type.
     /// Note: This class is intended to future proofs the system for the day when concurrency is added to the project.
-    class ModifyModelScope final {
+    class BABELWIRESQTUI_API ModifyModelScope final {
       public:
         ModifyModelScope(ProjectGraphModel& bridge);
         ~ModifyModelScope();

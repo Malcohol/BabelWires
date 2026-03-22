@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 class QModelIndex;
 class QWidget;
 
@@ -21,7 +23,7 @@ namespace babelwires {
     /// There's no common base class for the value editors, and QObjects may not be
     /// muliply-inherited, so instead we make them all own one of these and make
     /// it accessible through the ValueEditorInterface.
-    class ValueEditorCommonSignals : public QObject {
+    class BABELWIRESQTUI_API ValueEditorCommonSignals : public QObject {
         Q_OBJECT
       public:
         ValueEditorCommonSignals(QObject* parent);
@@ -33,7 +35,7 @@ namespace babelwires {
     /// An interface of common functionality for Value Editors.
     /// The common base type of value editors is QWidget, so this interface is not known by
     /// the compiler. Instead, it is found dynamically by querying a QObject propery.
-    struct ValueEditorInterface {
+    struct BABELWIRESQTUI_API ValueEditorInterface {
         /// Typical implementations will set text to bold.
         virtual void setIsModified(bool isModified) = 0;
 

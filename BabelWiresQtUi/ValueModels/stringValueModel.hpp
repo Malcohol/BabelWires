@@ -7,11 +7,13 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ValueModels/valueModel.hpp>
 
 namespace babelwires {
 
-    class StringValueModel : ValueModel {
+    class BABELWIRESQTUI_API StringValueModel : ValueModel {
       public:
         bool isItemEditable() const override;
         QWidget* createEditor(QWidget* parent) const override;

@@ -6,6 +6,8 @@
  */
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/nodeFactory.hpp>
 
 #include <QtNodes/BasicGraphicsScene>
@@ -16,7 +18,7 @@ namespace babelwires {
 
     class ProjectGraphModel;
 
-    class ProjectGraphicsScene : public QtNodes::BasicGraphicsScene {
+    class BABELWIRESQTUI_API ProjectGraphicsScene : public QtNodes::BasicGraphicsScene {
       public:
         ProjectGraphicsScene(ProjectGraphModel& graphModel);
 
@@ -24,7 +26,7 @@ namespace babelwires {
 
         void setWidgetForDialogs(QWidget* widgetForDialogs);
 
-        struct SelectedObjects {
+        struct BABELWIRESQTUI_API SelectedObjects {
           std::vector<NodeId> m_nodeIds;
           std::vector<QtNodes::ConnectionId> m_connectionIds;
         };

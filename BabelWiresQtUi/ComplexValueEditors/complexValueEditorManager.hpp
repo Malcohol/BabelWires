@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditor.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditorFactory.hpp>
 
@@ -14,7 +16,7 @@ namespace babelwires {
     class ProjectGraphModel;
     struct UserLogger;
 
-    class ComplexValueEditorManager : public QObject {
+    class BABELWIRESQTUI_API ComplexValueEditorManager : public QObject {
         Q_OBJECT
 
       public:

@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
 #include <BabelWiresQtUi/ValueModels/valueModel.hpp>
@@ -20,7 +22,7 @@ namespace babelwires {
     /// Allows the set of RowModels to be extended by client code.
     /// This will be required by any domain specific value type which wants a specialized display or editor.
     // TODO This doesn't use the Registry pattern from common. Should it?
-    class ValueModelRegistry {
+        class BABELWIRESQTUI_API ValueModelRegistry {
       public:
         using Handler = std::function<bool(const Type*, ValueModel*)>;
 

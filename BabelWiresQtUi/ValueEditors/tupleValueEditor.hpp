@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp>
 #include <BabelWiresQtUi/ValueModels/valueModelDispatcher.hpp>
 
@@ -18,7 +20,7 @@ namespace babelwires {
     class TupleType;
 
     ///
-    class TupleValueEditor : public ValueEditorCommonBase<QWidget> {
+    class BABELWIRESQTUI_API TupleValueEditor : public ValueEditorCommonBase<QWidget> {
         Q_OBJECT
       public:
         ///
@@ -40,7 +42,7 @@ namespace babelwires {
       public:
         const TupleType& m_tupleType;
 
-        struct PerComponentData {
+        struct BABELWIRESQTUI_API PerComponentData {
             ValueModelDispatcher m_valueModel;
             QWidget* m_valueEditor;
             ValueHolder m_value;

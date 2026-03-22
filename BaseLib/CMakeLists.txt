@@ -38,10 +38,3 @@ if(BUILD_SHARED_LIBS)
 		VISIBILITY_INLINES_HIDDEN ON)
 	target_compile_definitions(BaseLib PRIVATE BASELIB_EXPORTS)
 endif()
-
-if(BUILD_SHARED_LIBS)
-	set_target_properties(BaseLib PROPERTIES
-		CXX_VISIBILITY_PRESET hidden
-		VISIBILITY_INLINES_HIDDEN ON)
-	target_compile_definitions(BaseLib PRIVATE BASELIB_EXPORTS)
-endif()

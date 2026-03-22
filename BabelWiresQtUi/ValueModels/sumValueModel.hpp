@@ -7,13 +7,15 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ValueModels/valueModel.hpp>
 
 namespace babelwires {
 
     class ValueModelDispatcher;
 
-    class SumValueModel : ValueModel {
+    class BABELWIRESQTUI_API SumValueModel : ValueModel {
       public:
         bool isItemEditable() const override;
         QWidget* createEditor(QWidget* parent) const override;

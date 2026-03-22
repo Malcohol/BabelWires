@@ -7,12 +7,14 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp>
 #include <QComboBox>
 
 namespace babelwires {
 
-    class DropDownValueEditor : public ValueEditorCommonBase<QComboBox> {
+    class BABELWIRESQTUI_API DropDownValueEditor : public ValueEditorCommonBase<QComboBox> {
         Q_OBJECT
       public:
         /// The arguments as provided to createEditor.

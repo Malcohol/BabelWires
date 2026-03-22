@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp>
 
 namespace babelwires {
@@ -20,7 +22,7 @@ namespace babelwires {
     /// Allocate the appropriate rowModel on top of its same-sized base class.
     /// Neither require destruction, so it should be safe.
     /// TODO: This abstraction is mostly a legacy feature and is now only used to special-case FileType at the element level.
-    class RowModelDispatcher {
+    class BABELWIRESQTUI_API RowModelDispatcher {
       public:
         RowModelDispatcher(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem,
                            const ContentsCacheEntry* entry, const Node* node);

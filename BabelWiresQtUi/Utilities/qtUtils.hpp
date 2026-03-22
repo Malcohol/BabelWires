@@ -7,10 +7,12 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <QWidget>
 
 namespace babelwires {
     /// Get the global point corresponding to the widget local point.
     /// This accounts for the fact that regular mapToGlobal doesn't work if a widget is inside a graphics view.
-    QPoint mapToGlobalCorrect(const QWidget* widget, QPoint point);
+    BABELWIRESQTUI_API QPoint mapToGlobalCorrect(const QWidget* widget, QPoint point);
 }

@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ModelBridge/RowModels/rowModel.hpp>
 
 namespace babelwires {
@@ -14,7 +16,7 @@ namespace babelwires {
     class FileNode;
 
     /// The file-model is special-cased to query the Node for the fileName.
-    class FileRowModel : public RowModel {
+    class BABELWIRESQTUI_API FileRowModel : public RowModel {
       public:
         virtual QVariant getValueDisplayData() const override;
 

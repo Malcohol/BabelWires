@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BaseLib/Result/result.hpp>
 
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -19,7 +21,7 @@ namespace babelwires {
     class ProjectGraphModel;
  
     /// Constructs the correct type of editor to open.
-    class ComplexValueEditorFactory {
+    class BABELWIRESQTUI_API ComplexValueEditorFactory {
       public:
         /// This will return an error if it does not make sense to open an editor for the value at data.
         ResultT<ComplexValueEditor*> createEditor(QWidget* parent, ProjectGraphModel& projectGraphModel, UserLogger& userLogger, const ProjectDataLocation& data);

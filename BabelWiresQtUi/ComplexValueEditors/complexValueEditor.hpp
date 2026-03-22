@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresLib/ProjectExtra/projectDataLocation.hpp>
 
 #include <BaseLib/Result/result.hpp>
@@ -20,7 +22,7 @@ namespace babelwires {
     class AccessModelScope;
 
     /// Base class of widgets which provide type-specific UIs for editing values.
-    class ComplexValueEditor : public QWidget {
+    class BABELWIRESQTUI_API ComplexValueEditor : public QWidget {
         Q_OBJECT
 
         public:
