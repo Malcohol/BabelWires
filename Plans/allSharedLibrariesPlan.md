@@ -64,8 +64,10 @@ All boxes except the executable and external dependencies become shared librarie
 
 **Export annotation strategy**
 - Phases 1–4 use class-level annotation (`class BASELIB_API Foo`) to minimize initial effort and get the shared build working. This exports all members, which is more than necessary but avoids time-consuming per-symbol decisions during the initial migration.
-- Phase 10 refines to member-level annotation once the shared build is stable, reducing the exported symbol surface to only what consumers actually need.
 - Templated classes/functions that are fully defined in headers generally do not need export annotations (they are instantiated in the consuming TU). Only explicit instantiations in `.cpp` files need export.
+- Symbols that need to be exported that are not in classes (e.g. global functions) should be annotated individually. (Do not temporarily adjust default visibility settings.)
+- Do not to add annotations to forward declarations.
+- Phase 10 refines to member-level annotation once the shared build is stable, reducing the exported symbol surface to only what consumers actually need.
 
 **External dependencies — always static**
 - All external dependencies are built as static libraries regardless of the global `BUILD_SHARED_LIBS` setting (enforced in Phase 0). Each is absorbed into the single BabelWires shared library that consumes it, and its symbols are not re-exported.
