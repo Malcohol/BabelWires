@@ -8,12 +8,14 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 namespace babelwires {
     class DeserializationRegistry;
 
     /// A DataContext is expected to provide some context specific data during high-level serialization
     /// and deserialization.
-    struct DataContext {
+    struct BASELIB_API DataContext {
         DeserializationRegistry& m_deserializationReg;
     };
 } // namespace babelwires

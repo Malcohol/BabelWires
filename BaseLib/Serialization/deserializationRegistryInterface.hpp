@@ -18,14 +18,14 @@ namespace babelwires {
     struct Serializable;
 
     /// An interface for looking up deserialization information about classes.
-    class DeserializationRegistryInterface {
+        class BASELIB_API DeserializationRegistryInterface {
       public:
         using Factory = std::function<ResultT<std::unique_ptr<Serializable>>(Deserializer& deserializer)>;
 
         virtual ~DeserializationRegistryInterface() = default;
 
         /// Instances of this object represent the registration of a single concrete class' deserializingFactory.
-        struct Entry {
+        struct BASELIB_API Entry {
             Factory m_factory;
             std::string_view m_serializationType;
             VersionNumber m_version = 0;

@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/Log/debugLogger.hpp>
 #include <BaseLib/Log/log.hpp>
 #include <BaseLib/Log/userLogger.hpp>
@@ -14,7 +16,7 @@
 namespace babelwires {
 
     /// A Log which supports both user and debug logging.
-    class UnifiedLog : public Log, public UserLogger, public DebugLogger {
+    class BASELIB_API UnifiedLog : public Log, public UserLogger, public DebugLogger {
       public:
         virtual MessageBuilder logInfo() override;
         virtual MessageBuilder logError() override;

@@ -22,7 +22,7 @@ namespace babelwires {
     class DeserializationRegistryInterface;
 
     /// Some common functionality shared by the serializer and the deserializer.
-    class SerializerDeserializerCommon {
+    class BASELIB_API SerializerDeserializerCommon {
       public:
         /// 0 is returned if the type is not found.
         VersionNumber getTypeVersion(std::string_view typeName);

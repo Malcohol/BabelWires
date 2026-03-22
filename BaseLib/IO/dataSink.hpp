@@ -16,7 +16,7 @@
 namespace babelwires {
 
     /// Provide a destination for bytes.
-    class DataSink {
+    class BASELIB_API DataSink {
       public:
         DataSink() = default;
         DataSink(DataSink&& other) noexcept;

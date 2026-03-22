@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/Result/resultDSL.hpp>
 #include <BaseLib/Serialization/deserializationRegistryInterface.hpp>
 
@@ -21,7 +23,7 @@ namespace babelwires {
     class Deserializer;
 
     /// Classes which are serializable must derive from this interface.
-    struct Serializable {
+    struct BASELIB_API Serializable {
         virtual ~Serializable() = default;
 
         /// Concrete classes need to implement this, to serialize their contents.

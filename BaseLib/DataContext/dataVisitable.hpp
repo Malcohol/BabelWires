@@ -8,13 +8,15 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/DataContext/filePathVisitor.hpp>
 #include <BaseLib/Identifiers/identifierVisitor.hpp>
 
 namespace babelwires {
     /// DataVisitable defines an interface for classes storing certain types of data, allowing it to be exposed
     /// to important infrastructural visitors.
-    struct DataVisitable {
+    struct BASELIB_API DataVisitable {
         /// Call the visitor on all Identifiers in the object.
         virtual void visitIdentifiers(IdentifierVisitor& visitor) = 0;
 

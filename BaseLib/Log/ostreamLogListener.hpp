@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/Log/log.hpp>
 #include <BaseLib/Signal/signalSubscription.hpp>
 #include <BaseLib/Utilities/enumFlags.hpp>
@@ -16,7 +18,7 @@
 namespace babelwires {
 
     /// Writes all messages to a provided ostream.
-    class OStreamLogListener {
+    class BASELIB_API OStreamLogListener {
       public:
         enum class Features : unsigned int { none = 0, timestamp = 1, logDebugMessages = 2 };
 

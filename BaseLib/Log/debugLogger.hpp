@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/Log/log.hpp>
 
 #include <cassert>
@@ -14,11 +16,11 @@
 namespace babelwires {
 
     /// Logs debug messages to the global debug logger.
-    babelwires::Log::MessageBuilder logDebug();
+    BASELIB_API babelwires::Log::MessageBuilder logDebug();
 
     /// An interface for submitting debug log messages.
     /// There are also static members for managing access to a global debug logger.
-    class DebugLogger {
+    class BASELIB_API DebugLogger {
       public:
         /// Returns an object that has the same kind of operator<< behaviour as an ostream.
         virtual Log::MessageBuilder logDebug() = 0;

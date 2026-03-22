@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/Signal/signal.hpp>
 
 #include <chrono>
@@ -22,7 +24,7 @@ namespace babelwires {
     /// The aim of this structure is to force user-relevant logging to be managed by normal code-paths
     /// so arbitary code is not able to issue user-visible log messages.
     /// On the other hand, debug logging is arbitarily accessible via a singleton pattern (TODO)
-    class Log {
+    class BASELIB_API Log {
       public:
         enum class MessageType { infoMessage, errorMessage, warningMessage, debugMessage };
 

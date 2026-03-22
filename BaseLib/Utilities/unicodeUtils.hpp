@@ -7,12 +7,14 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <ostream>
 
 namespace babelwires {
     /// Write the number using unicode subscript characters.
-    void writeUnicodeSubscript(std::ostream& os, int number);
+    BASELIB_API void writeUnicodeSubscript(std::ostream& os, int number);
 
     /// Write the number using unicode superscript characters
-    void writeUnicodeSuperscript(std::ostream& os, int number);
+    BASELIB_API void writeUnicodeSuperscript(std::ostream& os, int number);
 }

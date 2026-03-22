@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/Serialization/deserializationRegistryInterface.hpp>
 
 #include <map>
@@ -14,7 +16,7 @@
 
 namespace babelwires {
 
-    class DeserializationRegistry : public DeserializationRegistryInterface {
+    class BASELIB_API DeserializationRegistry : public DeserializationRegistryInterface {
       public:
         template <typename T> void registerClass() {
             registerEntry(T::serializationType, T::getDeserializationRegistryEntry());

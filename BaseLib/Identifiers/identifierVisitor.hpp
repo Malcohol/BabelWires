@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/Identifiers/identifier.hpp>
 
 #include <functional>
@@ -24,7 +26,7 @@ namespace babelwires {
     /// The use-cases are for preparing identifiers when they an object is being moved from one context to another.
     /// For example, when data is deserialized from a file, the discriminators may not match those of the current system.
     /// Because the job is to adjust the identifiers, the visitor expects non-const access to the object it visits.
-    struct IdentifierVisitor {
+    struct BASELIB_API IdentifierVisitor {
         virtual ~IdentifierVisitor() = default;
         virtual void operator()(ShortId& identifier) = 0;
         virtual void operator()(MediumId& identifier) = 0;

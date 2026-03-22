@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/Result/result.hpp>
 
 #include <filesystem>
@@ -16,7 +18,7 @@ namespace babelwires {
     struct UserLogger;
 
     /// How file locations are represented in project data.
-    class FilePath {
+    class BASELIB_API FilePath {
       public:
         FilePath() = default;
         FilePath(const FilePath&) = default;

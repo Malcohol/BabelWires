@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <algorithm>
 #include <cstdint>
 #include <filesystem>
@@ -68,7 +70,7 @@ namespace babelwires {
 
     /// Is str usable as an "identifier" ([a..zA..Z][_a..zA..Z0..9]*).
     /// This constraint is just used to keep certain strings sane.
-    bool isValidIdentifier(const char* str);
+    BASELIB_API bool isValidIdentifier(const char* str);
 
     // Utility templates.
 
@@ -89,5 +91,5 @@ namespace babelwires {
     template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
     /// Unified handling of path to string conversion. (I'm deferring Unicode issues to the future.)
-    std::string pathToString(const std::filesystem::path& path);
+    BASELIB_API std::string pathToString(const std::filesystem::path& path);
 } // namespace babelwires

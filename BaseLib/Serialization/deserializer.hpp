@@ -8,6 +8,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/Result/result.hpp>
 #include <BaseLib/Serialization/deserializationRegistryInterface.hpp>
 #include <BaseLib/Serialization/serializable.hpp>
@@ -22,7 +24,7 @@
 namespace babelwires {
 
     /// Client code must call either finalize or finalizeOnError before the destructor is called.
-    class Deserializer : public SerializerDeserializerCommon {
+    class BASELIB_API Deserializer : public SerializerDeserializerCommon {
       public:
         Deserializer(UserLogger& userLogger, const DeserializationRegistryInterface& deserializationRegistry);
         virtual ~Deserializer();
@@ -135,7 +137,7 @@ namespace babelwires {
         ResultT<std::unique_ptr<Serializable>> deserializeCurrentObject(const void* tagOfTypeSought);
 
         struct BaseIterator;
-        struct AbstractIterator {
+        struct BASELIB_API AbstractIterator {
             virtual ~AbstractIterator() = default;
             virtual Result advance() = 0;
             virtual bool isValid() const = 0;
@@ -162,7 +164,7 @@ namespace babelwires {
 
 } // namespace babelwires
 
-struct babelwires::Deserializer::BaseIterator {
+struct BASELIB_API babelwires::Deserializer::BaseIterator {
     Result advance();
     bool isValid() const;
 

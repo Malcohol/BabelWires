@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/BlockStream/streamEvent.hpp>
 
 #include <memory>
@@ -16,7 +18,7 @@ namespace babelwires {
     /// A container which can carry a sequence of hetrogeneous events.
     /// Since streams will often contain objects of more than one type, the calling code should use StreamEvent::asA to
     /// inspect events. The memory is laid out in multiple blocks for reasonably efficient traversal.
-    class BlockStream {
+    class BASELIB_API BlockStream {
       public:
         BlockStream() = default;
         BlockStream(const BlockStream& other);

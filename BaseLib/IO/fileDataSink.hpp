@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/IO/dataSink.hpp>
 #include <BaseLib/Result/result.hpp>
 
@@ -15,7 +17,7 @@
 
 namespace babelwires {
 
-    class FileDataSink : public DataSink {
+    class BASELIB_API FileDataSink : public DataSink {
       public:
         ~FileDataSink() override;
 
