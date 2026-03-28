@@ -7,11 +7,13 @@
  **/
 #pragma once
 
+#include <Domains/TestDomain/testDomainExport.hpp>
+
 namespace babelwires {
     struct ProjectContext;
 }
 
 namespace testDomain {
     /// This is not a true plugin model, because everything is statically linked.
-    void registerLib(babelwires::ProjectContext& context);
+    TESTDOMAIN_API void registerLib(babelwires::ProjectContext& context);
 } // namespace testDomain

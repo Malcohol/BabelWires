@@ -1,3 +1,14 @@
+/**
+ * TestSumType
+ *
+ * (C) 2026 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
+
+#include <Domains/TestDomain/testDomainExport.hpp>
+
 #include <BabelWiresLib/TypeSystem/registeredType.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
@@ -7,7 +18,7 @@
 #include <BabelWiresLib/Types/Sum/sumType.hpp>
 
 namespace testDomain {
-    class TestSumType : public babelwires::SumType {
+    class TESTDOMAIN_API TestSumType : public babelwires::SumType {
       public:
         DOWNCASTABLE(TestSumType, babelwires::SumType);
         REGISTERED_TYPE("TestSumType", "TestSumType", "19c1e116-5e37-489e-9205-8d0b0a023f13", 1);

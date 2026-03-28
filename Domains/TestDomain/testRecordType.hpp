@@ -1,4 +1,13 @@
+/**
+ * TestRecordType
+ *
+ * (C) 2026 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #pragma once
+
+#include <Domains/TestDomain/testDomainExport.hpp>
 
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 
@@ -8,7 +17,7 @@
 
 namespace testDomain {
 
-    class TestSimpleRecordType : public babelwires::RecordType {
+    class TESTDOMAIN_API TestSimpleRecordType : public babelwires::RecordType {
       public:
         DOWNCASTABLE(TestSimpleRecordType, babelwires::RecordType);
 
@@ -36,7 +45,7 @@ namespace testDomain {
         static constexpr char s_int1Uuid[] = "00000000-1111-2222-3333-800070000002";
     };
 
-    class TestComplexRecordType : public babelwires::RecordType {
+    class TESTDOMAIN_API TestComplexRecordType : public babelwires::RecordType {
       public:
         DOWNCASTABLE(TestComplexRecordType, babelwires::RecordType);
 
@@ -92,7 +101,7 @@ namespace testDomain {
     };
 
     /// ValueNodeData which creates an element carrying a simple record type.
-    class TestSimpleRecordElementData : public babelwires::ValueNodeData {
+    class TESTDOMAIN_API TestSimpleRecordElementData : public babelwires::ValueNodeData {
       public:
         DOWNCASTABLE(TestSimpleRecordElementData, babelwires::ValueNodeData);
         TestSimpleRecordElementData();
@@ -102,7 +111,7 @@ namespace testDomain {
         static babelwires::Path getPathToRecordInt1();
     };
 
-    class TestComplexRecordElementData : public babelwires::ValueNodeData {
+    class TESTDOMAIN_API TestComplexRecordElementData : public babelwires::ValueNodeData {
       public:
         DOWNCASTABLE(TestComplexRecordElementData, babelwires::ValueNodeData);
         TestComplexRecordElementData();
@@ -125,7 +134,7 @@ namespace testDomain {
     /// Useful for unit tests which want to access parts of the ValueTreeNode hierarchy of this record type
     /// without using the Instance system.
     // Currently not all ValueTreeNodes are represented.
-    struct TestComplexRecordTypeFeatureInfo {
+    struct TESTDOMAIN_API TestComplexRecordTypeFeatureInfo {
         const babelwires::ValueTreeNode& m_record;
         const babelwires::ValueTreeNode& m_int;
         const babelwires::ValueTreeNode& m_subRecord;

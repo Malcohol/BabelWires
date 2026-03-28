@@ -1,3 +1,14 @@
+/**
+ * TestProcessor
+ *
+ * (C) 2026 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
+
+#include <Domains/TestDomain/testDomainExport.hpp>
+
 #include <BabelWiresLib/Instance/instance.hpp>
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processor.hpp>
@@ -15,7 +26,7 @@ namespace testDomain {
     // about adding and removing array elements via the project. It might be better if
     // the input had no array at all.
 
-    class TestProcessorInputOutputType : public babelwires::RecordType {
+    class TESTDOMAIN_API TestProcessorInputOutputType : public babelwires::RecordType {
       public:
         DOWNCASTABLE(TestProcessorInputOutputType, babelwires::RecordType);
 
@@ -62,11 +73,11 @@ namespace testDomain {
         static const babelwires::Path s_pathToInt2;
     };
 
-    struct TestProcessor : babelwires::Processor {
+    struct TESTDOMAIN_API TestProcessor : babelwires::Processor {
         // Expand the BW_PROCESSOR_WITH_DEFAULT_FACTORY to allow the factory to be given version 2.
         static babelwires::LongId getFactoryIdentifier() { return BW_LONG_ID("TestProcessor", "TestProcessor", "8ec4249a-dc7f-4cd5-931b-cc83aaf7287b"); }
         template <typename PROCESSOR_SUBTYPE>
-        struct ThisProcessorFactory : babelwires::CommonProcessorFactory<PROCESSOR_SUBTYPE> {
+        struct TESTDOMAIN_API ThisProcessorFactory : babelwires::CommonProcessorFactory<PROCESSOR_SUBTYPE> {
             ThisProcessorFactory()
                 : babelwires::CommonProcessorFactory<PROCESSOR_SUBTYPE>(PROCESSOR_SUBTYPE::getFactoryIdentifier(), 2) {}
         };

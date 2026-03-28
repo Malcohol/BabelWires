@@ -1,3 +1,14 @@
+/**
+ * TestFileFormats
+ *
+ * (C) 2026 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
+
+#include <Domains/TestDomain/testDomainExport.hpp>
+
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
@@ -7,14 +18,14 @@
 
 namespace testDomain {
     /// A file type which wraps a TestSimpleRecordType.
-    babelwires::TypeExp getTestFileType();
+    TESTDOMAIN_API babelwires::TypeExp getTestFileType();
 
     /// Get the path in a FileNode to Int0 in TestSimpleRecordType.
-    babelwires::Path getTestFileElementPathToInt0();
+    TESTDOMAIN_API babelwires::Path getTestFileElementPathToInt0();
 
     /// A file format that can save and load some test data.
     /// The serialized format is just the identifier followed two ints. This has version 1.
-    struct TestSourceFileFormat : babelwires::SourceFileFormat {
+    struct TESTDOMAIN_API TestSourceFileFormat : babelwires::SourceFileFormat {
         static babelwires::LongId getThisIdentifier();
         static std::string getFileExtension();
 
@@ -31,7 +42,7 @@ namespace testDomain {
 
     /// A factor for construction new file features.
     /// This is given version 3, to allow version testing.
-    struct TestTargetFileFormat : babelwires::TargetFileFormat {
+    struct TESTDOMAIN_API TestTargetFileFormat : babelwires::TargetFileFormat {
         static babelwires::LongId getThisIdentifier();
 
         TestTargetFileFormat();
