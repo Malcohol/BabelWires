@@ -51,8 +51,8 @@ All boxes except the executable and external dependencies become shared librarie
 - [Phase 2 — Export macros for BabelWiresLib (PR 3)](allSharedPhase2.md)
 - [Phase 3 — Export macros for BabelWiresQtUi (PR 4)](allSharedPhase3.md)
 - [Phase 4 — Export macros for domain libraries (PR 5)](allSharedPhase4.md)
-- [Phase 5 — Test utility libraries and RPATH configuration (PR 6)](allSharedPhase5.md)
-- [Phase 6 — SERIALIZABLE macro and inline static hardening (PR 7)](allSharedPhase6.md)
+- [Phase 5 — SERIALIZABLE macro and inline static hardening (PR 6)](allSharedPhase5.md)
+- [Phase 6 — Test utility libraries and RPATH configuration (PR 7)](allSharedPhase6.md)
 - [Phase 7 — Singleton validation and cleanup (PR 8)](allSharedPhase7.md)
 - [Phase 8 — Enable runtime-loadable plugins on top of shared core (PR 9)](allSharedPhase8.md)
 - [Phase 9 — Generalize plugin loading and transition completion (PR 10)](allSharedPhase9.md)
@@ -98,7 +98,7 @@ All boxes except the executable and external dependencies become shared librarie
 ### PR Slicing Guidance
 
 - Phases 1–4 (class-level export macros) are the bulk of the initial mechanical work. Within each phase, annotation can be split further by subdirectory if the PR is too large.
-- Phase 5 (RPATH) is largely independent and can be done in parallel with later annotation phases.
+- Phase 6 (RPATH) is largely independent and can be done in parallel with later annotation phases.
 - Phases 8–9 (runtime plugin loading) are optional extensions that leverage the all-shared foundation but are not required for the core migration.
 - Phase 10 (member-level refinement) can be done incrementally, one library at a time, and is not blocking for any other phase.
 - Enforce "shippable at each step": `BUILD_SHARED_LIBS=OFF` must remain green until Phase 9 flips the default.

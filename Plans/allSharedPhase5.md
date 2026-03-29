@@ -1,58 +1,37 @@
-## Phase 5 — Test utility libraries and RPATH configuration (PR 6)
+## Phase 5 — SERIALIZABLE macro and inline static hardening (PR 6)
 
 ### Goal
 
-Ensure all test executables can find shared libraries at runtime and decide whether test utility libraries should be shared or static.
+Verify that the `SERIALIZABLE` macro's inline static members and serialization tag mechanism work correctly across shared library boundaries.
+
+### Background
+
+The `SERIALIZABLE` macro (in [BaseLib/Serialization/serializable.hpp](BaseLib/Serialization/serializable.hpp)) generates per-class:
+- `static inline const DeserializationRegistryInterface::Entry s_registryEntry{...}` — contains factory, type name, version.
+- `Detail::SerializableType<T>::s_serializationTag` — a `const void*` whose address serves as a unique type identifier.
+
+With C++17 inline variable rules and shared linkage, these should have a single instance per type across the process. However, this needs verification.
 
 ### Changes required
 
-#### 1. Test utility libraries
+#### 1. Audit `inline static` variables
 
-Test utility libraries (`testUtils`, `libTestUtils`, `seqTestUtils`) only exist for testing and need not be shared. Mark them `STATIC` explicitly so they are not affected by the global `BUILD_SHARED_LIBS` setting:
+- Verify that `inline static` variables in header-included templates have a single instance per type across the process on all target platforms (GCC, Clang, MSVC).
+- If any library is accidentally included via both static and shared paths, the ODR guarantee is violated. Add a CMake check or link-time assertion that prevents mixing.
 
-```cmake
-ADD_LIBRARY( testUtils STATIC ${TEST_UTILS_SRCS} )
-```
+#### 2. Audit `s_serializationTag`
 
-Alternatively, if they are kept as shared, create export headers for them following the same pattern as [Phase 1](allSharedPhase1.md).
+Same inline-variable concerns as above for `Detail::SerializableType<T>::s_serializationTag`.
 
-#### 2. RPATH configuration
+#### 3. Fix edge cases
 
-Configure RPATH on all executable targets so shared libraries are found at both build time and install time. Add to the top-level [CMakeLists.txt](CMakeLists.txt):
-
-```cmake
-if(BUILD_SHARED_LIBS)
-    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-    set(CMAKE_BUILD_RPATH_USE_ORIGIN TRUE)
-    # Optionally per-target:
-    # set_target_properties(babelWires PROPERTIES
-    #     BUILD_RPATH "$ORIGIN/../lib"
-    #     INSTALL_RPATH "$ORIGIN/../lib")
-endif()
-```
-
-#### 3. Windows DLL co-location
-
-On Windows, ensure all `.dll` files end up in the same directory as executables:
-
-```cmake
-if(BUILD_SHARED_LIBS AND WIN32)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-endif()
-```
-
-Or configure `PATH` in CTest environment.
-
-#### 4. Test discovery
-
-Ensure `gtest_discover_tests()` finds shared libraries at test run time by setting `ENVIRONMENT` properties or output directories.
+If any edge cases are found, move the static storage into a `.cpp` file with explicit instantiation, or use a registry-based approach instead of inline statics.
 
 ### Acceptance criteria
 
-- `ctest` passes all tests in `BUILD_SHARED_LIBS=ON` mode. No "library not found" runtime failures.
-- `BUILD_SHARED_LIBS=OFF` still works.
+- Serialization round-trip tests pass.
+- No duplicate `type_info` or `s_registryEntry` instances detected (verify with `nm -D` / `dumpbin`).
 
 ### Rollback
 
-Revert RPATH/output-directory changes; static mode unaffected.
+Keep explicit registration as-is; inline statics are harmless in static-linking mode.
