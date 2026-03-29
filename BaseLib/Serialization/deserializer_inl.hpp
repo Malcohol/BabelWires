@@ -48,7 +48,7 @@ inline babelwires::Result babelwires::Deserializer::deserializeValue(std::string
 
 template <typename T>
 inline babelwires::ResultT<std::unique_ptr<T>> babelwires::Deserializer::deserializeCurrentObject() {
-    return deserializeCurrentObject(T::getSerializationTag()).transform([](std::unique_ptr<Serializable>&& basePtr) {
+    return deserializeCurrentObject(T::getDeserializationTreeNode()).transform([](std::unique_ptr<Serializable>&& basePtr) {
         return uniquePtrCast<T>(std::move(basePtr));
     });
 }

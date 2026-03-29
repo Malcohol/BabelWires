@@ -45,15 +45,15 @@ void babelwires::Deserializer::finalizeOnError() {
 }
 
 babelwires::ResultT<std::unique_ptr<babelwires::Serializable>>
-babelwires::Deserializer::deserializeCurrentObject(const void* tagOfTypeSought) {
+babelwires::Deserializer::deserializeCurrentObject(const DeserializationTreeNode& treeNodeOfExpectedType) {
     const std::string_view currentTypeName = getCurrentTypeName();
     if (const DeserializationRegistryInterface::Entry* entry = getDeserializationRegistry().findEntry(currentTypeName)) {
-        const void* entryTag = entry->m_baseClassTag;
-        // The tags form a path up the type tree, so search for a match for T.
-        while (entryTag && (tagOfTypeSought != entryTag)) {
-            entryTag = *static_cast<const void* const*>(entryTag);
+        const DeserializationTreeNode* treeNode = entry->m_node;
+        // Look for the expected type in the inheritance hierarchy of the type we deserialized.
+        while (treeNode && (treeNodeOfExpectedType.m_serializationType != treeNode->m_serializationType)) {
+            treeNode = treeNode->m_parentNode;
         }
-        if (entryTag) {
+        if (treeNode) {
             // The registered entry is a subtype of the type we're trying to deserialize.
             return entry->m_factory(*this);
         } else {

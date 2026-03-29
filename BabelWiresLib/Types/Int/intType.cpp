@@ -35,7 +35,7 @@ babelwires::Range<babelwires::IntValue::NativeType> babelwires::IntType::getRang
 }
 
 std::string babelwires::IntType::getFlavour() const {
-    return IntValue::serializationType;
+    return IntValue::s_serializationTypeName;
 }
 
 std::optional<babelwires::SubtypeOrder> babelwires::IntType::compareSubtypeHelper(const TypeSystem& typeSystem,

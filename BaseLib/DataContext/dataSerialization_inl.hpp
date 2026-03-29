@@ -15,7 +15,7 @@ babelwires::DataSerialization<BUNDLE>::loadFromStream(std::istream& is, const Da
     XmlDeserializer deserializer(context.m_deserializationReg, userLogger);
     ON_ERROR(deserializer.finalizeOnError());
     DO_OR_ERROR(deserializer.parse(str));
-    auto projectBundleResult = deserializer.deserializeObject<BUNDLE>(BUNDLE::serializationType);
+    auto projectBundleResult = deserializer.deserializeObject<BUNDLE>(BUNDLE::s_serializationTypeName);
     if (!projectBundleResult) {
         deserializer.augmentResultWithContext(projectBundleResult);
         RETURN_ERROR_VALUE(projectBundleResult.error());
