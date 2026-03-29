@@ -35,7 +35,7 @@ babelwires::Range<babelwires::Rational> babelwires::RationalType::getRange() con
 }
 
 std::string babelwires::RationalType::getFlavour() const {
-    return RationalValue::serializationType;
+    return RationalValue::s_serializationTypeName;
 }
 
 std::optional<babelwires::SubtypeOrder> babelwires::RationalType::compareSubtypeHelper(const TypeSystem& typeSystem,

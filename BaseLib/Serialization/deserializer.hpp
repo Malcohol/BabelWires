@@ -62,24 +62,24 @@ namespace babelwires {
         /// The key is often the name of a field, but by default it duplicates the name of the object's type.
         /// Returns an error if the key is not found or if there is a parse error.
         template <typename T>
-        ResultT<std::unique_ptr<T>> deserializeObject(std::string_view key = T::serializationType);
+        ResultT<std::unique_ptr<T>> deserializeObject(std::string_view key = T::s_serializationTypeName);
 
         /// Deserialize a child object of type T.
         /// If the key is missing, a nullptr is returned.
         template <typename T>
-        ResultT<std::unique_ptr<T>> tryDeserializeObject(std::string_view key = T::serializationType);
+        ResultT<std::unique_ptr<T>> tryDeserializeObject(std::string_view key = T::s_serializationTypeName);
 
         /// Deserialize a child object of type T.
         /// Returns an error if the key is not found or if there is a parse error.
         /// The object is assigned by value, so any polymorphism is lost.
         template <typename T>
-        babelwires::Result deserializeObjectByValue(T& object, std::string_view key = T::serializationType);
+        babelwires::Result deserializeObjectByValue(T& object, std::string_view key = T::s_serializationTypeName);
 
         /// Deserialize a child object of type T.
         /// If the key is not found, then false is returned and the object is not modified.
         /// The object is assigned by value, so any polymorphism is lost.
         template <typename T>
-        babelwires::ResultT<bool> tryDeserializeObjectByValue(T& object, std::string_view key = T::serializationType);
+        babelwires::ResultT<bool> tryDeserializeObjectByValue(T& object, std::string_view key = T::s_serializationTypeName);
 
         /// A non-standard iterator, which provides access to the deserialized objects of base type T in an array.
         template <typename T> struct Iterator;
@@ -134,7 +134,7 @@ namespace babelwires {
       protected:
         template <typename T> ResultT<std::unique_ptr<T>> deserializeCurrentObject();
 
-        ResultT<std::unique_ptr<Serializable>> deserializeCurrentObject(const void* tagOfTypeSought);
+        ResultT<std::unique_ptr<Serializable>> deserializeCurrentObject(const DeserializationTreeNode& treeNodeOfExpectedType);
 
         struct BaseIterator;
         struct BASELIB_API AbstractIterator {

@@ -56,7 +56,7 @@ namespace babelwires {
 
         /// Return a short string which can be used in the UI to give a sense of the data this type handles.
         /// It is not used to impose any formal restrictions.
-        /// In cases where the type has a unique and serializable class of values, the serializationType of that
+        /// In cases where the type has a unique and serializable class of values, the s_serializationTypeName of that
         /// class is a good choice.
         virtual std::string getFlavour() const = 0;
 

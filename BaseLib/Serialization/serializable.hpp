@@ -11,6 +11,7 @@
 
 #include <BaseLib/Result/resultDSL.hpp>
 #include <BaseLib/Serialization/deserializationRegistryInterface.hpp>
+#include <BaseLib/Utilities/classUniqueString.hpp>
 
 #include <cassert>
 #include <functional>
@@ -33,30 +34,38 @@ namespace babelwires {
         virtual Result deserializeContents(Deserializer& deserializer) = 0;
 
         /// This is supplied automatically by both SERIALIZABLE macros.
-        virtual std::string_view getSerializationType() const = 0;
+        virtual std::string_view getSerializationTypeName() const = 0;
 
         /// This is supplied automatically by the SERIALIZABLE macro.
-        /// If there is a serializationVersion member, that is used. Otherwise the version is assumed to be 1.
+        /// If there is a s_serializationVersion member, that is used. Otherwise the version is assumed to be 1.
         virtual VersionNumber getSerializationVersion() const = 0;
     };
 
 /// For abstract classes whose subtypes can be serialized.
+/// Abstract classes do not need to provide a TYPENAME, so a unique string is generated for them.
 #define SERIALIZABLE_ABSTRACT(T, PARENT)                                                                               \
     using SerializableParent = PARENT;                                                                                 \
-    static constexpr void* getSerializationTag() {                                                                     \
-        return babelwires::Detail::getSerializationTag<T>();                                                           \
+    inline static const babelwires::DeserializationTreeNode s_deserializationTreeNode{                                 \
+        babelwires::getClassUniqueString<T>(), babelwires::Detail::getParentDeserializationTreeNode<T>()};             \
+    static constexpr const babelwires::DeserializationTreeNode& getDeserializationTreeNode() {                         \
+        return s_deserializationTreeNode;                                                                             \
     }
 
 /// For concrete classes which can be serialized and deserialized.
 /// A class must provide implementations of serializeContents and deserializeContents.
 // TODO Macro tricks to make PARENT and VERSION optional.
 #define SERIALIZABLE(T, TYPENAME, PARENT, VERSION)                                                                     \
-    SERIALIZABLE_ABSTRACT(T, PARENT);                                                                                  \
-    std::string_view getSerializationType() const override {                                                           \
-        return serializationType;                                                                                      \
+    using SerializableParent = PARENT;                                                                                 \
+    inline static const babelwires::DeserializationTreeNode s_deserializationTreeNode{                                 \
+        TYPENAME, babelwires::Detail::getParentDeserializationTreeNode<T>()};                                          \
+    static constexpr const babelwires::DeserializationTreeNode& getDeserializationTreeNode() {                         \
+        return s_deserializationTreeNode;                                                                             \
     }                                                                                                                  \
-    static constexpr char serializationType[] = TYPENAME;                                                              \
-    static constexpr int serializationVersion = VERSION;                                                               \
+    std::string_view getSerializationTypeName() const override {                                                       \
+        return s_serializationTypeName;                                                                                \
+    }                                                                                                                  \
+    static constexpr char s_serializationTypeName[] = TYPENAME;                                                        \
+    static constexpr int s_serializationVersion = VERSION;                                                             \
     static_assert(VERSION != 0, "Version must be greater than 0");                                                     \
     babelwires::VersionNumber getSerializationVersion() const override {                                               \
         return VERSION;                                                                                                \
@@ -76,17 +85,10 @@ namespace babelwires {
         return std::move(newObject);                                                                                   \
     }                                                                                                                  \
     inline static const babelwires::DeserializationRegistryInterface::Entry s_registryEntry{                           \
-        deserializingFactory, serializationType, serializationVersion, babelwires::Detail::getSerializationTag<T>()};
+        deserializingFactory, s_serializationVersion, &s_deserializationTreeNode};
 
     // Implementation details
     namespace Detail {
-        template <typename T> struct SerializableType {
-            /// The _address_ of this pointer uniquely defines a type.
-            /// The value is the address of T's parent's tag, or void if the parent doesn't have one.
-            /// This enables the system to validate subtype relationships during deserialization.
-            static const void* s_serializationTag;
-        };
-
         template <typename T> class IsSerializable {
           private:
             using Yes = char[1];
@@ -99,23 +101,13 @@ namespace babelwires {
             enum { value = sizeof(test<T>(0)) == sizeof(Yes) };
         };
 
-        template <typename T> constexpr void* getSerializationTag() {
-            if constexpr (IsSerializable<T>::value) {
-                return &SerializableType<T>::s_serializationTag;
-            } else {
-                return nullptr;
-            }
-        }
-
-        template <typename T> constexpr void* getParentsSerializationTag() {
+        template <typename T> constexpr const DeserializationTreeNode* getParentDeserializationTreeNode() {
             if constexpr (IsSerializable<T>::value && IsSerializable<typename T::SerializableParent>::value) {
-                return T::SerializableParent::getSerializationTag();
+                return &T::SerializableParent::s_deserializationTreeNode;
             } else {
                 return nullptr;
             }
         }
-
-        template <typename T> const void* SerializableType<T>::s_serializationTag = getParentsSerializationTag<T>();
 
     } // namespace Detail
 

@@ -75,7 +75,7 @@ babelwires::NewValueHolder babelwires::EnumType::createValue(const TypeSystem& t
 }
 
 std::string babelwires::EnumType::getFlavour() const {
-    return EnumValue::serializationType;
+    return EnumValue::s_serializationTypeName;
 }
 
 std::optional<babelwires::SubtypeOrder> babelwires::EnumType::compareSubtypeHelper(const TypeSystem& typeSystem,

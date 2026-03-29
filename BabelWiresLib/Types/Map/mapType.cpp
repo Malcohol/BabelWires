@@ -48,7 +48,7 @@ bool babelwires::MapType::visitValue(const TypeSystem& typeSystem, const Value& 
 }
 
 std::string babelwires::MapType::getFlavour() const {
-    return MapValue::serializationType;
+    return MapValue::s_serializationTypeName;
 }
 
 babelwires::TypeExp babelwires::MapType::getSourceTypeExp() const {

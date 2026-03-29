@@ -26,7 +26,7 @@ namespace babelwires {
 
         /// Serialize the object. The key is often the name of a field, but by
         /// default it duplicates the name of the object's type.
-        template <typename T> void serializeObject(const T& object, std::string_view key = T::serializationType);
+        template <typename T> void serializeObject(const T& object, std::string_view key = T::s_serializationTypeName);
 
         /// Serialize an array of objects, whose contents described by the given span
         /// (i.e. object with begin and end methods).
@@ -94,8 +94,8 @@ namespace babelwires {
 } // namespace babelwires
 
 template <typename T> void babelwires::Serializer::serializeObject(const T& object, std::string_view key) {
-    recordVersion(object.getSerializationType(), object.getSerializationVersion());
-    pushObjectWithKey(object.getSerializationType(), key);
+    recordVersion(object.getSerializationTypeName(), object.getSerializationVersion());
+    pushObjectWithKey(object.getSerializationTypeName(), key);
     object.serializeContents(*this);
     popObject();
 }
@@ -119,8 +119,8 @@ template <typename S> void babelwires::Serializer::serializeArray(std::string_vi
         pushArray(key);
         for (const auto& it : span) {
             auto& obj = asReference(it);
-            recordVersion(obj.getSerializationType(), obj.getSerializationVersion());
-            pushObject(obj.getSerializationType());
+            recordVersion(obj.getSerializationTypeName(), obj.getSerializationVersion());
+            pushObject(obj.getSerializationTypeName());
             obj.serializeContents(*this);
             popObject();
         }

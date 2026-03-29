@@ -19,7 +19,7 @@ namespace babelwires {
     class BASELIB_API DeserializationRegistry : public DeserializationRegistryInterface {
       public:
         template <typename T> void registerClass() {
-            registerEntry(T::serializationType, T::getDeserializationRegistryEntry());
+            registerEntry(T::s_serializationTypeName, T::getDeserializationRegistryEntry());
         }
 
         void registerEntry(std::string_view typeName, const Entry* entry);
