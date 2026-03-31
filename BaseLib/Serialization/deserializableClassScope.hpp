@@ -28,7 +28,7 @@ namespace babelwires {
         ~DeserializableClassScope() { m_deserializer.setDeserializationRegistry(*m_previousRegistry); }
 
         const Entry* findEntry(std::string_view typeName) const override {
-            if (typeName == T::serializationType) {
+            if (typeName == T::s_serializationTypeName) {
                 return T::getDeserializationRegistryEntry();
             }
             return m_previousRegistry->findEntry(typeName);

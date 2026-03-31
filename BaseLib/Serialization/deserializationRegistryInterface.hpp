@@ -2,13 +2,13 @@
  * An interface for looking up deserialization information about classes.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
 
-#include <BaseLib/common.hpp>
 #include <BaseLib/Result/result.hpp>
+#include <BaseLib/common.hpp>
 #include <functional>
 #include <string_view>
 
@@ -16,6 +16,12 @@ namespace babelwires {
 
     class Deserializer;
     struct Serializable;
+
+    struct DeserializationTreeNode {
+        /// Either the provided name for concrete classes using the SERIALIZABLE macro, or a generated string for abstract classes.
+        std::string_view m_serializationType;
+        const DeserializationTreeNode* m_parentNode = nullptr;
+    };
 
     /// An interface for looking up deserialization information about classes.
     class DeserializationRegistryInterface {
@@ -27,10 +33,9 @@ namespace babelwires {
         /// Instances of this object represent the registration of a single concrete class' deserializingFactory.
         struct Entry {
             Factory m_factory;
-            std::string_view m_serializationType;
             VersionNumber m_version = 0;
-            /// Defines the SerializableBase class the type inherits from.
-            const void* m_baseClassTag = nullptr;
+            // The serializationTypeName of this type and all of its parents.
+            const DeserializationTreeNode* m_node = nullptr;
         };
 
         /// Returns nullptr if an entry cannot be found.

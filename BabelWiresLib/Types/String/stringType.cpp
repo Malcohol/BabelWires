@@ -24,7 +24,7 @@ bool babelwires::StringType::visitValue(const TypeSystem& typeSystem, const Valu
 }
 
 std::string babelwires::StringType::getFlavour() const {
-    return StringValue::serializationType;
+    return StringValue::s_serializationTypeName;
 }
 
 
