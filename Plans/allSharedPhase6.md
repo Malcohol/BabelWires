@@ -14,8 +14,6 @@ Test utility libraries (`testUtils`, `libTestUtils`, `seqTestUtils`) only exist 
 ADD_LIBRARY( testUtils STATIC ${TEST_UTILS_SRCS} )
 ```
 
-Alternatively, if they are kept as shared, create export headers for them following the same pattern as [Phase 1](allSharedPhase1.md).
-
 #### 2. RPATH configuration
 
 Configure RPATH on all executable targets so shared libraries are found at both build time and install time. Add to the top-level [CMakeLists.txt](CMakeLists.txt):

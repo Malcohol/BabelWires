@@ -19,6 +19,16 @@ option(BUILD_SHARED_LIBS "Build all BabelWires libraries as shared libraries" OF
 # Ensure that submodules (e.g. nodeeditor) respect the BUILD_SHARED_LIBS setting.
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
+if(BUILD_SHARED_LIBS)
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+    set(CMAKE_BUILD_RPATH_USE_ORIGIN TRUE)
+endif()
+
+if(BUILD_SHARED_LIBS AND WIN32)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+endif()
+
 SET(gtest_force_shared_crt ON)
 
 #SET(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreadedDebug)
@@ -89,6 +99,26 @@ endif()
 
 if(BUILD_TESTING)
     include(GoogleTest)
+
+    function(configure_shared_test_runtime discoveredTests targetName)
+        if(NOT BUILD_SHARED_LIBS)
+            return()
+        endif()
+
+        if(NOT "${${discoveredTests}}" STREQUAL "")
+            if(WIN32)
+                set_tests_properties(${${discoveredTests}} PROPERTIES
+                    ENVIRONMENT "PATH=$<TARGET_FILE_DIR:${targetName}>;$ENV{PATH}")
+            elseif(APPLE)
+                set_tests_properties(${${discoveredTests}} PROPERTIES
+                    ENVIRONMENT "DYLD_LIBRARY_PATH=$<TARGET_FILE_DIR:${targetName}>:$ENV{DYLD_LIBRARY_PATH}")
+            else()
+                set_tests_properties(${${discoveredTests}} PROPERTIES
+                    ENVIRONMENT "LD_LIBRARY_PATH=$<TARGET_FILE_DIR:${targetName}>:$ENV{LD_LIBRARY_PATH}")
+            endif()
+        endif()
+    endfunction()
+
     add_subdirectory(Tests/TestUtils)
     add_subdirectory(Tests/BaseLib)
     add_subdirectory(Tests/BabelWiresLib)
