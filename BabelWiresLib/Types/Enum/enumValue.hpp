@@ -7,11 +7,12 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/Detail/identifierValueBase.hpp>
 
 namespace babelwires {
 
-    class EnumValue : public IdentifierValueBase<ShortId> {
+    class BABELWIRESLIB_API EnumValue : public IdentifierValueBase<ShortId> {
       public:
         DOWNCASTABLE(EnumValue, IdentifierValueBase<ShortId>);
         CLONEABLE(EnumValue);

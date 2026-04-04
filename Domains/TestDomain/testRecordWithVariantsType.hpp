@@ -1,3 +1,14 @@
+/**
+ * TestRecordWithVariantsType
+ *
+ * (C) 2026 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
+
+#include <Domains/TestDomain/testDomainExport.hpp>
+
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
@@ -6,7 +17,7 @@
 
 namespace testDomain {
 
-    class TestRecordWithVariantsType : public babelwires::RecordWithVariantsType {
+    class TESTDOMAIN_API TestRecordWithVariantsType : public babelwires::RecordWithVariantsType {
       public:
         DOWNCASTABLE(TestRecordWithVariantsType, babelwires::RecordWithVariantsType);
 
@@ -30,7 +41,7 @@ namespace testDomain {
         static babelwires::ShortId getFieldBCId();
     };
 
-    struct TestRecordWithVariantsElementData : babelwires::ValueNodeData {
+    struct TESTDOMAIN_API TestRecordWithVariantsElementData : babelwires::ValueNodeData {
         TestRecordWithVariantsElementData();
 
         static babelwires::Path getPathToRecordWithVariants();

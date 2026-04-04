@@ -7,11 +7,12 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
 
 namespace babelwires {
 
-    class ProjectDataLocation : public DataLocation {
+    class BABELWIRESLIB_API ProjectDataLocation : public DataLocation {
       public:
         DOWNCASTABLE(ProjectDataLocation, DataLocation);
         CLONEABLE(ProjectDataLocation);

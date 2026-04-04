@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
 namespace babelwires {
@@ -14,7 +15,7 @@ namespace babelwires {
     /// TupleType (a.k.a. Product Type).
     /// Tuple types are primarily added to allow for complex maps, so for now do not use CompoundType.
     /// Also: The parameter types are expected to have EditableValues.
-    class TupleType : public Type {
+    class BABELWIRESLIB_API TupleType : public Type {
       public:
         DOWNCASTABLE(TupleType, Type);
 

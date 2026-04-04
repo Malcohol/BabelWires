@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/TypeSystem/registeredType.hpp>
 #include <BabelWiresLib/Types/Enum/enumWithCppEnum.hpp>
@@ -27,7 +28,7 @@ namespace babelwires {
     X(All2Sm, "AllToSame", "49293192-43b2-4902-820a-e11d519b152b")
 
     /// The enum that determines the algorithm used.
-    class MapEntryFallbackKind : public babelwires::EnumType {
+    class BABELWIRESLIB_API MapEntryFallbackKind : public babelwires::EnumType {
       public:
         REGISTERED_TYPE("FallbackKind", "MapEntryFallbackKind", "11e020d5-526e-412d-aa9f-ac464ea34d26", 1);
         MapEntryFallbackKind();
@@ -35,7 +36,7 @@ namespace babelwires {
         ENUM_DEFINE_CPP_ENUM(BW_MAP_ENTRY_FALLBACK_KIND);
     };
 
-    class MapEntryData : public Serializable, public Cloneable, public ProjectVisitable {
+    class BABELWIRESLIB_API MapEntryData : public Serializable, public Cloneable, public ProjectVisitable {
       public:
         DOWNCASTABLE_BASE(MapEntryData);
         CLONEABLE_ABSTRACT(MapEntryData);

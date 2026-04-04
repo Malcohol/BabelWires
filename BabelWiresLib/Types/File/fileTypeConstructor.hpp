@@ -7,12 +7,13 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 
 namespace babelwires {
     /// Construct a new IntType from three IntValues: min, max and default.
-    class FileTypeConstructor : public TypeConstructor {
+    class BABELWIRESLIB_API FileTypeConstructor : public TypeConstructor {
       public:
         DOWNCASTABLE(FileTypeConstructor, TypeConstructor);
         /// Note that the we don't represent the default in the name.

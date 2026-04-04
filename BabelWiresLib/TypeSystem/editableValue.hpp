@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 
@@ -17,7 +18,7 @@ namespace babelwires {
     /// An editable value can be created directly within BabelWires.
     /// This is in contrast with values that can only be loaded, manipulated using processors and saved.
     /// Since EditableValues can be created directly, BabelWires must be able to serialize them.
-    class EditableValue : public Value, public Serializable, public ProjectVisitable {
+    class BABELWIRESLIB_API EditableValue : public Value, public Serializable, public ProjectVisitable {
       public:
         DOWNCASTABLE(EditableValue, Value);
         SERIALIZABLE_ABSTRACT(EditableValue, void);
@@ -40,7 +41,7 @@ namespace babelwires {
     };
 
     /// A base class for Values that are always editable.
-    class AlwaysEditableValue : public EditableValue {
+    class BABELWIRESLIB_API AlwaysEditableValue : public EditableValue {
       public:
         DOWNCASTABLE(AlwaysEditableValue, EditableValue);
         SERIALIZABLE_ABSTRACT(AlwaysEditableValue, EditableValue);

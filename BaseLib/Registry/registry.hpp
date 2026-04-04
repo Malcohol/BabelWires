@@ -20,7 +20,7 @@
 namespace babelwires {
 
     /// The expected base class of any entry stored in a registry.
-    class RegistryEntry {
+    class BASELIB_API RegistryEntry {
       public:
         /// An identifier is used to uniquely identify the entry.
         /// Typically, it will be obtained via the BW_LONG_ID macro.
@@ -47,7 +47,7 @@ namespace babelwires {
     /// Provides the core functionality for a registry, but applies only to the RegistryEntry class.
     /// Since most use cases will want to register subclasses of RegistryEntry, they should use
     /// Registry, below.
-    class UntypedRegistry {
+    class BASELIB_API UntypedRegistry {
       public:
         virtual ~UntypedRegistry() {}
 

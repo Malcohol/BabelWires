@@ -7,11 +7,13 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ValueModels/valueModel.hpp>
 
 namespace babelwires {
 
-    class EnumValueModel : ValueModel {
+    class BABELWIRESQTUI_API EnumValueModel : ValueModel {
       public:
         QWidget* createEditor(QWidget* parent) const override;
         void setEditorData(QWidget* editor) const override;

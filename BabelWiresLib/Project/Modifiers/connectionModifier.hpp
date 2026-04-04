@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 
 namespace babelwires {
@@ -19,7 +20,7 @@ namespace babelwires {
 
     /// A ConnectionModifier connects features from two Nodes together.
     /// By contrast with LocalModifiers, it application depends on context.
-    class ConnectionModifier : public Modifier {
+    class BABELWIRESLIB_API ConnectionModifier : public Modifier {
       public:
         DOWNCASTABLE(ConnectionModifier, Modifier);
         ConnectionModifier(std::unique_ptr<ConnectionModifierData> modifierData);

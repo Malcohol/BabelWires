@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
@@ -14,7 +15,7 @@ namespace babelwires {
     class Value;
 
     /// Data used to assign a Value within a container to a certain value.
-    class ValueAssignmentData : public LocalModifierData {
+    class BABELWIRESLIB_API ValueAssignmentData : public LocalModifierData {
       public:
         DOWNCASTABLE(ValueAssignmentData, LocalModifierData);
         CLONEABLE(ValueAssignmentData);

@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -17,7 +18,7 @@ namespace babelwires {
     struct ConnectionModifierData;
 
     /// Add a modifier to a Node.
-    class AddConnectionCommand : public CompoundCommand<Project> {
+    class BABELWIRESLIB_API AddConnectionCommand : public CompoundCommand<Project> {
       public:
         DOWNCASTABLE(AddConnectionCommand, CompoundCommand<Project>);
         ~AddConnectionCommand();

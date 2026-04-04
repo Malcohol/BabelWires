@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 
 namespace babelwires {
@@ -18,7 +19,7 @@ namespace babelwires {
     struct LocalModifierData;
 
     /// A modifier which operates on the contents of a single Node, and is unaffected by context.
-    class LocalModifier : public Modifier {
+    class BABELWIRESLIB_API LocalModifier : public Modifier {
       public:
         DOWNCASTABLE(LocalModifier, Modifier);
         LocalModifier(std::unique_ptr<LocalModifierData> modifierData);

@@ -7,12 +7,13 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 
 namespace babelwires {
     /// Construct a new MapType from a source and target type and a default fallback kind.
-    class MapTypeConstructor : public TypeConstructor {
+    class BABELWIRESLIB_API MapTypeConstructor : public TypeConstructor {
       public:
         DOWNCASTABLE(MapTypeConstructor, TypeConstructor);
         /// Note that the we don't represent the default in the name.

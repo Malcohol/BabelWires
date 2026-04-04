@@ -7,12 +7,14 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ValueModels/valueModel.hpp>
 
 namespace babelwires {
     class DataLocation;
 
-    class RecordWithVariantsValueModel : ValueModel {
+    class BABELWIRESQTUI_API RecordWithVariantsValueModel : ValueModel {
       public:
         void getContextMenuActions(const DataLocation& location, std::vector<ContextMenuEntry>& actionsOut) const override;
     };

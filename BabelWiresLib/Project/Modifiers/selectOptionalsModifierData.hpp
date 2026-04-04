@@ -7,13 +7,14 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
 #include <map>
 
 namespace babelwires {
     /// SelectOptionalsModifierData is used to select a set of optionals in a RecordType
-    class SelectOptionalsModifierData : public LocalModifierData {
+    class BABELWIRESLIB_API SelectOptionalsModifierData : public LocalModifierData {
       public:
         DOWNCASTABLE(SelectOptionalsModifierData, LocalModifierData);
         virtual Result apply(ValueTreeNode* target) const override;

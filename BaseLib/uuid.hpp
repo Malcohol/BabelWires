@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <functional>
 #include <string>
 #include <string_view>
@@ -21,7 +23,7 @@ namespace babelwires {
     /// A very simple UUID class.
     /// This does not impose any standard on the UUIDs, it just requires that they have the
     /// the required textual format.
-    class Uuid {
+    class BASELIB_API Uuid {
       public:
         /// Initializes the uuid to the zero pattern.
         Uuid();

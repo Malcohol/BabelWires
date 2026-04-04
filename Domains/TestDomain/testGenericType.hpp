@@ -1,3 +1,14 @@
+/**
+ * TestGenericType
+ *
+ * (C) 2026 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
+
+#include <Domains/TestDomain/testDomainExport.hpp>
+
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 
 #include <BabelWiresLib/Path/path.hpp>
@@ -6,7 +17,7 @@
 
 namespace testDomain {
 
-    class TestGenericType : public babelwires::GenericType {
+    class TESTDOMAIN_API TestGenericType : public babelwires::GenericType {
       public:
         DOWNCASTABLE(TestGenericType, babelwires::GenericType);
         REGISTERED_TYPE("TGen", "Test Generic Type", "80013367-d279-4f9d-aa38-6c397b31d38d", 1);
@@ -33,7 +44,7 @@ namespace testDomain {
     };
 
     /// A simple compound type that can be used to instantiate the record in the nested generic type above.
-    class TestSimpleCompoundType : public babelwires::RecordType {
+    class TESTDOMAIN_API TestSimpleCompoundType : public babelwires::RecordType {
       public:
         DOWNCASTABLE(TestSimpleCompoundType, babelwires::RecordType);
 

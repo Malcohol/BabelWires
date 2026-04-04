@@ -7,13 +7,15 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <string>
 
 namespace babelwires {
 
     /// An interface which provides information about a product (e.g. a piece of hardware).
     /// Several registries have entries which supply this information.
-    class ProductInfo {
+    class BASELIB_API ProductInfo {
       public:
         virtual ~ProductInfo() = default;
         virtual std::string getManufacturerName() const = 0;

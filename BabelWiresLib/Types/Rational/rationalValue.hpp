@@ -7,13 +7,14 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
 #include <BaseLib/Math/rational.hpp>
 
 namespace babelwires {
 
-    class RationalValue : public AlwaysEditableValue {
+    class BABELWIRESLIB_API RationalValue : public AlwaysEditableValue {
       public:
         DOWNCASTABLE(RationalValue, AlwaysEditableValue);
         CLONEABLE(RationalValue);

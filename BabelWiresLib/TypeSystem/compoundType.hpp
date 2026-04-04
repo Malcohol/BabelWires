@@ -7,13 +7,14 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Path/pathStep.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 
 namespace babelwires {
 
     /// CompoundTypes have values which have a structure made of child values.
-    class CompoundType : public Type {
+    class BABELWIRESLIB_API CompoundType : public Type {
       public:
         DOWNCASTABLE(CompoundType, Type);
 

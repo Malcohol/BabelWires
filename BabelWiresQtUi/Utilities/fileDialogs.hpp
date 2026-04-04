@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <QString>
 
 class QWidget;
@@ -15,8 +17,8 @@ namespace babelwires {
 
     class FileTypeEntry;
 
-    QString showOpenFileDialog(QWidget* parent, const FileTypeEntry& format);
+    BABELWIRESQTUI_API QString showOpenFileDialog(QWidget* parent, const FileTypeEntry& format);
 
-    QString showSaveFileDialog(QWidget* parent, const FileTypeEntry& format);
+    BABELWIRESQTUI_API QString showSaveFileDialog(QWidget* parent, const FileTypeEntry& format);
 
 } // namespace babelwires

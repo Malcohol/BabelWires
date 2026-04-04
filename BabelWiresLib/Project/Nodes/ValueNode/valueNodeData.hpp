@@ -8,12 +8,13 @@
 #pragma once
 
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 
 namespace babelwires {
     /// Describes the construction of a ValueNode.
-    class ValueNodeData : public NodeData {
+    class BABELWIRESLIB_API ValueNodeData : public NodeData {
       public:
         DOWNCASTABLE(ValueNodeData, NodeData);
         CLONEABLE(ValueNodeData);

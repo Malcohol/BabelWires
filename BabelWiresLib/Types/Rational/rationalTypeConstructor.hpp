@@ -7,13 +7,14 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 
 #include <BaseLib/Math/rational.hpp>
 
 namespace babelwires {
     /// Construct a new RationalType from three RationalValues: min, max and default.
-    class RationalTypeConstructor : public TypeConstructor {
+    class BABELWIRESLIB_API RationalTypeConstructor : public TypeConstructor {
       public:
         DOWNCASTABLE(RationalTypeConstructor, TypeConstructor);
         // The name format is not distinct from that of int, so there can be ambiguity. That's probably

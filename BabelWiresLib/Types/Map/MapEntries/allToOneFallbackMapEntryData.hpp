@@ -7,12 +7,13 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/fallbackMapEntryData.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 
 namespace babelwires {
 
-    class AllToOneFallbackMapEntryData : public FallbackMapEntryData {
+    class BABELWIRESLIB_API AllToOneFallbackMapEntryData : public FallbackMapEntryData {
       public:
         DOWNCASTABLE(AllToOneFallbackMapEntryData, FallbackMapEntryData);
         CLONEABLE(AllToOneFallbackMapEntryData);

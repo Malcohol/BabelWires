@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Project/uiPosition.hpp>
 #include <BabelWiresLib/Path/path.hpp>
@@ -18,7 +19,7 @@
 namespace babelwires {
     class Project;
 
-    class ResizeNodeCommand : public SimpleCommand<Project> {
+    class BABELWIRESLIB_API ResizeNodeCommand : public SimpleCommand<Project> {
       public:
         DOWNCASTABLE(ResizeNodeCommand, SimpleCommand<Project>);
         CLONEABLE(ResizeNodeCommand);

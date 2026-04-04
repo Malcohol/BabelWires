@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -17,7 +18,7 @@ namespace babelwires {
     struct ModifierData;
 
     /// Activate an optional in a RecordWithVariantType
-    class SelectRecordVariantCommand : public CompoundCommand<Project> {
+    class BABELWIRESLIB_API SelectRecordVariantCommand : public CompoundCommand<Project> {
       public:
         DOWNCASTABLE(SelectRecordVariantCommand, CompoundCommand<Project>);
         CLONEABLE(SelectRecordVariantCommand);

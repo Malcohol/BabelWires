@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Instance/instanceUtils.hpp>
 
 #include <optional>
@@ -16,7 +17,7 @@
 /// Start the declaration of an instance.
 #define DECLARE_INSTANCE_BEGIN(TYPE)                                                                                   \
     template <typename VALUE_TREE_NODE>                                                                                \
-    class InstanceImpl : public babelwires::InstanceParent<VALUE_TREE_NODE, TYPE> {                                    \
+    class BABELWIRESLIB_API InstanceImpl : public babelwires::InstanceParent<VALUE_TREE_NODE, TYPE> {                                    \
       public:                                                                                                          \
         InstanceImpl(VALUE_TREE_NODE& valueFeature)                                                                    \
             : babelwires::InstanceParent<VALUE_TREE_NODE, TYPE>(valueFeature) {}

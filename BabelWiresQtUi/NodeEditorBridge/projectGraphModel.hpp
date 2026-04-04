@@ -6,6 +6,8 @@
  */
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
@@ -32,7 +34,7 @@ namespace babelwires {
     class MainWindow;
     class NodeNodeModel;
 
-    class ProjectGraphModel : public QtNodes::AbstractGraphModel {
+    class BABELWIRESQTUI_API ProjectGraphModel : public QtNodes::AbstractGraphModel {
         Q_OBJECT
       public:
         ProjectGraphModel(Project& project, CommandManager<Project>& commandManager, UiProjectContext& projectContext);

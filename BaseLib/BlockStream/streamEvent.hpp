@@ -42,7 +42,7 @@ namespace babelwires {
 
 namespace babelwires {
     /// All StreamEvents are required to implement this interface.
-    struct Streamable {
+    struct BASELIB_API Streamable {
         // Streamable
         virtual std::size_t getSize() const = 0;
         virtual std::size_t getAlignment() const = 0;
@@ -56,7 +56,7 @@ namespace babelwires {
     /// Such events are required to be both copy and move-constructable.
     /// They should also provide implementations of the Streamable interface via the STREAM_EVENT macro.
     /// Events will be properly destroyed, so they may own other data.
-    class StreamEvent : public Streamable {
+        class BASELIB_API StreamEvent : public Streamable {
       public:
         STREAM_EVENT(StreamEvent);
         DOWNCASTABLE_BASE(StreamEvent);

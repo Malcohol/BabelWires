@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/projectVisitable.hpp>
 #include <BabelWiresLib/TypeSystem/typePtr.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
@@ -26,7 +27,7 @@ namespace babelwires {
     class TypeSystem;
 
     /// Holds the arguments to a TypeConstructor.
-    class TypeConstructorArguments {
+    class BABELWIRESLIB_API TypeConstructorArguments {
       public:
         TypeConstructorArguments() = default;
         TypeConstructorArguments(std::vector<TypeExp> typeArguments);
@@ -59,7 +60,7 @@ namespace babelwires {
 
     /// A TypeExp is an expression that describes a type.
     /// It either stores an Id for registered types, or stores the id of a constructor and its arguments.
-    class TypeExp : public ProjectVisitable, public Serializable {
+    class BABELWIRESLIB_API TypeExp : public ProjectVisitable, public Serializable {
       public:
         SERIALIZABLE(TypeExp, "type", void, 1);
 

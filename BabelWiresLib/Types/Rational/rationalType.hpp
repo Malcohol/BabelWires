@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/registeredType.hpp>
 
@@ -15,7 +16,7 @@
 namespace babelwires {
 
     /// Common between RationalTypes constructed with a range and/or default.
-    class RationalType : public Type {
+    class BABELWIRESLIB_API RationalType : public Type {
       public:
         DOWNCASTABLE(RationalType, Type);
 
@@ -39,7 +40,7 @@ namespace babelwires {
     };
 
     /// The standard Int type which has a default of zero and allows the full range of IntValue::NativeType.
-    class DefaultRationalType : public RationalType {
+    class BABELWIRESLIB_API DefaultRationalType : public RationalType {
       public:
         DOWNCASTABLE(DefaultRationalType, RationalType);
 

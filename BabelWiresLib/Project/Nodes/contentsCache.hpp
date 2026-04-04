@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -25,7 +26,7 @@ namespace babelwires {
     }
 
     /// The information cached about a single row in the contents of a Node.
-    class ContentsCacheEntry {
+    class BABELWIRESLIB_API ContentsCacheEntry {
       public:
         ContentsCacheEntry(std::string label, const ValueTreeNode* input, const ValueTreeNode* output,
                            const Path& path, std::uint8_t depth, std::uint8_t indent);
@@ -121,7 +122,7 @@ namespace babelwires {
     /// A cache of the contents of a Node visible to the user.
     /// This is relevant only to the UI, but is included in the base library
     /// because the logic is independent of the particular UI framework.
-    class ContentsCache {
+    class BABELWIRESLIB_API ContentsCache {
       public:
         /// The EditTree object is never replaced, so we can keep a reference.
         /// (The input/output features can change (e.g. after a reload) so we

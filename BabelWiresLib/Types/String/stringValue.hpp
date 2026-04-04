@@ -7,11 +7,12 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
 namespace babelwires {
 
-    class StringValue : public AlwaysEditableValue {
+    class BABELWIRESLIB_API StringValue : public AlwaysEditableValue {
       public:
         DOWNCASTABLE(StringValue, AlwaysEditableValue);
         CLONEABLE(StringValue);

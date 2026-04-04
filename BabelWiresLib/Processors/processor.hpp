@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/typePtr.hpp>
 
 #include <BaseLib/Result/result.hpp>
@@ -22,7 +23,7 @@ namespace babelwires {
 
     /// A Processor defines an operation from an input ValueTree to an output ValueTree.
     /// This should not store any state.
-    class Processor {
+    class BABELWIRESLIB_API Processor {
       public:
         Processor(const ProjectContext& projectContext, TypePtr inputTypeExp, TypePtr outputTypeExp);
         virtual ~Processor();

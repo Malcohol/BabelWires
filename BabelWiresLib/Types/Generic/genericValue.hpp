@@ -7,13 +7,14 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 
 namespace babelwires {
-    class GenericValue : public Value {
+    class BABELWIRESLIB_API GenericValue : public Value {
       public:
         DOWNCASTABLE(GenericValue, Value);
         CLONEABLE(GenericValue);

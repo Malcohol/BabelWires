@@ -1,3 +1,4 @@
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 /**
  * Registration of factories etc for the main BabelWiresLib
  * 
@@ -12,5 +13,5 @@ namespace babelwires {
 
     /// Registration factories etc. for Standard MIDI File.
     /// Note: This is not a true plugin model, because everything is statically linked.
-    void registerLib(babelwires::ProjectContext& context);
+    BABELWIRESLIB_API void registerLib(babelwires::ProjectContext& context);
 } // namespace smf

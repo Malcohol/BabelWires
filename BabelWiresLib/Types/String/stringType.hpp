@@ -7,13 +7,14 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/registeredType.hpp>
 
 namespace babelwires {
 
     // TODO Strings should have a length limit.
-    class StringType : public Type {
+    class BABELWIRESLIB_API StringType : public Type {
       public:
         DOWNCASTABLE(StringType, Type);
 

@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -15,7 +16,7 @@ namespace babelwires {
     class Project;
 
     /// Adjust modifiers and connections which point into an array to adapt to shifted array elements.
-    class AdjustModifiersInArraySubcommand : public CompoundCommand<Project> {
+    class BABELWIRESLIB_API AdjustModifiersInArraySubcommand : public CompoundCommand<Project> {
       public:
         DOWNCASTABLE(AdjustModifiersInArraySubcommand, CompoundCommand<Project>);
         CLONEABLE(AdjustModifiersInArraySubcommand);

@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 
@@ -18,7 +19,7 @@ namespace babelwires {
     class MapValue;
 
     /// Add an element to an array.
-    class SetMapSourceTypeCommand : public SimpleCommand<MapProject> {
+    class BABELWIRESLIB_API SetMapSourceTypeCommand : public SimpleCommand<MapProject> {
       public:
         DOWNCASTABLE(SetMapSourceTypeCommand, SimpleCommand<MapProject>);
         CLONEABLE(SetMapSourceTypeCommand);

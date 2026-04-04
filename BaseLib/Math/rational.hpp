@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/Math/math.hpp>
 #include <BaseLib/Result/result.hpp>
 
@@ -18,7 +20,7 @@
 namespace babelwires {
 
     /// Very rudimentary implementation of rational numbers.
-    class Rational {
+    class BASELIB_API Rational {
       public:
         using ComponentType = std::int32_t;
 
@@ -79,7 +81,7 @@ namespace babelwires {
     };
 
     /// n/d
-    std::ostream& operator<<(std::ostream& os, const babelwires::Rational& r);
+    BASELIB_API std::ostream& operator<<(std::ostream& os, const babelwires::Rational& r);
 
 } // namespace babelwires
 

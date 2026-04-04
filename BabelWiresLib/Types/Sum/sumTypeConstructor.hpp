@@ -7,12 +7,13 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 
 namespace babelwires {
     /// Construct a new SumType from a pair of types.
-    class SumTypeConstructor : public TypeConstructor {
+    class BABELWIRESLIB_API SumTypeConstructor : public TypeConstructor {
       public:
         DOWNCASTABLE(SumTypeConstructor, TypeConstructor);
         // SumTypes are variadic.

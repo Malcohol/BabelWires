@@ -7,12 +7,14 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ValueModels/valueModel.hpp>
 
 namespace babelwires {
 
     /// Will handle displayData with embedded html.
-    class ValueModelWithRichText : public ValueModel {
+    class BABELWIRESQTUI_API ValueModelWithRichText : public ValueModel {
       public:
         /// Wraps the result of getRichText with <b> and </b> if indicated by the styleHint.
         QVariant getDisplayData(StyleHint styleHint) const override final;

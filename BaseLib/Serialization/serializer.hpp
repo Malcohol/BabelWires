@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/Serialization/serializableValue.hpp>
 #include <BaseLib/Serialization/serializerDeserializerCommon.hpp>
 
@@ -18,7 +20,7 @@
 namespace babelwires {
 
     /// An interface for serializers.
-    class Serializer : public SerializerDeserializerCommon {
+        class BASELIB_API Serializer : public SerializerDeserializerCommon {
       public:
         virtual ~Serializer();
 

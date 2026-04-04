@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -19,7 +20,7 @@ namespace babelwires {
     /// Remove a modifier from a Node.
     /// This will not remove modifiers on array elements affected by removing
     /// an array size modifier. See RemoveModifierCommand.
-    class RemoveSimpleModifierSubcommand : public SimpleCommand<Project> {
+    class BABELWIRESLIB_API RemoveSimpleModifierSubcommand : public SimpleCommand<Project> {
       public:
         DOWNCASTABLE(RemoveSimpleModifierSubcommand, SimpleCommand<Project>);
         CLONEABLE(RemoveSimpleModifierSubcommand);

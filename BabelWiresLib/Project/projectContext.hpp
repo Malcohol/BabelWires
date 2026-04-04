@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BaseLib/DataContext/dataContext.hpp>
 
 #include <random>
@@ -25,7 +26,7 @@ namespace babelwires {
     /// * The debug log, because that is needed everywhere.
     /// * The user log is provided separately, because I want fine control of its use.
     /// * The IdentifierRegistry, because I judged it too painful to pass around.
-    struct ProjectContext : DataContext {
+    struct BABELWIRESLIB_API ProjectContext : DataContext {
         SourceFileFormatRegistry& m_sourceFileFormatReg;
         TargetFileFormatRegistry& m_targetFileFormatReg;
         ProcessorFactoryRegistry& m_processorReg;

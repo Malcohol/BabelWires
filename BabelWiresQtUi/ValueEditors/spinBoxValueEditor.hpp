@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ValueEditors/valueEditorCommonBase.hpp>
 #include <QSpinBox>
 
@@ -15,7 +17,7 @@ namespace babelwires {
 
     /// A spinBox QWidget which can be used for editing Values.
     // TODO: The handling of valueName text entry is needs work.
-    class SpinBoxValueEditor : public ValueEditorCommonBase<QSpinBox> {
+    class BABELWIRESQTUI_API SpinBoxValueEditor : public ValueEditorCommonBase<QSpinBox> {
         Q_OBJECT
       public:
         /// The arguments as provided to createEditor.

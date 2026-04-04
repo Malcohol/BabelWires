@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BaseLib/common.hpp>
 #include <BaseLib/Identifiers/identifier.hpp>
 
@@ -18,7 +19,7 @@ namespace babelwires {
 
     /// Abstract the difference between some features and their value type equivalents, so code doesn't always need to 
     /// handle both cases.
-    class ValueTreeHelper {
+    class BABELWIRESLIB_API ValueTreeHelper {
       public:
         /// Obtain details about an array.
         static std::tuple<const ValueTreeNode*, unsigned int, Range<unsigned int>, unsigned int> getInfoFromArray(const ValueTreeNode* f);

@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <memory>
 #include <type_traits>
 
@@ -15,7 +17,7 @@ namespace babelwires {
     /// Use this at the base of a hierarchy of cloneable classes.
     /// Note: The expected semantics of copy contructors of any class deriving from Cloneable
     /// is that it should deep-clone its non-const members.
-    struct Cloneable {
+    struct BASELIB_API Cloneable {
         virtual ~Cloneable();
         virtual Cloneable* cloneImpl() const& = 0;
         virtual Cloneable* cloneImpl() && = 0;

@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/registeredType.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
@@ -14,7 +15,7 @@
 namespace babelwires {
 
     /// Common between IntTypes constructed with a range and/or default.
-    class IntType : public Type {
+    class BABELWIRESLIB_API IntType : public Type {
       public:
         DOWNCASTABLE(IntType, Type);
 
@@ -39,7 +40,7 @@ namespace babelwires {
     };
 
     /// The standard Int type which has a default of zero and allows the full range of IntValue::NativeType.
-    class DefaultIntType : public IntType {
+    class BABELWIRESLIB_API DefaultIntType : public IntType {
       public:
         DOWNCASTABLE(DefaultIntType, IntType);
 
@@ -49,7 +50,7 @@ namespace babelwires {
     };
 
     /// An Int type which covers the range between 0 and the maximum NativeInt value.
-    class NonNegativeIntType : public IntType {
+    class BABELWIRESLIB_API NonNegativeIntType : public IntType {
       public:
         DOWNCASTABLE(NonNegativeIntType, IntType);
 

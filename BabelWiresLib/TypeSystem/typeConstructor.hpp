@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/typePtr.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
@@ -22,7 +23,7 @@ namespace babelwires {
 
     /// A TypeConstructor constructs a type from other types.
     /// A mutable cache ensures that each type is only constructed once.
-    class TypeConstructor {
+    class BABELWIRESLIB_API TypeConstructor {
       public:
         DOWNCASTABLE_BASE(TypeConstructor);
 

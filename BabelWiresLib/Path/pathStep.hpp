@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BaseLib/Identifiers/identifier.hpp>
 #include <BaseLib/Result/result.hpp>
 
@@ -20,7 +21,7 @@ namespace babelwires {
     struct IdentifierVisitor;
 
     /// A PathStep is a union of a ShortId and an ArrayIndex.
-    union PathStep {
+    union BABELWIRESLIB_API PathStep {
       public:
         /// A default constructed step is neither a field nor an index.
         /// Not-step steps are not permitted in paths, so most code can ignore this type of step
@@ -119,13 +120,13 @@ namespace babelwires {
         // A union of these.
         ShortId m_fieldIdentifier;
 
-        struct Index {
+        struct BABELWIRESLIB_API Index {
             /// The last two bytes are used as the tag.
             std::uint16_t m_padding[3] = {paddingVal, paddingVal, 0};
             ArrayIndex m_index;
         } m_arrayIndex;
 
-        struct NotAStep {
+        struct BABELWIRESLIB_API NotAStep {
             std::uint16_t m_notAStep[4] = { paddingVal, 0, paddingVal, paddingVal };
         } m_notAStep;
 

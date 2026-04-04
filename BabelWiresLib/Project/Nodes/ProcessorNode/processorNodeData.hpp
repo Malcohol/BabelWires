@@ -7,11 +7,12 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 
 namespace babelwires {
     /// Describes the construction of a processor.
-    struct ProcessorNodeData : NodeData {
+    struct BABELWIRESLIB_API ProcessorNodeData : NodeData {
         DOWNCASTABLE(ProcessorNodeData, NodeData);
         CLONEABLE(ProcessorNodeData);
         CUSTOM_CLONEABLE(ProcessorNodeData);

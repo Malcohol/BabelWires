@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/TypeSystem/registeredType.hpp>
 
@@ -15,7 +16,7 @@ namespace babelwires {
     /// A type which wraps the contents of a file.
     /// The FileType has no real functionality of its own and mainly just reserves a row in the feature hierarchy.
     /// The actual file information is stored in the NodeData of the containing FileFeature.
-    class FileType : public RecordType {
+    class BABELWIRESLIB_API FileType : public RecordType {
       public:
         DOWNCASTABLE(FileType, RecordType);
 

@@ -8,6 +8,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Nodes/contentsCache.hpp>
 #include <BabelWiresLib/Project/Nodes/editTree.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -33,7 +34,7 @@ namespace babelwires {
 
     /// The fundamental constituent of the project.
     /// Nodes expose input and output Features, and carry edits.
-    class Node {
+    class BABELWIRESLIB_API Node {
       public:
         DOWNCASTABLE_BASE(Node);
 

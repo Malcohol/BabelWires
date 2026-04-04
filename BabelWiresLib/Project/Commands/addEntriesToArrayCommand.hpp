@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -16,7 +17,7 @@ namespace babelwires {
     class Project;
 
     /// Add an element to an array.
-    class AddEntriesToArrayCommand : public CompoundCommand<Project> {
+    class BABELWIRESLIB_API AddEntriesToArrayCommand : public CompoundCommand<Project> {
       public:
         DOWNCASTABLE(AddEntriesToArrayCommand, CompoundCommand<Project>);
         CLONEABLE(AddEntriesToArrayCommand);

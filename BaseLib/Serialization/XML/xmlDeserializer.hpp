@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/Serialization/deserializer.hpp>
 
 #include <set>
@@ -14,7 +16,7 @@
 
 namespace babelwires {
 
-    class XmlDeserializer : public Deserializer {
+    class BASELIB_API XmlDeserializer : public Deserializer {
       public:
         XmlDeserializer(const DeserializationRegistryInterface& deserializationRegistry, UserLogger& userLogger);
 
@@ -33,7 +35,7 @@ namespace babelwires {
         ResultT<bool> tryDeserializeValue(std::string_view key, std::int8_t& value) override;
 
       protected:
-        struct IteratorImpl : Deserializer::AbstractIterator {
+        struct BASELIB_API IteratorImpl : Deserializer::AbstractIterator {
             IteratorImpl(XmlDeserializer& deserializer, const tinyxml2::XMLElement* arrayElement);
 
             Result advance() override;

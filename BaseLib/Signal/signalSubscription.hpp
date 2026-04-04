@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <cassert>
 #include <functional>
 #include <memory>
@@ -18,7 +20,7 @@ namespace babelwires {
 
     /// Returned by Signal::subscribe.
     /// This must be kept alive in order to receive calls from the signal.
-    class SignalSubscription {
+    class BASELIB_API SignalSubscription {
       public:
         SignalSubscription() = default;
         SignalSubscription(SignalSubscription&&) = default;
@@ -50,7 +52,7 @@ namespace babelwires {
     };
 
     /// A non-template base interface for Signals, sufficient to unsubscribe subscriptions.
-    struct SignalBase {
+    struct BASELIB_API SignalBase {
         virtual void unsubscribe(const SignalSubscription::Handle* handle) = 0;
     };
 

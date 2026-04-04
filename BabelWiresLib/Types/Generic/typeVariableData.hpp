@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <string>
 #include <optional>
 
@@ -14,7 +15,7 @@ namespace babelwires {
     class TypeExp;
 
     /// TypeVariableData carries the data that identifies an instance of a type variable.
-    struct TypeVariableData {
+    struct BABELWIRESLIB_API TypeVariableData {
         /// The index in the generic type of which this is a variable.
         unsigned int m_typeVariableIndex;
 

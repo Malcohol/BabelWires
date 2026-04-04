@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/IO/dataSource.hpp>
 #include <BaseLib/Result/result.hpp>
 
@@ -16,7 +18,7 @@
 namespace babelwires {
 
     /// Either close or closeOnError must be called before the FileDataSource is destroyed.
-    class FileDataSource : public DataSource {
+    class BASELIB_API FileDataSource : public DataSource {
       public:
         ~FileDataSource() override;
 

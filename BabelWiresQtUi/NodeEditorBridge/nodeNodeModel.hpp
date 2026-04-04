@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresLib/Project/projectIds.hpp>
 
 #include <QtNodes/Definitions>
@@ -36,7 +38,7 @@ namespace babelwires {
     /// TODO: Right now, it also manages access to a bunch of other node information.
     /// However, I think that second role is not necessary: The ProjectGraphModel can
     /// go to the Project for almost all of the information.
-    class NodeNodeModel : public QObject {
+    class BABELWIRESQTUI_API NodeNodeModel : public QObject {
         Q_OBJECT
 
       public:

@@ -97,9 +97,10 @@ FOREACH(file ${TestData})
 ENDFOREACH()
 
 ADD_EXECUTABLE( babelWiresTests ${LIB_TESTS_SRCS} )
-TARGET_INCLUDE_DIRECTORIES( babelWiresTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../.. )
+TARGET_INCLUDE_DIRECTORIES( babelWiresTests PRIVATE ${PROJECT_SOURCE_DIR} )
 TARGET_LINK_LIBRARIES(babelWiresTests BaseLib testUtils BabelWiresLib libTestUtils gtest)
 
 if(BUILD_TESTING)
-    gtest_discover_tests(babelWiresTests)
+    gtest_discover_tests(babelWiresTests TEST_LIST babelWiresDiscoveredTests)
+    configure_shared_test_runtime(babelWiresDiscoveredTests babelWiresTests)
 endif()

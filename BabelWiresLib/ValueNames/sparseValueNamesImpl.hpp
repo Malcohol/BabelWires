@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/ValueNames/valueNames.hpp>
 
 #include <map>
@@ -15,7 +16,7 @@
 
 namespace babelwires {
 
-    class SparseValueNamesImpl : public ValueNames {
+    class BABELWIRESLIB_API SparseValueNamesImpl : public ValueNames {
       public:
         typedef std::map<int, std::string> NameFromValuesMap;
         typedef std::unordered_map<std::string, int> ValueFromNamesMap;

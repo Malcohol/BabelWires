@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 
@@ -36,7 +37,7 @@ namespace babelwires {
     struct UiSize;
 
     /// The Project manages the graph of Nodes, and propagates data from sources to targets.
-    class Project {
+    class BABELWIRESLIB_API Project {
       public:
         /// Construct a new project.
         Project(ProjectContext& context, UserLogger& userLogger);
@@ -136,7 +137,7 @@ namespace babelwires {
 
         /// Information about the connections between Nodes.
         /// The connectionInfo includes Nodes and modifiers which failed.
-        struct ConnectionInfo {
+        struct BABELWIRESLIB_API ConnectionInfo {
             using Connections = std::vector<std::tuple<ConnectionModifier*, Node*>>;
             using ConnectionMap = std::unordered_map<const Node*, Connections>;
 

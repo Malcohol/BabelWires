@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Nodes/nodeData.hpp>
 #include <BaseLib/DataContext/filePath.hpp>
 
@@ -17,7 +18,7 @@
 
 namespace babelwires {
     /// Describes the construction of a SourceFileFeature.
-    struct SourceFileNodeData : NodeData {
+    struct BABELWIRESLIB_API SourceFileNodeData : NodeData {
         DOWNCASTABLE(SourceFileNodeData, NodeData);
         CLONEABLE(SourceFileNodeData);
         CUSTOM_CLONEABLE(SourceFileNodeData);

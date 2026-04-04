@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableData.hpp>
 
@@ -14,7 +15,7 @@ namespace babelwires {
 
     /// The Type used at a type variable that has not been instantiated.
     /// The information about the type variable is carried by the typeExp.
-    class TypeVariableType : public Type {
+    class BABELWIRESLIB_API TypeVariableType : public Type {
       public:
         DOWNCASTABLE(TypeVariableType, Type);
 

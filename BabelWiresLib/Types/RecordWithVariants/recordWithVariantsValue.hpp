@@ -7,13 +7,14 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Types/Record/recordValue.hpp>
 
 #include <vector>
 
 namespace babelwires {
     /// RecordValues are compound values containing a set of named children.
-    class RecordWithVariantsValue : public RecordValue {
+    class BABELWIRESLIB_API RecordWithVariantsValue : public RecordValue {
       public:
         CLONEABLE(RecordWithVariantsValue);
 

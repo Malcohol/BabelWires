@@ -1,3 +1,10 @@
+/**
+ * TestRecordType
+ *
+ * (C) 2026 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include <Domains/TestDomain/testRecordType.hpp>
 
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>

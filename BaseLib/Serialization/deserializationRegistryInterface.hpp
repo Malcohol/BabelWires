@@ -17,21 +17,21 @@ namespace babelwires {
     class Deserializer;
     struct Serializable;
 
-    struct DeserializationTreeNode {
+    struct BASELIB_API DeserializationTreeNode {
         /// Either the provided name for concrete classes using the SERIALIZABLE macro, or a generated string for abstract classes.
         std::string_view m_serializationType;
         const DeserializationTreeNode* m_parentNode = nullptr;
     };
 
     /// An interface for looking up deserialization information about classes.
-    class DeserializationRegistryInterface {
+    class BASELIB_API DeserializationRegistryInterface {
       public:
         using Factory = std::function<ResultT<std::unique_ptr<Serializable>>(Deserializer& deserializer)>;
 
         virtual ~DeserializationRegistryInterface() = default;
 
         /// Instances of this object represent the registration of a single concrete class' deserializingFactory.
-        struct Entry {
+        struct BASELIB_API Entry {
             Factory m_factory;
             VersionNumber m_version = 0;
             // The serializationTypeName of this type and all of its parents.

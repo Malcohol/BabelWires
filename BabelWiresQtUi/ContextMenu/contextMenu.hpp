@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ContextMenu/contextMenuAction.hpp>
 
 #include <QAction>
@@ -16,7 +18,7 @@
 
 namespace babelwires {
     /// The pop-up context menu used for the elements of an QAbstractItemModel.
-    class ContextMenu : public QMenu {
+    class BABELWIRESQTUI_API ContextMenu : public QMenu {
         Q_OBJECT
       public:
         ContextMenu(QAbstractItemModel& model, const QModelIndex& index);

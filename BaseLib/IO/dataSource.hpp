@@ -13,7 +13,7 @@
 namespace babelwires {
 
     /// Provide a source of bytes with a simple mechanism for rewinding.
-    class DataSource {
+    class BASELIB_API DataSource {
       public:
         DataSource();
 

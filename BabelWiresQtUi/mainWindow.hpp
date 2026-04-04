@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ComplexValueEditors/complexValueEditorManager.hpp>
 
 #include <BabelWiresLib/Project/projectData.hpp>
@@ -30,7 +32,7 @@ namespace babelwires {
     class LogWindow;
 
     /// The MainWindow of the application.
-    class MainWindow : public QMainWindow {
+    class BABELWIRESQTUI_API MainWindow : public QMainWindow {
         Q_OBJECT
 
       public:

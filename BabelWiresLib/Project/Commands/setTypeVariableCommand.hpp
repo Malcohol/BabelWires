@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -16,7 +17,7 @@ namespace babelwires {
     class Project;
 
     /// Set the size of an array.
-    class SetTypeVariableCommand : public CompoundCommand<Project> {
+    class BABELWIRESLIB_API SetTypeVariableCommand : public CompoundCommand<Project> {
       public:
         DOWNCASTABLE(SetTypeVariableCommand, CompoundCommand<Project>);
         CLONEABLE(SetTypeVariableCommand);

@@ -8,12 +8,13 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 
 namespace babelwires {
     /// Construct a new TupleType from a vector of types.
-    class TupleTypeConstructor : public TypeConstructor {
+    class BABELWIRESLIB_API TupleTypeConstructor : public TypeConstructor {
       public:
         DOWNCASTABLE(TupleTypeConstructor, TypeConstructor);
         // TupleTypes are variadic.

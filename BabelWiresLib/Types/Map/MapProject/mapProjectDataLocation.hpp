@@ -7,11 +7,12 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/ProjectExtra/dataLocation.hpp>
 
 namespace babelwires {
     /// A MapProjectDataLocation identifies some data within a MapProject.
-    class MapProjectDataLocation : public DataLocation {
+    class BABELWIRESLIB_API MapProjectDataLocation : public DataLocation {
       public:
         DOWNCASTABLE(MapProjectDataLocation, DataLocation);
         CLONEABLE(MapProjectDataLocation);

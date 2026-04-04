@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>
 #include <BabelWiresLib/Path/path.hpp>
@@ -25,7 +26,7 @@ namespace babelwires {
     /// This class is designed to allow that to happen in any order, by having the
     /// first command to subsume all the rest, and then have the combined operation
     /// executed in a consistent way.
-    class RemoveNodeCommand : public SimpleCommand<Project> {
+    class BABELWIRESLIB_API RemoveNodeCommand : public SimpleCommand<Project> {
       public:
         DOWNCASTABLE(RemoveNodeCommand, SimpleCommand<Project>);
         CLONEABLE(RemoveNodeCommand);

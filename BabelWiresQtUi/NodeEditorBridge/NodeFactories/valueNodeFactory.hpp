@@ -7,13 +7,15 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/nodeFactory.hpp>
 
 namespace babelwires {
     class TypeSystem;
     struct UiProjectContext;
 
-    class ValueNodeFactory : public NodeFactory {
+    class BABELWIRESQTUI_API ValueNodeFactory : public NodeFactory {
       public:
         ValueNodeFactory(const UiProjectContext& uiProjectContext);
 

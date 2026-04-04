@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
@@ -16,7 +17,7 @@
 
 namespace babelwires {
     /// RecordValues are compound values containing a set of named children.
-    class RecordValue : public Value {
+    class BABELWIRESLIB_API RecordValue : public Value {
       public:
         DOWNCASTABLE(RecordValue, Value);
         CLONEABLE(RecordValue);

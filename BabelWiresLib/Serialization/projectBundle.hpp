@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
 
 #include <BaseLib/DataContext/dataBundle.hpp>
@@ -16,7 +17,7 @@
 namespace babelwires {
     /// A ProjectBundle carries ProjectData which is independent of the current system, and carries metadata sufficient
     /// to version it (i.e. load it into a system which has changed since the data was saved).
-    class ProjectBundle : public DataBundle<ProjectData> {
+    class BABELWIRESLIB_API ProjectBundle : public DataBundle<ProjectData> {
       public:
         SERIALIZABLE(ProjectBundle, "project", void, 1);
         ProjectBundle() = default;

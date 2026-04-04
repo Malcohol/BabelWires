@@ -7,11 +7,12 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 
 namespace babelwires {
     /// Data used to set an array within a container to a certain size.
-    struct ArraySizeModifierData : LocalModifierData {
+    struct BABELWIRESLIB_API ArraySizeModifierData : LocalModifierData {
         DOWNCASTABLE(ArraySizeModifierData, LocalModifierData);
         Result apply(ValueTreeNode* target) const override;
         std::unique_ptr<Modifier> createModifier() const override;

@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <string>
 #include <tuple>
 
@@ -15,12 +16,12 @@ namespace babelwires {
     /// An interface for objects which associate some values with human-friendly names.
     // TODO This used to be available for IntFeature, but it's not available with IntType.
     // TODO Can this be generalized this so value types other than integers can have names?
-    class ValueNames {
+    class BABELWIRESLIB_API ValueNames {
       public:
         bool getValueForName(const std::string& name, int& valueOut) const;
         bool getNameForValue(int value, std::string& nameOut) const;
 
-        struct NamedValueIterator {
+        struct BABELWIRESLIB_API NamedValueIterator {
             void operator++();
             bool operator==(const NamedValueIterator& other) const;
             bool operator!=(const NamedValueIterator& other) const;

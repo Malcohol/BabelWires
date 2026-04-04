@@ -7,11 +7,12 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/fallbackMapEntryData.hpp>
 
 namespace babelwires {
     /// FallbackMapEntries are the last entry in a map, and define what happens to previously unmapped source values.
-    class AllToSameFallbackMapEntryData : public FallbackMapEntryData {
+    class BABELWIRESLIB_API AllToSameFallbackMapEntryData : public FallbackMapEntryData {
       public:
         DOWNCASTABLE(AllToSameFallbackMapEntryData, FallbackMapEntryData);
         CLONEABLE(AllToSameFallbackMapEntryData);

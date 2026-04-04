@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
 
@@ -15,7 +16,7 @@
 namespace babelwires {
 
     /// The command which pastes content into a project.
-    class PasteNodesCommand : public SimpleCommand<Project> {
+    class BABELWIRESLIB_API PasteNodesCommand : public SimpleCommand<Project> {
       public:
         DOWNCASTABLE(PasteNodesCommand, SimpleCommand<Project>);
         CLONEABLE(PasteNodesCommand);

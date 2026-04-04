@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 
 namespace babelwires {
@@ -16,7 +17,7 @@ namespace babelwires {
     class Processor;
     class ValueTreeRoot;
 
-    class ProcessorNode : public Node {
+    class BABELWIRESLIB_API ProcessorNode : public Node {
       public:
         DOWNCASTABLE(ProcessorNode, Node);
         ProcessorNode(const ProjectContext& context, UserLogger& userLogger, const ProcessorNodeData& data,

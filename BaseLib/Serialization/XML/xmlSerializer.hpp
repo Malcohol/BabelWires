@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/Serialization/serializer.hpp>
 
 #include <tinyxml2.h>
@@ -16,7 +18,7 @@
 
 namespace babelwires {
 
-    class XmlSerializer : public Serializer {
+    class BASELIB_API XmlSerializer : public Serializer {
       public:
         /// Create a serializer
         XmlSerializer();

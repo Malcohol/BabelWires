@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
@@ -15,7 +16,7 @@ namespace babelwires {
     /// Apply a function to all appropriate subvalues of a given value.
     /// If the predicate returns true for a subvalue, the function is applied to that subvalue.
     /// However, the function is not applied recursively to the subvalues of that subvalue.
-    void applyToSubvalues(const TypeSystem& typeSystem, const Type& type, ValueHolder& sourceValue,
+    BABELWIRESLIB_API void applyToSubvalues(const TypeSystem& typeSystem, const Type& type, ValueHolder& sourceValue,
                           const std::function<bool(const Type&, const Value&)>& predicate,
                           const std::function<void(const Type&, Value&)>& function);
 

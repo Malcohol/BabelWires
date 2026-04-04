@@ -7,36 +7,37 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 
 namespace babelwires
 {
-    Path getPathTo(const ValueTreeNode* valueTreeNode);
+    BABELWIRESLIB_API Path getPathTo(const ValueTreeNode* valueTreeNode);
 
     template <typename VALUE_TREE_ROOT> struct RootAndPath {
         VALUE_TREE_ROOT& m_root;
         Path m_pathFromRoot;
     };
 
-    RootAndPath<const ValueTreeRoot> getRootAndPathTo(const ValueTreeNode& valueTreeNode);
-    RootAndPath<ValueTreeRoot> getRootAndPathTo(ValueTreeNode& valueTreeNode);
+    BABELWIRESLIB_API RootAndPath<const ValueTreeRoot> getRootAndPathTo(const ValueTreeNode& valueTreeNode);
+    BABELWIRESLIB_API RootAndPath<ValueTreeRoot> getRootAndPathTo(ValueTreeNode& valueTreeNode);
 
     /// Follow the path, returns an error if it cannot be followed.
-    ResultT<ValueTreeNode&> followPath(const Path& path, ValueTreeNode& start);
+    BABELWIRESLIB_API ResultT<ValueTreeNode&> followPath(const Path& path, ValueTreeNode& start);
 
     /// Follow the path, returns an error if it cannot be followed.
-    ResultT<const ValueTreeNode&> followPath(const Path& path, const ValueTreeNode& start);
+    BABELWIRESLIB_API ResultT<const ValueTreeNode&> followPath(const Path& path, const ValueTreeNode& start);
 
     /// Follow the path, returns nullptr if it cannot be followed.
-    ValueTreeNode* tryFollowPath(const Path& path, ValueTreeNode& start);
+    BABELWIRESLIB_API ValueTreeNode* tryFollowPath(const Path& path, ValueTreeNode& start);
 
     /// Follow the path, returns nullptr if it cannot be followed.
-    const ValueTreeNode* tryFollowPath(const Path& path, const ValueTreeNode& start);
+    BABELWIRESLIB_API const ValueTreeNode* tryFollowPath(const Path& path, const ValueTreeNode& start);
 
     /// Follow the path, asserts if it cannot be followed.
-    ValueTreeNode& assertFollowPath(const Path& path, ValueTreeNode& start);
+    BABELWIRESLIB_API ValueTreeNode& assertFollowPath(const Path& path, ValueTreeNode& start);
 
     /// Follow the path, asserts if it cannot be followed.
-    const ValueTreeNode& assertFollowPath(const Path& path, const ValueTreeNode& start);
+    BABELWIRESLIB_API const ValueTreeNode& assertFollowPath(const Path& path, const ValueTreeNode& start);
 }

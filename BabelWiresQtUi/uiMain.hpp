@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <memory>
 
 namespace babelwires {
@@ -14,7 +16,7 @@ namespace babelwires {
     struct UiProjectContext;
 
     /// Manages the creation of the UI.
-    class Ui {
+    class BABELWIRESQTUI_API Ui {
       public:
         /// A UI framework may consume arguments from the command-line.
         Ui(int& argc, char** argv, UiProjectContext& projectContext, UnifiedLog& log);

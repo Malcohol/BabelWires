@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
@@ -15,7 +16,7 @@
 #include <vector>
 
 namespace babelwires {
-    class TupleValue : public AlwaysEditableValue {
+    class BABELWIRESLIB_API TupleValue : public AlwaysEditableValue {
       public:
         DOWNCASTABLE(TupleValue, AlwaysEditableValue);
         CLONEABLE(TupleValue);

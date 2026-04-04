@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/Project/projectVisitable.hpp>
@@ -21,7 +22,7 @@ namespace babelwires {
     /// to allow it to identify those subvalues.
     /// Note: In theory, a path on its own could be used to express the current use-cases, but I do not
     /// want to assume that will always be a possible or convenient option.
-    class DataLocation : public Cloneable, public Serializable, public ProjectVisitable {
+    class BABELWIRESLIB_API DataLocation : public Cloneable, public Serializable, public ProjectVisitable {
       public:
         DOWNCASTABLE_BASE(DataLocation);
         CLONEABLE_ABSTRACT(DataLocation);

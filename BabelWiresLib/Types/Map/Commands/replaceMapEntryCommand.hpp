@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 
@@ -16,7 +17,7 @@ namespace babelwires {
     class MapEntryData;
 
     /// Add an element to an array.
-    class ReplaceMapEntryCommand : public SimpleCommand<MapProject> {
+    class BABELWIRESLIB_API ReplaceMapEntryCommand : public SimpleCommand<MapProject> {
       public:
         DOWNCASTABLE(ReplaceMapEntryCommand, SimpleCommand<MapProject>);
         CLONEABLE(ReplaceMapEntryCommand);

@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/Identifiers/identifier.hpp>
 
 #include <BaseLib/Serialization/serializable.hpp>
@@ -25,7 +27,7 @@ namespace babelwires {
     /// Singletons are usually a mistake and for the most part, "dependency injection" has been used to provide
     /// the project with its dependencies. However, passing the registry through to every use of Path was
     /// just too painful, so a singleton was adopted in this case.
-    class IdentifierRegistry : public Serializable {
+    class BASELIB_API IdentifierRegistry : public Serializable {
       public:
         SERIALIZABLE(IdentifierRegistry, "identifierMetadata", void, 1);
         IdentifierRegistry();
@@ -86,7 +88,7 @@ namespace babelwires {
 
         /// Access the contents of the singleton instance within the scope of this object.
         /// This holds a lock, so ensure its lifetime is minimal.
-        class ReadAccess {
+        class BASELIB_API ReadAccess {
           public:
             ReadAccess(std::shared_mutex* mutex, const IdentifierRegistry* registry);
             ReadAccess(ReadAccess&& other);
@@ -103,7 +105,7 @@ namespace babelwires {
 
         /// Access the contents of the singleton instance within the scope of this object.
         /// This holds a lock, so ensure its lifetime is minimal.
-        class WriteAccess {
+        class BASELIB_API WriteAccess {
           public:
             WriteAccess(std::shared_mutex* mutex, IdentifierRegistry* registry);
             WriteAccess(WriteAccess&& other);
@@ -131,7 +133,7 @@ namespace babelwires {
         const_iterator end() const;
 
       protected:
-        struct InstanceData : Serializable {
+        struct BASELIB_API InstanceData : Serializable {
             SERIALIZABLE(InstanceData, "identifier", void, 1);
             InstanceData();
             InstanceData(std::string fieldName, Uuid uuid, LongId identifier, Authority authority);
@@ -170,7 +172,7 @@ namespace babelwires {
     };
 
     /// Creates a IdentifierRegistry and sets it to be the singleton instance.
-    class IdentifierRegistryScope {
+    class BASELIB_API IdentifierRegistryScope {
       public:
         IdentifierRegistryScope();
         ~IdentifierRegistryScope();
@@ -182,7 +184,7 @@ namespace babelwires {
 
 } // namespace babelwires
 
-class babelwires::IdentifierRegistry::const_iterator {
+class BASELIB_API babelwires::IdentifierRegistry::const_iterator {
   public:
     using InnerIterator = decltype(babelwires::IdentifierRegistry::m_uuidToInstanceDataMap)::const_iterator;
     using ValueType = IdentifierRegistry::ValueType;

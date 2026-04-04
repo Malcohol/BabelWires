@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <cassert>
 
@@ -18,8 +20,8 @@ namespace babelwires {
     using RegisteredIdentifiers = std::vector<babelwires::ShortId>;
 
     namespace detail {
-        RegisteredIdentifiers getIdentifiers(const IdentifiersSource& source);
-        bool testIdentifiers(const IdentifiersSource& source, const babelwires::RegisteredIdentifiers& ids);
+        BASELIB_API RegisteredIdentifiers getIdentifiers(const IdentifiersSource& source);
+        BASELIB_API bool testIdentifiers(const IdentifiersSource& source, const babelwires::RegisteredIdentifiers& ids);
     } // namespace detail
 } // namespace babelwires
 

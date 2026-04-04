@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BaseLib/Registry/fileTypeRegistry.hpp>
 #include <BaseLib/Result/result.hpp>
 #include <BaseLib/productInfo.hpp>
@@ -25,14 +26,14 @@ namespace babelwires {
     class ValueTreeRoot;
     struct ProjectContext;
 
-    class SourceFileFormat : public FileTypeEntry, ProductInfo {
+    class BABELWIRESLIB_API SourceFileFormat : public FileTypeEntry, ProductInfo {
       public:
         SourceFileFormat(LongId identifier, VersionNumber version, Extensions extensions);
         virtual ResultT<std::unique_ptr<babelwires::ValueTreeRoot>> loadFromFile(const std::filesystem::path& path, const ProjectContext& projectContext,
                                                                       UserLogger& userLogger) const = 0;
     };
 
-    class SourceFileFormatRegistry : public FileTypeRegistry<SourceFileFormat> {
+    class BABELWIRESLIB_API SourceFileFormatRegistry : public FileTypeRegistry<SourceFileFormat> {
       public:
         SourceFileFormatRegistry();
     };

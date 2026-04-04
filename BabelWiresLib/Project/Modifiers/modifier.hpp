@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Path/pathStep.hpp>
 
 #include <BaseLib/Cloning/cloneable.hpp>
@@ -29,7 +30,7 @@ namespace babelwires {
     class ConnectionModifier;
 
     /// A Modifier changes a value somewhere in the input of a Node, and corresponds to a user edit.
-    class Modifier : public Cloneable {
+    class BABELWIRESLIB_API Modifier : public Cloneable {
       public:
         CLONEABLE_ABSTRACT(Modifier);
         DOWNCASTABLE_BASE(Modifier);

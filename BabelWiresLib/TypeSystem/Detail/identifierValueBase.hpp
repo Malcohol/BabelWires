@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
@@ -15,7 +16,7 @@
 namespace babelwires {
 
     template<typename IDENTIFIER>
-    class IdentifierValueBase : public AlwaysEditableValue {
+    class BABELWIRESLIB_API IdentifierValueBase : public AlwaysEditableValue {
       public:
         DOWNCASTABLE(IdentifierValueBase, AlwaysEditableValue);
         CLONEABLE_ABSTRACT(IdentifierValueBase);

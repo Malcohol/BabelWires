@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
@@ -17,7 +18,7 @@ namespace babelwires {
     class Path;
 
     /// A ValueTreeRoot is a ValueTreeNode that owns its value.
-    class ValueTreeRoot : public ValueTreeNode {
+    class BABELWIRESLIB_API ValueTreeRoot : public ValueTreeNode {
       public:
         DOWNCASTABLE(ValueTreeRoot, ValueTreeNode);
 

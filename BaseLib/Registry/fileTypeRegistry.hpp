@@ -7,12 +7,14 @@
  **/
 #pragma once
 
+#include <BaseLib/baseLibExport.hpp>
+
 #include <BaseLib/Registry/registry.hpp>
 
 namespace babelwires {
 
     /// A registry entry which corresponds to some file extensions.
-    class FileTypeEntry : public RegistryEntry {
+    class BASELIB_API FileTypeEntry : public RegistryEntry {
       public:
         using Extensions = std::vector<std::string>;
 

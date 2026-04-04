@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -17,7 +18,7 @@ namespace babelwires {
     class Project;
 
     /// Change the source file of a FileNode.
-    class ChangeFileCommand : public SimpleCommand<Project> {
+    class BABELWIRESLIB_API ChangeFileCommand : public SimpleCommand<Project> {
       public:
         DOWNCASTABLE(ChangeFileCommand, SimpleCommand<Project>);
         CLONEABLE(ChangeFileCommand);

@@ -8,8 +8,9 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BaseLib/DataContext/dataVisitable.hpp>
 
 namespace babelwires {
-    struct ProjectVisitable : DataVisitable {};
+    struct BABELWIRESLIB_API ProjectVisitable : DataVisitable {};
 }

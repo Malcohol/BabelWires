@@ -7,6 +7,8 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresQtUi/ContextMenu/contextMenuAction.hpp>
 
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -25,7 +27,7 @@ namespace babelwires {
     class Path;
 
     /// Presents the contents of the contentsCache as a table model.
-    class NodeContentsModel : public QAbstractTableModel {
+    class BABELWIRESQTUI_API NodeContentsModel : public QAbstractTableModel {
         Q_OBJECT
       public:
         NodeContentsModel(QObject* parent, NodeId elementId, ProjectGraphModel& projectGraphModel);

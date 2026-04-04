@@ -7,11 +7,12 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Serialization/projectBundle.hpp>
 
 #include <BaseLib/DataContext/dataSerialization.hpp>
 
 namespace babelwires {
     /// Isolates the codebase from the choice of format and other implementation details of serialization.
-    class ProjectSerialization : public DataSerialization<ProjectBundle> {};
+    class BABELWIRESLIB_API ProjectSerialization : public DataSerialization<ProjectBundle> {};
 } // namespace babelwires

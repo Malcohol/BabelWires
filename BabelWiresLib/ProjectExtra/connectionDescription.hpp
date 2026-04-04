@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
@@ -17,7 +18,7 @@ namespace babelwires {
 
     /// ConnectionDescription is a self-contained description of a connection.
     /// The project does not use this (instead it uses a ConnectionModifier stored at the target Node).
-    struct ConnectionDescription {
+    struct BABELWIRESLIB_API ConnectionDescription {
         ConnectionDescription();
         ConnectionDescription(const ConnectionDescription& other);
         ConnectionDescription(ConnectionDescription&& other);

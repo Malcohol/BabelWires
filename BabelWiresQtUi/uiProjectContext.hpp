@@ -5,6 +5,10 @@
  * 
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
+#pragma once
+
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresLib/Project/projectContext.hpp>
 
 #include <string>
@@ -13,7 +17,7 @@ namespace babelwires {
     class ValueModelRegistry;
 
     /// Values which give the application its identity.
-    struct ApplicationIdentity
+    struct BABELWIRESQTUI_API ApplicationIdentity
     {
         /// The name of the application ("BabelWires")
         std::string m_applicationTitle;
@@ -21,7 +25,7 @@ namespace babelwires {
         std::string m_projectExtension;
     };
 
-    struct UiProjectContext : ProjectContext {
+    struct BABELWIRESQTUI_API UiProjectContext : ProjectContext {
         ValueModelRegistry& m_valueModelReg;
         ApplicationIdentity m_applicationIdentity;
     };

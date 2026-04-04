@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BaseLib/Registry/registry.hpp>
 
 namespace babelwires {
@@ -14,7 +15,7 @@ namespace babelwires {
     class ProcessorFactory;
 
     /// A registry for processor factories.
-    class ProcessorFactoryRegistry : public Registry<ProcessorFactory> {
+    class BABELWIRESLIB_API ProcessorFactoryRegistry : public Registry<ProcessorFactory> {
       public:
         ProcessorFactoryRegistry();
 

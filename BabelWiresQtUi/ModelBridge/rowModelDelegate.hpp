@@ -7,13 +7,15 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <QStyledItemDelegate>
 
 namespace babelwires {
 
     class ProjectGraphModel;
 
-    class RowModelDelegate : public QStyledItemDelegate {
+    class BABELWIRESQTUI_API RowModelDelegate : public QStyledItemDelegate {
         Q_OBJECT
       public:
         /// Construct a delegate to handle the editing of ValueTreeNodes.

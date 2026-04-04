@@ -7,11 +7,12 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 
 namespace babelwires {
     /// Construct a new ArrayType from a TypeExp and three IntValues: min size, max size and default size.
-    class ArrayTypeConstructor : public TypeConstructor {
+    class BABELWIRESLIB_API ArrayTypeConstructor : public TypeConstructor {
       public:
         DOWNCASTABLE(ArrayTypeConstructor, TypeConstructor);
         /// Note that the default size is not represented in the name.

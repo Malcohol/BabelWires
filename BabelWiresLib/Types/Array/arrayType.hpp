@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
 #include <BaseLib/Result/result.hpp>
@@ -14,7 +15,7 @@
 namespace babelwires {
 
     /// ArrayTypes have values which contain a dynamically-sized sequence of child values.
-    class ArrayType : public CompoundType {
+    class BABELWIRESLIB_API ArrayType : public CompoundType {
       public:
         DOWNCASTABLE(ArrayType, CompoundType);
 

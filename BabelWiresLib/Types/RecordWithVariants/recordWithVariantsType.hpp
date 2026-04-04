@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/compoundType.hpp>
 
 #include <BaseLib/Result/result.hpp>
@@ -17,13 +18,13 @@ namespace babelwires {
     /// Variants are selected using tags.
     // MAYBEDO Consider implementing this as a SumType of RecordTypes.
     // MAYBEDO Find an efficient way to unite this with RecordType or implement support for type coercion.
-    class RecordWithVariantsType : public CompoundType {
+    class BABELWIRESLIB_API RecordWithVariantsType : public CompoundType {
       public:
         DOWNCASTABLE(RecordWithVariantsType, CompoundType);
 
         using Tags = std::vector<ShortId>;
 
-        struct FieldWithTags {
+        struct BABELWIRESLIB_API FieldWithTags {
             ShortId m_identifier;
             TypeExp m_type;
             /// The tags of the variants containing this field.
@@ -79,7 +80,7 @@ namespace babelwires {
                                         const ValueHolder& otherCompoundValue) const override;
 
       private:
-        struct FieldChanges {
+        struct BABELWIRESLIB_API FieldChanges {
             std::vector<unsigned int> m_fieldsRemoved;
             std::vector<unsigned int> m_fieldsAdded;
         };
@@ -88,7 +89,7 @@ namespace babelwires {
         FieldChanges getFieldChanges(ShortId currentTag, ShortId proposedTag) const;
 
         /// The storage type, which has a resolve TypePtr instead of a TypeExp.
-        struct Field {
+        struct BABELWIRESLIB_API Field {
             ShortId m_identifier;
             TypePtr m_type;
             Tags m_tags;

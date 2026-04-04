@@ -1,3 +1,10 @@
+/**
+ * TestProcessor
+ *
+ * (C) 2026 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
 #include <Domains/TestDomain/testProcessor.hpp>
 
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>

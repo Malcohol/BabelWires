@@ -7,13 +7,15 @@
  **/
 #pragma once
 
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
 #include <QComboBox>
 #include <optional>
 
 namespace babelwires {
-    class TypeWidget : public QComboBox {
+    class BABELWIRESQTUI_API TypeWidget : public QComboBox {
         Q_OBJECT
       public:
         TypeWidget(QWidget* parent, const std::vector<TypeExp>& allowedTypeExps);

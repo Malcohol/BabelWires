@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BaseLib/Identifiers/identifier.hpp>
 
 namespace babelwires {
@@ -14,7 +15,7 @@ namespace babelwires {
     constexpr const char c_wildcardMatch[] = "<match>";
     constexpr const char c_blankName[] = "____";
 
-    ShortId getWildcardId();
-    ShortId getWildcardMatchId();
-    ShortId getBlankValueId();
+    BABELWIRESLIB_API ShortId getWildcardId();
+    BABELWIRESLIB_API ShortId getWildcardMatchId();
+    BABELWIRESLIB_API ShortId getBlankValueId();
 }
