@@ -1,7 +1,9 @@
 #pragma once
 
 #if defined(_WIN32) || defined(_WIN64)
-    #ifdef TESTDOMAIN_EXPORTS
+    #if defined(TESTDOMAIN_STATIC)
+        #define TESTDOMAIN_API
+    #elif defined(TESTDOMAIN_EXPORTS)
         #define TESTDOMAIN_API __declspec(dllexport)
     #else
         #define TESTDOMAIN_API __declspec(dllimport)

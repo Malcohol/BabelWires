@@ -21,4 +21,6 @@ if(BUILD_SHARED_LIBS)
         CXX_VISIBILITY_PRESET hidden
         VISIBILITY_INLINES_HIDDEN ON)
     target_compile_definitions(libTestDomain PRIVATE TESTDOMAIN_EXPORTS)
+else()
+    target_compile_definitions(libTestDomain PUBLIC TESTDOMAIN_STATIC)
 endif()

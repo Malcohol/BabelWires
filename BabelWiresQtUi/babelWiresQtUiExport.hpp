@@ -1,7 +1,9 @@
 #pragma once
 
 #if defined(_WIN32) || defined(_WIN64)
-    #ifdef BABELWIRESQTUI_EXPORTS
+    #if defined(BABELWIRESQTUI_STATIC)
+        #define BABELWIRESQTUI_API
+    #elif defined(BABELWIRESQTUI_EXPORTS)
         #define BABELWIRESQTUI_API __declspec(dllexport)
     #else
         #define BABELWIRESQTUI_API __declspec(dllimport)

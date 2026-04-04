@@ -153,4 +153,6 @@ if(BUILD_SHARED_LIBS)
 		CXX_VISIBILITY_PRESET hidden
 		VISIBILITY_INLINES_HIDDEN ON)
 	target_compile_definitions(BabelWiresLib PRIVATE BABELWIRESLIB_EXPORTS)
+else()
+	target_compile_definitions(BabelWiresLib PUBLIC BABELWIRESLIB_STATIC)
 endif()
