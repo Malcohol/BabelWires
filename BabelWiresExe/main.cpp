@@ -33,7 +33,7 @@
 // "plugins"
 #include <Domains/Music/MusicLib/libRegistration.hpp>
 #include <Domains/Music/MusicLibUi/libRegistration.hpp>
-#include <Domains/Music/Plugins/Smf/Plugin/libRegistration.hpp>
+#include <Smf/libRegistration.hpp>
 #include <Domains/Music/Plugins/TestPlugin/libRegistration.hpp>
 #include <Domains/TestDomain/libRegistration.hpp>
 

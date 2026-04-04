@@ -14,7 +14,7 @@ For each domain library, create an export header and annotate public API classes
 |---------|-------------|-------|-------------|
 | `musicLib` | `Domains/Music/MusicLib/musicLibExport.hpp` | `MUSICLIB_API` | `MUSICLIB_EXPORTS` |
 | `musicLibUi` | `Domains/Music/MusicLibUi/musicLibUiExport.hpp` | `MUSICLIBUI_API` | `MUSICLIBUI_EXPORTS` |
-| `SmfLib` | `Domains/Music/Plugins/Smf/Plugin/smfLibExport.hpp` | `SMFLIB_API` | `SMFLIB_EXPORTS` |
+| `SmfLib` | `Domains/Music/Plugins/Smf/Smf/smfLibExport.hpp` | `SMFLIB_API` | `SMFLIB_EXPORTS` |
 | `TestPluginLib` | `Domains/Music/Plugins/TestPlugin/testPluginLibExport.hpp` | `TESTPLUGINLIB_API` | `TESTPLUGINLIB_EXPORTS` |
 | `Seq2tapeLib` | `Domains/Music/Seq2tapeLib/seq2tapeLibExport.hpp` | `SEQ2TAPELIB_API` | `SEQ2TAPELIB_EXPORTS` |
 | `libTestDomain` | `Domains/TestDomain/testDomainExport.hpp` | `TESTDOMAIN_API` | `TESTDOMAIN_EXPORTS` |
