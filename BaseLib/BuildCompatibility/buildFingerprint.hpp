@@ -14,6 +14,7 @@
 
 #include <algorithm>
 #include <array>
+#include <bit>
 #include <cstddef>
 #include <cstring>
 #include <string>
@@ -77,11 +78,13 @@ namespace babelwires {
         }();
 
         const auto endianness = []() -> std::string {
-            union {
-                unsigned int value;
-                unsigned char bytes[sizeof(unsigned int)];
-            } data{0x01020304u};
-            return (data.bytes[0] == 0x01u) ? "big" : "little";
+            if constexpr (std::endian::native == std::endian::big) {
+                return "big";
+            } else if constexpr (std::endian::native == std::endian::little) {
+                return "little";
+            } else {
+                return "mixed";
+            }
         }();
 
         const auto glibcxxAbi = []() -> std::string {
