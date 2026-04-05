@@ -1,4 +1,5 @@
 SET( COMMON_TESTS_SRCS
+   buildCompatibilityTest.cpp
    blockStreamTest.cpp
    cloneTest.cpp
    baseLibTests.cpp
