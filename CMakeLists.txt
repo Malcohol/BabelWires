@@ -4,7 +4,7 @@ CMAKE_MINIMUM_REQUIRED( VERSION 3.25 )
 # Build the project
 ###############################################################################
 
-PROJECT( BabelWires )
+PROJECT( BabelWires VERSION 0.0.1 )
 
 SET(CMAKE_CXX_STANDARD 23)
 

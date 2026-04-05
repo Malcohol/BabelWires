@@ -1,0 +1,18 @@
+/**
+ * Auto-generated file (or its template) providing the project version numbers.
+ * 
+ * (C) 2026 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
+
+#include <cstdint>
+
+namespace babelwires::detail {
+
+    inline constexpr std::uint16_t c_projectVersionMajor = @PROJECT_VERSION_MAJOR@;
+    inline constexpr std::uint16_t c_projectVersionMinor = @PROJECT_VERSION_MINOR@;
+    inline constexpr std::uint16_t c_projectVersionPatch = @PROJECT_VERSION_PATCH@;
+
+} // namespace babelwires::detail
