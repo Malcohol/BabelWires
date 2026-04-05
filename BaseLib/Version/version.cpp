@@ -18,3 +18,19 @@ const babelwires::Version& babelwires::Version::projectVersion() {
 
     return s_projectVersion;
 }
+
+bool babelwires::Version::satisfies(const Version& requiredVersion) const {
+    if ((major == 0) || (requiredVersion.major == 0)) {
+        return (major == requiredVersion.major) && (minor == requiredVersion.minor) && (patch == requiredVersion.patch);
+    }
+
+    if (major != requiredVersion.major) {
+        return false;
+    }
+
+    if (minor != requiredVersion.minor) {
+        return minor > requiredVersion.minor;
+    }
+
+    return patch >= requiredVersion.patch;
+}

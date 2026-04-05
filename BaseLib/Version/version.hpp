@@ -34,6 +34,15 @@ namespace babelwires {
         /// This is set from values in the (auto-generated) file projectVersion_gen.hpp.
         /// The original source of the version values is the root CMakeLists.txt file.
         static const Version& projectVersion();
+
+        /// Return true if this version satisfies the given required version.
+        /// Specifically, an API with this version can be consumed where someone requires the given requiredVersion.
+        ///
+        /// Compatibility rules:
+        /// * For major >= 1, this follows semantic versioning compatibility:
+        ///   same major and this version >= requiredVersion.
+        /// * For major == 0, compatibility is treated conservatively and requires exact match.
+        bool satisfies(const Version& requiredVersion) const;
     };
 
 } // namespace babelwires

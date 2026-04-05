@@ -21,6 +21,7 @@ SET( COMMON_TESTS_SRCS
    signalTest.cpp
    streamEventHolderTest.cpp
    commonTest.cpp
+   versionTest.cpp
    uuidTest.cpp
    )
 
