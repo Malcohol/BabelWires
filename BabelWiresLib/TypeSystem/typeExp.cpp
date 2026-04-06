@@ -78,7 +78,8 @@ babelwires::ResultT<babelwires::TypePtr> babelwires::TypeExp::resolve(const Type
             const TypeConstructorId typeConstructorId = std::get<0>(higherOrderData);
             const TypeConstructor* typeConstructor = m_typeSystem.tryGetTypeConstructorById(typeConstructorId);
             if (!typeConstructor) {
-                return Error() << "Type constructor \"" << typeConstructorId << "\" is not registered in the type system.";
+                return Error() << "Type constructor \"" << typeConstructorId
+                               << "\" is not registered in the type system.";
             }
             return typeConstructor->getOrConstructType(m_typeSystem, std::get<1>(higherOrderData));
         }
@@ -197,7 +198,9 @@ void babelwires::TypeExp::visitIdentifiers(IdentifierVisitor& visitor) {
                           [this](TypeExp& arg) { arg.visitIdentifiers(m_visitor); });
             auto& valueArguments = std::get<1>(higherOrderData).getValueArguments();
             std::for_each(valueArguments.begin(), valueArguments.end(), [this](ValueHolder& valueArg) {
-                valueArg.copyContentsAndGetNonConst().getAsEditableValue().visitIdentifiers(m_visitor);
+                if (valueArg->getAsEditableValue().canContainIdentifiers()) {
+                    valueArg.copyContentsAndGetNonConst().getAsEditableValue().visitIdentifiers(m_visitor);
+                }
             });
         }
         IdentifierVisitor& m_visitor;

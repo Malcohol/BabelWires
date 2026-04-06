@@ -2,9 +2,9 @@
 
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+#include <BabelWiresLib/Types/Enum/enumValue.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
-#include <BabelWiresLib/Types/Enum/enumValue.hpp>
 
 #include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
 #include <BaseLib/Serialization/XML/xmlSerializer.hpp>
@@ -417,7 +417,8 @@ TEST(TypeExpTest, visitIdentifiers) {
                                   babelwires::TypeExp(testUtils::getTestRegisteredMediumIdentifier("Flerm", 1),
                                                       testUtils::getTestRegisteredMediumIdentifier("Erm", 13))},
                                  {
-                                    babelwires::EnumValue(testUtils::getTestRegisteredIdentifier("Oom", 5)),
+                                     babelwires::EnumValue(testUtils::getTestRegisteredIdentifier("Oom", 5)),
+                                     babelwires::IntValue(12)
                                  }});
 
     struct Visitor : babelwires::IdentifierVisitor {
