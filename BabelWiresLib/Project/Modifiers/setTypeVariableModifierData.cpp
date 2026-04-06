@@ -42,9 +42,16 @@ babelwires::Result babelwires::SetTypeVariableModifierData::apply(ValueTreeNode*
         ValueHolder newValue = target->getValue();
         if (m_typeAssignments.size() != genericType->getNumVariables()) {
             return Error()
-                << "SetTypeVariable modifier has incorrect number of type assignments for Generic Type";
+                << "SetTypeVariable modifier has an incorrect number of type assignments for Generic Type";
         }
-        genericType->setTypeVariableAssignmentAndInstantiate(target->getTypeSystem(), newValue, m_typeAssignments);
+        const TypeSystem& typeSystem = target->getTypeSystem();
+        for (const TypeExp& assignment : m_typeAssignments) {
+            if (!assignment.tryResolve(typeSystem)) {
+                return Error() << "SetTypeVariable modifier has a type assignment that cannot be resolved: "
+                               << assignment.toString();
+            }
+        }
+        genericType->setTypeVariableAssignmentAndInstantiate(typeSystem, newValue, m_typeAssignments);
         target->assertSetValue(newValue);
         return {};
     } else {
