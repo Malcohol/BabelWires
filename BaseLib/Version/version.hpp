@@ -43,6 +43,16 @@ namespace babelwires {
         ///   same major and this version >= requiredVersion.
         /// * For major == 0, compatibility is treated conservatively and requires exact match.
         bool satisfies(const Version& requiredVersion) const;
+
+        /// Return a string representation of this version, in the format "major.minor.patch".
+        std::string toString() const;
+
+        /// Serialize this version to a string in the format "major.minor.patch".
+        std::string serializeToString() const;
+
+        /// Parse a serialized version string. For future-proofing, any valid SemVer 2.0.0 string is accepted, but only
+        /// the major, minor and patch components are stored in the Version struct.
+        static ResultT<Version> deserializeFromString(std::string_view versionText);
     };
 
 } // namespace babelwires
