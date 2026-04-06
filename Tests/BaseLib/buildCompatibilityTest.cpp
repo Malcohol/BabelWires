@@ -6,6 +6,15 @@
 #include <cstring>
 #include <string>
 
+TEST(BuildCompatibilityTest, defaultBufferIsBiggerThanFingerprint) {
+    char buffer[babelwires::c_buildFingerprintBufferSize] = {};
+    const std::size_t bytesUsed = babelwires::writeBuildFingerprint(buffer, sizeof(buffer));
+
+    EXPECT_GT(bytesUsed, 0u);
+    EXPECT_LT(bytesUsed, babelwires::c_buildFingerprintBufferSize);
+    EXPECT_EQ(buffer[bytesUsed], '\0');
+}
+
 TEST(BuildCompatibilityTest, compareEqualFingerprints) {
     char expected[babelwires::c_buildFingerprintBufferSize] = {};
     char actual[babelwires::c_buildFingerprintBufferSize] = {};
