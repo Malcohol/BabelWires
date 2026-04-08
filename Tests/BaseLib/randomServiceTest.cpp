@@ -73,6 +73,7 @@ TEST(RandomServiceTest, providesDistinctThreadLocalEnginesForConcurrentThreads) 
     std::vector<std::thread> threads;
     threads.reserve(threadCount);
     std::barrier syncPoint(threadCount);
+    std::barrier addressesCaptured(threadCount);
 
     for (int i = 0; i < threadCount; ++i) {
         threads.emplace_back([&, i]() {
@@ -81,6 +82,9 @@ TEST(RandomServiceTest, providesDistinctThreadLocalEnginesForConcurrentThreads) 
             engineAddresses[i] = reinterpret_cast<std::uintptr_t>(&engine);
             std::uniform_int_distribution<std::uint64_t> distribution;
             (void)distribution(engine);
+            // Ensure all threads have captured their engine address before any thread
+            // exits and destroys its thread-local engine, which could allow address reuse.
+            addressesCaptured.arrive_and_wait();
         });
     }
 
