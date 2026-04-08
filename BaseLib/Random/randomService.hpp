@@ -15,13 +15,12 @@
 
 namespace babelwires {
 
-    /// RandomService derives all randomness from a single canonical root seed.
-    ///
-    /// Access is thread-safe and efficient: each thread lazily initializes its own
-    /// engine stream derived from the canonical seed, avoiding a shared mutex in
-    /// hot paths.
+    /// RandomService provides a thread-safe and efficient source of randomness derived from a single canonical root
+    /// seed.
     ///
     /// It is not expected that arbitrary multithreaded use of the engines will be deterministic.
+    /// However, if threads call getRandomEngine() in a deterministic order, then each thread will get a deterministic
+    /// sequence of random values.
     class BASELIB_API RandomService {
       public:
         /// Construct using a provided seed.
