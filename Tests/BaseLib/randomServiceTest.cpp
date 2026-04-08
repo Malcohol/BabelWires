@@ -99,3 +99,25 @@ TEST(RandomServiceTest, providesDistinctThreadLocalEnginesForConcurrentThreads) 
     auto* const mainThreadEngineB = &randomService.getRandomEngine();
     EXPECT_EQ(mainThreadEngineA, mainThreadEngineB);
 }
+
+TEST(RandomServiceTest, coexistingServicesProvideDistinctEnginesOnSameThread) {
+    constexpr std::uint64_t seed = 0x123456789abcdef0ull;
+
+    babelwires::RandomService serviceA(seed);
+    babelwires::RandomService serviceB(seed);
+
+    auto& engineA = serviceA.getRandomEngine();
+    auto& engineB = serviceB.getRandomEngine();
+
+    EXPECT_NE(&engineA, &engineB);
+
+    std::uniform_int_distribution<std::uint64_t> distribution;
+    // The two engines are independent but should produce the same sequence of values, since they are derived from the
+    // same seed in the same way.
+    const std::uint64_t valueA0 = distribution(engineA);
+    const std::uint64_t valueA1 = distribution(engineA);
+    const std::uint64_t valueB0 = distribution(engineB);
+    const std::uint64_t valueB1 = distribution(engineB);
+    EXPECT_EQ(valueA0, valueB0);
+    EXPECT_EQ(valueA1, valueB1);
+}
