@@ -34,7 +34,7 @@
 #include <numeric>
 #include <unordered_set>
 
-babelwires::Project::Project(ProjectContext& context, UserLogger& userLogger)
+babelwires::Project::Project(const ProjectContext& context, UserLogger& userLogger)
     : m_context(context)
     , m_userLogger(userLogger) {
     randomizeProjectId();

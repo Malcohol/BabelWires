@@ -40,7 +40,7 @@ namespace babelwires {
     class BABELWIRESLIB_API Project {
       public:
         /// Construct a new project.
-        Project(ProjectContext& context, UserLogger& userLogger);
+        Project(const ProjectContext& context, UserLogger& userLogger);
         virtual ~Project();
 
         /// Initialize the project as described by the projectData.
@@ -190,7 +190,7 @@ namespace babelwires {
         void addNodeConnectionsToCache(Node* node);
 
       private:
-        ProjectContext& m_context;
+        const ProjectContext& m_context;
 
         /// The userLogger is only used for logging user-visible errors, warnings and messages.
         /// It is not intended for debug logging.
