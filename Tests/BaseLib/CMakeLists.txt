@@ -14,6 +14,7 @@ SET( COMMON_TESTS_SRCS
    multiKeyMapTest.cpp
    pointerRangeTest.cpp
    rationalTest.cpp
+   randomServiceTest.cpp
    registryTest.cpp
    resultTest.cpp
    serializationTest.cpp
