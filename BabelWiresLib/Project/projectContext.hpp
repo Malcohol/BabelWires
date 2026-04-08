@@ -10,8 +10,6 @@
 #include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BaseLib/DataContext/dataContext.hpp>
 
-#include <random>
-
 namespace babelwires {
 
     class TargetFileFormatRegistry;
@@ -31,7 +29,6 @@ namespace babelwires {
         TargetFileFormatRegistry& m_targetFileFormatReg;
         ProcessorFactoryRegistry& m_processorReg;
         TypeSystem& m_typeSystem;
-        std::default_random_engine m_randomEngine;
     };
 
 } // namespace babelwires

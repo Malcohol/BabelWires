@@ -3,6 +3,7 @@
 #include <BaseLib/DataContext/dataBundle.hpp>
 #include <BaseLib/DataContext/dataSerialization.hpp>
 #include <BaseLib/DataContext/dataVisitable.hpp>
+#include <BaseLib/Random/randomService.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
@@ -118,9 +119,10 @@ TEST(DataBundleTest, identifiers) {
         testUtils::TestLog testLog;
         babelwires::IdentifierRegistryScope identifierRegistry;
         babelwires::DeserializationRegistry deserializationReg;
+        babelwires::RandomService randomService(0x123456789abcdeful);
         deserializationReg.registerClass<TestBundlePayload>();
         deserializationReg.registerClass<TestBundle>();
-        babelwires::DataContext dataContext{deserializationReg};
+        babelwires::DataContext dataContext{deserializationReg, randomService};
 
         // Ensure we're not just testing in same context on both sides.
         babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
@@ -213,9 +215,10 @@ TEST(DataBundleTest, filePathResolution) {
             testUtils::TestLog testLog;
             babelwires::IdentifierRegistryScope identifierRegistry;
             babelwires::DeserializationRegistry deserializationReg;
+            babelwires::RandomService randomService(0x123456789abcdeful);
             deserializationReg.registerClass<TestBundlePayload>();
             deserializationReg.registerClass<TestBundle>();
-            babelwires::DataContext dataContext{deserializationReg};
+            babelwires::DataContext dataContext{deserializationReg, randomService};
 
             const babelwires::ResultT<TestBundlePayload> targetPayloadResult =
                 std::move(bundle).resolveAgainstCurrentContext(dataContext, scenario.m_newBase, log);

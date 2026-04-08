@@ -12,10 +12,12 @@
 
 namespace babelwires {
     class DeserializationRegistry;
+    class RandomService;
 
     /// A DataContext is expected to provide some context specific data during high-level serialization
     /// and deserialization.
     struct BASELIB_API DataContext {
         DeserializationRegistry& m_deserializationReg;
+        RandomService& m_randomService;
     };
 } // namespace babelwires

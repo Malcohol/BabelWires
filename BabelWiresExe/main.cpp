@@ -28,6 +28,7 @@
 #include <BaseLib/libRegistration.hpp>
 #include <BaseLib/Log/ostreamLogListener.hpp>
 #include <BaseLib/Log/unifiedLog.hpp>
+#include <BaseLib/Random/randomService.hpp>
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
 
 // "plugins"
@@ -81,10 +82,10 @@ int main(int argc, char* argv[]) {
 
     const unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
     babelwires::logDebug() << "The random seed was " << seed;
-    std::default_random_engine randomEngine(seed);
+    babelwires::RandomService randomService(seed);
 
     babelwires::UiProjectContext context{
-        deserializationRegistry, sourceFileFormatReg, targetFileFormatReg, processorReg, typeSystem, randomEngine,
+        deserializationRegistry, randomService, sourceFileFormatReg, targetFileFormatReg, processorReg, typeSystem,
         valueModelRegistry};
 
     context.m_applicationIdentity.m_applicationTitle = "BabelWires";
