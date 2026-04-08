@@ -30,7 +30,7 @@ namespace babelwires {
         using RandomEngine = std::default_random_engine;
 
         /// Returns a random engine safely usable by the current thread.
-        RandomEngine& getEngineForThisThread() const;
+        RandomEngine& getRandomEngine() const;
 
       public:
         RandomService(const RandomService&) = delete;

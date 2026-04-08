@@ -18,7 +18,7 @@ babelwires::RandomService::RandomService(const std::uint64_t rootSeed)
     , m_rootSeed(rootSeed)
     , m_nextSequenceNumber(0) {}
 
-babelwires::RandomService::RandomEngine& babelwires::RandomService::getEngineForThisThread() const {
+babelwires::RandomService::RandomEngine& babelwires::RandomService::getRandomEngine() const {
     thread_local std::unordered_map<std::uint64_t, RandomEngine> threadEngines;
 
     auto [it, inserted] = threadEngines.try_emplace(m_randomServiceId);
