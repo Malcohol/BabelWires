@@ -46,7 +46,7 @@ babelwires::Result babelwires::SetTypeVariableModifierData::apply(ValueTreeNode*
         }
         const TypeSystem& typeSystem = target->getTypeSystem();
         for (const TypeExp& assignment : m_typeAssignments) {
-            if (!assignment.tryResolve(typeSystem)) {
+            if (assignment && !assignment.tryResolve(typeSystem)) {
                 return Error() << "SetTypeVariable modifier has a type assignment that cannot be resolved: "
                                << assignment.toString();
             }
