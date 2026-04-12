@@ -24,7 +24,7 @@ namespace babelwires {
 
 namespace babelwires {
     class ValueTreeRoot;
-    struct Context;
+    class Context;
 
     class BABELWIRESLIB_API SourceFileFormat : public FileTypeEntry, ProductInfo {
       public:

@@ -30,7 +30,7 @@ namespace babelwires {
     class Path;
     struct UiPosition;
     struct UiSize;
-    struct Context;
+    class Context;
 
     /// The fundamental constituent of the project.
     /// Nodes expose input and output Features, and carry edits.

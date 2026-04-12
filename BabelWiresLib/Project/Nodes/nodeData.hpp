@@ -25,7 +25,7 @@
 
 namespace babelwires {
     struct UserLogger;
-    struct Context;
+    class Context;
     class Node;
     class UntypedRegistry;
 

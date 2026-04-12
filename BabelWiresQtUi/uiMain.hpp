@@ -13,7 +13,7 @@
 
 namespace babelwires {
     class UnifiedLog;
-    struct Context;
+    class Context;
 
     /// Manages the creation of the UI.
     class BABELWIRESQTUI_API Ui {

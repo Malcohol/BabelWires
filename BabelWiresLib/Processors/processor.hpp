@@ -17,7 +17,7 @@
 namespace babelwires {
     struct UserLogger;
     class ValueTreeNode;
-    struct Context;
+    class Context;
     class TypeExp;
     class ValueTreeRoot;
 

@@ -26,7 +26,7 @@ namespace babelwires {
     class TargetFileFormatRegistry;
     class SourceFileFormatRegistry;
     class ProcessorFactoryRegistry;
-    struct Context;
+    class Context;
     class Modifier;
     struct ModifierData;
     class Node;

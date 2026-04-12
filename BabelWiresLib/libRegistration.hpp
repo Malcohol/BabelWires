@@ -9,7 +9,7 @@
 #pragma once
 
 namespace babelwires {
-    struct Context;
+    class Context;
 
     /// Registration factories etc. for Standard MIDI File.
     /// Note: This is not a true plugin model, because everything is statically linked.

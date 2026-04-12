@@ -14,7 +14,7 @@ namespace babelwires {
     struct UserLogger;
     class ValueTreeRoot;
     struct TargetFileNodeData;
-    struct Context;
+    class Context;
 
     /// TargetFileNodes are Nodes which correspond to a target file.
     class BABELWIRESLIB_API TargetFileNode : public FileNode {

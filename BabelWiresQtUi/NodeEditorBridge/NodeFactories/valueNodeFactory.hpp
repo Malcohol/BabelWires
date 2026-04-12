@@ -13,7 +13,7 @@
 
 namespace babelwires {
     class TypeSystem;
-    struct Context;
+    class Context;
 
     class BABELWIRESQTUI_API ValueNodeFactory : public NodeFactory {
       public:

@@ -12,7 +12,7 @@
 
 namespace babelwires {
     struct UserLogger;
-    struct Context;
+    class Context;
     struct ProcessorNodeData;
     class Processor;
     class ValueTreeRoot;

@@ -13,7 +13,7 @@
 
 namespace babelwires {
     class TargetFileFormatRegistry;
-    struct Context;
+    class Context;
 
     class BABELWIRESQTUI_API TargetFileNodeFactory : public NodeFactory {
       public:

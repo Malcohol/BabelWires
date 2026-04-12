@@ -22,7 +22,7 @@ namespace babelwires {
     class Value;
     class Type;
     class MapEntryModelDispatcher;
-    struct Context;
+    class Context;
     
     class MapView : public QTableView {
         Q_OBJECT

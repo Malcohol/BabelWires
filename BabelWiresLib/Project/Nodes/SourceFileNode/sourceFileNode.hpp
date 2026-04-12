@@ -14,7 +14,7 @@
 namespace babelwires {
     struct UserLogger;
     struct SourceFileNodeData;
-    struct Context;
+    class Context;
     class ValueTreeRoot;
 
     /// SourceFileNodes are Nodes which correspond to a source file.

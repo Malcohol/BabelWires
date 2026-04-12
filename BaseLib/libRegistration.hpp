@@ -10,7 +10,7 @@
 #include <BaseLib/baseLibExport.hpp>
 
 namespace babelwires {
-    struct Context;
+    class Context;
 
     // This is just needed for disambiguation with BabelWiresLib::registerLib.
     namespace baseLib {

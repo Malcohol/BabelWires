@@ -10,7 +10,7 @@
 #include <Domains/TestDomain/testDomainExport.hpp>
 
 namespace babelwires {
-    struct Context;
+    class Context;
 }
 
 namespace testDomain {

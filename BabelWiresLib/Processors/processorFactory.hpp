@@ -29,7 +29,7 @@
 namespace babelwires {
 
     class Processor;
-    struct Context;
+    class Context;
 
     /// Objects which can create processors, and which can be registered in the ProcessFactoryRegistry.
     class BABELWIRESLIB_API ProcessorFactory : public RegistryEntry {

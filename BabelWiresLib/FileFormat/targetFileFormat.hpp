@@ -23,7 +23,7 @@ namespace babelwires {
 
 namespace babelwires {
     class ValueTreeRoot;
-    struct Context;
+    class Context;
 
     /// Factories which can create FileFeatures in a default state, and write those features as files.
     class BABELWIRESLIB_API TargetFileFormat : public FileTypeEntry, ProductInfo {

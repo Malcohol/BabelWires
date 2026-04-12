@@ -13,7 +13,7 @@
 
 namespace babelwires {
     class ProcessorFactoryRegistry;
-    struct Context;
+    class Context;
 
     class BABELWIRESQTUI_API ProcessorNodeFactory : public NodeFactory {
       public:

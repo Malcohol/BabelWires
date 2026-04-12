@@ -22,14 +22,14 @@
 
 namespace babelwires {
     class Project;
-    struct Context;
+    class Context;
     class ConnectionModifier;
     class Node;
     class ModifyModelScope;
     class AccessModelScope;
     struct UiPosition;
     class AddNodeCommand;
-    struct Context;
+    class Context;
     struct ProjectData;
     class MainWindow;
     class NodeNodeModel;

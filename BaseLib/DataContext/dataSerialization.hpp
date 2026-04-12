@@ -20,7 +20,7 @@
 
 namespace babelwires {
     struct UserLogger;
-    struct Context;
+    class Context;
 
     /// Isolates the codebase from the choice of format.
     /// BUNDLE should derive from DataBundle are defines the Data payload.
