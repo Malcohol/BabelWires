@@ -3,7 +3,7 @@
 #include <BaseLib/Version/version.hpp>
 
 TEST(VersionTest, projectVersionNotPlaceholder) {
-    const babelwires::Version& v = babelwires::Version::projectVersion();
+    const babelwires::Version& v = babelwires::Version::getProjectVersion();
     EXPECT_FALSE((v.major == 0) && (v.minor == 0) && (v.patch == 0));
 }
 

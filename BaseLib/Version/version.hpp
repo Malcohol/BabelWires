@@ -33,7 +33,7 @@ namespace babelwires {
         /// Return the version of this project.
         /// This is set from values in the (auto-generated) file projectVersion_gen.hpp.
         /// The original source of the version values is the root CMakeLists.txt file.
-        static const Version& projectVersion();
+        static const Version& getProjectVersion();
 
         /// Return true if this version satisfies the given required version.
         /// Specifically, an API with this version can be consumed where someone requires the given requiredVersion.
