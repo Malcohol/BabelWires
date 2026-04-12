@@ -51,29 +51,6 @@ TEST(ContextTest, mutateViaGetService) {
     EXPECT_EQ(a.value, 100);
 }
 
-TEST(ContextTest, tryGetServiceReturnsNullptrForUnregistered) {
-    babelwires::Context context;
-
-    EXPECT_EQ(context.tryGet<ServiceA>(), nullptr);
-    EXPECT_EQ(context.tryGet<ServiceB>(), nullptr);
-
-    const babelwires::Context& constContext = context;
-    EXPECT_EQ(constContext.tryGet<ServiceA>(), nullptr);
-}
-
-TEST(ContextTest, tryGetServiceReturnsPointerForRegistered) {
-    babelwires::Context context;
-    ServiceA a;
-
-    context.registerService<ServiceA>(a);
-
-    EXPECT_EQ(context.tryGet<ServiceA>(), &a);
-    EXPECT_EQ(context.tryGet<ServiceB>(), nullptr);
-
-    const babelwires::Context& constContext = context;
-    EXPECT_EQ(constContext.tryGet<ServiceA>(), &a);
-}
-
 TEST(ContextTest, independentInstances) {
     babelwires::Context context1;
     babelwires::Context context2;

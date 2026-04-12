@@ -8,6 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/babelWiresLibExport.hpp>
+
 #include <BabelWiresLib/TypeSystem/type.hpp>
 #include <BabelWiresLib/TypeSystem/typeConstructor.hpp>
 #include <BabelWiresLib/TypeSystem/typePtr.hpp>

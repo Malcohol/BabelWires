@@ -1,4 +1,5 @@
 SET( COMMON_SRCS
+	Context/context.cpp
 	DataContext/filePath.cpp
 	Identifiers/identifierRegistry.cpp
 	Identifiers/registeredIdentifier.cpp

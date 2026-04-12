@@ -27,7 +27,6 @@ namespace babelwires {
         explicit RandomService(std::uint64_t rootSeed);
 
         using RandomEngine = std::default_random_engine;
-
         /// Returns a random engine safely usable by the current thread.
         RandomEngine& getRandomEngine() const;
 
