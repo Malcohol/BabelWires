@@ -27,52 +27,54 @@
 #include <BaseLib/Context/context.hpp>
 
 void testDomain::registerLib(babelwires::Context& context) {
-    context.getService<babelwires::TypeSystem>().addType<testDomain::TestEnum>();
-    context.getService<babelwires::TypeSystem>().addType<testDomain::TestSubEnum>();
-    context.getService<babelwires::TypeSystem>().addType<testDomain::TestSubSubEnum1>();
-    context.getService<babelwires::TypeSystem>().addType<testDomain::TestSubSubEnum2>();
-    context.getService<babelwires::TypeSystem>().addType<testDomain::TestSimpleArrayType>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::TestCompoundArrayType>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::TestSimpleRecordType>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::TestComplexRecordType>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::TestRecordWithVariantsType>(context.getService<babelwires::TypeSystem>());    
-    context.getService<babelwires::TypeSystem>().addType<testDomain::TestTupleType>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordWithNoFields>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::TestSumType>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::TestGenericType>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::TestSimpleCompoundType>(context.getService<babelwires::TypeSystem>());
+    babelwires::TypeSystem& typeSystem = context.getService<babelwires::TypeSystem>();
+    typeSystem.addType<testDomain::TestEnum>();
+    typeSystem.addType<testDomain::TestSubEnum>();
+    typeSystem.addType<testDomain::TestSubSubEnum1>();
+    typeSystem.addType<testDomain::TestSubSubEnum2>();
+    typeSystem.addType<testDomain::TestSimpleArrayType>(typeSystem);
+    typeSystem.addType<testDomain::TestCompoundArrayType>(typeSystem);
+    typeSystem.addType<testDomain::TestSimpleRecordType>(typeSystem);
+    typeSystem.addType<testDomain::TestComplexRecordType>(typeSystem);
+    typeSystem.addType<testDomain::TestRecordWithVariantsType>(typeSystem);    
+    typeSystem.addType<testDomain::TestTupleType>(typeSystem);
+    typeSystem.addType<testDomain::RecordWithNoFields>(typeSystem);
+    typeSystem.addType<testDomain::TestSumType>(typeSystem);
+    typeSystem.addType<testDomain::TestGenericType>(typeSystem);
+    typeSystem.addType<testDomain::TestSimpleCompoundType>(typeSystem);
 
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordA0>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordA1>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordAS>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordB>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordAB>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordAOpt>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordAOptFixed>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordABOpt>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordAOptS>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordABOptChild>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordAsub0>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordAsubBsup>(context.getService<babelwires::TypeSystem>());
+    typeSystem.addType<testDomain::RecordA0>(typeSystem);
+    typeSystem.addType<testDomain::RecordA1>(typeSystem);
+    typeSystem.addType<testDomain::RecordAS>(typeSystem);
+    typeSystem.addType<testDomain::RecordB>(typeSystem);
+    typeSystem.addType<testDomain::RecordAB>(typeSystem);
+    typeSystem.addType<testDomain::RecordAOpt>(typeSystem);
+    typeSystem.addType<testDomain::RecordAOptFixed>(typeSystem);
+    typeSystem.addType<testDomain::RecordABOpt>(typeSystem);
+    typeSystem.addType<testDomain::RecordAOptS>(typeSystem);
+    typeSystem.addType<testDomain::RecordABOptChild>(typeSystem);
+    typeSystem.addType<testDomain::RecordAsub0>(typeSystem);
+    typeSystem.addType<testDomain::RecordAsubBsup>(typeSystem);
 
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordVWithNoFields>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordVA0>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordVA1>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordVAS>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordVB>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordVAB>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordVAV0>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordVABV0>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordVABV1>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordVABV01>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::RecordVAVB>(context.getService<babelwires::TypeSystem>());
+    typeSystem.addType<testDomain::RecordVWithNoFields>(typeSystem);
+    typeSystem.addType<testDomain::RecordVA0>(typeSystem);
+    typeSystem.addType<testDomain::RecordVA1>(typeSystem);
+    typeSystem.addType<testDomain::RecordVAS>(typeSystem);
+    typeSystem.addType<testDomain::RecordVB>(typeSystem);
+    typeSystem.addType<testDomain::RecordVAB>(typeSystem);
+    typeSystem.addType<testDomain::RecordVAV0>(typeSystem);
+    typeSystem.addType<testDomain::RecordVABV0>(typeSystem);
+    typeSystem.addType<testDomain::RecordVABV1>(typeSystem);
+    typeSystem.addType<testDomain::RecordVABV01>(typeSystem);
+    typeSystem.addType<testDomain::RecordVAVB>(typeSystem);
 
-    context.getService<babelwires::TypeSystem>().addType<testDomain::TestParallelProcessorInput>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::TestParallelProcessorOutput>(context.getService<babelwires::TypeSystem>());
-    context.getService<babelwires::TypeSystem>().addType<testDomain::TestProcessorInputOutputType>(context.getService<babelwires::TypeSystem>());
+    typeSystem.addType<testDomain::TestParallelProcessorInput>(typeSystem);
+    typeSystem.addType<testDomain::TestParallelProcessorOutput>(typeSystem);
+    typeSystem.addType<testDomain::TestProcessorInputOutputType>(typeSystem);
 
-    context.getService<babelwires::ProcessorFactoryRegistry>().addProcessor<TestProcessor>();
-    context.getService<babelwires::ProcessorFactoryRegistry>().addProcessor<TestParallelProcessor>();
+    babelwires::ProcessorFactoryRegistry& processorFactoryRegistry = context.getService<babelwires::ProcessorFactoryRegistry>();
+    processorFactoryRegistry.addProcessor<TestProcessor>();
+    processorFactoryRegistry.addProcessor<TestParallelProcessor>();
 
     context.getService<babelwires::TargetFileFormatRegistry>().addEntry<TestTargetFileFormat>();
     context.getService<babelwires::SourceFileFormatRegistry>().addEntry<TestSourceFileFormat>();
