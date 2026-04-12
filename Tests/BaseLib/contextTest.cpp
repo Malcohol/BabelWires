@@ -91,18 +91,6 @@ TEST(ContextTest, independentInstances) {
     EXPECT_NE(&context1.getService<ServiceA>(), &context2.getService<ServiceA>());
 }
 
-TEST(ContextTest, assertServicesRegistered) {
-    babelwires::Context context;
-    ServiceA a;
-    ServiceB b;
-
-    context.registerService<ServiceA>(a);
-    context.registerService<ServiceB>(b);
-
-    // Should not assert - both services registered.
-    context.assertServicesRegistered<ServiceA, ServiceB>();
-}
-
 TEST(ContextTest, getServiceAssertOnMissing) {
     babelwires::Context context;
     EXPECT_DEATH(context.getService<ServiceA>(), "Service not registered");
@@ -114,16 +102,4 @@ TEST(ContextTest, registerServiceAssertOnDuplicate) {
     ServiceA a2;
     context.registerService<ServiceA>(a1);
     EXPECT_DEATH(context.registerService<ServiceA>(a2), "Service already registered");
-}
-
-TEST(ContextTest, assertServicesRegisteredFailsOnMissing) {
-    babelwires::Context context;
-    ServiceA a;
-    context.registerService<ServiceA>(a);
-    EXPECT_DEATH(
-        {
-            context.assertServicesRegistered<ServiceA>();
-            context.assertServicesRegistered<ServiceB>();
-        },
-        "Required service not registered");
 }

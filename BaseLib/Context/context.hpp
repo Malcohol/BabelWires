@@ -1,5 +1,5 @@
 /**
- * A Context is a dynamic, type-indexed service provider.
+ * A Context is a simple dynamic type-indexed service provider.
  *
  * (C) 2026 Malcolm Tyrrell
  *
@@ -15,9 +15,7 @@
 
 namespace babelwires {
 
-    /// A dynamic, type-indexed service provider.
-    /// Services are stored in a map keyed by std::type_index, which is guaranteed
-    /// to work correctly across shared library boundaries.
+    /// A simple dynamic type-indexed service provider.
     class BASELIB_API Context {
       public:
         /// Register a service of type T. The caller must ensure the service outlives this Context.
@@ -62,18 +60,6 @@ namespace babelwires {
                 return nullptr;
             }
             return static_cast<const T*>(it->second);
-        }
-
-        /// Assert that all the specified service types have been registered.
-        template <typename... Ts>
-        void assertServicesRegistered() const {
-            (assertServiceRegistered<Ts>(), ...);
-        }
-
-      private:
-        template <typename T>
-        void assertServiceRegistered() const {
-            assert(tryGetService<T>() && "Required service not registered");
         }
 
         std::unordered_map<std::type_index, void*> m_services;
