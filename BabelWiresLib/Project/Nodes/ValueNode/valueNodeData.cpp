@@ -8,8 +8,8 @@
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNode.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 
@@ -20,7 +20,7 @@ babelwires::ValueNodeData::ValueNodeData(const ValueNodeData& other, ShallowClon
     : NodeData(other, shallowCloneContext)
     , m_typeExp(other.m_typeExp) {}
 
-bool babelwires::ValueNodeData::checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) {
+bool babelwires::ValueNodeData::checkFactoryVersion(const Context& context, UserLogger& userLogger) {
     // For now, assume types do not need to be versioned.
     // In theory, a type might change the way that it is represented in a typeExp.
     // Not sure if that should be handled here.
@@ -43,7 +43,7 @@ babelwires::Result babelwires::ValueNodeData::deserializeContents(Deserializer& 
 }
 
 std::unique_ptr<babelwires::Node>
-babelwires::ValueNodeData::doCreateNode(const ProjectContext& context, UserLogger& userLogger,
+babelwires::ValueNodeData::doCreateNode(const Context& context, UserLogger& userLogger,
                                                      NodeId newId) const {
     return std::make_unique<ValueNode>(context, userLogger, *this, newId);
 }

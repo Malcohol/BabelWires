@@ -114,15 +114,15 @@ void testUtils::TestProjectData::testProjectData(const babelwires::ProjectData& 
     EXPECT_EQ(sortedElements[2]->m_expandedPaths.size(), 0);
 }
 
-void testUtils::TestProjectData::testProjectData(const babelwires::ProjectContext& context,
+void testUtils::TestProjectData::testProjectData(const babelwires::Context& context,
                                                  const babelwires::ProjectData& projectData) {
     testUtils::TestProjectData::testProjectData(projectData);
 }
 
-void testUtils::TestProjectData::resolvePathsInCurrentContext(const babelwires::ProjectContext& context) {
-    babelwires::ValueTreeRoot testRecord(context.m_typeSystem, context.m_typeSystem.getRegisteredType<testDomain::TestProcessorInputOutputType>());
+void testUtils::TestProjectData::resolvePathsInCurrentContext(const babelwires::Context& context) {
+    babelwires::ValueTreeRoot testRecord(context.getService<babelwires::TypeSystem>(), context.getService<babelwires::TypeSystem>().getRegisteredType<testDomain::TestProcessorInputOutputType>());
     testRecord.setToDefault();
-    babelwires::ValueTreeRoot testFileFeature(context.m_typeSystem, testDomain::getTestFileType().assertResolve(context.m_typeSystem));
+    babelwires::ValueTreeRoot testFileFeature(context.getService<babelwires::TypeSystem>(), testDomain::getTestFileType().assertResolve(context.getService<babelwires::TypeSystem>()));
 
     // These have side-effects on the field discriminators in the paths.
     auto modData0 = m_nodes[0]->m_modifiers[0].get()->tryAs<babelwires::ConnectionModifierData>();

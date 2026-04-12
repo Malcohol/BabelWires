@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifier.hpp>
 
 #include <BabelWiresLib/Project/Modifiers/arraySizeModifierData.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
+#include <BaseLib/Context/context.hpp>
 
 #include <BaseLib/Log/userLogger.hpp>
 

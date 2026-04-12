@@ -9,7 +9,7 @@
 
 #include <BaseLib/DataContext/dataVisitable.hpp>
 #include <BaseLib/DataContext/filePath.hpp>
-#include <BaseLib/DataContext/dataContext.hpp>
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <BaseLib/Log/userLogger.hpp>
 #include <BaseLib/Serialization/serializable.hpp>
@@ -43,7 +43,7 @@ namespace babelwires {
 
         /// Returns the contained data, modified so it corresponds the current system.
         /// This object is invalidated after calling this.
-        ResultT<DATA> resolveAgainstCurrentContext(const DataContext& context, const std::filesystem::path& pathToFile,
+        ResultT<DATA> resolveAgainstCurrentContext(const Context& context, const std::filesystem::path& pathToFile,
                                           UserLogger& userLogger) &&;
 
         void serializeContents(Serializer& serializer) const override;
@@ -60,7 +60,7 @@ namespace babelwires {
         virtual void interpretAdditionalMetadataInCurrentContext() {}
 
         /// If the subclass needs to do any additional resolution, it can do it here.
-        virtual void adaptDataToAdditionalMetadata(const DataContext& context, UserLogger& userLogger) {}
+        virtual void adaptDataToAdditionalMetadata(const Context& context, UserLogger& userLogger) {}
 
         /// Allows the subclass to put additional metadata at the same level as the metadata handled by this class.
         virtual void serializeAdditionalMetadata(Serializer& serializer) const {}

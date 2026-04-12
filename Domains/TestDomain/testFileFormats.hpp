@@ -33,7 +33,7 @@ namespace testDomain {
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
         babelwires::ResultT<std::unique_ptr<babelwires::ValueTreeRoot>> loadFromFile(const std::filesystem::path& path,
-                                                              const babelwires::ProjectContext& projectContext,
+                                                              const babelwires::Context& context,
                                                               babelwires::UserLogger& userLogger) const override;
 
         static babelwires::ResultT<std::tuple<int, int>> getFileData(const std::filesystem::path& path);
@@ -49,8 +49,8 @@ namespace testDomain {
         std::string getManufacturerName() const override;
         std::string getProductName() const override;
         std::unique_ptr<babelwires::ValueTreeRoot>
-        createNewValue(const babelwires::ProjectContext& projectContext) const override;
-        babelwires::Result writeToFile(const babelwires::ProjectContext& projectContext,
+        createNewValue(const babelwires::Context& context) const override;
+        babelwires::Result writeToFile(const babelwires::Context& context,
                            babelwires::UserLogger& userLogger,
                            const babelwires::ValueTreeRoot& contents,
                            const std::filesystem::path& path) const override;

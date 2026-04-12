@@ -11,8 +11,8 @@
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Log/userLogger.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
@@ -20,12 +20,12 @@
 babelwires::ProcessorNodeData::ProcessorNodeData(const ProcessorNodeData& other, ShallowCloneContext c)
     : NodeData(other, c) {}
 
-bool babelwires::ProcessorNodeData::checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) {
-    return checkFactoryVersionCommon(context.m_processorReg, userLogger, m_factoryIdentifier, m_factoryVersion);
+bool babelwires::ProcessorNodeData::checkFactoryVersion(const Context& context, UserLogger& userLogger) {
+    return checkFactoryVersionCommon(context.getService<ProcessorFactoryRegistry>(), userLogger, m_factoryIdentifier, m_factoryVersion);
 }
 
 std::unique_ptr<babelwires::Node>
-babelwires::ProcessorNodeData::doCreateNode(const ProjectContext& context, UserLogger& userLogger,
+babelwires::ProcessorNodeData::doCreateNode(const Context& context, UserLogger& userLogger,
                                                   NodeId newId) const {
     return std::make_unique<ProcessorNode>(context, userLogger, *this, newId);
 }

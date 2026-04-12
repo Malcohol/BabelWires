@@ -9,25 +9,25 @@
 
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
+#include <BaseLib/Context/context.hpp>
 
-babelwires::ValueNode::ValueNode(const ProjectContext& context, UserLogger& userLogger,
+babelwires::ValueNode::ValueNode(const Context& context, UserLogger& userLogger,
                                        const ValueNodeData& data, NodeId newId)
     : Node(data, newId) {
     setFactoryName(data.getTypeExp().toString());
     TypePtr nodeType;
-    auto resolveResult = data.getTypeExp().resolve(context.m_typeSystem);
+    auto resolveResult = data.getTypeExp().resolve(context.getService<TypeSystem>());
     if (resolveResult) {
         nodeType = std::move(*resolveResult);
     } else {
         std::ostringstream message;
         message << "Type Reference " << data.getTypeExp().toString() << " could not be resolved: " << resolveResult.error().toString();
         setInternalFailure(message.str());
-        nodeType = context.m_typeSystem.getRegisteredType<FailureType>();
+        nodeType = context.getService<TypeSystem>().getRegisteredType<FailureType>();
     }
-    m_valueTreeRoot = std::make_unique<ValueTreeRoot>(context.m_typeSystem, std::move(nodeType));
+    m_valueTreeRoot = std::make_unique<ValueTreeRoot>(context.getService<TypeSystem>(), std::move(nodeType));
 }
 
 babelwires::ValueNode::~ValueNode() = default;

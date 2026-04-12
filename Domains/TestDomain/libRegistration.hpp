@@ -10,10 +10,10 @@
 #include <Domains/TestDomain/testDomainExport.hpp>
 
 namespace babelwires {
-    struct ProjectContext;
+    struct Context;
 }
 
 namespace testDomain {
     /// This is not a true plugin model, because everything is statically linked.
-    TESTDOMAIN_API void registerLib(babelwires::ProjectContext& context);
+    TESTDOMAIN_API void registerLib(babelwires::Context& context);
 } // namespace testDomain

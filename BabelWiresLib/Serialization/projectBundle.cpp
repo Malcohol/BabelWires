@@ -6,10 +6,9 @@
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #include <BabelWiresLib/Serialization/projectBundle.hpp>
-
 #include <BabelWiresLib/Project/Modifiers/connectionModifierData.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/DataContext/filePath.hpp>
 #include <BaseLib/Serialization/deserializableClassScope.hpp>
 
@@ -27,15 +26,14 @@ void babelwires::ProjectBundle::interpretAdditionalMetadataInCurrentContext() {
     }
 }
 
-void babelwires::ProjectBundle::adaptDataToAdditionalMetadata(const DataContext& context, UserLogger& userLogger) {
-    const ProjectContext& projectContext = static_cast<const ProjectContext&>(context);
+void babelwires::ProjectBundle::adaptDataToAdditionalMetadata(const Context& context, UserLogger& userLogger) {
     for (auto& node : getData().m_nodes) {
         node->m_factoryVersion = m_factoryMetadata[node->m_factoryIdentifier];
     }
 
     for (auto& node : getData().m_nodes) {
         // Can log the same message multiple times.
-        node->checkFactoryVersion(projectContext, userLogger);
+        node->checkFactoryVersion(context, userLogger);
     }
 }
 

@@ -6,18 +6,18 @@
  */
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 
+#include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
+#include <BabelWiresQtUi/NodeEditorBridge/nodeNodeModel.hpp>
+
 #include <BabelWiresLib/Project/Commands/moveNodeCommand.hpp>
 #include <BabelWiresLib/Project/Commands/removeNodeCommand.hpp>
 #include <BabelWiresLib/Project/Commands/resizeNodeCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-
-#include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
-#include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
-#include <BabelWiresQtUi/NodeEditorBridge/nodeNodeModel.hpp>
-#include <BabelWiresQtUi/uiProjectContext.hpp>
-
 #include <BabelWiresLib/Project/project.hpp>
+
+#include <BaseLib/Context/context.hpp>
 
 #include <QtNodes/StyleCollection>
 
@@ -39,10 +39,10 @@ class babelwires::ProjectGraphModel::StateScope final {
 };
 
 babelwires::ProjectGraphModel::ProjectGraphModel(Project& project, CommandManager<Project>& commandManager,
-                                                 UiProjectContext& projectContext)
+                                                 Context& context)
     : m_project(project)
     , m_commandManager(commandManager)
-    , m_projectContext(projectContext)
+    , m_projectContext(context)
     , m_state(State::ListeningToFlowScene)
     , m_projectObserver(project) {
     m_projectObserverSubscriptions.emplace_back(
@@ -193,7 +193,7 @@ bool babelwires::ProjectGraphModel::connectionPossible(QtNodes::ConnectionId con
 
     // Note: isSubtype is too strict for the default behaviour. For example: A numeric type with a wide range could not be connected to a
     // numeric type with a narrow range.
-    return sourceType && targetType && m_projectContext.m_typeSystem.isRelatedType(*sourceType, *targetType);
+    return sourceType && targetType && m_projectContext.getService<TypeSystem>().isRelatedType(*sourceType, *targetType);
 }
 
 void babelwires::ProjectGraphModel::addConnection(QtNodes::ConnectionId const connectionId) {
@@ -395,7 +395,7 @@ void babelwires::ProjectGraphModel::setWidgets(MainWindow* mainWindow, QGraphics
     m_flowGraphWidget = flowGraphWidget;
 }
 
-const babelwires::UiProjectContext& babelwires::ProjectGraphModel::getContext() const {
+const babelwires::Context& babelwires::ProjectGraphModel::getContext() const {
     return m_projectContext;
 }
 

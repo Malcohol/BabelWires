@@ -1,6 +1,7 @@
 SET( COMMON_TESTS_SRCS
    blockStreamTest.cpp
    cloneTest.cpp
+   contextTest.cpp
    baseLibTests.cpp
    dataBundleTest.cpp
    dataSourceTest.cpp

@@ -11,8 +11,9 @@
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+
+#include <BaseLib/Context/context.hpp>
 
 babelwires::SetMapTargetTypeCommand::SetMapTargetTypeCommand(std::string commandName, TypeExp newTargetTypeExp)
     : SimpleCommand(commandName)
@@ -20,8 +21,8 @@ babelwires::SetMapTargetTypeCommand::SetMapTargetTypeCommand(std::string command
 
 bool babelwires::SetMapTargetTypeCommand::initialize(const MapProject& map) {
     const MapProject::AllowedTypes& allowedTypeExps = map.getAllowedTargetTypeExps();
-    const ProjectContext& context = map.getProjectContext();
-    const TypeSystem& typeSystem = context.m_typeSystem;
+    const Context& context = map.getProjectContext();
+    const TypeSystem& typeSystem = context.getService<TypeSystem>();
     if (!allowedTypeExps.isSubtypeOfSome(typeSystem, m_newTargetTypeExp)) {
         return false;
     }

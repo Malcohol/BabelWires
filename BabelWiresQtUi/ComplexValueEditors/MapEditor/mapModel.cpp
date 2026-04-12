@@ -9,14 +9,17 @@
 
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/MapEntryModels/mapEntryModelDispatcher.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
-#include <BabelWiresQtUi/uiProjectContext.hpp>
 #include <BabelWiresQtUi/Utilities/colours.hpp>
+#include <BabelWiresQtUi/ValueModels/valueModelRegistry.hpp>
 
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/allToOneFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/allToSameFallbackMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
+
+#include <BaseLib/Context/context.hpp>
 
 #include <QMenu>
 #include <QtWidgets/QHeaderView>
@@ -34,9 +37,9 @@ babelwires::MapView::MapView() {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
-babelwires::MapModel::MapModel(QObject* parent, const UiProjectContext& projectContext, MapEditor& mapEditor)
+babelwires::MapModel::MapModel(QObject* parent, const Context& context, MapEditor& mapEditor)
     : QAbstractTableModel(parent)
-    , m_projectContext(projectContext)
+    , m_projectContext(context)
     , m_mapEditor(mapEditor) {}
 
 int babelwires::MapModel::rowCount(const QModelIndex& /*parent*/) const {
@@ -59,7 +62,7 @@ bool babelwires::MapModel::initMapEntryModelDispatcher(const QModelIndex& index,
     }
     const MapProjectEntry& entry = mapProject.getMapEntry(row);
     const bool isLastRow = (row == numMapEntries - 1);
-    mapEntryModel.init(m_projectContext.m_valueModelReg, m_projectContext.m_typeSystem, mapProject.getCurrentSourceType(), mapProject.getCurrentTargetType(), entry, row, static_cast<MapEntryModel::Column>(column), isLastRow);
+    mapEntryModel.init(m_projectContext.getService<ValueModelRegistry>(), m_projectContext.getService<TypeSystem>(), mapProject.getCurrentSourceType(), mapProject.getCurrentTargetType(), entry, row, static_cast<MapEntryModel::Column>(column), isLastRow);
     return true;
 }
 

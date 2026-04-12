@@ -12,7 +12,6 @@
 #include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
 
 #include <BabelWiresLib/Instance/instanceUtils.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
@@ -20,6 +19,7 @@
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Result/error.hpp>
 
 #include <algorithm>
@@ -53,10 +53,10 @@ babelwires::ParallelProcessorOutputBase::ParallelProcessorOutputBase(TypeExp&& t
                                                                      TypeExp entryType)
     : RecordType(std::move(typeExpOfThis), typeSystem, {{arrayId, getParallelArray(std::move(entryType))}}) {}
 
-babelwires::ParallelProcessor::ParallelProcessor(const ProjectContext& projectContext, const TypeExp& parallelInputExp,
+babelwires::ParallelProcessor::ParallelProcessor(const Context& context, const TypeExp& parallelInputExp,
                                                  const TypeExp& parallelOutputExp)
-    : Processor(projectContext, parallelInputExp.assertResolve(projectContext.m_typeSystem),
-                parallelOutputExp.assertResolve(projectContext.m_typeSystem)) {
+    : Processor(context, parallelInputExp.assertResolve(context.getService<TypeSystem>()),
+                parallelOutputExp.assertResolve(context.getService<TypeSystem>())) {
 #ifndef NDEBUG
     auto inputType = getInput().getType()->as<ParallelProcessorInputBase>();
     auto outputType = getOutput().getType()->as<ParallelProcessorOutputBase>();
@@ -136,8 +136,8 @@ babelwires::Result babelwires::ParallelProcessor::processValue(UserLogger& userL
         const char* newline = "";
         for (const auto& entry : entriesToProcess) {
             if (!entry.m_failureString.empty()) {
-                compositeError << newline << "Failure processing entry " << getPathTo(&entry.m_inputEntry)
-                               << ": " << entry.m_failureString;
+                compositeError << newline << "Failure processing entry " << getPathTo(&entry.m_inputEntry) << ": "
+                               << entry.m_failureString;
                 newline = "\n";
             }
         }

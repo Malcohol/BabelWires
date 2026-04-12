@@ -8,11 +8,11 @@
 
 template <typename BUNDLE>
 babelwires::ResultT<typename babelwires::DataSerialization<BUNDLE>::Data>
-babelwires::DataSerialization<BUNDLE>::loadFromStream(std::istream& is, const DataContext& context,
+babelwires::DataSerialization<BUNDLE>::loadFromStream(std::istream& is, const Context& context,
                                                       const std::filesystem::path& pathToFile, UserLogger& userLogger) {
     std::string str((std::istreambuf_iterator<char>(is)), std::istreambuf_iterator<char>());
 
-    XmlDeserializer deserializer(context.m_deserializationReg, userLogger);
+    XmlDeserializer deserializer(context.getService<DeserializationRegistry>(), userLogger);
     ON_ERROR(deserializer.finalizeOnError());
     DO_OR_ERROR(deserializer.parse(str));
     auto projectBundleResult = deserializer.deserializeObject<BUNDLE>(BUNDLE::s_serializationTypeName);
@@ -27,7 +27,7 @@ babelwires::DataSerialization<BUNDLE>::loadFromStream(std::istream& is, const Da
 
 template <typename BUNDLE>
 babelwires::ResultT<typename babelwires::DataSerialization<BUNDLE>::Data>
-babelwires::DataSerialization<BUNDLE>::loadFromFile(const std::filesystem::path& pathToFile, const DataContext& context,
+babelwires::DataSerialization<BUNDLE>::loadFromFile(const std::filesystem::path& pathToFile, const Context& context,
                                                     UserLogger& userLogger) {
     std::ifstream is(pathToFile);
     auto result = loadFromStream(is, context, pathToFile, userLogger);
@@ -39,7 +39,7 @@ babelwires::DataSerialization<BUNDLE>::loadFromFile(const std::filesystem::path&
 
 template <typename BUNDLE>
 babelwires::ResultT<typename babelwires::DataSerialization<BUNDLE>::Data>
-babelwires::DataSerialization<BUNDLE>::loadFromString(const std::string& string, const DataContext& context,
+babelwires::DataSerialization<BUNDLE>::loadFromString(const std::string& string, const Context& context,
                                                       const std::filesystem::path& pathToFile, UserLogger& userLogger) {
     std::istringstream is(string);
     return loadFromStream(is, context, pathToFile, userLogger);

@@ -5,13 +5,14 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-
 #include <BabelWiresLib/Types/Map/Commands/addEntryToMapCommand.hpp>
 
-#include <BabelWiresLib/Project/projectContext.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
+
+#include <BaseLib/Context/context.hpp>
 
 #include <cassert>
 
@@ -29,8 +30,8 @@ bool babelwires::AddEntryToMapCommand::initialize(const MapProject& map) {
 }
 
 void babelwires::AddEntryToMapCommand::execute(MapProject& map) const {
-    auto newEntry = std::make_unique<OneToOneMapEntryData>(
-        map.getProjectContext().m_typeSystem, *map.getCurrentSourceType(), *map.getCurrentTargetType());
+    auto newEntry = std::make_unique<OneToOneMapEntryData>(map.getProjectContext().getService<TypeSystem>(),
+                                                           *map.getCurrentSourceType(), *map.getCurrentTargetType());
     map.addMapEntry(std::move(newEntry), m_indexOfNewEntry);
 }
 

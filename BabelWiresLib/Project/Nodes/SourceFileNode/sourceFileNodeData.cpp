@@ -9,8 +9,8 @@
 
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNode.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Log/userLogger.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
@@ -19,12 +19,12 @@ babelwires::SourceFileNodeData::SourceFileNodeData(const SourceFileNodeData& oth
     : NodeData(other, c)
     , m_filePath(other.m_filePath) {}
 
-bool babelwires::SourceFileNodeData::checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) {
-    return checkFactoryVersionCommon(context.m_sourceFileFormatReg, userLogger, m_factoryIdentifier, m_factoryVersion);
+bool babelwires::SourceFileNodeData::checkFactoryVersion(const Context& context, UserLogger& userLogger) {
+    return checkFactoryVersionCommon(context.getService<SourceFileFormatRegistry>(), userLogger, m_factoryIdentifier, m_factoryVersion);
 }
 
 std::unique_ptr<babelwires::Node>
-babelwires::SourceFileNodeData::doCreateNode(const ProjectContext& context, UserLogger& userLogger,
+babelwires::SourceFileNodeData::doCreateNode(const Context& context, UserLogger& userLogger,
                                                    NodeId newId) const {
     return std::make_unique<SourceFileNode>(context, userLogger, *this, newId);
 }

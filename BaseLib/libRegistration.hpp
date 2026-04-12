@@ -10,10 +10,10 @@
 #include <BaseLib/baseLibExport.hpp>
 
 namespace babelwires {
-    struct DataContext;
+    struct Context;
 
     // This is just needed for disambiguation with BabelWiresLib::registerLib.
     namespace baseLib {
-        BASELIB_API void registerLib(DataContext& context);
+        BASELIB_API void registerLib(Context& context);
     }
 } // namespace babelwires

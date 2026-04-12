@@ -23,14 +23,14 @@ namespace babelwires {
 
 namespace babelwires {
     class ValueTreeRoot;
-    struct ProjectContext;
+    struct Context;
 
     /// Factories which can create FileFeatures in a default state, and write those features as files.
     class BABELWIRESLIB_API TargetFileFormat : public FileTypeEntry, ProductInfo {
       public:
         TargetFileFormat(LongId identifier, VersionNumber version, Extensions extensions);
-        virtual std::unique_ptr<ValueTreeRoot> createNewValue(const ProjectContext& projectContext) const = 0;
-        virtual Result writeToFile(const ProjectContext& projectContext, UserLogger& userLogger,
+        virtual std::unique_ptr<ValueTreeRoot> createNewValue(const Context& context) const = 0;
+        virtual Result writeToFile(const Context& context, UserLogger& userLogger,
                                    const ValueTreeRoot& contents, const std::filesystem::path& path) const = 0;
     };
 

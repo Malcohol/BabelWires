@@ -69,7 +69,7 @@ template <typename DATA> void babelwires::DataBundle<DATA>::interpretInCurrentCo
 }
 
 template <typename DATA>
-babelwires::ResultT<DATA> babelwires::DataBundle<DATA>::resolveAgainstCurrentContext(const DataContext& context,
+babelwires::ResultT<DATA> babelwires::DataBundle<DATA>::resolveAgainstCurrentContext(const Context& context,
                                                                 const std::filesystem::path& pathToFile,
                                                                 UserLogger& userLogger) && {
     DO_OR_ERROR(resolveIdentifiersAgainstCurrentContext());

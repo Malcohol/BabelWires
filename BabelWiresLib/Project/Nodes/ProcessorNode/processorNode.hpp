@@ -12,7 +12,7 @@
 
 namespace babelwires {
     struct UserLogger;
-    struct ProjectContext;
+    struct Context;
     struct ProcessorNodeData;
     class Processor;
     class ValueTreeRoot;
@@ -20,7 +20,7 @@ namespace babelwires {
     class BABELWIRESLIB_API ProcessorNode : public Node {
       public:
         DOWNCASTABLE(ProcessorNode, Node);
-        ProcessorNode(const ProjectContext& context, UserLogger& userLogger, const ProcessorNodeData& data,
+        ProcessorNode(const Context& context, UserLogger& userLogger, const ProcessorNodeData& data,
                          NodeId newId);
         ~ProcessorNode();
 

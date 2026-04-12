@@ -278,9 +278,9 @@ TEST(ProjectBundleTest, factoryIdentifiers) {
     EXPECT_EQ(projectData.m_elements[2]->m_factoryIdentifier.getDiscriminator(), 0);
 
     testUtils::TestEnvironment testEnvironment;
-    testEnvironment.m_projectContext.m_targetFileFormatReg.getEntryByIdentifier(projectData.m_elements[0]->m_factoryIdentifier);
-    testEnvironment.m_projectContext.m_processorReg.getEntryByIdentifier(projectData.m_elements[1]->m_factoryIdentifier);
-    testEnvironment.m_projectContext.m_sourceFileFormatReg.getEntryByIdentifier(projectData.m_elements[2]->m_factoryIdentifier);
+    testEnvironment.m_projectContext.getService<babelwires::TargetFileFormatRegistry>().getEntryByIdentifier(projectData.m_elements[0]->m_factoryIdentifier);
+    testEnvironment.m_projectContext.getService<babelwires::ProcessorFactoryRegistry>().getEntryByIdentifier(projectData.m_elements[1]->m_factoryIdentifier);
+    testEnvironment.m_projectContext.getService<babelwires::SourceFileFormatRegistry>().getEntryByIdentifier(projectData.m_elements[2]->m_factoryIdentifier);
 
     EXPECT_EQ(projectData.m_elements[0]->m_factoryIdentifier.getDiscriminator(), 2);
     EXPECT_EQ(projectData.m_elements[1]->m_factoryIdentifier.getDiscriminator(), 2);

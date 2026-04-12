@@ -82,7 +82,7 @@ namespace testDomain {
                 : babelwires::CommonProcessorFactory<PROCESSOR_SUBTYPE>(PROCESSOR_SUBTYPE::getFactoryIdentifier(), 2) {}
         };
 
-        TestProcessor(const babelwires::ProjectContext& context);
+        TestProcessor(const babelwires::Context& context);
 
         babelwires::Result processValue(babelwires::UserLogger& userLogger, const babelwires::ValueTreeNode& input,
                           babelwires::ValueTreeNode& output) const override;

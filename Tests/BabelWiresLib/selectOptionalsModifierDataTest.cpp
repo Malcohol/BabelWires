@@ -17,8 +17,8 @@
 
 TEST(SelectOptionalsModifierDataTest, apply) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
-                                                testEnvironment.m_projectContext.m_typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
+    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.getService<babelwires::TypeSystem>(),
+                                                testEnvironment.m_projectContext.getService<babelwires::TypeSystem>().getRegisteredType<testDomain::TestComplexRecordType>());
     valueFeature.setToDefault();
     const auto* type = valueFeature.getType()->tryAs<testDomain::TestComplexRecordType>();
 
@@ -44,8 +44,8 @@ TEST(SelectOptionalsModifierDataTest, apply) {
 
 TEST(SelectOptionalsModifierDataTest, failureNotOptionals) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
-                                                testEnvironment.m_projectContext.m_typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
+    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.getService<babelwires::TypeSystem>(),
+                                                testEnvironment.m_projectContext.getService<babelwires::TypeSystem>().getRegisteredType<testDomain::TestComplexRecordType>());
     valueFeature.setToDefault();
     const auto* type = valueFeature.getType()->tryAs<testDomain::TestComplexRecordType>();
 
@@ -62,8 +62,8 @@ TEST(SelectOptionalsModifierDataTest, failureNotOptionals) {
 
 TEST(SelectOptionalsModifierDataTest, failureNotARecordWithOptionals) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.m_typeSystem,
-                                                testEnvironment.m_projectContext.m_typeSystem.getRegisteredType<testDomain::TestSimpleRecordType>());
+    babelwires::ValueTreeRoot valueFeature(testEnvironment.m_projectContext.getService<babelwires::TypeSystem>(),
+                                                testEnvironment.m_projectContext.getService<babelwires::TypeSystem>().getRegisteredType<testDomain::TestSimpleRecordType>());
     valueFeature.setToDefault();
 
     babelwires::SelectOptionalsModifierData data;

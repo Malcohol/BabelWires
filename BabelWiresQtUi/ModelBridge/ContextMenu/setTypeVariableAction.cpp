@@ -11,7 +11,6 @@
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
-#include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
 #include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
@@ -21,6 +20,8 @@
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableData.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
+
+#include <BaseLib/Context/context.hpp>
 
 #include <QInputDialog>
 
@@ -68,7 +69,7 @@ void babelwires::SetTypeVariableAction::actionTriggered(babelwires::NodeContents
     text << "GenericType at " << m_locationOfGenericType;
 
     std::vector<TypeExp> allowedTypes;
-    for (const auto& typeId : projectGraphModel.getContext().m_typeSystem.getAllRegisteredTypes()) {
+    for (const auto& typeId : projectGraphModel.getContext().getService<TypeSystem>().getAllRegisteredTypes()) {
         allowedTypes.emplace_back(typeId);
     }
 

@@ -24,12 +24,12 @@ namespace babelwires {
 
 namespace babelwires {
     class ValueTreeRoot;
-    struct ProjectContext;
+    struct Context;
 
     class BABELWIRESLIB_API SourceFileFormat : public FileTypeEntry, ProductInfo {
       public:
         SourceFileFormat(LongId identifier, VersionNumber version, Extensions extensions);
-        virtual ResultT<std::unique_ptr<babelwires::ValueTreeRoot>> loadFromFile(const std::filesystem::path& path, const ProjectContext& projectContext,
+        virtual ResultT<std::unique_ptr<babelwires::ValueTreeRoot>> loadFromFile(const std::filesystem::path& path, const Context& context,
                                                                       UserLogger& userLogger) const = 0;
     };
 

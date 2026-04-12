@@ -8,9 +8,9 @@
 #include <BabelWiresLib/Project/Modifiers/localModifier.hpp>
 
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Log/userLogger.hpp>
 
 #include <cassert>

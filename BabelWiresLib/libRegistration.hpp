@@ -9,9 +9,9 @@
 #pragma once
 
 namespace babelwires {
-    struct ProjectContext;
+    struct Context;
 
     /// Registration factories etc. for Standard MIDI File.
     /// Note: This is not a true plugin model, because everything is statically linked.
-    BABELWIRESLIB_API void registerLib(babelwires::ProjectContext& context);
+    BABELWIRESLIB_API void registerLib(babelwires::Context& context);
 } // namespace smf

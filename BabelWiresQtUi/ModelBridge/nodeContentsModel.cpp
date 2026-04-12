@@ -14,9 +14,10 @@
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 #include <BabelWiresQtUi/Utilities/colours.hpp>
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
-#include <BabelWiresQtUi/uiProjectContext.hpp>
 #include <BabelWiresQtUi/ModelBridge/rowModelDelegate.hpp>
+#include <BabelWiresQtUi/ValueModels/valueModelRegistry.hpp>
 
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Commands/commandManager.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Path/path.hpp>
@@ -25,9 +26,10 @@
 #include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Project/uiPosition.hpp>
 #include <BabelWiresLib/ValueNames/valueNames.hpp>
+
+#include <BaseLib/Context/context.hpp>
 
 #include <QApplication>
 #include <QBrush>
@@ -93,8 +95,8 @@ QVariant babelwires::NodeContentsModel::data(const QModelIndex& index, int role)
 
     const ValueTreeNode* valueTreeNode = entry->getInputThenOutput();
     assert(valueTreeNode && "No valueTreeNode for row model");
-    const babelwires::UiProjectContext& context = m_projectGraphModel.getContext();
-    RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
+    const babelwires::Context& context = m_projectGraphModel.getContext();
+    RowModelDispatcher rowModel(context.getService<ValueModelRegistry>(), context.getService<TypeSystem>(), entry, node);
 
     switch (role) {
         case Qt::DisplayRole: {
@@ -153,8 +155,8 @@ Qt::ItemFlags babelwires::NodeContentsModel::flags(const QModelIndex& index) con
     AccessModelScope scope(m_projectGraphModel);
     if (const Node* node = getNode(scope)) {
         if (const babelwires::ContentsCacheEntry* entry = getEntry(scope, index)) {
-            const babelwires::UiProjectContext& context = m_projectGraphModel.getContext();
-            RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
+            const babelwires::Context& context = m_projectGraphModel.getContext();
+            RowModelDispatcher rowModel(context.getService<ValueModelRegistry>(), context.getService<TypeSystem>(), entry, node);
 
             if (rowModel->isItemEditable()) {
                 flags = flags | Qt::ItemIsEditable;
@@ -176,8 +178,8 @@ void babelwires::NodeContentsModel::getContextMenuActions(std::vector<ContextMen
         return;
     }
 
-    const babelwires::UiProjectContext& context = m_projectGraphModel.getContext();
-    RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
+    const babelwires::Context& context = m_projectGraphModel.getContext();
+    RowModelDispatcher rowModel(context.getService<ValueModelRegistry>(), context.getService<TypeSystem>(), entry, node);
 
     rowModel->getContextMenuActions(actionsOut);
 }

@@ -13,11 +13,11 @@
 
 namespace babelwires {
     class TypeSystem;
-    struct UiProjectContext;
+    struct Context;
 
     class BABELWIRESQTUI_API ValueNodeFactory : public NodeFactory {
       public:
-        ValueNodeFactory(const UiProjectContext& uiProjectContext);
+        ValueNodeFactory(const Context& context);
 
         QString getCategoryName() const override;
 

@@ -7,17 +7,17 @@
  **/
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Result/resultDSL.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 
-babelwires::MapProject::MapProject(const ProjectContext& projectContext)
-    : m_projectContext(projectContext)
+babelwires::MapProject::MapProject(const Context& context)
+    : m_projectContext(context)
     , m_sourceTypeValidity()
     , m_targetTypeValidity() {}
 
@@ -50,7 +50,7 @@ const babelwires::TypeExp& babelwires::MapProject::getCurrentTargetTypeExp() con
 }
 
 void babelwires::MapProject::setCurrentSourceTypeExp(const TypeExp& sourceId) {
-    const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
+    const TypeSystem& typeSystem = m_projectContext.getService<TypeSystem>();
     TypePtr type = sourceId.tryResolve(typeSystem);
     if (!type) {
         // TODO Add type name.
@@ -73,7 +73,7 @@ void babelwires::MapProject::setCurrentSourceTypeExp(const TypeExp& sourceId) {
 }
 
 void babelwires::MapProject::setCurrentTargetTypeExp(const TypeExp& targetId) {
-    const TypeSystem& typeSystem = m_projectContext.m_typeSystem;
+    const TypeSystem& typeSystem = m_projectContext.getService<TypeSystem>();
     TypePtr type = targetId.tryResolve(typeSystem);
     if (!type) {
         // TODO Add type name.
@@ -112,14 +112,14 @@ const babelwires::MapProjectEntry& babelwires::MapProject::getMapEntry(unsigned 
 }
 
 babelwires::Result babelwires::MapProject::validateNewEntry(const MapEntryData& newEntry, bool isLastEntry) const {
-    return newEntry.validate(m_projectContext.m_typeSystem, *m_currentSourceType, *m_currentTargetType, isLastEntry);
+    return newEntry.validate(m_projectContext.getService<TypeSystem>(), *m_currentSourceType, *m_currentTargetType, isLastEntry);
 }
 
 void babelwires::MapProject::addMapEntry(std::unique_ptr<MapEntryData> newEntryData, unsigned int index) {
     assert((index < m_mapEntries.size()) && "You cannot add the last entry of a map. It needs to be a fallback entry.");
     assert((index <= m_mapEntries.size()) && "index to add is out of range");
     auto newEntry = std::make_unique<MapProjectEntry>(std::move(newEntryData));
-    newEntry->validate(m_projectContext.m_typeSystem, m_currentSourceType, m_currentTargetType, false);
+    newEntry->validate(m_projectContext.getService<TypeSystem>(), m_currentSourceType, m_currentTargetType, false);
     m_mapEntries.emplace(m_mapEntries.begin() + index, std::move(newEntry));
 }
 
@@ -134,7 +134,7 @@ void babelwires::MapProject::replaceMapEntry(std::unique_ptr<MapEntryData> newEn
     assert((index < m_mapEntries.size()) && "index to replace is out of range");
     const bool isLastEntry = (index == m_mapEntries.size() - 1);
     auto newEntry = std::make_unique<MapProjectEntry>(std::move(newEntryData));
-    newEntry->validate(m_projectContext.m_typeSystem, m_currentSourceType, m_currentTargetType, isLastEntry);
+    newEntry->validate(m_projectContext.getService<TypeSystem>(), m_currentSourceType, m_currentTargetType, isLastEntry);
     m_mapEntries[index] = std::move(newEntry);
 }
 
@@ -156,12 +156,12 @@ void babelwires::MapProject::setMapValue(const MapValue& data) {
         const auto& mapEntryData = data.m_mapEntries[i];
         auto mapEntry = std::make_unique<MapProjectEntry>(mapEntryData->clone());
         const bool isLastEntry = (i == data.m_mapEntries.size() - 1);
-        mapEntry->validate(m_projectContext.m_typeSystem, m_currentSourceType, m_currentTargetType, isLastEntry);
+        mapEntry->validate(m_projectContext.getService<TypeSystem>(), m_currentSourceType, m_currentTargetType, isLastEntry);
         m_mapEntries.emplace_back(std::move(mapEntry));
     }
 }
 
-const babelwires::ProjectContext& babelwires::MapProject::getProjectContext() const {
+const babelwires::Context& babelwires::MapProject::getProjectContext() const {
     return m_projectContext;
 }
 

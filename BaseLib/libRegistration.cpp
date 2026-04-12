@@ -7,12 +7,12 @@
  **/
 #include <BaseLib/libRegistration.hpp>
 
-#include <BaseLib/DataContext/dataContext.hpp>
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
 
 #include <cassert>
 
-void babelwires::baseLib::registerLib(DataContext& context) {
-    context.m_deserializationReg.registerClass<IdentifierRegistry>();
+void babelwires::baseLib::registerLib(Context& context) {
+    context.getService<DeserializationRegistry>().registerClass<IdentifierRegistry>();
 }

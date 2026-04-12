@@ -11,12 +11,13 @@
 #include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
-#include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
 #include <BabelWiresLib/Commands/commandManager.hpp>
 #include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 #include <BabelWiresLib/Project/project.hpp>
+
+#include <BaseLib/Context/context.hpp>
 
 babelwires::SaveFileAsAction::SaveFileAsAction()
     : NodeContentsContextMenuActionBase(tr("Save file as\u2026")) {}

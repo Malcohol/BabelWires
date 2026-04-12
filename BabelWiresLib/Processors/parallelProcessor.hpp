@@ -47,7 +47,7 @@ namespace babelwires {
     /// Nodes in the project.
     class BABELWIRESLIB_API ParallelProcessor : public Processor {
       public:
-        ParallelProcessor(const ProjectContext& projectContext, const TypeExp& parallelInput,
+        ParallelProcessor(const Context& context, const TypeExp& parallelInput,
                           const TypeExp& parallelOutput);
 
       protected:

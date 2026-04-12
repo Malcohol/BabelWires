@@ -22,7 +22,7 @@ testDomain::TestParallelProcessorInput::TestParallelProcessorInput(const babelwi
 testDomain::TestParallelProcessorOutput::TestParallelProcessorOutput(const babelwires::TypeSystem& typeSystem)
     : babelwires::ParallelProcessorOutputBase(getThisIdentifier(), typeSystem, TestParallelProcessor::getCommonArrayId(), getLimitedIntType()) {}
 
-testDomain::TestParallelProcessor::TestParallelProcessor(const babelwires::ProjectContext& context)
+testDomain::TestParallelProcessor::TestParallelProcessor(const babelwires::Context& context)
     : babelwires::ParallelProcessor(context, TestParallelProcessorInput::getThisIdentifier(),
                                     TestParallelProcessorOutput::getThisIdentifier()) {}
 

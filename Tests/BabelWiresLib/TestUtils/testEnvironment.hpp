@@ -6,9 +6,9 @@
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Random/randomService.hpp>
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
 
@@ -23,7 +23,18 @@ namespace testUtils {
         babelwires::RandomService m_randomService;
         babelwires::TypeSystem m_typeSystem;
 
-        babelwires::ProjectContext m_projectContext;
+        /// A Context subclass that registers services in its constructor,
+        /// ensuring they are available before any member initialized after it.
+        struct TestContext : babelwires::Context {
+            TestContext(babelwires::DeserializationRegistry& deserializationReg,
+                               babelwires::RandomService& randomService,
+                               babelwires::SourceFileFormatRegistry& sourceFileFormatReg,
+                               babelwires::TargetFileFormatRegistry& targetFileFormatReg,
+                               babelwires::ProcessorFactoryRegistry& processorReg, 
+                               babelwires::TypeSystem& typeSystem);
+        };
+
+        TestContext m_projectContext;
         testUtils::TestLogWithListener m_log;
 
         babelwires::Project m_project;

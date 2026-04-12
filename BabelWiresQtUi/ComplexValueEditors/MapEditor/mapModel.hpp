@@ -22,7 +22,7 @@ namespace babelwires {
     class Value;
     class Type;
     class MapEntryModelDispatcher;
-    struct UiProjectContext;
+    struct Context;
     
     class MapView : public QTableView {
         Q_OBJECT
@@ -33,7 +33,7 @@ namespace babelwires {
     class MapModel : public QAbstractTableModel {
         Q_OBJECT
       public:
-        MapModel(QObject* parent, const UiProjectContext& projectContext, MapEditor& mapEditor);
+        MapModel(QObject* parent, const Context& context, MapEditor& mapEditor);
         int rowCount(const QModelIndex& /*parent*/) const override;
         int columnCount(const QModelIndex& /*parent*/) const override;
         QVariant data(const QModelIndex& index, int role) const override;
@@ -55,7 +55,7 @@ namespace babelwires {
         void valuesMayHaveChanged() const;
         
       private:
-        const UiProjectContext& m_projectContext;
+        const Context& m_projectContext;
         MapEditor& m_mapEditor;
     };
 }
