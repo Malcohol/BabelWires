@@ -9,8 +9,8 @@
 #include <BabelWiresExe/babelWiresOptions.hpp>
 
 #include <BabelWiresQtUi/ValueModels/valueModelRegistry.hpp>
+#include <BabelWiresQtUi/applicationIdentity.hpp>
 #include <BabelWiresQtUi/uiMain.hpp>
-#include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
 #include <BabelWiresLib/FileFormat/targetFileFormat.hpp>
@@ -23,19 +23,21 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/libRegistration.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/IO/fileDataSource.hpp>
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
-#include <BaseLib/libRegistration.hpp>
 #include <BaseLib/Log/ostreamLogListener.hpp>
 #include <BaseLib/Log/unifiedLog.hpp>
+#include <BaseLib/Random/randomService.hpp>
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
+#include <BaseLib/libRegistration.hpp>
 
 // "plugins"
 #include <Domains/Music/MusicLib/libRegistration.hpp>
 #include <Domains/Music/MusicLibUi/libRegistration.hpp>
-#include <Smf/libRegistration.hpp>
 #include <Domains/Music/Plugins/TestPlugin/libRegistration.hpp>
 #include <Domains/TestDomain/libRegistration.hpp>
+#include <Smf/libRegistration.hpp>
 
 #include <cassert>
 #include <chrono>
@@ -66,7 +68,7 @@ int main(int argc, char* argv[]) {
     babelwires::OStreamLogListener::Features features = babelwires::OStreamLogListener::Features::none;
 #ifndef NDEBUG
     features = features | babelwires::OStreamLogListener::Features::logDebugMessages |
-                babelwires::OStreamLogListener::Features::timestamp;
+               babelwires::OStreamLogListener::Features::timestamp;
 #endif
     babelwires::UnifiedLog log;
     babelwires::DebugLogger::swapGlobalDebugLogger(&log);
@@ -81,14 +83,22 @@ int main(int argc, char* argv[]) {
 
     const unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
     babelwires::logDebug() << "The random seed was " << seed;
-    std::default_random_engine randomEngine(seed);
+    babelwires::RandomService randomService(seed);
 
-    babelwires::UiProjectContext context{
-        deserializationRegistry, sourceFileFormatReg, targetFileFormatReg, processorReg, typeSystem, randomEngine,
-        valueModelRegistry};
+    babelwires::Context context;
 
-    context.m_applicationIdentity.m_applicationTitle = "BabelWires";
-    context.m_applicationIdentity.m_projectExtension = ".babelwires";
+    babelwires::ApplicationIdentity applicationIdentity;
+    applicationIdentity.m_applicationTitle = "BabelWires";
+    applicationIdentity.m_projectExtension = ".babelwires";
+
+    context.registerService<babelwires::DeserializationRegistry>(deserializationRegistry);
+    context.registerService<babelwires::RandomService>(randomService);
+    context.registerService<babelwires::SourceFileFormatRegistry>(sourceFileFormatReg);
+    context.registerService<babelwires::TargetFileFormatRegistry>(targetFileFormatReg);
+    context.registerService<babelwires::ProcessorFactoryRegistry>(processorReg);
+    context.registerService<babelwires::TypeSystem>(typeSystem);
+    context.registerService<babelwires::ValueModelRegistry>(valueModelRegistry);
+    context.registerService<babelwires::ApplicationIdentity>(applicationIdentity);
 
     // register factories, etc.
     babelwires::baseLib::registerLib(context);
@@ -98,12 +108,13 @@ int main(int argc, char* argv[]) {
     smf::registerLib(context);
 
     // Uncomment to enable a domain of testing data.
-    //bw_music_testplugin::registerLib(context);
-    //testDomain::registerLib(context);
+    // bw_music_testplugin::registerLib(context);
+    // testDomain::registerLib(context);
 
     if (options->m_mode == ProgramOptions::MODE_RUN_PROJECT) {
         Project project(context, log);
-        ResultT<ProjectData> projectDataResult = ProjectSerialization::loadFromFile(options->m_inputFileName.c_str(), context, log);
+        ResultT<ProjectData> projectDataResult =
+            ProjectSerialization::loadFromFile(options->m_inputFileName.c_str(), context, log);
         if (!projectDataResult) {
             std::cerr << "Error loading project: " << projectDataResult.error().toString() << std::endl;
             return EXIT_FAILURE;

@@ -8,7 +8,6 @@
 #pragma once
 
 #include <BaseLib/baseLibExport.hpp>
-
 #include <BaseLib/Serialization/deserializationRegistryInterface.hpp>
 
 #include <map>

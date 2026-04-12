@@ -7,11 +7,10 @@
  **/
 #include <BabelWiresQtUi/ValueEditors/typeWidget.hpp>
 
-#include <BabelWiresQtUi/uiProjectContext.hpp>
-
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 
 #include <cassert>

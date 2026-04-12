@@ -22,14 +22,14 @@
 
 namespace babelwires {
     class Project;
-    struct ProjectContext;
+    class Context;
     class ConnectionModifier;
     class Node;
     class ModifyModelScope;
     class AccessModelScope;
     struct UiPosition;
     class AddNodeCommand;
-    struct UiProjectContext;
+    class Context;
     struct ProjectData;
     class MainWindow;
     class NodeNodeModel;
@@ -37,7 +37,7 @@ namespace babelwires {
     class BABELWIRESQTUI_API ProjectGraphModel : public QtNodes::AbstractGraphModel {
         Q_OBJECT
       public:
-        ProjectGraphModel(Project& project, CommandManager<Project>& commandManager, UiProjectContext& projectContext);
+        ProjectGraphModel(Project& project, CommandManager<Project>& commandManager, Context& context);
         ~ProjectGraphModel();
 
         /// The command will be executed when Qt is idle.
@@ -60,7 +60,7 @@ namespace babelwires {
 
         void setWidgets(MainWindow* mainWindow, QGraphicsView* flowGraphWidget);
 
-        const UiProjectContext& getContext() const;
+        const Context& getContext() const;
 
         ProjectData getDataFromSelectedNodes(const std::vector<NodeId>& selectedNodes) const;
 
@@ -146,7 +146,7 @@ namespace babelwires {
 
         Project& m_project;
         CommandManager<Project>& m_commandManager;
-        UiProjectContext& m_projectContext;
+        Context& m_projectContext;
 
         MainWindow* m_mainWindow = nullptr;
         QGraphicsView* m_flowGraphWidget = nullptr;

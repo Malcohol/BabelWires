@@ -15,22 +15,22 @@
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Log/userLogger.hpp>
 
-babelwires::ProcessorNode::ProcessorNode(const ProjectContext& context, UserLogger& userLogger,
+babelwires::ProcessorNode::ProcessorNode(const Context& context, UserLogger& userLogger,
                                                const ProcessorNodeData& data, NodeId newId)
     : Node(data, newId) {
     const NodeData& elementData = getNodeData();
-    const auto factoryResult = context.m_processorReg.getRegisteredEntry(elementData.m_factoryIdentifier);
+    const auto factoryResult = context.get<ProcessorFactoryRegistry>().getRegisteredEntry(elementData.m_factoryIdentifier);
     if (!factoryResult) {
         setFactoryName(elementData.m_factoryIdentifier);
         setInternalFailure(factoryResult.error().toString());
         m_failedValueTree =
-            std::make_unique<babelwires::ValueTreeRoot>(context.m_typeSystem, context.m_typeSystem.getRegisteredType<FailureType>());
+            std::make_unique<babelwires::ValueTreeRoot>(context.get<TypeSystem>(), context.get<TypeSystem>().getRegisteredType<FailureType>());
         userLogger.logError() << "Failed to create processor id=" << elementData.m_id
                                 << ": " << factoryResult.error().toString();
         return;

@@ -13,19 +13,15 @@
 
 namespace babelwires {
     struct UserLogger;
-}
-
-namespace babelwires {
-
     struct SourceFileNodeData;
-    struct ProjectContext;
+    class Context;
     class ValueTreeRoot;
 
     /// SourceFileNodes are Nodes which correspond to a source file.
     class BABELWIRESLIB_API SourceFileNode : public FileNode {
       public:
         DOWNCASTABLE(SourceFileNode, FileNode);
-        SourceFileNode(const ProjectContext& context, UserLogger& userLogger, const SourceFileNodeData& data,
+        SourceFileNode(const Context& context, UserLogger& userLogger, const SourceFileNodeData& data,
                           NodeId newId);
 
         /// Down-cast version of the parent's method.
@@ -35,9 +31,9 @@ namespace babelwires {
         
         virtual std::filesystem::path getFilePath() const override;
         virtual void setFilePath(std::filesystem::path newFilePath) override;
-        virtual const FileTypeEntry* getFileFormatInformation(const ProjectContext& context) const override;
+        virtual const FileTypeEntry* getFileFormatInformation(const Context& context) const override;
         virtual FileOperations getSupportedFileOperations() const override;
-        virtual bool reload(const ProjectContext& context, UserLogger& userLogger) override;
+        virtual bool reload(const Context& context, UserLogger& userLogger) override;
 
       protected:
         ValueTreeNode* doGetOutputNonConst() override;

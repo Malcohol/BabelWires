@@ -8,17 +8,17 @@
 #include <BabelWiresQtUi/NodeEditorBridge/NodeFactories/processorNodeFactory.hpp>
 
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
-#include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
 #include <BabelWiresLib/Project/Commands/addNodeCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Identifiers/identifierRegistry.hpp> 
 
-babelwires::ProcessorNodeFactory::ProcessorNodeFactory(const UiProjectContext& projectContext)
-    : m_processorFactoryRegistry(projectContext.m_processorReg) {}
+babelwires::ProcessorNodeFactory::ProcessorNodeFactory(const Context& context)
+    : m_processorFactoryRegistry(context.get<ProcessorFactoryRegistry>()) {}
 
 QString babelwires::ProcessorNodeFactory::getCategoryName() const {
     return m_processorFactoryRegistry.getRegistryName().c_str();

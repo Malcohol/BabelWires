@@ -3,6 +3,7 @@
 #include <BaseLib/DataContext/dataBundle.hpp>
 #include <BaseLib/DataContext/dataSerialization.hpp>
 #include <BaseLib/DataContext/dataVisitable.hpp>
+#include <BaseLib/Random/randomService.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
@@ -72,7 +73,7 @@ namespace {
 
         void interpretAdditionalMetadataInCurrentContext() override {}
 
-        void adaptDataToAdditionalMetadata(const babelwires::DataContext& context,
+        void adaptDataToAdditionalMetadata(const babelwires::Context& context,
                                            babelwires::UserLogger& userLogger) override {}
 
         void serializeAdditionalMetadata(babelwires::Serializer& serializer) const override {}
@@ -118,9 +119,12 @@ TEST(DataBundleTest, identifiers) {
         testUtils::TestLog testLog;
         babelwires::IdentifierRegistryScope identifierRegistry;
         babelwires::DeserializationRegistry deserializationReg;
+        babelwires::RandomService randomService(0x123456789abcdeful);
         deserializationReg.registerClass<TestBundlePayload>();
         deserializationReg.registerClass<TestBundle>();
-        babelwires::DataContext dataContext{deserializationReg};
+        babelwires::Context context;
+        context.registerService<babelwires::DeserializationRegistry>(deserializationReg);
+        context.registerService<babelwires::RandomService>(randomService);
 
         // Ensure we're not just testing in same context on both sides.
         babelwires::IdentifierRegistry::write()->addShortIdWithMetadata(
@@ -134,7 +138,7 @@ TEST(DataBundleTest, identifiers) {
             babelwires::IdentifierRegistry::Authority::isAuthoritative);
 
         const babelwires::ResultT<TestBundlePayload> targetPayloadResult =
-            std::move(bundle).resolveAgainstCurrentContext(dataContext, std::filesystem::current_path(), testLog);
+            std::move(bundle).resolveAgainstCurrentContext(context, std::filesystem::current_path(), testLog);
 
         ASSERT_TRUE(targetPayloadResult);
         const TestBundlePayload& targetPayload = *targetPayloadResult;
@@ -213,12 +217,15 @@ TEST(DataBundleTest, filePathResolution) {
             testUtils::TestLog testLog;
             babelwires::IdentifierRegistryScope identifierRegistry;
             babelwires::DeserializationRegistry deserializationReg;
+            babelwires::RandomService randomService(0x123456789abcdeful);
             deserializationReg.registerClass<TestBundlePayload>();
             deserializationReg.registerClass<TestBundle>();
-            babelwires::DataContext dataContext{deserializationReg};
+            babelwires::Context context;
+            context.registerService<babelwires::DeserializationRegistry>(deserializationReg);
+            context.registerService<babelwires::RandomService>(randomService);
 
             const babelwires::ResultT<TestBundlePayload> targetPayloadResult =
-                std::move(bundle).resolveAgainstCurrentContext(dataContext, scenario.m_newBase, log);
+                std::move(bundle).resolveAgainstCurrentContext(context, scenario.m_newBase, log);
 
             ASSERT_TRUE(targetPayloadResult);
             const TestBundlePayload& targetPayload = *targetPayloadResult;

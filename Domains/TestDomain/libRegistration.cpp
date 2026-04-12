@@ -22,57 +22,60 @@
 
 #include <BabelWiresLib/Processors/processorFactory.hpp>
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
-void testDomain::registerLib(babelwires::ProjectContext& context) {
-    context.m_typeSystem.addType<testDomain::TestEnum>();
-    context.m_typeSystem.addType<testDomain::TestSubEnum>();
-    context.m_typeSystem.addType<testDomain::TestSubSubEnum1>();
-    context.m_typeSystem.addType<testDomain::TestSubSubEnum2>();
-    context.m_typeSystem.addType<testDomain::TestSimpleArrayType>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::TestCompoundArrayType>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::TestSimpleRecordType>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::TestComplexRecordType>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::TestRecordWithVariantsType>(context.m_typeSystem);    
-    context.m_typeSystem.addType<testDomain::TestTupleType>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordWithNoFields>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::TestSumType>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::TestGenericType>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::TestSimpleCompoundType>(context.m_typeSystem);
+#include <BaseLib/Context/context.hpp>
 
-    context.m_typeSystem.addType<testDomain::RecordA0>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordA1>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordAS>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordB>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordAB>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordAOpt>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordAOptFixed>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordABOpt>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordAOptS>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordABOptChild>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordAsub0>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordAsubBsup>(context.m_typeSystem);
+void testDomain::registerLib(babelwires::Context& context) {
+    babelwires::TypeSystem& typeSystem = context.get<babelwires::TypeSystem>();
+    typeSystem.addType<testDomain::TestEnum>();
+    typeSystem.addType<testDomain::TestSubEnum>();
+    typeSystem.addType<testDomain::TestSubSubEnum1>();
+    typeSystem.addType<testDomain::TestSubSubEnum2>();
+    typeSystem.addType<testDomain::TestSimpleArrayType>(typeSystem);
+    typeSystem.addType<testDomain::TestCompoundArrayType>(typeSystem);
+    typeSystem.addType<testDomain::TestSimpleRecordType>(typeSystem);
+    typeSystem.addType<testDomain::TestComplexRecordType>(typeSystem);
+    typeSystem.addType<testDomain::TestRecordWithVariantsType>(typeSystem);    
+    typeSystem.addType<testDomain::TestTupleType>(typeSystem);
+    typeSystem.addType<testDomain::RecordWithNoFields>(typeSystem);
+    typeSystem.addType<testDomain::TestSumType>(typeSystem);
+    typeSystem.addType<testDomain::TestGenericType>(typeSystem);
+    typeSystem.addType<testDomain::TestSimpleCompoundType>(typeSystem);
 
-    context.m_typeSystem.addType<testDomain::RecordVWithNoFields>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordVA0>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordVA1>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordVAS>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordVB>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordVAB>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordVAV0>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordVABV0>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordVABV1>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordVABV01>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::RecordVAVB>(context.m_typeSystem);
+    typeSystem.addType<testDomain::RecordA0>(typeSystem);
+    typeSystem.addType<testDomain::RecordA1>(typeSystem);
+    typeSystem.addType<testDomain::RecordAS>(typeSystem);
+    typeSystem.addType<testDomain::RecordB>(typeSystem);
+    typeSystem.addType<testDomain::RecordAB>(typeSystem);
+    typeSystem.addType<testDomain::RecordAOpt>(typeSystem);
+    typeSystem.addType<testDomain::RecordAOptFixed>(typeSystem);
+    typeSystem.addType<testDomain::RecordABOpt>(typeSystem);
+    typeSystem.addType<testDomain::RecordAOptS>(typeSystem);
+    typeSystem.addType<testDomain::RecordABOptChild>(typeSystem);
+    typeSystem.addType<testDomain::RecordAsub0>(typeSystem);
+    typeSystem.addType<testDomain::RecordAsubBsup>(typeSystem);
 
-    context.m_typeSystem.addType<testDomain::TestParallelProcessorInput>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::TestParallelProcessorOutput>(context.m_typeSystem);
-    context.m_typeSystem.addType<testDomain::TestProcessorInputOutputType>(context.m_typeSystem);
+    typeSystem.addType<testDomain::RecordVWithNoFields>(typeSystem);
+    typeSystem.addType<testDomain::RecordVA0>(typeSystem);
+    typeSystem.addType<testDomain::RecordVA1>(typeSystem);
+    typeSystem.addType<testDomain::RecordVAS>(typeSystem);
+    typeSystem.addType<testDomain::RecordVB>(typeSystem);
+    typeSystem.addType<testDomain::RecordVAB>(typeSystem);
+    typeSystem.addType<testDomain::RecordVAV0>(typeSystem);
+    typeSystem.addType<testDomain::RecordVABV0>(typeSystem);
+    typeSystem.addType<testDomain::RecordVABV1>(typeSystem);
+    typeSystem.addType<testDomain::RecordVABV01>(typeSystem);
+    typeSystem.addType<testDomain::RecordVAVB>(typeSystem);
 
-    context.m_processorReg.addProcessor<TestProcessor>();
-    context.m_processorReg.addProcessor<TestParallelProcessor>();
+    typeSystem.addType<testDomain::TestParallelProcessorInput>(typeSystem);
+    typeSystem.addType<testDomain::TestParallelProcessorOutput>(typeSystem);
+    typeSystem.addType<testDomain::TestProcessorInputOutputType>(typeSystem);
 
-    context.m_targetFileFormatReg.addEntry<TestTargetFileFormat>();
-    context.m_sourceFileFormatReg.addEntry<TestSourceFileFormat>();
+    babelwires::ProcessorFactoryRegistry& processorFactoryRegistry = context.get<babelwires::ProcessorFactoryRegistry>();
+    processorFactoryRegistry.addProcessor<TestProcessor>();
+    processorFactoryRegistry.addProcessor<TestParallelProcessor>();
+
+    context.get<babelwires::TargetFileFormatRegistry>().addEntry<TestTargetFileFormat>();
+    context.get<babelwires::SourceFileFormatRegistry>().addEntry<TestSourceFileFormat>();
 }

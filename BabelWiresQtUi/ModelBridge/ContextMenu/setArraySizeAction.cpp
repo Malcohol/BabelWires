@@ -11,7 +11,6 @@
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 #include <BabelWiresQtUi/Utilities/fileDialogs.hpp>
-#include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
 #include <BabelWiresLib/Project/Commands/changeFileCommand.hpp>
@@ -22,6 +21,8 @@
 #include <BabelWiresLib/ValueTree/valueTreeHelper.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
+
+#include <BaseLib/Context/context.hpp>
 
 #include <QInputDialog>
 

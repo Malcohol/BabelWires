@@ -8,10 +8,11 @@
 
 #include <BabelWiresLib/Types/Map/Commands/changeEntryKindCommand.hpp>
 
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
+
+#include <BaseLib/Context/context.hpp>
 
 #include <cassert>
 
@@ -45,7 +46,7 @@ bool babelwires::ChangeEntryKindCommand::initialize(const MapProject& map) {
 
     m_replacedEntry = map.getMapEntry(m_indexOfEntry).getData().clone();
 
-    m_newEntry = MapEntryData::create(map.getProjectContext().m_typeSystem, *map.getCurrentSourceType(),
+    m_newEntry = MapEntryData::create(map.getProjectContext().get<TypeSystem>(), *map.getCurrentSourceType(),
                                       *map.getCurrentTargetType(), m_kind);
 
     return true;

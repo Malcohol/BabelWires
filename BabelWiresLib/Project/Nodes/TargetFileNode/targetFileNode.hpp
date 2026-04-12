@@ -12,18 +12,15 @@
 
 namespace babelwires {
     struct UserLogger;
-}
-
-namespace babelwires {
     class ValueTreeRoot;
     struct TargetFileNodeData;
-    struct ProjectContext;
+    class Context;
 
     /// TargetFileNodes are Nodes which correspond to a target file.
     class BABELWIRESLIB_API TargetFileNode : public FileNode {
       public:
         DOWNCASTABLE(TargetFileNode, FileNode);
-        TargetFileNode(const ProjectContext& context, UserLogger& userLogger, const TargetFileNodeData& data,
+        TargetFileNode(const Context& context, UserLogger& userLogger, const TargetFileNodeData& data,
                           NodeId newId);
         ~TargetFileNode();
 
@@ -34,9 +31,9 @@ namespace babelwires {
 
         virtual std::filesystem::path getFilePath() const override;
         virtual void setFilePath(std::filesystem::path newFilePath) override;
-        virtual const FileTypeEntry* getFileFormatInformation(const ProjectContext& context) const override;
+        virtual const FileTypeEntry* getFileFormatInformation(const Context& context) const override;
         virtual FileOperations getSupportedFileOperations() const override;
-        virtual bool save(const ProjectContext& context, UserLogger& userLogger) override;
+        virtual bool save(const Context& context, UserLogger& userLogger) override;
 
         /// Adjusts the label to mark that the Node has not been saved since
         /// changes were made.

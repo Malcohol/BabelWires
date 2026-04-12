@@ -11,14 +11,14 @@
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Nodes/SourceFileNode/sourceFileNodeData.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Log/userLogger.hpp>
 
-babelwires::SourceFileNode::SourceFileNode(const ProjectContext& context, UserLogger& userLogger,
+babelwires::SourceFileNode::SourceFileNode(const Context& context, UserLogger& userLogger,
                                            const SourceFileNodeData& data, NodeId newId)
     : FileNode(data, newId) {
     reload(context, userLogger);
@@ -63,8 +63,8 @@ void babelwires::SourceFileNode::setFilePath(std::filesystem::path newFilePath) 
 }
 
 const babelwires::FileTypeEntry*
-babelwires::SourceFileNode::getFileFormatInformation(const ProjectContext& context) const {
-    const auto formatResult = context.m_sourceFileFormatReg.getRegisteredEntry(getNodeData().m_factoryIdentifier);
+babelwires::SourceFileNode::getFileFormatInformation(const Context& context) const {
+    const auto formatResult = context.get<SourceFileFormatRegistry>().getRegisteredEntry(getNodeData().m_factoryIdentifier);
     if (!formatResult) {
         return nullptr;
     }
@@ -75,19 +75,19 @@ babelwires::FileNode::FileOperations babelwires::SourceFileNode::getSupportedFil
     return FileOperations::reload;
 }
 
-bool babelwires::SourceFileNode::reload(const ProjectContext& context, UserLogger& userLogger) {
+bool babelwires::SourceFileNode::reload(const Context& context, UserLogger& userLogger) {
     const SourceFileNodeData& data = getNodeData();
 
     const auto onFailure = [this, context](std::string error) {
         setInternalFailure(std::move(error));
         // A dummy file root which allows the user to change the file via the context menu.
-        auto failure = std::make_unique<ValueTreeRoot>(context.m_typeSystem,
-                                                       context.m_typeSystem.getRegisteredType<FailureType>());
+        auto failure = std::make_unique<ValueTreeRoot>(context.get<TypeSystem>(),
+                                                       context.get<TypeSystem>().getRegisteredType<FailureType>());
         failure->setToDefault();
         setValueTreeRoot(std::move(failure));
     };
 
-    const auto formatResult = context.m_sourceFileFormatReg.getRegisteredEntry(data.m_factoryIdentifier);
+    const auto formatResult = context.get<SourceFileFormatRegistry>().getRegisteredEntry(data.m_factoryIdentifier);
     if (!formatResult) {
         userLogger.logError() << "Could not create Source File Node id=" << data.m_id << ": "
                               << formatResult.error().toString();

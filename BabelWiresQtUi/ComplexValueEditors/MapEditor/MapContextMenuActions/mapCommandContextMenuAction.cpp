@@ -10,8 +10,9 @@
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapEditor.hpp>
 #include <BabelWiresQtUi/ComplexValueEditors/MapEditor/mapModel.hpp>
 
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Types/Map/Commands/changeEntryKindCommand.hpp>
+
+#include <BaseLib/Context/context.hpp>
 
 babelwires::MapCommandContextMenuAction::MapCommandContextMenuAction(std::unique_ptr<Command<MapProject>> command)
     : ContextMenuAction(command->getName().c_str())

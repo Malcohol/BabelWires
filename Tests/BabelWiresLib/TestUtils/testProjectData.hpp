@@ -13,7 +13,7 @@ namespace testUtils {
         /// Ensure the discriminators in the fields in the paths match those stored in the current context by
         /// attempting to resolve the paths against a TestRecordFeature and TestFileFeature.
         /// Note: This assumes the elements are still in the order they were on construction.
-        void resolvePathsInCurrentContext(const babelwires::ProjectContext& context);
+        void resolvePathsInCurrentContext(const babelwires::Context& context);
 
         /// Set the file paths in the features to the give ones. Also updates the members of this class.
         void setFilePaths(std::string_view sourceFilePath, std::string_view targetFilePath);
@@ -27,7 +27,7 @@ namespace testUtils {
         /// Also check that the discriminators in the path IDs match the currently registered values.
         /// This is agnostic about the order of the elements.
         // Note: The first argument is not required to be an instance of this class.
-        static void testProjectData(const babelwires::ProjectContext& context, const babelwires::ProjectData& projectData);
+        static void testProjectData(const babelwires::Context& context, const babelwires::ProjectData& projectData);
 
         static constexpr babelwires::NodeId c_sourceNodeId = 12;
         static constexpr babelwires::NodeId c_processorId = 6;

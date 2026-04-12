@@ -21,12 +21,12 @@
 namespace babelwires {
     class MapProjectEntry;
     class MapEntryData;
-    struct ProjectContext;
+    class Context;
 
     /// The MapProject carries an enriched version of the data in a MapValue and has support for editing.
     class BABELWIRESLIB_API MapProject {
       public:
-        MapProject(const ProjectContext& projectContext);
+        MapProject(const Context& context);
         virtual ~MapProject();
 
         struct BABELWIRESLIB_API AllowedTypes {
@@ -71,10 +71,10 @@ namespace babelwires {
         /// Get the validity of the target type (considered with respect to the allowed target type)
         const Result& getTargetTypeValidity() const;
 
-        const ProjectContext& getProjectContext() const;
+        const Context& getProjectContext() const;
 
       private:
-        const ProjectContext& m_projectContext;
+        const Context& m_projectContext;
         AllowedTypes m_allowedSourceTypeExps;
         AllowedTypes m_allowedTargetTypeExps;
 

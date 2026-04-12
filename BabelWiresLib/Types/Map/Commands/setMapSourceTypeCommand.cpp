@@ -11,8 +11,9 @@
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
+
+#include <BaseLib/Context/context.hpp>
 
 babelwires::SetMapSourceTypeCommand::SetMapSourceTypeCommand(std::string commandName, TypeExp newSourceTypeExp)
     : SimpleCommand(commandName)
@@ -20,8 +21,8 @@ babelwires::SetMapSourceTypeCommand::SetMapSourceTypeCommand(std::string command
 
 bool babelwires::SetMapSourceTypeCommand::initialize(const MapProject& map) {
     const MapProject::AllowedTypes& allowedTypes = map.getAllowedSourceTypeExps();
-    const ProjectContext& context = map.getProjectContext();
-    const TypeSystem& typeSystem = context.m_typeSystem;
+    const Context& context = map.getProjectContext();
+    const TypeSystem& typeSystem = context.get<TypeSystem>();
     if (!allowedTypes.isRelatedToSome(typeSystem, m_newSourceTypeExp)) {
         return false;
     }

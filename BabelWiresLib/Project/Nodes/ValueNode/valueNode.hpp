@@ -19,7 +19,7 @@ namespace babelwires {
     class BABELWIRESLIB_API ValueNode : public Node {
       public:
         DOWNCASTABLE(ValueNode, Node);
-        ValueNode(const ProjectContext& context, UserLogger& userLogger, const ValueNodeData& data,
+        ValueNode(const Context& context, UserLogger& userLogger, const ValueNodeData& data,
                          NodeId newId);
         ~ValueNode();
 

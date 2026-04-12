@@ -7,12 +7,12 @@
  **/
 #include <Domains/TestDomain/testFileFormats.hpp>
 
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/File/fileType.hpp>
 #include <BabelWiresLib/Types/File/fileTypeConstructor.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/IO/fileDataSource.hpp>
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <BaseLib/Identifiers/registeredIdentifier.hpp>
@@ -86,11 +86,11 @@ testDomain::TestSourceFileFormat::getFileData(const std::filesystem::path& path)
 
 babelwires::ResultT<std::unique_ptr<babelwires::ValueTreeRoot>>
 testDomain::TestSourceFileFormat::loadFromFile(const std::filesystem::path& path,
-                                               const babelwires::ProjectContext& projectContext,
+                                               const babelwires::Context& context,
                                                babelwires::UserLogger& userLogger) const {
     ASSIGN_OR_ERROR(auto [r0, r1], getFileData(path));
     auto newFeature = std::make_unique<babelwires::ValueTreeRoot>(
-        projectContext.m_typeSystem, getTestFileType().assertResolve(projectContext.m_typeSystem));
+        context.get<babelwires::TypeSystem>(), getTestFileType().assertResolve(context.get<babelwires::TypeSystem>()));
     newFeature->setToDefault();
     TestSimpleRecordType::Instance instance{newFeature->getChild(0)->as<babelwires::ValueTreeNode>()};
     instance.getintR0().set(r0);
@@ -114,12 +114,12 @@ std::string testDomain::TestTargetFileFormat::getProductName() const {
 }
 
 std::unique_ptr<babelwires::ValueTreeRoot>
-testDomain::TestTargetFileFormat::createNewValue(const babelwires::ProjectContext& projectContext) const {
-    return std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem,
-                                                       getTestFileType().assertResolve(projectContext.m_typeSystem));
+testDomain::TestTargetFileFormat::createNewValue(const babelwires::Context& context) const {
+    return std::make_unique<babelwires::ValueTreeRoot>(context.get<babelwires::TypeSystem>(),
+                                                       getTestFileType().assertResolve(context.get<babelwires::TypeSystem>()));
 }
 
-babelwires::Result testDomain::TestTargetFileFormat::writeToFile(const babelwires::ProjectContext& projectContext,
+babelwires::Result testDomain::TestTargetFileFormat::writeToFile(const babelwires::Context& context,
                                                                  babelwires::UserLogger& userLogger,
                                                                  const babelwires::ValueTreeRoot& contents,
                                                                  const std::filesystem::path& path) const {

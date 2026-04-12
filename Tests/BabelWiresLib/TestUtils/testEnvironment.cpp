@@ -11,8 +11,9 @@
 
 testUtils::TestEnvironment::TestEnvironment()
     // Try to ensure the tests are deterministic by fixing the random seed.
-    : m_projectContext{m_deserializationReg, m_sourceFileFormatReg, m_targetFileFormatReg,
-                       m_processorReg,       m_typeSystem,          std::default_random_engine(0x123456789abcdeful)}
+    : m_randomService(0x123456789abcdeful)
+    , m_projectContext(m_deserializationReg, m_randomService, m_sourceFileFormatReg, m_targetFileFormatReg,
+                       m_processorReg, m_typeSystem)
     , m_project(m_projectContext, m_log) {
 
     babelwires::baseLib::registerLib(m_projectContext);
@@ -34,4 +35,18 @@ testUtils::TestEnvironment::TestEnvironment()
     m_typeSystem.addTypeConstructor<testUtils::TestUnaryTypeConstructor>();
     m_typeSystem.addTypeConstructor<testUtils::TestBinaryTypeConstructor>();
     m_typeSystem.addTypeConstructor<testUtils::TestMixedTypeConstructor>();
+}
+
+testUtils::TestEnvironment::TestContext::TestContext(babelwires::DeserializationRegistry& deserializationReg,
+                                               babelwires::RandomService& randomService,
+                                               babelwires::SourceFileFormatRegistry& sourceFileFormatReg,
+                                               babelwires::TargetFileFormatRegistry& targetFileFormatReg,
+                                               babelwires::ProcessorFactoryRegistry& processorReg,
+                                               babelwires::TypeSystem& typeSystem) {
+    registerService<babelwires::DeserializationRegistry>(deserializationReg);
+    registerService<babelwires::RandomService>(randomService);
+    registerService<babelwires::SourceFileFormatRegistry>(sourceFileFormatReg);
+    registerService<babelwires::TargetFileFormatRegistry>(targetFileFormatReg);
+    registerService<babelwires::ProcessorFactoryRegistry>(processorReg);
+    registerService<babelwires::TypeSystem>(typeSystem);
 }

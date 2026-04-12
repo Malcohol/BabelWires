@@ -7,13 +7,13 @@
  **/
 #include <BabelWiresQtUi/mainWindow.hpp>
 
+#include <BabelWiresQtUi/applicationIdentity.hpp>
 #include <BabelWiresQtUi/Dialogs/messageBox.hpp>
 #include <BabelWiresQtUi/LogWindow/logWindow.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphicsScene.hpp>
-#include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
 #include <BabelWiresLib/FileFormat/sourceFileFormat.hpp>
@@ -28,6 +28,7 @@
 #include <BabelWiresLib/Serialization/projectSerialization.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Log/unifiedLog.hpp>
 
 #include <QtNodes/ConnectionStyle>
@@ -543,13 +544,13 @@ void babelwires::MainWindow::onShowLogWindow(bool show) {
 }
 
 QString babelwires::MainWindow::getApplicationTitle() const {
-    const std::string& title = m_projectGraphModel.getContext().m_applicationIdentity.m_applicationTitle;
+    const std::string& title = m_projectGraphModel.getContext().get<ApplicationIdentity>().m_applicationTitle;
     assert(!title.empty() && "m_applicationTitle must be provided");
     return title.c_str();
 }
 
 QString babelwires::MainWindow::getProjectExtension() const {
-    const std::string& ext = m_projectGraphModel.getContext().m_applicationIdentity.m_projectExtension;
+    const std::string& ext = m_projectGraphModel.getContext().get<ApplicationIdentity>().m_projectExtension;
     assert(!ext.empty() && "m_projectExtension must be provided");
     assert((ext[0] == '.') && "The extension must begin with .");
     return ext.c_str();

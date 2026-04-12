@@ -14,12 +14,12 @@
 babelwires::FileNode::FileNode(const NodeData& data, NodeId newId)
     : Node(data, newId) {}
 
-bool babelwires::FileNode::reload(const ProjectContext& context, UserLogger& userLogger) {
+bool babelwires::FileNode::reload(const Context& context, UserLogger& userLogger) {
     assert(!"Reload is not supported on this type of FileNode");
     return false;
 }
 
-bool babelwires::FileNode::save(const ProjectContext& context, UserLogger& userLogger) {
+bool babelwires::FileNode::save(const Context& context, UserLogger& userLogger) {
     assert(!"Save is not supported on this type of FileNode");
     return false;
 }
