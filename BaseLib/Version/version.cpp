@@ -43,23 +43,23 @@ const babelwires::Version& babelwires::Version::getCodebaseVersion() {
 }
 
 bool babelwires::Version::satisfies(const Version& requiredVersion) const {
-    if ((major == 0) || (requiredVersion.major == 0)) {
-        return (major == requiredVersion.major) && (minor == requiredVersion.minor) && (patch == requiredVersion.patch);
+    if ((m_major == 0) || (requiredVersion.m_major == 0)) {
+        return (m_major == requiredVersion.m_major) && (m_minor == requiredVersion.m_minor) && (m_patch == requiredVersion.m_patch);
     }
 
-    if (major != requiredVersion.major) {
+    if (m_major != requiredVersion.m_major) {
         return false;
     }
 
-    if (minor != requiredVersion.minor) {
-        return minor > requiredVersion.minor;
+    if (m_minor != requiredVersion.m_minor) {
+        return m_minor > requiredVersion.m_minor;
     }
 
-    return patch >= requiredVersion.patch;
+    return m_patch >= requiredVersion.m_patch;
 }
 
 std::string babelwires::Version::toString() const {
-    return std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(patch);
+    return std::to_string(m_major) + "." + std::to_string(m_minor) + "." + std::to_string(m_patch);
 }
 
 std::string babelwires::Version::serializeToString() const {

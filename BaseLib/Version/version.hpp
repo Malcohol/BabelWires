@@ -24,13 +24,15 @@ namespace babelwires {
     struct BASELIB_API Version {
         /// A major version change always indicates incompatibility.
         /// However, a major version of zero is a special case and indicates that the API is not yet stable.
-        std::uint16_t major;
+        std::uint16_t m_major;
         /// A minor version change indicates backward-compatible functionality additions.
-        std::uint16_t minor;
+        std::uint16_t m_minor;
         /// A patch version change indicates backward-compatible bug fixes.
-        std::uint16_t patch;
+        std::uint16_t m_patch;
 
         /// Return the version of this codebase.
+        /// NOTE: The version returned by this function is the one that was used when BaseLib was compiled.
+        /// From the perspective of plugins, this is the host's version. The plugins own version can be obtained from the generated header, codebaseVersion_gen.hpp.
         /// This is set from values in the (auto-generated) file codebaseVersion_gen.hpp.
         /// The original source of the version values is the root CMakeLists.txt file.
         static const Version& getCodebaseVersion();

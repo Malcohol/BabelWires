@@ -4,7 +4,7 @@
 
 TEST(VersionTest, codebaseVersionNotPlaceholder) {
     const babelwires::Version& v = babelwires::Version::getCodebaseVersion();
-    EXPECT_FALSE((v.major == 0) && (v.minor == 0) && (v.patch == 0));
+    EXPECT_FALSE((v.m_major == 0) && (v.m_minor == 0) && (v.m_patch == 0));
 }
 
 TEST(VersionTest, satisfiesStableSemver) {
@@ -35,26 +35,26 @@ TEST(VersionTest, serializationRoundTrip) {
     const auto deserializedResult = babelwires::Version::deserializeFromString(serialized);
     ASSERT_TRUE(deserializedResult.has_value());
     const babelwires::Version deserialized = deserializedResult.value();
-    EXPECT_EQ(deserialized.major, original.major);
-    EXPECT_EQ(deserialized.minor, original.minor);
-    EXPECT_EQ(deserialized.patch, original.patch);
+    EXPECT_EQ(deserialized.m_major, original.m_major);
+    EXPECT_EQ(deserialized.m_minor, original.m_minor);
+    EXPECT_EQ(deserialized.m_patch, original.m_patch);
 }
 
 TEST(VersionTest, deserializeFromStringAcceptsSemVerWithMetadata) {
     const babelwires::ResultT<babelwires::Version> parsed =
         babelwires::Version::deserializeFromString("1.2.3-alpha.1+build.42");
     ASSERT_TRUE(parsed.has_value());
-    EXPECT_EQ(parsed->major, 1);
-    EXPECT_EQ(parsed->minor, 2);
-    EXPECT_EQ(parsed->patch, 3);
+    EXPECT_EQ(parsed->m_major, 1);
+    EXPECT_EQ(parsed->m_minor, 2);
+    EXPECT_EQ(parsed->m_patch, 3);
 }
 
 TEST(VersionTest, deserializeFromStringAcceptsPlainSemVer) {
     const babelwires::ResultT<babelwires::Version> parsed = babelwires::Version::deserializeFromString("0.0.1");
     ASSERT_TRUE(parsed.has_value());
-    EXPECT_EQ(parsed->major, 0);
-    EXPECT_EQ(parsed->minor, 0);
-    EXPECT_EQ(parsed->patch, 1);
+    EXPECT_EQ(parsed->m_major, 0);
+    EXPECT_EQ(parsed->m_minor, 0);
+    EXPECT_EQ(parsed->m_patch, 1);
 }
 
 TEST(VersionTest, deserializeFromStringRejectsInvalidSemVerText) {
