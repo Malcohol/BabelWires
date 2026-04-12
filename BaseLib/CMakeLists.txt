@@ -35,12 +35,12 @@ SET( COMMON_SRCS
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/generated/BaseLib/Version)
 
 configure_file(
-	${CMAKE_CURRENT_SOURCE_DIR}/Version/projectVersion.hpp.in
-	${CMAKE_CURRENT_BINARY_DIR}/generated/BaseLib/Version/projectVersion_gen.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Version/codebaseVersion.hpp.in
+	${CMAKE_CURRENT_BINARY_DIR}/generated/BaseLib/Version/codebaseVersion_gen.hpp
 	@ONLY
 )
 
-# TODO: Add install/export rules for generated BaseLib/Version/projectVersion_gen.hpp
+# TODO: Add install/export rules for generated BaseLib/Version/codebaseVersion_gen.hpp
 # and associated CMake package metadata when external plugin support is introduced.
 
 ADD_LIBRARY( BaseLib ${COMMON_SRCS} )

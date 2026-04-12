@@ -2,8 +2,8 @@
 
 #include <BaseLib/Version/version.hpp>
 
-TEST(VersionTest, projectVersionNotPlaceholder) {
-    const babelwires::Version& v = babelwires::Version::getProjectVersion();
+TEST(VersionTest, codebaseVersionNotPlaceholder) {
+    const babelwires::Version& v = babelwires::Version::getCodebaseVersion();
     EXPECT_FALSE((v.major == 0) && (v.minor == 0) && (v.patch == 0));
 }
 

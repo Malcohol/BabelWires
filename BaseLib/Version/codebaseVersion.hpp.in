@@ -11,8 +11,8 @@
 
 namespace babelwires::detail {
 
-    inline constexpr std::uint16_t c_projectVersionMajor = @PROJECT_VERSION_MAJOR@;
-    inline constexpr std::uint16_t c_projectVersionMinor = @PROJECT_VERSION_MINOR@;
-    inline constexpr std::uint16_t c_projectVersionPatch = @PROJECT_VERSION_PATCH@;
+    inline constexpr std::uint16_t c_codebaseVersionMajor = @PROJECT_VERSION_MAJOR@;
+    inline constexpr std::uint16_t c_codebaseVersionMinor = @PROJECT_VERSION_MINOR@;
+    inline constexpr std::uint16_t c_codebaseVersionPatch = @PROJECT_VERSION_PATCH@;
 
 } // namespace babelwires::detail

@@ -7,7 +7,7 @@
  **/
 
 #include <BaseLib/Version/version.hpp>
-#include <BaseLib/Version/projectVersion_gen.hpp>
+#include <BaseLib/Version/codebaseVersion_gen.hpp>
 
 #include <BaseLib/Result/resultDSL.hpp>
 
@@ -32,14 +32,14 @@ namespace {
     }
 } // namespace
 
-const babelwires::Version& babelwires::Version::projectVersion() {
-    static const Version s_projectVersion = {
-        detail::c_projectVersionMajor,
-        detail::c_projectVersionMinor,
-        detail::c_projectVersionPatch,
+const babelwires::Version& babelwires::Version::getCodebaseVersion() {
+    static const Version s_codebaseVersion = {
+        detail::c_codebaseVersionMajor,
+        detail::c_codebaseVersionMinor,
+        detail::c_codebaseVersionPatch,
     };
 
-    return s_projectVersion;
+    return s_codebaseVersion;
 }
 
 bool babelwires::Version::satisfies(const Version& requiredVersion) const {

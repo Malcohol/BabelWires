@@ -30,10 +30,10 @@ namespace babelwires {
         /// A patch version change indicates backward-compatible bug fixes.
         std::uint16_t patch;
 
-        /// Return the version of this project.
-        /// This is set from values in the (auto-generated) file projectVersion_gen.hpp.
+        /// Return the version of this codebase.
+        /// This is set from values in the (auto-generated) file codebaseVersion_gen.hpp.
         /// The original source of the version values is the root CMakeLists.txt file.
-        static const Version& getProjectVersion();
+        static const Version& getCodebaseVersion();
 
         /// Return true if this version satisfies the given required version.
         /// Specifically, an API with this version can be consumed where someone requires the given requiredVersion.
