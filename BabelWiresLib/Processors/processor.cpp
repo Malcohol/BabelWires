@@ -7,17 +7,18 @@
  **/
 #include <BabelWiresLib/Processors/processor.hpp>
 
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeExp.hpp>
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Identifiers/registeredIdentifier.hpp>
 
-babelwires::Processor::Processor(const ProjectContext& projectContext, TypePtr inputType, TypePtr outputType)
+babelwires::Processor::Processor(const Context& context, TypePtr inputType, TypePtr outputType)
     : m_inputValueTreeRoot(
-          std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, std::move(inputType)))
+          std::make_unique<babelwires::ValueTreeRoot>(context.get<TypeSystem>(), std::move(inputType)))
     , m_outputValueTreeRoot(
-          std::make_unique<babelwires::ValueTreeRoot>(projectContext.m_typeSystem, std::move(outputType))) {}
+          std::make_unique<babelwires::ValueTreeRoot>(context.get<TypeSystem>(), std::move(outputType))) {}
 
 babelwires::Processor::~Processor() = default;
 

@@ -26,7 +26,7 @@ namespace babelwires {
     class TargetFileFormatRegistry;
     class SourceFileFormatRegistry;
     class ProcessorFactoryRegistry;
-    struct ProjectContext;
+    class Context;
     class Modifier;
     struct ModifierData;
     class Node;
@@ -40,7 +40,7 @@ namespace babelwires {
     class BABELWIRESLIB_API Project {
       public:
         /// Construct a new project.
-        Project(ProjectContext& context, UserLogger& userLogger);
+        Project(const Context& context, UserLogger& userLogger);
         virtual ~Project();
 
         /// Initialize the project as described by the projectData.
@@ -103,9 +103,6 @@ namespace babelwires {
 
         /// Sets the Ui size of the Node's contents.
         void setNodeContentsSize(NodeId nodeId, const UiSize& newSize);
-
-        const TargetFileFormatRegistry& getFactoryFormatRegistry() const;
-        const SourceFileFormatRegistry& getFileFormatRegistry() const;
 
         Node* getNode(NodeId id);
         const Node* getNode(NodeId id) const;
@@ -190,7 +187,7 @@ namespace babelwires {
         void addNodeConnectionsToCache(Node* node);
 
       private:
-        ProjectContext& m_context;
+        const Context& m_context;
 
         /// The userLogger is only used for logging user-visible errors, warnings and messages.
         /// It is not intended for debug logging.

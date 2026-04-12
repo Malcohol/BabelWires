@@ -17,9 +17,12 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
+#include <Tests/TestUtils/testIdentifiers.hpp>
+
 TEST(SetTypeVariableModifierDataTest, setSingleTypeVariable) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
+    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem,
+                                        testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
     valueTree.setToDefault();
 
     const auto* const type = valueTree.getType()->tryAs<testDomain::TestGenericType>();
@@ -51,7 +54,8 @@ TEST(SetTypeVariableModifierDataTest, setSingleTypeVariable) {
     data.apply(&valueTree);
 
     const auto& valueAfterSecondApplication = valueTree.getValue();
-    const auto* const genericValueAfterSecondApplication = valueAfterSecondApplication->tryAs<babelwires::GenericValue>();
+    const auto* const genericValueAfterSecondApplication =
+        valueAfterSecondApplication->tryAs<babelwires::GenericValue>();
     ASSERT_NE(genericValueAfterSecondApplication, nullptr);
     EXPECT_EQ(type->getTypeAssignment(valueAfterSecondApplication, 0), babelwires::StringType::getThisIdentifier());
     EXPECT_EQ(type->getTypeAssignment(valueAfterSecondApplication, 1), babelwires::StringType::getThisIdentifier());
@@ -69,12 +73,14 @@ TEST(SetTypeVariableModifierDataTest, setSingleTypeVariable) {
 
 TEST(SetTypeVariableModifierDataTest, failureNotAGenericType) {
     testUtils::TestEnvironment testEnvironment;
-    
+
     babelwires::SetTypeVariableModifierData data;
     data.m_typeAssignments.resize(1);
     data.m_typeAssignments[0] = babelwires::StringType::getThisIdentifier();
 
-    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestSimpleRecordType>());
+    babelwires::ValueTreeRoot valueTree(
+        testEnvironment.m_typeSystem,
+        testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestSimpleRecordType>());
 
     valueTree.setToDefault();
 
@@ -83,29 +89,47 @@ TEST(SetTypeVariableModifierDataTest, failureNotAGenericType) {
 
 TEST(SetTypeVariableModifierDataTest, failureTooFewTypeVariables) {
     testUtils::TestEnvironment testEnvironment;
-    
+
     babelwires::SetTypeVariableModifierData data;
     data.m_typeAssignments.resize(1);
     data.m_typeAssignments[0] = babelwires::StringType::getThisIdentifier();
 
-    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
+    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem,
+                                        testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
 
     valueTree.setToDefault();
 
     EXPECT_FALSE(data.apply(&valueTree));
 }
 
-
 TEST(SetTypeVariableModifierDataTest, failureTooManyTypeVariables) {
     testUtils::TestEnvironment testEnvironment;
-    
+
     babelwires::SetTypeVariableModifierData data;
     data.m_typeAssignments.resize(3);
     data.m_typeAssignments[0] = babelwires::StringType::getThisIdentifier();
     data.m_typeAssignments[1] = babelwires::StringType::getThisIdentifier();
     data.m_typeAssignments[2] = babelwires::StringType::getThisIdentifier();
 
-    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem, testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
+    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem,
+                                        testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
+
+    valueTree.setToDefault();
+
+    EXPECT_FALSE(data.apply(&valueTree));
+}
+
+TEST(SetTypeVariableModifierDataTest, failureArgumentDoesNotResolve) {
+    // This can happen after deserialization, if the modifier uses a type that is not present in the current TypeSystem.
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::SetTypeVariableModifierData data;
+    data.m_typeAssignments.resize(2);
+    data.m_typeAssignments[0] = babelwires::TypeExp(testUtils::getTestRegisteredMediumIdentifier("UnknownType"));
+    data.m_typeAssignments[1] = babelwires::StringType::getThisIdentifier();
+
+    babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem,
+                                        testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
 
     valueTree.setToDefault();
 

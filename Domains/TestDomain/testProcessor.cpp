@@ -10,8 +10,8 @@
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 #include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Result/resultDSL.hpp>
 
 babelwires::ShortId testDomain::TestProcessorInputOutputType::getIntId() {
@@ -58,9 +58,9 @@ const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToRecord 
 const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToInt2 =
     *babelwires::Path::deserializeFromString("Record/intR0");
 
-testDomain::TestProcessor::TestProcessor(const babelwires::ProjectContext& context)
-    : babelwires::Processor(context, context.m_typeSystem.getRegisteredType<testDomain::TestProcessorInputOutputType>(),
-                            context.m_typeSystem.getRegisteredType<testDomain::TestProcessorInputOutputType>()) {}
+testDomain::TestProcessor::TestProcessor(const babelwires::Context& context)
+    : babelwires::Processor(context, context.get<babelwires::TypeSystem>().getRegisteredType<testDomain::TestProcessorInputOutputType>(),
+                            context.get<babelwires::TypeSystem>().getRegisteredType<testDomain::TestProcessorInputOutputType>()) {}
 
 babelwires::Result testDomain::TestProcessor::processValue(babelwires::UserLogger& userLogger, const babelwires::ValueTreeNode& input,
                                              babelwires::ValueTreeNode& output) const {

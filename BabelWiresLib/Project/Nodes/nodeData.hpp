@@ -24,9 +24,8 @@
 #include <filesystem>
 
 namespace babelwires {
-
     struct UserLogger;
-    struct ProjectContext;
+    class Context;
     class Node;
     class UntypedRegistry;
 
@@ -68,9 +67,9 @@ namespace babelwires {
         /// Unless m_factoryVersion is 0 (which means "ignore versions"), this should return false
         /// if the m_factoryVersion is different than the factory version registered in the context.
         /// Warn if it is less and error if it is more.
-        virtual bool checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) = 0;
+        virtual bool checkFactoryVersion(const Context& context, UserLogger& userLogger) = 0;
 
-        std::unique_ptr<Node> createNode(const ProjectContext& context, UserLogger& userLogger,
+        std::unique_ptr<Node> createNode(const Context& context, UserLogger& userLogger,
                                                              NodeId newId) const;
 
         /// Call the visitor on all the FieldIdentifiers in the Node.
@@ -103,7 +102,7 @@ namespace babelwires {
 
       protected:
         virtual std::unique_ptr<Node>
-        doCreateNode(const ProjectContext& context, UserLogger& userLogger, NodeId newId) const = 0;
+        doCreateNode(const Context& context, UserLogger& userLogger, NodeId newId) const = 0;
 
         /// For use when serializing subclasses.
         void addCommonKeyValuePairs(Serializer& serializer) const;

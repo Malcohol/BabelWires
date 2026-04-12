@@ -13,14 +13,16 @@
 #include <BabelWiresQtUi/NodeEditorBridge/modifyModelScope.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 #include <BabelWiresQtUi/ModelBridge/nodeContentsModel.hpp>
-#include <BabelWiresQtUi/uiProjectContext.hpp>
+#include <BabelWiresQtUi/ValueModels/valueModelRegistry.hpp>
 
+#include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Commands/commands.hpp>
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/project.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
+
+#include <BaseLib/Context/context.hpp>
 
 #include <QApplication>
 #include <QBrush>
@@ -53,8 +55,8 @@ QWidget* babelwires::RowModelDelegate::createEditor(QWidget* parent, const QStyl
     if (!entry) {
         return nullptr;
     }
-    const babelwires::UiProjectContext& context = m_projectGraphModel.getContext();
-    RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
+    const babelwires::Context& context = m_projectGraphModel.getContext();
+    RowModelDispatcher rowModel(context.get<ValueModelRegistry>(), context.get<TypeSystem>(), entry, node);
 
     assert(rowModel->isItemEditable() && "We should not be trying to create an editor for a non-editable ValueTreeNode");
     QWidget* const editor = rowModel->createEditor(parent, index);
@@ -94,8 +96,8 @@ void babelwires::RowModelDelegate::setEditorData(QWidget* editor, const QModelIn
         return;
     }
 
-    const babelwires::UiProjectContext& context = m_projectGraphModel.getContext();
-    RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
+    const babelwires::Context& context = m_projectGraphModel.getContext();
+    RowModelDispatcher rowModel(context.get<ValueModelRegistry>(), context.get<TypeSystem>(), entry, node);
 
     assert(rowModel->isItemEditable() && "We should not be trying to create an editor for a non-editable ValueTreeNode");
     rowModel->setEditorData(editor);
@@ -119,8 +121,8 @@ void babelwires::RowModelDelegate::setModelData(QWidget* editor, QAbstractItemMo
     if (!entry) {
         return;
     }
-    const babelwires::UiProjectContext& context = m_projectGraphModel.getContext();
-    RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
+    const babelwires::Context& context = m_projectGraphModel.getContext();
+    RowModelDispatcher rowModel(context.get<ValueModelRegistry>(), context.get<TypeSystem>(), entry, node);
 
     assert(rowModel->isItemEditable() && "We should not be trying to create an editor for a non-editable ValueTreeNode");
     // Allow the function to reject the contents of the editor.
@@ -139,8 +141,8 @@ void babelwires::RowModelDelegate::paint(QPainter* painter, const QStyleOptionVi
         AccessModelScope scope(m_projectGraphModel);
         if (const Node* node = nodeContentsModel->getNode(scope)) {
             if (const babelwires::ContentsCacheEntry* entry = nodeContentsModel->getEntry(scope, index)) {
-                const babelwires::UiProjectContext& context = m_projectGraphModel.getContext();
-                RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
+                const babelwires::Context& context = m_projectGraphModel.getContext();
+                RowModelDispatcher rowModel(context.get<ValueModelRegistry>(), context.get<TypeSystem>(), entry, node);
                 if (rowModel->hasCustomPainting()) {
                     QStyleOptionViewItem options = option;
                     initStyleOption(&options, index);
@@ -165,8 +167,8 @@ QSize babelwires::RowModelDelegate::sizeHint(const QStyleOptionViewItem& option,
         AccessModelScope scope(m_projectGraphModel);
         if (const Node* node = nodeContentsModel->getNode(scope)) {
             if (const babelwires::ContentsCacheEntry* entry = nodeContentsModel->getEntry(scope, index)) {
-                const babelwires::UiProjectContext& context = m_projectGraphModel.getContext();
-                RowModelDispatcher rowModel(context.m_valueModelReg, context.m_typeSystem, entry, node);
+                const babelwires::Context& context = m_projectGraphModel.getContext();
+                RowModelDispatcher rowModel(context.get<ValueModelRegistry>(), context.get<TypeSystem>(), entry, node);
                 if (rowModel->hasCustomPainting()) {
                     QStyleOptionViewItem options = option;
                     initStyleOption(&options, index);

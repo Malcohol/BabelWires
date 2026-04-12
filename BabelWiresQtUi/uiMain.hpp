@@ -13,13 +13,13 @@
 
 namespace babelwires {
     class UnifiedLog;
-    struct UiProjectContext;
+    class Context;
 
     /// Manages the creation of the UI.
     class BABELWIRESQTUI_API Ui {
       public:
         /// A UI framework may consume arguments from the command-line.
-        Ui(int& argc, char** argv, UiProjectContext& projectContext, UnifiedLog& log);
+        Ui(int& argc, char** argv, Context& context, UnifiedLog& log);
 
         virtual ~Ui();
 

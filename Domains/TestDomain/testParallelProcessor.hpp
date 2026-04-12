@@ -39,7 +39,7 @@ namespace testDomain {
     struct TESTDOMAIN_API TestParallelProcessor : babelwires::ParallelProcessor {
         BW_PROCESSOR_WITH_DEFAULT_FACTORY("testParallelProc", "Test Parallel Processor", "d993345a-4127-41e6-b090-33848f4c5da2");
 
-        TestParallelProcessor(const babelwires::ProjectContext& context);
+        TestParallelProcessor(const babelwires::Context& context);
 
         static babelwires::ShortId getCommonArrayId();
 

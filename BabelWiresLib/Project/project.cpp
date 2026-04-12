@@ -18,22 +18,23 @@
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
 #include <BabelWiresLib/Project/Nodes/FileNode/fileNode.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/ValueTree/Utilities/modelUtilities.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/IO/fileDataSource.hpp>
 #include <BaseLib/Log/userLogger.hpp>
+#include <BaseLib/Random/randomService.hpp>
 
 #include <algorithm>
 #include <cassert>
 #include <numeric>
 #include <unordered_set>
 
-babelwires::Project::Project(ProjectContext& context, UserLogger& userLogger)
+babelwires::Project::Project(const Context& context, UserLogger& userLogger)
     : m_context(context)
     , m_userLogger(userLogger) {
     randomizeProjectId();
@@ -262,14 +263,6 @@ void babelwires::Project::clear() {
 }
 
 babelwires::Project::~Project() {}
-
-const babelwires::TargetFileFormatRegistry& babelwires::Project::getFactoryFormatRegistry() const {
-    return m_context.m_targetFileFormatReg;
-}
-
-const babelwires::SourceFileFormatRegistry& babelwires::Project::getFileFormatRegistry() const {
-    return m_context.m_sourceFileFormatReg;
-}
 
 babelwires::Node* babelwires::Project::getNode(NodeId id) {
     auto&& it = m_nodes.find(id);
@@ -572,8 +565,8 @@ void babelwires::Project::setNodeContentsSize(NodeId nodeId, const UiSize& newSi
 }
 
 void babelwires::Project::randomizeProjectId() {
-    m_projectId =
-        std::uniform_int_distribution<ProjectId>(1, std::numeric_limits<ProjectId>::max())(m_context.m_randomEngine);
+    m_projectId = std::uniform_int_distribution<ProjectId>(1, std::numeric_limits<ProjectId>::max())(
+        m_context.get<RandomService>().getRandomEngine());
 }
 
 babelwires::ProjectId babelwires::Project::getProjectId() const {

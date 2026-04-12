@@ -20,18 +20,18 @@ namespace testUtils {
         // Dummy implementations.
         void serializeContents(babelwires::Serializer& serializer) const override;
         babelwires::Result deserializeContents(babelwires::Deserializer& deserializer) override;
-        bool checkFactoryVersion(const babelwires::ProjectContext& context,
+        bool checkFactoryVersion(const babelwires::Context& context,
                                  babelwires::UserLogger& userLogger) override;
 
         // Creates a TestNode.
-        std::unique_ptr<babelwires::Node> doCreateNode(const babelwires::ProjectContext& context,
+        std::unique_ptr<babelwires::Node> doCreateNode(const babelwires::Context& context,
                                                                            babelwires::UserLogger& userLogger,
                                                                            babelwires::NodeId newId) const override;
     };
 
     struct TestNode : babelwires::Node {
-        TestNode(const babelwires::ProjectContext& context);
-        TestNode(const babelwires::ProjectContext& context, const TestNodeData& data, babelwires::NodeId newId);
+        TestNode(const babelwires::Context& context);
+        TestNode(const babelwires::Context& context, const TestNodeData& data, babelwires::NodeId newId);
         void doProcess(babelwires::UserLogger&) override;
 
         babelwires::ValueTreeNode* doGetInputNonConst() override;
@@ -39,8 +39,8 @@ namespace testUtils {
         const babelwires::ValueTreeNode* getInput() const override;
         const babelwires::ValueTreeNode* getOutput() const override;
 
-        void simulateFailure(const babelwires::ProjectContext& context);
-        void simulateRecovery(const babelwires::ProjectContext& context);
+        void simulateFailure(const babelwires::Context& context);
+        void simulateRecovery(const babelwires::Context& context);
 
         std::unique_ptr<babelwires::ValueTreeNode> m_valueTreeRoot;
     };

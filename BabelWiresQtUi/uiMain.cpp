@@ -9,19 +9,19 @@
 
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 #include <BabelWiresQtUi/mainWindow.hpp>
-#include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Log/unifiedLog.hpp>
 
 #include <QtWidgets/QApplication>
 
 struct babelwires::Ui::Impl {
-    Impl(int& argc, char** argv, babelwires::UiProjectContext& projectContext, UnifiedLog& log)
+    Impl(int& argc, char** argv, babelwires::Context& context, UnifiedLog& log)
         : m_app(argc, argv)
-        , m_projectContext(projectContext)
+        , m_projectContext(context)
         , m_log(log) {}
 
     void runMainLoop() {
@@ -34,12 +34,12 @@ struct babelwires::Ui::Impl {
     }
 
     QApplication m_app;
-    babelwires::UiProjectContext& m_projectContext;
+    babelwires::Context& m_projectContext;
     UnifiedLog& m_log;
 };
 
-babelwires::Ui::Ui(int& argc, char** argv, babelwires::UiProjectContext& projectContext, UnifiedLog& log) {
-    m_impl = std::make_unique<Impl>(argc, argv, projectContext, log);
+babelwires::Ui::Ui(int& argc, char** argv, babelwires::Context& context, UnifiedLog& log) {
+    m_impl = std::make_unique<Impl>(argc, argv, context, log);
 }
 
 babelwires::Ui::~Ui() = default;

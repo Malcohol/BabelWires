@@ -2,6 +2,7 @@ SET( COMMON_TESTS_SRCS
    buildCompatibilityTest.cpp
    blockStreamTest.cpp
    cloneTest.cpp
+   contextTest.cpp
    baseLibTests.cpp
    dataBundleTest.cpp
    dataSourceTest.cpp
@@ -15,6 +16,7 @@ SET( COMMON_TESTS_SRCS
    multiKeyMapTest.cpp
    pointerRangeTest.cpp
    rationalTest.cpp
+   randomServiceTest.cpp
    registryTest.cpp
    resultTest.cpp
    serializationTest.cpp

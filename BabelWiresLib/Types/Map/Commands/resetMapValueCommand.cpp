@@ -8,12 +8,13 @@
 
 #include <BabelWiresLib/Types/Map/Commands/resetMapValueCommand.hpp>
 
-#include <BabelWiresLib/Project/projectContext.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
 #include <BabelWiresLib/Types/Map/MapEntries/mapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
+
+#include <BaseLib/Context/context.hpp>
 
 babelwires::ResetMapValueCommand::ResetMapValueCommand(std::string commandName, MapProjectDataLocation loc,
                                                        TypeExp type)
@@ -46,7 +47,7 @@ bool babelwires::ResetMapValueCommand::initialize(const MapProject& map) {
     // TODO: Paths within values
     assert (m_location.getPathToValue().getNumSteps() == 0);
     /*
-    const TypeSystem& typeSystem = map.getProjectContext().m_typeSystem;
+    const TypeSystem& typeSystem = map.getProjectContext().get<TypeSystem>();
     std::optional<std::tuple<const babelwires::Type&, const babelwires::ValueHolder&>> optional =
         tryFollowPath(typeSystem, *typeInMap, m_location.getPathToValue(), *entryHolder);
 
@@ -65,7 +66,7 @@ void babelwires::ResetMapValueCommand::execute(MapProject& map) const {
     assert (m_location.getEntryIndex() < map.getNumMapEntries());
     const MapProjectEntry& mapEntry = map.getMapEntry(m_location.getEntryIndex());
     std::unique_ptr<MapEntryData> entryData = mapEntry.getData().clone();
-    const TypeSystem& typeSystem = map.getProjectContext().m_typeSystem;
+    const TypeSystem& typeSystem = map.getProjectContext().get<TypeSystem>();
 
     /*
 
@@ -109,7 +110,7 @@ void babelwires::ResetMapValueCommand::undo(MapProject& map) const {
     const MapProjectEntry& mapEntry = map.getMapEntry(m_location.getEntryIndex());
     std::unique_ptr<MapEntryData> entryData = mapEntry.getData().clone();
 
-    const TypeSystem& typeSystem = map.getProjectContext().m_typeSystem;
+    const TypeSystem& typeSystem = map.getProjectContext().get<TypeSystem>();
 
     /*
     const ValueHolder* entryHolder;

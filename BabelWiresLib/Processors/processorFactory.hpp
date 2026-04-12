@@ -29,7 +29,7 @@
 namespace babelwires {
 
     class Processor;
-    struct ProjectContext;
+    class Context;
 
     /// Objects which can create processors, and which can be registered in the ProcessFactoryRegistry.
     class BABELWIRESLIB_API ProcessorFactory : public RegistryEntry {
@@ -37,7 +37,7 @@ namespace babelwires {
         ProcessorFactory(LongId identifier, VersionNumber version);
 
         /// Return a new processor.
-        virtual std::unique_ptr<Processor> createNewProcessor(const ProjectContext& projectContext) const = 0;
+        virtual std::unique_ptr<Processor> createNewProcessor(const Context& context) const = 0;
     };
 
     /// A convenient base class for processor factories.
@@ -46,8 +46,8 @@ namespace babelwires {
         CommonProcessorFactory(LongId identifier, VersionNumber version)
             : ProcessorFactory(identifier, version) {}
 
-        std::unique_ptr<Processor> createNewProcessor(const ProjectContext& projectContext) const override {
-            return std::make_unique<PROCESSOR>(projectContext);
+        std::unique_ptr<Processor> createNewProcessor(const Context& context) const override {
+            return std::make_unique<PROCESSOR>(context);
         }
     };
 

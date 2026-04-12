@@ -17,7 +17,7 @@
 namespace babelwires {
     struct UserLogger;
     class ValueTreeNode;
-    struct ProjectContext;
+    class Context;
     class TypeExp;
     class ValueTreeRoot;
 
@@ -25,7 +25,7 @@ namespace babelwires {
     /// This should not store any state.
     class BABELWIRESLIB_API Processor {
       public:
-        Processor(const ProjectContext& projectContext, TypePtr inputTypeExp, TypePtr outputTypeExp);
+        Processor(const Context& context, TypePtr inputTypeExp, TypePtr outputTypeExp);
         virtual ~Processor();
 
         /// Set values in the output based on values in the input.

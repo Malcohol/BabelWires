@@ -14,7 +14,6 @@
 #include <BabelWiresQtUi/NodeEditorBridge/accessModelScope.hpp>
 #include <BabelWiresQtUi/NodeEditorBridge/projectGraphModel.hpp>
 #include <BabelWiresQtUi/ValueEditors/typeWidget.hpp>
-#include <BabelWiresQtUi/uiProjectContext.hpp>
 
 #include <BabelWiresLib/Project/Commands/addModifierCommand.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifier.hpp>
@@ -28,6 +27,8 @@
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
 #include <BabelWiresLib/Types/Map/mapType.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
+
+#include <BaseLib/Context/context.hpp>
 
 #include <QDialogButtonBox>
 #include <QFileDialog>
@@ -86,8 +87,8 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectGraphModel& projectGrap
 
         {
             AccessModelScope scope(getProjectGraphModel());
-            const UiProjectContext& context = projectGraphModel.getContext();
-            const TypeSystem& typeSystem = context.m_typeSystem;
+            const Context& context = projectGraphModel.getContext();
+            const TypeSystem& typeSystem = context.get<TypeSystem>();
             const ValueTreeNode& mapTreeNode = getMapTreeNode(scope);
             m_typeExp = mapTreeNode.getType()->getTypeExp();
             const MapValue& mapValue = getMapValueFromProject(scope);
@@ -425,7 +426,7 @@ void babelwires::MapEditor::onUndoStateChanged() {
 }
 
 void babelwires::MapEditor::setToDefault() {
-    const TypeSystem& typeSystem = getProjectGraphModel().getContext().m_typeSystem;
+    const TypeSystem& typeSystem = getProjectGraphModel().getContext().get<TypeSystem>();
     auto mapType = m_typeExp.resolveAs<MapType>(typeSystem);
     ValueHolder defaultMapValue = mapType->createValue(typeSystem).m_valueHolder;
     executeCommand(std::make_unique<SetMapCommand>("Restore default map", std::move(defaultMapValue)));

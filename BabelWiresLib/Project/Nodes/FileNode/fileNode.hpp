@@ -28,7 +28,7 @@ namespace babelwires {
         /// Implementations are not expected to perform file operations.
         virtual void setFilePath(std::filesystem::path newFilePath) = 0;
 
-        virtual const FileTypeEntry* getFileFormatInformation(const ProjectContext& context) const = 0;
+        virtual const FileTypeEntry* getFileFormatInformation(const Context& context) const = 0;
 
         enum class FileOperations : unsigned int { reload = 0b01, save = 0b10 };
 
@@ -36,11 +36,11 @@ namespace babelwires {
 
         /// Attempt to reload the contents from disk and return true if the operation was successful.
         /// The default implementation asserts.
-        virtual bool reload(const ProjectContext& context, UserLogger& userLogger);
+        virtual bool reload(const Context& context, UserLogger& userLogger);
 
         /// Attempt to write the contents to disk and return true if the operation was successful.
         /// The default implementation asserts.
-        virtual bool save(const ProjectContext& context, UserLogger& userLogger);
+        virtual bool save(const Context& context, UserLogger& userLogger);
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(FileNode::FileOperations);

@@ -12,8 +12,8 @@
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
 #include <BabelWiresLib/Project/Modifiers/modifierData.hpp>
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNode.hpp>
-#include <BabelWiresLib/Project/projectContext.hpp>
 
+#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 
@@ -47,7 +47,7 @@ babelwires::NodeData::NodeData(const NodeData& other)
     m_expandedPaths = other.m_expandedPaths;
 }
 
-std::unique_ptr<babelwires::Node> babelwires::NodeData::createNode(const ProjectContext& context,
+std::unique_ptr<babelwires::Node> babelwires::NodeData::createNode(const Context& context,
                                                                    UserLogger& userLogger, NodeId newId) const {
     std::unique_ptr<babelwires::Node> newNode = doCreateNode(context, userLogger, newId);
     newNode->applyLocalModifiers(userLogger);

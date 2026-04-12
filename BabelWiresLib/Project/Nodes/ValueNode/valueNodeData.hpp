@@ -25,7 +25,7 @@ namespace babelwires {
         ValueNodeData(const ValueNodeData& other) = default;
         ValueNodeData(const ValueNodeData& other, ShallowCloneContext);
 
-        bool checkFactoryVersion(const ProjectContext& context, UserLogger& userLogger) override;
+        bool checkFactoryVersion(const Context& context, UserLogger& userLogger) override;
 
         void serializeContents(Serializer& serializer) const override;
         Result deserializeContents(Deserializer& deserializer) override;
@@ -33,7 +33,7 @@ namespace babelwires {
         const TypeExp& getTypeExp() const;
 
       protected:
-        std::unique_ptr<Node> doCreateNode(const ProjectContext& context, UserLogger& userLogger,
+        std::unique_ptr<Node> doCreateNode(const Context& context, UserLogger& userLogger,
                                                                NodeId newId) const override;
 
       private:
