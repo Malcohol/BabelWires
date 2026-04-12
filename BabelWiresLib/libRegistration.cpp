@@ -60,7 +60,7 @@
 #include <cassert>
 
 void babelwires::registerLib(babelwires::Context& context) {
-    TypeSystem& typeSystem = context.getService<TypeSystem>();
+    TypeSystem& typeSystem = context.get<TypeSystem>();
     typeSystem.addType<DefaultIntType>();
     typeSystem.addType<NonNegativeIntType>();
     typeSystem.addType<StringType>();
@@ -80,7 +80,7 @@ void babelwires::registerLib(babelwires::Context& context) {
     typeSystem.addTypeConstructor<GenericTypeConstructor>();
     typeSystem.addTypeConstructor<TypeVariableTypeConstructor>();
 
-    DeserializationRegistry& deserializationRegistry = context.getService<DeserializationRegistry>();
+    DeserializationRegistry& deserializationRegistry = context.get<DeserializationRegistry>();
     deserializationRegistry.registerClass<ProjectData>();
     deserializationRegistry.registerClass<ProjectDataLocation>();
     deserializationRegistry.registerClass<ProjectBundle>();

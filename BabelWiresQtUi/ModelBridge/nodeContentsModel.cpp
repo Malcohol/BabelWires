@@ -96,7 +96,7 @@ QVariant babelwires::NodeContentsModel::data(const QModelIndex& index, int role)
     const ValueTreeNode* valueTreeNode = entry->getInputThenOutput();
     assert(valueTreeNode && "No valueTreeNode for row model");
     const babelwires::Context& context = m_projectGraphModel.getContext();
-    RowModelDispatcher rowModel(context.getService<ValueModelRegistry>(), context.getService<TypeSystem>(), entry, node);
+    RowModelDispatcher rowModel(context.get<ValueModelRegistry>(), context.get<TypeSystem>(), entry, node);
 
     switch (role) {
         case Qt::DisplayRole: {
@@ -156,7 +156,7 @@ Qt::ItemFlags babelwires::NodeContentsModel::flags(const QModelIndex& index) con
     if (const Node* node = getNode(scope)) {
         if (const babelwires::ContentsCacheEntry* entry = getEntry(scope, index)) {
             const babelwires::Context& context = m_projectGraphModel.getContext();
-            RowModelDispatcher rowModel(context.getService<ValueModelRegistry>(), context.getService<TypeSystem>(), entry, node);
+            RowModelDispatcher rowModel(context.get<ValueModelRegistry>(), context.get<TypeSystem>(), entry, node);
 
             if (rowModel->isItemEditable()) {
                 flags = flags | Qt::ItemIsEditable;
@@ -179,7 +179,7 @@ void babelwires::NodeContentsModel::getContextMenuActions(std::vector<ContextMen
     }
 
     const babelwires::Context& context = m_projectGraphModel.getContext();
-    RowModelDispatcher rowModel(context.getService<ValueModelRegistry>(), context.getService<TypeSystem>(), entry, node);
+    RowModelDispatcher rowModel(context.get<ValueModelRegistry>(), context.get<TypeSystem>(), entry, node);
 
     rowModel->getContextMenuActions(actionsOut);
 }

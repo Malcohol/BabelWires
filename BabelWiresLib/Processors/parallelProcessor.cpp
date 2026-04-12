@@ -55,8 +55,8 @@ babelwires::ParallelProcessorOutputBase::ParallelProcessorOutputBase(TypeExp&& t
 
 babelwires::ParallelProcessor::ParallelProcessor(const Context& context, const TypeExp& parallelInputExp,
                                                  const TypeExp& parallelOutputExp)
-    : Processor(context, parallelInputExp.assertResolve(context.getService<TypeSystem>()),
-                parallelOutputExp.assertResolve(context.getService<TypeSystem>())) {
+    : Processor(context, parallelInputExp.assertResolve(context.get<TypeSystem>()),
+                parallelOutputExp.assertResolve(context.get<TypeSystem>())) {
 #ifndef NDEBUG
     auto inputType = getInput().getType()->as<ParallelProcessorInputBase>();
     auto outputType = getOutput().getType()->as<ParallelProcessorOutputBase>();

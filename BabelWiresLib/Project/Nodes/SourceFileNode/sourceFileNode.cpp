@@ -64,7 +64,7 @@ void babelwires::SourceFileNode::setFilePath(std::filesystem::path newFilePath) 
 
 const babelwires::FileTypeEntry*
 babelwires::SourceFileNode::getFileFormatInformation(const Context& context) const {
-    const auto formatResult = context.getService<SourceFileFormatRegistry>().getRegisteredEntry(getNodeData().m_factoryIdentifier);
+    const auto formatResult = context.get<SourceFileFormatRegistry>().getRegisteredEntry(getNodeData().m_factoryIdentifier);
     if (!formatResult) {
         return nullptr;
     }
@@ -81,13 +81,13 @@ bool babelwires::SourceFileNode::reload(const Context& context, UserLogger& user
     const auto onFailure = [this, context](std::string error) {
         setInternalFailure(std::move(error));
         // A dummy file root which allows the user to change the file via the context menu.
-        auto failure = std::make_unique<ValueTreeRoot>(context.getService<TypeSystem>(),
-                                                       context.getService<TypeSystem>().getRegisteredType<FailureType>());
+        auto failure = std::make_unique<ValueTreeRoot>(context.get<TypeSystem>(),
+                                                       context.get<TypeSystem>().getRegisteredType<FailureType>());
         failure->setToDefault();
         setValueTreeRoot(std::move(failure));
     };
 
-    const auto formatResult = context.getService<SourceFileFormatRegistry>().getRegisteredEntry(data.m_factoryIdentifier);
+    const auto formatResult = context.get<SourceFileFormatRegistry>().getRegisteredEntry(data.m_factoryIdentifier);
     if (!formatResult) {
         userLogger.logError() << "Could not create Source File Node id=" << data.m_id << ": "
                               << formatResult.error().toString();

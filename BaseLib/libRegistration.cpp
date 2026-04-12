@@ -14,5 +14,5 @@
 #include <cassert>
 
 void babelwires::baseLib::registerLib(Context& context) {
-    context.getService<DeserializationRegistry>().registerClass<IdentifierRegistry>();
+    context.get<DeserializationRegistry>().registerClass<IdentifierRegistry>();
 }

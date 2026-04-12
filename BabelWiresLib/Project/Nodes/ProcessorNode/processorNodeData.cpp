@@ -21,7 +21,7 @@ babelwires::ProcessorNodeData::ProcessorNodeData(const ProcessorNodeData& other,
     : NodeData(other, c) {}
 
 bool babelwires::ProcessorNodeData::checkFactoryVersion(const Context& context, UserLogger& userLogger) {
-    return checkFactoryVersionCommon(context.getService<ProcessorFactoryRegistry>(), userLogger, m_factoryIdentifier, m_factoryVersion);
+    return checkFactoryVersionCommon(context.get<ProcessorFactoryRegistry>(), userLogger, m_factoryIdentifier, m_factoryVersion);
 }
 
 std::unique_ptr<babelwires::Node>

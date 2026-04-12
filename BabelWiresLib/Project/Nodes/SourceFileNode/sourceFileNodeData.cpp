@@ -20,7 +20,7 @@ babelwires::SourceFileNodeData::SourceFileNodeData(const SourceFileNodeData& oth
     , m_filePath(other.m_filePath) {}
 
 bool babelwires::SourceFileNodeData::checkFactoryVersion(const Context& context, UserLogger& userLogger) {
-    return checkFactoryVersionCommon(context.getService<SourceFileFormatRegistry>(), userLogger, m_factoryIdentifier, m_factoryVersion);
+    return checkFactoryVersionCommon(context.get<SourceFileFormatRegistry>(), userLogger, m_factoryIdentifier, m_factoryVersion);
 }
 
 std::unique_ptr<babelwires::Node>

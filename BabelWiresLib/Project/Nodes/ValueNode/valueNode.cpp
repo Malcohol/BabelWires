@@ -18,16 +18,16 @@ babelwires::ValueNode::ValueNode(const Context& context, UserLogger& userLogger,
     : Node(data, newId) {
     setFactoryName(data.getTypeExp().toString());
     TypePtr nodeType;
-    auto resolveResult = data.getTypeExp().resolve(context.getService<TypeSystem>());
+    auto resolveResult = data.getTypeExp().resolve(context.get<TypeSystem>());
     if (resolveResult) {
         nodeType = std::move(*resolveResult);
     } else {
         std::ostringstream message;
         message << "Type Reference " << data.getTypeExp().toString() << " could not be resolved: " << resolveResult.error().toString();
         setInternalFailure(message.str());
-        nodeType = context.getService<TypeSystem>().getRegisteredType<FailureType>();
+        nodeType = context.get<TypeSystem>().getRegisteredType<FailureType>();
     }
-    m_valueTreeRoot = std::make_unique<ValueTreeRoot>(context.getService<TypeSystem>(), std::move(nodeType));
+    m_valueTreeRoot = std::make_unique<ValueTreeRoot>(context.get<TypeSystem>(), std::move(nodeType));
 }
 
 babelwires::ValueNode::~ValueNode() = default;

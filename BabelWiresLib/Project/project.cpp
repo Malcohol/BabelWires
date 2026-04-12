@@ -566,7 +566,7 @@ void babelwires::Project::setNodeContentsSize(NodeId nodeId, const UiSize& newSi
 
 void babelwires::Project::randomizeProjectId() {
     m_projectId = std::uniform_int_distribution<ProjectId>(1, std::numeric_limits<ProjectId>::max())(
-        m_context.getService<RandomService>().getRandomEngine());
+        m_context.get<RandomService>().getRandomEngine());
 }
 
 babelwires::ProjectId babelwires::Project::getProjectId() const {

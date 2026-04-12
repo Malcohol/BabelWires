@@ -130,8 +130,8 @@ TEST(ElementDataTest, sourceFileDataCreateElement) {
     testUtils::TempFilePath tempFilePath(tempFileName.str());
     {
         auto targetFileFormat = std::make_unique<testDomain::TestTargetFileFormat>();
-        auto fileFeature = std::make_unique<babelwires::ValueTreeRoot>(testEnvironment.m_projectContext.getService<babelwires::TypeSystem>(),
-                                                                       testDomain::getTestFileType().assertResolve(testEnvironment.m_projectContext.getService<babelwires::TypeSystem>()));
+        auto fileFeature = std::make_unique<babelwires::ValueTreeRoot>(testEnvironment.m_projectContext.get<babelwires::TypeSystem>(),
+                                                                       testDomain::getTestFileType().assertResolve(testEnvironment.m_projectContext.get<babelwires::TypeSystem>()));
         fileFeature->setToDefault();
         testDomain::TestSimpleRecordType::Instance instance{fileFeature->getChild(0)->as<babelwires::ValueTreeNode>()};
         instance.getintR0().set(14);

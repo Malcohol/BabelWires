@@ -26,10 +26,10 @@ babelwires::TargetFileNode::TargetFileNode(const Context& context, UserLogger& u
     : FileNode(data, newId) {
     const NodeData& nodeData = getNodeData();
     setFactoryName(nodeData.m_factoryIdentifier);
-    const auto factoryResult = context.getService<TargetFileFormatRegistry>().getRegisteredEntry(nodeData.m_factoryIdentifier);
+    const auto factoryResult = context.get<TargetFileFormatRegistry>().getRegisteredEntry(nodeData.m_factoryIdentifier);
     if (!factoryResult) {
         setInternalFailure(factoryResult.error().toString());
-        setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.getService<TypeSystem>(), context.getService<TypeSystem>().getRegisteredType<FailureType>()));
+        setValueTreeRoot(std::make_unique<ValueTreeRoot>(context.get<TypeSystem>(), context.get<TypeSystem>().getRegisteredType<FailureType>()));
         userLogger.logError() << "Failed to create target id=" << nodeData.m_id
                                 << ": " << factoryResult.error().toString();
         return;
@@ -78,7 +78,7 @@ void babelwires::TargetFileNode::setFilePath(std::filesystem::path newFilePath) 
 
 const babelwires::FileTypeEntry*
 babelwires::TargetFileNode::getFileFormatInformation(const Context& context) const {
-    const auto formatResult = context.getService<TargetFileFormatRegistry>().getRegisteredEntry(getNodeData().m_factoryIdentifier);
+    const auto formatResult = context.get<TargetFileFormatRegistry>().getRegisteredEntry(getNodeData().m_factoryIdentifier);
     if (!formatResult) {
         return nullptr;
     }
@@ -100,7 +100,7 @@ bool babelwires::TargetFileNode::save(const Context& context, UserLogger& userLo
                               << data.m_id << ")";
         return false;
     }
-    const TargetFileFormat* format = context.getService<TargetFileFormatRegistry>().getEntryByIdentifier(data.m_factoryIdentifier);
+    const TargetFileFormat* format = context.get<TargetFileFormatRegistry>().getEntryByIdentifier(data.m_factoryIdentifier);
     assert(format && "FileFeature with unregistered file format");
     const auto writeResult = format->writeToFile(context, userLogger, *m_valueTreeRoot, data.m_filePath);
     if (!writeResult) {

@@ -88,7 +88,7 @@ babelwires::MapEditor::MapEditor(QWidget* parent, ProjectGraphModel& projectGrap
         {
             AccessModelScope scope(getProjectGraphModel());
             const Context& context = projectGraphModel.getContext();
-            const TypeSystem& typeSystem = context.getService<TypeSystem>();
+            const TypeSystem& typeSystem = context.get<TypeSystem>();
             const ValueTreeNode& mapTreeNode = getMapTreeNode(scope);
             m_typeExp = mapTreeNode.getType()->getTypeExp();
             const MapValue& mapValue = getMapValueFromProject(scope);
@@ -426,7 +426,7 @@ void babelwires::MapEditor::onUndoStateChanged() {
 }
 
 void babelwires::MapEditor::setToDefault() {
-    const TypeSystem& typeSystem = getProjectGraphModel().getContext().getService<TypeSystem>();
+    const TypeSystem& typeSystem = getProjectGraphModel().getContext().get<TypeSystem>();
     auto mapType = m_typeExp.resolveAs<MapType>(typeSystem);
     ValueHolder defaultMapValue = mapType->createValue(typeSystem).m_valueHolder;
     executeCommand(std::make_unique<SetMapCommand>("Restore default map", std::move(defaultMapValue)));

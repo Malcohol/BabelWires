@@ -16,9 +16,9 @@
 
 babelwires::Processor::Processor(const Context& context, TypePtr inputType, TypePtr outputType)
     : m_inputValueTreeRoot(
-          std::make_unique<babelwires::ValueTreeRoot>(context.getService<TypeSystem>(), std::move(inputType)))
+          std::make_unique<babelwires::ValueTreeRoot>(context.get<TypeSystem>(), std::move(inputType)))
     , m_outputValueTreeRoot(
-          std::make_unique<babelwires::ValueTreeRoot>(context.getService<TypeSystem>(), std::move(outputType))) {}
+          std::make_unique<babelwires::ValueTreeRoot>(context.get<TypeSystem>(), std::move(outputType))) {}
 
 babelwires::Processor::~Processor() = default;
 

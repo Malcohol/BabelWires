@@ -733,8 +733,8 @@ TEST(ContentsCacheTest, inputFileFeatureOnly) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::ValueTreeRoot inputFeature(testEnvironment.m_projectContext.getService<babelwires::TypeSystem>(),
-                                           testDomain::getTestFileType().assertResolve(testEnvironment.m_projectContext.getService<babelwires::TypeSystem>()));
+    babelwires::ValueTreeRoot inputFeature(testEnvironment.m_projectContext.get<babelwires::TypeSystem>(),
+                                           testDomain::getTestFileType().assertResolve(testEnvironment.m_projectContext.get<babelwires::TypeSystem>()));
     inputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
 
@@ -749,8 +749,8 @@ TEST(ContentsCacheTest, outputFileFeatureOnly) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_projectContext.getService<babelwires::TypeSystem>(),
-                                           testDomain::getTestFileType().assertResolve(testEnvironment.m_projectContext.getService<babelwires::TypeSystem>()));
+    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_projectContext.get<babelwires::TypeSystem>(),
+                                           testDomain::getTestFileType().assertResolve(testEnvironment.m_projectContext.get<babelwires::TypeSystem>()));
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
 
@@ -764,10 +764,10 @@ TEST(ContentsCacheTest, inputAndOutputFileFeature) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::ValueTreeRoot inputFeature(testEnvironment.m_projectContext.getService<babelwires::TypeSystem>(),
-                                           testDomain::getTestFileType().assertResolve(testEnvironment.m_projectContext.getService<babelwires::TypeSystem>()));
-    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_projectContext.getService<babelwires::TypeSystem>(),
-                                           testDomain::getTestFileType().assertResolve(testEnvironment.m_projectContext.getService<babelwires::TypeSystem>()));
+    babelwires::ValueTreeRoot inputFeature(testEnvironment.m_projectContext.get<babelwires::TypeSystem>(),
+                                           testDomain::getTestFileType().assertResolve(testEnvironment.m_projectContext.get<babelwires::TypeSystem>()));
+    babelwires::ValueTreeRoot outputFeature(testEnvironment.m_projectContext.get<babelwires::TypeSystem>(),
+                                           testDomain::getTestFileType().assertResolve(testEnvironment.m_projectContext.get<babelwires::TypeSystem>()));
     inputFeature.setToDefault();
     outputFeature.setToDefault();
     editTree.setExpanded(babelwires::Path(), true);
@@ -783,8 +783,8 @@ TEST(ContentsCacheTest, unassignedTypeVariables_noAssignments) {
     babelwires::EditTree editTree;
     babelwires::ContentsCache cache(editTree);
 
-    babelwires::ValueTreeRoot valueTree(testEnvironment.m_projectContext.getService<babelwires::TypeSystem>(),
-                                        testEnvironment.m_projectContext.getService<babelwires::TypeSystem>().getRegisteredType<testDomain::TestGenericType>());
+    babelwires::ValueTreeRoot valueTree(testEnvironment.m_projectContext.get<babelwires::TypeSystem>(),
+                                        testEnvironment.m_projectContext.get<babelwires::TypeSystem>().getRegisteredType<testDomain::TestGenericType>());
     valueTree.setToDefault();
 
     babelwires::ValueTreeNode& nestedGenericTypeNode =

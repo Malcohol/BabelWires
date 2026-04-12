@@ -193,7 +193,7 @@ bool babelwires::ProjectGraphModel::connectionPossible(QtNodes::ConnectionId con
 
     // Note: isSubtype is too strict for the default behaviour. For example: A numeric type with a wide range could not be connected to a
     // numeric type with a narrow range.
-    return sourceType && targetType && m_projectContext.getService<TypeSystem>().isRelatedType(*sourceType, *targetType);
+    return sourceType && targetType && m_projectContext.get<TypeSystem>().isRelatedType(*sourceType, *targetType);
 }
 
 void babelwires::ProjectGraphModel::addConnection(QtNodes::ConnectionId const connectionId) {

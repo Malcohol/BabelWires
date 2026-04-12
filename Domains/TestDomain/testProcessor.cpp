@@ -59,8 +59,8 @@ const babelwires::Path testDomain::TestProcessorInputOutputType::s_pathToInt2 =
     *babelwires::Path::deserializeFromString("Record/intR0");
 
 testDomain::TestProcessor::TestProcessor(const babelwires::Context& context)
-    : babelwires::Processor(context, context.getService<babelwires::TypeSystem>().getRegisteredType<testDomain::TestProcessorInputOutputType>(),
-                            context.getService<babelwires::TypeSystem>().getRegisteredType<testDomain::TestProcessorInputOutputType>()) {}
+    : babelwires::Processor(context, context.get<babelwires::TypeSystem>().getRegisteredType<testDomain::TestProcessorInputOutputType>(),
+                            context.get<babelwires::TypeSystem>().getRegisteredType<testDomain::TestProcessorInputOutputType>()) {}
 
 babelwires::Result testDomain::TestProcessor::processValue(babelwires::UserLogger& userLogger, const babelwires::ValueTreeNode& input,
                                              babelwires::ValueTreeNode& output) const {

@@ -22,7 +22,7 @@ babelwires::SetMapTargetTypeCommand::SetMapTargetTypeCommand(std::string command
 bool babelwires::SetMapTargetTypeCommand::initialize(const MapProject& map) {
     const MapProject::AllowedTypes& allowedTypeExps = map.getAllowedTargetTypeExps();
     const Context& context = map.getProjectContext();
-    const TypeSystem& typeSystem = context.getService<TypeSystem>();
+    const TypeSystem& typeSystem = context.get<TypeSystem>();
     if (!allowedTypeExps.isSubtypeOfSome(typeSystem, m_newTargetTypeExp)) {
         return false;
     }

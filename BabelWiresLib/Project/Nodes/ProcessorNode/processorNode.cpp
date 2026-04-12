@@ -25,12 +25,12 @@ babelwires::ProcessorNode::ProcessorNode(const Context& context, UserLogger& use
                                                const ProcessorNodeData& data, NodeId newId)
     : Node(data, newId) {
     const NodeData& elementData = getNodeData();
-    const auto factoryResult = context.getService<ProcessorFactoryRegistry>().getRegisteredEntry(elementData.m_factoryIdentifier);
+    const auto factoryResult = context.get<ProcessorFactoryRegistry>().getRegisteredEntry(elementData.m_factoryIdentifier);
     if (!factoryResult) {
         setFactoryName(elementData.m_factoryIdentifier);
         setInternalFailure(factoryResult.error().toString());
         m_failedValueTree =
-            std::make_unique<babelwires::ValueTreeRoot>(context.getService<TypeSystem>(), context.getService<TypeSystem>().getRegisteredType<FailureType>());
+            std::make_unique<babelwires::ValueTreeRoot>(context.get<TypeSystem>(), context.get<TypeSystem>().getRegisteredType<FailureType>());
         userLogger.logError() << "Failed to create processor id=" << elementData.m_id
                                 << ": " << factoryResult.error().toString();
         return;

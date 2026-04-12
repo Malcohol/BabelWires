@@ -41,7 +41,7 @@ testUtils::TestNode::TestNode(const babelwires::Context& context, const TestNode
     : Node(data, newId) {
     setFactoryName(data.m_factoryIdentifier);
     m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(
-        context.getService<babelwires::TypeSystem>(), context.getService<babelwires::TypeSystem>().getRegisteredType<testDomain::TestComplexRecordType>());
+        context.get<babelwires::TypeSystem>(), context.get<babelwires::TypeSystem>().getRegisteredType<testDomain::TestComplexRecordType>());
 }
 
 void testUtils::TestNode::doProcess(babelwires::UserLogger&) {}
@@ -65,11 +65,11 @@ babelwires::ValueTreeNode* testUtils::TestNode::doGetOutputNonConst() {
 void testUtils::TestNode::simulateFailure(const babelwires::Context& context) {
     setInternalFailure("Simulated failure");
     m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(
-        context.getService<babelwires::TypeSystem>(), context.getService<babelwires::TypeSystem>().getRegisteredType<babelwires::FailureType>());
+        context.get<babelwires::TypeSystem>(), context.get<babelwires::TypeSystem>().getRegisteredType<babelwires::FailureType>());
 }
 
 void testUtils::TestNode::simulateRecovery(const babelwires::Context& context) {
     m_valueTreeRoot = std::make_unique<babelwires::ValueTreeRoot>(
-        context.getService<babelwires::TypeSystem>(), context.getService<babelwires::TypeSystem>().getRegisteredType<testDomain::TestComplexRecordType>());
+        context.get<babelwires::TypeSystem>(), context.get<babelwires::TypeSystem>().getRegisteredType<testDomain::TestComplexRecordType>());
     clearInternalFailure();
 }

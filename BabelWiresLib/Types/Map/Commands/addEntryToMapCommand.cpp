@@ -30,7 +30,7 @@ bool babelwires::AddEntryToMapCommand::initialize(const MapProject& map) {
 }
 
 void babelwires::AddEntryToMapCommand::execute(MapProject& map) const {
-    auto newEntry = std::make_unique<OneToOneMapEntryData>(map.getProjectContext().getService<TypeSystem>(),
+    auto newEntry = std::make_unique<OneToOneMapEntryData>(map.getProjectContext().get<TypeSystem>(),
                                                            *map.getCurrentSourceType(), *map.getCurrentTargetType());
     map.addMapEntry(std::move(newEntry), m_indexOfNewEntry);
 }

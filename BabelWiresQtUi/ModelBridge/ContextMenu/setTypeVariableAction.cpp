@@ -69,7 +69,7 @@ void babelwires::SetTypeVariableAction::actionTriggered(babelwires::NodeContents
     text << "GenericType at " << m_locationOfGenericType;
 
     std::vector<TypeExp> allowedTypes;
-    for (const auto& typeId : projectGraphModel.getContext().getService<TypeSystem>().getAllRegisteredTypes()) {
+    for (const auto& typeId : projectGraphModel.getContext().get<TypeSystem>().getAllRegisteredTypes()) {
         allowedTypes.emplace_back(typeId);
     }
 

@@ -20,7 +20,7 @@
 #include <BaseLib/Identifiers/identifierRegistry.hpp> 
 
 babelwires::SourceFileNodeFactory::SourceFileNodeFactory(const Context& context)
-    : m_sourceFileFormatRegistry(context.getService<SourceFileFormatRegistry>()) {}
+    : m_sourceFileFormatRegistry(context.get<SourceFileFormatRegistry>()) {}
 
 QString babelwires::SourceFileNodeFactory::getCategoryName() const {
     return m_sourceFileFormatRegistry.getRegistryName().c_str();

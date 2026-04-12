@@ -17,7 +17,7 @@
 #include <BaseLib/Identifiers/identifierRegistry.hpp> 
 
 babelwires::TargetFileNodeFactory::TargetFileNodeFactory(const Context& context)
-    : m_targetFileFormatRegistry(context.getService<TargetFileFormatRegistry>()) {}
+    : m_targetFileFormatRegistry(context.get<TargetFileFormatRegistry>()) {}
 
 QString babelwires::TargetFileNodeFactory::getCategoryName() const {
     return m_targetFileFormatRegistry.getRegistryName().c_str();

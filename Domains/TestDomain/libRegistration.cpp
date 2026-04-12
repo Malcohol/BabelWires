@@ -27,7 +27,7 @@
 #include <BaseLib/Context/context.hpp>
 
 void testDomain::registerLib(babelwires::Context& context) {
-    babelwires::TypeSystem& typeSystem = context.getService<babelwires::TypeSystem>();
+    babelwires::TypeSystem& typeSystem = context.get<babelwires::TypeSystem>();
     typeSystem.addType<testDomain::TestEnum>();
     typeSystem.addType<testDomain::TestSubEnum>();
     typeSystem.addType<testDomain::TestSubSubEnum1>();
@@ -72,10 +72,10 @@ void testDomain::registerLib(babelwires::Context& context) {
     typeSystem.addType<testDomain::TestParallelProcessorOutput>(typeSystem);
     typeSystem.addType<testDomain::TestProcessorInputOutputType>(typeSystem);
 
-    babelwires::ProcessorFactoryRegistry& processorFactoryRegistry = context.getService<babelwires::ProcessorFactoryRegistry>();
+    babelwires::ProcessorFactoryRegistry& processorFactoryRegistry = context.get<babelwires::ProcessorFactoryRegistry>();
     processorFactoryRegistry.addProcessor<TestProcessor>();
     processorFactoryRegistry.addProcessor<TestParallelProcessor>();
 
-    context.getService<babelwires::TargetFileFormatRegistry>().addEntry<TestTargetFileFormat>();
-    context.getService<babelwires::SourceFileFormatRegistry>().addEntry<TestSourceFileFormat>();
+    context.get<babelwires::TargetFileFormatRegistry>().addEntry<TestTargetFileFormat>();
+    context.get<babelwires::SourceFileFormatRegistry>().addEntry<TestSourceFileFormat>();
 }

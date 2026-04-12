@@ -18,7 +18,7 @@
 #include <BaseLib/Identifiers/identifierRegistry.hpp> 
 
 babelwires::ProcessorNodeFactory::ProcessorNodeFactory(const Context& context)
-    : m_processorFactoryRegistry(context.getService<ProcessorFactoryRegistry>()) {}
+    : m_processorFactoryRegistry(context.get<ProcessorFactoryRegistry>()) {}
 
 QString babelwires::ProcessorNodeFactory::getCategoryName() const {
     return m_processorFactoryRegistry.getRegistryName().c_str();

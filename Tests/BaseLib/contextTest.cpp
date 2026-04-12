@@ -24,10 +24,10 @@ TEST(ContextTest, registerAndRetrieve) {
     context.registerService<ServiceA>(a);
     context.registerService<ServiceB>(b);
 
-    EXPECT_EQ(&context.getService<ServiceA>(), &a);
-    EXPECT_EQ(&context.getService<ServiceB>(), &b);
-    EXPECT_EQ(context.getService<ServiceA>().value, 42);
-    EXPECT_EQ(context.getService<ServiceB>().name, "hello");
+    EXPECT_EQ(&context.get<ServiceA>(), &a);
+    EXPECT_EQ(&context.get<ServiceB>(), &b);
+    EXPECT_EQ(context.get<ServiceA>().value, 42);
+    EXPECT_EQ(context.get<ServiceB>().name, "hello");
 }
 
 TEST(ContextTest, constAccess) {
@@ -38,8 +38,8 @@ TEST(ContextTest, constAccess) {
     context.registerService<ServiceA>(a);
 
     const babelwires::Context& constContext = context;
-    EXPECT_EQ(&constContext.getService<ServiceA>(), &a);
-    EXPECT_EQ(constContext.getService<ServiceA>().value, 99);
+    EXPECT_EQ(&constContext.get<ServiceA>(), &a);
+    EXPECT_EQ(constContext.get<ServiceA>().value, 99);
 }
 
 TEST(ContextTest, mutateViaGetService) {
@@ -47,18 +47,18 @@ TEST(ContextTest, mutateViaGetService) {
     ServiceA a;
 
     context.registerService<ServiceA>(a);
-    context.getService<ServiceA>().value = 100;
+    context.get<ServiceA>().value = 100;
     EXPECT_EQ(a.value, 100);
 }
 
 TEST(ContextTest, tryGetServiceReturnsNullptrForUnregistered) {
     babelwires::Context context;
 
-    EXPECT_EQ(context.tryGetService<ServiceA>(), nullptr);
-    EXPECT_EQ(context.tryGetService<ServiceB>(), nullptr);
+    EXPECT_EQ(context.tryGet<ServiceA>(), nullptr);
+    EXPECT_EQ(context.tryGet<ServiceB>(), nullptr);
 
     const babelwires::Context& constContext = context;
-    EXPECT_EQ(constContext.tryGetService<ServiceA>(), nullptr);
+    EXPECT_EQ(constContext.tryGet<ServiceA>(), nullptr);
 }
 
 TEST(ContextTest, tryGetServiceReturnsPointerForRegistered) {
@@ -67,11 +67,11 @@ TEST(ContextTest, tryGetServiceReturnsPointerForRegistered) {
 
     context.registerService<ServiceA>(a);
 
-    EXPECT_EQ(context.tryGetService<ServiceA>(), &a);
-    EXPECT_EQ(context.tryGetService<ServiceB>(), nullptr);
+    EXPECT_EQ(context.tryGet<ServiceA>(), &a);
+    EXPECT_EQ(context.tryGet<ServiceB>(), nullptr);
 
     const babelwires::Context& constContext = context;
-    EXPECT_EQ(constContext.tryGetService<ServiceA>(), &a);
+    EXPECT_EQ(constContext.tryGet<ServiceA>(), &a);
 }
 
 TEST(ContextTest, independentInstances) {
@@ -86,14 +86,14 @@ TEST(ContextTest, independentInstances) {
     context1.registerService<ServiceA>(a1);
     context2.registerService<ServiceA>(a2);
 
-    EXPECT_EQ(context1.getService<ServiceA>().value, 1);
-    EXPECT_EQ(context2.getService<ServiceA>().value, 2);
-    EXPECT_NE(&context1.getService<ServiceA>(), &context2.getService<ServiceA>());
+    EXPECT_EQ(context1.get<ServiceA>().value, 1);
+    EXPECT_EQ(context2.get<ServiceA>().value, 2);
+    EXPECT_NE(&context1.get<ServiceA>(), &context2.get<ServiceA>());
 }
 
 TEST(ContextTest, getServiceAssertOnMissing) {
     babelwires::Context context;
-    EXPECT_DEATH(context.getService<ServiceA>(), "Service not registered");
+    EXPECT_DEATH(context.get<ServiceA>(), "Service not registered");
 }
 
 TEST(ContextTest, registerServiceAssertOnDuplicate) {

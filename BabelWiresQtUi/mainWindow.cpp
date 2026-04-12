@@ -544,13 +544,13 @@ void babelwires::MainWindow::onShowLogWindow(bool show) {
 }
 
 QString babelwires::MainWindow::getApplicationTitle() const {
-    const std::string& title = m_projectGraphModel.getContext().getService<ApplicationIdentity>().m_applicationTitle;
+    const std::string& title = m_projectGraphModel.getContext().get<ApplicationIdentity>().m_applicationTitle;
     assert(!title.empty() && "m_applicationTitle must be provided");
     return title.c_str();
 }
 
 QString babelwires::MainWindow::getProjectExtension() const {
-    const std::string& ext = m_projectGraphModel.getContext().getService<ApplicationIdentity>().m_projectExtension;
+    const std::string& ext = m_projectGraphModel.getContext().get<ApplicationIdentity>().m_projectExtension;
     assert(!ext.empty() && "m_projectExtension must be provided");
     assert((ext[0] == '.') && "The extension must begin with .");
     return ext.c_str();

@@ -28,23 +28,23 @@ namespace babelwires {
 
         /// Get a registered service of type T (non-const). Asserts if not registered.
         template <typename T>
-        T& getService() {
-            T* s = tryGetService<T>();
+        T& get() {
+            T* s = tryGet<T>();
             assert(s && "Service not registered");
             return *s;
         }
 
         /// Get a registered service of type T (const). Asserts if not registered.
         template <typename T>
-        const T& getService() const {
-            const T* s = tryGetService<T>();
+        const T& get() const {
+            const T* s = tryGet<T>();
             assert(s && "Service not registered");
             return *s;
         }
 
         /// Try to get a registered service of type T (non-const). Returns nullptr if not registered.
         template <typename T>
-        T* tryGetService() {
+        T* tryGet() {
             auto it = m_services.find(std::type_index(typeid(T)));
             if (it == m_services.end()) {
                 return nullptr;
@@ -54,7 +54,7 @@ namespace babelwires {
 
         /// Try to get a registered service of type T (const). Returns nullptr if not registered.
         template <typename T>
-        const T* tryGetService() const {
+        const T* tryGet() const {
             auto it = m_services.find(std::type_index(typeid(T)));
             if (it == m_services.end()) {
                 return nullptr;

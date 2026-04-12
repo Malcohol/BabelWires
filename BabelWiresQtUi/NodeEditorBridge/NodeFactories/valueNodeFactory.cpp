@@ -19,7 +19,7 @@
 #include <optional>
 
 babelwires::ValueNodeFactory::ValueNodeFactory(const Context& context)
-    : m_typeSystem(context.getService<TypeSystem>()) {}
+    : m_typeSystem(context.get<TypeSystem>()) {}
 
 QString babelwires::ValueNodeFactory::getCategoryName() const {
     return "Values";

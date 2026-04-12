@@ -62,7 +62,7 @@ bool babelwires::MapModel::initMapEntryModelDispatcher(const QModelIndex& index,
     }
     const MapProjectEntry& entry = mapProject.getMapEntry(row);
     const bool isLastRow = (row == numMapEntries - 1);
-    mapEntryModel.init(m_projectContext.getService<ValueModelRegistry>(), m_projectContext.getService<TypeSystem>(), mapProject.getCurrentSourceType(), mapProject.getCurrentTargetType(), entry, row, static_cast<MapEntryModel::Column>(column), isLastRow);
+    mapEntryModel.init(m_projectContext.get<ValueModelRegistry>(), m_projectContext.get<TypeSystem>(), mapProject.getCurrentSourceType(), mapProject.getCurrentTargetType(), entry, row, static_cast<MapEntryModel::Column>(column), isLastRow);
     return true;
 }
 
