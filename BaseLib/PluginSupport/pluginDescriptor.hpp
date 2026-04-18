@@ -14,7 +14,7 @@
 
 namespace babelwires {
     class Context;
-    struct UserLogger;
+    struct UserAdvisoryLogger;
 
     /// Descriptor filled in by every plugin's entry point.
     struct PluginDescriptor {
@@ -29,7 +29,7 @@ namespace babelwires {
 
         /// Register the plugin's functionality (e.g. factories) into the Context.
         /// Returns an error if registration fails.
-        Result (*registerPlugin)(Context& context, UserLogger& userLogger) = nullptr;
+        Result (*registerPlugin)(Context& context, UserAdvisoryLogger& userLogger) = nullptr;
     };
 
     /// The type of the single plugin entry point, which must be exported by every plugin.

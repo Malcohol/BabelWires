@@ -17,7 +17,8 @@
 namespace babelwires {
 
     class Context;
-    class UserLogger;
+    struct UserLogger;
+    struct UserAdvisoryLogger;
 
     /// Plugin files are expected to have this extension.
     constexpr const char c_pluginFileExtension[] = ".bwplugin";
