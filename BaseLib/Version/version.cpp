@@ -33,13 +33,7 @@ namespace {
 } // namespace
 
 const babelwires::Version& babelwires::Version::getCodebaseVersion() {
-    static const Version s_codebaseVersion = {
-        detail::c_codebaseVersionMajor,
-        detail::c_codebaseVersionMinor,
-        detail::c_codebaseVersionPatch,
-    };
-
-    return s_codebaseVersion;
+    return c_myCodebaseVersion;
 }
 
 bool babelwires::Version::satisfies(const Version& requiredVersion) const {

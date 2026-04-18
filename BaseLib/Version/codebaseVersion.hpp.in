@@ -1,18 +1,21 @@
 /**
- * Auto-generated file (or its template) providing the project version numbers.
- * 
+ * Auto-generated file (or its template) providing the project's version.
+ *
  * (C) 2026 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
 
-#include <cstdint>
+#include <BaseLib/Version/version.hpp>
 
-namespace babelwires::detail {
+namespace babelwires {
 
-    inline constexpr std::uint16_t c_codebaseVersionMajor = @PROJECT_VERSION_MAJOR@;
-    inline constexpr std::uint16_t c_codebaseVersionMinor = @PROJECT_VERSION_MINOR@;
-    inline constexpr std::uint16_t c_codebaseVersionPatch = @PROJECT_VERSION_PATCH@;
+//clang-format off
+    /// Return the version of this codebase when the including code was compiled.
+    constexpr Version c_myCodebaseVersion = {
+        @PROJECT_VERSION_MAJOR@, @PROJECT_VERSION_MINOR@, @PROJECT_VERSION_PATCH@
+    };
+//clang-format on
 
-} // namespace babelwires::detail
+} // namespace babelwires
