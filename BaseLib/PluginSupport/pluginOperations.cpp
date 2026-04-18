@@ -12,6 +12,7 @@
 #include <BaseLib/Context/context.hpp>
 #include <BaseLib/Log/userLogger.hpp>
 #include <BaseLib/PluginSupport/pluginDescriptor.hpp>
+#include <BaseLib/PluginSupport/detail/pluginModuleOperations.hpp>
 #include <BaseLib/Result/resultDSL.hpp>
 #include <BaseLib/Version/version.hpp>
 
@@ -21,72 +22,9 @@
 #include <string>
 #include <vector>
 
-#if defined(_WIN32) || defined(_WIN64)
-    #include <Windows.h>
-#else
-    #include <dlfcn.h>
-#endif
-
 namespace {
-
-    std::string getLastError() {
-#if defined(_WIN32) || defined(_WIN64)
-        const DWORD errorCode = GetLastError();
-        if (errorCode == 0) {
-            return "Unknown error";
-        }
-
-        LPSTR messageBuffer = nullptr;
-        const DWORD messageLength = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
-                                                       FORMAT_MESSAGE_IGNORE_INSERTS,
-                                                   nullptr,
-                                                   errorCode,
-                                                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                                                   reinterpret_cast<LPSTR>(&messageBuffer),
-                                                   0,
-                                                   nullptr);
-        std::string message = (messageLength > 0 && messageBuffer != nullptr) ? messageBuffer : "Unknown error";
-        if (messageBuffer != nullptr) {
-            LocalFree(messageBuffer);
-        }
-        return message;
-#else
-        const char* errorText = dlerror();
-        return (errorText != nullptr) ? std::string(errorText) : std::string("Unknown error");
-#endif
-    }
-
-    using ModuleHandle = void*;
-
-    ModuleHandle openPluginModule(const std::filesystem::path& pluginPath) {
-#if defined(_WIN32) || defined(_WIN64)
-        return reinterpret_cast<ModuleHandle>(LoadLibraryW(pluginPath.c_str()));
-#else
-        return dlopen(pluginPath.c_str(), RTLD_NOW | RTLD_LOCAL);
-#endif
-    }
-
-    void closePluginModule(ModuleHandle moduleHandle) {
-        if (moduleHandle == nullptr) {
-            return;
-        }
-#if defined(_WIN32) || defined(_WIN64)
-        FreeLibrary(reinterpret_cast<HMODULE>(moduleHandle));
-#else
-        dlclose(moduleHandle);
-#endif
-    }
-
-    void* findPluginSymbol(ModuleHandle moduleHandle, const char* symbolName) {
-#if defined(_WIN32) || defined(_WIN64)
-        return reinterpret_cast<void*>(GetProcAddress(reinterpret_cast<HMODULE>(moduleHandle), symbolName));
-#else
-        return dlsym(moduleHandle, symbolName);
-#endif
-    }
-
-    std::vector<ModuleHandle>& loadedPluginModules() {
-        static std::vector<ModuleHandle> modules;
+    std::vector<babelwires::detail::ModuleHandle>& loadedPluginModules() {
+        static std::vector<babelwires::detail::ModuleHandle> modules;
         return modules;
     }
 
@@ -98,7 +36,7 @@ babelwires::PluginHandle::PluginHandle(void* moduleHandle, PluginDescriptor desc
     , m_pluginPath(std::move(pluginPath)) {}
 
 babelwires::PluginHandle::~PluginHandle() {
-    closePluginModule(m_moduleHandle);
+    detail::closePluginModule(m_moduleHandle);
 }
 
 babelwires::PluginHandle::PluginHandle(PluginHandle&& other) noexcept
@@ -110,7 +48,7 @@ babelwires::PluginHandle::PluginHandle(PluginHandle&& other) noexcept
 
 babelwires::PluginHandle& babelwires::PluginHandle::operator=(PluginHandle&& other) noexcept {
     if (this != &other) {
-        closePluginModule(m_moduleHandle);
+        detail::closePluginModule(m_moduleHandle);
         m_moduleHandle = other.m_moduleHandle;
         m_descriptor = other.m_descriptor;
         m_pluginPath = std::move(other.m_pluginPath);
@@ -193,19 +131,19 @@ babelwires::ResultT<std::vector<std::filesystem::path>> babelwires::discoverPlug
 }
 
 babelwires::ResultT<babelwires::PluginHandle> babelwires::validatePlugin(const std::filesystem::path& pluginPath) {
-    ModuleHandle moduleHandle = openPluginModule(pluginPath);
+    detail::ModuleHandle moduleHandle = detail::openPluginModule(pluginPath);
     if (moduleHandle == nullptr) {
-        return Error() << "Failed to open plugin " << pluginPath << ": " << getLastError();
+        return Error() << "Failed to open plugin " << pluginPath << ": " << detail::getLastModuleError();
     }
 
     const auto closeOnFailure = [&]() {
-        closePluginModule(moduleHandle);
+        detail::closePluginModule(moduleHandle);
         moduleHandle = nullptr;
     };
 
-    void* symbol = findPluginSymbol(moduleHandle, c_pluginDescriptorSymbolName);
+    void* symbol = detail::findPluginSymbol(moduleHandle, c_pluginDescriptorSymbolName);
     if (symbol == nullptr) {
-        const std::string symbolError = getLastError();
+        const std::string symbolError = detail::getLastModuleError();
         closeOnFailure();
         return Error() << "Plugin " << pluginPath << " is missing symbol " << c_pluginDescriptorSymbolName << ": "
                        << symbolError;

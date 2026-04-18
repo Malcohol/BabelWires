@@ -29,6 +29,7 @@ SET( COMMON_SRCS
 	Signal/signalSubscription.cpp
 	BlockStream/blockStream.cpp
 	BuildCompatibility/buildCompatibility.cpp
+	PluginSupport/detail/pluginModuleOperations.cpp
 	PluginSupport/pluginOperations.cpp
 	Utilities/unicodeUtils.cpp
    )
