@@ -231,7 +231,7 @@ babelwires::ResultT<babelwires::PluginHandle> babelwires::validatePlugin(const s
 #ifndef NDEBUG
     const std::size_t hostFingerprintSize =
 #endif 
-    writeBuildFingerprint(hostFingerprint, sizeof(hostFingerprint));
+    writeMyBuildFingerprint(hostFingerprint, sizeof(hostFingerprint));
     assert(hostFingerprintSize > 0 && hostFingerprintSize < sizeof(hostFingerprint));
 
     char pluginFingerprint[babelwires::c_buildFingerprintBufferSize] = {};

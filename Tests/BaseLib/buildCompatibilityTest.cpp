@@ -8,7 +8,7 @@
 
 TEST(BuildCompatibilityTest, defaultBufferIsBiggerThanFingerprint) {
     char buffer[babelwires::c_buildFingerprintBufferSize] = {};
-    const std::size_t bytesUsed = babelwires::writeBuildFingerprint(buffer, sizeof(buffer));
+    const std::size_t bytesUsed = babelwires::writeMyBuildFingerprint(buffer, sizeof(buffer));
 
     EXPECT_GT(bytesUsed, 0u);
     EXPECT_LT(bytesUsed, babelwires::c_buildFingerprintBufferSize);
@@ -19,8 +19,8 @@ TEST(BuildCompatibilityTest, compareEqualFingerprints) {
     char expected[babelwires::c_buildFingerprintBufferSize] = {};
     char actual[babelwires::c_buildFingerprintBufferSize] = {};
 
-    const std::size_t expectedSize = babelwires::writeBuildFingerprint(expected, sizeof(expected));
-    const std::size_t actualSize = babelwires::writeBuildFingerprint(actual, sizeof(actual));
+    const std::size_t expectedSize = babelwires::writeMyBuildFingerprint(expected, sizeof(expected));
+    const std::size_t actualSize = babelwires::writeMyBuildFingerprint(actual, sizeof(actual));
 
     EXPECT_GT(expectedSize, 0u);
     EXPECT_EQ(expectedSize, actualSize);
@@ -49,7 +49,7 @@ TEST(BuildCompatibilityTest, writeBuildFingerprintTruncatesWithNullTerminator) {
     char smallBuffer[32];
     std::memset(smallBuffer, 'X', sizeof(smallBuffer));
 
-    const std::size_t bytesUsed = babelwires::writeBuildFingerprint(smallBuffer, sizeof(smallBuffer));
+    const std::size_t bytesUsed = babelwires::writeMyBuildFingerprint(smallBuffer, sizeof(smallBuffer));
 
     EXPECT_EQ(bytesUsed, sizeof(smallBuffer));
     EXPECT_EQ(smallBuffer[sizeof(smallBuffer) - 1], '\0');

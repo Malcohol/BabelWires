@@ -12,7 +12,7 @@
 namespace babelwires {
 
 //clang-format off
-    /// Return the version of this codebase when the including code was compiled.
+    /// Return the version of this codebase when the including code was compiled (hence "my" version).
     constexpr Version c_myCodebaseVersion = {
         @PROJECT_VERSION_MAJOR@, @PROJECT_VERSION_MINOR@, @PROJECT_VERSION_PATCH@
     };
