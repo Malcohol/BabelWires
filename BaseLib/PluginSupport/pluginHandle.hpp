@@ -17,7 +17,6 @@ namespace babelwires {
     /// Owning handle for a validated plugin module.
     class BASELIB_API PluginHandle {
       public:
-        PluginHandle() = default;
         PluginHandle(void* moduleHandle, PluginDescriptor descriptor, std::filesystem::path pluginPath);
         ~PluginHandle();
 
@@ -32,10 +31,6 @@ namespace babelwires {
 
         /// Get the path to the location of the plugin file.
         const std::filesystem::path& getPluginPath() const;
-
-        void* releaseModuleHandle();
-
-        explicit operator bool() const;
 
       private:
         void* m_moduleHandle = nullptr;

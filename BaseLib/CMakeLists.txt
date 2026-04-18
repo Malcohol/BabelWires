@@ -31,6 +31,7 @@ SET( COMMON_SRCS
 	BuildCompatibility/buildCompatibility.cpp
 	PluginSupport/Detail/pluginModuleOperations.cpp
 	PluginSupport/pluginHandle.cpp
+	PluginSupport/pluginManager.cpp
 	PluginSupport/pluginOperations.cpp
 	Utilities/unicodeUtils.cpp
    )

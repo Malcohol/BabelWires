@@ -9,7 +9,6 @@
 
 #include <BaseLib/BuildCompatibility/buildCompatibility.hpp>
 #include <BaseLib/BuildCompatibility/buildFingerprint.hpp>
-#include <BaseLib/Context/context.hpp>
 #include <BaseLib/Log/userLogger.hpp>
 #include <BaseLib/PluginSupport/pluginDescriptor.hpp>
 #include <BaseLib/PluginSupport/Detail/pluginModuleOperations.hpp>
@@ -19,14 +18,6 @@
 #include <algorithm>
 #include <filesystem>
 #include <string>
-
-namespace {
-    std::vector<babelwires::detail::ModuleHandle>& loadedPluginModules() {
-        static std::vector<babelwires::detail::ModuleHandle> modules;
-        return modules;
-    }
-
-} // namespace
 
 babelwires::ResultT<std::vector<std::filesystem::path>> babelwires::discoverPlugins(const std::filesystem::path& pluginDir, UserLogger& userLogger) {
     constexpr std::size_t c_maxPluginSearchDepth = 8;
@@ -83,7 +74,7 @@ babelwires::ResultT<std::vector<std::filesystem::path>> babelwires::discoverPlug
     return plugins;
 }
 
-babelwires::ResultT<babelwires::PluginHandle> babelwires::validatePlugin(const std::filesystem::path& pluginPath) {
+babelwires::ResultT<babelwires::PluginHandle> babelwires::openPlugin(const std::filesystem::path& pluginPath) {
     detail::ModuleHandle moduleHandle = detail::openPluginModule(pluginPath);
     if (moduleHandle == nullptr) {
         return Error() << "Failed to open plugin " << pluginPath << ": " << detail::getLastModuleError();
@@ -141,49 +132,3 @@ babelwires::ResultT<babelwires::PluginHandle> babelwires::validatePlugin(const s
     return PluginHandle(moduleHandle, descriptor, pluginPath);
 }
 
-babelwires::Result babelwires::loadPlugin(PluginHandle&& handle, Context& context, UserLogger& userLogger) {
-    if (!handle) {
-        return Error() << "Cannot load an empty plugin handle";
-    }
-
-    const PluginDescriptor descriptor = handle.getDescriptor();
-    if (descriptor.registerPlugin == nullptr) {
-        return Error() << "Plugin " << handle.getPluginPath() << " has no registerPlugin function";
-    }
-
-    const Result registrationResult = descriptor.registerPlugin(context, userLogger);
-    if (!registrationResult) {
-        return Error() << "Plugin " << handle.getPluginPath() << " failed during registration: "
-                        << registrationResult.error().toString();
-    }
-
-    loadedPluginModules().push_back(handle.releaseModuleHandle());
-    return Result{};
-}
-
-unsigned int babelwires::loadAllPlugins(const std::filesystem::path& pluginDir, Context& context, UserLogger& userLogger) {
-    ResultT<std::vector<std::filesystem::path>> discovered = discoverPlugins(pluginDir, userLogger);
-    if (!discovered) {
-        userLogger.logWarning() << discovered.error().toString();
-        return 0;
-    }
-
-    unsigned int loadedCount = 0;
-    for (const auto& pluginPath : *discovered) {
-        ResultT<PluginHandle> validated = validatePlugin(pluginPath);
-        if (!validated) {
-            userLogger.logWarning() << validated.error().toString();
-            continue;
-        }
-
-        Result loaded = loadPlugin(std::move(*validated), context, userLogger);
-        if (!loaded) {
-            userLogger.logWarning() << loaded.error().toString();
-            continue;
-        }
-
-        ++loadedCount;
-    }
-
-    return loadedCount;
-}

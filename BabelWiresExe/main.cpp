@@ -28,6 +28,7 @@
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <BaseLib/Log/ostreamLogListener.hpp>
 #include <BaseLib/Log/unifiedLog.hpp>
+#include <BaseLib/PluginSupport/pluginManager.hpp>
 #include <BaseLib/PluginSupport/pluginOperations.hpp>
 #include <BaseLib/Random/randomService.hpp>
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
@@ -79,6 +80,11 @@ int main(int argc, char* argv[]) {
     babelwires::DebugLogger::swapGlobalDebugLogger(&log);
     babelwires::OStreamLogListener logToCout(std::cout, log, features);
 
+#if BABELWIRES_SHARED_BUILD
+    // Because the plugin manager keeps code in memory, it needs a lifetime that encompasses other services.
+    babelwires::PluginManager pluginManager;
+#endif
+
     SourceFileFormatRegistry sourceFileFormatReg;
     TargetFileFormatRegistry targetFileFormatReg;
     ProcessorFactoryRegistry processorReg;
@@ -112,7 +118,7 @@ int main(int argc, char* argv[]) {
     bw_musicUi::registerLib(context);
 
 #if BABELWIRES_SHARED_BUILD
-    const unsigned int loadedPlugins = babelwires::loadAllPlugins(BABELWIRES_DEFAULT_PLUGIN_DIR, context, log);
+    const unsigned int loadedPlugins = pluginManager.loadAllPlugins(BABELWIRES_DEFAULT_PLUGIN_DIR, context, log);
     babelwires::logDebug() << "Loaded " << loadedPlugins << " plugin(s) from " << BABELWIRES_DEFAULT_PLUGIN_DIR;
 #else
     const babelwires::Result smfRegisterResult = smf::registerLib(context, log);

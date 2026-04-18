@@ -9,12 +9,16 @@
 
 #include <BaseLib/PluginSupport/Detail/pluginModuleOperations.hpp>
 
+#include <cassert>
 #include <utility>
 
-babelwires::PluginHandle::PluginHandle(void* moduleHandle, PluginDescriptor descriptor, std::filesystem::path pluginPath)
+babelwires::PluginHandle::PluginHandle(void* moduleHandle, PluginDescriptor descriptor,
+                                       std::filesystem::path pluginPath)
     : m_moduleHandle(moduleHandle)
     , m_descriptor(descriptor)
-    , m_pluginPath(std::move(pluginPath)) {}
+    , m_pluginPath(std::move(pluginPath)) {
+    assert((m_moduleHandle != nullptr) && "PluginHandle should only be constructed with a valid module handle");
+}
 
 babelwires::PluginHandle::~PluginHandle() {
     detail::closePluginModule(m_moduleHandle);
@@ -44,14 +48,4 @@ const babelwires::PluginDescriptor& babelwires::PluginHandle::getDescriptor() co
 
 const std::filesystem::path& babelwires::PluginHandle::getPluginPath() const {
     return m_pluginPath;
-}
-
-void* babelwires::PluginHandle::releaseModuleHandle() {
-    void* handle = m_moduleHandle;
-    m_moduleHandle = nullptr;
-    return handle;
-}
-
-babelwires::PluginHandle::operator bool() const {
-    return m_moduleHandle != nullptr;
 }
