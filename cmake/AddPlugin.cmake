@@ -1,8 +1,13 @@
 function(babelwires_add_plugin moduleTarget objectTarget)
     set(options)
-    set(oneValueArgs ENTRY_SOURCE)
+    set(oneValueArgs ENTRY_SOURCE OUTPUT_SUBDIR)
     set(multiValueArgs SOURCES DEPS INCLUDE_DIRS)
     cmake_parse_arguments(BW_PLUGIN "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    set(pluginOutputDir "${BABELWIRES_PLUGIN_OUTPUT_DIR}")
+    if(NOT "${BW_PLUGIN_OUTPUT_SUBDIR}" STREQUAL "")
+        set(pluginOutputDir "${pluginOutputDir}/${BW_PLUGIN_OUTPUT_SUBDIR}")
+    endif()
 
     if("${BW_PLUGIN_SOURCES}" STREQUAL "")
         message(FATAL_ERROR "babelwires_add_plugin(${moduleTarget}): SOURCES is required")
@@ -32,8 +37,8 @@ function(babelwires_add_plugin moduleTarget objectTarget)
         set_target_properties(${moduleTarget} PROPERTIES
             PREFIX ""
             SUFFIX ".bwplugin"
-            LIBRARY_OUTPUT_DIRECTORY "${BABELWIRES_PLUGIN_OUTPUT_DIR}"
-            RUNTIME_OUTPUT_DIRECTORY "${BABELWIRES_PLUGIN_OUTPUT_DIR}"
+            LIBRARY_OUTPUT_DIRECTORY "${pluginOutputDir}"
+            RUNTIME_OUTPUT_DIRECTORY "${pluginOutputDir}"
         )
     endif()
 endfunction()
