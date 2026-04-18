@@ -7,7 +7,7 @@
  **/
 #include <BaseLib/PluginSupport/pluginHandle.hpp>
 
-#include <BaseLib/PluginSupport/detail/pluginModuleOperations.hpp>
+#include <BaseLib/PluginSupport/Detail/pluginModuleOperations.hpp>
 
 #include <utility>
 

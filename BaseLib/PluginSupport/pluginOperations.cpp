@@ -12,7 +12,7 @@
 #include <BaseLib/Context/context.hpp>
 #include <BaseLib/Log/userLogger.hpp>
 #include <BaseLib/PluginSupport/pluginDescriptor.hpp>
-#include <BaseLib/PluginSupport/detail/pluginModuleOperations.hpp>
+#include <BaseLib/PluginSupport/Detail/pluginModuleOperations.hpp>
 #include <BaseLib/Result/resultDSL.hpp>
 #include <BaseLib/Version/version.hpp>
 

@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BaseLib/PluginSupport/detail/pluginModuleOperations.hpp>
+#include <BaseLib/PluginSupport/Detail/pluginModuleOperations.hpp>
 
 #if defined(_WIN32) || defined(_WIN64)
     #include <Windows.h>
