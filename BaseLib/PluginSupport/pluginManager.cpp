@@ -13,12 +13,24 @@
 #include <BaseLib/PluginSupport/pluginOperations.hpp>
 #include <BaseLib/Result/resultDSL.hpp>
 
+#include <algorithm>
 #include <utility>
+
+bool babelwires::PluginManager::isPluginLoaded(const Uuid& pluginUuid) const {
+    return std::any_of(m_loadedPlugins.begin(),
+                       m_loadedPlugins.end(),
+                       [&](const PluginHandle& loaded) { return loaded.getDescriptor().m_pluginUuid == pluginUuid; });
+}
 
 babelwires::Result babelwires::PluginManager::loadPlugin(PluginHandle&& handle, Context& context, UserLogger& userLogger) {
     const PluginDescriptor descriptor = handle.getDescriptor();
     if (descriptor.registerPlugin == nullptr) {
         return Error() << "Plugin " << handle.getPluginPath() << " has no registerPlugin function";
+    }
+
+    if (isPluginLoaded(descriptor.m_pluginUuid)) {
+        return Error() << "Plugin " << handle.getPluginPath() << " duplicates an already loaded plugin UUID "
+                       << descriptor.m_pluginUuid;
     }
 
     userLogger.logInfo() << "Loading plugin " << handle.getPluginPath();
@@ -47,6 +59,12 @@ unsigned int babelwires::PluginManager::loadAllPlugins(const std::filesystem::pa
         ResultT<PluginHandle> validated = openPlugin(pluginPath);
         if (!validated) {
             userLogger.logWarning() << validated.error().toString();
+            continue;
+        }
+
+        const PluginDescriptor descriptor = validated->getDescriptor();
+        if (isPluginLoaded(descriptor.m_pluginUuid)) {
+            userLogger.logWarning() << "Skipping duplicate plugin " << pluginPath << " with UUID " << descriptor.m_pluginUuid;
             continue;
         }
 

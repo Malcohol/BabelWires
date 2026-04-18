@@ -3,6 +3,7 @@
  *
  * Expects:
  *   - PLUGIN_REGISTRATION_FUNCTION to name the plugin registration function.
+ *   - PLUGIN_UUID to contain a hardcoded UUID string.
  *
  * (C) 2026 Malcolm Tyrrell
  *
@@ -11,6 +12,10 @@
 
 #ifndef PLUGIN_REGISTRATION_FUNCTION
     #error "PLUGIN_REGISTRATION_FUNCTION must be defined before including pluginEntryDefinition.inc"
+#endif
+
+#ifndef PLUGIN_UUID
+    #error "PLUGIN_UUID must be defined before including pluginEntryDefinition.inc"
 #endif
 
 #include <BaseLib/BuildCompatibility/buildFingerprint.hpp>
@@ -28,6 +33,7 @@ extern "C" BABELWIRES_PLUGIN_EXPORT void babelwires_getPluginDescriptor(babelwir
     // Important: Don't take the address of BaseLib's writeMyBuildFingerprint, but instead the address of the local
     // wrapper.
     out->getBuildFingerprint = &pluginLocalBuildFingerprint;
+    out->m_pluginUuid = babelwires::Uuid(PLUGIN_UUID);
     out->registerPlugin = &PLUGIN_REGISTRATION_FUNCTION;
 }
 

@@ -129,6 +129,11 @@ babelwires::ResultT<babelwires::PluginHandle> babelwires::openPlugin(const std::
         return Error() << "Plugin " << pluginPath << " is build-incompatible: " << fingerprintResult.error().toString();
     }
 
+    if (descriptor.m_pluginUuid.isZero()) {
+        closeOnFailure();
+        return Error() << "Plugin " << pluginPath << " has an invalid UUID";
+    }
+
     return PluginHandle(moduleHandle, descriptor, pluginPath);
 }
 

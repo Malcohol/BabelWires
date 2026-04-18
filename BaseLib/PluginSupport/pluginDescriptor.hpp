@@ -7,6 +7,7 @@
  **/
 #pragma once
 
+#include <BaseLib/uuid.hpp>
 #include <BaseLib/Result/result.hpp>
 #include <BaseLib/Version/version.hpp>
 
@@ -19,13 +20,15 @@ namespace babelwires {
     /// Descriptor filled in by every plugin's entry point.
     struct PluginDescriptor {
         /// The codebase version of BabelWires that the plugin was built against.
-        /// The loader checks Version::getCodebaseVersion().satisfies(m_codebaseVersion).
         Version m_codebaseVersion;
 
         /// Write the plugin's build fingerprint into the provided buffer.
         /// Returns the number of bytes used (including null terminator).
         /// If the return value equals bufferSize, the output was truncated. The caller can retry with a larger buffer.
         std::size_t (*getBuildFingerprint)(char* buffer, std::size_t bufferSize) = nullptr;
+
+        /// Stable plugin identity for runtime safety checks.
+        Uuid m_pluginUuid;
 
         /// Register the plugin's functionality (e.g. factories) into the Context.
         /// Returns an error if registration fails.

@@ -9,6 +9,7 @@
 
 #include <BaseLib/PluginSupport/pluginHandle.hpp>
 #include <BaseLib/Result/result.hpp>
+#include <BaseLib/uuid.hpp>
 #include <BaseLib/baseLibExport.hpp>
 
 #include <filesystem>
@@ -23,6 +24,9 @@ namespace babelwires {
     /// Note: The plugin manager keeps code in memory, so it needs a lifetime that encompasses other services.
     class BASELIB_API PluginManager {
       public:
+        /// Returns true if a plugin with this UUID is already loaded.
+        bool isPluginLoaded(const Uuid& pluginUuid) const;
+
         /// Register a previously validated plugin into the Context.
         /// On success, the PluginHandle is consumed and the plugin stays loaded for this manager's lifetime.
         Result loadPlugin(PluginHandle&& handle, Context& context, UserLogger& userLogger);
