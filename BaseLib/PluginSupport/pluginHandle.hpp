@@ -33,7 +33,8 @@ namespace babelwires {
         const std::filesystem::path& getPluginPath() const;
 
       private:
-        void* m_moduleHandle = nullptr;
+        /// Low-level module handle.
+        void* m_moduleHandle;
         PluginDescriptor m_descriptor{};
         std::filesystem::path m_pluginPath;
     };

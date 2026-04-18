@@ -21,6 +21,7 @@ babelwires::Result babelwires::PluginManager::loadPlugin(PluginHandle&& handle, 
         return Error() << "Plugin " << handle.getPluginPath() << " has no registerPlugin function";
     }
 
+    userLogger.logInfo() << "Loading plugin " << handle.getPluginPath();
     const Result registrationResult = descriptor.registerPlugin(context, userLogger);
     if (!registrationResult) {
         return Error() << "Plugin " << handle.getPluginPath() << " failed during registration: "
@@ -28,6 +29,7 @@ babelwires::Result babelwires::PluginManager::loadPlugin(PluginHandle&& handle, 
     }
 
     m_loadedPlugins.push_back(std::move(handle));
+    userLogger.logInfo() << "Successfully loaded plugin " << m_loadedPlugins.back().getPluginPath();
     return Result{};
 }
 
