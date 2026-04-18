@@ -28,6 +28,7 @@
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <BaseLib/Log/ostreamLogListener.hpp>
 #include <BaseLib/Log/unifiedLog.hpp>
+#include <BaseLib/PluginSupport/pluginOperations.hpp>
 #include <BaseLib/Random/randomService.hpp>
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
 #include <BaseLib/libRegistration.hpp>
@@ -37,7 +38,10 @@
 #include <Domains/Music/MusicLibUi/libRegistration.hpp>
 #include <Domains/Music/Plugins/TestPlugin/libRegistration.hpp>
 #include <Domains/TestDomain/libRegistration.hpp>
-#include <Smf/libRegistration.hpp>
+
+#if !BABELWIRES_SHARED_BUILD
+    #include <Smf/libRegistration.hpp>
+#endif
 
 #include <cassert>
 #include <chrono>
@@ -45,6 +49,7 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <filesystem>
 
 #include <tinyxml2.h>
 
@@ -105,7 +110,13 @@ int main(int argc, char* argv[]) {
     babelwires::registerLib(context);
     bw_music::registerLib(context);
     bw_musicUi::registerLib(context);
+
+#if BABELWIRES_SHARED_BUILD
+    const unsigned int loadedPlugins = babelwires::loadAllPlugins(BABELWIRES_DEFAULT_PLUGIN_DIR, context, log);
+    babelwires::logDebug() << "Loaded " << loadedPlugins << " plugin(s) from " << BABELWIRES_DEFAULT_PLUGIN_DIR;
+#else
     smf::registerLib(context);
+#endif
 
     // Uncomment to enable a domain of testing data.
     // bw_music_testplugin::registerLib(context);

@@ -19,6 +19,12 @@ option(BUILD_SHARED_LIBS "Build all BabelWires libraries as shared libraries" OF
 # Ensure that submodules (e.g. nodeeditor) respect the BUILD_SHARED_LIBS setting.
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
+set(BABELWIRES_PLUGIN_OUTPUT_DIR "${CMAKE_BINARY_DIR}/plugins" CACHE PATH
+    "Directory where runtime-loadable BabelWires plugins are placed")
+
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+include(AddPlugin)
+
 if(BUILD_SHARED_LIBS)
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
     set(CMAKE_BUILD_RPATH_USE_ORIGIN TRUE)

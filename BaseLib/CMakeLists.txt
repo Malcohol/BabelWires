@@ -29,6 +29,7 @@ SET( COMMON_SRCS
 	Signal/signalSubscription.cpp
 	BlockStream/blockStream.cpp
 	BuildCompatibility/buildCompatibility.cpp
+	PluginSupport/pluginOperations.cpp
 	Utilities/unicodeUtils.cpp
    )
 
@@ -51,6 +52,10 @@ TARGET_INCLUDE_DIRECTORIES( BaseLib
 		$<INSTALL_INTERFACE:include>
 )
 TARGET_LINK_LIBRARIES(BaseLib PUBLIC tinyxml2)
+
+if(UNIX AND NOT APPLE)
+	target_link_libraries(BaseLib PRIVATE dl)
+endif()
 
 if(BUILD_SHARED_LIBS)
 	set_target_properties(BaseLib PROPERTIES
