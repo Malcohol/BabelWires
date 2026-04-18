@@ -7,18 +7,14 @@
  **/
 #pragma once
 
+#include <BaseLib/Result/result.hpp>
 #include <BaseLib/Version/version.hpp>
 
 #include <cstddef>
 
-#if defined(_WIN32) || defined(_WIN64)
-    #define BABELWIRES_PLUGIN_EXPORT __declspec(dllexport)
-#else
-    #define BABELWIRES_PLUGIN_EXPORT
-#endif
-
 namespace babelwires {
     class Context;
+    struct UserLogger;
 
     /// Descriptor filled in by every plugin's entry point.
     struct PluginDescriptor {
@@ -32,7 +28,8 @@ namespace babelwires {
         std::size_t (*getBuildFingerprint)(char* buffer, std::size_t bufferSize) = nullptr;
 
         /// Register the plugin's functionality (e.g. factories) into the Context.
-        void (*registerPlugin)(Context& context) = nullptr;
+        /// Returns an error if registration fails.
+        Result (*registerPlugin)(Context& context, UserLogger& userLogger) = nullptr;
     };
 
     /// The type of the single plugin entry point, which must be exported by every plugin.
@@ -42,3 +39,9 @@ namespace babelwires {
     inline constexpr const char* c_pluginDescriptorSymbolName = "babelwires_getPluginDescriptor";
 
 } // namespace babelwires
+
+#if defined(_WIN32) || defined(_WIN64)
+    #define BABELWIRES_PLUGIN_EXPORT __declspec(dllexport)
+#else
+    #define BABELWIRES_PLUGIN_EXPORT
+#endif

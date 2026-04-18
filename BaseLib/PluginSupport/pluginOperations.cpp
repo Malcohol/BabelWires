@@ -18,7 +18,6 @@
 
 #include <algorithm>
 #include <filesystem>
-#include <stdexcept>
 #include <string>
 
 namespace {
@@ -142,7 +141,7 @@ babelwires::ResultT<babelwires::PluginHandle> babelwires::validatePlugin(const s
     return PluginHandle(moduleHandle, descriptor, pluginPath);
 }
 
-babelwires::Result babelwires::loadPlugin(PluginHandle&& handle, Context& context) {
+babelwires::Result babelwires::loadPlugin(PluginHandle&& handle, Context& context, UserLogger& userLogger) {
     if (!handle) {
         return Error() << "Cannot load an empty plugin handle";
     }
@@ -152,12 +151,10 @@ babelwires::Result babelwires::loadPlugin(PluginHandle&& handle, Context& contex
         return Error() << "Plugin " << handle.getPluginPath() << " has no registerPlugin function";
     }
 
-    try {
-        descriptor.registerPlugin(context);
-    } catch (const std::exception& ex) {
-        return Error() << "Plugin " << handle.getPluginPath() << " threw during registration: " << ex.what();
-    } catch (...) {
-        return Error() << "Plugin " << handle.getPluginPath() << " threw during registration";
+    const Result registrationResult = descriptor.registerPlugin(context, userLogger);
+    if (!registrationResult) {
+        return Error() << "Plugin " << handle.getPluginPath() << " failed during registration: "
+                        << registrationResult.error().toString();
     }
 
     loadedPluginModules().push_back(handle.releaseModuleHandle());
@@ -179,7 +176,7 @@ unsigned int babelwires::loadAllPlugins(const std::filesystem::path& pluginDir, 
             continue;
         }
 
-        Result loaded = loadPlugin(std::move(*validated), context);
+        Result loaded = loadPlugin(std::move(*validated), context, userLogger);
         if (!loaded) {
             userLogger.logWarning() << loaded.error().toString();
             continue;

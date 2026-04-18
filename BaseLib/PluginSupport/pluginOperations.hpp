@@ -39,7 +39,7 @@ namespace babelwires {
     /// Register a previously validated plugin into the Context.
     /// On success, the PluginHandle is consumed and the plugin stays loaded for the process lifetime.
     /// On failure (e.g. exception in registerPlugin), returns an error.
-    BASELIB_API Result loadPlugin(PluginHandle&& handle, Context& context);
+    BASELIB_API Result loadPlugin(PluginHandle&& handle, Context& context, UserLogger& userLogger);
 
     /// Discover, validate, and load all plugins from a directory.
     /// This is the main entry point for startup. It never "fails" — individual plugin

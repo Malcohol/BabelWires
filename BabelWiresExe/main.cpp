@@ -115,7 +115,11 @@ int main(int argc, char* argv[]) {
     const unsigned int loadedPlugins = babelwires::loadAllPlugins(BABELWIRES_DEFAULT_PLUGIN_DIR, context, log);
     babelwires::logDebug() << "Loaded " << loadedPlugins << " plugin(s) from " << BABELWIRES_DEFAULT_PLUGIN_DIR;
 #else
-    smf::registerLib(context);
+    const babelwires::Result smfRegisterResult = smf::registerLib(context, log);
+    if (!smfRegisterResult) {
+        std::cerr << "Error loading SMF library: " << smfRegisterResult.error().toString() << std::endl;
+        return EXIT_FAILURE;
+    }
 #endif
 
     // Uncomment to enable a domain of testing data.
