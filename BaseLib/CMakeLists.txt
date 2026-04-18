@@ -30,6 +30,7 @@ SET( COMMON_SRCS
 	BlockStream/blockStream.cpp
 	BuildCompatibility/buildCompatibility.cpp
 	PluginSupport/detail/pluginModuleOperations.cpp
+	PluginSupport/pluginHandle.cpp
 	PluginSupport/pluginOperations.cpp
 	Utilities/unicodeUtils.cpp
    )
