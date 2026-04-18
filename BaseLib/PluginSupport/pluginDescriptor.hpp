@@ -31,12 +31,14 @@ namespace babelwires {
         /// If the return value equals bufferSize, the output was truncated. The caller can retry with a larger buffer.
         std::size_t (*getBuildFingerprint)(char* buffer, std::size_t bufferSize) = nullptr;
 
-        /// Register the plugin's types, processors, file formats, etc. into the Context.
+        /// Register the plugin's functionality (e.g. factories) into the Context.
         void (*registerPlugin)(Context& context) = nullptr;
     };
 
+    /// The type of the single plugin entry point, which must be exported by every plugin.
     using GetPluginDescriptorFunction = void (*)(PluginDescriptor* out);
 
+    /// The symbol of the single plugin entry point, which must be exported by every plugin.
     inline constexpr const char* c_pluginDescriptorSymbolName = "babelwires_getPluginDescriptor";
 
 } // namespace babelwires
