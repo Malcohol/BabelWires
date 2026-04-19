@@ -16,7 +16,7 @@
 
 namespace babelwires {
     /// A container which can carry a sequence of hetrogeneous events.
-    /// Since streams will often contain objects of more than one type, the calling code should use StreamEvent::asA to
+    /// Since streams will often contain objects of more than one type, the calling code should use StreamEvent::tryAs to
     /// inspect events. The memory is laid out in multiple blocks for reasonably efficient traversal.
     class BASELIB_API BlockStream {
       public:
