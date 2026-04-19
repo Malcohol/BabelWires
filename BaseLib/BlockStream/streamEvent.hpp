@@ -2,7 +2,7 @@
  * Common functionality for objects residing in BlockStreams.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
@@ -19,14 +19,22 @@ namespace babelwires {
 
 /// Adds boiler-plate needed by every abstract StreamEvent.
 #define STREAM_EVENT_ABSTRACT(CLASS)                                                                                   \
-    CLASS& cloneInto(void* memory) const& { return static_cast<CLASS&>(doCloneInto(memory)); }                         \
-    CLASS& cloneInto(void* memory)&& { return static_cast<CLASS&>(std::move(*this).doCloneInto(memory)); }
+    CLASS& cloneInto(void* memory) const& {                                                                            \
+        return static_cast<CLASS&>(doCloneInto(memory));                                                               \
+    }                                                                                                                  \
+    CLASS& cloneInto(void* memory) && {                                                                                \
+        return static_cast<CLASS&>(std::move(*this).doCloneInto(memory));                                              \
+    }
 
 /// Adds boiler-plate needed by every concrete StreamEvent.
 #define STREAM_EVENT(CLASS)                                                                                            \
     STREAM_EVENT_ABSTRACT(CLASS)                                                                                       \
-    std::size_t getSize() const override { return sizeof(CLASS); }                                                     \
-    std::size_t getAlignment() const override { return alignof(CLASS); }                                               \
+    std::size_t getSize() const override {                                                                             \
+        return sizeof(CLASS);                                                                                          \
+    }                                                                                                                  \
+    std::size_t getAlignment() const override {                                                                        \
+        return alignof(CLASS);                                                                                         \
+    }                                                                                                                  \
     CLASS& doCloneInto(void* memory) const& override {                                                                 \
         static_assert(sizeof(CLASS) <= babelwires::c_maxEventSize);                                                    \
         static_assert(sizeof(void*) == sizeof(std::size_t));                                                           \
@@ -56,7 +64,7 @@ namespace babelwires {
     /// Such events are required to be both copy and move-constructable.
     /// They should also provide implementations of the Streamable interface via the STREAM_EVENT macro.
     /// Events will be properly destroyed, so they may own other data.
-        class BASELIB_API StreamEvent : public Streamable {
+    class BASELIB_API StreamEvent : public Streamable {
       public:
         STREAM_EVENT(StreamEvent);
         DOWNCASTABLE_BASE(StreamEvent);
@@ -85,7 +93,8 @@ namespace babelwires {
 
         StreamEvent* getPreviousEventInBlock() {
             assert(m_numBytesFromPreviousEvent && "There is no previous event in this block");
-            return reinterpret_cast<StreamEvent*>(reinterpret_cast<babelwires::Byte*>(this) - m_numBytesFromPreviousEvent);
+            return reinterpret_cast<StreamEvent*>(reinterpret_cast<babelwires::Byte*>(this) -
+                                                  m_numBytesFromPreviousEvent);
         }
 
         const StreamEvent* getPreviousEventInBlock() const {
