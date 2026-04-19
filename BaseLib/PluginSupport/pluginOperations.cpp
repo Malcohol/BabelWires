@@ -10,8 +10,8 @@
 #include <BaseLib/BuildCompatibility/buildCompatibility.hpp>
 #include <BaseLib/BuildCompatibility/buildFingerprint.hpp>
 #include <BaseLib/Log/userLogger.hpp>
-#include <BaseLib/PluginSupport/pluginDescriptor.hpp>
 #include <BaseLib/PluginSupport/Detail/pluginModuleOperations.hpp>
+#include <BaseLib/PluginSupport/pluginDescriptor.hpp>
 #include <BaseLib/Result/resultDSL.hpp>
 #include <BaseLib/Version/version.hpp>
 #include <BaseLib/uuid.hpp>
@@ -32,7 +32,8 @@ namespace {
     }
 } // namespace
 
-babelwires::ResultT<std::vector<std::filesystem::path>> babelwires::discoverPlugins(const std::filesystem::path& pluginDir, UserLogger& userLogger) {
+babelwires::ResultT<std::vector<std::filesystem::path>>
+babelwires::discoverPlugins(const std::filesystem::path& pluginDir, UserLogger& userLogger) {
     constexpr std::size_t c_maxPluginSearchDepth = 8;
 
     std::error_code ec;
@@ -51,9 +52,11 @@ babelwires::ResultT<std::vector<std::filesystem::path>> babelwires::discoverPlug
     }
 
     std::vector<std::filesystem::path> plugins;
-    const auto optionsFind = std::filesystem::directory_options::skip_permission_denied | std::filesystem::directory_options::follow_directory_symlink;
+    const auto optionsFind = std::filesystem::directory_options::skip_permission_denied |
+                             std::filesystem::directory_options::follow_directory_symlink;
     const auto optionsCheckPermissions = std::filesystem::directory_options::none;
-    for (std::filesystem::recursive_directory_iterator it(pluginDir, optionsFind, ec), end; it != end; it.increment(ec)) {
+    for (std::filesystem::recursive_directory_iterator it(pluginDir, optionsFind, ec), end; it != end;
+         it.increment(ec)) {
         if (ec) {
             return Error() << "Failed to scan plugin directory " << pluginDir << ": " << ec.message();
         }
@@ -61,7 +64,8 @@ babelwires::ResultT<std::vector<std::filesystem::path>> babelwires::discoverPlug
         const auto& entry = *it;
         if (entry.is_directory(ec) && !ec && it.depth() >= c_maxPluginSearchDepth) {
             it.disable_recursion_pending();
-            userLogger.logWarning() << "Not descending into excessively deep directory " << entry.path() << " when scanning for plugins";
+            userLogger.logWarning() << "Not descending into excessively deep directory " << entry.path()
+                                    << " when scanning for plugins";
         }
         if (ec) {
             return Error() << "Failed to inspect plugin entry " << entry.path() << ": " << ec.message();
@@ -72,14 +76,16 @@ babelwires::ResultT<std::vector<std::filesystem::path>> babelwires::discoverPlug
             plugins.emplace_back(entry.path());
         }
     }
-    // Report permission denied errors 
-    for (std::filesystem::recursive_directory_iterator it(pluginDir, optionsCheckPermissions, ec), end; it != end; it.increment(ec)) {
+    // Report permission denied errors
+    for (std::filesystem::recursive_directory_iterator it(pluginDir, optionsCheckPermissions, ec), end; it != end;
+         it.increment(ec)) {
         const auto& entry = *it;
         if (entry.is_directory(ec) && !ec && it.depth() >= c_maxPluginSearchDepth) {
             it.disable_recursion_pending();
         }
         if (ec) {
-            userLogger.logWarning() << "Permission denied accessing " << entry.path() << " when scanning for plugins: " << ec.message();
+            userLogger.logWarning() << "Permission denied accessing " << entry.path()
+                                    << " when scanning for plugins: " << ec.message();
             ec.clear();
         }
     }
@@ -107,21 +113,25 @@ babelwires::ResultT<babelwires::PluginHandle> babelwires::openPlugin(const std::
     }
 
     auto getProbeDescriptor = reinterpret_cast<GetPluginProbeDescriptorFunction>(symbol);
-    PluginProbeDescriptor probeDescriptor;
-    getProbeDescriptor(&probeDescriptor);
+    PluginProbeDescriptor probeDescriptor{c_pluginProbeHostMagicNumber, c_pluginProbeAbiVersion,
+                                          sizeof(PluginProbeDescriptor)};
+    if (getProbeDescriptor(&probeDescriptor) != 0) {
+        closeOnFailure();
+        return Error() << "Plugin " << pluginPath << " rejected the probe handshake";
+    }
 
-    if (probeDescriptor.m_magic != c_pluginProbeMagic) {
+    if (probeDescriptor.m_magicNumberInOut != c_pluginProbePluginMagicNumber) {
         closeOnFailure();
         return Error() << "Plugin " << pluginPath << " returned an invalid plugin probe descriptor magic value";
     }
 
-    if (probeDescriptor.m_abiVersion != c_pluginProbeAbiVersion) {
+    if (probeDescriptor.m_probeVersionInOut != c_pluginProbeAbiVersion) {
         closeOnFailure();
         return Error() << "Plugin " << pluginPath << " uses unsupported plugin probe ABI version "
-                       << probeDescriptor.m_abiVersion;
+                       << probeDescriptor.m_probeVersionInOut;
     }
 
-    if (probeDescriptor.m_structSize < sizeof(PluginProbeDescriptor)) {
+    if (probeDescriptor.m_structSizeInOut < sizeof(PluginProbeDescriptor)) {
         closeOnFailure();
         return Error() << "Plugin " << pluginPath << " returned an undersized plugin probe descriptor";
     }
@@ -132,7 +142,8 @@ babelwires::ResultT<babelwires::PluginHandle> babelwires::openPlugin(const std::
     }
 
     const Version& hostVersion = Version::getCodebaseVersion();
-    const Version pluginVersion{probeDescriptor.m_codebaseMajor, probeDescriptor.m_codebaseMinor, probeDescriptor.m_codebasePatch};
+    const Version pluginVersion{probeDescriptor.m_codebaseMajor, probeDescriptor.m_codebaseMinor,
+                                probeDescriptor.m_codebasePatch};
     if (!hostVersion.satisfies(pluginVersion)) {
         closeOnFailure();
         return Error() << "Plugin " << pluginPath << " requires BabelWires " << pluginVersion.toString()
@@ -142,12 +153,13 @@ babelwires::ResultT<babelwires::PluginHandle> babelwires::openPlugin(const std::
     char hostFingerprint[babelwires::c_buildFingerprintBufferSize] = {};
 #ifndef NDEBUG
     const std::size_t hostFingerprintSize =
-#endif 
-    writeMyBuildFingerprint(hostFingerprint, sizeof(hostFingerprint));
+#endif
+        writeMyBuildFingerprint(hostFingerprint, sizeof(hostFingerprint));
     assert(hostFingerprintSize > 0 && hostFingerprintSize < sizeof(hostFingerprint));
 
     char pluginFingerprint[babelwires::c_buildFingerprintBufferSize] = {};
-    const std::size_t pluginFingerprintSize = probeDescriptor.writeBuildFingerprint(pluginFingerprint, sizeof(pluginFingerprint));
+    const std::size_t pluginFingerprintSize =
+        probeDescriptor.writeBuildFingerprint(pluginFingerprint, sizeof(pluginFingerprint));
     if (pluginFingerprintSize == 0 || pluginFingerprintSize > sizeof(pluginFingerprint)) {
         closeOnFailure();
         return Error() << "Failed to read build fingerprint for plugin " << pluginPath;

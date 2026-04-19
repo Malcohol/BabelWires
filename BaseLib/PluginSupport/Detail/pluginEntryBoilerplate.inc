@@ -41,24 +41,29 @@ namespace {
     }
 } // namespace
 
-extern "C" BABELWIRES_PLUGIN_EXPORT void BABELWIRES_PLUGIN_CALL babelwires_getPluginProbeDescriptor(
-    babelwires::PluginProbeDescriptor* out) {
-    if (out == nullptr) {
-        return;
+extern "C" BABELWIRES_PLUGIN_EXPORT int BABELWIRES_PLUGIN_CALL babelwires_getPluginProbeDescriptor(
+    babelwires::PluginProbeDescriptor* inOut) {
+    if (inOut == nullptr) {
+        return -1;
     }
-
-    out->m_magic = babelwires::c_pluginProbeMagic;
-    out->m_abiVersion = babelwires::c_pluginProbeAbiVersion;
-    out->m_reserved = 0;
-    out->m_structSize = sizeof(babelwires::PluginProbeDescriptor);
-    out->m_codebaseMajor = babelwires::c_myCodebaseVersion.m_major;
-    out->m_codebaseMinor = babelwires::c_myCodebaseVersion.m_minor;
-    out->m_codebasePatch = babelwires::c_myCodebaseVersion.m_patch;
-    out->m_flags = 0;
-    writePluginUuidText(out->m_pluginUuidText);
+    if (inOut->m_magicNumberInOut != babelwires::c_pluginProbeHostMagicNumber) {
+        return -1;
+    }
+    if (inOut->m_structSizeInOut < sizeof(babelwires::PluginProbeDescriptor)) {
+        return -1;
+    }
+    // No test on c_pluginProbeAbiVersion in version 1.
+    inOut->m_magicNumberInOut = babelwires::c_pluginProbePluginMagicNumber;
+    inOut->m_probeVersionInOut = babelwires::c_pluginProbeAbiVersion;
+    inOut->m_structSizeInOut = sizeof(babelwires::PluginProbeDescriptor);
+    inOut->m_codebaseMajor = babelwires::c_myCodebaseVersion.m_major;
+    inOut->m_codebaseMinor = babelwires::c_myCodebaseVersion.m_minor;
+    inOut->m_codebasePatch = babelwires::c_myCodebaseVersion.m_patch;
+    writePluginUuidText(inOut->m_pluginUuidText);
     // Important: Don't take the address of BaseLib's writeMyBuildFingerprint, but instead the address of the local
     // wrapper.
-    out->writeBuildFingerprint = &pluginLocalBuildFingerprint;
+    inOut->writeBuildFingerprint = &pluginLocalBuildFingerprint;
+    return 0;
 }
 
 extern "C" BABELWIRES_PLUGIN_EXPORT babelwires::Result BABELWIRES_PLUGIN_CALL babelwires_registerPlugin(
