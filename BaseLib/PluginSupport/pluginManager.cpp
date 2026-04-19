@@ -19,22 +19,22 @@
 bool babelwires::PluginManager::isPluginLoaded(const Uuid& pluginUuid) const {
     return std::any_of(m_loadedPlugins.begin(),
                        m_loadedPlugins.end(),
-                       [&](const PluginHandle& loaded) { return loaded.getDescriptor().m_pluginUuid == pluginUuid; });
+                       [&](const PluginHandle& loaded) { return loaded.getPluginUuid() == pluginUuid; });
 }
 
 babelwires::Result babelwires::PluginManager::loadPlugin(PluginHandle&& handle, Context& context, UserLogger& userLogger) {
-    const PluginDescriptor descriptor = handle.getDescriptor();
-    if (descriptor.registerPlugin == nullptr) {
+    const RegisterPluginFunction registerPlugin = handle.getRegisterPluginFunction();
+    if (registerPlugin == nullptr) {
         return Error() << "Plugin " << handle.getPluginPath() << " has no registerPlugin function";
     }
 
-    if (isPluginLoaded(descriptor.m_pluginUuid)) {
+    if (isPluginLoaded(handle.getPluginUuid())) {
         return Error() << "Plugin " << handle.getPluginPath() << " duplicates an already loaded plugin UUID "
-                       << descriptor.m_pluginUuid;
+                       << handle.getPluginUuid();
     }
 
     userLogger.logInfo() << "Loading plugin " << handle.getPluginPath();
-    const Result registrationResult = descriptor.registerPlugin(context, userLogger);
+    const Result registrationResult = registerPlugin(context, userLogger);
     if (!registrationResult) {
         return Error() << "Plugin " << handle.getPluginPath() << " failed during registration: "
                        << registrationResult.error().toString();
@@ -62,9 +62,8 @@ unsigned int babelwires::PluginManager::loadAllPlugins(const std::filesystem::pa
             continue;
         }
 
-        const PluginDescriptor descriptor = validated->getDescriptor();
-        if (isPluginLoaded(descriptor.m_pluginUuid)) {
-            userLogger.logWarning() << "Skipping duplicate plugin " << pluginPath << " with UUID " << descriptor.m_pluginUuid;
+        if (isPluginLoaded(validated->getPluginUuid())) {
+            userLogger.logWarning() << "Skipping duplicate plugin " << pluginPath << " with UUID " << validated->getPluginUuid();
             continue;
         }
 

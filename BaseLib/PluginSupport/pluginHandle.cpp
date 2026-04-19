@@ -12,10 +12,15 @@
 #include <cassert>
 #include <utility>
 
-babelwires::PluginHandle::PluginHandle(void* moduleHandle, PluginDescriptor descriptor,
+babelwires::PluginHandle::PluginHandle(void* moduleHandle,
+                                       Version pluginVersion,
+                                       Uuid pluginUuid,
+                                       RegisterPluginFunction registerPlugin,
                                        std::filesystem::path pluginPath)
     : m_moduleHandle(moduleHandle)
-    , m_descriptor(descriptor)
+    , m_pluginVersion(pluginVersion)
+    , m_pluginUuid(std::move(pluginUuid))
+    , m_registerPlugin(registerPlugin)
     , m_pluginPath(std::move(pluginPath)) {
     assert((m_moduleHandle != nullptr) && "PluginHandle should only be constructed with a valid module handle");
 }
@@ -26,24 +31,38 @@ babelwires::PluginHandle::~PluginHandle() {
 
 babelwires::PluginHandle::PluginHandle(PluginHandle&& other) noexcept
     : m_moduleHandle(other.m_moduleHandle)
-    , m_descriptor(other.m_descriptor)
+    , m_pluginVersion(other.m_pluginVersion)
+    , m_pluginUuid(std::move(other.m_pluginUuid))
+    , m_registerPlugin(other.m_registerPlugin)
     , m_pluginPath(std::move(other.m_pluginPath)) {
     other.m_moduleHandle = nullptr;
+    other.m_registerPlugin = nullptr;
 }
 
 babelwires::PluginHandle& babelwires::PluginHandle::operator=(PluginHandle&& other) noexcept {
     if (this != &other) {
         detail::closePluginModule(m_moduleHandle);
         m_moduleHandle = other.m_moduleHandle;
-        m_descriptor = other.m_descriptor;
+        m_pluginVersion = other.m_pluginVersion;
+        m_pluginUuid = std::move(other.m_pluginUuid);
+        m_registerPlugin = other.m_registerPlugin;
         m_pluginPath = std::move(other.m_pluginPath);
         other.m_moduleHandle = nullptr;
+        other.m_registerPlugin = nullptr;
     }
     return *this;
 }
 
-const babelwires::PluginDescriptor& babelwires::PluginHandle::getDescriptor() const {
-    return m_descriptor;
+const babelwires::Version& babelwires::PluginHandle::getPluginVersion() const {
+    return m_pluginVersion;
+}
+
+const babelwires::Uuid& babelwires::PluginHandle::getPluginUuid() const {
+    return m_pluginUuid;
+}
+
+babelwires::RegisterPluginFunction babelwires::PluginHandle::getRegisterPluginFunction() const {
+    return m_registerPlugin;
 }
 
 const std::filesystem::path& babelwires::PluginHandle::getPluginPath() const {
