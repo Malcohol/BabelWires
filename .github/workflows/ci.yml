@@ -12,27 +12,17 @@ on:
 jobs:
   build-and-test:
     if: github.event.pull_request.draft == false
-    name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.platform.name }}-${{ matrix.build_type }}-SharedLibs${{ matrix.build_shared_libs }}
+    runs-on: ${{ matrix.platform.os }}
     strategy:
       fail-fast: false
       matrix:
-        config: 
+        build_type: [ "Debug" ]
+        build_shared_libs: [ "OFF", "ON" ]
+        platform: 
         - {
             name: "Ubuntu_GCC",
             os: ubuntu-24.04,
-            build_type: "Debug",
-            build_shared_libs: "OFF",
-            targetFolder: "",
-            exeExtension: "",
-            cc: "gcc-14",
-            cxx: "g++-14"
-          }
-        - {
-            name: "Ubuntu_GCC_Shared",
-            os: ubuntu-24.04,
-            build_type: "Debug",
-            build_shared_libs: "ON",
             targetFolder: "",
             exeExtension: "",
             cc: "gcc-14",
@@ -41,8 +31,6 @@ jobs:
         - {
             name: "Windows Latest MSVC",
             os: windows-latest,
-            build_type: "Debug",
-            build_shared_libs: "OFF",
             targetFolder: "Debug/", # Must match build_type.
             exeExtension: ".exe",
             cc: "cl",
@@ -52,8 +40,6 @@ jobs:
         - {
             name: "macOS Latest Clang",
             os: macos-latest,
-            build_type: "Debug",
-            build_shared_libs: "OFF",
             targetFolder: "",
             exeExtension: "",
             cc: "clang",
@@ -66,23 +52,23 @@ jobs:
         submodules: recursive
 
     - name: Install dependencies on ubuntu
-      if: startsWith(matrix.config.name, 'Ubuntu_GCC')
+      if: startsWith(matrix.platform.name, 'Ubuntu_GCC')
       run: |
         sudo apt-get update
-        sudo apt-get install cmake ${{ matrix.config.cc }} ${{ matrix.config.cxx }} qt6-base-dev libasound2-dev
+        sudo apt-get install cmake ${{ matrix.platform.cc }} ${{ matrix.platform.cxx }} qt6-base-dev libasound2-dev
         cmake --version
         gcc --version
         g++ --version
 
     - name: Install dependencies on macOS
-      if: startsWith(matrix.config.os, 'macos')
+      if: startsWith(matrix.platform.os, 'macos')
       run: |
         brew install cmake qt6
         cmake --version
         clang --version
 
     - name: Install Qt on Windows
-      if: startsWith(matrix.config.os, 'windows')
+      if: startsWith(matrix.platform.os, 'windows')
       uses: jurplel/install-qt-action@v4
       with:
         version: '6.8.3'
@@ -90,35 +76,35 @@ jobs:
 
     - name: Configure CMake
       run: |
-        cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} -DBUILD_SHARED_LIBS=${{ matrix.config.build_shared_libs }}
+        cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DBUILD_SHARED_LIBS=${{ matrix.build_shared_libs }}
       env:
-        CC:   ${{ matrix.config.cc }}
-        CXX:  ${{ matrix.config.cxx }}
+        CC:   ${{ matrix.platform.cc }}
+        CXX:  ${{ matrix.platform.cxx }}
 
     - name: Build
-      run: cmake --build build --config ${{ matrix.config.build_type }}
+      run: cmake --build build --config ${{ matrix.build_type }}
 
     - name: BaseLibTest
       working-directory: build
       shell: bash
-      run: Tests/BaseLib/${{ matrix.config.targetFolder }}baseLibTests${{ matrix.config.exeExtension }}
+      run: Tests/BaseLib/${{ matrix.platform.targetFolder }}baseLibTests${{ matrix.platform.exeExtension }}
 
     - name: BabelWiresTest
       working-directory: build/Tests/BabelWiresLib
       shell: bash
-      run: ./${{ matrix.config.targetFolder }}babelWiresTests${{ matrix.config.exeExtension }}
+      run: ./${{ matrix.platform.targetFolder }}babelWiresTests${{ matrix.platform.exeExtension }}
 
     - name: MusicLibTests
       working-directory: build
       shell: bash
-      run: Domains/Music/Tests/MusicLib/${{ matrix.config.targetFolder }}musicLibTests${{ matrix.config.exeExtension }}
+      run: Domains/Music/Tests/MusicLib/${{ matrix.platform.targetFolder }}musicLibTests${{ matrix.platform.exeExtension }}
 
     - name: Seq2tapeLibTests
       working-directory: build
       shell: bash
-      run: Domains/Music/Tests/Seq2tapeLib/${{ matrix.config.targetFolder }}seq2tapeLibTests${{ matrix.config.exeExtension }}
+      run: Domains/Music/Tests/Seq2tapeLib/${{ matrix.platform.targetFolder }}seq2tapeLibTests${{ matrix.platform.exeExtension }}
 
     - name: SmfTests
       working-directory: build/Domains/Music/Plugins/Smf/Tests
       shell: bash
-      run: ./${{ matrix.config.targetFolder }}SmfTests${{ matrix.config.exeExtension }}
+      run: ./${{ matrix.platform.targetFolder }}SmfTests${{ matrix.platform.exeExtension }}
