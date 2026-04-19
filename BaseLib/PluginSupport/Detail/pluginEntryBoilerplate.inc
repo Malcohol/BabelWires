@@ -56,13 +56,13 @@ extern "C" BABELWIRES_PLUGIN_EXPORT int BABELWIRES_PLUGIN_CALL babelwires_getPlu
     inOut->m_magicNumberInOut = babelwires::c_pluginProbePluginMagicNumber;
     inOut->m_probeVersionInOut = babelwires::c_pluginProbeAbiVersion;
     inOut->m_structSizeInOut = sizeof(babelwires::PluginProbeDescriptor);
-    inOut->m_codebaseMajor = babelwires::c_myCodebaseVersion.m_major;
-    inOut->m_codebaseMinor = babelwires::c_myCodebaseVersion.m_minor;
-    inOut->m_codebasePatch = babelwires::c_myCodebaseVersion.m_patch;
-    writePluginUuidText(inOut->m_pluginUuidText);
+    inOut->v1.m_codebaseMajor = babelwires::c_myCodebaseVersion.m_major;
+    inOut->v1.m_codebaseMinor = babelwires::c_myCodebaseVersion.m_minor;
+    inOut->v1.m_codebasePatch = babelwires::c_myCodebaseVersion.m_patch;
+    writePluginUuidText(inOut->v1.m_pluginUuidText);
     // Important: Don't take the address of BaseLib's writeMyBuildFingerprint, but instead the address of the local
     // wrapper.
-    inOut->writeBuildFingerprint = &pluginLocalBuildFingerprint;
+    inOut->v1.writeBuildFingerprint = &pluginLocalBuildFingerprint;
     return 0;
 }
 
@@ -71,4 +71,3 @@ extern "C" BABELWIRES_PLUGIN_EXPORT babelwires::Result BABELWIRES_PLUGIN_CALL ba
     babelwires::UserAdvisoryLogger& userLogger) {
     return PLUGIN_REGISTRATION_FUNCTION(context, userLogger);
 }
-

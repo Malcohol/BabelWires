@@ -33,7 +33,7 @@ namespace {
 } // namespace
 
 babelwires::ResultT<std::vector<std::filesystem::path>>
-babelwires::discoverPlugins(const std::filesystem::path& pluginDir, UserLogger& userLogger) {
+babelwires::discoverPlugins(const std::filesystem::path& pluginDir, std::string_view pluginExtension, UserLogger& userLogger) {
     constexpr std::size_t c_maxPluginSearchDepth = 8;
 
     std::error_code ec;
@@ -72,7 +72,7 @@ babelwires::discoverPlugins(const std::filesystem::path& pluginDir, UserLogger& 
         }
 
         std::error_code typeError;
-        if (entry.is_regular_file(typeError) && (entry.path().extension() == c_pluginFileExtension)) {
+        if (entry.is_regular_file(typeError) && (entry.path().extension() == pluginExtension)) {
             plugins.emplace_back(entry.path());
         }
     }
@@ -136,14 +136,14 @@ babelwires::ResultT<babelwires::PluginHandle> babelwires::openPlugin(const std::
         return Error() << "Plugin " << pluginPath << " returned an undersized plugin probe descriptor";
     }
 
-    if (probeDescriptor.writeBuildFingerprint == nullptr) {
+    if (probeDescriptor.v1.writeBuildFingerprint == nullptr) {
         closeOnFailure();
         return Error() << "Plugin " << pluginPath << " returned an incomplete plugin probe descriptor";
     }
 
     const Version& hostVersion = Version::getCodebaseVersion();
-    const Version pluginVersion{probeDescriptor.m_codebaseMajor, probeDescriptor.m_codebaseMinor,
-                                probeDescriptor.m_codebasePatch};
+    const Version pluginVersion{probeDescriptor.v1.m_codebaseMajor, probeDescriptor.v1.m_codebaseMinor,
+                                probeDescriptor.v1.m_codebasePatch};
     if (!hostVersion.satisfies(pluginVersion)) {
         closeOnFailure();
         return Error() << "Plugin " << pluginPath << " requires BabelWires " << pluginVersion.toString()
@@ -159,7 +159,7 @@ babelwires::ResultT<babelwires::PluginHandle> babelwires::openPlugin(const std::
 
     char pluginFingerprint[babelwires::c_buildFingerprintBufferSize] = {};
     const std::size_t pluginFingerprintSize =
-        probeDescriptor.writeBuildFingerprint(pluginFingerprint, sizeof(pluginFingerprint));
+        probeDescriptor.v1.writeBuildFingerprint(pluginFingerprint, sizeof(pluginFingerprint));
     if (pluginFingerprintSize == 0 || pluginFingerprintSize > sizeof(pluginFingerprint)) {
         closeOnFailure();
         return Error() << "Failed to read build fingerprint for plugin " << pluginPath;
@@ -171,7 +171,7 @@ babelwires::ResultT<babelwires::PluginHandle> babelwires::openPlugin(const std::
         return Error() << "Plugin " << pluginPath << " is build-incompatible: " << fingerprintResult.error().toString();
     }
 
-    auto parsedUuid = uuidFromProbeText(probeDescriptor.m_pluginUuidText);
+    auto parsedUuid = uuidFromProbeText(probeDescriptor.v1.m_pluginUuidText);
     if (!parsedUuid) {
         closeOnFailure();
         return Error() << "Plugin " << pluginPath << " has an invalid UUID: " << parsedUuid.error().toString();

@@ -19,15 +19,12 @@ namespace babelwires {
     class Context;
     struct UserLogger;
 
-    /// Plugin files are expected to have this extension.
-    constexpr const char c_pluginFileExtension[] = ".bwplugin";
-
     /// Scan a directory tree for plugin files.
     /// Returns the list of filesystem paths found.
     /// Symlinks are followed, but the recursion depth is limited.
     /// Fails if the directory does not exist or is not readable,
     /// but warns (without failing) if some entries cannot be accessed due to permissions.
-    BASELIB_API ResultT<std::vector<std::filesystem::path>> discoverPlugins(const std::filesystem::path& pluginDir, UserLogger& userLogger);
+    BASELIB_API ResultT<std::vector<std::filesystem::path>> discoverPlugins(const std::filesystem::path& pluginDir, std::string_view pluginExtension, UserLogger& userLogger);
 
     /// Open a plugin file and validate compatibility without registering anything.
     /// On success, returns an opaque PluginHandle.

@@ -54,13 +54,19 @@ namespace babelwires {
         /// field.
         std::uint32_t m_structSizeInOut = 0;
 
-        std::uint16_t m_codebaseMajor = 0;
-        std::uint16_t m_codebaseMinor = 0;
-        std::uint16_t m_codebasePatch = 0;
+        struct PluginProbeDescriptorV1 {
+            std::uint16_t m_codebaseMajor = 0;
+            std::uint16_t m_codebaseMinor = 0;
+            std::uint16_t m_codebasePatch = 0;
 
-        std::uint8_t m_pluginUuidText[c_pluginUuidTextSize] = {};
+            std::uint8_t m_pluginUuidText[c_pluginUuidTextSize] = {};
 
-        WriteBuildFingerprintFunction writeBuildFingerprint = nullptr;
+            WriteBuildFingerprintFunction writeBuildFingerprint = nullptr;
+        };
+        
+        union {
+            PluginProbeDescriptorV1 v1;
+        };
     };
 
     /// Probe entry point type exported by every plugin.

@@ -16,6 +16,10 @@
 #include <algorithm>
 #include <utility>
 
+babelwires::PluginManager::PluginManager(std::string pluginFileExtension)
+    : m_pluginFileExtension(std::move(pluginFileExtension)) {
+}
+
 bool babelwires::PluginManager::isPluginLoaded(const Uuid& pluginUuid) const {
     return std::any_of(m_loadedPlugins.begin(),
                        m_loadedPlugins.end(),
@@ -48,7 +52,7 @@ babelwires::Result babelwires::PluginManager::loadPlugin(PluginHandle&& handle, 
 unsigned int babelwires::PluginManager::loadAllPlugins(const std::filesystem::path& pluginDir,
                                                         Context& context,
                                                         UserLogger& userLogger) {
-    ResultT<std::vector<std::filesystem::path>> discovered = discoverPlugins(pluginDir, userLogger);
+    ResultT<std::vector<std::filesystem::path>> discovered = discoverPlugins(pluginDir, m_pluginFileExtension, userLogger);
     if (!discovered) {
         userLogger.logWarning() << discovered.error().toString();
         return 0;

@@ -24,10 +24,10 @@ extern "C" BABELWIRES_PLUGIN_EXPORT int BABELWIRES_PLUGIN_CALL babelwires_getPlu
     out->m_magicNumberInOut = babelwires::c_pluginProbePluginMagicNumber;
     out->m_probeVersionInOut = babelwires::c_pluginProbeAbiVersion;
     out->m_structSizeInOut = sizeof(babelwires::PluginProbeDescriptor);
-    out->m_codebaseMajor = babelwires::c_myCodebaseVersion.m_major;
-    out->m_codebaseMinor = babelwires::c_myCodebaseVersion.m_minor;
-    out->m_codebasePatch = babelwires::c_myCodebaseVersion.m_patch;
-    writePluginUuidText(out->m_pluginUuidText, "11111111-2222-3333-4444-555555555555");
-    out->writeBuildFingerprint = &testFingerprint;
+    out->v1.m_codebaseMajor = babelwires::c_myCodebaseVersion.m_major;
+    out->v1.m_codebaseMinor = babelwires::c_myCodebaseVersion.m_minor;
+    out->v1.m_codebasePatch = babelwires::c_myCodebaseVersion.m_patch;
+    writePluginUuidText(out->v1.m_pluginUuidText, "11111111-2222-3333-4444-555555555555");
+    out->v1.writeBuildFingerprint = &testFingerprint;
     return 0;
 }

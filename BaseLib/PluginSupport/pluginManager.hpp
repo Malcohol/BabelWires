@@ -24,6 +24,8 @@ namespace babelwires {
     /// Note: The plugin manager keeps code in memory, so it needs a lifetime that encompasses other services.
     class BASELIB_API PluginManager {
       public:
+        PluginManager(std::string pluginFileExtension);
+
         /// Returns true if a plugin with this UUID is already loaded.
         bool isPluginLoaded(const Uuid& pluginUuid) const;
 
@@ -37,6 +39,7 @@ namespace babelwires {
         unsigned int loadAllPlugins(const std::filesystem::path& pluginDir, Context& context, UserLogger& userLogger);
 
       private:
+        std::string m_pluginFileExtension;
         std::vector<PluginHandle> m_loadedPlugins;
     };
 

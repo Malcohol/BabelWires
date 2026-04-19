@@ -56,6 +56,12 @@
 
 using namespace babelwires;
 
+
+/// Plugin files are expected to have this extension.
+constexpr const char c_pluginFileExtension[] = ".bwplugin";
+constexpr const char c_applicationTitle[] = "BabelWires";
+constexpr const char c_projectExtension[] = ".babelwires";
+
 int main(int argc, char* argv[]) {
     auto options = ProgramOptions::parse(argc, argv);
     if (!options) {
@@ -82,7 +88,7 @@ int main(int argc, char* argv[]) {
 
 #if BABELWIRES_SHARED_BUILD
     // Because the plugin manager keeps code in memory, it needs a lifetime that encompasses other services.
-    babelwires::PluginManager pluginManager;
+    babelwires::PluginManager pluginManager(c_pluginFileExtension);
 #endif
 
     SourceFileFormatRegistry sourceFileFormatReg;
@@ -99,8 +105,8 @@ int main(int argc, char* argv[]) {
     babelwires::Context context;
 
     babelwires::ApplicationIdentity applicationIdentity;
-    applicationIdentity.m_applicationTitle = "BabelWires";
-    applicationIdentity.m_projectExtension = ".babelwires";
+    applicationIdentity.m_applicationTitle = c_applicationTitle;
+    applicationIdentity.m_projectExtension = c_projectExtension;
 
     context.registerService<babelwires::DeserializationRegistry>(deserializationRegistry);
     context.registerService<babelwires::RandomService>(randomService);
