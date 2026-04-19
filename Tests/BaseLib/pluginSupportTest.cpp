@@ -1,11 +1,19 @@
 #include <gtest/gtest.h>
 
+#include <BaseLib/Context/context.hpp>
+#include <BaseLib/PluginSupport/pluginManager.hpp>
 #include <BaseLib/PluginSupport/pluginOperations.hpp>
 #include <BaseLib/Version/version.hpp>
+
+#include <Tests/TestUtils/testLog.hpp>
 
 #include <string>
 
 namespace {
+    std::filesystem::path pluginOutputDir() {
+        return std::filesystem::path(BASELIB_TEST_PLUGIN_OUTPUT_DIR);
+    }
+
     std::filesystem::path goodPluginPath() {
         return BASELIB_TEST_PLUGIN_GOOD_PATH;
     }
@@ -63,3 +71,68 @@ TEST(PluginSupportTest, openPluginRejectsMissingRegistrationSymbol) {
     ASSERT_FALSE(opened);
     EXPECT_NE(opened.error().toString().find(babelwires::c_pluginRegistrationSymbolName), std::string::npos);
 }
+
+TEST(PluginSupportTest, discoverPluginsFindsPluginsWithCorrectExtension) {
+    testUtils::TestLog log;
+    auto discovered =
+        babelwires::discoverPlugins(pluginOutputDir(), ".bwplugin", log);
+
+    ASSERT_TRUE(discovered) << discovered.error().toString();
+    EXPECT_NE(std::find(discovered->begin(), discovered->end(), goodPluginPath()), discovered->end());
+    EXPECT_NE(std::find(discovered->begin(), discovered->end(), badMagicPluginPath()), discovered->end());
+    EXPECT_NE(std::find(discovered->begin(), discovered->end(), fingerprintMismatchPluginPath()), discovered->end());
+    EXPECT_NE(std::find(discovered->begin(), discovered->end(), missingProbePluginPath()), discovered->end());
+    EXPECT_NE(std::find(discovered->begin(), discovered->end(), missingRegistrationPluginPath()), discovered->end());
+}
+
+TEST(PluginSupportTest, discoverPluginsSkipsFilesWithWrongExtension) {
+    testUtils::TestLog log;
+    auto discovered =
+        babelwires::discoverPlugins(pluginOutputDir(), ".notaplugin", log);
+
+    ASSERT_TRUE(discovered) << discovered.error().toString();
+    EXPECT_EQ(discovered->size(), 0);
+}
+
+TEST(PluginSupportTest, pluginManagerLoadGoodPlugin) {
+    testUtils::TestLogWithListener log;
+    babelwires::PluginManager manager(".bwplugin");
+
+    auto good = babelwires::openPlugin(goodPluginPath());
+    ASSERT_TRUE(good) << good.error().toString();
+
+    babelwires::Context context;
+    auto loadGood = manager.loadPlugin(std::move(*good), context, log);
+    ASSERT_TRUE(loadGood) << loadGood.error().toString();
+    EXPECT_TRUE(log.hasSubstring("Successfully loaded plugin \"" + goodPluginPath().string()));
+}
+
+TEST(PluginSupportTest, pluginManagerLoadPluginRejectsDuplicateUuid) {
+    testUtils::TestLog log;
+    babelwires::PluginManager manager(".bwplugin");
+
+    auto first = babelwires::openPlugin(goodPluginPath());
+    ASSERT_TRUE(first) << first.error().toString();
+    auto second = babelwires::openPlugin(goodPluginPath());
+    ASSERT_TRUE(second) << second.error().toString();
+
+    babelwires::Context context;
+    auto loadFirst = manager.loadPlugin(std::move(*first), context, log);
+    ASSERT_TRUE(loadFirst) << loadFirst.error().toString();
+    auto loadSecond = manager.loadPlugin(std::move(*second), context, log);
+    ASSERT_FALSE(loadSecond);
+    EXPECT_NE(loadSecond.error().toString().find("duplicates an already loaded plugin UUID"), std::string::npos);
+}
+
+TEST(PluginSupportTest, pluginManagerLoadAllPlugins) {
+    testUtils::TestLogWithListener log;
+    babelwires::PluginManager manager(".bwplugin");
+
+    babelwires::Context context;
+    const int numLoaded = manager.loadAllPlugins(pluginOutputDir(), context, log);
+    EXPECT_EQ(numLoaded, 1);
+    EXPECT_TRUE(log.hasSubstring("Successfully loaded plugin \"" + goodPluginPath().string()));
+    EXPECT_FALSE(log.hasSubstring("Successfully loaded plugin \"" + badMagicPluginPath().string()));
+    EXPECT_TRUE(log.hasSubstring(badMagicPluginPath().string()));
+}
+
