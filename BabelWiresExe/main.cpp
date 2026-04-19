@@ -37,11 +37,11 @@
 // "plugins"
 #include <Domains/Music/MusicLib/libRegistration.hpp>
 #include <Domains/Music/MusicLibUi/libRegistration.hpp>
-#include <Domains/Music/Plugins/TestPlugin/libRegistration.hpp>
 #include <Domains/TestDomain/libRegistration.hpp>
 
 #if !BABELWIRES_SHARED_BUILD
     #include <Smf/libRegistration.hpp>
+    #include <Domains/Music/Plugins/TestPlugin/libRegistration.hpp>
 #endif
 
 #include <cassert>
@@ -124,18 +124,14 @@ int main(int argc, char* argv[]) {
     bw_musicUi::registerLib(context);
 
 #if BABELWIRES_SHARED_BUILD
+    // TODO Stop the test plugin loading automatically.
     const unsigned int loadedPlugins = pluginManager.loadAllPlugins(BABELWIRES_DEFAULT_PLUGIN_DIR, context, log);
     babelwires::logDebug() << "Loaded " << loadedPlugins << " plugin(s) from " << BABELWIRES_DEFAULT_PLUGIN_DIR;
 #else
-    const babelwires::Result smfRegisterResult = smf::registerLib(context, log);
-    if (!smfRegisterResult) {
-        std::cerr << "Error loading SMF library: " << smfRegisterResult.error().toString() << std::endl;
-        return EXIT_FAILURE;
-    }
+    ASSERT_NO_ERROR(smf::registerLib(context, log));
+    //ASSERT_NO_ERROR(bw_music_testplugin::registerLib(context, log));
 #endif
 
-    // Uncomment to enable a domain of testing data.
-    // bw_music_testplugin::registerLib(context);
     // testDomain::registerLib(context);
 
     if (options->m_mode == ProgramOptions::MODE_RUN_PROJECT) {
