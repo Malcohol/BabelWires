@@ -26,9 +26,6 @@ namespace babelwires {
                      std::filesystem::path pluginPath);
         ~PluginHandle();
 
-        PluginHandle(const PluginHandle&) = delete;
-        PluginHandle& operator=(const PluginHandle&) = delete;
-
         PluginHandle(PluginHandle&& other) noexcept;
         PluginHandle& operator=(PluginHandle&& other) noexcept;
 
@@ -38,6 +35,10 @@ namespace babelwires {
 
         /// Get the path to the location of the plugin file.
         const std::filesystem::path& getPluginPath() const;
+
+      public:
+        PluginHandle(const PluginHandle&) = delete;
+        PluginHandle& operator=(const PluginHandle&) = delete;
 
       private:
         /// Low-level module handle.

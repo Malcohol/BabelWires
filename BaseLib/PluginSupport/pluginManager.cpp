@@ -44,7 +44,7 @@ babelwires::Result babelwires::PluginManager::loadPlugin(PluginHandle&& handle, 
                        << registrationResult.error().toString();
     }
 
-    m_loadedPlugins.push_back(std::move(handle));
+    m_loadedPlugins.emplace_back(std::move(handle));
     userLogger.logInfo() << "Successfully loaded plugin " << m_loadedPlugins.back().getPluginPath();
     return Result{};
 }

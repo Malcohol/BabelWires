@@ -38,6 +38,10 @@ namespace babelwires {
         /// Returns the number of plugins successfully loaded.
         unsigned int loadAllPlugins(const std::filesystem::path& pluginDir, Context& context, UserLogger& userLogger);
 
+      public:
+        PluginManager(const PluginManager&) = delete;
+        PluginManager& operator=(const PluginManager&) = delete;
+
       private:
         std::string m_pluginFileExtension;
         std::vector<PluginHandle> m_loadedPlugins;
