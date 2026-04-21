@@ -48,19 +48,6 @@ babelwires::PathStep babelwires::EditTree::RootedPathIterator::operator*() const
     }
 }
 
-babelwires::EditTree::RootedPath::RootedPath(const Path& path)
-    : m_path(path) {}
-
-babelwires::EditTree::RootedPathIterator babelwires::EditTree::RootedPath::begin() const {
-    return RootedPathIterator{m_path.begin(), true};
-}
-babelwires::EditTree::RootedPathIterator babelwires::EditTree::RootedPath::end() const {
-    return RootedPathIterator{m_path.end(), false};
-};
-
-unsigned int babelwires::EditTree::RootedPath::getNumSteps() const {
-    return m_path.getNumSteps() + 1;
-}
 
 babelwires::EditTree::~EditTree() = default;
 
