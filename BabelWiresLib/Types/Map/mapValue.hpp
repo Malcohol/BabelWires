@@ -73,6 +73,9 @@ namespace babelwires {
         bool isValid(const TypeSystem& typeSystem) const;
 
       public:
+        
+
+      public:
         // Do not store TypePtrs here, since MapValues may exist on the undo stack.
         TypeExp m_sourceTypeExp;
         TypeExp m_targetTypeExp;

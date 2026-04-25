@@ -54,6 +54,9 @@ namespace babelwires {
 
         void addNodeToRemove(NodeId nodeId);
 
+      public:
+        RemoveNodeCommand& operator=(const RemoveNodeCommand& other) = delete;
+
       private:
         using ConnectionSet = std::unordered_set<ConnectionDescription>;
 

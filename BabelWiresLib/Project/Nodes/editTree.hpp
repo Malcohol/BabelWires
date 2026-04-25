@@ -9,6 +9,8 @@
 
 #include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Path/path.hpp>
+#include <BabelWiresLib/Project/Modifiers/modifier.hpp>
+
 #include <BaseLib/common.hpp>
 
 #include <memory>
@@ -23,6 +25,10 @@ namespace babelwires {
     /// Management of the changes of the expansion state is done explicitly within the tree.
     class BABELWIRESLIB_API EditTree {
       public:
+        EditTree() = default;
+        EditTree(EditTree&& other) = default;
+        EditTree& operator=(EditTree&& other) = default;
+
         virtual ~EditTree();
 
         void addModifier(std::unique_ptr<Modifier> modifier);
@@ -135,6 +141,10 @@ namespace babelwires {
         /// The first level is always expanded.
         static constexpr bool c_expandedByDefault = false;
 
+      public:
+        EditTree(const EditTree& other) = delete;
+        EditTree& operator=(const EditTree& other) = delete;
+
       private:
         /// The data structure which carries the tree's data.
         struct BABELWIRESLIB_API TreeNode {
@@ -157,6 +167,12 @@ namespace babelwires {
             /// Is this tree node needed, either because it has descendents or it
             /// carries an edit?
             bool isNeeded() const;
+
+            TreeNode() = default;
+            TreeNode(const TreeNode&) = delete;
+            TreeNode& operator=(const TreeNode&) = delete;
+            TreeNode(TreeNode&& other) = default;
+            TreeNode& operator=(TreeNode&& other) = default;
         };
 
         /// Children follow immediately after their parent.

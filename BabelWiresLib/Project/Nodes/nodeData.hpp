@@ -100,6 +100,9 @@ namespace babelwires {
         /// Note: Only those which are present in the features are maintained on serialization.
         std::vector<Path> m_expandedPaths;
 
+      public:
+        NodeData& operator=(const NodeData& other) = delete;
+
       protected:
         virtual std::unique_ptr<Node>
         doCreateNode(const Context& context, UserLogger& userLogger, NodeId newId) const = 0;

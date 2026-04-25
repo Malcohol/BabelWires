@@ -114,6 +114,9 @@ namespace babelwires {
         virtual void execute(COMMAND_TARGET& target) const override;
         virtual void undo(COMMAND_TARGET& target) const override;
 
+      public:
+        CompoundCommand& operator=(const CompoundCommand& other) = delete;
+
       private:
         std::vector<std::unique_ptr<Command<COMMAND_TARGET>>> m_subCommands;
     };
