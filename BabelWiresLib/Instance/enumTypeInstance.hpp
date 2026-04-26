@@ -20,7 +20,7 @@ namespace babelwires {
     /// Specialized instance handling for EnumTypes when the type _does_ use the ENUM_DEFINE_CPP_ENUM macro.
     template <typename VALUE_TREE_NODE, typename ENUM_TYPE>
         requires std::is_base_of_v<EnumType, ENUM_TYPE> && HasCppEnum<ENUM_TYPE>
-    class BABELWIRESLIB_API InstanceImpl<VALUE_TREE_NODE, ENUM_TYPE> : public InstanceCommonBase<VALUE_TREE_NODE, ENUM_TYPE> {
+    class InstanceImpl<VALUE_TREE_NODE, ENUM_TYPE> : public InstanceCommonBase<VALUE_TREE_NODE, ENUM_TYPE> {
       public:
         InstanceImpl(VALUE_TREE_NODE& valueFeature)
             : InstanceCommonBase<VALUE_TREE_NODE, ENUM_TYPE>(valueFeature) {}

@@ -18,7 +18,7 @@ namespace babelwires {
     /// The DSL provides a DECLARE_INSTANCE_ARRAY_FIELD macro which directly uses the following instance template.
     /// Note: The second type parameter is the entry type, not array type.
     template <typename VALUE_TREE_NODE, typename ENTRY_TYPE>
-    class BABELWIRESLIB_API ArrayInstanceImpl : public InstanceCommonBase<VALUE_TREE_NODE, ArrayType> {
+    class ArrayInstanceImpl : public InstanceCommonBase<VALUE_TREE_NODE, ArrayType> {
       public:
         ArrayInstanceImpl(VALUE_TREE_NODE& valueFeature)
             : InstanceCommonBase<VALUE_TREE_NODE, ArrayType>(valueFeature) {}

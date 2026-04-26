@@ -15,7 +15,7 @@ namespace babelwires {
     /// Specialized instance handling for IntType.
     template <typename VALUE_TREE_NODE, typename INT_TYPE>
         requires std::is_base_of_v<IntType, INT_TYPE>
-    class BABELWIRESLIB_API InstanceImpl<VALUE_TREE_NODE, INT_TYPE> : public InstanceCommonBase<VALUE_TREE_NODE, INT_TYPE> {
+    class InstanceImpl<VALUE_TREE_NODE, INT_TYPE> : public InstanceCommonBase<VALUE_TREE_NODE, INT_TYPE> {
       public:
         InstanceImpl(VALUE_TREE_NODE& valueFeature)
             : InstanceCommonBase<VALUE_TREE_NODE, INT_TYPE>(valueFeature) {}
