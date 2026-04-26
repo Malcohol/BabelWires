@@ -106,6 +106,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/removeEntryFromArrayCommand.cpp
 	Project/Commands/changeFileCommand.cpp
 	Project/Commands/pasteNodesCommand.cpp
+	Project/Commands/projectCommands.cpp
 	Project/Commands/setExpandedCommand.cpp
 	Project/Commands/removeFailedModifiersCommand.cpp
 	Project/Commands/resizeNodeCommand.cpp

@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/babelWiresLibExport.hpp>
-#include <BabelWiresLib/Commands/commands.hpp>
+#include <BabelWiresLib/Project/Commands/projectCommands.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
 
 #include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Commands/commandManager.hpp>
-#include <BabelWiresLib/Commands/commands.hpp>
+#include <BabelWiresLib/Project/Commands/projectCommands.hpp>
 #include <BabelWiresLib/Project/project.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
