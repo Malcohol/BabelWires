@@ -89,6 +89,7 @@ SET( BABELWIRESLIB_SRCS
 	Path/path.cpp
 	Path/pathStep.cpp
 	Serialization/projectBundle.cpp
+	Serialization/projectSerialization.cpp
 	Project/Commands/activateOptionalCommand.cpp
 	Project/Commands/addConnectionCommand.cpp
 	Project/Commands/addNodeCommand.cpp

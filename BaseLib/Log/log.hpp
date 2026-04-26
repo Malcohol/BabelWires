@@ -32,7 +32,7 @@ namespace babelwires {
         using TimeStamp = TimeStampClock::time_point;
 
         /// The actual data in a log message.
-        struct Message {
+        struct BASELIB_API Message {
             Message& operator=(const Message& other);
 
             std::string m_contents;
@@ -43,7 +43,7 @@ namespace babelwires {
       public:
         /// An RIAA object which submits a stream constructed message atomically to the log.
         /// A non-member operator<< is provided below.
-        class MessageBuilder {
+        class BASELIB_API MessageBuilder {
           public:
             MessageBuilder(MessageBuilder&& other);
             virtual ~MessageBuilder();
