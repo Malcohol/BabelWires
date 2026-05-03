@@ -2,6 +2,7 @@ SET( TEST_UTILS_SRCS
    testLog.cpp
    tempFilePath.cpp
    testIdentifiers.cpp
+   testStrings.cpp
    )
 
 ADD_LIBRARY( testUtils STATIC ${TEST_UTILS_SRCS} )
