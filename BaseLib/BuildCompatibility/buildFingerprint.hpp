@@ -25,6 +25,8 @@ namespace babelwires {
     ///
     /// The function has an inline implementation (in buildFingerprint_inl.hpp), so the calling code gets the
     /// fingerprint corresponding to the environment in which it was compiled (hence "my" fingerprint).
+    /// See the getBuildFingerprint() function in buildInfo.hpp for a non-inline version which returns the
+    /// build fingerprint used to compile BaseLib.
     ///
     /// The output uses a canonical key=value format with one entry per line. A schema_version comes first, and
     /// then implementation defined fields follow. New keys may be added at the end in future versions.
