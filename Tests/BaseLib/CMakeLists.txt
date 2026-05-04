@@ -30,6 +30,5 @@ TARGET_INCLUDE_DIRECTORIES( baseLibTests PRIVATE ${PROJECT_SOURCE_DIR} )
 TARGET_LINK_LIBRARIES(baseLibTests BaseLib testUtils gtest)
 
 if(BUILD_TESTING)
-   gtest_discover_tests(baseLibTests TEST_LIST baseLibDiscoveredTests)
-   configure_shared_test_runtime(baseLibDiscoveredTests baseLibTests)
+   register_test_executable(baseLibTests)
 endif()
