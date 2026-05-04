@@ -9,9 +9,28 @@
 
 #include <BaseLib/Result/resultDSL.hpp>
 
-babelwires::Result babelwires::compareBuildFingerprints(std::string_view expected, std::string_view actual) {
-    if (expected != actual) {
-        return Error() << "Build fingerprints do not match.\nExpected:\n" << expected << "\nActual:\n" << actual;
+namespace {
+    void trimTrailingNewline(std::string_view& fingerprint) {
+        if (!fingerprint.empty() && fingerprint.back() == '\n') {
+            fingerprint.remove_suffix(1);
+        }
     }
-    return Result{};
+} // namespace
+
+babelwires::Result babelwires::compareBuildFingerprints(std::string_view expected, std::string_view actual) {
+    const std::string_view originalExpected = expected;
+    const std::string_view originalActual = actual;
+
+    trimTrailingNewline(expected);
+    trimTrailingNewline(actual);
+
+    const std::string_view shorter = (expected.size() <= actual.size()) ? expected : actual;
+    const std::string_view longer = (expected.size() <= actual.size()) ? actual : expected;
+
+    if (longer.substr(0, shorter.size()) == shorter) {
+        return Result{};
+    }
+
+    return Error() << "Build fingerprints do not match.\nExpected:\n" << originalExpected << "\nActual:\n"
+                   << originalActual;
 }

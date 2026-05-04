@@ -45,6 +45,40 @@ TEST(BuildCompatibilityTest, compareMismatchIncludesBothFingerprints) {
     EXPECT_NE(errorText.find("Actual:\n" + actualFingerprint), std::string::npos);
 }
 
+TEST(BuildCompatibilityTest, compareAllowsExpectedFingerprintToExtendActual) {
+    const std::string expectedFingerprint =
+        "schema_version=1\ncompiler=gcc\nstandard_library=libstdc++\n";
+    const std::string actualFingerprint = "schema_version=1\ncompiler=gcc\n";
+
+    const babelwires::Result result = babelwires::compareBuildFingerprints(expectedFingerprint, actualFingerprint);
+    EXPECT_TRUE(result);
+}
+
+TEST(BuildCompatibilityTest, compareAllowsActualFingerprintToExtendExpected) {
+    const std::string expectedFingerprint = "schema_version=1\ncompiler=gcc\n";
+    const std::string actualFingerprint =
+        "schema_version=1\ncompiler=gcc\nstandard_library=libstdc++\n";
+
+    const babelwires::Result result = babelwires::compareBuildFingerprints(expectedFingerprint, actualFingerprint);
+    EXPECT_TRUE(result);
+}
+
+TEST(BuildCompatibilityTest, compareIgnoresSingleTrailingNewlineDifference) {
+    const std::string expectedFingerprint = "schema_version=1\ncompiler=gcc\n";
+    const std::string actualFingerprint = "schema_version=1\ncompiler=gcc";
+
+    const babelwires::Result result = babelwires::compareBuildFingerprints(expectedFingerprint, actualFingerprint);
+    EXPECT_TRUE(result);
+}
+
+TEST(BuildCompatibilityTest, compareRejectsOrderChangeInsideCommonSection) {
+    const std::string expectedFingerprint = "schema_version=1\ncompiler=gcc\nplatform=linux\n";
+    const std::string actualFingerprint = "schema_version=1\nplatform=linux\ncompiler=gcc\n";
+
+    const babelwires::Result result = babelwires::compareBuildFingerprints(expectedFingerprint, actualFingerprint);
+    EXPECT_FALSE(result);
+}
+
 TEST(BuildCompatibilityTest, writeBuildFingerprintTruncatesWithNullTerminator) {
     char smallBuffer[32];
     std::memset(smallBuffer, 'X', sizeof(smallBuffer));

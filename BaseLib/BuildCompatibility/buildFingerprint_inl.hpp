@@ -11,12 +11,9 @@
 // This code is called prior to the point at which it's known that the module is compatible
 // with the main codebase.
 
-#include <algorithm>
-#include <array>
 #include <bit>
 #include <cstring>
 #include <string>
-#include <utility>
 
 // This is necessarily an inline function.
 inline std::size_t babelwires::writeMyBuildFingerprint(char* outBuffer, std::size_t bufferSize) {
@@ -84,29 +81,28 @@ inline std::size_t babelwires::writeMyBuildFingerprint(char* outBuffer, std::siz
 #endif
     }();
 
-    std::array<std::pair<std::string, std::string>, 10> fields = {
-        std::pair<std::string, std::string>{"build_type", buildType},
-        std::pair<std::string, std::string>{"compiler", compiler},
-        std::pair<std::string, std::string>{"cxx_standard", std::to_string(__cplusplus)},
-        std::pair<std::string, std::string>{"endianness", endianness},
-        std::pair<std::string, std::string>{"glibcxx_cxx11_abi", glibcxxAbi},
-        std::pair<std::string, std::string>{"platform", platform},
-        std::pair<std::string, std::string>{"pointer_size", std::to_string(sizeof(void*))},
-        std::pair<std::string, std::string>{"size_of_long", std::to_string(sizeof(long))},
-        std::pair<std::string, std::string>{"size_of_wchar_t", std::to_string(sizeof(wchar_t))},
-        std::pair<std::string, std::string>{"standard_library", standardLibrary},
-    };
-
-    std::sort(fields.begin(), fields.end(), [](const auto& a, const auto& b) { return a.first < b.first; });
-
     std::string formatted;
-    formatted += "schema_version=1\n";
-    for (const auto& [key, value] : fields) {
+    const auto appendField = [&formatted](const char* key, const std::string& value) {
         formatted += key;
         formatted += '=';
         formatted += value;
         formatted += '\n';
-    }
+    };
+
+    // IMPORTANT: NEW DATA FIELDS MUST BE APPENDED AT THE END. FIELDS MUST NOT BE REORDERED.
+    // Also note: It is not required that all fields be present in all variants, but a field should be present in all
+    // variants which have the same values of preceding fields (i.e. the fingerprint format is a prefix tree / trie).
+    appendField("schema_version", "1");
+    appendField("build_type", buildType);
+    appendField("compiler", compiler);
+    appendField("cxx_standard", std::to_string(__cplusplus));
+    appendField("endianness", endianness);
+    appendField("glibcxx_cxx11_abi", glibcxxAbi);
+    appendField("platform", platform);
+    appendField("pointer_size", std::to_string(sizeof(void*)));
+    appendField("size_of_long", std::to_string(sizeof(long)));
+    appendField("size_of_wchar_t", std::to_string(sizeof(wchar_t)));
+    appendField("standard_library", standardLibrary);
 
     if ((outBuffer == nullptr) || (bufferSize == 0)) {
         return 0;

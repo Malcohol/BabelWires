@@ -15,7 +15,8 @@
 namespace babelwires {
 
     /// Compare two build fingerprints represented as textual buffers.
-    /// Exact byte-equality is required.
+    /// A single trailing newline is ignored, and either fingerprint may extend the other so long as the shorter one
+    /// is an exact prefix of the longer one.
     BASELIB_API Result compareBuildFingerprints(std::string_view expected, std::string_view actual);
 
 } // namespace babelwires
