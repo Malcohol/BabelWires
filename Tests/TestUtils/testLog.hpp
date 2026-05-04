@@ -29,6 +29,11 @@ namespace testUtils {
 
         bool hasSubstringIgnoreCase(std::string_view substring) const;
 
+        /// Comparison where "/", "\", and "\\" are not distinguished and case is ignored.
+        /// It cannot abstract away the more significant differences (such as absolute vs relative), but
+        /// is good enough for some unit tests. There is also some small risk of a false positive.
+        bool hasSubstringWhenPathsNormalized(std::string_view substring) const;
+
         /// Clear the output stream.
         void clear();
 
