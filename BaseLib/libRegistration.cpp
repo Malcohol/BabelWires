@@ -10,9 +10,13 @@
 #include <BaseLib/Context/context.hpp>
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
+#include <BaseLib/BuildCompatibility/buildFingerprint.hpp>
+#include <BaseLib/Log/debugLogger.hpp>
 
 #include <cassert>
 
 void babelwires::baseLib::registerLib(Context& context) {
+    logDebug() << "Build info:\n" << getBuildFingerprint();
+
     context.get<DeserializationRegistry>().registerClass<IdentifierRegistry>();
 }
