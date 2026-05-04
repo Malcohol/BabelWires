@@ -1,11 +1,11 @@
 /**
- * Build fingerprint generation for loadable module compatibility checks.
+ * A function that provides the build fingerprint of the host system.
  *
  * (C) 2026 Malcolm Tyrrell
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BaseLib/BuildCompatibility/buildFingerprint.hpp>
+#include <BaseLib/BuildCompatibility/buildInfo.hpp>
 
 #include <cassert>
 

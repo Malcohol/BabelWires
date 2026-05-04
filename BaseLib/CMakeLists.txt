@@ -31,7 +31,7 @@ SET( COMMON_SRCS
 	Signal/signalSubscription.cpp
 	BlockStream/blockStream.cpp
 	BuildCompatibility/buildCompatibility.cpp
-	BuildCompatibility/buildFingerprint.cpp
+	BuildCompatibility/buildInfo.cpp
 	PluginSupport/Detail/pluginModuleOperations.cpp
 	PluginSupport/pluginHandle.cpp
 	PluginSupport/pluginManager.cpp

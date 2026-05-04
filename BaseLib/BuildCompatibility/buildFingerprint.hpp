@@ -34,10 +34,6 @@ namespace babelwires {
     /// and zero is returned.
     std::size_t writeMyBuildFingerprint(char* outBuffer, std::size_t bufferSize);
 
-    /// A convenience function to get the build fingerprint as a std::string. This always returns the build
-    /// fingerprint of the environment that BaseLib was compiled in.
-    std::string getBuildFingerprint();
-
 } // namespace babelwires
 
 #include <BaseLib/BuildCompatibility/buildFingerprint_inl.hpp>

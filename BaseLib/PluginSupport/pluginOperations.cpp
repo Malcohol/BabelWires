@@ -9,6 +9,7 @@
 
 #include <BaseLib/BuildCompatibility/buildCompatibility.hpp>
 #include <BaseLib/BuildCompatibility/buildFingerprint.hpp>
+#include <BaseLib/BuildCompatibility/buildInfo.hpp>
 #include <BaseLib/Log/userLogger.hpp>
 #include <BaseLib/PluginSupport/Detail/pluginModuleOperations.hpp>
 #include <BaseLib/PluginSupport/pluginDescriptor.hpp>
