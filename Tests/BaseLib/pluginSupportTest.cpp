@@ -104,7 +104,7 @@ TEST(PluginSupportTest, pluginManagerLoadGoodPlugin) {
     babelwires::Context context;
     auto loadGood = manager.loadPlugin(std::move(*good), context, log);
     ASSERT_TRUE(loadGood) << loadGood.error().toString();
-    EXPECT_TRUE(log.hasSubstring("Successfully loaded plugin \"" + goodPluginPath().string()));
+    EXPECT_TRUE(log.hasSubstringWhenPathsNormalized("Successfully loaded plugin \"" + goodPluginPath().string()));
 }
 
 TEST(PluginSupportTest, pluginManagerLoadPluginRejectsDuplicateUuid) {
@@ -131,8 +131,8 @@ TEST(PluginSupportTest, pluginManagerLoadAllPlugins) {
     babelwires::Context context;
     const int numLoaded = manager.loadAllPlugins(pluginOutputDir(), context, log);
     EXPECT_EQ(numLoaded, 1);
-    EXPECT_TRUE(log.hasSubstring("Successfully loaded plugin \"" + goodPluginPath().string()));
-    EXPECT_FALSE(log.hasSubstring("Successfully loaded plugin \"" + badMagicPluginPath().string()));
-    EXPECT_TRUE(log.hasSubstring(badMagicPluginPath().string()));
+    EXPECT_TRUE(log.hasSubstringWhenPathsNormalized("Successfully loaded plugin \"" + goodPluginPath().string()));
+    EXPECT_FALSE(log.hasSubstringWhenPathsNormalized("Successfully loaded plugin \"" + badMagicPluginPath().string()));
+    EXPECT_TRUE(log.hasSubstringWhenPathsNormalized(badMagicPluginPath().string()));
 }
 
