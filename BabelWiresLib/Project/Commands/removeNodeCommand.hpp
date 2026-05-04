@@ -8,7 +8,7 @@
 #pragma once
 
 #include <BabelWiresLib/babelWiresLibExport.hpp>
-#include <BabelWiresLib/Commands/commands.hpp>
+#include <BabelWiresLib/Project/Commands/projectCommands.hpp>
 #include <BabelWiresLib/ProjectExtra/connectionDescription.hpp>
 #include <BabelWiresLib/Path/path.hpp>
 #include <BabelWiresLib/Project/projectIds.hpp>
@@ -53,6 +53,9 @@ namespace babelwires {
         virtual void subsume(std::unique_ptr<Command> subsequentCommand) override;
 
         void addNodeToRemove(NodeId nodeId);
+
+      public:
+        RemoveNodeCommand& operator=(const RemoveNodeCommand& other) = delete;
 
       private:
         using ConnectionSet = std::unordered_set<ConnectionDescription>;

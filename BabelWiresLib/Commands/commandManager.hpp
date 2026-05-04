@@ -58,6 +58,10 @@ namespace babelwires {
         Command<COMMAND_TARGET>& getLastCommand();
         const Command<COMMAND_TARGET>& getLastCommand() const;
 
+      public:
+        CommandManager(const CommandManager&) = delete;
+        CommandManager& operator=(const CommandManager&) = delete;
+
       public: // Signals
         Signal<> signal_undoStateChanged;
 

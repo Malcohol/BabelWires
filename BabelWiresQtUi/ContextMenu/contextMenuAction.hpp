@@ -47,6 +47,10 @@ namespace babelwires {
         QActionGroup::ExclusionPolicy m_exclusionPolicy;
         QString m_groupName;
         std::vector<std::unique_ptr<ContextMenuAction>> m_actions;
+
+      public:
+        ContextMenuGroup(const ContextMenuGroup& other) = delete;
+        ContextMenuGroup& operator=(const ContextMenuGroup& other) = delete;
     };
 
     using ContextMenuEntry =

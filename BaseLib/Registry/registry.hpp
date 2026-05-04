@@ -53,6 +53,8 @@ namespace babelwires {
 
         /// The registry name will be used in exceptions, and may be user visible.
         UntypedRegistry(std::string registryName);
+        UntypedRegistry(const UntypedRegistry&) = delete;
+        UntypedRegistry& operator=(const UntypedRegistry&) = delete;
 
         /// Transfer ownership to the registry.
         RegistryEntry* addEntry(std::unique_ptr<RegistryEntry> newEntry);
@@ -130,7 +132,6 @@ namespace babelwires {
       protected:
         UntypedRegistry m_untypedRegistry;
     };
-
 } // namespace babelwires
 
 #include <BaseLib/Registry/registry_inl.hpp>

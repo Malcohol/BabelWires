@@ -23,16 +23,12 @@ jobs:
         - {
             name: "Ubuntu_GCC",
             os: ubuntu-24.04,
-            targetFolder: "",
-            exeExtension: "",
             cc: "gcc-14",
             cxx: "g++-14"
           }
         - {
             name: "Windows Latest MSVC",
             os: windows-latest,
-            targetFolder: "Debug/", # Must match build_type.
-            exeExtension: ".exe",
             cc: "cl",
             cxx: "cl",
             generators: "Visual Studio 16 2019"
@@ -40,8 +36,6 @@ jobs:
         - {
             name: "macOS Latest Clang",
             os: macos-latest,
-            targetFolder: "",
-            exeExtension: "",
             cc: "clang",
             cxx: "clang++"
           }
@@ -84,27 +78,5 @@ jobs:
     - name: Build
       run: cmake --build build --config ${{ matrix.build_type }}
 
-    - name: BaseLibTest
-      working-directory: build
-      shell: bash
-      run: Tests/BaseLib/${{ matrix.platform.targetFolder }}baseLibTests${{ matrix.platform.exeExtension }}
-
-    - name: BabelWiresTest
-      working-directory: build/Tests/BabelWiresLib
-      shell: bash
-      run: ./${{ matrix.platform.targetFolder }}babelWiresTests${{ matrix.platform.exeExtension }}
-
-    - name: MusicLibTests
-      working-directory: build
-      shell: bash
-      run: Domains/Music/Tests/MusicLib/${{ matrix.platform.targetFolder }}musicLibTests${{ matrix.platform.exeExtension }}
-
-    - name: Seq2tapeLibTests
-      working-directory: build
-      shell: bash
-      run: Domains/Music/Tests/Seq2tapeLib/${{ matrix.platform.targetFolder }}seq2tapeLibTests${{ matrix.platform.exeExtension }}
-
-    - name: SmfTests
-      working-directory: build/Domains/Music/Plugins/Smf/Tests
-      shell: bash
-      run: ./${{ matrix.platform.targetFolder }}SmfTests${{ matrix.platform.exeExtension }}
+    - name: Run Tests
+      run: ctest --test-dir build -C ${{ matrix.build_type }} --output-on-failure

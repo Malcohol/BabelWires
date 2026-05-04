@@ -33,7 +33,7 @@ namespace babelwires {
 
     /// Convert an EnumValue to a native enum value.
     template<typename ENUM>
-    struct BABELWIRESLIB_API EnumToValueValueAdapter {
+    struct EnumToValueValueAdapter {
         const ENUM& m_enum;
 
         typename ENUM::Value operator() (const Value& value) const {

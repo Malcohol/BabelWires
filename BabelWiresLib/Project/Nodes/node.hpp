@@ -158,6 +158,10 @@ namespace babelwires {
         void adjustArrayIndices(const babelwires::Path& pathToArray, babelwires::ArrayIndex startIndex,
                                 int adjustment);
 
+      public:
+        Node(const Node&) = delete;
+        Node& operator=(const Node&) = delete;
+
       protected:
         /// Get a non-const pointer to the input feature. The default implementation returns null.
         virtual ValueTreeNode* doGetInputNonConst();

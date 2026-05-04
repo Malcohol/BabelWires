@@ -30,6 +30,7 @@ if(BUILD_SHARED_LIBS)
     set(CMAKE_BUILD_RPATH_USE_ORIGIN TRUE)
 endif()
 
+# Put all Windows shared-runtime artifacts in one place so executables and DLLs can find each other.
 if(BUILD_SHARED_LIBS AND WIN32)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -104,24 +105,24 @@ if(BUILD_SHARED_LIBS AND TARGET QtNodes)
 endif()
 
 if(BUILD_TESTING)
-    include(GoogleTest)
+    # Define a helper function to register test executables with CTest and set the appropriate environment variables for finding shared libraries.
+    # Note: Registering individual tests with Ctest is far too slow, so we just use CTest as registry for the test executables, mainly for CI.
+    function(register_test_executable targetName)
+        add_test(NAME ${targetName} COMMAND $<TARGET_FILE:${targetName}>)
 
-    function(configure_shared_test_runtime discoveredTests targetName)
         if(NOT BUILD_SHARED_LIBS)
             return()
         endif()
 
-        if(NOT "${${discoveredTests}}" STREQUAL "")
-            if(WIN32)
-                set_tests_properties(${${discoveredTests}} PROPERTIES
-                    ENVIRONMENT "PATH=$<TARGET_FILE_DIR:${targetName}>;$ENV{PATH}")
-            elseif(APPLE)
-                set_tests_properties(${${discoveredTests}} PROPERTIES
-                    ENVIRONMENT "DYLD_LIBRARY_PATH=$<TARGET_FILE_DIR:${targetName}>:$ENV{DYLD_LIBRARY_PATH}")
-            else()
-                set_tests_properties(${${discoveredTests}} PROPERTIES
-                    ENVIRONMENT "LD_LIBRARY_PATH=$<TARGET_FILE_DIR:${targetName}>:$ENV{LD_LIBRARY_PATH}")
-            endif()
+        if(WIN32)
+            set_tests_properties(${targetName} PROPERTIES
+                ENVIRONMENT "PATH=$<TARGET_FILE_DIR:${targetName}>;$ENV{PATH}")
+        elseif(APPLE)
+            set_tests_properties(${targetName} PROPERTIES
+                ENVIRONMENT "DYLD_LIBRARY_PATH=$<TARGET_FILE_DIR:${targetName}>:$ENV{DYLD_LIBRARY_PATH}")
+        else()
+            set_tests_properties(${targetName} PROPERTIES
+                ENVIRONMENT "LD_LIBRARY_PATH=$<TARGET_FILE_DIR:${targetName}>:$ENV{LD_LIBRARY_PATH}")
         endif()
     endfunction()
 
@@ -134,4 +135,5 @@ endif()
 # This is useful even if not building the tests.
 add_subdirectory(Domains/TestDomain)
 add_subdirectory(Domains/Music )
+
 add_subdirectory(BabelWiresExe)

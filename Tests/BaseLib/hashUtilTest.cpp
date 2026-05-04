@@ -1,5 +1,7 @@
 #include <BaseLib/Hash/hash.hpp>
 
+#include <Tests/TestUtils/testStrings.hpp>
+
 #include <gtest/gtest.h>
 
 TEST(Hash, mixInto) {
@@ -36,4 +38,16 @@ TEST(Hash, mixtureOf) {
 
     EXPECT_NE(babelwires::hash::mixtureOf(foo, bar), babelwires::hash::mixtureOf(bar, foo));
     EXPECT_NE(babelwires::hash::mixtureOf(foo, 0), babelwires::hash::mixtureOf(0, foo));
+}
+
+TEST(Hash, stableStringHash) {
+    constexpr std::string_view fixedText = testUtils::c_testString;
+    constexpr std::uint64_t expectedHash = 0xD94D32CC2E5C3409ull;
+
+    static_assert(babelwires::hash::stableStringHash(fixedText) == expectedHash,
+                  "stableStringHash must remain stable for fixed inputs");
+
+    const std::string_view dynamicText = testUtils::getTestStringOutOfLine();
+    EXPECT_EQ(babelwires::hash::stableStringHash(fixedText), expectedHash);
+    EXPECT_EQ(babelwires::hash::stableStringHash(dynamicText), expectedHash);
 }

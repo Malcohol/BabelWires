@@ -45,6 +45,5 @@ target_compile_definitions(baseLibTests PRIVATE
 )
 
 if(BUILD_TESTING)
-   gtest_discover_tests(baseLibTests TEST_LIST baseLibDiscoveredTests)
-   configure_shared_test_runtime(baseLibDiscoveredTests baseLibTests)
+   register_test_executable(baseLibTests)
 endif()

@@ -79,6 +79,10 @@ namespace babelwires {
         /// Get all the registered types tagged with the given tag.
         TypeIdSet getTaggedRegisteredTypes(Type::Tag tag) const;
 
+      public:
+        TypeSystem(const TypeSystem&) = delete;
+        TypeSystem& operator=(const TypeSystem&) = delete;
+
       protected:
         void addRegisteredType(RegisteredTypeId typeId, VersionNumber version, TypePtr newType);
         TypeConstructor* addTypeConstructorInternal(TypeConstructorId typeConstructorId, VersionNumber version,

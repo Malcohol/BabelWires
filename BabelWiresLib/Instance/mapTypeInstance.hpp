@@ -18,7 +18,7 @@ namespace babelwires {
     /// The DSL provides a DECLARE_INSTANCE_MAP_FIELD macro which directly uses the following instance template.
     /// Note: The second type parameter is the entry type, not map type.
     template <typename VALUE_TREE_NODE, typename SOURCE_TYPE, typename TARGET_TYPE>
-    class BABELWIRESLIB_API MapInstanceImpl : public InstanceCommonBase<VALUE_TREE_NODE, MapType> {
+    class MapInstanceImpl : public InstanceCommonBase<VALUE_TREE_NODE, MapType> {
       public:
         MapInstanceImpl(VALUE_TREE_NODE& valueFeature)
             : InstanceCommonBase<VALUE_TREE_NODE, MapType>(valueFeature) {}

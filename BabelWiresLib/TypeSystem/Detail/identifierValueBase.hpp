@@ -16,7 +16,7 @@
 namespace babelwires {
 
     template<typename IDENTIFIER>
-    class BABELWIRESLIB_API IdentifierValueBase : public AlwaysEditableValue {
+    class IdentifierValueBase : public AlwaysEditableValue {
       public:
         DOWNCASTABLE(IdentifierValueBase, AlwaysEditableValue);
         CLONEABLE_ABSTRACT(IdentifierValueBase);
