@@ -13,6 +13,7 @@
 // with the main codebase.
 
 #include <cstddef>
+#include <string>
 
 namespace babelwires {
 
@@ -32,6 +33,10 @@ namespace babelwires {
     /// truncated, the return value equals bufferSize. If outBuffer is null or bufferSize is zero, nothing is written
     /// and zero is returned.
     std::size_t writeMyBuildFingerprint(char* outBuffer, std::size_t bufferSize);
+
+    /// A convenience function to get the build fingerprint as a std::string. This always returns the build
+    /// fingerprint of the environment that BaseLib was compiled in.
+    std::string getBuildFingerprint();
 
 } // namespace babelwires
 

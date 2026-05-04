@@ -150,12 +150,7 @@ babelwires::ResultT<babelwires::PluginHandle> babelwires::openPlugin(const std::
                        << " but host is " << hostVersion.toString();
     }
 
-    char hostFingerprint[babelwires::c_buildFingerprintBufferSize] = {};
-#ifndef NDEBUG
-    const std::size_t hostFingerprintSize =
-#endif
-        writeMyBuildFingerprint(hostFingerprint, sizeof(hostFingerprint));
-    assert(hostFingerprintSize > 0 && hostFingerprintSize < sizeof(hostFingerprint));
+    const std::string hostFingerprint = babelwires::getBuildFingerprint();
 
     char pluginFingerprint[babelwires::c_buildFingerprintBufferSize] = {};
     const std::size_t pluginFingerprintSize =
