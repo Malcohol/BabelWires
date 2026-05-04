@@ -26,17 +26,6 @@ namespace babelwires {
     using Byte = std::uint8_t;
     using VersionNumber = std::uint16_t;
 
-    enum Endianness { IS_BIG_ENDIAN, IS_LITTLE_ENDIAN };
-
-    inline const Endianness getPlatformEndianness() {
-        constexpr union {
-            char m_bytes[4];
-            uint32_t m_int;
-        } data = {'\xAA', '\xBB', '\xCC', '\xDD'};
-
-        return (data.m_int == 0xAABBCCDDu) ? IS_BIG_ENDIAN : IS_LITTLE_ENDIAN;
-    }
-
     // TODO: Consider renaming Interval.
     // TODO: Allow ranges to describe open and closed intervals.
     template <typename T> struct Range {

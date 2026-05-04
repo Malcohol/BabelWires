@@ -16,6 +16,7 @@
 namespace babelwires {
 
     /// Values which give the application its identity.
+    /// NOTE: The application version is the same as the codebase-defined version (obtained with Version::getCodebaseVersion()).
     struct BABELWIRESQTUI_API ApplicationIdentity
     {
         /// The name of the application ("BabelWires")

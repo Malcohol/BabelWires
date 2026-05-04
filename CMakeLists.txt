@@ -4,7 +4,7 @@ CMAKE_MINIMUM_REQUIRED( VERSION 3.25 )
 # Build the project
 ###############################################################################
 
-PROJECT( BabelWires )
+PROJECT( BabelWires VERSION 0.0.1 )
 
 SET(CMAKE_CXX_STANDARD 23)
 
@@ -18,6 +18,12 @@ endif()
 option(BUILD_SHARED_LIBS "Build all BabelWires libraries as shared libraries" OFF)
 # Ensure that submodules (e.g. nodeeditor) respect the BUILD_SHARED_LIBS setting.
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+
+set(BABELWIRES_PLUGIN_OUTPUT_DIR "${CMAKE_BINARY_DIR}/plugins" CACHE PATH
+    "Directory where runtime-loadable BabelWires plugins are placed")
+
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+include(AddPlugin)
 
 if(BUILD_SHARED_LIBS)
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)

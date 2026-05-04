@@ -6,6 +6,7 @@ SET( COMMON_SRCS
 	Identifiers/registeredIdentifier.cpp
 	common.cpp
 	libRegistration.cpp
+	Version/version.cpp
 	Cloning/cloneable.cpp
 	Registry/registry.cpp
 	Registry/fileTypeRegistry.cpp
@@ -29,16 +30,38 @@ SET( COMMON_SRCS
 	Serialization/XML/xmlDeserializer.cpp
 	Signal/signalSubscription.cpp
 	BlockStream/blockStream.cpp
+	BuildCompatibility/buildCompatibility.cpp
+	BuildCompatibility/buildInfo.cpp
+	PluginSupport/Detail/pluginModuleOperations.cpp
+	PluginSupport/pluginHandle.cpp
+	PluginSupport/pluginManager.cpp
+	PluginSupport/pluginOperations.cpp
 	Utilities/unicodeUtils.cpp
    )
+
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/generated/BaseLib/Version)
+
+configure_file(
+	${CMAKE_CURRENT_SOURCE_DIR}/Version/codebaseVersion.hpp.in
+	${CMAKE_CURRENT_BINARY_DIR}/generated/BaseLib/Version/codebaseVersion_gen.hpp
+	@ONLY
+)
+
+# TODO: Add install/export rules for generated BaseLib/Version/codebaseVersion_gen.hpp
+# and associated CMake package metadata when external plugin support is introduced.
 
 ADD_LIBRARY( BaseLib ${COMMON_SRCS} )
 TARGET_INCLUDE_DIRECTORIES( BaseLib
 	PUBLIC
 		$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated>
 		$<INSTALL_INTERFACE:include>
 )
 TARGET_LINK_LIBRARIES(BaseLib PUBLIC tinyxml2)
+
+if(UNIX AND NOT APPLE)
+	target_link_libraries(BaseLib PRIVATE dl)
+endif()
 
 if(BUILD_SHARED_LIBS)
 	set_target_properties(BaseLib PROPERTIES

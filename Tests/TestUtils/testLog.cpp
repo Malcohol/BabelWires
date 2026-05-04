@@ -1,7 +1,32 @@
 #include <Tests/TestUtils/testLog.hpp>
 
-#include <cassert>
 #include <algorithm>
+#include <cassert>
+#include <cctype>
+
+namespace {
+    std::string normalizeForPathSubstringSearch(std::string_view text) {
+        std::string normalized;
+        normalized.reserve(text.size());
+
+        bool previousWasSlash = false;
+        for (const unsigned char ch : text) {
+            char out = static_cast<char>(std::tolower(ch));
+            if (out == '\\') {
+                out = '/';
+            }
+
+            if ((out == '/') && previousWasSlash) {
+                continue;
+            }
+
+            normalized.push_back(out);
+            previousWasSlash = (out == '/');
+        }
+
+        return normalized;
+    }
+} // namespace
 
 testUtils::TestLog::TestLog()
     : m_oldDebugLogger(babelwires::DebugLogger::swapGlobalDebugLogger(this)) {}
@@ -27,6 +52,11 @@ bool testUtils::TestLogWithListener::hasSubstringIgnoreCase(std::string_view sub
     const std::string contents = getLogContents();
     return std::search(contents.begin(), contents.end(), substring.begin(), substring.end(), equalCharIgnoreCase) !=
            contents.end();
+}
+
+bool testUtils::TestLogWithListener::hasSubstringWhenPathsNormalized(std::string_view substring) const {
+    return normalizeForPathSubstringSearch(getLogContents()).find(normalizeForPathSubstringSearch(substring)) !=
+           std::string::npos;
 }
 
 void testUtils::TestLogWithListener::clear() {

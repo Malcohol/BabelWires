@@ -23,11 +23,15 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/libRegistration.hpp>
 
+#include <BaseLib/BuildCompatibility/buildInfo.hpp>
 #include <BaseLib/Context/context.hpp>
 #include <BaseLib/IO/fileDataSource.hpp>
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
+#include <BaseLib/Log/debugLogger.hpp>
 #include <BaseLib/Log/ostreamLogListener.hpp>
 #include <BaseLib/Log/unifiedLog.hpp>
+#include <BaseLib/PluginSupport/pluginManager.hpp>
+#include <BaseLib/PluginSupport/pluginOperations.hpp>
 #include <BaseLib/Random/randomService.hpp>
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
 #include <BaseLib/libRegistration.hpp>
@@ -35,12 +39,16 @@
 // "plugins"
 #include <Domains/Music/MusicLib/libRegistration.hpp>
 #include <Domains/Music/MusicLibUi/libRegistration.hpp>
-#include <Domains/Music/Plugins/TestPlugin/libRegistration.hpp>
 #include <Domains/TestDomain/libRegistration.hpp>
+
+#if !BABELWIRES_SHARED_BUILD
+#include <Domains/Music/Plugins/TestPlugin/libRegistration.hpp>
 #include <Smf/libRegistration.hpp>
+#endif
 
 #include <cassert>
 #include <chrono>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -49,6 +57,11 @@
 #include <tinyxml2.h>
 
 using namespace babelwires;
+
+/// Plugin files are expected to have this extension.
+constexpr const char c_pluginFileExtension[] = ".bwplugin";
+constexpr const char c_applicationTitle[] = "BabelWires";
+constexpr const char c_projectExtension[] = ".babelwires";
 
 int main(int argc, char* argv[]) {
     auto options = ProgramOptions::parse(argc, argv);
@@ -74,6 +87,13 @@ int main(int argc, char* argv[]) {
     babelwires::DebugLogger::swapGlobalDebugLogger(&log);
     babelwires::OStreamLogListener logToCout(std::cout, log, features);
 
+    logDebug() << "Build info:\n" << getBuildFingerprint();
+
+#if BABELWIRES_SHARED_BUILD
+    // Because the plugin manager keeps code in memory, it needs a lifetime that encompasses other services.
+    babelwires::PluginManager pluginManager(c_pluginFileExtension);
+#endif
+
     SourceFileFormatRegistry sourceFileFormatReg;
     TargetFileFormatRegistry targetFileFormatReg;
     ProcessorFactoryRegistry processorReg;
@@ -88,8 +108,8 @@ int main(int argc, char* argv[]) {
     babelwires::Context context;
 
     babelwires::ApplicationIdentity applicationIdentity;
-    applicationIdentity.m_applicationTitle = "BabelWires";
-    applicationIdentity.m_projectExtension = ".babelwires";
+    applicationIdentity.m_applicationTitle = c_applicationTitle;
+    applicationIdentity.m_projectExtension = c_projectExtension;
 
     context.registerService<babelwires::DeserializationRegistry>(deserializationRegistry);
     context.registerService<babelwires::RandomService>(randomService);
@@ -105,10 +125,16 @@ int main(int argc, char* argv[]) {
     babelwires::registerLib(context);
     bw_music::registerLib(context);
     bw_musicUi::registerLib(context);
-    smf::registerLib(context);
 
-    // Uncomment to enable a domain of testing data.
-    // bw_music_testplugin::registerLib(context);
+#if BABELWIRES_SHARED_BUILD
+    // TODO Stop the test plugin loading automatically.
+    const unsigned int loadedPlugins = pluginManager.loadAllPlugins(BABELWIRES_DEFAULT_PLUGIN_DIR, context, log);
+    babelwires::logDebug() << "Loaded " << loadedPlugins << " plugin(s) from " << BABELWIRES_DEFAULT_PLUGIN_DIR;
+#else
+    ASSERT_NO_ERROR(smf::registerLib(context, log));
+    // ASSERT_NO_ERROR(bw_music_testplugin::registerLib(context, log));
+#endif
+
     // testDomain::registerLib(context);
 
     if (options->m_mode == ProgramOptions::MODE_RUN_PROJECT) {

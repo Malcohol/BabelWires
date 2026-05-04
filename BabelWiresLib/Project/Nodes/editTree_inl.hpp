@@ -22,11 +22,12 @@ struct BABELWIRESLIB_API babelwires::EditTree::RootedPathIterator {
 /// the non-step to the root. This is a convenience structure which simplifies
 /// a lot of the EditTree code, since RootedPaths correspond in a nicer way to
 /// nodes of the EditTree.
-struct BABELWIRESLIB_API babelwires::EditTree::RootedPath {
-    RootedPath(const Path& path);
-    RootedPathIterator begin() const;
-    RootedPathIterator end() const;
-    unsigned int getNumSteps() const;
+struct babelwires::EditTree::RootedPath {
+    RootedPath(const Path& path)
+        : m_path(path) {}
+    RootedPathIterator begin() const { return RootedPathIterator{m_path.begin(), true}; }
+    RootedPathIterator end() const { return RootedPathIterator{m_path.end(), false}; }
+    unsigned int getNumSteps() const { return m_path.getNumSteps() + 1; }
 
     const Path& m_path;
 };
