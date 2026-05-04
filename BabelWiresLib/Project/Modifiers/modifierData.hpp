@@ -57,6 +57,6 @@ namespace babelwires {
         /// Perform the modification on the target ValueTreeNode.
         virtual Result apply(ValueTreeNode* target) const = 0;
 
-        virtual std::unique_ptr<Modifier> createModifier() const;
+        virtual std::unique_ptr<Modifier> createModifier() const override;
     };
 } // namespace babelwires

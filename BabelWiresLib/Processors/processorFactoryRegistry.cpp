@@ -7,5 +7,7 @@
  **/
 #include <BabelWiresLib/Processors/processorFactoryRegistry.hpp>
 
+#include <BabelWiresLib/Processors/processorFactory.hpp>
+
 babelwires::ProcessorFactoryRegistry::ProcessorFactoryRegistry()
     : Registry<ProcessorFactory>("Processor Factory Registry") {}

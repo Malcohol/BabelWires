@@ -13,7 +13,7 @@
 #include <cassert>
 #include <optional>
 
-inline void babelwires::EditTree::RootedPathIterator::operator++() {
+void babelwires::EditTree::RootedPathIterator::operator++() {
     if (m_isAtRoot) {
         m_isAtRoot = false;
     } else {
@@ -21,15 +21,15 @@ inline void babelwires::EditTree::RootedPathIterator::operator++() {
     }
 }
 
-inline bool babelwires::EditTree::RootedPathIterator::operator==(const RootedPathIterator& other) const {
+bool babelwires::EditTree::RootedPathIterator::operator==(const RootedPathIterator& other) const {
     return (m_it == other.m_it) && (m_isAtRoot == other.m_isAtRoot);
 }
 
-inline bool babelwires::EditTree::RootedPathIterator::operator!=(const RootedPathIterator& other) const {
+bool babelwires::EditTree::RootedPathIterator::operator!=(const RootedPathIterator& other) const {
     return !(*this == other);
 };
 
-inline int babelwires::EditTree::RootedPathIterator::distanceFrom(const RootedPathIterator& other) const {
+int babelwires::EditTree::RootedPathIterator::distanceFrom(const RootedPathIterator& other) const {
     int itDist = m_it - other.m_it;
     if (m_isAtRoot) {
         --itDist;
@@ -40,7 +40,7 @@ inline int babelwires::EditTree::RootedPathIterator::distanceFrom(const RootedPa
     return itDist;
 }
 
-inline babelwires::PathStep babelwires::EditTree::RootedPathIterator::operator*() const {
+babelwires::PathStep babelwires::EditTree::RootedPathIterator::operator*() const {
     if (m_isAtRoot) {
         return {};
     } else {
@@ -48,17 +48,17 @@ inline babelwires::PathStep babelwires::EditTree::RootedPathIterator::operator*(
     }
 }
 
-inline babelwires::EditTree::RootedPath::RootedPath(const Path& path)
+babelwires::EditTree::RootedPath::RootedPath(const Path& path)
     : m_path(path) {}
 
-inline babelwires::EditTree::RootedPathIterator babelwires::EditTree::RootedPath::begin() const {
+babelwires::EditTree::RootedPathIterator babelwires::EditTree::RootedPath::begin() const {
     return RootedPathIterator{m_path.begin(), true};
 }
-inline babelwires::EditTree::RootedPathIterator babelwires::EditTree::RootedPath::end() const {
+babelwires::EditTree::RootedPathIterator babelwires::EditTree::RootedPath::end() const {
     return RootedPathIterator{m_path.end(), false};
 };
 
-inline unsigned int babelwires::EditTree::RootedPath::getNumSteps() const {
+unsigned int babelwires::EditTree::RootedPath::getNumSteps() const {
     return m_path.getNumSteps() + 1;
 }
 

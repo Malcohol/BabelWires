@@ -16,7 +16,7 @@
 namespace babelwires {
 
     /// Logs debug messages to the global debug logger.
-    BASELIB_API babelwires::Log::MessageBuilder logDebug();
+    babelwires::Log::MessageBuilder logDebug();
 
     /// An interface for submitting debug log messages.
     /// There are also static members for managing access to a global debug logger.

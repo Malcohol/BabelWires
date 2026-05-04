@@ -73,6 +73,10 @@ namespace babelwires {
 
         const Context& getProjectContext() const;
 
+      public:
+        MapProject(const MapProject&) = delete;
+        MapProject& operator=(const MapProject&) = delete;
+
       private:
         const Context& m_projectContext;
         AllowedTypes m_allowedSourceTypeExps;

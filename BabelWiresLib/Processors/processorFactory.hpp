@@ -21,7 +21,7 @@
         return BW_LONG_ID(LONG_ID, NAME, UUID);                                                                        \
     }                                                                                                                  \
     template <typename PROCESSOR_SUBTYPE>                                                                              \
-    struct BABELWIRESLIB_API ThisProcessorFactory : babelwires::CommonProcessorFactory<PROCESSOR_SUBTYPE> {                              \
+    struct ThisProcessorFactory : babelwires::CommonProcessorFactory<PROCESSOR_SUBTYPE> {                              \
         ThisProcessorFactory()                                                                                         \
             : babelwires::CommonProcessorFactory<PROCESSOR_SUBTYPE>(PROCESSOR_SUBTYPE::getFactoryIdentifier(), 1) {}   \
     };

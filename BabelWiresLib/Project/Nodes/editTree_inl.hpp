@@ -7,7 +7,7 @@
  **/
 
 /// Iterate over a RootedPath.
-struct babelwires::EditTree::RootedPathIterator {
+struct BABELWIRESLIB_API babelwires::EditTree::RootedPathIterator {
     void operator++();
     bool operator==(const RootedPathIterator& other) const;
     bool operator!=(const RootedPathIterator& other) const;
@@ -22,7 +22,7 @@ struct babelwires::EditTree::RootedPathIterator {
 /// the non-step to the root. This is a convenience structure which simplifies
 /// a lot of the EditTree code, since RootedPaths correspond in a nicer way to
 /// nodes of the EditTree.
-struct babelwires::EditTree::RootedPath {
+struct BABELWIRESLIB_API babelwires::EditTree::RootedPath {
     RootedPath(const Path& path);
     RootedPathIterator begin() const;
     RootedPathIterator end() const;

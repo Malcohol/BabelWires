@@ -1,6 +1,7 @@
 SET( COMMON_SRCS
 	Context/context.cpp
 	DataContext/filePath.cpp
+	DataContext/dataVisitable.cpp
 	Identifiers/identifierRegistry.cpp
 	Identifiers/registeredIdentifier.cpp
 	common.cpp
@@ -17,6 +18,7 @@ SET( COMMON_SRCS
 	Log/ostreamLogListener.cpp
 	Log/unifiedLog.cpp
 	Log/debugLogger.cpp
+	productInfo.cpp
 	Random/randomService.cpp
 	uuid.cpp
 	Serialization/deserializer.cpp

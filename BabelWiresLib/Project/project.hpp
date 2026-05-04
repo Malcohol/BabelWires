@@ -166,6 +166,10 @@ namespace babelwires {
         /// Return an available id, using the provided hint if it is valid and available.
         NodeId reserveNodeId(NodeId hint = INVALID_NODE_ID);
 
+      public:
+        Project(const Project&) = delete;
+        Project& operator=(const Project&) = delete;
+
       private:
         /// Mark the connection cache as invalid, so the next time it is queried, it gets recomputed.
         void setConnectionCacheInvalid();

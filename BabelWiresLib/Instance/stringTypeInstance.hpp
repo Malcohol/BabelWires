@@ -15,7 +15,7 @@ namespace babelwires {
     /// Specialized instance handling for StringType.
     template <typename VALUE_TREE_NODE, typename STRING_TYPE>
         requires std::is_base_of_v<StringType, STRING_TYPE>
-    class BABELWIRESLIB_API InstanceImpl<VALUE_TREE_NODE, STRING_TYPE> : public InstanceCommonBase<VALUE_TREE_NODE, STRING_TYPE> {
+    class InstanceImpl<VALUE_TREE_NODE, STRING_TYPE> : public InstanceCommonBase<VALUE_TREE_NODE, STRING_TYPE> {
       public:
         InstanceImpl(VALUE_TREE_NODE& valueFeature)
             : InstanceCommonBase<VALUE_TREE_NODE, STRING_TYPE>(valueFeature) {}

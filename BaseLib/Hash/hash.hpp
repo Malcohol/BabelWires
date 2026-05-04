@@ -7,12 +7,24 @@
  **/
 #pragma once
 
+#include <cstdint>
 #include <cstddef>
 #include <functional>
+#include <string_view>
 
 namespace babelwires {
 
     namespace hash {
+
+        /// Compile-time/runtime stable FNV-1a hash for string data.
+        constexpr std::uint64_t stableStringHash(std::string_view text) {
+            std::uint64_t hash = 14695981039346656037ull;
+            for (char c : text) {
+                hash ^= static_cast<unsigned char>(c);
+                hash *= 1099511628211ull;
+            }
+            return hash;
+        }
 
         inline void mixInto(std::size_t& seed) {}
 

@@ -24,7 +24,7 @@
 namespace babelwires {
     /// Commands define undoable ways of mutating the a COMMAND_TARGET.
     template<typename COMMAND_TARGET>
-    class BABELWIRESLIB_API Command : public Cloneable {
+    class Command : public Cloneable {
       public:
         DOWNCASTABLE_BASE(Command);
         CLONEABLE_ABSTRACT(Command);
@@ -85,7 +85,7 @@ namespace babelwires {
     /// A simple command can be initialized without affecting the state of the system,
     /// so it has three virtual methods to override: initialize, execute and undo.
     template<typename COMMAND_TARGET>
-    class BABELWIRESLIB_API SimpleCommand : public Command<COMMAND_TARGET> {
+    class SimpleCommand : public Command<COMMAND_TARGET> {
       public:
         DOWNCASTABLE(SimpleCommand, Command<COMMAND_TARGET>);
 
@@ -101,7 +101,7 @@ namespace babelwires {
 
     /// A compound command is composed of subcommands.
     template<typename COMMAND_TARGET>
-    class BABELWIRESLIB_API CompoundCommand : public Command<COMMAND_TARGET> {
+    class CompoundCommand : public Command<COMMAND_TARGET> {
       public:
         DOWNCASTABLE(CompoundCommand, Command<COMMAND_TARGET>);
         CLONEABLE(CompoundCommand);
@@ -113,6 +113,9 @@ namespace babelwires {
         virtual bool initializeAndExecute(COMMAND_TARGET& target) override;
         virtual void execute(COMMAND_TARGET& target) const override;
         virtual void undo(COMMAND_TARGET& target) const override;
+
+      public:
+        CompoundCommand& operator=(const CompoundCommand& other) = delete;
 
       private:
         std::vector<std::unique_ptr<Command<COMMAND_TARGET>>> m_subCommands;

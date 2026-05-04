@@ -53,6 +53,7 @@ SET( BABELWIRESLIB_SRCS
 	Types/Map/Commands/setMapTargetTypeCommand.cpp
 	Types/Map/Commands/changeEntryKindCommand.cpp
 	Types/Map/Commands/setMapCommand.cpp
+	Types/Map/Helpers/enumValueAdapters.cpp
 	Types/Map/mapValue.cpp
 	Types/Map/MapEntries/mapEntryData.cpp
 	Types/Map/MapEntries/oneToOneMapEntryData.cpp
@@ -89,6 +90,7 @@ SET( BABELWIRESLIB_SRCS
 	Path/path.cpp
 	Path/pathStep.cpp
 	Serialization/projectBundle.cpp
+	Serialization/projectSerialization.cpp
 	Project/Commands/activateOptionalCommand.cpp
 	Project/Commands/addConnectionCommand.cpp
 	Project/Commands/addNodeCommand.cpp
@@ -104,6 +106,7 @@ SET( BABELWIRESLIB_SRCS
 	Project/Commands/removeEntryFromArrayCommand.cpp
 	Project/Commands/changeFileCommand.cpp
 	Project/Commands/pasteNodesCommand.cpp
+	Project/Commands/projectCommands.cpp
 	Project/Commands/setExpandedCommand.cpp
 	Project/Commands/removeFailedModifiersCommand.cpp
 	Project/Commands/resizeNodeCommand.cpp
