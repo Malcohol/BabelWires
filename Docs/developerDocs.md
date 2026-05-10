@@ -62,3 +62,9 @@ Other:
   - Sometimes such a function returns a result object to for the error case. To prevent double-reporting, a UserAdvisoryLogger should be provided instead.
 * Do not use `std::cout` or similar for logging purposes.
 
+## TODOs
+
+* High-level TODOs for the framework (including bugs and features) are maintained in `Docs\TODO.md`.
+* Domains carry their own TODO list (e.g. `Domains\Music\Docs\TODO.md`)
+* Low-level TODOs can be captured in code with `// TODO ` comments.
+* When a potential improvement or fix requires some consideration, `// MAYBEDO ` should be used instead.

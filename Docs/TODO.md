@@ -38,7 +38,8 @@ Plugin architecture:
   - If data depends on stuff from an unloaded plugin, is it an error or a dependency?
 
 Compound Data Flow:
-1. Consider replacing NewValueHolder by a unique_ptr variant inside ValueHolder. This might allow unique ownership to last a bit longer and avoid some unnecessary clones. (Threading probably means we can never return to this state after sharing.)
+1. Consider replacing NewValueHolder by a unique_ptr variant inside ValueHolder. This might allow unique ownership to last a bit longer and avoid some unnecessary clones.
+  - Threading probably means we can never return to this state after sharing.
 
 New features:
 * Make undo move the view to the XY and scale position of the undone command.
