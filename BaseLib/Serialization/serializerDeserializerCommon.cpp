@@ -44,13 +44,17 @@ namespace {
             , m_version(v) {}
 
         void serializeContents(babelwires::Serializer& serializer) const override {
-            serializer.serializeValue("type", m_type);
-            serializer.serializeValue("version", m_version);
+            serializer.serializeValue(babelwires::SerializerDeserializerCommon::c_serializationMetadataTypeKey, m_type);
+            serializer.serializeValue(babelwires::SerializerDeserializerCommon::c_serializationMetadataVersionKey,
+                                      m_version);
         }
 
         babelwires::Result deserializeContents(babelwires::Deserializer& deserializer) override {
-            DO_OR_ERROR(deserializer.deserializeValue("type", m_type));
-            DO_OR_ERROR(deserializer.deserializeValue("version", m_version));
+            DO_OR_ERROR(
+                deserializer.deserializeValue(babelwires::SerializerDeserializerCommon::c_serializationMetadataTypeKey,
+                                              m_type));
+            DO_OR_ERROR(deserializer.deserializeValue(
+                babelwires::SerializerDeserializerCommon::c_serializationMetadataVersionKey, m_version));
             return {};
         }
     };
@@ -61,14 +65,14 @@ void babelwires::SerializerDeserializerCommon::serializeMetadata(Serializer& ser
     for (auto& [t, v] : m_serializationVersions) {
         metadata.emplace_back(SerializationMetadata(t, v));
     }
-    serializer.serializeArray("serializationMetadata", metadata);
+    serializer.serializeArray(c_serializationMetadataKey, metadata);
 }
 
 babelwires::Result babelwires::SerializerDeserializerCommon::deserializeMetadata(
     Deserializer& deserializer, UserLogger& userLogger) {
     DeserializableClassScope<SerializationMetadata> metadataScope(deserializer);
 
-    ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<SerializationMetadata>("serializationMetadata"));
+    ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<SerializationMetadata>(c_serializationMetadataKey));
     while (it.isValid()) {
         ASSIGN_OR_ERROR(auto ptr, it.getObject());
         const auto [_, wasInserted] = m_serializationVersions.insert(std::pair(ptr->m_type, ptr->m_version));

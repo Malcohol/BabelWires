@@ -94,7 +94,113 @@ namespace {
         A m_a;
         std::vector<A> m_arrayOfAs;
     };
+
+    struct KeyedContainer : Serializable {
+        SERIALIZABLE(KeyedContainer, "KeyedContainer", void, 1);
+
+        void serializeContents(Serializer& serializer) const override {
+            serializer.serializeObject(m_defaultKeyObject);
+            serializer.serializeObject(m_explicitKeyObject, "renamedA");
+        }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeObjectByValue(m_defaultKeyObject));
+            DO_OR_ERROR(deserializer.deserializeObjectByValue(m_explicitKeyObject, "renamedA"));
+            return {};
+        }
+
+        A m_defaultKeyObject;
+        A m_explicitKeyObject;
+    };
+
+    struct CustomValueArrayContainer : Serializable {
+        SERIALIZABLE(CustomValueArrayContainer, "CustomValueArrayContainer", void, 1);
+
+        void serializeContents(Serializer& serializer) const override {
+            serializer.serializeValueArray("values", m_values, "item");
+        }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            ASSIGN_OR_ERROR(auto it, deserializer.deserializeValueArray<std::string>("values", "item"));
+            while (it.isValid()) {
+                ASSIGN_OR_ERROR(m_values.emplace_back(), it.deserializeValue());
+                DO_OR_ERROR(it.advance());
+            }
+            return {};
+        }
+
+        std::vector<std::string> m_values;
+    };
 } // namespace
+
+TEST(SerializationTest, explicitAndDefaultKeys) {
+    std::string serializedContents;
+    {
+        KeyedContainer container;
+        container.m_defaultKeyObject.m_x = 17;
+        container.m_defaultKeyObject.m_array = {"default"};
+        container.m_explicitKeyObject.m_x = 23;
+        container.m_explicitKeyObject.m_array = {"explicit", "key"};
+
+        babelwires::XmlSerializer serializer;
+        serializer.serializeObject(container);
+        std::ostringstream os;
+        serializer.write(os);
+        serializedContents = std::move(os.str());
+    }
+
+    {
+        TestLog log;
+        DeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<A>();
+        deserializationReg.registerClass<KeyedContainer>();
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
+        auto containerResult = deserializer.deserializeObject<KeyedContainer>();
+        ASSERT_TRUE(containerResult);
+        auto container = std::move(*containerResult);
+        ASSERT_TRUE(deserializer.finalize());
+
+        EXPECT_EQ(container->m_defaultKeyObject.m_x, 17);
+        ASSERT_EQ(container->m_defaultKeyObject.m_array.size(), 1);
+        EXPECT_EQ(container->m_defaultKeyObject.m_array[0], "default");
+        EXPECT_EQ(container->m_explicitKeyObject.m_x, 23);
+        ASSERT_EQ(container->m_explicitKeyObject.m_array.size(), 2);
+        EXPECT_EQ(container->m_explicitKeyObject.m_array[0], "explicit");
+        EXPECT_EQ(container->m_explicitKeyObject.m_array[1], "key");
+    }
+}
+
+TEST(SerializationTest, valueArraysAllowCustomElementNames) {
+    std::string serializedContents;
+    {
+        CustomValueArrayContainer container;
+        container.m_values = {"one", "two", "three"};
+
+        babelwires::XmlSerializer serializer;
+        serializer.serializeObject(container);
+        std::ostringstream os;
+        serializer.write(os);
+        serializedContents = std::move(os.str());
+    }
+
+    {
+        TestLog log;
+        DeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<CustomValueArrayContainer>();
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
+        auto containerResult = deserializer.deserializeObject<CustomValueArrayContainer>();
+        ASSERT_TRUE(containerResult);
+        auto container = std::move(*containerResult);
+        ASSERT_TRUE(deserializer.finalize());
+
+        ASSERT_EQ(container->m_values.size(), 3);
+        EXPECT_EQ(container->m_values[0], "one");
+        EXPECT_EQ(container->m_values[1], "two");
+        EXPECT_EQ(container->m_values[2], "three");
+    }
+}
 
 TEST(SerializationTest, objects) {
     std::string serializedContents;
@@ -363,6 +469,33 @@ namespace {
         std::unique_ptr<Concrete2> m_concrete2;
         std::vector<std::unique_ptr<Base>> m_objects;
     };
+
+    struct ByValueSubtypeWriter : babelwires::Serializable {
+        SERIALIZABLE(ByValueSubtypeWriter, "ByValueHolder", void, 1);
+
+        void serializeContents(Serializer& serializer) const override { serializer.serializeObject(m_value, "value"); }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            ASSIGN_OR_ERROR(m_unusedValue, deserializer.tryDeserializeObject<Concrete2>("value"));
+            return {};
+        }
+
+        Concrete2 m_value;
+        std::unique_ptr<Concrete2> m_unusedValue;
+    };
+
+    struct ByValueSubtypeReader : babelwires::Serializable {
+        SERIALIZABLE(ByValueSubtypeReader, "ByValueHolder", void, 1);
+
+        void serializeContents(Serializer& serializer) const override { serializer.serializeObject(m_value, "value"); }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeObjectByValue(m_value, "value"));
+            return {};
+        }
+
+        Concrete1 m_value;
+    };
 } // namespace
 
 TEST(SerializationTest, polymorphism) {
@@ -465,5 +598,68 @@ TEST(SerializationTest, polymorphismFail) {
             EXPECT_NE(std::string_view(MainPtrResult.error().toString()).find(t), std::string_view::npos);
             deserializer.finalize();
         }
+    }
+}
+
+TEST(SerializationTest, deserializeObjectByValueRejectsStrictSubclasses) {
+    std::string serializedContents;
+    {
+        ByValueSubtypeWriter writer;
+        writer.m_value.m_s = "strict subtype";
+        writer.m_value.m_u32 = 77;
+
+        babelwires::XmlSerializer serializer;
+        serializer.serializeObject(writer);
+        std::ostringstream os;
+        serializer.write(os);
+        serializedContents = std::move(os.str());
+    }
+
+    {
+        TestLog log;
+        DeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<ByValueSubtypeReader>();
+        deserializationReg.registerClass<Concrete1>();
+        deserializationReg.registerClass<Concrete2>();
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
+        auto readerResult = deserializer.deserializeObject<ByValueSubtypeReader>();
+        ASSERT_FALSE(readerResult);
+        EXPECT_NE(std::string_view(readerResult.error().toString()).find("Concrete2"), std::string_view::npos);
+        EXPECT_NE(std::string_view(readerResult.error().toString()).find("Concrete1"), std::string_view::npos);
+        deserializer.finalizeOnError();
+    }
+}
+
+TEST(SerializationTest, deserializeRejectsUnexpectedUnconsumedData) {
+    std::string serializedContents;
+    {
+        A a;
+        a.m_x = 12;
+
+        babelwires::XmlSerializer serializer;
+        serializer.serializeObject(a);
+        std::ostringstream os;
+        serializer.write(os);
+        serializedContents = std::move(os.str());
+    }
+
+    {
+        const auto pos = serializedContents.find("x=\"12\"");
+        ASSERT_NE(pos, std::string::npos);
+        serializedContents.insert(pos + std::strlen("x=\"12\""), " unexpected=\"13\"");
+    }
+
+    {
+        TestLog log;
+        DeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<A>();
+        babelwires::XmlDeserializer deserializer(deserializationReg, log);
+        ASSERT_TRUE(deserializer.parse(serializedContents));
+        auto APtrResult = deserializer.deserializeObject<A>();
+        ASSERT_FALSE(APtrResult);
+        EXPECT_NE(std::string_view(APtrResult.error().toString()).find("Unexpected attribute unexpected"),
+                  std::string_view::npos);
+        deserializer.finalizeOnError();
     }
 }

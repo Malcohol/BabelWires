@@ -24,6 +24,25 @@ namespace babelwires {
     /// Some common functionality shared by the serializer and the deserializer.
     class BASELIB_API SerializerDeserializerCommon {
       public:
+        /// Serialized documents always have a single outer container owned by the serialization abstraction.
+        inline static constexpr std::string_view c_contentsKey = "contents";
+
+        /// Version metadata is stored as ordinary serialization-system data under the outer container.
+        inline static constexpr std::string_view c_serializationMetadataKey = "serializationMetadata";
+        inline static constexpr std::string_view c_serializationMetadataTypeKey = "type";
+        inline static constexpr std::string_view c_serializationMetadataVersionKey = "version";
+
+        /// Backends may choose their own concrete wire representation for value arrays.
+        /// If wrapper-object representations are required, these names can be used.
+        inline static constexpr std::string_view c_defaultValueArrayElementTypeName = "element";
+        inline static constexpr std::string_view c_defaultValueArrayValueKey = "value";
+
+        /// Reserved runtime type metadata is backend-defined. Map-like backends are expected to use this key.
+        inline static constexpr std::string_view c_runtimeTypeMetadataKey = "$type";
+
+        /// XML reserves the meta: prefix for serialization metadata such as explicit runtime type information.
+        inline static constexpr std::string_view c_xmlMetadataPrefix = "meta:";
+
         /// 0 is returned if the type is not found.
         VersionNumber getTypeVersion(std::string_view typeName);
 

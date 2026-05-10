@@ -24,8 +24,9 @@ namespace babelwires {
       public:
         virtual ~Serializer();
 
-        /// Serialize the object. The key is often the name of a field, but by
-        /// default it duplicates the name of the object's type.
+        /// Serialize a child object.
+        /// The key identifies the field in the containing object.
+        /// By default it duplicates the serialized type name, but runtime type identity remains a separate concept.
         template <typename T> void serializeObject(const T& object, std::string_view key = T::s_serializationTypeName);
 
         /// Serialize an array of objects, whose contents described by the given span
@@ -34,8 +35,10 @@ namespace babelwires {
 
         /// Serialize an array of values, whose contents described by the given span
         /// (i.e. object with begin and end methods).
+        /// Concrete backends may later choose a different wire representation while preserving the same semantics.
         template <typename S>
-        void serializeValueArray(std::string_view key, const S& span, std::string_view typeName = "element");
+        void serializeValueArray(std::string_view key, const S& span,
+                     std::string_view typeName = c_defaultValueArrayElementTypeName);
 
         // Serialize simple values.
         virtual void serializeValue(std::string_view key, bool value) = 0;
@@ -134,7 +137,7 @@ void babelwires::Serializer::serializeValueArray(std::string_view key, const S& 
         pushArray(key);
         for (const auto& it : span) {
             pushObject(typeName);
-            serializeValue("value", it);
+            serializeValue(c_defaultValueArrayValueKey, it);
             popObject();
         }
         popArray();

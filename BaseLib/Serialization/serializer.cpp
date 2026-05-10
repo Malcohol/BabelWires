@@ -52,7 +52,7 @@ void babelwires::Serializer::popArray() {
 }
 
 void babelwires::Serializer::initialize() {
-    pushObject("contents");
+    pushObject(c_contentsKey);
 }
 
 void babelwires::Serializer::finalize() {

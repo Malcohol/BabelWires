@@ -19,8 +19,8 @@ babelwires::Deserializer::~Deserializer() {
 }
 
 babelwires::Result babelwires::Deserializer::initialize() {
-    if (!pushObject("contents")) {
-        return Error() << "The element \"contents\" is missing";
+    if (!pushObject(c_contentsKey)) {
+        return Error() << "The element \"" << c_contentsKey << "\" is missing";
     }
     DO_OR_ERROR(deserializeMetadata(*this, m_userLogger));
     return {};
@@ -59,6 +59,19 @@ babelwires::Deserializer::deserializeCurrentObject(const DeserializationTreeNode
         } else {
             return Error() << "The type \"" << currentTypeName << "\" was not expected here";
         }
+    }
+    return Error() << "Unknown type \"" << currentTypeName << "\"";
+}
+
+babelwires::ResultT<std::unique_ptr<babelwires::Serializable>> babelwires::Deserializer::deserializeCurrentObjectOfExactType(
+    const DeserializationTreeNode& expectedTreeNode, std::string_view expectedTypeName) {
+    const std::string_view currentTypeName = getCurrentTypeName();
+    if (const DeserializationRegistryInterface::Entry* entry = getDeserializationRegistry().findEntry(currentTypeName)) {
+        if (entry->m_node == &expectedTreeNode) {
+            return entry->m_factory(*this);
+        }
+        return Error() << "The type \"" << currentTypeName << "\" cannot be deserialized by value as \""
+                       << expectedTypeName << "\"";
     }
     return Error() << "Unknown type \"" << currentTypeName << "\"";
 }

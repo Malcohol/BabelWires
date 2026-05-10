@@ -54,6 +54,12 @@ inline babelwires::ResultT<std::unique_ptr<T>> babelwires::Deserializer::deseria
 }
 
 template <typename T>
+inline babelwires::ResultT<std::unique_ptr<T>> babelwires::Deserializer::deserializeCurrentObjectOfExactType() {
+    return deserializeCurrentObjectOfExactType(T::getDeserializationTreeNode(), T::s_serializationTypeName)
+        .transform([](std::unique_ptr<Serializable>&& basePtr) { return uniquePtrCast<T>(std::move(basePtr)); });
+}
+
+template <typename T>
 inline babelwires::ResultT<std::unique_ptr<T>> babelwires::Deserializer::deserializeObject(std::string_view key) {
     if (!pushObject(key)) {
         return Error() << "Missing child \"" << key << "\"";
@@ -76,19 +82,22 @@ babelwires::Deserializer::tryDeserializeObject(std::string_view key) {
 
 template<typename T>
 babelwires::Result babelwires::Deserializer::deserializeObjectByValue(T& object, std::string_view key) {
-    // MAYBEDO: Reject strict subclasses, since the slicing will discard data?
-    ASSIGN_OR_ERROR(auto objPtr, deserializeObject<T>(key));
+    if (!pushObject(key)) {
+        return Error() << "Missing child \"" << key << "\"";
+    }
+    ASSIGN_OR_ERROR(auto objPtr, deserializeCurrentObjectOfExactType<T>());
+    DO_OR_ERROR(popObject());
     object = std::move(*objPtr);
-    return {};    
+    return {};
 }
 
 template<typename T>
 babelwires::ResultT<bool> babelwires::Deserializer::tryDeserializeObjectByValue(T& object, std::string_view key) {
-    // MAYBEDO: Reject strict subclasses, since the slicing will discard data?
-    ASSIGN_OR_ERROR(auto objPtr, tryDeserializeObject<T>(key));
-    if (!objPtr) {
+    if (!pushObject(key)) {
         return false;
     }
+    ASSIGN_OR_ERROR(auto objPtr, deserializeCurrentObjectOfExactType<T>());
+    DO_OR_ERROR(popObject());
     object = std::move(*objPtr);
     return true;
 }
@@ -121,7 +130,7 @@ babelwires::Deserializer::deserializeArray(std::string_view key) {
 }
 
 template <typename T> inline babelwires::ResultT<T> babelwires::Deserializer::ValueIterator<T>::deserializeValue(T tempValue) {
-    DO_OR_ERROR(m_deserializer.deserializeValue("value", tempValue));
+    DO_OR_ERROR(m_deserializer.deserializeValue(SerializerDeserializerCommon::c_defaultValueArrayValueKey, tempValue));
     return tempValue;
 }
 
