@@ -34,3 +34,6 @@
 # CMake default build directory.
 build/*
 .vscode
+
+.github/*
+!.github/workflows/*

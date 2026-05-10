@@ -47,6 +47,13 @@ Clone recursively to ensure submodules are populated:
 git clone --recurse-submodules https://github.com/Malcohol/BabelWires.git
 ```
 
+To build as shared libraries (recommended):
+
+```
+cmake --preset shared
+cmake --build --preset shared -j
+```
+
 ## License
 
 BabelWires is licensed under the GPLv3.

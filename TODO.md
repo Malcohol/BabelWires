@@ -27,6 +27,15 @@ Things to check:
   2. Or new identifier registered after identifier loaded. Does updated identifier get saved?
   See TODO in DataBundle_inl.hpp
 
+Plugin architecture:
+* Plugin selection UI.
+* Plugins should be removable
+  - Although maybe just in terms of availability through the registries, rather than actually unloading the code.
+* Plugin dependencies (Plugins can depend on domains and possibly on other plugins)
+* Domains should also not be automatically loaded
+  - Domains export symbols for use by plugins. I think this isn't a blocker but it would make them weird plugins.
+* Serialized files should list domains and plugins as dependencies
+  - If data depends on stuff from an unloaded plugin, is it an error or a dependency?
 
 Compound Data Flow:
 1. Consider replacing NewValueHolder by a unique_ptr variant inside ValueHolder. This might allow unique ownership to last a bit longer and avoid some unnecessary clones. (Threading probably means we can never return to this state after sharing.)
@@ -41,7 +50,6 @@ Unit Tests:
 
 Model
 * Consider a coercion system so numeric types can always be assigned.
-* Implement RecordType Optionality::optionalDefaultActive
 * Bool and float types
 * RationalType granularity
 * StringType length
@@ -74,7 +82,7 @@ Refactor:
   - Could have a custom stream (or formatter) which has a lock on the identifier registry. Deadlock a danger here.
   - deserializeToString methods should return a tuple which includes the position after the parsed object.
   - OR deserializeToString could take a std::string_view& and update it so it points after the parsed data.
-* Command::initialize could return an enum which allows a subcommand to declare that it's not needed rather than failed.
+* Command::initialize could return an enum which allows a subcommand to declare that it's not needed rather than failed. (What's the use-case?)
 * Can any classes be simplified using operator <=>?
 * Rational should use the new Unicode utils and not require UI specialization.
   - Should be able to parse pasted unicode rationals too.
