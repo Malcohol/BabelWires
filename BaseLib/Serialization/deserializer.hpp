@@ -124,6 +124,7 @@ namespace babelwires {
         void setDeserializationRegistry(const DeserializationRegistryInterface& deserializationRegistry);
 
         /// Finalize the deserializer.
+        /// This completes strict validation that the serialized document did not contain unconsumed data.
         virtual Result finalize();
 
         /// Finalize when an error is being processed.
@@ -154,11 +155,16 @@ namespace babelwires {
 
         /// Find the child, returns false if the child is missing.
         virtual bool pushObject(std::string_view key) = 0;
+
+        /// Subclasses must reject any backend-visible object data that client code did not consume.
         virtual Result popObject() = 0;
 
         virtual bool pushArray(std::string_view key) = 0;
+
+        /// Subclasses must reject any backend-visible array data that client code did not consume.
         virtual Result popArray() = 0;
 
+        /// Return the runtime type of the current object after decoding any backend-specific metadata.
         virtual std::string_view getCurrentTypeName() = 0;
 
         virtual ErrorStorage addContextDescription(const ErrorStorage& e) const = 0;

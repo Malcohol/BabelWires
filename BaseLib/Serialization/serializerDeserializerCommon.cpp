@@ -16,6 +16,10 @@
 
 #include <cassert>
 
+bool babelwires::SerializerDeserializerCommon::keyHasReservedPrefix(std::string_view key, std::string_view prefix) {
+    return (key.size() >= prefix.size()) && (key.substr(0, prefix.size()) == prefix);
+}
+
 babelwires::VersionNumber babelwires::SerializerDeserializerCommon::getTypeVersion(std::string_view typeName) {
     const auto it = m_serializationVersions.find(typeName);
     if (it != m_serializationVersions.end()) {

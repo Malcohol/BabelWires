@@ -171,6 +171,25 @@ TEST(SerializationTest, explicitAndDefaultKeys) {
     }
 }
 
+TEST(SerializationTest, xmlSerializerRejectsReservedMetadataPrefixForObjectKeys) {
+    EXPECT_DEATH(
+        {
+            A a;
+            babelwires::XmlSerializer serializer;
+            serializer.serializeObject(a, "meta:illegal");
+        },
+        "reserved for backend metadata");
+}
+
+TEST(SerializationTest, xmlSerializerRejectsReservedMetadataPrefixForValueKeys) {
+    EXPECT_DEATH(
+        {
+            babelwires::XmlSerializer serializer;
+            serializer.serializeValue("meta:illegal", 17);
+        },
+        "reserved for backend metadata");
+}
+
 TEST(SerializationTest, valueArraysAllowCustomElementNames) {
     std::string serializedContents;
     {

@@ -16,6 +16,60 @@ babelwires::Serializer::~Serializer() {
     assert(((std::uncaught_exceptions() > 0) || m_wasFinalized) && "The serializer was not finalized");
 }
 
+void babelwires::Serializer::serializeValue(std::string_view key, bool value) {
+    assertOrdinaryFieldKey(key);
+    doSerializeValue(key, value);
+}
+
+void babelwires::Serializer::serializeValue(std::string_view key, std::string_view value) {
+    assertOrdinaryFieldKey(key);
+    doSerializeValue(key, value);
+}
+
+void babelwires::Serializer::serializeValue(std::string_view key, std::uint64_t value) {
+    assertOrdinaryFieldKey(key);
+    doSerializeValue(key, value);
+}
+
+void babelwires::Serializer::serializeValue(std::string_view key, std::uint32_t value) {
+    assertOrdinaryFieldKey(key);
+    doSerializeValue(key, value);
+}
+
+void babelwires::Serializer::serializeValue(std::string_view key, std::uint16_t value) {
+    assertOrdinaryFieldKey(key);
+    doSerializeValue(key, value);
+}
+
+void babelwires::Serializer::serializeValue(std::string_view key, std::uint8_t value) {
+    assertOrdinaryFieldKey(key);
+    doSerializeValue(key, value);
+}
+
+void babelwires::Serializer::serializeValue(std::string_view key, std::int64_t value) {
+    assertOrdinaryFieldKey(key);
+    doSerializeValue(key, value);
+}
+
+void babelwires::Serializer::serializeValue(std::string_view key, std::int32_t value) {
+    assertOrdinaryFieldKey(key);
+    doSerializeValue(key, value);
+}
+
+void babelwires::Serializer::serializeValue(std::string_view key, std::int16_t value) {
+    assertOrdinaryFieldKey(key);
+    doSerializeValue(key, value);
+}
+
+void babelwires::Serializer::serializeValue(std::string_view key, std::int8_t value) {
+    assertOrdinaryFieldKey(key);
+    doSerializeValue(key, value);
+}
+
+void babelwires::Serializer::assertOrdinaryFieldKey(std::string_view key) const {
+    assert(!isOrdinaryFieldKeyReserved(key) && "Client code cannot use keys reserved for backend metadata");
+}
+
 void babelwires::Serializer::pushCommon() {
     assert(((m_depth > 0) || m_isEmpty) && "There can only be one outer object or array");
     ++m_depth;
@@ -32,6 +86,7 @@ void babelwires::Serializer::pushObject(std::string_view typeName) {
 }
 
 void babelwires::Serializer::pushObjectWithKey(std::string_view typeName, std::string_view key) {
+    assertOrdinaryFieldKey(key);
     pushCommon();
     doPushObjectWithKey(typeName, key);
 }
@@ -42,6 +97,7 @@ void babelwires::Serializer::popObject() {
 }
 
 void babelwires::Serializer::pushArray(std::string_view key) {
+    assertOrdinaryFieldKey(key);
     pushCommon();
     doPushArray(key);
 }

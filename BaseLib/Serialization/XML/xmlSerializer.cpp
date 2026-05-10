@@ -59,44 +59,48 @@ void babelwires::XmlSerializer::doPopObject() {
     contextPop();
 }
 
-void babelwires::XmlSerializer::serializeValue(std::string_view key, bool value) {
+void babelwires::XmlSerializer::doSerializeValue(std::string_view key, bool value) {
     getCurrentElement()->SetAttribute(toCStr(key), value);
 }
 
-void babelwires::XmlSerializer::serializeValue(std::string_view key, std::string_view value) {
+void babelwires::XmlSerializer::doSerializeValue(std::string_view key, std::string_view value) {
     getCurrentElement()->SetAttribute(toCStr(key), toCStr(value));
 }
 
-void babelwires::XmlSerializer::serializeValue(std::string_view key, std::uint64_t value) {
+void babelwires::XmlSerializer::doSerializeValue(std::string_view key, std::uint64_t value) {
     getCurrentElement()->SetAttribute(toCStr(key), value);
 }
 
-void babelwires::XmlSerializer::serializeValue(std::string_view key, std::uint32_t value) {
+void babelwires::XmlSerializer::doSerializeValue(std::string_view key, std::uint32_t value) {
     getCurrentElement()->SetAttribute(toCStr(key), value);
 }
 
-void babelwires::XmlSerializer::serializeValue(std::string_view key, std::uint16_t value) {
+void babelwires::XmlSerializer::doSerializeValue(std::string_view key, std::uint16_t value) {
     getCurrentElement()->SetAttribute(toCStr(key), value);
 }
 
-void babelwires::XmlSerializer::serializeValue(std::string_view key, std::uint8_t value) {
+void babelwires::XmlSerializer::doSerializeValue(std::string_view key, std::uint8_t value) {
     getCurrentElement()->SetAttribute(toCStr(key), value);
 }
 
-void babelwires::XmlSerializer::serializeValue(std::string_view key, std::int32_t value) {
+void babelwires::XmlSerializer::doSerializeValue(std::string_view key, std::int32_t value) {
     getCurrentElement()->SetAttribute(toCStr(key), value);
 }
 
-void babelwires::XmlSerializer::serializeValue(std::string_view key, std::int64_t value) {
+void babelwires::XmlSerializer::doSerializeValue(std::string_view key, std::int64_t value) {
     getCurrentElement()->SetAttribute(toCStr(key), value);
 }
 
-void babelwires::XmlSerializer::serializeValue(std::string_view key, std::int16_t value) {
+void babelwires::XmlSerializer::doSerializeValue(std::string_view key, std::int16_t value) {
     getCurrentElement()->SetAttribute(toCStr(key), value);
 }
 
-void babelwires::XmlSerializer::serializeValue(std::string_view key, std::int8_t value) {
+void babelwires::XmlSerializer::doSerializeValue(std::string_view key, std::int8_t value) {
     getCurrentElement()->SetAttribute(toCStr(key), value);
+}
+
+bool babelwires::XmlSerializer::isOrdinaryFieldKeyReserved(std::string_view key) const {
+    return keyHasReservedPrefix(key, c_xmlMetadataPrefix);
 }
 
 void babelwires::XmlSerializer::write(std::ostream& os) {

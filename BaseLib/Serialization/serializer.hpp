@@ -41,16 +41,16 @@ namespace babelwires {
                      std::string_view typeName = c_defaultValueArrayElementTypeName);
 
         // Serialize simple values.
-        virtual void serializeValue(std::string_view key, bool value) = 0;
-        virtual void serializeValue(std::string_view key, std::string_view value) = 0;
-        virtual void serializeValue(std::string_view key, std::uint64_t value) = 0;
-        virtual void serializeValue(std::string_view key, std::uint32_t value) = 0;
-        virtual void serializeValue(std::string_view key, std::uint16_t value) = 0;
-        virtual void serializeValue(std::string_view key, std::uint8_t value) = 0;
-        virtual void serializeValue(std::string_view key, std::int64_t value) = 0;
-        virtual void serializeValue(std::string_view key, std::int32_t value) = 0;
-        virtual void serializeValue(std::string_view key, std::int16_t value) = 0;
-        virtual void serializeValue(std::string_view key, std::int8_t value) = 0;
+        void serializeValue(std::string_view key, bool value);
+        void serializeValue(std::string_view key, std::string_view value);
+        void serializeValue(std::string_view key, std::uint64_t value);
+        void serializeValue(std::string_view key, std::uint32_t value);
+        void serializeValue(std::string_view key, std::uint16_t value);
+        void serializeValue(std::string_view key, std::uint8_t value);
+        void serializeValue(std::string_view key, std::int64_t value);
+        void serializeValue(std::string_view key, std::int32_t value);
+        void serializeValue(std::string_view key, std::int16_t value);
+        void serializeValue(std::string_view key, std::int8_t value);
 
         /// Objects with methods "serializeToString" and "deserializeToString" can be serialized as values.
         template <typename V>
@@ -75,11 +75,22 @@ namespace babelwires {
         void pushCommon();
         void popCommon();
 
-        void setValueCommon(std::string_view key, std::string_view value);
+                void assertOrdinaryFieldKey(std::string_view key) const;
 
       protected:
         virtual void doPushObject(std::string_view typeName) = 0;
         virtual void doPushObjectWithKey(std::string_view typeName, std::string_view key) = 0;
+                virtual void doSerializeValue(std::string_view key, bool value) = 0;
+                virtual void doSerializeValue(std::string_view key, std::string_view value) = 0;
+                virtual void doSerializeValue(std::string_view key, std::uint64_t value) = 0;
+                virtual void doSerializeValue(std::string_view key, std::uint32_t value) = 0;
+                virtual void doSerializeValue(std::string_view key, std::uint16_t value) = 0;
+                virtual void doSerializeValue(std::string_view key, std::uint8_t value) = 0;
+                virtual void doSerializeValue(std::string_view key, std::int64_t value) = 0;
+                virtual void doSerializeValue(std::string_view key, std::int32_t value) = 0;
+                virtual void doSerializeValue(std::string_view key, std::int16_t value) = 0;
+                virtual void doSerializeValue(std::string_view key, std::int8_t value) = 0;
+                virtual bool isOrdinaryFieldKeyReserved(std::string_view key) const = 0;
         virtual void doPopObject() = 0;
         virtual void doPushArray(std::string_view key) = 0;
         virtual void doPopArray() = 0;

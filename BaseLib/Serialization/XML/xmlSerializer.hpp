@@ -23,17 +23,6 @@ namespace babelwires {
         /// Create a serializer
         XmlSerializer();
 
-        void serializeValue(std::string_view key, bool value) override;
-        void serializeValue(std::string_view key, std::string_view value) override;
-        void serializeValue(std::string_view key, std::uint64_t value) override;
-        void serializeValue(std::string_view key, std::uint32_t value) override;
-        void serializeValue(std::string_view key, std::uint16_t value) override;
-        void serializeValue(std::string_view key, std::uint8_t value) override;
-        void serializeValue(std::string_view key, std::int64_t value) override;
-        void serializeValue(std::string_view key, std::int32_t value) override;
-        void serializeValue(std::string_view key, std::int16_t value) override;
-        void serializeValue(std::string_view key, std::int8_t value) override;
-
         /// Writes the contents to the stream.
         /// Asserts that all pushed objects have been popped.
         void write(std::ostream& os);
@@ -41,6 +30,17 @@ namespace babelwires {
       protected:
         void doPushObject(std::string_view typeName) override;
         void doPushObjectWithKey(std::string_view typeName, std::string_view key) override;
+        void doSerializeValue(std::string_view key, bool value) override;
+        void doSerializeValue(std::string_view key, std::string_view value) override;
+        void doSerializeValue(std::string_view key, std::uint64_t value) override;
+        void doSerializeValue(std::string_view key, std::uint32_t value) override;
+        void doSerializeValue(std::string_view key, std::uint16_t value) override;
+        void doSerializeValue(std::string_view key, std::uint8_t value) override;
+        void doSerializeValue(std::string_view key, std::int64_t value) override;
+        void doSerializeValue(std::string_view key, std::int32_t value) override;
+        void doSerializeValue(std::string_view key, std::int16_t value) override;
+        void doSerializeValue(std::string_view key, std::int8_t value) override;
+        bool isOrdinaryFieldKeyReserved(std::string_view key) const override;
         void doPopObject() override;
         void doPushArray(std::string_view key) override;
         void doPopArray() override;
