@@ -39,6 +39,24 @@ namespace {
         std::vector<std::string> m_array;
     };
 
+    struct AWithUnexpectedValue : A {
+        // Intentionally keep the same wire type as A so this helper can produce extra data that still deserializes as A.
+        SERIALIZABLE(AWithUnexpectedValue, "A", A, 1);
+
+        void serializeContents(Serializer& serializer) const override {
+            A::serializeContents(serializer);
+            serializer.serializeValue("unexpected", m_unexpected);
+        }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(A::deserializeContents(deserializer));
+            DO_OR_ERROR(deserializer.deserializeValue("unexpected", m_unexpected));
+            return {};
+        }
+
+        int m_unexpected = 0;
+    };
+
     struct XmlSerializationBackend {
         static std::unique_ptr<Serializer> createSerializer() {
             return std::make_unique<XmlSerializer>();
@@ -674,35 +692,31 @@ TYPED_TEST(SerializationBackendTest, deserializeObjectByValueRejectsStrictSubcla
     }
 }
 
-TEST(SerializationTest, deserializeRejectsUnexpectedUnconsumedData) {
+TYPED_TEST(SerializationBackendTest, deserializeRejectsUnexpectedUnconsumedData) {
     std::string serializedContents;
     {
-        A a;
+        AWithUnexpectedValue a;
         a.m_x = 12;
+        a.m_unexpected = 13;
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(a);
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(a);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
-    }
-
-    {
-        const auto pos = serializedContents.find("x=\"12\"");
-        ASSERT_NE(pos, std::string::npos);
-        serializedContents.insert(pos + std::strlen("x=\"12\""), " unexpected=\"13\"");
     }
 
     {
         TestLog log;
         DeserializationRegistry deserializationReg;
         deserializationReg.registerClass<A>();
-        babelwires::XmlDeserializer deserializer(deserializationReg, log);
-        ASSERT_TRUE(deserializer.parse(serializedContents));
-        auto APtrResult = deserializer.deserializeObject<A>();
+        auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto APtrResult = deserializer->template deserializeObject<A>();
         ASSERT_FALSE(APtrResult);
-        EXPECT_NE(std::string_view(APtrResult.error().toString()).find("Unexpected attribute unexpected"),
-                  std::string_view::npos);
-        deserializer.finalizeOnError();
+        EXPECT_NE(std::string_view(APtrResult.error().toString()).find("unexpected"), std::string_view::npos);
+        deserializer->finalizeOnError();
     }
 }
