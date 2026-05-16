@@ -58,9 +58,23 @@ Other:
   - This can be called from any code.
 * Logging non-debug messages for the user requires a UserAdvisoryLogger or UserLogger object from `BaseLib/Log/userLogger.hpp`.
   - These are not globally accessible by design, because most functions do not have enough information about how they are being used to report meaningful messages to the user.
-  - A UserLogger can be passed to functions that do have enough context.
-  - Sometimes such a function returns a result object to for the error case. To prevent double-reporting, a UserAdvisoryLogger should be provided instead.
+  - A `UserLogger` can be passed to functions that do have enough context.
+  - Sometimes such a function returns a result object to for the error case. To prevent double-reporting, a `UserAdvisoryLogger` should be provided instead.
 * Do not use `std::cout` or similar for logging purposes.
+
+## Singletons
+
+* Singletons should be avoided as much as possible.
+* There is one singleton intended for general use in the codebase: the `IdentifierRegister`.
+* Some other facilities are implemented using singletons, but that fact is hidden from callers.
+
+## Dependency Injection and the Context
+
+* Most services are made available to the system using a service-provided type object called the `Context`.
+* The Context is initialized in a program's main function.
+* Libraries and plugins register their factories, types, etc. with the context in functions named `registerLib` by convention.
+* The registerLib function of libraries should be called explicitly be the program's main function.
+* In the case of plugins, it's called by `babelwires::openPlugin` (in `PluginSupport/pluginOperations.hpp`).
 
 ## TODOs
 
