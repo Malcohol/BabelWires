@@ -16,6 +16,30 @@ using namespace babelwires;
 using namespace testUtils;
 
 namespace {
+    struct XmlSerializationBackend {
+        static std::unique_ptr<Serializer> createSerializer() {
+            return std::make_unique<XmlSerializer>();
+        }
+
+        static std::unique_ptr<Deserializer> createDeserializer(const DeserializationRegistry& deserializationRegistry,
+                                                                TestLog& log) {
+            return std::make_unique<XmlDeserializer>(deserializationRegistry, log);
+        }
+
+        // Rewrite runtime type tokens in serialized XML so backend-agnostic tests can exercise type-mismatch cases.
+        static std::string rewriteTypeInData(std::string serializedContents, std::string_view fromType,
+                                             std::string_view toType) {
+            size_t pos = 0;
+            while ((pos = serializedContents.find(fromType, pos)) != std::string::npos) {
+                serializedContents.replace(pos, fromType.size(), toType);
+                pos += toType.size();
+            }
+            return serializedContents;
+        }
+    };
+}
+
+namespace {
     struct A : Serializable {
         SERIALIZABLE(A, "A", void, 1);
 
@@ -55,17 +79,6 @@ namespace {
         }
 
         int m_unexpected = 0;
-    };
-
-    struct XmlSerializationBackend {
-        static std::unique_ptr<Serializer> createSerializer() {
-            return std::make_unique<XmlSerializer>();
-        }
-
-        static std::unique_ptr<Deserializer> createDeserializer(const DeserializationRegistry& deserializationRegistry,
-                                                                TestLog& log) {
-            return std::make_unique<XmlDeserializer>(deserializationRegistry, log);
-        }
     };
 } // namespace
 
@@ -615,7 +628,7 @@ TYPED_TEST(SerializationBackendTest, polymorphism) {
     }
 }
 
-TEST(SerializationTest, polymorphismFail) {
+TYPED_TEST(SerializationBackendTest, polymorphismFail) {
     std::string serializedContents;
     {
         Main m;
@@ -623,24 +636,18 @@ TEST(SerializationTest, polymorphismFail) {
         m.m_concrete2->m_s = "Ergh";
         m.m_concrete2->m_u32 = 145;
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(m);
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(m);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
 
     // Replace Concrete2 by an unrelated type, a distant relation and its parent type.
     // All of these scenarios should fail, since they are not subtypes of Concrete2.
     for (const auto& t : std::array<std::string_view, 3>{"A", "Concrete0", "Concrete1"}) {
-        std::string serializedContents2 = serializedContents;
-
-        {
-            size_t pos = 0;
-            while (pos = serializedContents2.find("Concrete2", pos), pos != std::string::npos) {
-                serializedContents2.replace(pos, std::strlen("Concrete2"), t);
-            }
-        }
+        std::string serializedContents2 = TypeParam::rewriteTypeInData(serializedContents, "Concrete2", t);
 
         {
             TestLog log;
@@ -650,12 +657,13 @@ TEST(SerializationTest, polymorphismFail) {
             deserializationReg.registerClass<Concrete0>();
             deserializationReg.registerClass<Concrete1>();
             deserializationReg.registerClass<Concrete2>();
-            babelwires::XmlDeserializer deserializer(deserializationReg, log);
-            ASSERT_TRUE(deserializer.parse(serializedContents2));
-            auto MainPtrResult = deserializer.deserializeObject<Main>();
+            auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+            ASSERT_NE(deserializer, nullptr);
+            ASSERT_TRUE(deserializer->parse(serializedContents2));
+            auto MainPtrResult = deserializer->template deserializeObject<Main>();
             EXPECT_FALSE(MainPtrResult);
             EXPECT_NE(std::string_view(MainPtrResult.error().toString()).find(t), std::string_view::npos);
-            deserializer.finalize();
+            deserializer->finalize();
         }
     }
 }
