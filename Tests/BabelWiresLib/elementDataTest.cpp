@@ -11,8 +11,9 @@
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
-#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
-#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/userDocumentSerializationFactory.hpp>
 
 #include <Domains/TestDomain/testFileFormats.hpp>
 #include <Domains/TestDomain/testProcessor.hpp>
@@ -101,20 +102,23 @@ TEST(ElementDataTest, sourceFileDataSerialize) {
         setCommonFields(data);
         data.m_filePath = "/a/b/c/foo.bar";
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(data);
+        auto serializer = babelwires::UserDocumentSerializationFactory::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(data);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
 
     testUtils::TestEnvironment testEnvironment;
-    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
-    ASSERT_TRUE(deserializer.parse(serializedContents));
-    auto dataPtrResult = deserializer.deserializeObject<babelwires::SourceFileNodeData>();
+    auto deserializer =
+        babelwires::UserDocumentSerializationFactory::createDeserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
+    ASSERT_NE(deserializer, nullptr);
+    ASSERT_TRUE(deserializer->parse(serializedContents));
+    auto dataPtrResult = deserializer->deserializeObject<babelwires::SourceFileNodeData>();
     ASSERT_TRUE(dataPtrResult);
     auto dataPtr = std::move(*dataPtrResult);
-    deserializer.finalize();
+    deserializer->finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
     checkCommonFields(*dataPtr);
@@ -209,19 +213,22 @@ TEST(ElementDataTest, targetFileDataSerialize) {
         setModifiers(data, testDomain::getTestFileElementPathToInt0());
         data.m_filePath = "/a/b/c/foo.bar";
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(data);
+        auto serializer = babelwires::UserDocumentSerializationFactory::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(data);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
 
-    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
-    ASSERT_TRUE(deserializer.parse(serializedContents));
-    auto dataPtrResult = deserializer.deserializeObject<babelwires::TargetFileNodeData>();
+    auto deserializer =
+        babelwires::UserDocumentSerializationFactory::createDeserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
+    ASSERT_NE(deserializer, nullptr);
+    ASSERT_TRUE(deserializer->parse(serializedContents));
+    auto dataPtrResult = deserializer->deserializeObject<babelwires::TargetFileNodeData>();
     ASSERT_TRUE(dataPtrResult);
     auto dataPtr = std::move(*dataPtrResult);
-    deserializer.finalize();
+    deserializer->finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
     checkCommonFields(*dataPtr);
@@ -294,20 +301,23 @@ TEST(ElementDataTest, processorDataSerialize) {
         setCommonFields(data);
         setModifiers(data, testDomain::TestSimpleRecordType::s_int0IdInitializer);
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(data);
+        auto serializer = babelwires::UserDocumentSerializationFactory::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(data);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
 
     testUtils::TestEnvironment testEnvironment;
-    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
-    ASSERT_TRUE(deserializer.parse(serializedContents));
-    auto dataPtrResult = deserializer.deserializeObject<babelwires::ProcessorNodeData>();
+    auto deserializer =
+        babelwires::UserDocumentSerializationFactory::createDeserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
+    ASSERT_NE(deserializer, nullptr);
+    ASSERT_TRUE(deserializer->parse(serializedContents));
+    auto dataPtrResult = deserializer->deserializeObject<babelwires::ProcessorNodeData>();
     ASSERT_TRUE(dataPtrResult);
     auto dataPtr = std::move(*dataPtrResult);
-    deserializer.finalize();
+    deserializer->finalize();
 
     EXPECT_EQ(dataPtr->m_factoryIdentifier, "foo");
     checkCommonFields(*dataPtr);

@@ -5,8 +5,9 @@
 #include <BabelWiresLib/Project/Nodes/ProcessorNode/processorNodeData.hpp>
 #include <BabelWiresLib/Project/projectData.hpp>
 
-#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
-#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/userDocumentSerializationFactory.hpp>
 
 #include <Domains/TestDomain/testFileFormats.hpp>
 #include <Domains/TestDomain/testProcessor.hpp>
@@ -22,19 +23,22 @@ TEST(ProjectDataTest, serialization) {
     {
         testUtils::TestProjectData projectData;
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(projectData);
+        auto serializer = babelwires::UserDocumentSerializationFactory::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(projectData);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
 
-    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
-    ASSERT_TRUE(deserializer.parse(serializedContents));
-    auto dataPtrResult = deserializer.deserializeObject<babelwires::ProjectData>();
+    auto deserializer =
+        babelwires::UserDocumentSerializationFactory::createDeserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
+    ASSERT_NE(deserializer, nullptr);
+    ASSERT_TRUE(deserializer->parse(serializedContents));
+    auto dataPtrResult = deserializer->deserializeObject<babelwires::ProjectData>();
     ASSERT_TRUE(dataPtrResult);
     auto dataPtr = std::move(*dataPtrResult);
-    deserializer.finalize();
+    deserializer->finalize();
 
     EXPECT_EQ(dataPtr->m_projectId, 1243);
     ASSERT_EQ(dataPtr->m_nodes.size(), 3);

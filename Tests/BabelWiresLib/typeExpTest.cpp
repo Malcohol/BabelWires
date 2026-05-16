@@ -6,8 +6,9 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/String/stringValue.hpp>
 
-#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
-#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/userDocumentSerializationFactory.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>
 
@@ -393,18 +394,21 @@ TEST(TypeExpTest, serialization) {
     for (auto typeExp : testRefs) {
         std::string serializedContents;
         {
-            babelwires::XmlSerializer serializer;
-            serializer.serializeObject(typeExp);
+            auto serializer = babelwires::UserDocumentSerializationFactory::createSerializer();
+            ASSERT_NE(serializer, nullptr);
+            serializer->serializeObject(typeExp);
             std::ostringstream os;
-            serializer.write(os);
+            serializer->write(os);
             serializedContents = std::move(os.str());
         }
-        babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
-        ASSERT_TRUE(deserializer.parse(serializedContents));
-        auto typeExpPtrResult = deserializer.deserializeObject<babelwires::TypeExp>();
+        auto deserializer = babelwires::UserDocumentSerializationFactory::createDeserializer(
+            testEnvironment.m_deserializationReg, testEnvironment.m_log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto typeExpPtrResult = deserializer->deserializeObject<babelwires::TypeExp>();
         ASSERT_TRUE(typeExpPtrResult);
         auto typeExpPtr = std::move(*typeExpPtrResult);
-        deserializer.finalize();
+        deserializer->finalize();
 
         ASSERT_NE(typeExpPtr, nullptr);
         EXPECT_EQ(*typeExpPtr, typeExp);

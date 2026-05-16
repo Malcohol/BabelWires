@@ -2,8 +2,9 @@
 
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
 
-#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
-#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/userDocumentSerializationFactory.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 #include <Tests/TestUtils/testLog.hpp>
@@ -25,19 +26,22 @@ TEST(RationalValueTest, serialization) {
         babelwires::RationalValue rationalValue(babelwires::Rational(104, 143));
 
         // Note: We want to be able to serialize when entries do not match the types, as in this case.
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(rationalValue);
+        auto serializer = babelwires::UserDocumentSerializationFactory::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(rationalValue);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
     testUtils::TestEnvironment testEnvironment;
-    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
-    ASSERT_TRUE(deserializer.parse(serializedContents));
-    auto dataPtrResult = deserializer.deserializeObject<babelwires::RationalValue>();
+    auto deserializer =
+        babelwires::UserDocumentSerializationFactory::createDeserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
+    ASSERT_NE(deserializer, nullptr);
+    ASSERT_TRUE(deserializer->parse(serializedContents));
+    auto dataPtrResult = deserializer->deserializeObject<babelwires::RationalValue>();
     ASSERT_TRUE(dataPtrResult);
     auto dataPtr = std::move(*dataPtrResult);
-    deserializer.finalize();
+    deserializer->finalize();
 
     ASSERT_NE(dataPtr, nullptr);
     EXPECT_EQ(dataPtr->get(), babelwires::Rational(104, 143));

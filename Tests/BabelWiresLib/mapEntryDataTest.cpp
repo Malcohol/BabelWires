@@ -10,8 +10,9 @@
 #include <BabelWiresLib/Types/String/stringValue.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
-#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
-#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/userDocumentSerializationFactory.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>
 
@@ -451,19 +452,22 @@ TEST(MapEntryDataTest, oneToOneSerialize) {
         targetValue.set("Foo");
         oneToOne.setTargetValue(targetValue.clone());
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(oneToOne);
+        auto serializer = babelwires::UserDocumentSerializationFactory::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(oneToOne);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
     testUtils::TestEnvironment testEnvironment;
-    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
-    ASSERT_TRUE(deserializer.parse(serializedContents));
-    auto dataPtrResult = deserializer.deserializeObject<babelwires::OneToOneMapEntryData>();
+    auto deserializer =
+        babelwires::UserDocumentSerializationFactory::createDeserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
+    ASSERT_NE(deserializer, nullptr);
+    ASSERT_TRUE(deserializer->parse(serializedContents));
+    auto dataPtrResult = deserializer->deserializeObject<babelwires::OneToOneMapEntryData>();
     ASSERT_TRUE(dataPtrResult);
     auto dataPtr = std::move(*dataPtrResult);
-    deserializer.finalize();
+    deserializer->finalize();
 
     ASSERT_NE(dataPtr, nullptr);
     const babelwires::ValueHolder& sourceValue = dataPtr->getSourceValue();
@@ -496,19 +500,22 @@ TEST(MapEntryDataTest, allToOneSerialize) {
 
         allToOne.setTargetValue(targetValue.clone());
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(allToOne);
+        auto serializer = babelwires::UserDocumentSerializationFactory::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(allToOne);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
     testUtils::TestEnvironment testEnvironment;
-    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
-    ASSERT_TRUE(deserializer.parse(serializedContents));
-    auto dataPtrResult = deserializer.deserializeObject<babelwires::AllToOneFallbackMapEntryData>();
+    auto deserializer =
+        babelwires::UserDocumentSerializationFactory::createDeserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
+    ASSERT_NE(deserializer, nullptr);
+    ASSERT_TRUE(deserializer->parse(serializedContents));
+    auto dataPtrResult = deserializer->deserializeObject<babelwires::AllToOneFallbackMapEntryData>();
     ASSERT_TRUE(dataPtrResult);
     auto dataPtr = std::move(*dataPtrResult);
-    deserializer.finalize();
+    deserializer->finalize();
 
     ASSERT_NE(dataPtr, nullptr);
     const babelwires::ValueHolder& targetValue = dataPtr->getTargetValue();
@@ -528,19 +535,22 @@ TEST(MapEntryDataTest, allToSameSerialize) {
 
         babelwires::AllToSameFallbackMapEntryData allToSame;
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(allToSame);
+        auto serializer = babelwires::UserDocumentSerializationFactory::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(allToSame);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
     testUtils::TestEnvironment testEnvironment;
-    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
-    ASSERT_TRUE(deserializer.parse(serializedContents));
-    auto dataPtrResult = deserializer.deserializeObject<babelwires::AllToSameFallbackMapEntryData>();
+    auto deserializer =
+        babelwires::UserDocumentSerializationFactory::createDeserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
+    ASSERT_NE(deserializer, nullptr);
+    ASSERT_TRUE(deserializer->parse(serializedContents));
+    auto dataPtrResult = deserializer->deserializeObject<babelwires::AllToSameFallbackMapEntryData>();
     ASSERT_TRUE(dataPtrResult);
     auto dataPtr = std::move(*dataPtrResult);
-    deserializer.finalize();
+    deserializer->finalize();
 
     ASSERT_NE(dataPtr, nullptr);
 }
