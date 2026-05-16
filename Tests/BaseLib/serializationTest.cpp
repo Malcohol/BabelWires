@@ -290,13 +290,10 @@ TYPED_TEST(SerializationBackendTest, objects) {
 }
 
 namespace {
-#define WILL_BE_PATCHED_TO_C "WILL_BE_PATCHED_TO_C"
-
     namespace old {
         /// The original version of the class C.
         struct C : Serializable {
-            SERIALIZABLE(C, WILL_BE_PATCHED_TO_C, void, 1);
-            // We will rewrite this in the file to "C"
+            SERIALIZABLE(C, "C", void, 1);
 
             void serializeContents(Serializer& serializer) const override { serializer.serializeValue("x", m_x); }
 
@@ -345,36 +342,31 @@ namespace {
 } // namespace
 
 // Test how the system supports version from an old class.
-TEST(SerializationTest, versioningOld) {
+TYPED_TEST(SerializationBackendTest, versioningOld) {
     std::string serializedContents;
     {
         old::C c;
         c.m_x = -2;
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(c);
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(c);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
-    }
-
-    {
-        size_t pos = 0;
-        while (pos = serializedContents.find(WILL_BE_PATCHED_TO_C, pos), pos != std::string::npos) {
-            serializedContents.replace(pos, std::strlen(WILL_BE_PATCHED_TO_C), "C");
-        }
     }
 
     {
         TestLog log;
         DeserializationRegistry deserializationReg;
         deserializationReg.registerClass<current::C>();
-        babelwires::XmlDeserializer deserializer(deserializationReg, log);
-        ASSERT_TRUE(deserializer.parse(serializedContents));
-        auto CPtrResult = deserializer.deserializeObject<current::C>();
+        auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto CPtrResult = deserializer->template deserializeObject<current::C>();
         ASSERT_TRUE(CPtrResult);
         auto CPtr = std::move(*CPtrResult);
-        deserializer.finalize();
+        ASSERT_TRUE(deserializer->finalize());
 
         EXPECT_EQ(CPtr->m_isPositive, false);
         EXPECT_EQ(CPtr->m_x, 2);
