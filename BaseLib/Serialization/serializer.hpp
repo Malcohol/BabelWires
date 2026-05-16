@@ -15,6 +15,7 @@
 #include <cstdint>
 #include <map>
 #include <memory>
+#include <ostream>
 #include <string_view>
 
 namespace babelwires {
@@ -23,6 +24,9 @@ namespace babelwires {
         class BASELIB_API Serializer : public SerializerDeserializerCommon {
       public:
         virtual ~Serializer();
+
+        /// Write the serialized document to the given stream.
+        virtual void write(std::ostream& os) = 0;
 
         /// Serialize a child object.
         /// The key identifies the field in the containing object.
@@ -75,22 +79,22 @@ namespace babelwires {
         void pushCommon();
         void popCommon();
 
-                void assertOrdinaryFieldKey(std::string_view key) const;
+        void assertOrdinaryFieldKey(std::string_view key) const;
 
       protected:
         virtual void doPushObject(std::string_view typeName) = 0;
         virtual void doPushObjectWithKey(std::string_view typeName, std::string_view key) = 0;
-                virtual void doSerializeValue(std::string_view key, bool value) = 0;
-                virtual void doSerializeValue(std::string_view key, std::string_view value) = 0;
-                virtual void doSerializeValue(std::string_view key, std::uint64_t value) = 0;
-                virtual void doSerializeValue(std::string_view key, std::uint32_t value) = 0;
-                virtual void doSerializeValue(std::string_view key, std::uint16_t value) = 0;
-                virtual void doSerializeValue(std::string_view key, std::uint8_t value) = 0;
-                virtual void doSerializeValue(std::string_view key, std::int64_t value) = 0;
-                virtual void doSerializeValue(std::string_view key, std::int32_t value) = 0;
-                virtual void doSerializeValue(std::string_view key, std::int16_t value) = 0;
-                virtual void doSerializeValue(std::string_view key, std::int8_t value) = 0;
-                virtual bool isOrdinaryFieldKeyReserved(std::string_view key) const = 0;
+        virtual void doSerializeValue(std::string_view key, bool value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::string_view value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::uint64_t value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::uint32_t value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::uint16_t value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::uint8_t value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::int64_t value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::int32_t value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::int16_t value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::int8_t value) = 0;
+        virtual bool isOrdinaryFieldKeyReserved(std::string_view key) const = 0;
         virtual void doPopObject() = 0;
         virtual void doPushArray(std::string_view key) = 0;
         virtual void doPopArray() = 0;

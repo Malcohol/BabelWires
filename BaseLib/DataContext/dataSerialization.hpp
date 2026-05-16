@@ -9,8 +9,9 @@
 
 #include <BaseLib/Context/context.hpp>
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
-#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
-#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/userDocumentSerializationFactory.hpp>
 
 #include <filesystem>
 #include <fstream>
@@ -32,7 +33,7 @@ namespace babelwires {
                                  UserLogger& userLogger);
 
         /// Returns an error on failure.
-        static Result saveToFile(const std::filesystem::path& pathToFile, Data data);
+        static Result saveToFile(const std::filesystem::path& pathToFile, const Context& context, Data data);
 
         /// Load the data from the given string, resolving the data in the given context and pathToFile.
         /// pathToFile may be empty, in which case only absolute file paths in the data can be resolved.
@@ -45,14 +46,15 @@ namespace babelwires {
         /// pathToFile is used to store relative versions of file paths.
         /// pathToFile may be empty, in which case only absolute file paths in the data will be stored.
         /// That might happen if data is being copied from an unsaved project.
-        static std::string saveToString(const std::filesystem::path& pathToFile, Data data);
+        static std::string saveToString(const std::filesystem::path& pathToFile, const Context& context, Data data);
 
       private:
         /// Load the data from is, resolving the data in the given context and pathToFile.
         static ResultT<Data> loadFromStream(std::istream& is, const Context& context,
                                    const std::filesystem::path& pathToFile, UserLogger& userLogger);
 
-        static void saveToStream(std::ostream& os, const std::filesystem::path& pathToFile, Data data);
+        static void saveToStream(std::ostream& os, const Context& context, const std::filesystem::path& pathToFile,
+                     Data data);
     };
 } // namespace babelwires
 

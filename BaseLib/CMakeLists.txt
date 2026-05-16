@@ -26,6 +26,7 @@ SET( COMMON_SRCS
 	Serialization/serializer.cpp
 	Serialization/serializerDeserializerCommon.cpp
 	Serialization/deserializationRegistry.cpp
+	Serialization/userDocumentSerializationFactory.cpp
 	Serialization/XML/xmlSerializer.cpp
 	Serialization/XML/xmlDeserializer.cpp
 	Signal/signalSubscription.cpp

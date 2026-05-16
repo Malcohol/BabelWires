@@ -25,7 +25,7 @@ namespace babelwires {
 
         /// Writes the contents to the stream.
         /// Asserts that all pushed objects have been popped.
-        void write(std::ostream& os);
+        void write(std::ostream& os) override;
 
       protected:
         void doPushObject(std::string_view typeName) override;

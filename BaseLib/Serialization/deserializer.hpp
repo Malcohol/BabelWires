@@ -29,6 +29,9 @@ namespace babelwires {
         Deserializer(UserLogger& userLogger, const DeserializationRegistryInterface& deserializationRegistry);
         virtual ~Deserializer();
 
+        /// Parse the serialized document text and initialize the deserializer.
+        virtual Result parse(std::string_view serializedContents) = 0;
+
         /// Get a value from the current object.
         /// These methods return a ResultT<bool> where:
         /// - Success with true means key was found and parsed successfully

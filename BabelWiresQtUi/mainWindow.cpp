@@ -310,7 +310,8 @@ bool babelwires::MainWindow::trySaveProject(const QString& filePath) {
         std::string filePathStr = filePath.toStdString();
         m_userLogger.logInfo() << "Save project to \"" << filePathStr << '"';
         ModifyModelScope scope(m_projectGraphModel);
-        auto saveResult = ProjectSerialization::saveToFile(filePathStr, scope.getProject().extractProjectData());
+        auto saveResult =
+            ProjectSerialization::saveToFile(filePathStr, m_projectGraphModel.getContext(), scope.getProject().extractProjectData());
         if (saveResult) {
             scope.getCommandManager().setCursor();
             return true;
@@ -390,7 +391,8 @@ babelwires::ProjectData babelwires::MainWindow::getProjectDataFromSelection() {
 }
 
 void babelwires::MainWindow::writeToClipboard(ProjectData projectData) {
-    std::string asString = ProjectSerialization::saveToString(getFullFilePath().toStdString(), std::move(projectData));
+    std::string asString = ProjectSerialization::saveToString(
+        getFullFilePath().toStdString(), m_projectGraphModel.getContext(), std::move(projectData));
 
     QByteArray contents(asString.c_str(), static_cast<int>(asString.size()));
     auto mimedata = std::make_unique<QMimeData>();

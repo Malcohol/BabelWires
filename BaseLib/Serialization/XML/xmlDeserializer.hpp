@@ -21,7 +21,7 @@ namespace babelwires {
         XmlDeserializer(const DeserializationRegistryInterface& deserializationRegistry, UserLogger& userLogger);
 
         /// Parse the given XML text. Must be called before using the deserializer.
-        Result parse(std::string_view xmlText);
+        Result parse(std::string_view xmlText) override;
 
         ResultT<bool> tryDeserializeValue(std::string_view key, bool& value) override;
         ResultT<bool> tryDeserializeValue(std::string_view key, std::string& value) override;
