@@ -728,3 +728,21 @@ TEST(XmlSerializationTest, xmlSerializerRejectsReservedMetadataPrefixForValueKey
         },
         "reserved for backend metadata");
 }
+
+TEST(XmlSerializationTest, xmlSerializerUsesMetaTypeForExplicitRuntimeTypeMetadata) {
+    KeyedContainer container;
+    container.m_defaultKeyObject.m_x = 17;
+    container.m_explicitKeyObject.m_x = 23;
+
+    babelwires::XmlSerializer serializer;
+    serializer.serializeObject(container);
+    std::ostringstream os;
+    serializer.write(os);
+
+    const std::string serializedContents = os.str();
+    EXPECT_NE(serializedContents.find("<contents xmlns:meta=\"urn:babelwires:serialization-meta\""),
+              std::string::npos);
+    EXPECT_NE(serializedContents.find("<renamedA meta:type=\"A\""), std::string::npos);
+    // Confirm the legacy name is no longer in use.
+    EXPECT_EQ(serializedContents.find("typeName=\"A\""), std::string::npos);
+}

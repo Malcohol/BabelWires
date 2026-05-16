@@ -42,6 +42,9 @@ void babelwires::XmlSerializer::doPopArray() {
 
 void babelwires::XmlSerializer::doPushObject(std::string_view typeName) {
     tinyxml2::XMLElement* newElement = m_doc.NewElement(toCStr(typeName));
+    if (m_xmlContext.empty()) {
+        newElement->SetAttribute(toCStr(c_xmlMetadataNamespaceAttribute), toCStr(c_xmlMetadataNamespace));
+    }
     getCurrentNode()->InsertEndChild(newElement);
     contextPush(newElement, false);
 }
@@ -49,7 +52,7 @@ void babelwires::XmlSerializer::doPushObject(std::string_view typeName) {
 void babelwires::XmlSerializer::doPushObjectWithKey(std::string_view typeName, std::string_view key) {
     tinyxml2::XMLElement* newElement = m_doc.NewElement(toCStr(key));
     if (key != typeName) {
-        newElement->SetAttribute("typeName", toCStr(typeName));
+        newElement->SetAttribute(toCStr(c_xmlRuntimeTypeMetadataAttribute), toCStr(typeName));
     }
     getCurrentNode()->InsertEndChild(newElement);
     contextPush(newElement, false);

@@ -144,6 +144,9 @@ babelwires::ResultT<bool> babelwires::XmlDeserializer::tryDeserializeValue(std::
 void babelwires::XmlDeserializer::contextPush(std::string_view key, const tinyxml2::XMLElement* element, bool isArray) {
     keyWasQueried(key);
     m_xmlContext.emplace_back(ContextEntry{element, isArray, m_xmlContext.back().m_isArray});
+    if (element == m_doc.RootElement()) {
+        m_xmlContext.back().m_keysQueried.insert(std::string(c_xmlMetadataNamespaceAttribute));
+    }
 }
 
 babelwires::Result babelwires::XmlDeserializer::contextPop() {
@@ -205,8 +208,8 @@ std::string_view babelwires::XmlDeserializer::getCurrentTypeName() {
     assert(!m_xmlContext.back().m_isArray && "You can't query the type of an array");
     if (m_xmlContext.back().m_isArrayElement) {
         return getCurrentElement()->Name();
-    } else if (const char* attr = getCurrentElement()->Attribute("typeName")) {
-        keyWasQueried("typeName");
+    } else if (const char* attr = getCurrentElement()->Attribute(toCStr(c_xmlRuntimeTypeMetadataAttribute))) {
+        keyWasQueried(c_xmlRuntimeTypeMetadataAttribute);
         return attr;
     } else {
         return getCurrentElement()->Name();

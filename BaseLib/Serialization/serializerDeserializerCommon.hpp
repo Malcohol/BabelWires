@@ -43,9 +43,6 @@ namespace babelwires {
         /// Map-like backends such as YAML and JSON reserve the $ prefix for backend metadata.
         inline static constexpr std::string_view c_dollarMetadataPrefix = "$";
 
-        /// XML reserves the meta: prefix for serialization metadata such as explicit runtime type information.
-        inline static constexpr std::string_view c_xmlMetadataPrefix = "meta:";
-
         static bool keyHasReservedPrefix(std::string_view key, std::string_view prefix);
 
         /// 0 is returned if the type is not found.
