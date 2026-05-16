@@ -224,25 +224,6 @@ TYPED_TEST(SerializationBackendTest, explicitAndDefaultKeys) {
     }
 }
 
-TEST(SerializationTest, xmlSerializerRejectsReservedMetadataPrefixForObjectKeys) {
-    EXPECT_DEATH(
-        {
-            A a;
-            babelwires::XmlSerializer serializer;
-            serializer.serializeObject(a, "meta:illegal");
-        },
-        "reserved for backend metadata");
-}
-
-TEST(SerializationTest, xmlSerializerRejectsReservedMetadataPrefixForValueKeys) {
-    EXPECT_DEATH(
-        {
-            babelwires::XmlSerializer serializer;
-            serializer.serializeValue("meta:illegal", 17);
-        },
-        "reserved for backend metadata");
-}
-
 TYPED_TEST(SerializationBackendTest, valueArraysAllowCustomElementNames) {
     std::string serializedContents;
     {
@@ -727,4 +708,23 @@ TYPED_TEST(SerializationBackendTest, deserializeRejectsUnexpectedUnconsumedData)
         EXPECT_NE(std::string_view(APtrResult.error().toString()).find("unexpected"), std::string_view::npos);
         deserializer->finalizeOnError();
     }
+}
+
+TEST(XmlSerializationTest, xmlSerializerRejectsReservedMetadataPrefixForObjectKeys) {
+    EXPECT_DEATH(
+        {
+            A a;
+            babelwires::XmlSerializer serializer;
+            serializer.serializeObject(a, "meta:illegal");
+        },
+        "reserved for backend metadata");
+}
+
+TEST(XmlSerializationTest, xmlSerializerRejectsReservedMetadataPrefixForValueKeys) {
+    EXPECT_DEATH(
+        {
+            babelwires::XmlSerializer serializer;
+            serializer.serializeValue("meta:illegal", 17);
+        },
+        "reserved for backend metadata");
 }
