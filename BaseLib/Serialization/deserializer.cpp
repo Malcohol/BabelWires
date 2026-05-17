@@ -79,11 +79,7 @@ babelwires::ResultT<std::unique_ptr<babelwires::Serializable>> babelwires::Deser
 babelwires::Result babelwires::Deserializer::BaseIterator::advance() {
     assert(isValid());
     DO_OR_ERROR(m_impl->advance());
-    if (!m_typeName.empty() && isValid()) {
-        if (m_deserializer.getCurrentTypeName() != m_typeName) {
-            return Error() << "Not expecting an object of type \"" << m_deserializer.getCurrentTypeName() << "\"";
-        }
-    }
+    DO_OR_ERROR(checkCurrentValueArrayElementType());
     DO_OR_ERROR(checkFinished());
     return {};
 }
@@ -97,6 +93,7 @@ babelwires::Deserializer::BaseIterator::BaseIterator(std::unique_ptr<AbstractIte
     : m_impl(std::move(impl))
     , m_deserializer(deserializer)
     , m_typeName(std::move(typeName)) {
+    checkCurrentValueArrayElementType();
     checkFinished();
 }
 
@@ -112,4 +109,17 @@ babelwires::Result babelwires::Deserializer::BaseIterator::checkFinished() {
         m_finished = true;
     }
     return {};
+}
+
+babelwires::Result babelwires::Deserializer::BaseIterator::checkCurrentValueArrayElementType() {
+    if (!m_typeName.empty() && isValid()) {
+        if (!m_deserializer.currentValueArrayElementMatchesType(m_typeName)) {
+            return Error() << "Not expecting an object of type \"" << m_deserializer.getCurrentTypeName() << "\"";
+        }
+    }
+    return {};
+}
+
+bool babelwires::Deserializer::currentValueArrayElementMatchesType(std::string_view expectedTypeName) {
+    return getCurrentTypeName() == expectedTypeName;
 }

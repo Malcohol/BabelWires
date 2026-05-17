@@ -29,6 +29,8 @@ SET( COMMON_SRCS
 	Serialization/userDocumentSerializationFactory.cpp
 	Serialization/XML/xmlSerializer.cpp
 	Serialization/XML/xmlDeserializer.cpp
+	Serialization/YAML/yamlSerializer.cpp
+	Serialization/YAML/yamlDeserializer.cpp
 	Signal/signalSubscription.cpp
 	BlockStream/blockStream.cpp
 	BuildCompatibility/buildCompatibility.cpp
@@ -58,7 +60,7 @@ TARGET_INCLUDE_DIRECTORIES( BaseLib
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated>
 		$<INSTALL_INTERFACE:include>
 )
-TARGET_LINK_LIBRARIES(BaseLib PUBLIC tinyxml2)
+TARGET_LINK_LIBRARIES(BaseLib PUBLIC tinyxml2 yaml-cpp)
 
 if(UNIX AND NOT APPLE)
 	target_link_libraries(BaseLib PRIVATE dl)

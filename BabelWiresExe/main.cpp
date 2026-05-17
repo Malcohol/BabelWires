@@ -135,7 +135,7 @@ int main(int argc, char* argv[]) {
     // ASSERT_NO_ERROR(bw_music_testplugin::registerLib(context, log));
 #endif
 
-    // testDomain::registerLib(context);
+     testDomain::registerLib(context);
 
     if (options->m_mode == ProgramOptions::MODE_RUN_PROJECT) {
         Project project(context, log);

@@ -170,6 +170,9 @@ namespace babelwires {
         /// Return the runtime type of the current object after decoding any backend-specific metadata.
         virtual std::string_view getCurrentTypeName() = 0;
 
+        /// Backends may accept alternative value-array wire representations that do not expose a runtime type token.
+        virtual bool currentValueArrayElementMatchesType(std::string_view expectedTypeName);
+
         virtual ErrorStorage addContextDescription(const ErrorStorage& e) const = 0;
 
       protected:
@@ -193,6 +196,8 @@ struct BASELIB_API babelwires::Deserializer::BaseIterator {
     Result checkFinished();
 
   protected:
+    Result checkCurrentValueArrayElementType();
+
     std::unique_ptr<AbstractIterator> m_impl;
     Deserializer& m_deserializer;
     bool m_finished = false;

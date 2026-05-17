@@ -3,12 +3,16 @@
 #include <BaseLib/Serialization/serializer.hpp>
 #include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
 #include <BaseLib/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/Serialization/YAML/yamlDeserializer.hpp>
+#include <BaseLib/Serialization/YAML/yamlSerializer.hpp>
 
 #include <BaseLib/Utilities/downcastable.hpp>
 
 #include <Tests/TestUtils/testLog.hpp>
 
 #include <gtest/gtest.h>
+
+#include <yaml-cpp/yaml.h>
 
 #include <array>
 
@@ -27,6 +31,27 @@ namespace {
         }
 
         // Rewrite runtime type tokens in serialized XML so backend-agnostic tests can exercise type-mismatch cases.
+        static std::string rewriteTypeInData(std::string serializedContents, std::string_view fromType,
+                                             std::string_view toType) {
+            size_t pos = 0;
+            while ((pos = serializedContents.find(fromType, pos)) != std::string::npos) {
+                serializedContents.replace(pos, fromType.size(), toType);
+                pos += toType.size();
+            }
+            return serializedContents;
+        }
+    };
+
+    struct YamlSerializationBackend {
+        static std::unique_ptr<Serializer> createSerializer() {
+            return std::make_unique<YamlSerializer>();
+        }
+
+        static std::unique_ptr<Deserializer> createDeserializer(const DeserializationRegistry& deserializationRegistry,
+                                                                TestLog& log) {
+            return std::make_unique<YamlDeserializer>(deserializationRegistry, log);
+        }
+
         static std::string rewriteTypeInData(std::string serializedContents, std::string_view fromType,
                                              std::string_view toType) {
             size_t pos = 0;
@@ -84,7 +109,7 @@ namespace {
 
 template <typename TBackend> class SerializationBackendTest : public ::testing::Test {};
 
-using SerializationBackendTypes = ::testing::Types<XmlSerializationBackend>;
+using SerializationBackendTypes = ::testing::Types<XmlSerializationBackend, YamlSerializationBackend>;
 TYPED_TEST_SUITE(SerializationBackendTest, SerializationBackendTypes);
 
 TYPED_TEST(SerializationBackendTest, values) {
@@ -745,4 +770,84 @@ TEST(XmlSerializationTest, xmlSerializerUsesMetaTypeForExplicitRuntimeTypeMetada
     EXPECT_NE(serializedContents.find("<renamedA meta:type=\"A\""), std::string::npos);
     // Confirm the legacy name is no longer in use.
     EXPECT_EQ(serializedContents.find("typeName=\"A\""), std::string::npos);
+}
+
+TEST(YamlSerializationTest, yamlSerializerRejectsReservedMetadataPrefixForObjectKeys) {
+    EXPECT_DEATH(
+        {
+            A a;
+            babelwires::YamlSerializer serializer;
+            serializer.serializeObject(a, "$illegal");
+        },
+        "reserved for backend metadata");
+}
+
+TEST(YamlSerializationTest, yamlSerializerRejectsReservedMetadataPrefixForValueKeys) {
+    EXPECT_DEATH(
+        {
+            babelwires::YamlSerializer serializer;
+            serializer.serializeValue("$illegal", 17);
+        },
+        "reserved for backend metadata");
+}
+
+TEST(YamlSerializationTest, yamlSerializerUsesDollarTypeForExplicitRuntimeTypeMetadata) {
+    KeyedContainer container;
+    container.m_defaultKeyObject.m_x = 17;
+    container.m_explicitKeyObject.m_x = 23;
+
+    babelwires::YamlSerializer serializer;
+    serializer.serializeObject(container);
+    std::ostringstream os;
+    serializer.write(os);
+
+    const YAML::Node root = YAML::Load(os.str());
+    ASSERT_TRUE(root.IsMap());
+    ASSERT_TRUE(root["KeyedContainer"]);
+    ASSERT_TRUE(root["KeyedContainer"]["renamedA"]);
+    EXPECT_EQ(root["KeyedContainer"]["renamedA"]["$type"].as<std::string>(), "A");
+    EXPECT_FALSE(root["KeyedContainer"]["A"]["$type"]);
+}
+
+TEST(YamlSerializationTest, yamlSerializerUsesPlainScalarSequencesForValueArrays) {
+    CustomValueArrayContainer container;
+    container.m_values = {"one", "two", "three"};
+
+    babelwires::YamlSerializer serializer;
+    serializer.serializeObject(container);
+    std::ostringstream os;
+    serializer.write(os);
+
+    const YAML::Node root = YAML::Load(os.str());
+    ASSERT_TRUE(root.IsMap());
+    const YAML::Node values = root["CustomValueArrayContainer"]["values"];
+    ASSERT_TRUE(values);
+    ASSERT_TRUE(values.IsSequence());
+    ASSERT_EQ(values.size(), 3u);
+    EXPECT_TRUE(values[0].IsScalar());
+    EXPECT_EQ(values[0].as<std::string>(), "one");
+    EXPECT_TRUE(values[1].IsScalar());
+    EXPECT_EQ(values[1].as<std::string>(), "two");
+    EXPECT_TRUE(values[2].IsScalar());
+    EXPECT_EQ(values[2].as<std::string>(), "three");
+}
+
+TEST(YamlSerializationTest, yamlDeserializerRejectsNonScalarMapKeys) {
+        const std::string serializedContents =
+            "A:\n"
+            "  x: 12\n"
+            "  ? [bad, key]\n"
+            "  : nope\n"
+            "serializationMetadata:\n"
+            "  - { $type: serializable, type: A, version: 1 }\n";
+
+    TestLog log;
+    DeserializationRegistry deserializationReg;
+    deserializationReg.registerClass<A>();
+    babelwires::YamlDeserializer deserializer(deserializationReg, log);
+    ASSERT_TRUE(deserializer.parse(serializedContents));
+    auto objectResult = deserializer.deserializeObject<A>();
+    ASSERT_FALSE(objectResult);
+    EXPECT_NE(std::string_view(objectResult.error().toString()).find("non-scalar key"), std::string_view::npos);
+    deserializer.finalizeOnError();
 }
