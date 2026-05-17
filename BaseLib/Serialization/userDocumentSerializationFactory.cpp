@@ -7,16 +7,16 @@
  **/
 #include <BaseLib/Serialization/userDocumentSerializationFactory.hpp>
 
-#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
-#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/Serialization/YAML/yamlDeserializer.hpp>
+#include <BaseLib/Serialization/YAML/yamlSerializer.hpp>
 
 #include <memory>
 
 std::unique_ptr<babelwires::Serializer> babelwires::UserDocumentSerializationFactory::createSerializer() {
-    return std::make_unique<XmlSerializer>();
+    return std::make_unique<YamlSerializer>();
 }
 
 std::unique_ptr<babelwires::Deserializer> babelwires::UserDocumentSerializationFactory::createDeserializer(
     const DeserializationRegistryInterface& deserializationRegistry, UserLogger& userLogger) {
-    return std::make_unique<XmlDeserializer>(deserializationRegistry, userLogger);
+    return std::make_unique<YamlDeserializer>(deserializationRegistry, userLogger);
 }
