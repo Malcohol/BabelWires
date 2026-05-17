@@ -71,6 +71,7 @@ namespace babelwires {
 
       protected:
         void pushObject(std::string_view typeName);
+        void pushValueArrayElement(std::string_view typeName);
         void pushObjectWithKey(std::string_view typeName, std::string_view key);
         void popObject();
         void pushArray(std::string_view key);
@@ -83,6 +84,7 @@ namespace babelwires {
 
       protected:
         virtual void doPushObject(std::string_view typeName) = 0;
+        virtual void doPushValueArrayElement(std::string_view typeName);
         virtual void doPushObjectWithKey(std::string_view typeName, std::string_view key) = 0;
         virtual void doSerializeValue(std::string_view key, bool value) = 0;
         virtual void doSerializeValue(std::string_view key, std::string_view value) = 0;
@@ -151,7 +153,7 @@ void babelwires::Serializer::serializeValueArray(std::string_view key, const S& 
     if (span.begin() != span.end()) {
         pushArray(key);
         for (const auto& it : span) {
-            pushObject(typeName);
+            pushValueArrayElement(typeName);
             serializeValue(c_defaultValueArrayValueKey, it);
             popObject();
         }

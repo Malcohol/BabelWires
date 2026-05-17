@@ -293,7 +293,7 @@ TEST(MapValueTest, serializationTest) {
     ASSERT_NE(deserializer, nullptr);
     ASSERT_TRUE(deserializer->parse(serializedContents));
     auto dataPtrResult = deserializer->deserializeObject<babelwires::MapValue>();
-    ASSERT_TRUE(dataPtrResult);
+    ASSERT_TRUE(dataPtrResult) << dataPtrResult.error().toString();
     auto dataPtr = std::move(*dataPtrResult);
     deserializer->finalize();
 

@@ -35,7 +35,8 @@ YAML::Node& babelwires::YamlSerializer::getCurrentNode() {
 
 void babelwires::YamlSerializer::serializeScalarValue(std::string_view key, YAML::Node value) {
     ContextEntry& currentContext = m_yamlContext.back();
-    if (currentContext.m_isPendingArrayElement && !currentContext.m_node && (key == c_defaultValueArrayValueKey)) {
+    if (currentContext.m_isPendingValueArrayElement && !currentContext.m_node &&
+        (key == c_defaultValueArrayValueKey)) {
         currentContext.m_node = std::move(value);
         currentContext.m_isScalarArrayElement = true;
         return;
@@ -66,8 +67,15 @@ void babelwires::YamlSerializer::doPushObject(std::string_view typeName) {
     currentContext.m_pendingArrayElementTypeName = typeName;
 }
 
+void babelwires::YamlSerializer::doPushValueArrayElement(std::string_view typeName) {
+    doPushObject(typeName);
+    ContextEntry& currentContext = m_yamlContext.back();
+    currentContext.m_isPendingValueArrayElement = true;
+}
+
 void babelwires::YamlSerializer::doPushObjectWithKey(std::string_view typeName, std::string_view key) {
     assert(!m_yamlContext.empty() && !m_yamlContext.back().m_isArray && "Keyed objects must be children of objects");
+    ensureCurrentNodeIsMaterialized();
     YAML::Node newNode(YAML::NodeType::Map);
     if (key != typeName) {
         newNode[c_runtimeTypeMetadataKey] = typeName;
@@ -94,6 +102,7 @@ void babelwires::YamlSerializer::doPopObject() {
 
 void babelwires::YamlSerializer::doPushArray(std::string_view key) {
     assert(!m_yamlContext.empty() && !m_yamlContext.back().m_isArray && "Arrays must be children of objects");
+    ensureCurrentNodeIsMaterialized();
     contextPush(YAML::Node(YAML::NodeType::Sequence), true, std::string(key));
 }
 
@@ -161,7 +170,7 @@ void babelwires::YamlSerializer::write(std::ostream& os) {
 }
 
 void babelwires::YamlSerializer::contextPush(YAML::Node node, bool isArray, std::string key) {
-    m_yamlContext.emplace_back(ContextEntry{std::move(node), isArray, false, false, std::move(key)});
+    m_yamlContext.emplace_back(ContextEntry{std::move(node), isArray, false, false, false, std::move(key)});
 }
 
 void babelwires::YamlSerializer::contextPop() {

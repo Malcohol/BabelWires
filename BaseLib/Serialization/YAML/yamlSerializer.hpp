@@ -27,6 +27,7 @@ namespace babelwires {
 
       protected:
         void doPushObject(std::string_view typeName) override;
+        void doPushValueArrayElement(std::string_view typeName) override;
         void doPushObjectWithKey(std::string_view typeName, std::string_view key) override;
         void doSerializeValue(std::string_view key, bool value) override;
         void doSerializeValue(std::string_view key, std::string_view value) override;
@@ -55,6 +56,7 @@ namespace babelwires {
           YAML::Node m_node;
           bool m_isArray = false;
           bool m_isPendingArrayElement = false;
+          bool m_isPendingValueArrayElement = false;
           bool m_isScalarArrayElement = false;
           std::string m_key;
           std::string m_pendingArrayElementTypeName;

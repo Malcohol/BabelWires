@@ -517,6 +517,89 @@ namespace {
 
         Concrete1 m_value;
     };
+
+    struct NestedObjectOnlyConcrete : Base {
+        DOWNCASTABLE(NestedObjectOnlyConcrete, Base);
+        SERIALIZABLE(NestedObjectOnlyConcrete, "NestedObjectOnlyConcrete", Base, 1);
+
+        void serializeContents(Serializer& serializer) const override { serializer.serializeObject(m_child, "child"); }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeObjectByValue(m_child, "child"));
+            return {};
+        }
+
+        A m_child;
+    };
+
+    struct NestedObjectOnlyMain : babelwires::Serializable {
+        SERIALIZABLE(NestedObjectOnlyMain, "NestedObjectOnlyMain", void, 1);
+
+        void serializeContents(Serializer& serializer) const override { serializer.serializeArray("objects", m_objects); }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<Base>("objects"));
+            while (it.isValid()) {
+                ASSIGN_OR_ERROR(auto ptr, it.getObject());
+                m_objects.emplace_back(std::move(ptr));
+                DO_OR_ERROR(it.advance());
+            }
+            return {};
+        }
+
+        std::vector<std::unique_ptr<Base>> m_objects;
+    };
+
+    struct ValueFieldOnlyConcrete : Base {
+        DOWNCASTABLE(ValueFieldOnlyConcrete, Base);
+        SERIALIZABLE(ValueFieldOnlyConcrete, "ValueFieldOnlyConcrete", Base, 1);
+
+        void serializeContents(Serializer& serializer) const override { serializer.serializeValue("value", m_value); }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeValue("value", m_value));
+            return {};
+        }
+
+        std::string m_value;
+    };
+
+    struct ValueFieldAndExtraConcrete : Base {
+        DOWNCASTABLE(ValueFieldAndExtraConcrete, Base);
+        SERIALIZABLE(ValueFieldAndExtraConcrete, "ValueFieldAndExtraConcrete", Base, 1);
+
+        void serializeContents(Serializer& serializer) const override {
+            serializer.serializeValue("value", m_value);
+            serializer.serializeValue("extra", m_extra);
+        }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeValue("value", m_value));
+            DO_OR_ERROR(deserializer.deserializeValue("extra", m_extra));
+            return {};
+        }
+
+        std::string m_value;
+        std::string m_extra;
+    };
+
+    struct ValueFieldMain : babelwires::Serializable {
+        SERIALIZABLE(ValueFieldMain, "ValueFieldMain", void, 1);
+
+        void serializeContents(Serializer& serializer) const override { serializer.serializeArray("objects", m_objects); }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<Base>("objects"));
+            while (it.isValid()) {
+                ASSIGN_OR_ERROR(auto ptr, it.getObject());
+                m_objects.emplace_back(std::move(ptr));
+                DO_OR_ERROR(it.advance());
+            }
+            return {};
+        }
+
+        std::vector<std::unique_ptr<Base>> m_objects;
+    };
 } // namespace
 
 TYPED_TEST(SerializationTest, polymorphism) {
@@ -576,6 +659,98 @@ TYPED_TEST(SerializationTest, polymorphism) {
         ASSERT_EQ(MainPtr->m_objects.size(), 1);
         ASSERT_NE(MainPtr->m_objects[0]->template tryAs<Concrete1>(), nullptr);
         EXPECT_EQ(MainPtr->m_objects[0]->template as<Concrete1>().m_s, "Tuesday");
+    }
+}
+
+TYPED_TEST(SerializationTest, polymorphicArrayElementsWithOnlyNestedObjects) {
+    std::string serializedContents;
+    {
+        NestedObjectOnlyMain m;
+        auto object = std::make_unique<NestedObjectOnlyConcrete>();
+        object->m_child.m_x = 44;
+        object->m_child.m_array = {"nested", "object"};
+        m.m_objects.emplace_back(std::move(object));
+
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(m);
+        std::ostringstream os;
+        serializer->write(os);
+        serializedContents = std::move(os.str());
+    }
+
+    {
+        TestLog log;
+        DeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<A>();
+        deserializationReg.registerClass<NestedObjectOnlyMain>();
+        deserializationReg.registerClass<NestedObjectOnlyConcrete>();
+        auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto mainResult = deserializer->template deserializeObject<NestedObjectOnlyMain>();
+        ASSERT_TRUE(mainResult) << mainResult.error().toString();
+        auto main = std::move(*mainResult);
+        ASSERT_TRUE(deserializer->finalize());
+
+        ASSERT_EQ(main->m_objects.size(), 1);
+        const auto* const nestedObjectOnly = main->m_objects[0]->template tryAs<NestedObjectOnlyConcrete>();
+        ASSERT_NE(nestedObjectOnly, nullptr);
+        EXPECT_EQ(nestedObjectOnly->m_child.m_x, 44);
+        ASSERT_EQ(nestedObjectOnly->m_child.m_array.size(), 2);
+        EXPECT_EQ(nestedObjectOnly->m_child.m_array[0], "nested");
+        EXPECT_EQ(nestedObjectOnly->m_child.m_array[1], "object");
+    }
+}
+
+TYPED_TEST(SerializationTest, polymorphicArrayElementsWithValueFieldObjects) {
+    std::string serializedContents;
+    {
+        ValueFieldMain m;
+
+        auto valueOnly = std::make_unique<ValueFieldOnlyConcrete>();
+        valueOnly->m_value = "scalar-like";
+        m.m_objects.emplace_back(std::move(valueOnly));
+
+        auto valueAndExtra = std::make_unique<ValueFieldAndExtraConcrete>();
+        valueAndExtra->m_value = "field-id-like";
+        valueAndExtra->m_extra = "extra metadata";
+        m.m_objects.emplace_back(std::move(valueAndExtra));
+
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(m);
+        std::ostringstream os;
+        serializer->write(os);
+        serializedContents = std::move(os.str());
+    }
+
+    {
+        TestLog log;
+        DeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<ValueFieldMain>();
+        deserializationReg.registerClass<ValueFieldOnlyConcrete>();
+        deserializationReg.registerClass<ValueFieldAndExtraConcrete>();
+        auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto mainResult = deserializer->template deserializeObject<ValueFieldMain>();
+        if (!mainResult) {
+            deserializer->finalizeOnError();
+        }
+        ASSERT_TRUE(mainResult) << mainResult.error().toString();
+        auto main = std::move(*mainResult);
+        ASSERT_TRUE(deserializer->finalize());
+
+        ASSERT_EQ(main->m_objects.size(), 2);
+        const auto* const valueOnly = main->m_objects[0]->template tryAs<ValueFieldOnlyConcrete>();
+        ASSERT_NE(valueOnly, nullptr);
+        EXPECT_EQ(valueOnly->m_value, "scalar-like");
+
+        const auto* const valueAndExtra = main->m_objects[1]->template tryAs<ValueFieldAndExtraConcrete>();
+        ASSERT_NE(valueAndExtra, nullptr);
+        EXPECT_EQ(valueAndExtra->m_value, "field-id-like");
+        EXPECT_EQ(valueAndExtra->m_extra, "extra metadata");
     }
 }
 

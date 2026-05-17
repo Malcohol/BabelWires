@@ -85,6 +85,11 @@ void babelwires::Serializer::pushObject(std::string_view typeName) {
     doPushObject(typeName);
 }
 
+void babelwires::Serializer::pushValueArrayElement(std::string_view typeName) {
+    pushCommon();
+    doPushValueArrayElement(typeName);
+}
+
 void babelwires::Serializer::pushObjectWithKey(std::string_view typeName, std::string_view key) {
     assertOrdinaryFieldKey(key);
     pushCommon();
@@ -100,6 +105,10 @@ void babelwires::Serializer::pushArray(std::string_view key) {
     assertOrdinaryFieldKey(key);
     pushCommon();
     doPushArray(key);
+}
+
+void babelwires::Serializer::doPushValueArrayElement(std::string_view typeName) {
+    doPushObject(typeName);
 }
 
 void babelwires::Serializer::popArray() {
