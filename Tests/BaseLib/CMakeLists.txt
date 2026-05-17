@@ -21,6 +21,8 @@ SET( COMMON_TESTS_SRCS
    registryTest.cpp
    resultTest.cpp
    serializationTest.cpp
+   xmlSerializationTest.cpp
+   yamlSerializationTest.cpp
    signalTest.cpp
    streamEventHolderTest.cpp
    commonTest.cpp

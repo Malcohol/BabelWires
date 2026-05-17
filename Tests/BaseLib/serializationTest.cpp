@@ -8,16 +8,20 @@
 
 #include <BaseLib/Utilities/downcastable.hpp>
 
+#include <Tests/BaseLib/TestData/serializableClasses.hpp>
+
 #include <Tests/TestUtils/testLog.hpp>
 
 #include <gtest/gtest.h>
-
-#include <yaml-cpp/yaml.h>
 
 #include <array>
 
 using namespace babelwires;
 using namespace testUtils;
+
+using testData::A;
+using testData::CustomValueArrayContainer;
+using testData::KeyedContainer;
 
 namespace {
     struct XmlSerializationBackend {
@@ -65,29 +69,6 @@ namespace {
 }
 
 namespace {
-    struct A : Serializable {
-        SERIALIZABLE(A, "A", void, 1);
-
-        void serializeContents(Serializer& serializer) const override {
-            serializer.serializeValue("x", m_x);
-            serializer.serializeValueArray("array", m_array);
-        }
-
-        Result deserializeContents(Deserializer& deserializer) override {
-            DO_OR_ERROR(deserializer.deserializeValue("x", m_x));
-            if (auto it = deserializer.tryDeserializeValueArray<std::string>("array")) {
-                while (it->isValid()) {
-                    ASSIGN_OR_ERROR(m_array.emplace_back(), it->deserializeValue());
-                    DO_OR_ERROR(it->advance());
-                }
-            }
-            return {};
-        }
-
-        int m_x = 0;
-        std::vector<std::string> m_array;
-    };
-
     struct AWithUnexpectedValue : A {
         // Intentionally keep the same wire type as A so this helper can produce extra data that still deserializes as A.
         SERIALIZABLE(AWithUnexpectedValue, "A", A, 1);
@@ -107,12 +88,12 @@ namespace {
     };
 } // namespace
 
-template <typename TBackend> class SerializationBackendTest : public ::testing::Test {};
+template <typename TBackend> class SerializationTest : public ::testing::Test {};
 
 using SerializationBackendTypes = ::testing::Types<XmlSerializationBackend, YamlSerializationBackend>;
-TYPED_TEST_SUITE(SerializationBackendTest, SerializationBackendTypes);
+TYPED_TEST_SUITE(SerializationTest, SerializationBackendTypes);
 
-TYPED_TEST(SerializationBackendTest, values) {
+TYPED_TEST(SerializationTest, values) {
     std::string serializedContents;
     {
         A a;
@@ -171,45 +152,9 @@ namespace {
         std::vector<A> m_arrayOfAs;
     };
 
-    struct KeyedContainer : Serializable {
-        SERIALIZABLE(KeyedContainer, "KeyedContainer", void, 1);
-
-        void serializeContents(Serializer& serializer) const override {
-            serializer.serializeObject(m_defaultKeyObject);
-            serializer.serializeObject(m_explicitKeyObject, "renamedA");
-        }
-
-        Result deserializeContents(Deserializer& deserializer) override {
-            DO_OR_ERROR(deserializer.deserializeObjectByValue(m_defaultKeyObject));
-            DO_OR_ERROR(deserializer.deserializeObjectByValue(m_explicitKeyObject, "renamedA"));
-            return {};
-        }
-
-        A m_defaultKeyObject;
-        A m_explicitKeyObject;
-    };
-
-    struct CustomValueArrayContainer : Serializable {
-        SERIALIZABLE(CustomValueArrayContainer, "CustomValueArrayContainer", void, 1);
-
-        void serializeContents(Serializer& serializer) const override {
-            serializer.serializeValueArray("values", m_values, "item");
-        }
-
-        Result deserializeContents(Deserializer& deserializer) override {
-            ASSIGN_OR_ERROR(auto it, deserializer.deserializeValueArray<std::string>("values", "item"));
-            while (it.isValid()) {
-                ASSIGN_OR_ERROR(m_values.emplace_back(), it.deserializeValue());
-                DO_OR_ERROR(it.advance());
-            }
-            return {};
-        }
-
-        std::vector<std::string> m_values;
-    };
 } // namespace
 
-TYPED_TEST(SerializationBackendTest, explicitAndDefaultKeys) {
+TYPED_TEST(SerializationTest, explicitAndDefaultKeys) {
     std::string serializedContents;
     {
         KeyedContainer container;
@@ -249,7 +194,7 @@ TYPED_TEST(SerializationBackendTest, explicitAndDefaultKeys) {
     }
 }
 
-TYPED_TEST(SerializationBackendTest, valueArraysAllowCustomElementNames) {
+TYPED_TEST(SerializationTest, valueArraysAllowCustomElementNames) {
     std::string serializedContents;
     {
         CustomValueArrayContainer container;
@@ -282,7 +227,7 @@ TYPED_TEST(SerializationBackendTest, valueArraysAllowCustomElementNames) {
     }
 }
 
-TYPED_TEST(SerializationBackendTest, objects) {
+TYPED_TEST(SerializationTest, objects) {
     std::string serializedContents;
     {
         B b;
@@ -379,7 +324,7 @@ namespace {
 } // namespace
 
 // Test how the system supports version from an old class.
-TYPED_TEST(SerializationBackendTest, versioningOld) {
+TYPED_TEST(SerializationTest, versioningOld) {
     std::string serializedContents;
     {
         old::C c;
@@ -411,7 +356,7 @@ TYPED_TEST(SerializationBackendTest, versioningOld) {
 }
 
 // Confirm that version support doesn't affect normal serialization
-TYPED_TEST(SerializationBackendTest, versioningCurrent) {
+TYPED_TEST(SerializationTest, versioningCurrent) {
     std::string serializedContents;
     {
         current::C c;
@@ -574,7 +519,7 @@ namespace {
     };
 } // namespace
 
-TYPED_TEST(SerializationBackendTest, polymorphism) {
+TYPED_TEST(SerializationTest, polymorphism) {
     std::string serializedContents;
     {
         Main m;
@@ -634,7 +579,7 @@ TYPED_TEST(SerializationBackendTest, polymorphism) {
     }
 }
 
-TYPED_TEST(SerializationBackendTest, polymorphismFail) {
+TYPED_TEST(SerializationTest, polymorphismFail) {
     std::string serializedContents;
     {
         Main m;
@@ -674,7 +619,7 @@ TYPED_TEST(SerializationBackendTest, polymorphismFail) {
     }
 }
 
-TYPED_TEST(SerializationBackendTest, deserializeObjectByValueRejectsStrictSubclasses) {
+TYPED_TEST(SerializationTest, deserializeObjectByValueRejectsStrictSubclasses) {
     std::string serializedContents;
     {
         ByValueSubtypeWriter writer;
@@ -706,7 +651,7 @@ TYPED_TEST(SerializationBackendTest, deserializeObjectByValueRejectsStrictSubcla
     }
 }
 
-TYPED_TEST(SerializationBackendTest, deserializeRejectsUnexpectedUnconsumedData) {
+TYPED_TEST(SerializationTest, deserializeRejectsUnexpectedUnconsumedData) {
     std::string serializedContents;
     {
         AWithUnexpectedValue a;
@@ -733,121 +678,4 @@ TYPED_TEST(SerializationBackendTest, deserializeRejectsUnexpectedUnconsumedData)
         EXPECT_NE(std::string_view(APtrResult.error().toString()).find("unexpected"), std::string_view::npos);
         deserializer->finalizeOnError();
     }
-}
-
-TEST(XmlSerializationTest, xmlSerializerRejectsReservedMetadataPrefixForObjectKeys) {
-    EXPECT_DEATH(
-        {
-            A a;
-            babelwires::XmlSerializer serializer;
-            serializer.serializeObject(a, "meta:illegal");
-        },
-        "reserved for backend metadata");
-}
-
-TEST(XmlSerializationTest, xmlSerializerRejectsReservedMetadataPrefixForValueKeys) {
-    EXPECT_DEATH(
-        {
-            babelwires::XmlSerializer serializer;
-            serializer.serializeValue("meta:illegal", 17);
-        },
-        "reserved for backend metadata");
-}
-
-TEST(XmlSerializationTest, xmlSerializerUsesMetaTypeForExplicitRuntimeTypeMetadata) {
-    KeyedContainer container;
-    container.m_defaultKeyObject.m_x = 17;
-    container.m_explicitKeyObject.m_x = 23;
-
-    babelwires::XmlSerializer serializer;
-    serializer.serializeObject(container);
-    std::ostringstream os;
-    serializer.write(os);
-
-    const std::string serializedContents = os.str();
-    EXPECT_NE(serializedContents.find("<contents xmlns:meta=\"urn:babelwires:serialization-meta\""),
-              std::string::npos);
-    EXPECT_NE(serializedContents.find("<renamedA meta:type=\"A\""), std::string::npos);
-    // Confirm the legacy name is no longer in use.
-    EXPECT_EQ(serializedContents.find("typeName=\"A\""), std::string::npos);
-}
-
-TEST(YamlSerializationTest, yamlSerializerRejectsReservedMetadataPrefixForObjectKeys) {
-    EXPECT_DEATH(
-        {
-            A a;
-            babelwires::YamlSerializer serializer;
-            serializer.serializeObject(a, "$illegal");
-        },
-        "reserved for backend metadata");
-}
-
-TEST(YamlSerializationTest, yamlSerializerRejectsReservedMetadataPrefixForValueKeys) {
-    EXPECT_DEATH(
-        {
-            babelwires::YamlSerializer serializer;
-            serializer.serializeValue("$illegal", 17);
-        },
-        "reserved for backend metadata");
-}
-
-TEST(YamlSerializationTest, yamlSerializerUsesDollarTypeForExplicitRuntimeTypeMetadata) {
-    KeyedContainer container;
-    container.m_defaultKeyObject.m_x = 17;
-    container.m_explicitKeyObject.m_x = 23;
-
-    babelwires::YamlSerializer serializer;
-    serializer.serializeObject(container);
-    std::ostringstream os;
-    serializer.write(os);
-
-    const YAML::Node root = YAML::Load(os.str());
-    ASSERT_TRUE(root.IsMap());
-    ASSERT_TRUE(root["KeyedContainer"]);
-    ASSERT_TRUE(root["KeyedContainer"]["renamedA"]);
-    EXPECT_EQ(root["KeyedContainer"]["renamedA"]["$type"].as<std::string>(), "A");
-    EXPECT_FALSE(root["KeyedContainer"]["A"]["$type"]);
-}
-
-TEST(YamlSerializationTest, yamlSerializerUsesPlainScalarSequencesForValueArrays) {
-    CustomValueArrayContainer container;
-    container.m_values = {"one", "two", "three"};
-
-    babelwires::YamlSerializer serializer;
-    serializer.serializeObject(container);
-    std::ostringstream os;
-    serializer.write(os);
-
-    const YAML::Node root = YAML::Load(os.str());
-    ASSERT_TRUE(root.IsMap());
-    const YAML::Node values = root["CustomValueArrayContainer"]["values"];
-    ASSERT_TRUE(values);
-    ASSERT_TRUE(values.IsSequence());
-    ASSERT_EQ(values.size(), 3u);
-    EXPECT_TRUE(values[0].IsScalar());
-    EXPECT_EQ(values[0].as<std::string>(), "one");
-    EXPECT_TRUE(values[1].IsScalar());
-    EXPECT_EQ(values[1].as<std::string>(), "two");
-    EXPECT_TRUE(values[2].IsScalar());
-    EXPECT_EQ(values[2].as<std::string>(), "three");
-}
-
-TEST(YamlSerializationTest, yamlDeserializerRejectsNonScalarMapKeys) {
-        const std::string serializedContents =
-            "A:\n"
-            "  x: 12\n"
-            "  ? [bad, key]\n"
-            "  : nope\n"
-            "serializationMetadata:\n"
-            "  - { $type: serializable, type: A, version: 1 }\n";
-
-    TestLog log;
-    DeserializationRegistry deserializationReg;
-    deserializationReg.registerClass<A>();
-    babelwires::YamlDeserializer deserializer(deserializationReg, log);
-    ASSERT_TRUE(deserializer.parse(serializedContents));
-    auto objectResult = deserializer.deserializeObject<A>();
-    ASSERT_FALSE(objectResult);
-    EXPECT_NE(std::string_view(objectResult.error().toString()).find("non-scalar key"), std::string_view::npos);
-    deserializer.finalizeOnError();
 }
