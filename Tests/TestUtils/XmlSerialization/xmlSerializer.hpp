@@ -2,12 +2,10 @@
  * The XmlSerializer implements Serializer and writes data in an XML representation.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
-
-#include <BaseLib/baseLibExport.hpp>
 
 #include <BaseLib/Serialization/serializer.hpp>
 
@@ -18,7 +16,7 @@
 
 namespace babelwires {
 
-    class BASELIB_API XmlSerializer : public Serializer {
+    class XmlSerializer : public Serializer {
       public:
         /// Create a serializer
         XmlSerializer();

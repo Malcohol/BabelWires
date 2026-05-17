@@ -1,14 +1,14 @@
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
-#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
-#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
 #include <BaseLib/Serialization/YAML/yamlDeserializer.hpp>
 #include <BaseLib/Serialization/YAML/yamlSerializer.hpp>
 
 #include <BaseLib/Utilities/downcastable.hpp>
 
 #include <Tests/BaseLib/TestData/serializableClasses.hpp>
+#include <Tests/TestUtils/XmlSerialization/xmlDeserializer.hpp>
+#include <Tests/TestUtils/XmlSerialization/xmlSerializer.hpp>
 
 #include <Tests/TestUtils/testLog.hpp>
 

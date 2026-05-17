@@ -5,9 +5,10 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
+#include <Tests/TestUtils/XmlSerialization/xmlDeserializer.hpp>
 
-#include <BaseLib/Serialization/XML/xmlCommon.h>
+#include <Tests/TestUtils/XmlSerialization/xmlCommon.h>
+
 #include <BaseLib/Result/resultDSL.hpp>
 
 #include <cassert>

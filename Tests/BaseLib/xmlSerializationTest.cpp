@@ -1,6 +1,5 @@
-#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
-
 #include <Tests/BaseLib/TestData/serializableClasses.hpp>
+#include <Tests/TestUtils/XmlSerialization/xmlSerializer.hpp>
 
 #include <gtest/gtest.h>
 
