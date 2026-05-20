@@ -23,6 +23,34 @@ namespace {
     unsigned int normalizeYamlScalarValue(std::uint8_t value) { return static_cast<unsigned int>(value); }
     int normalizeYamlScalarValue(std::int16_t value) { return static_cast<int>(value); }
     int normalizeYamlScalarValue(std::int8_t value) { return static_cast<int>(value); }
+
+    bool shouldUseFlowStyle(const YAML::Node& node) {
+        if (node.IsSequence()) {
+            for (const YAML::Node& childNode : node) {
+                if (!childNode.IsScalar()) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        if (node.IsMap()) {
+            for (const auto& entry : node) {
+                if (!entry.first.IsScalar() || !entry.second.IsScalar()) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    void applyPreferredStyle(YAML::Node& node) {
+        if (shouldUseFlowStyle(node)) {
+            node.SetStyle(YAML::EmitterStyle::Flow);
+        }
+    }
 }
 
 babelwires::YamlSerializer::YamlSerializer() { initialize(); }
@@ -90,6 +118,7 @@ void babelwires::YamlSerializer::doPopObject() {
     }
     ContextEntry completedContext = std::move(m_yamlContext.back());
     contextPop();
+    applyPreferredStyle(completedContext.m_node);
 
     if (m_yamlContext.empty()) {
         m_root = completedContext.m_node;
@@ -109,6 +138,7 @@ void babelwires::YamlSerializer::doPushArray(std::string_view key) {
 void babelwires::YamlSerializer::doPopArray() {
     ContextEntry completedContext = std::move(m_yamlContext.back());
     contextPop();
+    applyPreferredStyle(completedContext.m_node);
     if (m_yamlContext.empty()) {
         m_root = completedContext.m_node;
     } else {

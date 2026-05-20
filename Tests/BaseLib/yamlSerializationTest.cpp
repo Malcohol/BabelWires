@@ -17,6 +17,26 @@ using testData::A;
 using testData::CustomValueArrayContainer;
 using testData::KeyedContainer;
 
+namespace {
+    struct ScalarRecordContainer : Serializable {
+        SERIALIZABLE(ScalarRecordContainer, "ScalarRecordContainer", void, 1);
+
+        void serializeContents(Serializer& serializer) const override {
+            serializer.serializeValue("x", m_x);
+            serializer.serializeValue("name", m_name);
+        }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeValue("x", m_x));
+            DO_OR_ERROR(deserializer.deserializeValue("name", m_name));
+            return {};
+        }
+
+        int m_x = 0;
+        std::string m_name;
+    };
+}
+
 TEST(YamlSerializationTest, yamlSerializerRejectsReservedMetadataPrefixForObjectKeys) {
     EXPECT_DEATH(
         {
@@ -69,12 +89,33 @@ TEST(YamlSerializationTest, yamlSerializerUsesPlainScalarSequencesForValueArrays
     ASSERT_TRUE(values);
     ASSERT_TRUE(values.IsSequence());
     ASSERT_EQ(values.size(), 3u);
+    EXPECT_EQ(values.Style(), YAML::EmitterStyle::Flow);
     EXPECT_TRUE(values[0].IsScalar());
     EXPECT_EQ(values[0].as<std::string>(), "one");
     EXPECT_TRUE(values[1].IsScalar());
     EXPECT_EQ(values[1].as<std::string>(), "two");
     EXPECT_TRUE(values[2].IsScalar());
     EXPECT_EQ(values[2].as<std::string>(), "three");
+}
+
+TEST(YamlSerializationTest, yamlSerializerUsesFlowStyleForScalarOnlyRecords) {
+    ScalarRecordContainer container;
+    container.m_x = 17;
+    container.m_name = "example";
+
+    YamlSerializer serializer;
+    serializer.serializeObject(container);
+    std::ostringstream os;
+    serializer.write(os);
+
+    const YAML::Node root = YAML::Load(os.str());
+    ASSERT_TRUE(root.IsMap());
+    const YAML::Node record = root["ScalarRecordContainer"];
+    ASSERT_TRUE(record);
+    ASSERT_TRUE(record.IsMap());
+    EXPECT_EQ(record.Style(), YAML::EmitterStyle::Flow);
+    EXPECT_EQ(record["x"].as<int>(), 17);
+    EXPECT_EQ(record["name"].as<std::string>(), "example");
 }
 
 TEST(YamlSerializationTest, yamlDeserializerRejectsNonScalarMapKeys) {
