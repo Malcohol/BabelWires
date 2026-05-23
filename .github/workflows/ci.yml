@@ -30,8 +30,7 @@ jobs:
             name: "Windows Latest MSVC",
             os: windows-latest,
             cc: "cl",
-            cxx: "cl",
-            generators: "Visual Studio 16 2019"
+            cxx: "cl"
           }
         - {
             name: "macOS Latest Clang",
