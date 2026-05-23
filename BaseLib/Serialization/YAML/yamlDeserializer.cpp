@@ -15,6 +15,14 @@
 
 namespace {
     template <typename T> using BigInt = std::conditional_t<std::is_signed_v<T>, std::int64_t, std::uint64_t>;
+
+    std::string_view tryGetTypeNameFromTag(const YAML::Node& node) {
+        const std::string& tag = node.Tag();
+        if ((tag.size() > 1) && (tag.front() == '!')) {
+            return std::string_view(tag).substr(1);
+        }
+        return {};
+    }
 }
 
 void babelwires::YamlDeserializer::keyWasQueried(std::string_view key) {
@@ -242,15 +250,10 @@ std::string_view babelwires::YamlDeserializer::getCurrentTypeName() {
     assert(!m_yamlContext.back().m_isArray && "You cannot query the type of an array");
 
     const YAML::Node& currentNode = getCurrentNode();
+    if (const std::string_view tagTypeName = tryGetTypeNameFromTag(currentNode); !tagTypeName.empty()) {
+        return tagTypeName;
+    }
     if (currentNode.IsMap()) {
-        const YAML::Node runtimeTypeNode = currentNode[c_runtimeTypeMetadataKey];
-        if (runtimeTypeNode) {
-            keyWasQueried(c_runtimeTypeMetadataKey);
-            if (runtimeTypeNode.IsScalar()) {
-                return runtimeTypeNode.Scalar();
-            }
-            return {};
-        }
         if (!m_yamlContext.back().m_isArrayElement) {
             return m_yamlContext.back().m_key;
         }
@@ -264,12 +267,11 @@ bool babelwires::YamlDeserializer::currentValueArrayElementMatchesType(std::stri
         return true;
     }
     if (currentNode.IsMap()) {
-        const YAML::Node runtimeTypeNode = currentNode[c_runtimeTypeMetadataKey];
-        if (!runtimeTypeNode) {
+        const std::string_view tagTypeName = tryGetTypeNameFromTag(currentNode);
+        if (tagTypeName.empty()) {
             return true;
         }
-        keyWasQueried(c_runtimeTypeMetadataKey);
-        return runtimeTypeNode.IsScalar() && (runtimeTypeNode.Scalar() == expectedTypeName);
+        return tagTypeName == expectedTypeName;
     }
     return false;
 }

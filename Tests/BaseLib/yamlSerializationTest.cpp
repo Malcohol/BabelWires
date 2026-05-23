@@ -5,6 +5,7 @@
 #include <Tests/BaseLib/TestData/serializableClasses.hpp>
 
 #include <Tests/TestUtils/testLog.hpp>
+#include <Tests/TestUtils/resultTestUtils.hpp>
 
 #include <gtest/gtest.h>
 
@@ -18,6 +19,38 @@ using testData::CustomValueArrayContainer;
 using testData::KeyedContainer;
 
 namespace {
+    bool hasReservedMetadataKeys(const YAML::Node& node) {
+        if (!node.IsMap()) {
+            return false;
+        }
+
+        for (const auto& keyAndValue : node) {
+            if (keyAndValue.first.IsScalar() &&
+                keyAndValue.first.Scalar().starts_with(std::string(SerializerDeserializerCommon::c_dollarMetadataPrefix))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    struct ObjectArrayContainer : Serializable {
+        SERIALIZABLE(ObjectArrayContainer, "ObjectArrayContainer", void, 1);
+
+        void serializeContents(Serializer& serializer) const override { serializer.serializeArray("items", m_items); }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<A>("items"));
+            while (it.isValid()) {
+                ASSIGN_OR_ERROR(auto item, it.getObject());
+                m_items.emplace_back(std::move(item));
+                DO_OR_ERROR(it.advance());
+            }
+            return {};
+        }
+
+        std::vector<std::unique_ptr<A>> m_items;
+    };
+
     struct ScalarRecordContainer : Serializable {
         SERIALIZABLE(ScalarRecordContainer, "ScalarRecordContainer", void, 1);
 
@@ -56,7 +89,7 @@ TEST(YamlSerializationTest, yamlSerializerRejectsReservedMetadataPrefixForValueK
         "reserved for backend metadata");
 }
 
-TEST(YamlSerializationTest, yamlSerializerUsesDollarTypeForExplicitRuntimeTypeMetadata) {
+TEST(YamlSerializationTest, yamlSerializerUsesTagsForExplicitRuntimeTypeMetadata) {
     KeyedContainer container;
     container.m_defaultKeyObject.m_x = 17;
     container.m_explicitKeyObject.m_x = 23;
@@ -70,8 +103,39 @@ TEST(YamlSerializationTest, yamlSerializerUsesDollarTypeForExplicitRuntimeTypeMe
     ASSERT_TRUE(root.IsMap());
     ASSERT_TRUE(root["KeyedContainer"]);
     ASSERT_TRUE(root["KeyedContainer"]["renamedA"]);
-    EXPECT_EQ(root["KeyedContainer"]["renamedA"]["$type"].as<std::string>(), "A");
-    EXPECT_FALSE(root["KeyedContainer"]["A"]["$type"]);
+    EXPECT_EQ(root["KeyedContainer"]["renamedA"].Tag(), "!A");
+    EXPECT_TRUE(root["KeyedContainer"]["renamedA"].IsMap());
+    EXPECT_FALSE(hasReservedMetadataKeys(root["KeyedContainer"]["renamedA"]));
+    EXPECT_EQ(root["KeyedContainer"]["renamedA"]["x"].as<int>(), 23);
+    EXPECT_NE(root["KeyedContainer"]["A"].Tag(), "!A");
+}
+
+TEST(YamlSerializationTest, yamlSerializerUsesTagsForObjectArrayElements) {
+    ObjectArrayContainer container;
+    auto first = std::make_unique<A>();
+    first->m_x = 17;
+    auto second = std::make_unique<A>();
+    second->m_x = 23;
+    container.m_items.emplace_back(std::move(first));
+    container.m_items.emplace_back(std::move(second));
+
+    YamlSerializer serializer;
+    serializer.serializeObject(container);
+    std::ostringstream os;
+    serializer.write(os);
+
+    const YAML::Node root = YAML::Load(os.str());
+    ASSERT_TRUE(root.IsMap());
+    const YAML::Node items = root["ObjectArrayContainer"]["items"];
+    ASSERT_TRUE(items);
+    ASSERT_TRUE(items.IsSequence());
+    ASSERT_EQ(items.size(), 2u);
+    EXPECT_EQ(items[0].Tag(), "!A");
+    EXPECT_EQ(items[1].Tag(), "!A");
+    EXPECT_FALSE(hasReservedMetadataKeys(items[0]));
+    EXPECT_FALSE(hasReservedMetadataKeys(items[1]));
+    EXPECT_EQ(items[0]["x"].as<int>(), 17);
+    EXPECT_EQ(items[1]["x"].as<int>(), 23);
 }
 
 TEST(YamlSerializationTest, yamlSerializerUsesPlainScalarSequencesForValueArrays) {
@@ -125,7 +189,7 @@ TEST(YamlSerializationTest, yamlDeserializerRejectsNonScalarMapKeys) {
         "  ? [bad, key]\n"
         "  : nope\n"
         "serializationMetadata:\n"
-        "  - { $type: serializable, type: A, version: 1 }\n";
+        "  - !serializable {type: A, version: 1}\n";
 
     TestLog log;
     DeserializationRegistry deserializationReg;
@@ -136,4 +200,49 @@ TEST(YamlSerializationTest, yamlDeserializerRejectsNonScalarMapKeys) {
     ASSERT_FALSE(objectResult);
     EXPECT_NE(std::string_view(objectResult.error().toString()).find("non-scalar key"), std::string_view::npos);
     deserializer.finalizeOnError();
+}
+
+TEST(YamlSerializationTest, yamlDeserializerUsesTagsForExplicitRuntimeTypeMetadata) {
+    const std::string serializedContents =
+        "KeyedContainer:\n"
+        "  A: {x: 17}\n"
+        "  renamedA: !A\n"
+        "    x: 23\n"
+        "serializationMetadata:\n"
+        "  - !serializable {type: A, version: 1}\n"
+        "  - !serializable {type: KeyedContainer, version: 1}\n";
+
+    TestLog log;
+    DeserializationRegistry deserializationReg;
+    deserializationReg.registerClass<A>();
+    deserializationReg.registerClass<KeyedContainer>();
+    YamlDeserializer deserializer(deserializationReg, log);
+    ASSERT_TRUE(deserializer.parse(serializedContents));
+    BW_ASSERT_RESULT_ASSIGN(auto objectResult, deserializer.deserializeObject<KeyedContainer>());
+    EXPECT_EQ(objectResult->m_defaultKeyObject.m_x, 17);
+    EXPECT_EQ(objectResult->m_explicitKeyObject.m_x, 23);
+    EXPECT_TRUE(deserializer.finalize());
+}
+
+TEST(YamlSerializationTest, yamlDeserializerUsesTagsForObjectArrayElements) {
+    const std::string serializedContents =
+        "ObjectArrayContainer:\n"
+        "  items:\n"
+        "    - !A {x: 17}\n"
+        "    - !A {x: 23}\n"
+        "serializationMetadata:\n"
+        "  - !serializable {type: A, version: 1}\n"
+        "  - !serializable {type: ObjectArrayContainer, version: 1}\n";
+
+    TestLog log;
+    DeserializationRegistry deserializationReg;
+    deserializationReg.registerClass<A>();
+    deserializationReg.registerClass<ObjectArrayContainer>();
+    YamlDeserializer deserializer(deserializationReg, log);
+    ASSERT_TRUE(deserializer.parse(serializedContents));
+    BW_ASSERT_RESULT_ASSIGN(auto objectResult, deserializer.deserializeObject<ObjectArrayContainer>());
+    ASSERT_EQ(objectResult->m_items.size(), 2u);
+    EXPECT_EQ(objectResult->m_items[0]->m_x, 17);
+    EXPECT_EQ(objectResult->m_items[1]->m_x, 23);
+    EXPECT_TRUE(deserializer.finalize());
 }

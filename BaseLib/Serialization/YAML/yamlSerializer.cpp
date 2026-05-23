@@ -15,6 +15,10 @@ namespace {
         return value;
     }
 
+    std::string makeLocalYamlTag(std::string_view typeName) {
+        return std::string("!") + std::string(typeName);
+    }
+
     std::string normalizeYamlScalarValue(std::string_view value) {
         return std::string(value);
     }
@@ -79,7 +83,7 @@ void babelwires::YamlSerializer::ensureCurrentNodeIsMaterialized() {
         return;
     }
     currentContext.m_node = YAML::Node(YAML::NodeType::Map);
-    currentContext.m_node[c_runtimeTypeMetadataKey] = currentContext.m_pendingArrayElementTypeName;
+    currentContext.m_node.SetTag(makeLocalYamlTag(currentContext.m_pendingArrayElementTypeName));
 }
 
 void babelwires::YamlSerializer::doPushObject(std::string_view typeName) {
@@ -106,7 +110,7 @@ void babelwires::YamlSerializer::doPushObjectWithKey(std::string_view typeName, 
     ensureCurrentNodeIsMaterialized();
     YAML::Node newNode(YAML::NodeType::Map);
     if (key != typeName) {
-        newNode[c_runtimeTypeMetadataKey] = typeName;
+        newNode.SetTag(makeLocalYamlTag(typeName));
     }
     contextPush(std::move(newNode), false, std::string(key));
 }

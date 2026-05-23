@@ -37,10 +37,7 @@ namespace babelwires {
         inline static constexpr std::string_view c_defaultValueArrayElementTypeName = "element";
         inline static constexpr std::string_view c_defaultValueArrayValueKey = "value";
 
-        /// Reserved runtime type metadata is backend-defined. Map-like backends are expected to use this key.
-        inline static constexpr std::string_view c_runtimeTypeMetadataKey = "$type";
-
-        /// Map-like backends such as YAML and JSON reserve the $ prefix for backend metadata.
+        /// Some map-like backends reserve the $ prefix for backend metadata.
         inline static constexpr std::string_view c_dollarMetadataPrefix = "$";
 
         static bool keyHasReservedPrefix(std::string_view key, std::string_view prefix);
