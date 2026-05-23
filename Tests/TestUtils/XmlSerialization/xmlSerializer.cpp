@@ -102,10 +102,6 @@ void babelwires::XmlSerializer::doSerializeValue(std::string_view key, std::int8
     getCurrentElement()->SetAttribute(toCStr(key), value);
 }
 
-bool babelwires::XmlSerializer::isOrdinaryFieldKeyReserved(std::string_view key) const {
-    return keyHasReservedPrefix(key, c_xmlMetadataPrefix);
-}
-
 void babelwires::XmlSerializer::write(std::ostream& os) {
     finalize();
     assert(m_xmlContext.empty() && "Not all objects have been popped");

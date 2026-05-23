@@ -96,7 +96,6 @@ namespace babelwires {
         virtual void doSerializeValue(std::string_view key, std::int32_t value) = 0;
         virtual void doSerializeValue(std::string_view key, std::int16_t value) = 0;
         virtual void doSerializeValue(std::string_view key, std::int8_t value) = 0;
-        virtual bool isOrdinaryFieldKeyReserved(std::string_view key) const = 0;
         virtual void doPopObject() = 0;
         virtual void doPushArray(std::string_view key) = 0;
         virtual void doPopArray() = 0;

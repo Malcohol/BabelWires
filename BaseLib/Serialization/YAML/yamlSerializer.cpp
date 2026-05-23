@@ -190,10 +190,6 @@ void babelwires::YamlSerializer::doSerializeValue(std::string_view key, std::int
     serializeScalarValue(key, YAML::Node(normalizeYamlScalarValue(value)));
 }
 
-bool babelwires::YamlSerializer::isOrdinaryFieldKeyReserved(std::string_view key) const {
-    return keyHasReservedPrefix(key, c_dollarMetadataPrefix);
-}
-
 void babelwires::YamlSerializer::write(std::ostream& os) {
     finalize();
     assert(m_yamlContext.empty() && "Not all YAML nodes have been popped");

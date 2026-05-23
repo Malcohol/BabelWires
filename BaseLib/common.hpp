@@ -15,6 +15,7 @@
 #include <limits>
 #include <memory>
 #include <string>
+#include <string_view>
 #include <type_traits>
 #include <vector>
 
@@ -60,6 +61,7 @@ namespace babelwires {
     /// Is str usable as an "identifier" ([a..zA..Z][_a..zA..Z0..9]*).
     /// This constraint is just used to keep certain strings sane.
     BASELIB_API bool isValidIdentifier(const char* str);
+    BASELIB_API bool isValidIdentifier(std::string_view str);
 
     // Utility templates.
 

@@ -67,7 +67,7 @@ void babelwires::Serializer::serializeValue(std::string_view key, std::int8_t va
 }
 
 void babelwires::Serializer::assertOrdinaryFieldKey(std::string_view key) const {
-    assert(!isOrdinaryFieldKeyReserved(key) && "Client code cannot use keys reserved for backend metadata");
+    assert(isValidIdentifier(key) && "Client code must use a valid identifier for serialized field keys");
 }
 
 void babelwires::Serializer::pushCommon() {

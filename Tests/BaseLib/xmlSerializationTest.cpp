@@ -15,7 +15,7 @@ TEST(XmlSerializationTest, xmlSerializerRejectsReservedMetadataPrefixForObjectKe
             XmlSerializer serializer;
             serializer.serializeObject(a, "meta:illegal");
         },
-        "reserved for backend metadata");
+        "valid identifier");
 }
 
 TEST(XmlSerializationTest, xmlSerializerRejectsReservedMetadataPrefixForValueKeys) {
@@ -24,7 +24,7 @@ TEST(XmlSerializationTest, xmlSerializerRejectsReservedMetadataPrefixForValueKey
             XmlSerializer serializer;
             serializer.serializeValue("meta:illegal", 17);
         },
-        "reserved for backend metadata");
+        "valid identifier");
 }
 
 TEST(XmlSerializationTest, xmlSerializerUsesMetaTypeForExplicitRuntimeTypeMetadata) {

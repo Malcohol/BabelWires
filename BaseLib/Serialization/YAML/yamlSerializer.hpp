@@ -39,7 +39,6 @@ namespace babelwires {
         void doSerializeValue(std::string_view key, std::int32_t value) override;
         void doSerializeValue(std::string_view key, std::int16_t value) override;
         void doSerializeValue(std::string_view key, std::int8_t value) override;
-        bool isOrdinaryFieldKeyReserved(std::string_view key) const override;
         void doPopObject() override;
         void doPushArray(std::string_view key) override;
         void doPopArray() override;

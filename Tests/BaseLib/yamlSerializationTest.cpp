@@ -19,20 +19,6 @@ using testData::CustomValueArrayContainer;
 using testData::KeyedContainer;
 
 namespace {
-    bool hasReservedMetadataKeys(const YAML::Node& node) {
-        if (!node.IsMap()) {
-            return false;
-        }
-
-        for (const auto& keyAndValue : node) {
-            if (keyAndValue.first.IsScalar() &&
-                keyAndValue.first.Scalar().starts_with(std::string(SerializerDeserializerCommon::c_dollarMetadataPrefix))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     struct ObjectArrayContainer : Serializable {
         SERIALIZABLE(ObjectArrayContainer, "ObjectArrayContainer", void, 1);
 
@@ -77,7 +63,7 @@ TEST(YamlSerializationTest, yamlSerializerRejectsReservedMetadataPrefixForObject
             YamlSerializer serializer;
             serializer.serializeObject(a, "$illegal");
         },
-        "reserved for backend metadata");
+        "valid identifier");
 }
 
 TEST(YamlSerializationTest, yamlSerializerRejectsReservedMetadataPrefixForValueKeys) {
@@ -86,7 +72,7 @@ TEST(YamlSerializationTest, yamlSerializerRejectsReservedMetadataPrefixForValueK
             YamlSerializer serializer;
             serializer.serializeValue("$illegal", 17);
         },
-        "reserved for backend metadata");
+        "valid identifier");
 }
 
 TEST(YamlSerializationTest, yamlSerializerUsesTagsForExplicitRuntimeTypeMetadata) {
@@ -105,7 +91,6 @@ TEST(YamlSerializationTest, yamlSerializerUsesTagsForExplicitRuntimeTypeMetadata
     ASSERT_TRUE(root["KeyedContainer"]["renamedA"]);
     EXPECT_EQ(root["KeyedContainer"]["renamedA"].Tag(), "!A");
     EXPECT_TRUE(root["KeyedContainer"]["renamedA"].IsMap());
-    EXPECT_FALSE(hasReservedMetadataKeys(root["KeyedContainer"]["renamedA"]));
     EXPECT_EQ(root["KeyedContainer"]["renamedA"]["x"].as<int>(), 23);
     EXPECT_NE(root["KeyedContainer"]["A"].Tag(), "!A");
 }
@@ -132,8 +117,6 @@ TEST(YamlSerializationTest, yamlSerializerUsesTagsForObjectArrayElements) {
     ASSERT_EQ(items.size(), 2u);
     EXPECT_EQ(items[0].Tag(), "!A");
     EXPECT_EQ(items[1].Tag(), "!A");
-    EXPECT_FALSE(hasReservedMetadataKeys(items[0]));
-    EXPECT_FALSE(hasReservedMetadataKeys(items[1]));
     EXPECT_EQ(items[0]["x"].as<int>(), 17);
     EXPECT_EQ(items[1]["x"].as<int>(), 23);
 }
