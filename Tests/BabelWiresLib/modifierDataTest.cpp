@@ -10,8 +10,9 @@
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
-#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
-#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/userDocumentSerializationFactory.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
@@ -55,19 +56,22 @@ TEST(ModifierDataTest, arrayInitializationSerialization) {
         data.m_targetPath = *babelwires::Path::deserializeFromString("aa/bb/6");
         data.m_size = 5;
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(data);
+        auto serializer = babelwires::UserDocumentSerializationFactory::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(data);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
     testUtils::TestEnvironment testEnvironment;
-    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
-    ASSERT_TRUE(deserializer.parse(serializedContents));
-    auto dataPtrResult = deserializer.deserializeObject<babelwires::ArraySizeModifierData>();
+    auto deserializer =
+        babelwires::UserDocumentSerializationFactory::createDeserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
+    ASSERT_NE(deserializer, nullptr);
+    ASSERT_TRUE(deserializer->parse(serializedContents));
+    auto dataPtrResult = deserializer->deserializeObject<babelwires::ArraySizeModifierData>();
     ASSERT_TRUE(dataPtrResult);
     auto dataPtr = std::move(*dataPtrResult);
-    deserializer.finalize();
+    deserializer->finalize();
 
     ASSERT_NE(dataPtr, nullptr);
     EXPECT_EQ(dataPtr->m_targetPath, *babelwires::Path::deserializeFromString("aa/bb/6"));
@@ -147,19 +151,22 @@ TEST(ModifierDataTest, assignFromFeatureSerialization) {
         data.m_targetPath = *babelwires::Path::deserializeFromString("aa/bb/6");
         data.m_sourcePath = *babelwires::Path::deserializeFromString("10/ee/ff");
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(data);
+        auto serializer = babelwires::UserDocumentSerializationFactory::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(data);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
     testUtils::TestEnvironment testEnvironment;
-    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
-    ASSERT_TRUE(deserializer.parse(serializedContents));
-    auto dataPtrResult = deserializer.deserializeObject<babelwires::ConnectionModifierData>();
+    auto deserializer =
+        babelwires::UserDocumentSerializationFactory::createDeserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
+    ASSERT_NE(deserializer, nullptr);
+    ASSERT_TRUE(deserializer->parse(serializedContents));
+    auto dataPtrResult = deserializer->deserializeObject<babelwires::ConnectionModifierData>();
     ASSERT_TRUE(dataPtrResult);
     auto dataPtr = std::move(*dataPtrResult);
-    deserializer.finalize();
+    deserializer->finalize();
 
     ASSERT_NE(dataPtr, nullptr);
     EXPECT_EQ(dataPtr->m_targetPath, *babelwires::Path::deserializeFromString("aa/bb/6"));

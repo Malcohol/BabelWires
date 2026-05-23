@@ -2,12 +2,10 @@
  * The XmlDeserializer implements the Deserializer and loads data from an XML representation.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
-
-#include <BaseLib/baseLibExport.hpp>
 
 #include <BaseLib/Serialization/deserializer.hpp>
 
@@ -16,12 +14,12 @@
 
 namespace babelwires {
 
-    class BASELIB_API XmlDeserializer : public Deserializer {
+    class XmlDeserializer : public Deserializer {
       public:
         XmlDeserializer(const DeserializationRegistryInterface& deserializationRegistry, UserLogger& userLogger);
 
         /// Parse the given XML text. Must be called before using the deserializer.
-        Result parse(std::string_view xmlText);
+        Result parse(std::string_view xmlText) override;
 
         ResultT<bool> tryDeserializeValue(std::string_view key, bool& value) override;
         ResultT<bool> tryDeserializeValue(std::string_view key, std::string& value) override;
@@ -35,7 +33,7 @@ namespace babelwires {
         ResultT<bool> tryDeserializeValue(std::string_view key, std::int8_t& value) override;
 
       protected:
-        struct BASELIB_API IteratorImpl : Deserializer::AbstractIterator {
+        struct IteratorImpl : Deserializer::AbstractIterator {
             IteratorImpl(XmlDeserializer& deserializer, const tinyxml2::XMLElement* arrayElement);
 
             Result advance() override;

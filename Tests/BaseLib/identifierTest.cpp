@@ -6,8 +6,9 @@
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <BaseLib/Log/unifiedLog.hpp>
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
-#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
-#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/userDocumentSerializationFactory.hpp>
 
 TEST(IdentifierTest, identifiers) {
     babelwires::ShortId hello("Hello");
@@ -394,23 +395,25 @@ TEST(IdentifierTest, identifierRegistrySerializationDeserialization) {
         id1 =
             identifierRegistry.addIdentifierWithMetadata(id1, name1, uuid1, babelwires::IdentifierRegistry::Authority::isProvisional);
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(identifierRegistry);
+        auto serializer = babelwires::UserDocumentSerializationFactory::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(identifierRegistry);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
 
     {
         babelwires::DeserializationRegistry deserializationReg;
         deserializationReg.registerClass<babelwires::IdentifierRegistry>();
-        babelwires::XmlDeserializer deserializer(deserializationReg, log);
-        ASSERT_TRUE(deserializer.parse(serializedContents));
-        auto fieldNameRegPtrResult = deserializer.deserializeObject<babelwires::IdentifierRegistry>();
+        auto deserializer = babelwires::UserDocumentSerializationFactory::createDeserializer(deserializationReg, log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto fieldNameRegPtrResult = deserializer->deserializeObject<babelwires::IdentifierRegistry>();
         ASSERT_TRUE(fieldNameRegPtrResult);
         auto fieldNameRegPtr = std::move(*fieldNameRegPtrResult);
         ASSERT_NE(fieldNameRegPtr, nullptr);
-        deserializer.finalize();
+        deserializer->finalize();
 
         EXPECT_EQ(fieldNameRegPtr->getName(id0), name0);
         EXPECT_EQ(fieldNameRegPtr->getName(id1), name1);

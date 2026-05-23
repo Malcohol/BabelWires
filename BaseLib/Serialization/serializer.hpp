@@ -15,6 +15,7 @@
 #include <cstdint>
 #include <map>
 #include <memory>
+#include <ostream>
 #include <string_view>
 
 namespace babelwires {
@@ -24,8 +25,12 @@ namespace babelwires {
       public:
         virtual ~Serializer();
 
-        /// Serialize the object. The key is often the name of a field, but by
-        /// default it duplicates the name of the object's type.
+        /// Write the serialized document to the given stream.
+        virtual void write(std::ostream& os) = 0;
+
+        /// Serialize a child object.
+        /// The key identifies the field in the containing object.
+        /// By default it duplicates the serialized type name, but runtime type identity remains a separate concept.
         template <typename T> void serializeObject(const T& object, std::string_view key = T::s_serializationTypeName);
 
         /// Serialize an array of objects, whose contents described by the given span
@@ -34,20 +39,22 @@ namespace babelwires {
 
         /// Serialize an array of values, whose contents described by the given span
         /// (i.e. object with begin and end methods).
+        /// Concrete backends may later choose a different wire representation while preserving the same semantics.
         template <typename S>
-        void serializeValueArray(std::string_view key, const S& span, std::string_view typeName = "element");
+        void serializeValueArray(std::string_view key, const S& span,
+                     std::string_view typeName = c_defaultValueArrayElementTypeName);
 
         // Serialize simple values.
-        virtual void serializeValue(std::string_view key, bool value) = 0;
-        virtual void serializeValue(std::string_view key, std::string_view value) = 0;
-        virtual void serializeValue(std::string_view key, std::uint64_t value) = 0;
-        virtual void serializeValue(std::string_view key, std::uint32_t value) = 0;
-        virtual void serializeValue(std::string_view key, std::uint16_t value) = 0;
-        virtual void serializeValue(std::string_view key, std::uint8_t value) = 0;
-        virtual void serializeValue(std::string_view key, std::int64_t value) = 0;
-        virtual void serializeValue(std::string_view key, std::int32_t value) = 0;
-        virtual void serializeValue(std::string_view key, std::int16_t value) = 0;
-        virtual void serializeValue(std::string_view key, std::int8_t value) = 0;
+        void serializeValue(std::string_view key, bool value);
+        void serializeValue(std::string_view key, std::string_view value);
+        void serializeValue(std::string_view key, std::uint64_t value);
+        void serializeValue(std::string_view key, std::uint32_t value);
+        void serializeValue(std::string_view key, std::uint16_t value);
+        void serializeValue(std::string_view key, std::uint8_t value);
+        void serializeValue(std::string_view key, std::int64_t value);
+        void serializeValue(std::string_view key, std::int32_t value);
+        void serializeValue(std::string_view key, std::int16_t value);
+        void serializeValue(std::string_view key, std::int8_t value);
 
         /// Objects with methods "serializeToString" and "deserializeToString" can be serialized as values.
         template <typename V>
@@ -64,6 +71,7 @@ namespace babelwires {
 
       protected:
         void pushObject(std::string_view typeName);
+        void pushValueArrayElement(std::string_view typeName);
         void pushObjectWithKey(std::string_view typeName, std::string_view key);
         void popObject();
         void pushArray(std::string_view key);
@@ -72,11 +80,22 @@ namespace babelwires {
         void pushCommon();
         void popCommon();
 
-        void setValueCommon(std::string_view key, std::string_view value);
+        void assertOrdinaryFieldKey(std::string_view key) const;
 
       protected:
         virtual void doPushObject(std::string_view typeName) = 0;
+        virtual void doPushValueArrayElement(std::string_view typeName);
         virtual void doPushObjectWithKey(std::string_view typeName, std::string_view key) = 0;
+        virtual void doSerializeValue(std::string_view key, bool value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::string_view value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::uint64_t value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::uint32_t value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::uint16_t value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::uint8_t value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::int64_t value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::int32_t value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::int16_t value) = 0;
+        virtual void doSerializeValue(std::string_view key, std::int8_t value) = 0;
         virtual void doPopObject() = 0;
         virtual void doPushArray(std::string_view key) = 0;
         virtual void doPopArray() = 0;
@@ -133,8 +152,8 @@ void babelwires::Serializer::serializeValueArray(std::string_view key, const S& 
     if (span.begin() != span.end()) {
         pushArray(key);
         for (const auto& it : span) {
-            pushObject(typeName);
-            serializeValue("value", it);
+            pushValueArrayElement(typeName);
+            serializeValue(c_defaultValueArrayValueKey, it);
             popObject();
         }
         popArray();

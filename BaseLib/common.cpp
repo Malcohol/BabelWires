@@ -13,14 +13,18 @@
 
 bool babelwires::isValidIdentifier(const char* str) {
     assert(str != nullptr);
-    if (*str == 0) {
+    return isValidIdentifier(std::string_view(str));
+}
+
+bool babelwires::isValidIdentifier(std::string_view str) {
+    if (str.empty()) {
         return false;
     }
-    if (!isalpha(*str) && (*str != '_')) {
+    if (!isalpha(str.front()) && (str.front() != '_')) {
         return false;
     }
-    for (; *str; ++str) {
-        if (!isalpha(*str) && !isdigit(*str) && (*str != '_')) {
+    for (const char c : str) {
+        if (!isalpha(c) && !isdigit(c) && (c != '_')) {
             return false;
         }
     }

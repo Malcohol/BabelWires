@@ -298,7 +298,8 @@ bool babelwires::MapEditor::trySaveMapToFile(const QString& filePath) {
     while (1) {
         std::string filePathStr = filePath.toStdString();
         getUserLogger().logInfo() << "Save map to \"" << filePathStr << '"';
-        auto saveResult = MapSerialization::saveToFile(filePathStr, m_map.extractMapValue());
+        auto saveResult = MapSerialization::saveToFile(filePathStr, getProjectGraphModel().getContext(),
+                                                       m_map.extractMapValue());
         if (saveResult) {
             return true;
         }

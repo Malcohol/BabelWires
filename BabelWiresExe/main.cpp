@@ -54,8 +54,6 @@
 #include <sstream>
 #include <stdexcept>
 
-#include <tinyxml2.h>
-
 using namespace babelwires;
 
 /// Plugin files are expected to have this extension.

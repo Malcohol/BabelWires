@@ -19,8 +19,8 @@ babelwires::Deserializer::~Deserializer() {
 }
 
 babelwires::Result babelwires::Deserializer::initialize() {
-    if (!pushObject("contents")) {
-        return Error() << "The element \"contents\" is missing";
+    if (!pushObject(c_contentsKey)) {
+        return Error() << "The element \"" << c_contentsKey << "\" is missing";
     }
     DO_OR_ERROR(deserializeMetadata(*this, m_userLogger));
     return {};
@@ -63,14 +63,23 @@ babelwires::Deserializer::deserializeCurrentObject(const DeserializationTreeNode
     return Error() << "Unknown type \"" << currentTypeName << "\"";
 }
 
+babelwires::ResultT<std::unique_ptr<babelwires::Serializable>> babelwires::Deserializer::deserializeCurrentObjectOfExactType(
+    const DeserializationTreeNode& expectedTreeNode, std::string_view expectedTypeName) {
+    const std::string_view currentTypeName = getCurrentTypeName();
+    if (const DeserializationRegistryInterface::Entry* entry = getDeserializationRegistry().findEntry(currentTypeName)) {
+        if (entry->m_node == &expectedTreeNode) {
+            return entry->m_factory(*this);
+        }
+        return Error() << "The type \"" << currentTypeName << "\" cannot be deserialized by value as \""
+                       << expectedTypeName << "\"";
+    }
+    return Error() << "Unknown type \"" << currentTypeName << "\"";
+}
+
 babelwires::Result babelwires::Deserializer::BaseIterator::advance() {
     assert(isValid());
     DO_OR_ERROR(m_impl->advance());
-    if (!m_typeName.empty() && isValid()) {
-        if (m_deserializer.getCurrentTypeName() != m_typeName) {
-            return Error() << "Not expecting an object of type \"" << m_deserializer.getCurrentTypeName() << "\"";
-        }
-    }
+    DO_OR_ERROR(checkCurrentValueArrayElementType());
     DO_OR_ERROR(checkFinished());
     return {};
 }
@@ -84,6 +93,7 @@ babelwires::Deserializer::BaseIterator::BaseIterator(std::unique_ptr<AbstractIte
     : m_impl(std::move(impl))
     , m_deserializer(deserializer)
     , m_typeName(std::move(typeName)) {
+    checkCurrentValueArrayElementType();
     checkFinished();
 }
 
@@ -99,4 +109,17 @@ babelwires::Result babelwires::Deserializer::BaseIterator::checkFinished() {
         m_finished = true;
     }
     return {};
+}
+
+babelwires::Result babelwires::Deserializer::BaseIterator::checkCurrentValueArrayElementType() {
+    if (!m_typeName.empty() && isValid()) {
+        if (!m_deserializer.currentValueArrayElementMatchesType(m_typeName)) {
+            return Error() << "Not expecting an object of type \"" << m_deserializer.getCurrentTypeName() << "\"";
+        }
+    }
+    return {};
+}
+
+bool babelwires::Deserializer::currentValueArrayElementMatchesType(std::string_view expectedTypeName) {
+    return getCurrentTypeName() == expectedTypeName;
 }

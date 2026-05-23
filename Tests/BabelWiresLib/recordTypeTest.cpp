@@ -13,8 +13,9 @@
 #include <Domains/TestDomain/testRecordType.hpp>
 #include <Domains/TestDomain/testRecordTypeHierarchy.hpp>
 
-#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
-#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/userDocumentSerializationFactory.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
@@ -642,19 +643,22 @@ TEST(RecordTypeTest, typeExpSerialization) {
     std::string serializedContents;
     {
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(recordTypeExp);
+        auto serializer = babelwires::UserDocumentSerializationFactory::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(recordTypeExp);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
 
-    babelwires::XmlDeserializer deserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
-    ASSERT_TRUE(deserializer.parse(serializedContents));
-    auto deserializedTypeExpResult = deserializer.deserializeObject<babelwires::TypeExp>();
+    auto deserializer =
+        babelwires::UserDocumentSerializationFactory::createDeserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
+    ASSERT_NE(deserializer, nullptr);
+    ASSERT_TRUE(deserializer->parse(serializedContents));
+    auto deserializedTypeExpResult = deserializer->deserializeObject<babelwires::TypeExp>();
     ASSERT_TRUE(deserializedTypeExpResult);
     auto deserializedTypeExp = std::move(*deserializedTypeExpResult);
-    deserializer.finalize();
+    deserializer->finalize();
 
     EXPECT_EQ(recordTypeExp, *deserializedTypeExp);
 }

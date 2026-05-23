@@ -116,9 +116,8 @@ Parallel project processing:
 * Needs new UI features, since the parts of the project can be stale when processing is underway.
 
 Ideas:
-* Provide serializer via a registry, and move tinyxml dependency into its own lib.
 * Require commands to be serializable, to enable structured logging.
-* Don't format strings in log files: Use JSON so they are easy to parse.
+* Don't format strings in log _files_: Use JSON so they are easy to parse.
 * SelectableArrays: For arrays larger than 16 elements:
   - Each element has an input drop down which selects the output array element.
   - This would be useful for complex input formats.
@@ -144,3 +143,6 @@ Optimizations:
 
 Improvements:
 * TypeConstructor caches could build up excess entries containing stale weakPtrs. These could be cleaned up every N type construction.
+* Serialization:
+  - No distinction is made between object arrays that have a fixed element type and those where subclasses are permitted. In Yaml, this means that type tags get repeated for every element. It _may_ be possible to determine this using traits.
+

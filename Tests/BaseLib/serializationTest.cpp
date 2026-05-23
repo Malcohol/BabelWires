@@ -1,8 +1,14 @@
-#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
-#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
 #include <BaseLib/Serialization/deserializationRegistry.hpp>
+#include <BaseLib/Serialization/deserializer.hpp>
+#include <BaseLib/Serialization/serializer.hpp>
+#include <BaseLib/Serialization/YAML/yamlDeserializer.hpp>
+#include <BaseLib/Serialization/YAML/yamlSerializer.hpp>
 
 #include <BaseLib/Utilities/downcastable.hpp>
+
+#include <Tests/BaseLib/TestData/serializableClasses.hpp>
+#include <Tests/TestUtils/XmlSerialization/xmlDeserializer.hpp>
+#include <Tests/TestUtils/XmlSerialization/xmlSerializer.hpp>
 
 #include <Tests/TestUtils/testLog.hpp>
 
@@ -13,32 +19,81 @@
 using namespace babelwires;
 using namespace testUtils;
 
+using testData::A;
+using testData::CustomValueArrayContainer;
+using testData::KeyedContainer;
+
 namespace {
-    struct A : Serializable {
-        SERIALIZABLE(A, "A", void, 1);
+    struct XmlSerializationBackend {
+        static std::unique_ptr<Serializer> createSerializer() {
+            return std::make_unique<XmlSerializer>();
+        }
+
+        static std::unique_ptr<Deserializer> createDeserializer(const DeserializationRegistry& deserializationRegistry,
+                                                                TestLog& log) {
+            return std::make_unique<XmlDeserializer>(deserializationRegistry, log);
+        }
+
+        // Rewrite runtime type tokens in serialized XML so backend-agnostic tests can exercise type-mismatch cases.
+        static std::string rewriteTypeInData(std::string serializedContents, std::string_view fromType,
+                                             std::string_view toType) {
+            size_t pos = 0;
+            while ((pos = serializedContents.find(fromType, pos)) != std::string::npos) {
+                serializedContents.replace(pos, fromType.size(), toType);
+                pos += toType.size();
+            }
+            return serializedContents;
+        }
+    };
+
+    struct YamlSerializationBackend {
+        static std::unique_ptr<Serializer> createSerializer() {
+            return std::make_unique<YamlSerializer>();
+        }
+
+        static std::unique_ptr<Deserializer> createDeserializer(const DeserializationRegistry& deserializationRegistry,
+                                                                TestLog& log) {
+            return std::make_unique<YamlDeserializer>(deserializationRegistry, log);
+        }
+
+        static std::string rewriteTypeInData(std::string serializedContents, std::string_view fromType,
+                                             std::string_view toType) {
+            size_t pos = 0;
+            while ((pos = serializedContents.find(fromType, pos)) != std::string::npos) {
+                serializedContents.replace(pos, fromType.size(), toType);
+                pos += toType.size();
+            }
+            return serializedContents;
+        }
+    };
+}
+
+namespace {
+    struct AWithUnexpectedValue : A {
+        // Intentionally keep the same wire type as A so this helper can produce extra data that still deserializes as A.
+        SERIALIZABLE(AWithUnexpectedValue, "A", A, 1);
 
         void serializeContents(Serializer& serializer) const override {
-            serializer.serializeValue("x", m_x);
-            serializer.serializeValueArray("array", m_array);
+            A::serializeContents(serializer);
+            serializer.serializeValue("unexpected", m_unexpected);
         }
 
         Result deserializeContents(Deserializer& deserializer) override {
-            DO_OR_ERROR(deserializer.deserializeValue("x", m_x));
-            if (auto it = deserializer.tryDeserializeValueArray<std::string>("array")) {
-                while (it->isValid()) {
-                    ASSIGN_OR_ERROR(m_array.emplace_back(), it->deserializeValue());
-                    DO_OR_ERROR(it->advance());
-                }
-            }
+            DO_OR_ERROR(A::deserializeContents(deserializer));
+            DO_OR_ERROR(deserializer.deserializeValue("unexpected", m_unexpected));
             return {};
         }
 
-        int m_x = 0;
-        std::vector<std::string> m_array;
+        int m_unexpected = 0;
     };
 } // namespace
 
-TEST(SerializationTest, values) {
+template <typename TBackend> class SerializationTest : public ::testing::Test {};
+
+using SerializationBackendTypes = ::testing::Types<XmlSerializationBackend, YamlSerializationBackend>;
+TYPED_TEST_SUITE(SerializationTest, SerializationBackendTypes);
+
+TYPED_TEST(SerializationTest, values) {
     std::string serializedContents;
     {
         A a;
@@ -46,10 +101,11 @@ TEST(SerializationTest, values) {
         a.m_array.emplace_back("Hello");
         a.m_array.emplace_back("Goodbye");
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(a);
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(a);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
 
@@ -57,12 +113,13 @@ TEST(SerializationTest, values) {
         TestLog log;
         DeserializationRegistry deserializationReg;
         deserializationReg.registerClass<A>();
-        babelwires::XmlDeserializer deserializer(deserializationReg, log);
-        ASSERT_TRUE(deserializer.parse(serializedContents));
-        auto APtrResult = deserializer.deserializeObject<A>();
+        auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto APtrResult = deserializer->template deserializeObject<A>();
         ASSERT_TRUE(APtrResult);
         auto APtr = std::move(*APtrResult);
-        deserializer.finalize();
+        ASSERT_TRUE(deserializer->finalize());
 
         EXPECT_EQ(APtr->m_x, 12);
         EXPECT_EQ(APtr->m_array.size(), 2);
@@ -94,9 +151,83 @@ namespace {
         A m_a;
         std::vector<A> m_arrayOfAs;
     };
+
 } // namespace
 
-TEST(SerializationTest, objects) {
+TYPED_TEST(SerializationTest, explicitAndDefaultKeys) {
+    std::string serializedContents;
+    {
+        KeyedContainer container;
+        container.m_defaultKeyObject.m_x = 17;
+        container.m_defaultKeyObject.m_array = {"default"};
+        container.m_explicitKeyObject.m_x = 23;
+        container.m_explicitKeyObject.m_array = {"explicit", "key"};
+
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(container);
+        std::ostringstream os;
+        serializer->write(os);
+        serializedContents = std::move(os.str());
+    }
+
+    {
+        TestLog log;
+        DeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<A>();
+        deserializationReg.registerClass<KeyedContainer>();
+        auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto containerResult = deserializer->template deserializeObject<KeyedContainer>();
+        ASSERT_TRUE(containerResult);
+        auto container = std::move(*containerResult);
+        ASSERT_TRUE(deserializer->finalize());
+
+        EXPECT_EQ(container->m_defaultKeyObject.m_x, 17);
+        ASSERT_EQ(container->m_defaultKeyObject.m_array.size(), 1);
+        EXPECT_EQ(container->m_defaultKeyObject.m_array[0], "default");
+        EXPECT_EQ(container->m_explicitKeyObject.m_x, 23);
+        ASSERT_EQ(container->m_explicitKeyObject.m_array.size(), 2);
+        EXPECT_EQ(container->m_explicitKeyObject.m_array[0], "explicit");
+        EXPECT_EQ(container->m_explicitKeyObject.m_array[1], "key");
+    }
+}
+
+TYPED_TEST(SerializationTest, valueArraysAllowCustomElementNames) {
+    std::string serializedContents;
+    {
+        CustomValueArrayContainer container;
+        container.m_values = {"one", "two", "three"};
+
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(container);
+        std::ostringstream os;
+        serializer->write(os);
+        serializedContents = std::move(os.str());
+    }
+
+    {
+        TestLog log;
+        DeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<CustomValueArrayContainer>();
+        auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto containerResult = deserializer->template deserializeObject<CustomValueArrayContainer>();
+        ASSERT_TRUE(containerResult);
+        auto container = std::move(*containerResult);
+        ASSERT_TRUE(deserializer->finalize());
+
+        ASSERT_EQ(container->m_values.size(), 3);
+        EXPECT_EQ(container->m_values[0], "one");
+        EXPECT_EQ(container->m_values[1], "two");
+        EXPECT_EQ(container->m_values[2], "three");
+    }
+}
+
+TYPED_TEST(SerializationTest, objects) {
     std::string serializedContents;
     {
         B b;
@@ -108,10 +239,11 @@ TEST(SerializationTest, objects) {
         b.m_arrayOfAs.emplace_back();
         b.m_arrayOfAs[1].m_x = 100;
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(b);
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(b);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
 
@@ -120,12 +252,13 @@ TEST(SerializationTest, objects) {
         DeserializationRegistry deserializationReg;
         deserializationReg.registerClass<A>();
         deserializationReg.registerClass<B>();
-        babelwires::XmlDeserializer deserializer(deserializationReg, log);
-        ASSERT_TRUE(deserializer.parse(serializedContents));
-        auto BPtrResult = deserializer.deserializeObject<B>();
+        auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto BPtrResult = deserializer->template deserializeObject<B>();
         ASSERT_TRUE(BPtrResult);
         auto BPtr = std::move(*BPtrResult);
-        deserializer.finalize();
+        ASSERT_TRUE(deserializer->finalize());
 
         EXPECT_EQ(BPtr->m_a.m_x, 12);
         EXPECT_EQ(BPtr->m_a.m_array.size(), 1);
@@ -139,13 +272,10 @@ TEST(SerializationTest, objects) {
 }
 
 namespace {
-#define WILL_BE_PATCHED_TO_C "WILL_BE_PATCHED_TO_C"
-
     namespace old {
         /// The original version of the class C.
         struct C : Serializable {
-            SERIALIZABLE(C, WILL_BE_PATCHED_TO_C, void, 1);
-            // We will rewrite this in the file to "C"
+            SERIALIZABLE(C, "C", void, 1);
 
             void serializeContents(Serializer& serializer) const override { serializer.serializeValue("x", m_x); }
 
@@ -194,36 +324,31 @@ namespace {
 } // namespace
 
 // Test how the system supports version from an old class.
-TEST(SerializationTest, versioningOld) {
+TYPED_TEST(SerializationTest, versioningOld) {
     std::string serializedContents;
     {
         old::C c;
         c.m_x = -2;
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(c);
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(c);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
-    }
-
-    {
-        size_t pos = 0;
-        while (pos = serializedContents.find(WILL_BE_PATCHED_TO_C, pos), pos != std::string::npos) {
-            serializedContents.replace(pos, std::strlen(WILL_BE_PATCHED_TO_C), "C");
-        }
     }
 
     {
         TestLog log;
         DeserializationRegistry deserializationReg;
         deserializationReg.registerClass<current::C>();
-        babelwires::XmlDeserializer deserializer(deserializationReg, log);
-        ASSERT_TRUE(deserializer.parse(serializedContents));
-        auto CPtrResult = deserializer.deserializeObject<current::C>();
+        auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto CPtrResult = deserializer->template deserializeObject<current::C>();
         ASSERT_TRUE(CPtrResult);
         auto CPtr = std::move(*CPtrResult);
-        deserializer.finalize();
+        ASSERT_TRUE(deserializer->finalize());
 
         EXPECT_EQ(CPtr->m_isPositive, false);
         EXPECT_EQ(CPtr->m_x, 2);
@@ -231,17 +356,18 @@ TEST(SerializationTest, versioningOld) {
 }
 
 // Confirm that version support doesn't affect normal serialization
-TEST(SerializationTest, versioningCurrent) {
+TYPED_TEST(SerializationTest, versioningCurrent) {
     std::string serializedContents;
     {
         current::C c;
         c.m_isPositive = false;
         c.m_x = 18;
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(c);
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(c);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
 
@@ -249,12 +375,13 @@ TEST(SerializationTest, versioningCurrent) {
         TestLog log;
         DeserializationRegistry deserializationReg;
         deserializationReg.registerClass<current::C>();
-        babelwires::XmlDeserializer deserializer(deserializationReg, log);
-        ASSERT_TRUE(deserializer.parse(serializedContents));
-        auto CPtrResult = deserializer.deserializeObject<current::C>();
+        auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto CPtrResult = deserializer->template deserializeObject<current::C>();
         ASSERT_TRUE(CPtrResult);
         auto CPtr = std::move(*CPtrResult);
-        deserializer.finalize();
+        ASSERT_TRUE(deserializer->finalize());
 
         EXPECT_EQ(CPtr->m_isPositive, false);
         EXPECT_EQ(CPtr->m_x, 18);
@@ -363,9 +490,119 @@ namespace {
         std::unique_ptr<Concrete2> m_concrete2;
         std::vector<std::unique_ptr<Base>> m_objects;
     };
+
+    struct ByValueSubtypeWriter : babelwires::Serializable {
+        SERIALIZABLE(ByValueSubtypeWriter, "ByValueHolder", void, 1);
+
+        void serializeContents(Serializer& serializer) const override { serializer.serializeObject(m_value, "value"); }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            ASSIGN_OR_ERROR(m_unusedValue, deserializer.tryDeserializeObject<Concrete2>("value"));
+            return {};
+        }
+
+        Concrete2 m_value;
+        std::unique_ptr<Concrete2> m_unusedValue;
+    };
+
+    struct ByValueSubtypeReader : babelwires::Serializable {
+        SERIALIZABLE(ByValueSubtypeReader, "ByValueHolder", void, 1);
+
+        void serializeContents(Serializer& serializer) const override { serializer.serializeObject(m_value, "value"); }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeObjectByValue(m_value, "value"));
+            return {};
+        }
+
+        Concrete1 m_value;
+    };
+
+    struct NestedObjectOnlyConcrete : Base {
+        DOWNCASTABLE(NestedObjectOnlyConcrete, Base);
+        SERIALIZABLE(NestedObjectOnlyConcrete, "NestedObjectOnlyConcrete", Base, 1);
+
+        void serializeContents(Serializer& serializer) const override { serializer.serializeObject(m_child, "child"); }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeObjectByValue(m_child, "child"));
+            return {};
+        }
+
+        A m_child;
+    };
+
+    struct NestedObjectOnlyMain : babelwires::Serializable {
+        SERIALIZABLE(NestedObjectOnlyMain, "NestedObjectOnlyMain", void, 1);
+
+        void serializeContents(Serializer& serializer) const override { serializer.serializeArray("objects", m_objects); }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<Base>("objects"));
+            while (it.isValid()) {
+                ASSIGN_OR_ERROR(auto ptr, it.getObject());
+                m_objects.emplace_back(std::move(ptr));
+                DO_OR_ERROR(it.advance());
+            }
+            return {};
+        }
+
+        std::vector<std::unique_ptr<Base>> m_objects;
+    };
+
+    struct ValueFieldOnlyConcrete : Base {
+        DOWNCASTABLE(ValueFieldOnlyConcrete, Base);
+        SERIALIZABLE(ValueFieldOnlyConcrete, "ValueFieldOnlyConcrete", Base, 1);
+
+        void serializeContents(Serializer& serializer) const override { serializer.serializeValue("value", m_value); }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeValue("value", m_value));
+            return {};
+        }
+
+        std::string m_value;
+    };
+
+    struct ValueFieldAndExtraConcrete : Base {
+        DOWNCASTABLE(ValueFieldAndExtraConcrete, Base);
+        SERIALIZABLE(ValueFieldAndExtraConcrete, "ValueFieldAndExtraConcrete", Base, 1);
+
+        void serializeContents(Serializer& serializer) const override {
+            serializer.serializeValue("value", m_value);
+            serializer.serializeValue("extra", m_extra);
+        }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            DO_OR_ERROR(deserializer.deserializeValue("value", m_value));
+            DO_OR_ERROR(deserializer.deserializeValue("extra", m_extra));
+            return {};
+        }
+
+        std::string m_value;
+        std::string m_extra;
+    };
+
+    struct ValueFieldMain : babelwires::Serializable {
+        SERIALIZABLE(ValueFieldMain, "ValueFieldMain", void, 1);
+
+        void serializeContents(Serializer& serializer) const override { serializer.serializeArray("objects", m_objects); }
+
+        Result deserializeContents(Deserializer& deserializer) override {
+            ASSIGN_OR_ERROR(auto it, deserializer.deserializeArray<Base>("objects"));
+            while (it.isValid()) {
+                ASSIGN_OR_ERROR(auto ptr, it.getObject());
+                m_objects.emplace_back(std::move(ptr));
+                DO_OR_ERROR(it.advance());
+            }
+            return {};
+        }
+
+        std::vector<std::unique_ptr<Base>> m_objects;
+    };
 } // namespace
 
-TEST(SerializationTest, polymorphism) {
+TYPED_TEST(SerializationTest, polymorphism) {
     std::string serializedContents;
     {
         Main m;
@@ -382,10 +619,11 @@ TEST(SerializationTest, polymorphism) {
         m.m_objects.emplace_back(std::make_unique<Concrete1>());
         static_cast<Concrete1*>(m.m_objects[0].get())->m_s = "Tuesday";
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(m);
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(m);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
 
@@ -397,33 +635,126 @@ TEST(SerializationTest, polymorphism) {
         deserializationReg.registerClass<Concrete0>();
         deserializationReg.registerClass<Concrete1>();
         deserializationReg.registerClass<Concrete2>();
-        babelwires::XmlDeserializer deserializer(deserializationReg, log);
-        ASSERT_TRUE(deserializer.parse(serializedContents));
-        auto MainPtrResult = deserializer.deserializeObject<Main>();
+        auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto MainPtrResult = deserializer->template deserializeObject<Main>();
         ASSERT_TRUE(MainPtrResult);
         auto MainPtr = std::move(*MainPtrResult);
-        deserializer.finalize();
+        ASSERT_TRUE(deserializer->finalize());
 
         ASSERT_NE(MainPtr->m_base, nullptr);
-        EXPECT_NE(MainPtr->m_base->tryAs<Concrete0>(), nullptr);
-        EXPECT_EQ(MainPtr->m_base->as<Concrete0>().m_x, 32);
+        EXPECT_NE(MainPtr->m_base->template tryAs<Concrete0>(), nullptr);
+        EXPECT_EQ(MainPtr->m_base->template as<Concrete0>().m_x, 32);
         ASSERT_NE(MainPtr->m_concrete0, nullptr);
         EXPECT_EQ(MainPtr->m_concrete0->m_x, -13);
         EXPECT_NE(MainPtr->m_intermediate, nullptr);
-        ASSERT_NE(MainPtr->m_intermediate->tryAs<Concrete1>(), nullptr);
-        EXPECT_EQ(MainPtr->m_intermediate->as<Concrete1>().m_s, "Jump!");
+        ASSERT_NE(MainPtr->m_intermediate->template tryAs<Concrete1>(), nullptr);
+        EXPECT_EQ(MainPtr->m_intermediate->template as<Concrete1>().m_s, "Jump!");
         ASSERT_NE(MainPtr->m_concrete1, nullptr);
         EXPECT_EQ(MainPtr->m_concrete1->m_s, "Ergh");
         ASSERT_NE(MainPtr->m_concrete2, nullptr);
         EXPECT_EQ(MainPtr->m_concrete2->m_u32, 0x12345678);
 
         ASSERT_EQ(MainPtr->m_objects.size(), 1);
-        ASSERT_NE(MainPtr->m_objects[0]->tryAs<Concrete1>(), nullptr);
-        EXPECT_EQ(MainPtr->m_objects[0]->as<Concrete1>().m_s, "Tuesday");
+        ASSERT_NE(MainPtr->m_objects[0]->template tryAs<Concrete1>(), nullptr);
+        EXPECT_EQ(MainPtr->m_objects[0]->template as<Concrete1>().m_s, "Tuesday");
     }
 }
 
-TEST(SerializationTest, polymorphismFail) {
+TYPED_TEST(SerializationTest, polymorphicArrayElementsWithOnlyNestedObjects) {
+    std::string serializedContents;
+    {
+        NestedObjectOnlyMain m;
+        auto object = std::make_unique<NestedObjectOnlyConcrete>();
+        object->m_child.m_x = 44;
+        object->m_child.m_array = {"nested", "object"};
+        m.m_objects.emplace_back(std::move(object));
+
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(m);
+        std::ostringstream os;
+        serializer->write(os);
+        serializedContents = std::move(os.str());
+    }
+
+    {
+        TestLog log;
+        DeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<A>();
+        deserializationReg.registerClass<NestedObjectOnlyMain>();
+        deserializationReg.registerClass<NestedObjectOnlyConcrete>();
+        auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto mainResult = deserializer->template deserializeObject<NestedObjectOnlyMain>();
+        ASSERT_TRUE(mainResult) << mainResult.error().toString();
+        auto main = std::move(*mainResult);
+        ASSERT_TRUE(deserializer->finalize());
+
+        ASSERT_EQ(main->m_objects.size(), 1);
+        const auto* const nestedObjectOnly = main->m_objects[0]->template tryAs<NestedObjectOnlyConcrete>();
+        ASSERT_NE(nestedObjectOnly, nullptr);
+        EXPECT_EQ(nestedObjectOnly->m_child.m_x, 44);
+        ASSERT_EQ(nestedObjectOnly->m_child.m_array.size(), 2);
+        EXPECT_EQ(nestedObjectOnly->m_child.m_array[0], "nested");
+        EXPECT_EQ(nestedObjectOnly->m_child.m_array[1], "object");
+    }
+}
+
+TYPED_TEST(SerializationTest, polymorphicArrayElementsWithValueFieldObjects) {
+    std::string serializedContents;
+    {
+        ValueFieldMain m;
+
+        auto valueOnly = std::make_unique<ValueFieldOnlyConcrete>();
+        valueOnly->m_value = "scalar-like";
+        m.m_objects.emplace_back(std::move(valueOnly));
+
+        auto valueAndExtra = std::make_unique<ValueFieldAndExtraConcrete>();
+        valueAndExtra->m_value = "field-id-like";
+        valueAndExtra->m_extra = "extra metadata";
+        m.m_objects.emplace_back(std::move(valueAndExtra));
+
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(m);
+        std::ostringstream os;
+        serializer->write(os);
+        serializedContents = std::move(os.str());
+    }
+
+    {
+        TestLog log;
+        DeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<ValueFieldMain>();
+        deserializationReg.registerClass<ValueFieldOnlyConcrete>();
+        deserializationReg.registerClass<ValueFieldAndExtraConcrete>();
+        auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto mainResult = deserializer->template deserializeObject<ValueFieldMain>();
+        if (!mainResult) {
+            deserializer->finalizeOnError();
+        }
+        ASSERT_TRUE(mainResult) << mainResult.error().toString();
+        auto main = std::move(*mainResult);
+        ASSERT_TRUE(deserializer->finalize());
+
+        ASSERT_EQ(main->m_objects.size(), 2);
+        const auto* const valueOnly = main->m_objects[0]->template tryAs<ValueFieldOnlyConcrete>();
+        ASSERT_NE(valueOnly, nullptr);
+        EXPECT_EQ(valueOnly->m_value, "scalar-like");
+
+        const auto* const valueAndExtra = main->m_objects[1]->template tryAs<ValueFieldAndExtraConcrete>();
+        ASSERT_NE(valueAndExtra, nullptr);
+        EXPECT_EQ(valueAndExtra->m_value, "field-id-like");
+        EXPECT_EQ(valueAndExtra->m_extra, "extra metadata");
+    }
+}
+
+TYPED_TEST(SerializationTest, polymorphismFail) {
     std::string serializedContents;
     {
         Main m;
@@ -431,24 +762,18 @@ TEST(SerializationTest, polymorphismFail) {
         m.m_concrete2->m_s = "Ergh";
         m.m_concrete2->m_u32 = 145;
 
-        babelwires::XmlSerializer serializer;
-        serializer.serializeObject(m);
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(m);
         std::ostringstream os;
-        serializer.write(os);
+        serializer->write(os);
         serializedContents = std::move(os.str());
     }
 
     // Replace Concrete2 by an unrelated type, a distant relation and its parent type.
     // All of these scenarios should fail, since they are not subtypes of Concrete2.
     for (const auto& t : std::array<std::string_view, 3>{"A", "Concrete0", "Concrete1"}) {
-        std::string serializedContents2 = serializedContents;
-
-        {
-            size_t pos = 0;
-            while (pos = serializedContents2.find("Concrete2", pos), pos != std::string::npos) {
-                serializedContents2.replace(pos, std::strlen("Concrete2"), t);
-            }
-        }
+        std::string serializedContents2 = TypeParam::rewriteTypeInData(serializedContents, "Concrete2", t);
 
         {
             TestLog log;
@@ -458,12 +783,74 @@ TEST(SerializationTest, polymorphismFail) {
             deserializationReg.registerClass<Concrete0>();
             deserializationReg.registerClass<Concrete1>();
             deserializationReg.registerClass<Concrete2>();
-            babelwires::XmlDeserializer deserializer(deserializationReg, log);
-            ASSERT_TRUE(deserializer.parse(serializedContents2));
-            auto MainPtrResult = deserializer.deserializeObject<Main>();
+            auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+            ASSERT_NE(deserializer, nullptr);
+            ASSERT_TRUE(deserializer->parse(serializedContents2));
+            auto MainPtrResult = deserializer->template deserializeObject<Main>();
             EXPECT_FALSE(MainPtrResult);
             EXPECT_NE(std::string_view(MainPtrResult.error().toString()).find(t), std::string_view::npos);
-            deserializer.finalize();
+            deserializer->finalize();
         }
+    }
+}
+
+TYPED_TEST(SerializationTest, deserializeObjectByValueRejectsStrictSubclasses) {
+    std::string serializedContents;
+    {
+        ByValueSubtypeWriter writer;
+        writer.m_value.m_s = "strict subtype";
+        writer.m_value.m_u32 = 77;
+
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(writer);
+        std::ostringstream os;
+        serializer->write(os);
+        serializedContents = std::move(os.str());
+    }
+
+    {
+        TestLog log;
+        DeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<ByValueSubtypeReader>();
+        deserializationReg.registerClass<Concrete1>();
+        deserializationReg.registerClass<Concrete2>();
+        auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto readerResult = deserializer->template deserializeObject<ByValueSubtypeReader>();
+        ASSERT_FALSE(readerResult);
+        EXPECT_NE(std::string_view(readerResult.error().toString()).find("Concrete2"), std::string_view::npos);
+        EXPECT_NE(std::string_view(readerResult.error().toString()).find("Concrete1"), std::string_view::npos);
+        deserializer->finalizeOnError();
+    }
+}
+
+TYPED_TEST(SerializationTest, deserializeRejectsUnexpectedUnconsumedData) {
+    std::string serializedContents;
+    {
+        AWithUnexpectedValue a;
+        a.m_x = 12;
+        a.m_unexpected = 13;
+
+        auto serializer = TypeParam::createSerializer();
+        ASSERT_NE(serializer, nullptr);
+        serializer->serializeObject(a);
+        std::ostringstream os;
+        serializer->write(os);
+        serializedContents = std::move(os.str());
+    }
+
+    {
+        TestLog log;
+        DeserializationRegistry deserializationReg;
+        deserializationReg.registerClass<A>();
+        auto deserializer = TypeParam::createDeserializer(deserializationReg, log);
+        ASSERT_NE(deserializer, nullptr);
+        ASSERT_TRUE(deserializer->parse(serializedContents));
+        auto APtrResult = deserializer->template deserializeObject<A>();
+        ASSERT_FALSE(APtrResult);
+        EXPECT_NE(std::string_view(APtrResult.error().toString()).find("unexpected"), std::string_view::npos);
+        deserializer->finalizeOnError();
     }
 }

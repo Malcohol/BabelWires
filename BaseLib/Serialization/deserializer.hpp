@@ -29,6 +29,9 @@ namespace babelwires {
         Deserializer(UserLogger& userLogger, const DeserializationRegistryInterface& deserializationRegistry);
         virtual ~Deserializer();
 
+        /// Parse the serialized document text and initialize the deserializer.
+        virtual Result parse(std::string_view serializedContents) = 0;
+
         /// Get a value from the current object.
         /// These methods return a ResultT<bool> where:
         /// - Success with true means key was found and parsed successfully
@@ -71,13 +74,13 @@ namespace babelwires {
 
         /// Deserialize a child object of type T.
         /// Returns an error if the key is not found or if there is a parse error.
-        /// The object is assigned by value, so any polymorphism is lost.
+        /// The object is assigned by value, so exact runtime type equality is required and strict subtypes are rejected.
         template <typename T>
         babelwires::Result deserializeObjectByValue(T& object, std::string_view key = T::s_serializationTypeName);
 
         /// Deserialize a child object of type T.
         /// If the key is not found, then false is returned and the object is not modified.
-        /// The object is assigned by value, so any polymorphism is lost.
+        /// The object is assigned by value, so exact runtime type equality is required and strict subtypes are rejected.
         template <typename T>
         babelwires::ResultT<bool> tryDeserializeObjectByValue(T& object, std::string_view key = T::s_serializationTypeName);
 
@@ -103,13 +106,15 @@ namespace babelwires {
         /// not need to distinguish between a missing array and an empty array
         /// (even if an empty array is not valid for the type).
         template <typename T>
-        ResultT<ValueIterator<T>> tryDeserializeValueArray(std::string_view, std::string_view typeName = "element");
+        ResultT<ValueIterator<T>> tryDeserializeValueArray(
+          std::string_view, std::string_view typeName = c_defaultValueArrayElementTypeName);
 
         /// Get a ValueIterator to the beginning of the value array with the given key.
         /// Returns a Result containing the iterator on success, or an error if the array is not found.
         /// After checking the result, calling code can use while(it.isValid()) { ... DO_OR_ERROR(it.advance()); }
         template <typename T>
-        ResultT<ValueIterator<T>> deserializeValueArray(std::string_view, std::string_view typeName = "element");
+        ResultT<ValueIterator<T>> deserializeValueArray(
+          std::string_view, std::string_view typeName = c_defaultValueArrayElementTypeName);
 
         /// Get a description of the current parsing location which can be used in errors and warnings (e.g. a line
         /// number).
@@ -122,6 +127,7 @@ namespace babelwires {
         void setDeserializationRegistry(const DeserializationRegistryInterface& deserializationRegistry);
 
         /// Finalize the deserializer.
+        /// This completes strict validation that the serialized document did not contain unconsumed data.
         virtual Result finalize();
 
         /// Finalize when an error is being processed.
@@ -133,6 +139,11 @@ namespace babelwires {
 
       protected:
         template <typename T> ResultT<std::unique_ptr<T>> deserializeCurrentObject();
+
+        template <typename T> ResultT<std::unique_ptr<T>> deserializeCurrentObjectOfExactType();
+
+        ResultT<std::unique_ptr<Serializable>> deserializeCurrentObjectOfExactType(
+            const DeserializationTreeNode& expectedTreeNode, std::string_view expectedTypeName);
 
         ResultT<std::unique_ptr<Serializable>> deserializeCurrentObject(const DeserializationTreeNode& treeNodeOfExpectedType);
 
@@ -147,12 +158,20 @@ namespace babelwires {
 
         /// Find the child, returns false if the child is missing.
         virtual bool pushObject(std::string_view key) = 0;
+
+        /// Subclasses must reject any backend-visible object data that client code did not consume.
         virtual Result popObject() = 0;
 
         virtual bool pushArray(std::string_view key) = 0;
+
+        /// Subclasses must reject any backend-visible array data that client code did not consume.
         virtual Result popArray() = 0;
 
+        /// Return the runtime type of the current object after decoding any backend-specific metadata.
         virtual std::string_view getCurrentTypeName() = 0;
+
+        /// Backends may accept alternative value-array wire representations that do not expose a runtime type token.
+        virtual bool currentValueArrayElementMatchesType(std::string_view expectedTypeName);
 
         virtual ErrorStorage addContextDescription(const ErrorStorage& e) const = 0;
 
@@ -177,6 +196,8 @@ struct BASELIB_API babelwires::Deserializer::BaseIterator {
     Result checkFinished();
 
   protected:
+    Result checkCurrentValueArrayElementType();
+
     std::unique_ptr<AbstractIterator> m_impl;
     Deserializer& m_deserializer;
     bool m_finished = false;

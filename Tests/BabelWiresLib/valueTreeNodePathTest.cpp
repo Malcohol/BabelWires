@@ -7,8 +7,6 @@
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <BaseLib/Identifiers/registeredIdentifier.hpp>
 #include <BaseLib/Log/unifiedLog.hpp>
-#include <BaseLib/Serialization/XML/xmlDeserializer.hpp>
-#include <BaseLib/Serialization/XML/xmlSerializer.hpp>
 
 #include <Domains/TestDomain/testRecordType.hpp>
 

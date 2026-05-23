@@ -12,15 +12,18 @@ babelwires::DataSerialization<BUNDLE>::loadFromStream(std::istream& is, const Co
                                                       const std::filesystem::path& pathToFile, UserLogger& userLogger) {
     std::string str((std::istreambuf_iterator<char>(is)), std::istreambuf_iterator<char>());
 
-    XmlDeserializer deserializer(context.get<DeserializationRegistry>(), userLogger);
-    ON_ERROR(deserializer.finalizeOnError());
-    DO_OR_ERROR(deserializer.parse(str));
-    auto projectBundleResult = deserializer.deserializeObject<BUNDLE>(BUNDLE::s_serializationTypeName);
+    const DeserializationRegistry& deserializationRegistry = context.get<DeserializationRegistry>();
+    auto deserializer = UserDocumentSerializationFactory::createDeserializer(deserializationRegistry, userLogger);
+    assert(deserializer && "UserDocumentSerializationFactory returned a null deserializer");
+
+    ON_ERROR(deserializer->finalizeOnError());
+    DO_OR_ERROR(deserializer->parse(str));
+    auto projectBundleResult = deserializer->template deserializeObject<BUNDLE>(BUNDLE::s_serializationTypeName);
     if (!projectBundleResult) {
-        deserializer.augmentResultWithContext(projectBundleResult);
+        deserializer->augmentResultWithContext(projectBundleResult);
         RETURN_ERROR_VALUE(projectBundleResult.error());
     }
-    DO_OR_ERROR(deserializer.finalize());
+    DO_OR_ERROR(deserializer->finalize());
     auto projectBundle = std::move(*projectBundleResult);
     return std::move(*projectBundle).resolveAgainstCurrentContext(context, pathToFile, userLogger);
 }
@@ -46,20 +49,22 @@ babelwires::DataSerialization<BUNDLE>::loadFromString(const std::string& string,
 }
 
 template <typename BUNDLE>
-void babelwires::DataSerialization<BUNDLE>::saveToStream(std::ostream& os, const std::filesystem::path& pathToFile,
-                                                         Data data) {
-    XmlSerializer serializer;
+void babelwires::DataSerialization<BUNDLE>::saveToStream(std::ostream& os, const Context& context,
+                                                         const std::filesystem::path& pathToFile, Data data) {
+    auto serializer = UserDocumentSerializationFactory::createSerializer();
+    assert(serializer && "UserDocumentSerializationFactory returned a null serializer");
+
     BUNDLE bundle(pathToFile, std::move(data));
     bundle.interpretInCurrentContext();
-    serializer.serializeObject(bundle);
-    serializer.write(os);
+    serializer->serializeObject(bundle);
+    serializer->write(os);
 }
 
 template <typename BUNDLE>
 babelwires::Result babelwires::DataSerialization<BUNDLE>::saveToFile(const std::filesystem::path& pathToFile,
-                                                                      Data data) {
+                                                                     const Context& context, Data data) {
     std::ofstream os(pathToFile);
-    saveToStream(os, pathToFile, std::move(data));
+    saveToStream(os, context, pathToFile, std::move(data));
     os.close();
     if (!os.good()) {
         return Error() << "Failed to save data to: " << pathToFile;
@@ -68,8 +73,9 @@ babelwires::Result babelwires::DataSerialization<BUNDLE>::saveToFile(const std::
 }
 
 template <typename BUNDLE>
-std::string babelwires::DataSerialization<BUNDLE>::saveToString(const std::filesystem::path& pathToFile, Data data) {
+std::string babelwires::DataSerialization<BUNDLE>::saveToString(const std::filesystem::path& pathToFile,
+                                                                const Context& context, Data data) {
     std::ostringstream os;
-    saveToStream(os, pathToFile, std::move(data));
+    saveToStream(os, context, pathToFile, std::move(data));
     return os.str();
 }
