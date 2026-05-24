@@ -28,21 +28,30 @@ namespace {
             }
         }
         dialogFormats = dialogFormats + ")";
-        return dialogFormats;
+        return dialogFormats + ";;" + QObject::tr("All files (*)");
     }
 } // namespace
 
 QString babelwires::showOpenFileDialog(QWidget* parent, const FileTypeEntry& format) {
     QString dialogCaption = QObject::tr("Open ") + format.getName().c_str();
     QString dialogFormats = getFormatString(format);
-    // Currently case sensitive for me. Could use QFileDialog::DontUseNativeDialog to get around this.
-    return QFileDialog::getOpenFileName(parent, dialogCaption, QString(), dialogFormats);
+    QFileDialog dialog(parent, dialogCaption, QString(), dialogFormats);
+    dialog.setOption(QFileDialog::DontUseNativeDialog, true);
+    dialog.setAcceptMode(QFileDialog::AcceptOpen);
+    dialog.exec();
+    QString filePath;
+    QStringList selectedFiles = dialog.selectedFiles();
+    if (!selectedFiles.isEmpty()) {
+        filePath = selectedFiles.first();
+    }
+    return filePath;
 }
 
 QString babelwires::showSaveFileDialog(QWidget* parent, const FileTypeEntry& format) {
     QString dialogCaption = QObject::tr("Save ") + format.getName().c_str();
     QString dialogFormats = getFormatString(format);
     QFileDialog dialog(parent, dialogCaption, QString(), dialogFormats);
+    dialog.setOption(QFileDialog::DontUseNativeDialog, true);
     dialog.setAcceptMode(QFileDialog::AcceptSave);
     dialog.setDefaultSuffix(format.getFileExtensions()[0].c_str());
     dialog.exec();
