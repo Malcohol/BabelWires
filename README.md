@@ -39,7 +39,7 @@ Since GNU/Linux is my primary development platform, UI issues may be present on 
 BabelWires is under active development, but please do not expect development to be rapid.
 My focus is on fundamentals.
 
-## Downloading and Building
+## Downloading
 
 Clone recursively to ensure submodules are populated:
 
@@ -47,7 +47,25 @@ Clone recursively to ensure submodules are populated:
 git clone --recurse-submodules https://github.com/Malcohol/BabelWires.git
 ```
 
-To build as shared libraries (recommended):
+## Requirements
+
+All platforms:
+* CMake 3.25 or later (on Windows, this is provided by Visual Studio)
+* ninja (on Windows, this is provided by Visual Studio)
+* Qt6
+
+Linux:
+* g++ 14 or later.
+
+Mac: 
+* clang 17 or later
+
+Windows: 
+* Visual Studio 2022 or later.
+
+## Building
+
+It's recommended to use CMake `shared` preset. On Windows, run these commands from inside a "x64 Native Tools Command Prompt" (installed with Visual Studio). Qt6 must also be discoverable by CMake, e.g. via `CMAKE_PREFIX_PATH` or `Qt6_DIR`. To run the executable from the build folder, ensure the Qt6 `bin` folder is also in your `PATH`.
 
 ```
 cmake --preset shared
@@ -61,4 +79,3 @@ See the [LICENSE](LICENSE) file.
 
 BabelWires uses a customized version of the [Nodeeditor](https://github.com/paceholder/nodeeditor) project for its GUI.
 My fork with the customizations is [here](https://github.com/Malcohol/nodeeditor/tree/Malcohol/V3ChangesForBabelwires), and that libary (and my customizations) are licensed under the BSD 3-Clause License.
-

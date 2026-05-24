@@ -61,8 +61,8 @@ jobs:
         sudo apt-get install cmake ${{ matrix.platform.cc }} ${{ matrix.platform.cxx }} qt6-base-dev libasound2-dev
         cmake --version
         ninja --version
-        gcc --version
-        g++ --version
+        $CC --version
+        $CXX --version
 
     - name: Install dependencies on macOS
       if: startsWith(matrix.platform.os, 'macos')
