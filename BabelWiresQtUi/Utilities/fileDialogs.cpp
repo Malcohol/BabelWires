@@ -38,11 +38,12 @@ QString babelwires::showOpenFileDialog(QWidget* parent, const FileTypeEntry& for
     QFileDialog dialog(parent, dialogCaption, QString(), dialogFormats);
     dialog.setOption(QFileDialog::DontUseNativeDialog, true);
     dialog.setAcceptMode(QFileDialog::AcceptOpen);
-    dialog.exec();
     QString filePath;
-    QStringList selectedFiles = dialog.selectedFiles();
-    if (!selectedFiles.isEmpty()) {
-        filePath = selectedFiles.first();
+    if (dialog.exec()) {
+        QStringList selectedFiles = dialog.selectedFiles();
+        if (!selectedFiles.isEmpty()) {
+            filePath = selectedFiles.first();
+        }
     }
     return filePath;
 }
@@ -54,11 +55,12 @@ QString babelwires::showSaveFileDialog(QWidget* parent, const FileTypeEntry& for
     dialog.setOption(QFileDialog::DontUseNativeDialog, true);
     dialog.setAcceptMode(QFileDialog::AcceptSave);
     dialog.setDefaultSuffix(format.getFileExtensions()[0].c_str());
-    dialog.exec();
     QString filePath;
-    QStringList selectedFiles = dialog.selectedFiles();
-    if (!selectedFiles.isEmpty()) {
-        filePath = selectedFiles.first();
+    if (dialog.exec()) {
+        QStringList selectedFiles = dialog.selectedFiles();
+        if (!selectedFiles.isEmpty()) {
+            filePath = selectedFiles.first();
+        }
     }
     return filePath;
 }
