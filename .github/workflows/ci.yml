@@ -12,13 +12,15 @@ on:
 jobs:
   build-and-test:
     if: github.event.pull_request.draft == false
-    name: ${{ matrix.platform.name }}-${{ matrix.build_type }}-SharedLibs${{ matrix.build_shared_libs }}
+    name: ${{ matrix.platform.name }}-${{ matrix.cmake_preset }}
     runs-on: ${{ matrix.platform.os }}
+    env:
+      CC: ${{ matrix.platform.cc }}
+      CXX: ${{ matrix.platform.cxx }}
     strategy:
       fail-fast: false
       matrix:
-        build_type: [ "Debug" ]
-        build_shared_libs: [ "OFF", "ON" ]
+        cmake_preset: [static-debug, shared-debug]
         platform: 
         - {
             name: "Ubuntu_GCC",
@@ -40,7 +42,7 @@ jobs:
           }
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         submodules: recursive
 
@@ -50,14 +52,16 @@ jobs:
         sudo apt-get update
         sudo apt-get install cmake ${{ matrix.platform.cc }} ${{ matrix.platform.cxx }} qt6-base-dev libasound2-dev
         cmake --version
-        gcc --version
-        g++ --version
+        ninja --version
+        $CC --version
+        $CXX --version
 
     - name: Install dependencies on macOS
       if: startsWith(matrix.platform.os, 'macos')
       run: |
         brew install cmake qt6
         cmake --version
+        ninja --version
         clang --version
 
     - name: Install Qt on Windows
@@ -67,15 +71,15 @@ jobs:
         version: '6.8.3'
         host: 'windows'
 
+    - name: Configure MSVC environment on Windows
+      if: startsWith(matrix.platform.os, 'windows')
+      uses: ilammy/msvc-dev-cmd@v1
+
     - name: Configure CMake
-      run: |
-        cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DBUILD_SHARED_LIBS=${{ matrix.build_shared_libs }}
-      env:
-        CC:   ${{ matrix.platform.cc }}
-        CXX:  ${{ matrix.platform.cxx }}
+      run: cmake --preset ${{ matrix.cmake_preset }}
 
     - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }}
+      run: cmake --build --preset ${{ matrix.cmake_preset }}
 
     - name: Run Tests
-      run: ctest --test-dir build -C ${{ matrix.build_type }} --output-on-failure
+      run: ctest --preset ${{ matrix.cmake_preset }}

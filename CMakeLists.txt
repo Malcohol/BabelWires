@@ -12,7 +12,7 @@ include(CTest)
 
 # MSVC's legacy preprocessor has bugs with variadic macros.
 if(MSVC)
-    add_compile_options(/Zc:preprocessor)
+    add_compile_options(/Zc:preprocessor /utf-8)
 endif()
 
 option(BUILD_SHARED_LIBS "Build all BabelWires libraries as shared libraries" ON)

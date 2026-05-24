@@ -1,4 +1,5 @@
 Bugs:
+* Windows: Cannot open ".mid" files.
 * Moving compound connections targets between nodes does not work properly.
   e.g. Three test record values. 
   1. Wire two together. 
