@@ -12,7 +12,7 @@ on:
 jobs:
   build-and-test:
     if: github.event.pull_request.draft == false
-    name: ${{ matrix.platform.name }}-${{ matrix.lib_mode.name }}
+    name: ${{ matrix.platform.name }}-${{ matrix.preset.name }}
     runs-on: ${{ matrix.platform.os }}
     env:
       CC: ${{ matrix.platform.cc }}
@@ -20,14 +20,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        lib_mode:
+        preset:
         - {
-            name: "Debug-StaticLibs",
-            preset: "static"
+            name: "static-debug",
+            preset: "static-debug"
           }
         - {
-            name: "Debug-SharedLibs",
-            preset: "shared"
+            name: "shared-debug",
+            preset: "shared-debug"
           }
         platform: 
         - {
@@ -84,10 +84,10 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
 
     - name: Configure CMake
-      run: cmake --preset ${{ matrix.lib_mode.preset }}
+      run: cmake --preset ${{ matrix.preset.preset }}
 
     - name: Build
-      run: cmake --build --preset ${{ matrix.lib_mode.preset }}
+      run: cmake --build --preset ${{ matrix.preset.preset }}
 
     - name: Run Tests
-      run: ctest --preset ${{ matrix.lib_mode.preset }}
+      run: ctest --preset ${{ matrix.preset.preset }}

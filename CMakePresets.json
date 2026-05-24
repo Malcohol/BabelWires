@@ -7,22 +7,22 @@
   },
   "configurePresets": [
     {
-      "name": "static",
-      "displayName": "Static Libraries",
+      "name": "static-debug",
+      "displayName": "Static Libraries (Debug)",
       "description": "Configure BabelWires with BUILD_SHARED_LIBS=OFF.",
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build/static",
+      "binaryDir": "${sourceDir}/build/static-debug",
       "cacheVariables": {
         "BUILD_SHARED_LIBS": "OFF",
         "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
-      "name": "shared",
-      "displayName": "Shared Libraries",
+      "name": "shared-debug",
+      "displayName": "Shared Libraries (Debug)",
       "description": "Configure BabelWires with BUILD_SHARED_LIBS=ON.",
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build/shared",
+      "binaryDir": "${sourceDir}/build/shared-debug",
       "cacheVariables": {
         "BUILD_SHARED_LIBS": "ON",
         "CMAKE_BUILD_TYPE": "Debug"
@@ -31,29 +31,29 @@
   ],
   "buildPresets": [
     {
-      "name": "static",
-      "displayName": "Build Static Libraries",
-      "configurePreset": "static"
+      "name": "static-debug",
+      "displayName": "Build Static Libraries (Debug)",
+      "configurePreset": "static-debug"
     },
     {
-      "name": "shared",
-      "displayName": "Build Shared Libraries",
-      "configurePreset": "shared"
+      "name": "shared-debug",
+      "displayName": "Build Shared Libraries (Debug)",
+      "configurePreset": "shared-debug"
     }
   ],
   "testPresets": [
     {
-      "name": "static",
-      "displayName": "Test Static Libraries",
-      "configurePreset": "static",
+      "name": "static-debug",
+      "displayName": "Test Static Libraries (Debug)",
+      "configurePreset": "static-debug",
       "output": {
         "outputOnFailure": true
       }
     },
     {
-      "name": "shared",
-      "displayName": "Test Shared Libraries",
-      "configurePreset": "shared",
+      "name": "shared-debug",
+      "displayName": "Test Shared Libraries (Debug)",
+      "configurePreset": "shared-debug",
       "output": {
         "outputOnFailure": true
       }

@@ -65,11 +65,11 @@ Windows:
 
 ## Building
 
-It's recommended to use CMake `shared` preset. On Windows, run these commands from inside a "x64 Native Tools Command Prompt" (installed with Visual Studio). Qt6 must also be discoverable by CMake, e.g. via `CMAKE_PREFIX_PATH` or `Qt6_DIR`. To run the executable from the build folder, ensure the Qt6 `bin` folder is also in your `PATH`.
+It's recommended to use CMake `shared-debug` preset. On Windows, run these commands from inside a "x64 Native Tools Command Prompt" (installed with Visual Studio). Qt6 must also be discoverable by CMake, e.g. via `CMAKE_PREFIX_PATH` or `Qt6_DIR`. To run the executable from the build folder, ensure the Qt6 `bin` folder is also in your `PATH`.
 
 ```
-cmake --preset shared
-cmake --build --preset shared -j
+cmake --preset shared-debug
+cmake --build --preset shared-debug -j
 ```
 
 ## License
