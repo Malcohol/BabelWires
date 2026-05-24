@@ -189,8 +189,8 @@ TEST(ProjectBundleTest, filePathResolution) {
 
     struct TestScenario {
         std::filesystem::path m_pathInProjectData;
-        std::filesystem::path m_newBase;
-        std::filesystem::path m_oldBase;
+        std::filesystem::path m_oldProjectPath;
+        std::filesystem::path m_newProjectPath;
         std::filesystem::path m_expectedResolvedPath;
     };
 
@@ -198,21 +198,23 @@ TEST(ProjectBundleTest, filePathResolution) {
     // Because we interpret / resolve on the same platform, some of those tests do not carry over.
     std::vector<TestScenario> scenarios = {
         // Same testEnvironment.
-        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo/Bar", root / "Foo/Bar", root / "Foo/Bar/Bar.boo"},
+        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo/Bar/project.bw", root / "Foo/Bar/project.bw",
+                     root / "Foo/Bar/Bar.boo"},
         // Same testEnvironment.
-        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo", root / "Foo", root / "Foo/Bar/Bar.boo"},
+        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo/project.bw", root / "Foo/project.bw", root / "Foo/Bar/Bar.boo"},
         // Same testEnvironment, file doesn't exist.
-        TestScenario{root / "Flerm/Bar/Bar.boo", root / "Flerm", root / "Flerm", root / "Flerm/Bar/Bar.boo"},
+        TestScenario{root / "Flerm/Bar/Bar.boo", root / "Flerm/project.bw", root / "Flerm/project.bw",
+                     root / "Flerm/Bar/Bar.boo"},
         // New exists, old doesn't.
-        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo", root / "Flerm", root / "Foo/Bar/Bar.boo"},
+        TestScenario{root / "Flerm/Bar/Bar.boo", root / "Flerm/project.bw", root / "Foo/project.bw", root / "Foo/Bar/Bar.boo"},
         // Old exists, new doesn't.
-        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo", root / "Flerm", root / "Foo/Bar/Bar.boo"},
+        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo/project.bw", root / "Flerm/project.bw", root / "Foo/Bar/Bar.boo"},
         // Both exist. New prefered. Check log.
-        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo", root / "Oom", root / "Foo/Bar/Bar.boo"},
+        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo/project.bw", root / "Oom/project.bw", root / "Oom/Bar/Bar.boo"},
         // Empty new
-        TestScenario{root / "Foo/Bar/Bar.boo", std::filesystem::path(), root / "Foo", root / "Foo/Bar/Bar.boo"},
+        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo/project.bw", std::filesystem::path(), root / "Foo/Bar/Bar.boo"},
         // Empty old
-        TestScenario{root / "Foo/Bar/Bar.boo", root / "Foo", std::filesystem::path(), root / "Foo/Bar/Bar.boo"}};
+        TestScenario{root / "Foo/Bar/Bar.boo", std::filesystem::path(), root / "Foo/project.bw", root / "Foo/Bar/Bar.boo"}};
 
     // Check that the files in the element data get resolved in the expected way were the project to be opened
     // in a different place.
@@ -232,11 +234,11 @@ TEST(ProjectBundleTest, filePathResolution) {
                 elementData.m_factoryIdentifier = "MyOtherFactory";
                 projectData.m_nodes.emplace_back(elementData.clone());
             }
-            bundle = babelwires::ProjectBundle(scenario.m_oldBase, std::move(projectData));
+            bundle = babelwires::ProjectBundle(scenario.m_oldProjectPath, std::move(projectData));
         }
 
         const babelwires::ResultT<babelwires::ProjectData> projectDataResult =
-            std::move(bundle).resolveAgainstCurrentContext(testEnvironment.m_projectContext, scenario.m_newBase, log);
+            std::move(bundle).resolveAgainstCurrentContext(testEnvironment.m_projectContext, scenario.m_newProjectPath, log);
 
         ASSERT_TRUE(projectDataResult);
         const babelwires::ProjectData& projectData = *projectDataResult;
