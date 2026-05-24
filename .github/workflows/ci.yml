@@ -12,7 +12,7 @@ on:
 jobs:
   build-and-test:
     if: github.event.pull_request.draft == false
-    name: ${{ matrix.platform.name }}-${{ matrix.preset.name }}
+    name: ${{ matrix.platform.name }}-${{ matrix.cmake_preset }}
     runs-on: ${{ matrix.platform.os }}
     env:
       CC: ${{ matrix.platform.cc }}
@@ -20,15 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        preset:
-        - {
-            name: "static-debug",
-            preset: "static-debug"
-          }
-        - {
-            name: "shared-debug",
-            preset: "shared-debug"
-          }
+        cmake_preset: [static-debug, shared-debug]
         platform: 
         - {
             name: "Ubuntu_GCC",
@@ -84,10 +76,10 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
 
     - name: Configure CMake
-      run: cmake --preset ${{ matrix.preset.preset }}
+      run: cmake --preset ${{ matrix.cmake_preset }}
 
     - name: Build
-      run: cmake --build --preset ${{ matrix.preset.preset }}
+      run: cmake --build --preset ${{ matrix.cmake_preset }}
 
     - name: Run Tests
-      run: ctest --preset ${{ matrix.preset.preset }}
+      run: ctest --preset ${{ matrix.cmake_preset }}
