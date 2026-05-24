@@ -31,27 +31,42 @@ bool babelwires::FilePath::empty() const {
 }
 
 void babelwires::FilePath::resolveRelativeTo(const std::filesystem::path& newBase, const std::filesystem::path& oldBase, UserLogger& userLogger) {
-    // Note: A Windows-style absolute path might appear relative to a posix platform.
-    // Since project paths are intended to be absolute, we rely on the fact that they will appear relative too
-    // to avoid building a nonsensical path like c:/path/to/project/d:/path/to/file.
-    if (!m_filePath.is_absolute() && (oldBase.empty() || oldBase.is_absolute())) {
-        std::filesystem::path newPath = newBase / m_filePath;
-        std::filesystem::path oldPath = oldBase / m_filePath;
+    const auto isAbsoluteOrRooted = [](const std::filesystem::path& path) {
+        return path.is_absolute() || path.has_root_directory();
+    };
+
+    const auto preferResolvedPath = [&userLogger](const std::filesystem::path& newPath,
+                                                  const std::filesystem::path& oldPath) -> std::filesystem::path {
         // Prefer new relative file locations to old ones.
         if (std::filesystem::exists(newPath)) {
-            m_filePath = std::filesystem::canonical(newPath);
+            std::filesystem::path resolvedPath = std::filesystem::canonical(newPath);
             if (std::filesystem::exists(oldPath)) {
                 const std::filesystem::path oldCanonical = std::filesystem::canonical(oldPath);
-                if (m_filePath != oldPath) {
+                if (resolvedPath != oldCanonical) {
                     // Info, not warning, because this should be the expected behaviour.
                     userLogger.logInfo()
-                        << "Favouring file " << m_filePath << " over file " << oldCanonical
+                        << "Favouring file " << resolvedPath << " over file " << oldCanonical
                         << ", because its location relative to the project is preserved";
                 }
             }
-        } else {
-            // We presume the old path provides more context.
-            m_filePath = std::move(oldPath);
+            return resolvedPath;
+        }
+        // We presume the old path provides more context.
+        return oldPath;
+    };
+
+    // Note: A Windows-style absolute path might appear relative to a posix platform.
+    // Since project paths are intended to be absolute, we rely on the fact that they will appear relative too
+    // to avoid building a nonsensical path like c:/path/to/project/d:/path/to/file.
+    if (!isAbsoluteOrRooted(m_filePath) && (oldBase.empty() || isAbsoluteOrRooted(oldBase))) {
+        m_filePath = preferResolvedPath(newBase / m_filePath, oldBase / m_filePath);
+        return;
+    }
+
+    if (isAbsoluteOrRooted(m_filePath) && !newBase.empty() && !oldBase.empty() && isAbsoluteOrRooted(oldBase)) {
+        const std::filesystem::path relativePath = m_filePath.lexically_relative(oldBase);
+        if (!relativePath.empty() && !isAbsoluteOrRooted(relativePath)) {
+            m_filePath = preferResolvedPath(newBase / relativePath, m_filePath);
         }
     }
 }

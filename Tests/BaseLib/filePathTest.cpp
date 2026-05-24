@@ -116,10 +116,28 @@ TEST(FilePathTest, resolveRelativeTo) {
         path.resolveRelativeTo(root / "Foo", std::filesystem::path(), log);
         EXPECT_EQ(path, root / "Foo/Bar/Bar.boo");
     }
+#if defined(_WIN64) || defined(_WIN32)
+    // Posix-style absolute old base on Windows should still be treated as a rooted project path.
+    {
+        const std::filesystem::path oldBase("/home/username/babelwires-project");
+        ASSERT_TRUE(oldBase.has_root_directory());
+        ASSERT_FALSE(oldBase.is_absolute());
+
+        babelwires::FilePath path("Bar/Bar.boo");
+        path.resolveRelativeTo(root / "Foo", oldBase, log);
+        EXPECT_EQ(path, root / "Foo/Bar/Bar.boo");
+    }
+#endif
     // Absolute file
     {
         babelwires::FilePath path(root / "Foo/Bar/Bar.boo");
-        path.resolveRelativeTo(root / "Flerm", root / "Glurg", log);
+        path.resolveRelativeTo(root / "Oom", root / "Foo", log);
+        EXPECT_EQ(path, root / "Oom/Bar/Bar.boo");
+    }
+    // Absolute file, new relative location doesn't exist so keep the saved absolute path.
+    {
+        babelwires::FilePath path(root / "Foo/Bar/Bar.boo");
+        path.resolveRelativeTo(root / "Flerm", root / "Foo", log);
         EXPECT_EQ(path, root / "Foo/Bar/Bar.boo");
     }
     // Windows-style absolute file
@@ -129,4 +147,3 @@ TEST(FilePathTest, resolveRelativeTo) {
         EXPECT_EQ(path, "c:/Foo/Bar/Bar.boo");
     }
 }
-
