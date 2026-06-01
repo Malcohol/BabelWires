@@ -28,6 +28,7 @@ SET( COMMON_TESTS_SRCS
    commonTest.cpp
    versionTest.cpp
    uuidTest.cpp
+   resultExperiments.cpp
    )
 
 set(BASELIB_TEST_PLUGIN_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/plugins")
