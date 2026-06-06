@@ -1,4 +1,4 @@
-#include <BaseLib/Utilities/queryableInterfaces.hpp>
+#include <BaseLib/Utilities/interfaceQueryable.hpp>
 
 #include <gtest/gtest.h>
 
