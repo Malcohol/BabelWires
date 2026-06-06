@@ -9,6 +9,7 @@
 
 #include <BaseLib/Hash/hash.hpp>
 #include <BaseLib/Utilities/classUniqueString.hpp>
+#include <BaseLib/Utilities/utilityMacros.hpp>
 
 #include <concepts>
 #include <cstdint>
@@ -24,33 +25,12 @@ namespace babelwires {
 	} // namespace detail
 } // namespace babelwires
 
-#define BABELWIRES_CAT_IMPL(A, B) A##B
-#define BABELWIRES_CAT(A, B) BABELWIRES_CAT_IMPL(A, B)
-
-#define BABELWIRES_ARG_COUNT_IMPL(_1, _2, _3, _4, _5, _6, _7, _8, COUNT, ...) COUNT
-#define BABELWIRES_ARG_COUNT(...) BABELWIRES_ARG_COUNT_IMPL(__VA_ARGS__ __VA_OPT__(,) 8, 7, 6, 5, 4, 3, 2, 1, 0)
-
-#define BABELWIRES_FOR_EACH_0(MACRO)
-#define BABELWIRES_FOR_EACH_1(MACRO, A1) MACRO(A1)
-#define BABELWIRES_FOR_EACH_2(MACRO, A1, A2) MACRO(A1) MACRO(A2)
-#define BABELWIRES_FOR_EACH_3(MACRO, A1, A2, A3) MACRO(A1) MACRO(A2) MACRO(A3)
-#define BABELWIRES_FOR_EACH_4(MACRO, A1, A2, A3, A4) MACRO(A1) MACRO(A2) MACRO(A3) MACRO(A4)
-#define BABELWIRES_FOR_EACH_5(MACRO, A1, A2, A3, A4, A5) MACRO(A1) MACRO(A2) MACRO(A3) MACRO(A4) MACRO(A5)
-#define BABELWIRES_FOR_EACH_6(MACRO, A1, A2, A3, A4, A5, A6) MACRO(A1) MACRO(A2) MACRO(A3) MACRO(A4) MACRO(A5) MACRO(A6)
-#define BABELWIRES_FOR_EACH_7(MACRO, A1, A2, A3, A4, A5, A6, A7)                                                     \
-	MACRO(A1) MACRO(A2) MACRO(A3) MACRO(A4) MACRO(A5) MACRO(A6) MACRO(A7)
-#define BABELWIRES_FOR_EACH_8(MACRO, A1, A2, A3, A4, A5, A6, A7, A8)                                                 \
-	MACRO(A1) MACRO(A2) MACRO(A3) MACRO(A4) MACRO(A5) MACRO(A6) MACRO(A7) MACRO(A8)
-
-#define BABELWIRES_FOR_EACH(MACRO, ...)                                                                               \
-	BABELWIRES_CAT(BABELWIRES_FOR_EACH_, BABELWIRES_ARG_COUNT(__VA_ARGS__))(MACRO, __VA_ARGS__)
-
-#define BABELWIRES_QUERY_INTERFACE_CASE(INTERFACE)                                                                    \
+#define BW_QUERY_INTERFACE_CASE(INTERFACE)                                                                            \
 	if (interfaceId == INTERFACE::getInterfaceIdStatic()) {                                                           \
 		return static_cast<INTERFACE*>(this);                                                                         \
 	}
 
-#define BABELWIRES_QUERY_INTERFACE_CASE_CONST(INTERFACE)                                                              \
+#define BW_QUERY_INTERFACE_CASE_CONST(INTERFACE)                                                                      \
 	if (interfaceId == INTERFACE::getInterfaceIdStatic()) {                                                           \
 		return static_cast<const INTERFACE*>(this);                                                                   \
 	}
@@ -91,10 +71,10 @@ namespace babelwires {
 /// Supports up to 8 interfaces per class.
 #define INTERFACE_QUERYABLE(PARENT, ...)                                                                              \
 	void* queryInterface(std::uint64_t interfaceId) override {                                                        \
-		BABELWIRES_FOR_EACH(BABELWIRES_QUERY_INTERFACE_CASE, __VA_ARGS__)                                             \
+		BW_FOR_EACH(BW_QUERY_INTERFACE_CASE, __VA_ARGS__)                                                             \
 		return PARENT::queryInterface(interfaceId);                                                                   \
 	}                                                                                                                 \
 	const void* queryInterface(std::uint64_t interfaceId) const override {                                            \
-		BABELWIRES_FOR_EACH(BABELWIRES_QUERY_INTERFACE_CASE_CONST, __VA_ARGS__)                                       \
+		BW_FOR_EACH(BW_QUERY_INTERFACE_CASE_CONST, __VA_ARGS__)                                                       \
 		return PARENT::queryInterface(interfaceId);                                                                   \
 	}

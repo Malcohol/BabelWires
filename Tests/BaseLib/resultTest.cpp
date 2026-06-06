@@ -326,16 +326,16 @@ namespace babelwires {
 
 /// Run the code at the end of the scope.
 #define FINALLY(CODE_TO_RUN)                                                                                           \
-    const auto BW_UNIQUE_NAME(babelwiresFinally_, __LINE__) = ::babelwires::Detail::Finally([&]() { CODE_TO_RUN; });
+    const auto BW_CONCAT(babelwiresFinally_, __LINE__) = ::babelwires::Detail::Finally([&]() { CODE_TO_RUN; });
 
 /// Run the code at the end of the scope. The code can query a variable called errorState to determine whether the scope
 /// is being exited due to an error or not. Since this uses ON_ERROR, it cannot be used in a scope that already uses
 /// ON_ERROR or FINALLY_WITH_ERRORSTATE, but you can introduce a new scope to work around that.
 #define FINALLY_WITH_ERRORSTATE(CODE_TO_RUN)                                                                           \
-    babelwires::ErrorState BW_UNIQUE_NAME(babelwiresFinallyErrorState_, __LINE__) = babelwires::ErrorState::NoError;   \
-    ON_ERROR(BW_UNIQUE_NAME(babelwiresFinallyErrorState_, __LINE__) = babelwires::ErrorState::Error);                  \
-    const auto BW_UNIQUE_NAME(babelwiresFinally_, __LINE__) = ::babelwires::Detail::Finally(                           \
-        [&, &errorState = BW_UNIQUE_NAME(babelwiresFinallyErrorState_, __LINE__)]() { CODE_TO_RUN; });
+    babelwires::ErrorState BW_CONCAT(babelwiresFinallyErrorState_, __LINE__) = babelwires::ErrorState::NoError;   \
+    ON_ERROR(BW_CONCAT(babelwiresFinallyErrorState_, __LINE__) = babelwires::ErrorState::Error);                  \
+    const auto BW_CONCAT(babelwiresFinally_, __LINE__) = ::babelwires::Detail::Finally(                           \
+        [&, &errorState = BW_CONCAT(babelwiresFinallyErrorState_, __LINE__)]() { CODE_TO_RUN; });
 
 TEST(ResultTest, finallyWithSuccess) {
     auto functionThatUsesFinallyWithSuccess = [](bool& wasFinallyRun) -> babelwires::Result {
