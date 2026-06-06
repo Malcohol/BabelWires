@@ -16,7 +16,7 @@ SET( COMMON_TESTS_SRCS
    logTest.cpp
    multiKeyMapTest.cpp
    pointerRangeTest.cpp
-   interfaceQueryableTest.cpp
+   queryableInterfaceProviderTest.cpp
    rationalTest.cpp
    randomServiceTest.cpp
    registryTest.cpp

@@ -41,15 +41,15 @@ namespace babelwires {
         return babelwires::hash::stableStringHash(babelwires::getClassUniqueString<INTERFACE>());                      \
     }
 
-/// Add support for querying capability interfaces from a base class.
+/// Add support for making capability interfaces available within the hierarchy below a base class.
 ///
 /// Classes using this macro can expose capabilities with tryInterface<T>().
-/// Derived classes should use INTERFACE_QUERYABLE(PARENT, ...) to make the
+/// Derived classes should use QUERYABLE_INTERFACE_PROVIDER(PARENT, ...) to make the
 /// interfaces they implement available.
 ///
 /// Note: The base class cannot itself make an interface available this way, but
 /// that's OK because such an interface does not need to be queried dynamically.
-#define INTERFACE_QUERYABLE_BASE()                                                                                     \
+#define QUERYABLE_INTERFACE_PROVIDER_BASE()                                                                            \
     template <typename T> T* tryInterface() {                                                                          \
         static_assert(babelwires::detail::QueryableInterface<T>, "T must declare QUERYABLE_INTERFACE");                \
         return static_cast<T*>(queryInterface(T::getInterfaceIdStatic()));                                             \
@@ -69,10 +69,10 @@ namespace babelwires {
 
 /// Make one or more capability interfaces available from a derived class.
 ///
-/// PARENT must already provide INTERFACE_QUERYABLE_BASE() or INTERFACE_QUERYABLE(...).
+/// PARENT must already provide QUERYABLE_INTERFACE_PROVIDER_BASE() or QUERYABLE_INTERFACE_PROVIDER(...).
 /// Each listed interface must use QUERYABLE_INTERFACE.
 /// Supports up to 8 interfaces per class.
-#define INTERFACE_QUERYABLE(PARENT, ...)                                                                               \
+#define QUERYABLE_INTERFACE_PROVIDER(PARENT, ...)                                                                      \
     void* queryInterface(std::uint64_t interfaceId) override {                                                         \
         BW_FOR_EACH(BW_QUERY_INTERFACE_CASE, __VA_ARGS__)                                                              \
         return PARENT::queryInterface(interfaceId);                                                                    \
