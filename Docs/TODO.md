@@ -88,6 +88,7 @@ Refactor:
 * Rational should use the new Unicode utils and not require UI specialization.
   - Should be able to parse pasted unicode rationals too.
 * Processors should have a register method, to reduce boilerplate (see libRegistration for MusicLib)
+* registeredIdentifiers.hpp should provide a macro that defines a static get_<identifier>_id() function directly.
 
 UI:
 * ComplexValueEditors should work for DataLocations other than just ProjectDataLocations.
@@ -131,6 +132,8 @@ Ideas:
   - The REGISTER_TYPE macro could provide some kind of default TypeConstructor.
   - Related to: obtaining a non-trivial TypeExp which constructs a compound Type.
     - This would relax requirements on generic types, where they currently must be defined using TypeExps. 
+  - I think some dependency injection systems work like this.
+* Could there be a C++ type for resolved identifier?
 
 Speculative ideas:
 * Programming mechanism

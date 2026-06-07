@@ -9,6 +9,7 @@
 #pragma once
 
 #include <BaseLib/Result/result.hpp>
+#include <BaseLib/Utilities/utilityMacros.hpp>
 
 #include <cassert>
 
@@ -33,14 +34,6 @@ namespace babelwires {
 
 // Helper macros
 
-#define BW_UNIQUE_NAME(X, Y) BW_COMBINE_HELPER(X, Y)
-#define BW_COMBINE_HELPER(X, Y) X##Y
-#define BW_CONCAT(X, Y) BW_COMBINE_HELPER(X, Y)
-
-// Argument counting for variadic ASSIGN_OR_ERROR dispatch.
-#define BW_ARG_COUNT_IMPL(_1, _2, _3, _4, _5, _6, N, ...) N
-#define BW_ARG_COUNT(...) BW_ARG_COUNT_IMPL(__VA_ARGS__, 6, 5, 4, 3, 2, 1)
-
 // Dispatch macros: extract the last argument as the expression, reassemble the rest as the target.
 #define BW_ASSIGN_2(a, expr) BW_ASSIGN_IMPL(expr, a)
 #define BW_ASSIGN_3(a, b, expr) BW_ASSIGN_IMPL(expr, a, b)
@@ -51,9 +44,9 @@ namespace babelwires {
 // We can't use a scope in this case since it would enclose the target expression.
 // Instead it uses a file-unique variable name.
 #define BW_ASSIGN_IMPL(EXPRESSION_THAT_RETURNS_RESULTT, ...)                                                           \
-    auto BW_UNIQUE_NAME(assignOrErrorResult, __LINE__) = EXPRESSION_THAT_RETURNS_RESULTT;                              \
-    if (!BW_UNIQUE_NAME(assignOrErrorResult, __LINE__)) [[unlikely]] {                                                 \
+    auto BW_CONCAT(assignOrErrorResult, __LINE__) = EXPRESSION_THAT_RETURNS_RESULTT;                              \
+    if (!BW_CONCAT(assignOrErrorResult, __LINE__)) [[unlikely]] {                                                 \
         babelwiresOnError();                                                                                           \
-        return std::unexpected(BW_UNIQUE_NAME(assignOrErrorResult, __LINE__).error());                                 \
+        return std::unexpected(BW_CONCAT(assignOrErrorResult, __LINE__).error());                                 \
     }                                                                                                                  \
-    __VA_ARGS__ = ::babelwires::Detail::extractValue(BW_UNIQUE_NAME(assignOrErrorResult, __LINE__));
+    __VA_ARGS__ = ::babelwires::Detail::extractValue(BW_CONCAT(assignOrErrorResult, __LINE__));

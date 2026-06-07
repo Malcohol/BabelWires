@@ -5,9 +5,9 @@
 // Detail macros
 
 #define BW_ASSERT_RESULT_ASSIGN_IMPL(EXPRESSION_THAT_RETURNS_RESULTT, ...)                                                         \
-    auto BW_UNIQUE_NAME(assignOrErrorResult, __LINE__) = EXPRESSION_THAT_RETURNS_RESULTT;                              \
-    ASSERT_TRUE(BW_UNIQUE_NAME(assignOrErrorResult, __LINE__).has_value());                                            \
-    __VA_ARGS__ = ::babelwires::Detail::extractValue(BW_UNIQUE_NAME(assignOrErrorResult, __LINE__));
+    auto BW_CONCAT(assignOrErrorResult, __LINE__) = EXPRESSION_THAT_RETURNS_RESULTT;                              \
+    ASSERT_TRUE(BW_CONCAT(assignOrErrorResult, __LINE__).has_value());                                            \
+    __VA_ARGS__ = ::babelwires::Detail::extractValue(BW_CONCAT(assignOrErrorResult, __LINE__));
 
 #define BW_ASSERT_RESULT_ASSIGN_2(a, expr) BW_ASSERT_RESULT_ASSIGN_IMPL(expr, a)
 #define BW_ASSERT_RESULT_ASSIGN_3(a, b, expr) BW_ASSERT_RESULT_ASSIGN_IMPL(expr, a, b)
