@@ -65,8 +65,14 @@ Other:
 ## Singletons
 
 * Singletons should be avoided as much as possible.
-* There is one singleton intended for general use in the codebase: the `IdentifierRegister`.
+* There is one singleton intended for general use in the codebase: the `IdentifierRegister`. It is created very early in program lifetime and lasts for the entire duration of the program.
 * Some other facilities are implemented using singletons, but that fact is hidden from callers.
+
+## Identifiers
+
+The file `identifier.hpp` provides functionality for defining globally-unique identifier objects: `ShortId`, `MediumId` and `LongId`.
+
+Except during static initialization, Identifiers can be created on-the-fly using the macros BW_SHORT_ID, BW_MEDIUM_ID and BW_LONG_ID (in the file `registeredIdentifier.hpp`).
 
 ## Dependency Injection and the Context
 

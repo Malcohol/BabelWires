@@ -40,7 +40,7 @@ namespace babelwires {
     /// Unresolved identifiers are special and test equal to any identifier whose textual part matches
     /// regardless of the discriminator. This makes EQUALITY NON-TRANSITIVE on sets that have mixtures
     /// of resolved and unresolved identifiers. Standard algorithms can misbehave in this situation!
-    /// 
+    ///
     /// Data is arranged so the bit pattern can never be confused for array indices, when
     /// considering Paths. On little-endian architectures, the string is stored in
     /// reverse order. (On big-endian architectures, the string would be stored in the
@@ -54,7 +54,7 @@ namespace babelwires {
     /// * They sort in alphabetic order (deterministic and very useful for debugging)
     /// * They can be examined in any debugger without a visualizer.
     /// * The registry will store an identifier's metadata (Uuid & name) even if the identifier
-    ///   is deserialized into a build where the referant does not exist. Thus, the metadata will
+    ///   is deserialized into a build where the referent does not exist. Thus, the metadata will
     ///   be available if the identifier is later serialized.
     ///
     /// Identifiers follow the usual rules: The characters must be alphanumeric or '_' and cannot
@@ -158,9 +158,7 @@ namespace babelwires {
                     (a.getDiscriminator() == 0 || b.getDiscriminator() == 0));
         }
 
-        friend bool operator!=(const IdentifierBase& a, const IdentifierBase& b) {
-            return !(a == b);
-        }
+        friend bool operator!=(const IdentifierBase& a, const IdentifierBase& b) { return !(a == b); }
 
         friend bool operator<(const IdentifierBase& a, const IdentifierBase& b) {
             return a.getTupleOfData() < b.getTupleOfData();
@@ -240,7 +238,7 @@ namespace babelwires {
         explicit IdentifierBase(const IdentifierBase<OTHER_NUM_BLOCKS>& other) {
             constexpr unsigned int M = (OTHER_NUM_BLOCKS * sizeof(std::uint64_t)) - 2;
             constexpr unsigned int D = M - N;
-            assert ((other.m_data.m_chars[D - 1] == '\0') && "The contents of identifier are too long");
+            assert((other.m_data.m_chars[D - 1] == '\0') && "The contents of identifier are too long");
             m_data.m_discriminator = other.m_data.m_discriminator;
             std::copy(other.m_data.m_chars + D, other.m_data.m_chars + M, m_data.m_chars);
         }
@@ -265,8 +263,18 @@ namespace babelwires {
         static_assert(sizeof(Data) == sizeof(m_code));
     };
 
+    /// ShortId is good for scenarios where size is critical and where the context limits the likelihood
+    /// of confusion. Records fields are good examples of this --- although globally there are many fields, in the
+    /// context of a single record there are only a few, so the risk of confusion is low.
     using ShortId = IdentifierBase<1>;
+
+    /// MediumId is useful when more text is needed, because the context in which the identifiers are
+    /// considered is broader. For example, Type identifiers are interpreted globally, so it's useful for their
+    /// identifiers to be a bit more descriptive.
     using MediumId = IdentifierBase<2>;
+
+    /// LongId is good for situations where size and efficiency are less important. For example, factory
+    /// identifiers are unlikely to exist in high numbers or be used on a very hot codepath.
     using LongId = IdentifierBase<3>;
 
 } // namespace babelwires
