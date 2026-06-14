@@ -13,13 +13,13 @@
 #include <BaseLib/Serialization/deserializer.hpp>
 
 babelwires::StringValue::StringValue() = default;
-babelwires::StringValue::StringValue(std::string value) : m_value(std::move(value)) {}
+babelwires::StringValue::StringValue(Text value) : m_value(std::move(value)) {}
 
-std::string babelwires::StringValue::get() const {
+babelwires::Text babelwires::StringValue::get() const {
     return m_value;
 }
 
-void babelwires::StringValue::set(std::string value) {
+void babelwires::StringValue::set(Text value) {
     m_value = std::move(value);
 }
 
@@ -48,7 +48,7 @@ bool babelwires::StringValue::canContainFilePaths() const {
 }
 
 std::size_t babelwires::StringValue::getHash() const {
-    return std::hash<std::string>()(m_value);
+    return std::hash<std::string>()(std::string(m_value.toUtf8()));
 }
 
 bool babelwires::StringValue::operator==(const Value& other) const {
@@ -57,5 +57,5 @@ bool babelwires::StringValue::operator==(const Value& other) const {
 }
 
 std::string babelwires::StringValue::toString() const {
-    return m_value;
+    return std::string(m_value.toUtf8());
 }

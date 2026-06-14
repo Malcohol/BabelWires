@@ -3,6 +3,8 @@
 #include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
+#include <BaseLib/Text/text.hpp>
+
 #include <Tests/TestUtils/testIdentifiers.hpp>
 
 #pragma once
@@ -13,7 +15,7 @@ namespace testUtils {
         DOWNCASTABLE(TestValue, babelwires::EditableValue);
         CLONEABLE(TestValue);
         SERIALIZABLE(TestValue, "testValue", babelwires::EditableValue, 1);
-        TestValue(std::string value = "The value");
+        TestValue(babelwires::Text value = u8"The value");
         std::size_t getHash() const override;
         bool operator==(const Value& other) const override;
         std::string toString() const override;
@@ -24,7 +26,7 @@ namespace testUtils {
         bool canContainIdentifiers() const override;
         bool canContainFilePaths() const override;
 
-        std::string m_value;
+        babelwires::Text m_value;
     };
 
     /// The Type of TestValues.
@@ -34,9 +36,9 @@ namespace testUtils {
         REGISTERED_TYPE_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("TestType"), 1);
 
         /// 0 == unbounded.
-        TestType(unsigned int maximumLength = 0, std::string defaultValue = "Default value");
+        TestType(unsigned int maximumLength = 0, babelwires::Text defaultValue = u8"Default value");
         
-        TestType(babelwires::TypeExp&& typeExpOfThis, unsigned int maximumLength = 0, std::string defaultValue = "Default value");
+        TestType(babelwires::TypeExp&& typeExpOfThis, unsigned int maximumLength = 0, babelwires::Text defaultValue = u8"Default value");
 
         babelwires::NewValueHolder createValue(const babelwires::TypeSystem& typeSystem) const override;
         bool visitValue(const babelwires::TypeSystem& typeSystem, const babelwires::Value& value,
@@ -51,6 +53,6 @@ namespace testUtils {
         static Tag getTestTypeTag();
 
         unsigned int m_maximumLength;
-        std::string m_defaultValue;
+        babelwires::Text m_defaultValue;
     };
 } // namespace testUtils

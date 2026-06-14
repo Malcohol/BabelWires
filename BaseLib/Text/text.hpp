@@ -28,6 +28,11 @@ namespace babelwires {
         Text(Text&&) = default;
         /// This asserts that the string is indeed valid UTF-8.
         Text(std::u8string data);
+
+        template<size_t N>
+        Text(const char8_t (&data)[N])
+            : Text(std::u8string(data, N - 1)) {}
+
         Text& operator=(const Text&) = default;
         Text& operator=(Text&&) = default;
 

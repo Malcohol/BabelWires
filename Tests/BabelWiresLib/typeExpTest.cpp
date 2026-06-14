@@ -32,7 +32,7 @@ TEST(TypeExpTest, equality) {
     babelwires::TypeExp constructedTypeExp3(
         babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
         babelwires::TypeExp(babelwires::TypeConstructorId("Flerm"), babelwires::RegisteredTypeId("Erm")));
-    babelwires::TypeExp constructedTypeExpValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Bar"));
+    babelwires::TypeExp constructedTypeExpValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue(u8"Bar"));
     babelwires::TypeExp constructedTypeExpMixed1(
         babelwires::TypeConstructorId("Foo"),
         babelwires::TypeConstructorArguments{{babelwires::RegisteredTypeId("Bar")}, {babelwires::IntValue(16)}});
@@ -194,12 +194,12 @@ TEST(TypeExpTest, tryResolveMixed) {
         testUtils::TestMixedTypeConstructor::getThisIdentifier(),
         {{babelwires::TypeExp(testUtils::TestUnaryTypeConstructor::getThisIdentifier(),
                               testUtils::TestType::getThisIdentifier())},
-         {babelwires::StringValue(" is this string")}});
+         {babelwires::StringValue(u8" is this string")}});
 
     babelwires::TypePtr constructedTestType = *constructedTestTypeExp.resolve(typeSystem);
     const testUtils::TestType* const newTestType = constructedTestType->tryAs<testUtils::TestType>();
     ASSERT_NE(newTestType, nullptr);
-    EXPECT_EQ(newTestType->m_defaultValue, "Default value is this string");
+    EXPECT_EQ(newTestType->m_defaultValue, u8"Default value is this string");
 }
 
 TEST(TypeExpTest, toStringSuccessTypes) {
@@ -276,8 +276,8 @@ TEST(TypeExpTest, toStringSuccessValues) {
     testUtils::TestLog log;
     babelwires::IdentifierRegistryScope identifierRegistry;
 
-    babelwires::StringValue foo("foo");
-    babelwires::StringValue bar("bar");
+    babelwires::StringValue foo(u8"foo");
+    babelwires::StringValue bar(u8"bar");
 
     babelwires::TypeConstructorId unary0 = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Unary0", "UNARY[[[0]]]", "8b3068ee-c604-4fa1-895f-c85dffeceda4",
@@ -327,8 +327,8 @@ TEST(TypeExpTest, toStringSuccessMixed) {
     babelwires::RegisteredTypeId foo = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "Foo", "Foofoo", "325d9560-6330-43bb-80b4-963843ec8fba",
         babelwires::IdentifierRegistry::Authority::isAuthoritative);
-    babelwires::StringValue bar("bar");
-    babelwires::StringValue boo("boo");
+    babelwires::StringValue bar(u8"bar");
+    babelwires::StringValue boo(u8"boo");
 
     babelwires::TypeConstructorId mixed = babelwires::IdentifierRegistry::write()->addMediumIdWithMetadata(
         "WithOp", "{0}+[0|<\\]>]+{1}", "258495b5-a88e-45c0-83ca-762817c27fb1",
@@ -382,7 +382,7 @@ TEST(TypeExpTest, serialization) {
     babelwires::TypeExp constructedTypeExp3(
         babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
         babelwires::TypeExp(babelwires::TypeConstructorId("Flerm"), babelwires::RegisteredTypeId("Erm")));
-    babelwires::TypeExp constructedTypeExpValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Bar"));
+    babelwires::TypeExp constructedTypeExpValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue(u8"Bar"));
     babelwires::TypeExp constructedTypeExpMixed1(
         babelwires::TypeConstructorId("Foo"),
         babelwires::TypeConstructorArguments{{babelwires::RegisteredTypeId("Bar")}, {babelwires::IntValue(16)}});
@@ -478,8 +478,8 @@ TEST(TypeExpTest, hash) {
     babelwires::TypeExp constructedTypeExp3(
         babelwires::TypeConstructorId("Foo"), babelwires::RegisteredTypeId("Bar"),
         babelwires::TypeExp(babelwires::TypeConstructorId("Oom"), babelwires::RegisteredTypeId("Erm")));
-    babelwires::TypeExp constructedTypeExpValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Bar"));
-    babelwires::TypeExp constructedTypeExpValue2(babelwires::TypeConstructorId("Foo"), babelwires::StringValue("Erm"));
+    babelwires::TypeExp constructedTypeExpValue1(babelwires::TypeConstructorId("Foo"), babelwires::StringValue(u8"Bar"));
+    babelwires::TypeExp constructedTypeExpValue2(babelwires::TypeConstructorId("Foo"), babelwires::StringValue(u8"Erm"));
     babelwires::TypeExp constructedTypeExpMixed1(
         babelwires::TypeConstructorId("Foo"),
         babelwires::TypeConstructorArguments{{babelwires::RegisteredTypeId("Bar")}, {babelwires::IntValue(16)}});

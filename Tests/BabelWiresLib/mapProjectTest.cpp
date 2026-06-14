@@ -174,7 +174,7 @@ TEST(MapProjectTest, modifyMapValue) {
 
     babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, *stringType, *testSubEnumType);
     babelwires::StringValue newSourceValue;
-    newSourceValue.set("Source");
+    newSourceValue.set(u8"Source");
     babelwires::EnumValue newTargetValue;
     newTargetValue.set("Erm");
     oneToOne2.setSourceValue(newSourceValue.clone());

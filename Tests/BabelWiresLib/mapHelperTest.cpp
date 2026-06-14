@@ -19,7 +19,7 @@
 #include <Tests/TestUtils/testLog.hpp>
 
 namespace {
-    std::string testValueAdapter(const babelwires::Value& value) {
+    babelwires::Text testValueAdapter(const babelwires::Value& value) {
         return value.tryAs<babelwires::StringValue>()->get();
     }
 
@@ -62,19 +62,19 @@ namespace {
     babelwires::MapValue setUpTestTypeMapValue(const babelwires::TypeSystem& typeSystem, babelwires::MapValue& mapValue,
                                                bool allToOneFallback) {
         babelwires::StringValue sourceValue1;
-        sourceValue1.set("aaa");
+        sourceValue1.set(u8"aaa");
 
         babelwires::StringValue sourceValue2;
-        sourceValue2.set("bbb");
+        sourceValue2.set(u8"bbb");
 
         babelwires::StringValue targetValue1;
-        targetValue1.set("xxx");
+        targetValue1.set(u8"xxx");
 
         babelwires::StringValue targetValue2;
-        targetValue2.set("yyy");
+        targetValue2.set(u8"yyy");
 
         babelwires::StringValue targetValue3;
-        targetValue3.set("zzz");
+        targetValue3.set(u8"zzz");
 
         return setUpTestMapValue(typeSystem, babelwires::StringType::getThisIdentifier(), babelwires::StringType::getThisIdentifier(),
                                  sourceValue1, sourceValue2, targetValue1, targetValue2, targetValue3,
@@ -106,10 +106,10 @@ namespace {
     babelwires::MapValue setUpTestTypeTestEnumMapValue(const babelwires::TypeSystem& typeSystem,
                                                        babelwires::MapValue& mapValue) {
         babelwires::StringValue sourceValue1;
-        sourceValue1.set("aaa");
+        sourceValue1.set(u8"aaa");
 
         babelwires::StringValue sourceValue2;
-        sourceValue2.set("bbb");
+        sourceValue2.set(u8"bbb");
 
         babelwires::EnumValue targetValue1;
         targetValue1.set("Oom");
@@ -133,13 +133,13 @@ namespace {
         sourceValue2.set("Bar");
 
         babelwires::StringValue targetValue1;
-        targetValue1.set("xxx");
+        targetValue1.set(u8"xxx");
 
         babelwires::StringValue targetValue2;
-        targetValue2.set("yyy");
+        targetValue2.set(u8"yyy");
 
         babelwires::StringValue targetValue3;
-        targetValue3.set("zzz");
+        targetValue3.set(u8"zzz");
 
         return setUpTestMapValue(typeSystem, testDomain::TestEnum::getThisIdentifier(), testDomain::TestEnum::getThisIdentifier(),
                                  sourceValue1, sourceValue2, targetValue1, targetValue2, targetValue3, true);
@@ -153,13 +153,13 @@ TEST(MapHelperTest, unorderedMapApplicator_allToOneFallback) {
 
     babelwires::MapValue mapValue = setUpTestTypeMapValue(typeSystem, mapValue, true);
 
-    babelwires::UnorderedMapApplicator<std::string, std::string> mapApplicator(mapValue, &testValueAdapter,
-                                                                               &testValueAdapter);
+    babelwires::UnorderedMapApplicator<babelwires::Text, babelwires::Text> mapApplicator(mapValue, &testValueAdapter,
+                                                                                       &testValueAdapter);
 
-    EXPECT_EQ(mapApplicator["aaa"], "xxx");
-    EXPECT_EQ(mapApplicator["bbb"], "yyy");
-    EXPECT_EQ(mapApplicator["ccc"], "zzz");
-    EXPECT_EQ(mapApplicator["ddd"], "zzz");
+    EXPECT_EQ(mapApplicator[u8"aaa"], u8"xxx");
+    EXPECT_EQ(mapApplicator[u8"bbb"], u8"yyy");
+    EXPECT_EQ(mapApplicator[u8"ccc"], u8"zzz");
+    EXPECT_EQ(mapApplicator[u8"ddd"], u8"zzz");
 }
 
 TEST(MapHelperTest, unorderedMapApplicator_allToSameFallback) {
@@ -169,13 +169,13 @@ TEST(MapHelperTest, unorderedMapApplicator_allToSameFallback) {
 
     babelwires::MapValue mapValue = setUpTestTypeMapValue(typeSystem, mapValue, false);
 
-    babelwires::UnorderedMapApplicator<std::string, std::string> mapApplicator(mapValue, &testValueAdapter,
-                                                                               &testValueAdapter);
+    babelwires::UnorderedMapApplicator<babelwires::Text, babelwires::Text> mapApplicator(mapValue, &testValueAdapter,
+                                                                                       &testValueAdapter);
 
-    EXPECT_EQ(mapApplicator["aaa"], "xxx");
-    EXPECT_EQ(mapApplicator["bbb"], "yyy");
-    EXPECT_EQ(mapApplicator["ccc"], "ccc");
-    EXPECT_EQ(mapApplicator["ddd"], "ddd");
+    EXPECT_EQ(mapApplicator[u8"aaa"], u8"xxx");
+    EXPECT_EQ(mapApplicator[u8"bbb"], u8"yyy");
+    EXPECT_EQ(mapApplicator[u8"ccc"], u8"ccc");
+    EXPECT_EQ(mapApplicator[u8"ddd"], u8"ddd");
 }
 
 TEST(MapHelperTest, unorderedMapApplicator_differentTypes) {
@@ -189,13 +189,13 @@ TEST(MapHelperTest, unorderedMapApplicator_differentTypes) {
     babelwires::MapValue mapValue = setUpTestTypeTestEnumMapValue(typeSystem, mapValue);
 
     // Also test the EnumToIndexValueAdapter
-    babelwires::UnorderedMapApplicator<std::string, unsigned int> mapApplicator(
+    babelwires::UnorderedMapApplicator<babelwires::Text, unsigned int> mapApplicator(
         mapValue, &testValueAdapter, babelwires::EnumToIndexValueAdapter{testEnum});
 
-    EXPECT_EQ(mapApplicator["aaa"], 3);
-    EXPECT_EQ(mapApplicator["bbb"], 4);
-    EXPECT_EQ(mapApplicator["ccc"], 2);
-    EXPECT_EQ(mapApplicator["ddd"], 2);
+    EXPECT_EQ(mapApplicator[u8"aaa"], 3);
+    EXPECT_EQ(mapApplicator[u8"bbb"], 4);
+    EXPECT_EQ(mapApplicator[u8"ccc"], 2);
+    EXPECT_EQ(mapApplicator[u8"ddd"], 2);
 }
 
 TEST(MapHelperTest, enumSourceMapApplicator_allToOneFallback) {
@@ -245,12 +245,12 @@ TEST(MapHelperTest, enumSourceMapApplicator_differentTypes) {
 
     babelwires::MapValue mapValue = setUpTestEnumTestTypeMapValue(typeSystem, mapValue);
 
-    babelwires::EnumSourceMapApplicator<testDomain::TestEnum, std::string> mapApplicator(mapValue, *testEnum,
+    babelwires::EnumSourceMapApplicator<testDomain::TestEnum, babelwires::Text> mapApplicator(mapValue, *testEnum,
                                                                                          &testValueAdapter);
 
-    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Foo], "xxx");
-    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Bar], "yyy");
-    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Erm], "zzz");
-    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Oom], "zzz");
-    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Boo], "zzz");
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Foo], u8"xxx");
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Bar], u8"yyy");
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Erm], u8"zzz");
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Oom], u8"zzz");
+    EXPECT_EQ(mapApplicator[testDomain::TestEnum::Value::Boo], u8"zzz");
 }

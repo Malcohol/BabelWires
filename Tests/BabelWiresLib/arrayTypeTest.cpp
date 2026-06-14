@@ -91,7 +91,7 @@ TEST(ArrayTypeTest, isValidValueArrayCanBeEmpty) {
                                       testDomain::TestSimpleArrayType::s_maximumSize);
 
     // Make an entry not an element of the entry type.
-    mixedValue.setValue(testDomain::TestSimpleArrayType::s_minimumSize, babelwires::StringValue("Not valid"));
+    mixedValue.setValue(testDomain::TestSimpleArrayType::s_minimumSize, babelwires::StringValue(u8"Not valid"));
     EXPECT_FALSE(arrayType.isValidValue(testEnvironment.m_typeSystem, mixedValue));
 
     // Restore the entry to a value of the entry type.

@@ -19,23 +19,23 @@ QWidget* babelwires::StringValueModel::createEditor(QWidget* parent) const {
 
 void babelwires::StringValueModel::setEditorData(QWidget* editor) const {
     const StringValue& v = getValue()->as<StringValue>();
-    const std::string& value = v.get();
+    const std::string value = v.get().toUtf8();
 
     auto lineEditor = qobject_cast<LineEditValueEditor*>(editor);
     assert(lineEditor && "Unexpected editor");
-    lineEditor->setText(value.c_str());
+    lineEditor->setText(QString::fromUtf8(value.c_str()));
 }
 
 babelwires::ValueHolder babelwires::StringValueModel::createValueFromEditorIfDifferent(QWidget* editor) const {
     auto lineEditor = qobject_cast<const LineEditValueEditor*>(editor);
     assert(lineEditor && "Unexpected editor");
-    const std::string newValue = lineEditor->text().toStdString();
+    const std::string newValue = lineEditor->text().toUtf8().toStdString();
 
     const StringValue& v = getValue()->as<StringValue>();
-    const std::string currentValue = v.get();
+    const std::string currentValue = v.get().toUtf8();
     
     if (newValue != currentValue) {
-        return ValueHolder::makeValue<babelwires::StringValue>(newValue);
+        return ValueHolder::makeValue<babelwires::StringValue>(babelwires::Text::assertFromUtf8(newValue));
     } 
     return {};
 }

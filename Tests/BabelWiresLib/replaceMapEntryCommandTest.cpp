@@ -34,16 +34,16 @@ TEST(ReplaceMapEntryCommandTest, executeAndUndo) {
 
     mapValue.emplaceBack(oneToOne.clone());
 
-    oneToOne.setSourceValue(babelwires::StringValue("Source"));
-    oneToOne.setTargetValue(babelwires::StringValue("Target"));
+    oneToOne.setSourceValue(babelwires::StringValue(u8"Source"));
+    oneToOne.setTargetValue(babelwires::StringValue(u8"Target"));
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
     mapProject.setMapValue(mapValue);
 
     babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, *stringType, *stringType);
-    oneToOne2.setSourceValue(babelwires::StringValue("Source2"));
-    oneToOne2.setTargetValue(babelwires::StringValue("Target2"));
+    oneToOne2.setSourceValue(babelwires::StringValue(u8"Source2"));
+    oneToOne2.setTargetValue(babelwires::StringValue(u8"Target2"));
 
     babelwires::ReplaceMapEntryCommand testCopyConstructor("Replace", oneToOne2.clone(), 1);
     babelwires::ReplaceMapEntryCommand command = testCopyConstructor;
@@ -117,8 +117,8 @@ TEST(ReplaceMapEntryCommandTest, replaceInvalid) {
 
     babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, *stringType, *stringType);
     
-    oneToOne2.setSourceValue(babelwires::StringValue("Source"));
-    oneToOne2.setTargetValue(babelwires::StringValue("Target"));
+    oneToOne2.setSourceValue(babelwires::StringValue(u8"Source"));
+    oneToOne2.setTargetValue(babelwires::StringValue(u8"Target"));
 
     babelwires::ReplaceMapEntryCommand command("Replace", oneToOne2.clone(), 1);
     

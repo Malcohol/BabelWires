@@ -30,7 +30,7 @@ TEST(AddEntryToMapCommandTest, executeAndUndo) {
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType,
                                               *stringType);
 
-    babelwires::StringValue nonDefaultValue("non-default");
+    babelwires::StringValue nonDefaultValue(u8"non-default");
     oneToOne.setSourceValue(nonDefaultValue.clone());
     oneToOne.setTargetValue(nonDefaultValue.clone());
 

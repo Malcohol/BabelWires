@@ -34,8 +34,8 @@ TEST(RemoveEntryFromMapCommandTest, executeAndUndo) {
 
     mapValue.emplaceBack(oneToOne.clone());
 
-    oneToOne.setSourceValue(babelwires::StringValue("Source"));
-    oneToOne.setTargetValue(babelwires::StringValue("Target"));
+    oneToOne.setSourceValue(babelwires::StringValue(u8"Source"));
+    oneToOne.setTargetValue(babelwires::StringValue(u8"Target"));
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());

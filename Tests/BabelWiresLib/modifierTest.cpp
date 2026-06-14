@@ -120,7 +120,7 @@ TEST(ModifierTest, localApplyFailureWrongType) {
     babelwires::Path path;
     path.pushStep(babelwires::PathStep{testDomain::TestSimpleRecordType::getInt0Id()});
 
-    auto stringModData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::StringValue("Hello"));
+    auto stringModData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::StringValue(u8"Hello"));
     stringModData->m_targetPath = path;
 
     babelwires::LocalModifier stringMod(std::move(stringModData));
@@ -381,7 +381,7 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
                                                        testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestComplexRecordType>());
     targetRecordFeature.setToDefault();
     testDomain::TestComplexRecordType::Instance targetInstance{targetRecordFeature};
-    targetInstance.getstring().set("Hello");
+    targetInstance.getstring().set(u8"Hello");
 
     const babelwires::Path targetPath{
         std::vector<babelwires::PathStep>{testDomain::TestComplexRecordType::getStringId()}};
@@ -395,12 +395,12 @@ TEST(ModifierTest, connectionModifierApplicationFailure) {
     TestOwner owner;
     connectionMod.setOwner(&owner);
 
-    EXPECT_EQ(targetInstance.getstring().get(), "Hello");
+    EXPECT_EQ(targetInstance.getstring().get(), u8"Hello");
     connectionMod.applyConnection(testEnvironment.m_project, testEnvironment.m_log, &targetRecordFeature);
     EXPECT_TRUE(connectionMod.isFailed());
     EXPECT_EQ(connectionMod.getState(), babelwires::Modifier::State::ApplicationFailed);
     // The string will now be default.
-    EXPECT_TRUE(targetInstance.getstring().get().empty());
+    EXPECT_TRUE(targetInstance.getstring().get().getData().empty());
     EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("Failed to apply operation"));
     EXPECT_TRUE(testEnvironment.m_log.hasSubstringIgnoreCase("not a valid instance"));
 }
