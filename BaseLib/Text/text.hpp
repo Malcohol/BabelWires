@@ -20,12 +20,14 @@ namespace babelwires {
     /// The class provides several methods for ingesting data from a std::string_view. These ensure the ingested data
     /// was in exactly the expected form and that the stored data is valid UTF-8.
     /// The class provides several methods for egesting the data to a std::string. These ensure the egested data is in
-    /// exactly the expected form. 
+    /// exactly the expected form.
     class BASELIB_API Text {
       public:
         Text() = default;
         Text(const Text&) = default;
         Text(Text&&) = default;
+        /// This asserts that the string is indeed valid UTF-8.
+        Text(std::u8string data);
         Text& operator=(const Text&) = default;
         Text& operator=(Text&&) = default;
 
@@ -63,14 +65,33 @@ namespace babelwires {
         std::string tryTo7BitAscii() const;
 
         // Always succeeds
-        std::string_view toUtf8() const;
+        std::string toUtf8() const;
+
+        std::string serializeToString() const;
+        static ResultT<Text> deserializeFromString(std::string_view str);
+
+        auto operator<=>(const Text&) const = default;
+
+        const std::u8string& getData() const { return m_data; }
 
       private:
-        explicit Text(std::string data)
-            : m_data(std::move(data)) {}
+        // Unlike the public constructor, this version doesn't perform any validation.
+        Text(std::u8string checkedData, bool /*unused*/)
+            : m_data(std::move(checkedData)) {}
+
+        explicit Text(std::string_view checkedData)
+            : m_data(std::u8string(checkedData.begin(), checkedData.end())) {}
 
         /// The data is always in UTF-8 encoding.
-        std::string m_data;
+        std::u8string m_data;
     };
 
 } // namespace babelwires
+
+namespace std {
+    template <> struct hash<babelwires::Text> {
+        inline std::size_t operator()(const babelwires::Text& text) const {
+            return std::hash<std::u8string>()(text.getData());
+        }
+    };
+} // namespace std

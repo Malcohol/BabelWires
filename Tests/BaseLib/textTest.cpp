@@ -15,6 +15,15 @@ namespace {
     }
 } // namespace
 
+TEST(TextTest, u8ConstructorAcceptsValidUtf8) {
+    babelwires::Text text(u8"Hello, world!");
+    EXPECT_EQ(text.toUtf8(), "Hello, world!");
+}
+
+TEST(TextTest, u8ConstructorRejectsInvalidUtf8) {
+    EXPECT_DEATH(babelwires::Text text(u8"Hello \x80 World"), "invalid UTF-8");
+}
+
 TEST(TextTest, fromPrintableAsciiAcceptsPrintableTextButRejectsControlCharactersAndHighBitBytes) {
     const auto printableResult = babelwires::Text::fromPrintableAscii("Hello, world!");
     ASSERT_TRUE(printableResult);
