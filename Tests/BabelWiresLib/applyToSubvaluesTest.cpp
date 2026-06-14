@@ -26,7 +26,7 @@ class ApplyToSubvaluesTest : public ::testing::Test {
         recordInstance.getarray().getEntry(1).set(2);
         recordInstance.getarray().getEntry(2).set(3);
         recordInstance.activateAndGetonOpt().set(7);
-        recordInstance.getstring().set("Hello");
+        recordInstance.getstring().set(u8"Hello");
         m_recordValue = recordValueTreeNode.getValue();
     }
 
@@ -46,7 +46,7 @@ class ApplyToSubvaluesTest : public ::testing::Test {
         EXPECT_EQ(recordInstance.getarray().getEntry(1).get(), 2 + offset);
         EXPECT_EQ(recordInstance.getarray().getEntry(2).get(), 3 + offset);
         EXPECT_EQ(recordInstance.getonOpt().get(), 7 + offset); // Optional, but activated by default
-        EXPECT_EQ(recordInstance.getstring().get(), "Hello");
+        EXPECT_EQ(recordInstance.getstring().get(), u8"Hello");
     }
 
     testUtils::TestEnvironment m_testEnvironment;

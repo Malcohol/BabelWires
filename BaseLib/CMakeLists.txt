@@ -37,6 +37,7 @@ SET( COMMON_SRCS
 	PluginSupport/pluginHandle.cpp
 	PluginSupport/pluginManager.cpp
 	PluginSupport/pluginOperations.cpp
+	Text/text.cpp
 	Utilities/unicodeUtils.cpp
    )
 

@@ -42,8 +42,9 @@ babelwires::ResultT<babelwires::TypePtr> testUtils::TestMixedTypeConstructor::co
 
     assert(testType != nullptr);
     assert(stringValue != nullptr);
-
+    babelwires::Text stringValueText = stringValue->get();
+    
     // Remember the typeExp, since there's no way to reconstruct it.
-    return babelwires::makeType<TestType>(std::move(newTypeExp), testType->m_maximumLength + stringValue->get().size(),
-                                          testType->m_defaultValue + stringValue->get());
+    return babelwires::makeType<TestType>(std::move(newTypeExp), testType->m_maximumLength + stringValueText.getData().size(),
+                                          testType->m_defaultValue.getData() + stringValueText.getData());
 }

@@ -276,7 +276,7 @@ TEST(MapValueTest, serializationTest) {
 
             // Note: We want to be able to serialize when entries do not match the types, as in this case.
         auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, *stringType, *stringType);
-        entryData->setSourceValue(babelwires::StringValue("test mapValue serialization"));
+        entryData->setSourceValue(babelwires::StringValue(u8"test mapValue serialization"));
         mapValue.emplaceBack(std::move(entryData));
         mapValue.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 
@@ -306,7 +306,7 @@ TEST(MapValueTest, serializationTest) {
     ASSERT_NE(sourceValue, nullptr);
     const auto *const sourceAsTestValue = sourceValue->tryAs<babelwires::StringValue>();
     ASSERT_NE(sourceAsTestValue, nullptr);
-    EXPECT_EQ(sourceAsTestValue->get(), "test mapValue serialization");
+    EXPECT_EQ(sourceAsTestValue->get(), u8"test mapValue serialization");
 
     EXPECT_EQ(dataPtr->getMapEntry(1).getKind(), babelwires::MapEntryData::Kind::All2Sm);
 }
@@ -324,7 +324,7 @@ TEST(MapValueTest, cloneTest) {
     // Note: We want to be able to clone when entries do not match the types, as in this case.
     auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, *stringType, *stringType);
     auto entryDataPtr = entryData.get();
-    entryData->setSourceValue(babelwires::StringValue("test mapValue serialization"));
+    entryData->setSourceValue(babelwires::StringValue(u8"test mapValue serialization"));
     mapValue.emplaceBack(std::move(entryData));
     mapValue.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 

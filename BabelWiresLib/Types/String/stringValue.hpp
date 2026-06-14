@@ -10,6 +10,8 @@
 #include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
+#include <BaseLib/Text/text.hpp>
+
 namespace babelwires {
 
     class BABELWIRESLIB_API StringValue : public AlwaysEditableValue {
@@ -19,10 +21,10 @@ namespace babelwires {
         SERIALIZABLE(StringValue, "string", EditableValue, 1);
 
         StringValue();
-        StringValue(std::string value);
+        StringValue(Text value);
 
-        std::string get() const;
-        void set(std::string value);
+        Text get() const;
+        void set(Text value);
 
         void serializeContents(Serializer& serializer) const override;
         Result deserializeContents(Deserializer& deserializer) override;
@@ -35,7 +37,7 @@ namespace babelwires {
         std::string toString() const override;
 
       private:
-        std::string m_value;
+        Text m_value;
     };
 
 } // namespace babelwires

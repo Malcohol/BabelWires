@@ -3,11 +3,11 @@
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
 
-testUtils::TestValue::TestValue(std::string value)
+testUtils::TestValue::TestValue(babelwires::Text value)
     : m_value(value) {}
 
 std::size_t testUtils::TestValue::getHash() const {
-    return std::hash<std::string>()(m_value);
+    return std::hash<babelwires::Text>()(m_value);
 }
 
 bool testUtils::TestValue::operator==(const Value& other) const {
@@ -19,7 +19,7 @@ bool testUtils::TestValue::operator==(const Value& other) const {
 }
 
 std::string testUtils::TestValue::toString() const {
-    return m_value;
+    return m_value.toUtf8();
 }
 
 void testUtils::TestValue::visitIdentifiers(babelwires::IdentifierVisitor& visitor) {}
@@ -41,14 +41,14 @@ babelwires::Result testUtils::TestValue::deserializeContents(babelwires::Deseria
     return deserializer.deserializeValue("value", m_value);
 }
 
-testUtils::TestType::TestType(unsigned int maximumLength, std::string defaultValue)
+testUtils::TestType::TestType(unsigned int maximumLength, babelwires::Text defaultValue)
     : Type(getThisIdentifier())
     , m_maximumLength(maximumLength)
     , m_defaultValue(defaultValue) {
         addTag(getTestTypeTag());
     }
 
-testUtils::TestType::TestType(babelwires::TypeExp&& typeExpOfThis, unsigned int maximumLength, std::string defaultValue)
+testUtils::TestType::TestType(babelwires::TypeExp&& typeExpOfThis, unsigned int maximumLength, babelwires::Text defaultValue)
     : Type(std::move(typeExpOfThis))
     , m_maximumLength(maximumLength)
     , m_defaultValue(defaultValue) {
@@ -65,7 +65,7 @@ bool testUtils::TestType::visitValue(const babelwires::TypeSystem& typeSystem, c
     if (!testValue) {
         return false;
     }
-    return (m_maximumLength == 0) || (testValue->m_value.size() <= m_maximumLength);
+    return (m_maximumLength == 0) || (testValue->m_value.getData().size() <= m_maximumLength);
 }
 
 std::string testUtils::TestType::getFlavour() const {

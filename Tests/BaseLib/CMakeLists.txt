@@ -26,6 +26,7 @@ SET( COMMON_TESTS_SRCS
    yamlSerializationTest.cpp
    signalTest.cpp
    streamEventHolderTest.cpp
+   textTest.cpp
    commonTest.cpp
    versionTest.cpp
    uuidTest.cpp

@@ -17,7 +17,7 @@ TEST(StringTypeTest, stringTypeCreateValue) {
 
     const auto* const newStringValue = newValue->tryAs<babelwires::StringValue>();
     EXPECT_NE(newStringValue, nullptr);
-    EXPECT_EQ(newStringValue->get(), std::string());
+    EXPECT_EQ(newStringValue->get(), babelwires::Text());
 }
 
 TEST(StringTypeTest, stringTypeIsValidValue) {
@@ -25,7 +25,7 @@ TEST(StringTypeTest, stringTypeIsValidValue) {
     babelwires::TypeSystem typeSystem;
     babelwires::StringType stringType;
 
-    babelwires::StringValue value("Hello");
+    babelwires::StringValue value(u8"Hello");
 
     EXPECT_TRUE(stringType.isValidValue(typeSystem, value));
 

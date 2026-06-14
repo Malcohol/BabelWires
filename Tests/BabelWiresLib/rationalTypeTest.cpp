@@ -46,7 +46,7 @@ TEST(RationalTypeTest, defaultRationalTypeIsValidValue) {
     EXPECT_TRUE(rationalType.isValidValue(typeSystem, minValue));
     EXPECT_TRUE(rationalType.isValidValue(typeSystem, maxValue));
 
-    EXPECT_FALSE(rationalType.isValidValue(typeSystem, babelwires::StringValue("Hello")));
+    EXPECT_FALSE(rationalType.isValidValue(typeSystem, babelwires::StringValue(u8"Hello")));
     EXPECT_FALSE(rationalType.isValidValue(typeSystem, babelwires::IntValue(3)));
 }
 
@@ -114,7 +114,7 @@ TEST(RationalTypeTest, constructedRationalTypeIsValidValue) {
     EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::RationalValue(babelwires::Rational(4, 3))));
     EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::RationalValue(babelwires::Rational(3, 2))));
 
-    EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::StringValue("Hello")));
+    EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::StringValue(u8"Hello")));
     EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::IntValue(3)));
 }
 
