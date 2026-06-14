@@ -3,8 +3,15 @@
 #include <BaseLib/Text/text.hpp>
 
 namespace {
+    // Note: It is important that this test does not depend on the source file encoding.
+    // So it doesn't use `\uXXXX` escapes, which are interpreted according to the source file encoding.
     std::string makeString(std::initializer_list<char> chars) {
         return std::string(chars.begin(), chars.end());
+    }
+
+    const std::string& replacementCharacter() {
+        static const std::string value = "\xEF\xBF\xBD";
+        return value;
     }
 } // namespace
 
@@ -44,6 +51,39 @@ TEST(TextTest, utf8EntryPointsRoundTripValidUtf8) {
 
     const auto lossy = babelwires::Text::tryFromUtf8(utf8);
     EXPECT_EQ(lossy.toUtf8(), utf8);
+}
+
+TEST(TextTest, fromUtf8RejectsInvalidUtf8) {
+    const auto strayContinuation = babelwires::Text::fromUtf8(makeString({'A', static_cast<char>(0x80), 'B'}));
+    ASSERT_FALSE(strayContinuation);
+    
+    const auto overlong = babelwires::Text::fromUtf8(
+        makeString({'A', static_cast<char>(0xE0), static_cast<char>(0x80), static_cast<char>(0x80), 'B'}));
+    ASSERT_FALSE(overlong);
+    
+    const auto truncated =
+        babelwires::Text::fromUtf8(makeString({'A', static_cast<char>(0xE2), static_cast<char>(0x82), 'B'}));
+    ASSERT_FALSE(truncated);
+}
+
+TEST(TextTest, assertFromUtf8AssertsOnInvalidUtf8) {
+    EXPECT_DEATH(babelwires::Text::assertFromUtf8(makeString({'A', static_cast<char>(0x80), 'B'})),
+                 "Input string contains invalid UTF-8.");
+}
+
+TEST(TextTest, tryFromUtf8ReplacesInvalidSequencesWithReplacementCharacter) {
+    const std::string invalidUtf8 =
+        makeString({'A', static_cast<char>(0xE0), static_cast<char>(0x80), static_cast<char>(0x80), 'B',
+                    static_cast<char>(0xE2), static_cast<char>(0x82), 'C', static_cast<char>(0x80), 'D'});
+
+    const babelwires::Text text = babelwires::Text::tryFromUtf8(invalidUtf8);
+    const std::string expected =
+        std::string("A") + replacementCharacter() + "B" + replacementCharacter() + "C" + replacementCharacter() + "D";
+
+    EXPECT_EQ(text.toUtf8(), expected);
+    EXPECT_FALSE(text.isPrintableAscii());
+    EXPECT_FALSE(text.is7BitAscii());
+    EXPECT_TRUE(babelwires::Text::fromUtf8(text.toUtf8()));
 }
 
 TEST(TextTest, tryFromPrintableAsciiReplacesNonPrintableCharacters) {

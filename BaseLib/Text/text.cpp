@@ -12,10 +12,11 @@
 namespace {
     constexpr const char c_nonPrintablePlaceholder = '?';
     constexpr const char c_non7BitPlaceholder = '?';
-    constexpr const char c_nonUtf8Placeholder[] = "\uFFFD"; // Decode error replacement character
+    // Use explicit UTF-8 encoding for the replacement character to avoid any ambiguity with the source file encoding.
+    constexpr const char c_nonUtf8Placeholder[] = "\xEF\xBF\xBD";
 
     bool isPrintableAsciiChar(char c) {
-        // Printable ASCII characters are in the range 32-126 inclusive. 
+        // Printable ASCII characters are in the range 32-126 inclusive.
         // 127 is DEL, which is not printable.
         return c >= 32 && c <= 126;
     }
@@ -42,7 +43,121 @@ namespace {
         }
         return true;
     }
-}
+
+    bool isUtf8ContinuationByte(unsigned char c) {
+        return c >= 0x80 && c <= 0xBF;
+    }
+
+    std::size_t getUtf8SequenceLength(unsigned char leadByte) {
+        if (leadByte <= 0x7F) {
+            return 1;
+        }
+        if (leadByte >= 0xC2 && leadByte <= 0xDF) {
+            return 2;
+        }
+        if (leadByte >= 0xE0 && leadByte <= 0xEF) {
+            return 3;
+        }
+        if (leadByte >= 0xF0 && leadByte <= 0xF4) {
+            return 4;
+        }
+        return 0;
+    }
+
+    bool isValidUtf8Sequence(std::string_view str, std::size_t index, std::size_t sequenceLength) {
+        const unsigned char leadByte = static_cast<unsigned char>(str[index]);
+        if (sequenceLength == 1) {
+            return true;
+        }
+
+        const unsigned char secondByte = static_cast<unsigned char>(str[index + 1]);
+        if (!isUtf8ContinuationByte(secondByte)) {
+            return false;
+        }
+
+        if (sequenceLength == 2) {
+            return true;
+        }
+
+        const unsigned char thirdByte = static_cast<unsigned char>(str[index + 2]);
+        if (!isUtf8ContinuationByte(thirdByte)) {
+            return false;
+        }
+
+        if (sequenceLength == 3) {
+            // Check for overlong sequences and surrogates
+            if (leadByte == 0xE0) {
+                return secondByte >= 0xA0;
+            }
+            if (leadByte == 0xED) {
+                return secondByte <= 0x9F;
+            }
+            return true;
+        }
+
+        const unsigned char fourthByte = static_cast<unsigned char>(str[index + 3]);
+        if (!isUtf8ContinuationByte(fourthByte)) {
+            return false;
+        }
+
+        // Check for overlong sequences and code points above U+10FFFF
+        if (leadByte == 0xF0) {
+            return secondByte >= 0x90;
+        }
+        if (leadByte == 0xF4) {
+            return secondByte <= 0x8F;
+        }
+        return true;
+    }
+
+    bool isValidUtf8String(std::string_view str) {
+        std::size_t index = 0;
+        while (index < str.size()) {
+            const std::size_t sequenceLength = getUtf8SequenceLength(static_cast<unsigned char>(str[index]));
+            if (sequenceLength == 0 || index + sequenceLength > str.size()) {
+                return false;
+            }
+            if (!isValidUtf8Sequence(str, index, sequenceLength)) {
+                return false;
+            }
+            index += sequenceLength;
+        }
+        return true;
+    }
+
+    std::size_t consumeInvalidUtf8Sequence(std::string_view str, std::size_t index, std::size_t sequenceLength) {
+        if (sequenceLength == 0) {
+            return index + 1;
+        }
+
+        std::size_t nextIndex = index + 1;
+        while (nextIndex < str.size() && (nextIndex - index) < sequenceLength &&
+               isUtf8ContinuationByte(static_cast<unsigned char>(str[nextIndex]))) {
+            ++nextIndex;
+        }
+        return nextIndex;
+    }
+
+    std::string replaceInvalidUtf8(std::string_view utf8) {
+        std::string result;
+        result.reserve(utf8.size());
+
+        std::size_t index = 0;
+        while (index < utf8.size()) {
+            const std::size_t sequenceLength = getUtf8SequenceLength(static_cast<unsigned char>(utf8[index]));
+            if ((sequenceLength != 0) && ((index + sequenceLength) <= utf8.size()) &&
+                isValidUtf8Sequence(utf8, index, sequenceLength)) {
+                result.append(utf8.substr(index, sequenceLength));
+                index += sequenceLength;
+            } else {
+                result.append(c_nonUtf8Placeholder);
+                index = consumeInvalidUtf8Sequence(utf8, index, sequenceLength);
+            }
+        }
+
+        return result;
+    }
+} // namespace
 
 babelwires::ResultT<babelwires::Text> babelwires::Text::fromPrintableAscii(std::string_view ascii) {
     if (!isPrintableAsciiString(ascii)) {
@@ -59,7 +174,9 @@ babelwires::ResultT<babelwires::Text> babelwires::Text::from7BitAscii(std::strin
 }
 
 babelwires::ResultT<babelwires::Text> babelwires::Text::fromUtf8(std::string_view utf8) {
-    // TODO Validate UTF-8 encoding. For now, we're just getting the API right, so assume the input is valid UTF-8.
+    if (!isValidUtf8String(utf8)) {
+        return ResultT<Text>(ErrorStorage("Input string contains invalid UTF-8."));
+    }
     return ResultT<Text>(Text(std::string(utf8)));
 }
 
@@ -74,7 +191,7 @@ babelwires::Text babelwires::Text::assertFrom7BitAscii(std::string_view ascii) {
 }
 
 babelwires::Text babelwires::Text::assertFromUtf8(std::string_view utf8) {
-    // TODO Validate UTF-8 encoding. For now, we're just getting the API right, so assume the input is valid UTF-8.
+    assert(isValidUtf8String(utf8) && "Input string contains invalid UTF-8.");
     return Text(std::string(utf8));
 }
 
@@ -108,8 +225,7 @@ babelwires::Text babelwires::Text::tryFrom7BitAscii(std::string_view ascii) {
 
 babelwires::Text babelwires::Text::tryFromUtf8(std::string_view utf8) {
     // This is a lossy conversion, so we will replace invalid UTF-8 sequences with a placeholder.
-    // TODO Implement proper UTF-8 validation and replacement. For now, we're just getting the API right, so assume the input is valid UTF-8.
-    return Text(std::string(utf8));
+    return Text(replaceInvalidUtf8(utf8));
 }
 
 bool babelwires::Text::isPrintableAscii() const {
