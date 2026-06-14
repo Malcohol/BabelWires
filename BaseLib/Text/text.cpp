@@ -12,8 +12,12 @@
 namespace {
     constexpr const char c_nonPrintablePlaceholder = '?';
     constexpr const char c_non7BitPlaceholder = '?';
-    // Use explicit UTF-8 encoding for the replacement character to avoid any ambiguity with the source file encoding.
-    constexpr const char8_t c_nonUtf8Placeholder[] = u8"\xEF\xBF\xBD";
+    constexpr const char8_t c_nonUtf8Placeholder[] = {
+        static_cast<char8_t>(0xEF),
+        static_cast<char8_t>(0xBF),
+        static_cast<char8_t>(0xBD),
+        static_cast<char8_t>(0x00),
+    };
 
     bool isPrintableAsciiChar(unsigned char c) {
         // Printable ASCII characters are in the range 32-126 inclusive.
@@ -156,7 +160,7 @@ namespace {
                 }
                 index += sequenceLength;
             } else {
-                result.append(c_nonUtf8Placeholder);
+                result.append(c_nonUtf8Placeholder, c_nonUtf8Placeholder + 3);
                 index = consumeInvalidUtf8Sequence(utf8, index, sequenceLength);
             }
         }

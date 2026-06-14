@@ -9,6 +9,15 @@ namespace {
         return std::string(chars.begin(), chars.end());
     }
 
+    std::u8string makeU8String(std::initializer_list<unsigned char> bytes) {
+        std::u8string result;
+        result.reserve(bytes.size());
+        for (const unsigned char byte : bytes) {
+            result.push_back(static_cast<char8_t>(byte));
+        }
+        return result;
+    }
+
     const std::string& replacementCharacter() {
         static const std::string value = "\xEF\xBF\xBD";
         return value;
@@ -21,7 +30,8 @@ TEST(TextTest, u8ConstructorAcceptsValidUtf8) {
 }
 
 TEST(TextTest, u8ConstructorRejectsInvalidUtf8) {
-    EXPECT_DEATH(babelwires::Text text(u8"Hello \x80 World"), "invalid UTF-8");
+    EXPECT_DEATH(babelwires::Text text(makeU8String({'H', 'e', 'l', 'l', 'o', ' ', 0x80, ' ', 'W', 'o', 'r', 'l', 'd'})),
+                 "invalid UTF-8");
 }
 
 TEST(TextTest, fromPrintableAsciiAcceptsPrintableTextButRejectsControlCharactersAndHighBitBytes) {
