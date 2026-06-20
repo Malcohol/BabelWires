@@ -1,6 +1,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testTypeConstructor.hpp>
 
-#include <BabelWiresLib/Types/String/textValue.hpp>
+#include <BabelWiresLib/Types/Text/textValue.hpp>
 
 #include <BaseLib/Result/error.hpp>
 

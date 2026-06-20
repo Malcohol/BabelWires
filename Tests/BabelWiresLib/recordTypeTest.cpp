@@ -5,8 +5,8 @@
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Record/recordValue.hpp>
-#include <BabelWiresLib/Types/String/textType.hpp>
-#include <BabelWiresLib/Types/String/textValue.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
+#include <BabelWiresLib/Types/Text/textValue.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>

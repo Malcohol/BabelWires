@@ -4,7 +4,7 @@
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
-#include <BabelWiresLib/Types/String/textValue.hpp>
+#include <BabelWiresLib/Types/Text/textValue.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 

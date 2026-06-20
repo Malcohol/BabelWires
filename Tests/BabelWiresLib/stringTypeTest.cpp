@@ -2,8 +2,8 @@
 
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
-#include <BabelWiresLib/Types/String/textType.hpp>
-#include <BabelWiresLib/Types/String/textValue.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
+#include <BabelWiresLib/Types/Text/textValue.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 

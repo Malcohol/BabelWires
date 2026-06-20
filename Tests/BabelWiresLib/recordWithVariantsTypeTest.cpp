@@ -4,8 +4,8 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsValue.hpp>
-#include <BabelWiresLib/Types/String/textType.hpp>
-#include <BabelWiresLib/Types/String/textValue.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
+#include <BabelWiresLib/Types/Text/textValue.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>

@@ -7,7 +7,7 @@
  **/
 #include <Domains/TestDomain/testRecordTypeHierarchy.hpp>
 
-#include <BabelWiresLib/Types/String/textType.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>
 

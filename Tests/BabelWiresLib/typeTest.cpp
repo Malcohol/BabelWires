@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/Types/String/textType.hpp>
-#include <BabelWiresLib/Types/String/textValue.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
+#include <BabelWiresLib/Types/Text/textValue.hpp>
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>

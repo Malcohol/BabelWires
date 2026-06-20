@@ -9,7 +9,7 @@
 
 #include <BabelWiresQtUi/ValueEditors/lineEditValueEditor.hpp>
 
-#include <BabelWiresLib/Types/String/textValue.hpp>
+#include <BabelWiresLib/Types/Text/textValue.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 

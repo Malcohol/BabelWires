@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Types/String/textValue.hpp>
+#include <BabelWiresLib/Types/Text/textValue.hpp>
 
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>

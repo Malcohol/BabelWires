@@ -3,7 +3,7 @@
 #include <BabelWiresLib/TypeSystem/value.hpp>
 #include <BabelWiresLib/TypeSystem/valueHolder.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
-#include <BabelWiresLib/Types/String/textValue.hpp>
+#include <BabelWiresLib/Types/Text/textValue.hpp>
 
 #include <BaseLib/DataContext/filePath.hpp>
 

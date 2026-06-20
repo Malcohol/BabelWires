@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
-#include <BabelWiresLib/Types/String/textType.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
 #include <BabelWiresLib/Project/Commands/addConnectionCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>

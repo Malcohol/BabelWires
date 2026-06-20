@@ -2,7 +2,7 @@
 
 #include <BabelWiresLib/Project/Modifiers/setTypeVariableModifierData.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
-#include <BabelWiresLib/Types/String/textType.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeGenericTypeUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreePathUtils.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>

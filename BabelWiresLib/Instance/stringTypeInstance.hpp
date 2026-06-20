@@ -8,8 +8,8 @@
 #pragma once
 
 #include <BabelWiresLib/babelWiresLibExport.hpp>
-#include <BabelWiresLib/Types/String/textType.hpp>
-#include <BabelWiresLib/Types/String/textValue.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
+#include <BabelWiresLib/Types/Text/textValue.hpp>
 
 namespace babelwires {
     /// Specialized instance handling for TextType.

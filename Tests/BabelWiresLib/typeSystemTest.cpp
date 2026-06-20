@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Types/String/textValue.hpp>
+#include <BabelWiresLib/Types/Text/textValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>

@@ -7,7 +7,7 @@
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
-#include <BabelWiresLib/Types/String/textType.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
 
 #include <Tests/TestUtils/testIdentifiers.hpp>
 

@@ -4,7 +4,7 @@
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
-#include <BabelWiresLib/Types/String/textValue.hpp>
+#include <BabelWiresLib/Types/Text/textValue.hpp>
 
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>

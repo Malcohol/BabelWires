@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
-#include <BabelWiresLib/Types/String/textType.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 

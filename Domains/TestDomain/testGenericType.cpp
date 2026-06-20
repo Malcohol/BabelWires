@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Types/Generic/genericTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
-#include <BabelWiresLib/Types/String/textType.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
 #include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 
 testDomain::TestGenericType::TestGenericType(const babelwires::TypeSystem& typeSystem)

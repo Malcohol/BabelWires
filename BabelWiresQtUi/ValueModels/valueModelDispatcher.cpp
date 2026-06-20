@@ -29,7 +29,7 @@
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
-#include <BabelWiresLib/Types/String/textType.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleType.hpp>
 
 void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem,

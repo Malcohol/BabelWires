@@ -3,7 +3,7 @@
 #include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
-#include <BabelWiresLib/Types/String/textType.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
 
 #include <Domains/TestDomain/testGenericType.hpp>
 
