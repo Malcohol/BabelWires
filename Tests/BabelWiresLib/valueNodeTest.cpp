@@ -5,7 +5,7 @@
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
 #include <BabelWiresLib/Project/Modifiers/valueAssignmentData.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/String/textType.hpp>
 
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>

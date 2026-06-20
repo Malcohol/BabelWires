@@ -6,7 +6,7 @@
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/String/textType.hpp>
 #include <BabelWiresLib/Types/String/textValue.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
@@ -26,19 +26,19 @@ namespace {
 TEST(MapProjectTest, mapProjectEntry) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
-    auto stringType = typeSystem.addAndGetType<babelwires::StringType>();
+    auto textType = typeSystem.addAndGetType<babelwires::TextType>();
 
-    babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *stringType);
+    babelwires::OneToOneMapEntryData oneToOne(typeSystem, *textType, *textType);
 
     babelwires::MapProjectEntry entry(oneToOne.clone());
 
     EXPECT_EQ(oneToOne, entry.getData());
 
-    entry.validate(typeSystem, stringType, stringType, false);
+    entry.validate(typeSystem, textType, textType, false);
 
     EXPECT_TRUE(entry.getValidity());
 
-    entry.validate(typeSystem, stringType, stringType, true);
+    entry.validate(typeSystem, textType, textType, true);
     EXPECT_FALSE(entry.getValidity());
     std::string reason = entry.getValidity().error().toString();
     EXPECT_TRUE(reason.find("fallback") != reason.npos);
@@ -49,11 +49,11 @@ TEST(MapProjectTest, allowedTypes) {
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
-    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::TextType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeExps({{testDomain::TestEnum::getThisIdentifier()}});
 
     EXPECT_TRUE(testUtils::unorderedAreEqualSets(mapProject.getAllowedSourceTypeExps().m_typeExps,
-                                                 {babelwires::StringType::getThisIdentifier()}));
+                                                 {babelwires::TextType::getThisIdentifier()}));
     EXPECT_TRUE(testUtils::unorderedAreEqualSets(mapProject.getAllowedTargetTypeExps().m_typeExps,
                                                  {testDomain::TestEnum::getThisIdentifier()}));
 }
@@ -71,17 +71,17 @@ TEST(MapProjectTest, types) {
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
-    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::TextType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeExps({{testDomain::TestEnum::getThisIdentifier()}});
 
-    mapProject.setCurrentSourceTypeExp(babelwires::StringType::getThisIdentifier());
+    mapProject.setCurrentSourceTypeExp(babelwires::TextType::getThisIdentifier());
     mapProject.setCurrentTargetTypeExp(testDomain::TestEnum::getThisIdentifier());
 
-    EXPECT_EQ(mapProject.getCurrentSourceTypeExp(), babelwires::StringType::getThisIdentifier());
+    EXPECT_EQ(mapProject.getCurrentSourceTypeExp(), babelwires::TextType::getThisIdentifier());
     EXPECT_EQ(mapProject.getCurrentTargetTypeExp(), testDomain::TestEnum::getThisIdentifier());
 
     EXPECT_EQ(mapProject.getCurrentSourceType().get(),
-              environment.m_typeSystem.getRegisteredType<babelwires::StringType>().get());
+              environment.m_typeSystem.getRegisteredType<babelwires::TextType>().get());
     EXPECT_EQ(mapProject.getCurrentTargetType().get(),
               environment.m_typeSystem.getRegisteredType<testDomain::TestEnum>().get());
 }
@@ -91,7 +91,7 @@ TEST(MapProjectTest, badTypes) {
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
-    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::TextType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeExps({{testDomain::TestEnum::getThisIdentifier()}});
 
     EXPECT_TRUE(mapProject.getSourceTypeValidity());
@@ -102,12 +102,12 @@ TEST(MapProjectTest, badTypes) {
     EXPECT_FALSE(mapProject.getSourceTypeValidity());
     EXPECT_TRUE(mapProject.getTargetTypeValidity());
 
-    mapProject.setCurrentTargetTypeExp(babelwires::StringType::getThisIdentifier());
+    mapProject.setCurrentTargetTypeExp(babelwires::TextType::getThisIdentifier());
 
     EXPECT_FALSE(mapProject.getSourceTypeValidity());
     EXPECT_FALSE(mapProject.getTargetTypeValidity());
 
-    mapProject.setCurrentSourceTypeExp(babelwires::StringType::getThisIdentifier());
+    mapProject.setCurrentSourceTypeExp(babelwires::TextType::getThisIdentifier());
     mapProject.setCurrentTargetTypeExp(testDomain::TestEnum::getThisIdentifier());
 
     EXPECT_TRUE(mapProject.getSourceTypeValidity());
@@ -125,24 +125,24 @@ TEST(MapProjectTest, setAndExtractMapValue) {
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
-    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::TextType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeExps({{testDomain::TestEnum::getThisIdentifier()}});
 
-    const auto& stringType = environment.m_typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& textType = environment.m_typeSystem.getRegisteredType<babelwires::TextType>();
     const auto& testSubEnumType = environment.m_typeSystem.getRegisteredType<testDomain::TestSubEnum>();
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *testSubEnumType);
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *textType, *testSubEnumType);
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *testSubEnumType);
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());
+    mapValue.setSourceTypeExp(babelwires::TextType::getThisIdentifier());
     mapValue.setTargetTypeExp(testDomain::TestSubEnum::getThisIdentifier());
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
 
     mapProject.setMapValue(mapValue);
 
-    EXPECT_EQ(mapProject.getCurrentSourceTypeExp(), babelwires::StringType::getThisIdentifier());
+    EXPECT_EQ(mapProject.getCurrentSourceTypeExp(), babelwires::TextType::getThisIdentifier());
     EXPECT_EQ(mapProject.getCurrentTargetTypeExp(), testDomain::TestSubEnum::getThisIdentifier());
     EXPECT_EQ(mapProject.extractMapValue(), mapValue);
     EXPECT_EQ(mapProject.getNumMapEntries(), 2);
@@ -155,24 +155,24 @@ TEST(MapProjectTest, modifyMapValue) {
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
-    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::TextType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeExps({{testDomain::TestEnum::getThisIdentifier()}});
 
-    const auto& stringType = environment.m_typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& textType = environment.m_typeSystem.getRegisteredType<babelwires::TextType>();
     const auto& testSubEnumType = environment.m_typeSystem.getRegisteredType<testDomain::TestSubEnum>();
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *testSubEnumType);
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *textType, *testSubEnumType);
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *testSubEnumType);
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());
+    mapValue.setSourceTypeExp(babelwires::TextType::getThisIdentifier());
     mapValue.setTargetTypeExp(testDomain::TestSubEnum::getThisIdentifier());
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
 
     mapProject.setMapValue(mapValue);
 
-    babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, *stringType, *testSubEnumType);
+    babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, *textType, *testSubEnumType);
     babelwires::TextValue newSourceValue;
     newSourceValue.set(u8"Source");
     babelwires::EnumValue newTargetValue;
@@ -265,18 +265,18 @@ TEST(MapProjectTest, modifyValidity) {
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
-    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::TextType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeExps({{testDomain::TestEnum::getThisIdentifier()}});
 
-    const auto& stringType = environment.m_typeSystem.getRegisteredType<babelwires::StringType>();
+    const auto& textType = environment.m_typeSystem.getRegisteredType<babelwires::TextType>();
     const auto& testEnumType = environment.m_typeSystem.getRegisteredType<testDomain::TestEnum>();
     const auto& testSubEnumType = environment.m_typeSystem.getRegisteredType<testDomain::TestSubEnum>();
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType, *testSubEnumType);
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *textType, *testSubEnumType);
     babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *testSubEnumType);
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());
+    mapValue.setSourceTypeExp(babelwires::TextType::getThisIdentifier());
     mapValue.setTargetTypeExp(testDomain::TestSubEnum::getThisIdentifier());
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
@@ -291,7 +291,7 @@ TEST(MapProjectTest, modifyValidity) {
     EXPECT_FALSE(mapProject.getMapEntry(0).getValidity());
 
     // Only fallbacks allowed in the last position.
-    babelwires::OneToOneMapEntryData oneToOne3(environment.m_typeSystem, *stringType, *testSubEnumType);
+    babelwires::OneToOneMapEntryData oneToOne3(environment.m_typeSystem, *textType, *testSubEnumType);
 
     mapProject.replaceMapEntry(oneToOne3.clone(), 2);
 
@@ -303,7 +303,7 @@ TEST(MapProjectTest, badMap) {
 
     babelwires::MapProject mapProject(environment.m_projectContext);
 
-    mapProject.setAllowedSourceTypeExps({{babelwires::StringType::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::TextType::getThisIdentifier()}});
     mapProject.setAllowedTargetTypeExps({{testDomain::TestEnum::getThisIdentifier()}});
 
     babelwires::MapValue mapValue;
@@ -315,7 +315,7 @@ TEST(MapProjectTest, badMap) {
     EXPECT_FALSE(mapProject.getSourceTypeValidity());
     EXPECT_TRUE(mapProject.getTargetTypeValidity());
 
-    mapValue.setSourceTypeExp(babelwires::StringType::getThisIdentifier());
+    mapValue.setSourceTypeExp(babelwires::TextType::getThisIdentifier());
     mapValue.setTargetTypeExp(testTypeId2);
     mapProject.setMapValue(mapValue);
 

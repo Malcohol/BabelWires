@@ -2,7 +2,7 @@
 
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/String/textType.hpp>
 #include <BabelWiresLib/Types/String/textValue.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
@@ -10,9 +10,9 @@
 TEST(StringTypeTest, stringTypeCreateValue) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
-    babelwires::StringType stringType;
+    babelwires::TextType textType;
 
-    babelwires::ValueHolder newValue = stringType.createValue(typeSystem);
+    babelwires::ValueHolder newValue = textType.createValue(typeSystem);
     EXPECT_TRUE(newValue);
 
     const auto* const newStringValue = newValue->tryAs<babelwires::TextValue>();
@@ -23,28 +23,28 @@ TEST(StringTypeTest, stringTypeCreateValue) {
 TEST(StringTypeTest, stringTypeIsValidValue) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
-    babelwires::StringType stringType;
+    babelwires::TextType textType;
 
     babelwires::TextValue value(u8"Hello");
 
-    EXPECT_TRUE(stringType.isValidValue(typeSystem, value));
+    EXPECT_TRUE(textType.isValidValue(typeSystem, value));
 
-    EXPECT_FALSE(stringType.isValidValue(typeSystem, babelwires::IntValue(5)));
-    EXPECT_FALSE(stringType.isValidValue(typeSystem, babelwires::RationalValue(3)));
+    EXPECT_FALSE(textType.isValidValue(typeSystem, babelwires::IntValue(5)));
+    EXPECT_FALSE(textType.isValidValue(typeSystem, babelwires::RationalValue(3)));
 }
 
 TEST(StringTypeTest, stringTypeGetKind) {
     testUtils::TestLog log;
-    babelwires::StringType stringType;
+    babelwires::TextType textType;
 
-    EXPECT_FALSE(stringType.getFlavour().empty());
+    EXPECT_FALSE(textType.getFlavour().empty());
 }
 
 TEST(StringTypeTest, stringTypeIsRegistered) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::TypePtr foundType =
-        testEnvironment.m_typeSystem.tryGetRegisteredTypeById(babelwires::StringType::getThisIdentifier());
+        testEnvironment.m_typeSystem.tryGetRegisteredTypeById(babelwires::TextType::getThisIdentifier());
     EXPECT_TRUE(foundType);
-    EXPECT_NE(foundType->tryAs<babelwires::StringType>(), nullptr);
+    EXPECT_NE(foundType->tryAs<babelwires::TextType>(), nullptr);
 }

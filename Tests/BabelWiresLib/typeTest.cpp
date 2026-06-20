@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/String/textType.hpp>
 #include <BabelWiresLib/Types/String/textValue.hpp>
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 
@@ -19,7 +19,7 @@ TEST(TypeTest, typeAndValue)
 
     // This mostly just exercises the API.
 
-    babelwires::StringType type;
+    babelwires::TextType type;
     auto [valueHolder, value] = type.createValue(typeSystem);
     EXPECT_TRUE(valueHolder);
     EXPECT_TRUE(value.tryAs<babelwires::TextValue>());
@@ -34,11 +34,11 @@ TEST(TypeTest, typePtrTest)
     babelwires::TypeSystem typeSystem;
     testUtils::TestLog log;
 
-    typeSystem.addType<babelwires::StringType>();
+    typeSystem.addType<babelwires::TextType>();
     typeSystem.addTypeConstructor<babelwires::ArrayTypeConstructor>();
 
     babelwires::TypeExp arrayOfStringsExp = babelwires::ArrayTypeConstructor::makeTypeExp(
-        babelwires::TypeExp(babelwires::StringType::getThisIdentifier()), 0, 10); 
+        babelwires::TypeExp(babelwires::TextType::getThisIdentifier()), 0, 10); 
 
     babelwires::WeakTypePtr weakTypePtr;
     {

@@ -48,7 +48,7 @@
 #include <BabelWiresLib/Types/Record/fieldIdValue.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/String/textType.hpp>
 #include <BabelWiresLib/Types/String/textValue.hpp>
 #include <BabelWiresLib/Types/Sum/sumTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleTypeConstructor.hpp>
@@ -63,7 +63,7 @@ void babelwires::registerLib(babelwires::Context& context) {
     TypeSystem& typeSystem = context.get<TypeSystem>();
     typeSystem.addType<DefaultIntType>();
     typeSystem.addType<NonNegativeIntType>();
-    typeSystem.addType<StringType>();
+    typeSystem.addType<TextType>();
     typeSystem.addType<DefaultRationalType>();
     typeSystem.addType<MapEntryFallbackKind>();
     typeSystem.addType<FailureType>(typeSystem);

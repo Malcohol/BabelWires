@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/mapTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/String/textType.hpp>
 #include <BabelWiresLib/Types/String/textValue.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
@@ -42,7 +42,7 @@ TEST(MapFeatureTest, setToDefault) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot mapFeature(testEnvironment.m_typeSystem,
-                                              getTestMapType<babelwires::StringType, babelwires::StringType>(testEnvironment.m_typeSystem));
+                                              getTestMapType<babelwires::TextType, babelwires::TextType>(testEnvironment.m_typeSystem));
 
     mapFeature.setToDefault();
 
@@ -55,9 +55,9 @@ TEST(MapFeatureTest, isCompatible) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot mapFeature1(testEnvironment.m_typeSystem,
-                                               getTestMapType<babelwires::StringType, babelwires::DefaultIntType>(testEnvironment.m_typeSystem));
+                                               getTestMapType<babelwires::TextType, babelwires::DefaultIntType>(testEnvironment.m_typeSystem));
     babelwires::ValueTreeRoot mapFeature2(testEnvironment.m_typeSystem,
-                                               getTestMapType<babelwires::StringType, babelwires::DefaultIntType>(testEnvironment.m_typeSystem));
+                                               getTestMapType<babelwires::TextType, babelwires::DefaultIntType>(testEnvironment.m_typeSystem));
     babelwires::ValueTreeRoot intFeature(testEnvironment.m_typeSystem,
                                               testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultIntType>());
 
@@ -69,11 +69,11 @@ TEST(MapFeatureTest, assign) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot testTypeTestTypeFeature(
-        testEnvironment.m_typeSystem, getTestMapType<babelwires::StringType, babelwires::StringType>(testEnvironment.m_typeSystem));
+        testEnvironment.m_typeSystem, getTestMapType<babelwires::TextType, babelwires::TextType>(testEnvironment.m_typeSystem));
     babelwires::ValueTreeRoot testEnumTestTypeFeature(
-        testEnvironment.m_typeSystem, getTestMapType<testDomain::TestEnum, babelwires::StringType>(testEnvironment.m_typeSystem));
+        testEnvironment.m_typeSystem, getTestMapType<testDomain::TestEnum, babelwires::TextType>(testEnvironment.m_typeSystem));
     babelwires::ValueTreeRoot testTypeTestEnumFeature(
-        testEnvironment.m_typeSystem, getTestMapType<babelwires::StringType, testDomain::TestEnum>(testEnvironment.m_typeSystem));
+        testEnvironment.m_typeSystem, getTestMapType<babelwires::TextType, testDomain::TestEnum>(testEnvironment.m_typeSystem));
     babelwires::ValueTreeRoot testEnumTestEnumFeature(
         testEnvironment.m_typeSystem, getTestMapType<testDomain::TestEnum, testDomain::TestEnum>(testEnvironment.m_typeSystem));
 
@@ -129,11 +129,11 @@ TEST(MapFeatureTest, setAndGet) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::ValueTreeRoot testTypeTestTypeFeature(
-        testEnvironment.m_typeSystem, getTestMapType<babelwires::StringType, babelwires::StringType>(testEnvironment.m_typeSystem));
+        testEnvironment.m_typeSystem, getTestMapType<babelwires::TextType, babelwires::TextType>(testEnvironment.m_typeSystem));
     babelwires::ValueTreeRoot testEnumTestTypeFeature(
-        testEnvironment.m_typeSystem, getTestMapType<testDomain::TestEnum, babelwires::StringType>(testEnvironment.m_typeSystem));
+        testEnvironment.m_typeSystem, getTestMapType<testDomain::TestEnum, babelwires::TextType>(testEnvironment.m_typeSystem));
     babelwires::ValueTreeRoot testTypeTestEnumFeature(
-        testEnvironment.m_typeSystem, getTestMapType<babelwires::StringType, testDomain::TestEnum>(testEnvironment.m_typeSystem));
+        testEnvironment.m_typeSystem, getTestMapType<babelwires::TextType, testDomain::TestEnum>(testEnvironment.m_typeSystem));
     babelwires::ValueTreeRoot testEnumTestEnumFeature(
         testEnvironment.m_typeSystem, getTestMapType<testDomain::TestEnum, testDomain::TestEnum>(testEnvironment.m_typeSystem));
 

@@ -1,5 +1,5 @@
 /**
- * The type of strings.
+ * The type of text values.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -14,11 +14,11 @@
 namespace babelwires {
 
     // TODO Strings should have a length limit.
-    class BABELWIRESLIB_API StringType : public Type {
+    class BABELWIRESLIB_API TextType : public Type {
       public:
-        DOWNCASTABLE(StringType, Type);
+        DOWNCASTABLE(TextType, Type);
 
-        StringType();
+        TextType();
         REGISTERED_TYPE("string", "String", "0e422e25-cb94-40a3-8790-4918c918e637", 1);
 
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;

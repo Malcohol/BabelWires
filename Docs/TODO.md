@@ -53,7 +53,7 @@ Model
 * Consider a coercion system so numeric types can always be assigned.
 * Bool and float types
 * RationalType granularity
-* StringType length
+* TextType length
 
 Domains:
 * standard numeric library

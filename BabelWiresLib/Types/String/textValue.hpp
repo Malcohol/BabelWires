@@ -1,5 +1,5 @@
 /**
- * Holds a single string.
+ * Holds a single text value.
  *
  * (C) 2021 Malcolm Tyrrell
  *

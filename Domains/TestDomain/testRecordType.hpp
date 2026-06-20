@@ -94,7 +94,7 @@ namespace testDomain {
         DECLARE_INSTANCE_FIELD(rec, TestSimpleRecordType)
         DECLARE_INSTANCE_FIELD(intR1, babelwires::IntType)
         DECLARE_INSTANCE_FIELD(opRec, TestSimpleRecordType)
-        DECLARE_INSTANCE_FIELD(string, babelwires::StringType)
+        DECLARE_INSTANCE_FIELD(string, babelwires::TextType)
         DECLARE_INSTANCE_ARRAY_FIELD(array, babelwires::IntType)
         DECLARE_INSTANCE_FIELD_OPTIONAL(onOpt, babelwires::IntType)
         DECLARE_INSTANCE_END()

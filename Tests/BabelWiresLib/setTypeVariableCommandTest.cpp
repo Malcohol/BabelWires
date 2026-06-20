@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/String/textType.hpp>
 #include <BabelWiresLib/Project/Commands/setTypeVariableCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
@@ -26,14 +26,14 @@ namespace {
 
         const babelwires::TypeExp& typeAssignment0 = genericType->getTypeAssignment(input->getValue(), 0);
         if (var0Instantiated) {
-            EXPECT_EQ(typeAssignment0, babelwires::StringType::getThisIdentifier());
+            EXPECT_EQ(typeAssignment0, babelwires::TextType::getThisIdentifier());
         } else {
             EXPECT_EQ(typeAssignment0, babelwires::TypeExp());
         }
 
         const babelwires::TypeExp& typeAssignment1 = genericType->getTypeAssignment(input->getValue(), 1);
         if (var1Instantiated) {
-            EXPECT_EQ(typeAssignment1, babelwires::StringType::getThisIdentifier());
+            EXPECT_EQ(typeAssignment1, babelwires::TextType::getThisIdentifier());
         } else {
             EXPECT_EQ(typeAssignment1, babelwires::TypeExp());
         }
@@ -46,7 +46,7 @@ TEST(SetTypeVariableCommandTest, setSingleTypeVariable) {
 
     const babelwires::NodeId genericNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestGenericType::getThisIdentifier()));
     
-    babelwires::SetTypeVariableCommand testCopyConstructor("Test command", genericNodeId, babelwires::Path(), 0, babelwires::StringType::getThisIdentifier());
+    babelwires::SetTypeVariableCommand testCopyConstructor("Test command", genericNodeId, babelwires::Path(), 0, babelwires::TextType::getThisIdentifier());
     babelwires::SetTypeVariableCommand command = testCopyConstructor;
     EXPECT_EQ(command.getName(), "Test command");
 
@@ -69,8 +69,8 @@ TEST(SetTypeVariableCommandTest, setAnotherTypeVariable) {
 
     const babelwires::NodeId genericNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestGenericType::getThisIdentifier()));
     
-    babelwires::SetTypeVariableCommand setFirstVariable("Test command", genericNodeId, babelwires::Path(), 0, babelwires::StringType::getThisIdentifier());
-    babelwires::SetTypeVariableCommand setSecondVariable("Test command", genericNodeId, babelwires::Path(), 1, babelwires::StringType::getThisIdentifier());
+    babelwires::SetTypeVariableCommand setFirstVariable("Test command", genericNodeId, babelwires::Path(), 0, babelwires::TextType::getThisIdentifier());
+    babelwires::SetTypeVariableCommand setSecondVariable("Test command", genericNodeId, babelwires::Path(), 1, babelwires::TextType::getThisIdentifier());
 
     testEnvironment.m_project.process();
     checkInstantiation(testEnvironment.m_project, genericNodeId, false, false);
@@ -90,7 +90,7 @@ TEST(SetTypeVariableCommandTest, setAnotherTypeVariable) {
 
 TEST(SetTypeVariableCommandTest, failSafelyNoElement) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::SetTypeVariableCommand command("Test command", 13, babelwires::Path(), 0, babelwires::StringType::getThisIdentifier());
+    babelwires::SetTypeVariableCommand command("Test command", 13, babelwires::Path(), 0, babelwires::TextType::getThisIdentifier());
     
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
@@ -101,7 +101,7 @@ TEST(SetTypeVariableCommandTest, failSafelyNoGenericType) {
 
     const babelwires::NodeId elementId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestSimpleRecordType::getThisIdentifier()));
 
-    babelwires::SetTypeVariableCommand command("Test command", elementId, babelwires::Path(), 0, babelwires::StringType::getThisIdentifier());
+    babelwires::SetTypeVariableCommand command("Test command", elementId, babelwires::Path(), 0, babelwires::TextType::getThisIdentifier());
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));
@@ -112,7 +112,7 @@ TEST(SetTypeVariableCommandTest, failSafelyVariableOutOfRange) {
 
     const babelwires::NodeId genericNodeId = testEnvironment.m_project.addNode(babelwires::ValueNodeData(testDomain::TestGenericType::getThisIdentifier()));
     
-    babelwires::SetTypeVariableCommand command("Test command", genericNodeId, babelwires::Path(), 3, babelwires::StringType::getThisIdentifier());
+    babelwires::SetTypeVariableCommand command("Test command", genericNodeId, babelwires::Path(), 3, babelwires::TextType::getThisIdentifier());
 
     testEnvironment.m_project.process();
     EXPECT_FALSE(command.initializeAndExecute(testEnvironment.m_project));

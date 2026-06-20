@@ -14,7 +14,7 @@
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalTypeConstructor.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/String/textType.hpp>
 #include <BabelWiresLib/Types/Sum/sumType.hpp>
 
 namespace testDomain {

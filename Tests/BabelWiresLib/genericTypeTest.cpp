@@ -3,7 +3,7 @@
 #include <BabelWiresLib/TypeSystem/valuePathUtils.hpp>
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/String/textType.hpp>
 
 #include <Domains/TestDomain/testGenericType.hpp>
 
@@ -234,7 +234,7 @@ TEST(GenericTypeTest, childTypeAndTypeNames) {
     checkNames(false, false);
 
     std::vector<babelwires::TypeExp> typeAssignments(2);
-    typeAssignments[1] = babelwires::StringType::getThisIdentifier();
+    typeAssignments[1] = babelwires::TextType::getThisIdentifier();
 
     genericType->setTypeVariableAssignmentAndInstantiate(typeSystem, valueHolder, typeAssignments);
 
