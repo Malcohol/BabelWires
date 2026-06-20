@@ -7,7 +7,7 @@
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
-TEST(StringTypeTest, stringTypeCreateValue) {
+TEST(TextTypeTest, textTypeCreateValue) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     babelwires::TextType textType;
@@ -20,7 +20,7 @@ TEST(StringTypeTest, stringTypeCreateValue) {
     EXPECT_EQ(newStringValue->get(), babelwires::Text());
 }
 
-TEST(StringTypeTest, stringTypeIsValidValue) {
+TEST(TextTypeTest, textTypeIsValidValue) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     babelwires::TextType textType;
@@ -33,14 +33,14 @@ TEST(StringTypeTest, stringTypeIsValidValue) {
     EXPECT_FALSE(textType.isValidValue(typeSystem, babelwires::RationalValue(3)));
 }
 
-TEST(StringTypeTest, stringTypeGetKind) {
+TEST(TextTypeTest, textTypeGetKind) {
     testUtils::TestLog log;
     babelwires::TextType textType;
 
     EXPECT_FALSE(textType.getFlavour().empty());
 }
 
-TEST(StringTypeTest, stringTypeIsRegistered) {
+TEST(TextTypeTest, textTypeIsRegistered) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::TypePtr foundType =

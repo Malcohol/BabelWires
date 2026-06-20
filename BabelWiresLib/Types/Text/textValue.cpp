@@ -57,5 +57,6 @@ bool babelwires::TextValue::operator==(const Value& other) const {
 }
 
 std::string babelwires::TextValue::toString() const {
+    // TODO: Not correct when the native encoding is not UTF-8.
     return std::string(m_value.toUtf8());
 }
