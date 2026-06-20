@@ -11,7 +11,7 @@
 #include <BabelWiresLib/Types/Map/mapTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/String/textValue.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 

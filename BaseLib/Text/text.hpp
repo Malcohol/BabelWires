@@ -16,9 +16,8 @@
 namespace babelwires {
 
     /// The canonical representation of text data.
-    /// The data is always stored in UTF-8 encoding.
-    /// The class provides several methods for ingesting data from a std::string_view. These ensure the ingested data
-    /// was in exactly the expected form and that the stored data is valid UTF-8.
+    /// The class provides several methods for ingesting data held in a std::string_view. These ensure the ingested data
+    /// was in exactly the expected form.
     /// The class provides several methods for egesting the data to a std::string. These ensure the egested data is in
     /// exactly the expected form.
     class BASELIB_API Text {

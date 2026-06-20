@@ -4,7 +4,7 @@
 #include <BabelWiresLib/Types/Int/intTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/String/textValue.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
@@ -46,7 +46,7 @@ TEST(IntTypeTest, defaultIntTypeIsValidValue) {
     EXPECT_TRUE(intType.isValidValue(typeSystem, minValue));
     EXPECT_TRUE(intType.isValidValue(typeSystem, maxValue));
 
-    EXPECT_FALSE(intType.isValidValue(typeSystem, babelwires::StringValue(u8"Hello")));
+    EXPECT_FALSE(intType.isValidValue(typeSystem, babelwires::TextValue(u8"Hello")));
     EXPECT_FALSE(intType.isValidValue(typeSystem, babelwires::RationalValue(3)));
 }
 
@@ -111,7 +111,7 @@ TEST(IntTypeTest, constructedIntTypeIsValidValue) {
     EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::IntValue(14)));
     EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::IntValue(15)));
 
-    EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::StringValue(u8"Hello")));
+    EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::TextValue(u8"Hello")));
     EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::RationalValue(3)));
 }
 

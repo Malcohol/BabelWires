@@ -5,7 +5,7 @@
 #include <BabelWiresLib/Types/Array/arrayValue.hpp>
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/String/textValue.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeRoot.hpp>
 
 #include <Domains/TestDomain/testArrayType.hpp>
@@ -91,7 +91,7 @@ TEST(ArrayTypeTest, isValidValueArrayCanBeEmpty) {
                                       testDomain::TestSimpleArrayType::s_maximumSize);
 
     // Make an entry not an element of the entry type.
-    mixedValue.setValue(testDomain::TestSimpleArrayType::s_minimumSize, babelwires::StringValue(u8"Not valid"));
+    mixedValue.setValue(testDomain::TestSimpleArrayType::s_minimumSize, babelwires::TextValue(u8"Not valid"));
     EXPECT_FALSE(arrayType.isValidValue(testEnvironment.m_typeSystem, mixedValue));
 
     // Restore the entry to a value of the entry type.

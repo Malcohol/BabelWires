@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/String/textValue.hpp>
 
 #include <BaseLib/Serialization/deserializer.hpp>
 #include <BaseLib/Serialization/serializer.hpp>
@@ -10,25 +10,25 @@
 #include <Tests/TestUtils/testLog.hpp>
 
 TEST(StringValueTest, basics) {
-    babelwires::StringValue stringValue;
-    EXPECT_EQ(stringValue.get(), babelwires::Text());
+    babelwires::TextValue textValue;
+    EXPECT_EQ(textValue.get(), babelwires::Text());
 
-    stringValue.set(u8"Hello");
-    EXPECT_EQ(stringValue.get(), u8"Hello");
+    textValue.set(u8"Hello");
+    EXPECT_EQ(textValue.get(), u8"Hello");
 
-    babelwires::StringValue stringValue2(u8"Goodbye");
+    babelwires::TextValue stringValue2(u8"Goodbye");
     EXPECT_EQ(stringValue2.get(), u8"Goodbye");
 }
 
 TEST(StringValueTest, serialization) {
     std::string serializedContents;
     {
-        babelwires::StringValue stringValue(u8"Boing");
+        babelwires::TextValue textValue(u8"Boing");
 
         // Note: We want to be able to serialize when entries do not match the types, as in this case.
         auto serializer = babelwires::UserDocumentSerializationFactory::createSerializer();
         ASSERT_NE(serializer, nullptr);
-        serializer->serializeObject(stringValue);
+        serializer->serializeObject(textValue);
         std::ostringstream os;
         serializer->write(os);
         serializedContents = std::move(os.str());
@@ -38,7 +38,7 @@ TEST(StringValueTest, serialization) {
         babelwires::UserDocumentSerializationFactory::createDeserializer(testEnvironment.m_deserializationReg, testEnvironment.m_log);
     ASSERT_NE(deserializer, nullptr);
     ASSERT_TRUE(deserializer->parse(serializedContents));
-    auto dataPtrResult = deserializer->deserializeObject<babelwires::StringValue>();
+    auto dataPtrResult = deserializer->deserializeObject<babelwires::TextValue>();
     ASSERT_TRUE(dataPtrResult);
     auto dataPtr = std::move(*dataPtrResult);
     deserializer->finalize();
@@ -48,29 +48,29 @@ TEST(StringValueTest, serialization) {
 }
 
 TEST(StringValueTest, clone) {
-    babelwires::StringValue stringValue(u8"Plop");
-    auto clone = stringValue.clone();
+    babelwires::TextValue textValue(u8"Plop");
+    auto clone = textValue.clone();
     ASSERT_NE(clone, nullptr);
     EXPECT_EQ(clone->get(), u8"Plop");
 }
 
 TEST(StringValueTest, visitors) {
-    babelwires::StringValue stringValue(u8"Splash");
-    EXPECT_FALSE(stringValue.canContainFilePaths());
-    EXPECT_FALSE(stringValue.canContainIdentifiers());
+    babelwires::TextValue textValue(u8"Splash");
+    EXPECT_FALSE(textValue.canContainFilePaths());
+    EXPECT_FALSE(textValue.canContainIdentifiers());
 }
 
 TEST(StringValueTest, hash) {
-    babelwires::StringValue stringValue;
-    std::size_t hash0 = stringValue.getHash();
+    babelwires::TextValue textValue;
+    std::size_t hash0 = textValue.getHash();
 
-    stringValue.set(u8"ping");
-    std::size_t hash1 = stringValue.getHash();
+    textValue.set(u8"ping");
+    std::size_t hash1 = textValue.getHash();
 
-    stringValue.set(babelwires::Text());
-    std::size_t hash2 = stringValue.getHash();
+    textValue.set(babelwires::Text());
+    std::size_t hash2 = textValue.getHash();
 
-    babelwires::StringValue stringValue2(u8"ping");
+    babelwires::TextValue stringValue2(u8"ping");
     std::size_t hash3 = stringValue2.getHash();
 
     EXPECT_EQ(hash0, hash2);
@@ -81,9 +81,9 @@ TEST(StringValueTest, hash) {
 }
 
 TEST(StringValueTest, equality) {
-    babelwires::StringValue stringValue0;
-    babelwires::StringValue stringValue1(u8"pong");
-    babelwires::StringValue stringValue2(u8"pong");
+    babelwires::TextValue stringValue0;
+    babelwires::TextValue stringValue1(u8"pong");
+    babelwires::TextValue stringValue2(u8"pong");
     
     EXPECT_NE(stringValue0, stringValue1);
     EXPECT_EQ(stringValue1, stringValue2);
@@ -93,10 +93,10 @@ TEST(StringValueTest, equality) {
 }
 
 TEST(StringValueTest, toString) {
-    babelwires::StringValue stringValue;
+    babelwires::TextValue textValue;
     
-    EXPECT_EQ(stringValue.toString(), "");
+    EXPECT_EQ(textValue.toString(), "");
     
-    stringValue.set(u8"ping");
-    EXPECT_EQ(stringValue.toString(), "ping");
+    textValue.set(u8"ping");
+    EXPECT_EQ(textValue.toString(), "ping");
 }

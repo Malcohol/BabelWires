@@ -14,14 +14,14 @@
 
 namespace babelwires {
 
-    class BABELWIRESLIB_API StringValue : public AlwaysEditableValue {
+    class BABELWIRESLIB_API TextValue : public AlwaysEditableValue {
       public:
-        DOWNCASTABLE(StringValue, AlwaysEditableValue);
-        CLONEABLE(StringValue);
-        SERIALIZABLE(StringValue, "string", EditableValue, 1);
+        DOWNCASTABLE(TextValue, AlwaysEditableValue);
+        CLONEABLE(TextValue);
+        SERIALIZABLE(TextValue, "text", EditableValue, 1);
 
-        StringValue();
-        StringValue(Text value);
+        TextValue();
+        TextValue(Text value);
 
         Text get() const;
         void set(Text value);

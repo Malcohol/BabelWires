@@ -9,7 +9,7 @@
 
 #include <BabelWiresQtUi/ValueEditors/lineEditValueEditor.hpp>
 
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/String/textValue.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 
@@ -18,7 +18,7 @@ QWidget* babelwires::StringValueModel::createEditor(QWidget* parent) const {
 }
 
 void babelwires::StringValueModel::setEditorData(QWidget* editor) const {
-    const StringValue& v = getValue()->as<StringValue>();
+    const TextValue& v = getValue()->as<TextValue>();
     const std::string value = v.get().toUtf8();
 
     auto lineEditor = qobject_cast<LineEditValueEditor*>(editor);
@@ -31,17 +31,17 @@ babelwires::ValueHolder babelwires::StringValueModel::createValueFromEditorIfDif
     assert(lineEditor && "Unexpected editor");
     const std::string newValue = lineEditor->text().toUtf8().toStdString();
 
-    const StringValue& v = getValue()->as<StringValue>();
+    const TextValue& v = getValue()->as<TextValue>();
     const std::string currentValue = v.get().toUtf8();
     
     if (newValue != currentValue) {
-        return ValueHolder::makeValue<babelwires::StringValue>(babelwires::Text::assertFromUtf8(newValue));
+        return ValueHolder::makeValue<babelwires::TextValue>(babelwires::Text::assertFromUtf8(newValue));
     } 
     return {};
 }
 
 bool babelwires::StringValueModel::isItemEditable() const {
-    return getValue()->tryAs<StringValue>();
+    return getValue()->tryAs<TextValue>();
 }
 
 bool babelwires::StringValueModel::validateEditor(QWidget* editor) const {

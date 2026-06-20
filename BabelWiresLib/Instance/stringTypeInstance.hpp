@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/String/textValue.hpp>
 
 namespace babelwires {
     /// Specialized instance handling for StringType.
@@ -21,12 +21,12 @@ namespace babelwires {
             : InstanceCommonBase<VALUE_TREE_NODE, STRING_TYPE>(valueFeature) {}
 
         Text get() const {
-            const StringValue& stringValue = this->m_valueTreeNode.getValue()->template as<StringValue>();
-            return stringValue.get();
+            const TextValue& textValue = this->m_valueTreeNode.getValue()->template as<TextValue>();
+            return textValue.get();
         }
         template <typename VALUE_TREE_NODE_M = VALUE_TREE_NODE>
         std::enable_if_t<!std::is_const_v<VALUE_TREE_NODE_M>, void> set(Text newValue) {
-            this->m_valueTreeNode.assertSetValue(StringValue(std::move(newValue)));
+            this->m_valueTreeNode.assertSetValue(TextValue(std::move(newValue)));
         }
     };
 

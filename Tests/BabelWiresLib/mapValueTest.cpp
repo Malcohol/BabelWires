@@ -6,7 +6,7 @@
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/String/textValue.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
@@ -276,7 +276,7 @@ TEST(MapValueTest, serializationTest) {
 
             // Note: We want to be able to serialize when entries do not match the types, as in this case.
         auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, *stringType, *stringType);
-        entryData->setSourceValue(babelwires::StringValue(u8"test mapValue serialization"));
+        entryData->setSourceValue(babelwires::TextValue(u8"test mapValue serialization"));
         mapValue.emplaceBack(std::move(entryData));
         mapValue.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 
@@ -304,7 +304,7 @@ TEST(MapValueTest, serializationTest) {
     EXPECT_EQ(dataPtr->getMapEntry(0).getKind(), babelwires::MapEntryData::Kind::One21);
     const babelwires::ValueHolder& sourceValue = dataPtr->getMapEntry(0).tryAs<babelwires::OneToOneMapEntryData>()->getSourceValue();
     ASSERT_NE(sourceValue, nullptr);
-    const auto *const sourceAsTestValue = sourceValue->tryAs<babelwires::StringValue>();
+    const auto *const sourceAsTestValue = sourceValue->tryAs<babelwires::TextValue>();
     ASSERT_NE(sourceAsTestValue, nullptr);
     EXPECT_EQ(sourceAsTestValue->get(), u8"test mapValue serialization");
 
@@ -324,7 +324,7 @@ TEST(MapValueTest, cloneTest) {
     // Note: We want to be able to clone when entries do not match the types, as in this case.
     auto entryData = std::make_unique<babelwires::OneToOneMapEntryData>(typeSystem, *stringType, *stringType);
     auto entryDataPtr = entryData.get();
-    entryData->setSourceValue(babelwires::StringValue(u8"test mapValue serialization"));
+    entryData->setSourceValue(babelwires::TextValue(u8"test mapValue serialization"));
     mapValue.emplaceBack(std::move(entryData));
     mapValue.emplaceBack(std::make_unique<babelwires::AllToSameFallbackMapEntryData>());
 

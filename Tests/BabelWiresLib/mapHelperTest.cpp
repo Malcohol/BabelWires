@@ -10,7 +10,7 @@
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/String/textValue.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 
@@ -20,7 +20,7 @@
 
 namespace {
     babelwires::Text testValueAdapter(const babelwires::Value& value) {
-        return value.tryAs<babelwires::StringValue>()->get();
+        return value.tryAs<babelwires::TextValue>()->get();
     }
 
     babelwires::MapValue
@@ -61,19 +61,19 @@ namespace {
 
     babelwires::MapValue setUpTestTypeMapValue(const babelwires::TypeSystem& typeSystem, babelwires::MapValue& mapValue,
                                                bool allToOneFallback) {
-        babelwires::StringValue sourceValue1;
+        babelwires::TextValue sourceValue1;
         sourceValue1.set(u8"aaa");
 
-        babelwires::StringValue sourceValue2;
+        babelwires::TextValue sourceValue2;
         sourceValue2.set(u8"bbb");
 
-        babelwires::StringValue targetValue1;
+        babelwires::TextValue targetValue1;
         targetValue1.set(u8"xxx");
 
-        babelwires::StringValue targetValue2;
+        babelwires::TextValue targetValue2;
         targetValue2.set(u8"yyy");
 
-        babelwires::StringValue targetValue3;
+        babelwires::TextValue targetValue3;
         targetValue3.set(u8"zzz");
 
         return setUpTestMapValue(typeSystem, babelwires::StringType::getThisIdentifier(), babelwires::StringType::getThisIdentifier(),
@@ -105,10 +105,10 @@ namespace {
 
     babelwires::MapValue setUpTestTypeTestEnumMapValue(const babelwires::TypeSystem& typeSystem,
                                                        babelwires::MapValue& mapValue) {
-        babelwires::StringValue sourceValue1;
+        babelwires::TextValue sourceValue1;
         sourceValue1.set(u8"aaa");
 
-        babelwires::StringValue sourceValue2;
+        babelwires::TextValue sourceValue2;
         sourceValue2.set(u8"bbb");
 
         babelwires::EnumValue targetValue1;
@@ -132,13 +132,13 @@ namespace {
         babelwires::EnumValue sourceValue2;
         sourceValue2.set("Bar");
 
-        babelwires::StringValue targetValue1;
+        babelwires::TextValue targetValue1;
         targetValue1.set(u8"xxx");
 
-        babelwires::StringValue targetValue2;
+        babelwires::TextValue targetValue2;
         targetValue2.set(u8"yyy");
 
-        babelwires::StringValue targetValue3;
+        babelwires::TextValue targetValue3;
         targetValue3.set(u8"zzz");
 
         return setUpTestMapValue(typeSystem, testDomain::TestEnum::getThisIdentifier(), testDomain::TestEnum::getThisIdentifier(),

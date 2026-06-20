@@ -120,7 +120,7 @@ TEST(ModifierTest, localApplyFailureWrongType) {
     babelwires::Path path;
     path.pushStep(babelwires::PathStep{testDomain::TestSimpleRecordType::getInt0Id()});
 
-    auto stringModData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::StringValue(u8"Hello"));
+    auto stringModData = std::make_unique<babelwires::ValueAssignmentData>(babelwires::TextValue(u8"Hello"));
     stringModData->m_targetPath = path;
 
     babelwires::LocalModifier stringMod(std::move(stringModData));

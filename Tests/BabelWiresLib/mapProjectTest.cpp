@@ -7,7 +7,7 @@
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/String/textValue.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 
@@ -173,7 +173,7 @@ TEST(MapProjectTest, modifyMapValue) {
     mapProject.setMapValue(mapValue);
 
     babelwires::OneToOneMapEntryData oneToOne2(environment.m_typeSystem, *stringType, *testSubEnumType);
-    babelwires::StringValue newSourceValue;
+    babelwires::TextValue newSourceValue;
     newSourceValue.set(u8"Source");
     babelwires::EnumValue newTargetValue;
     newTargetValue.set("Erm");

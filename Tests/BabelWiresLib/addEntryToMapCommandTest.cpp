@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Types/Map/MapProject/mapProject.hpp>
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/String/textValue.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 
@@ -30,7 +30,7 @@ TEST(AddEntryToMapCommandTest, executeAndUndo) {
     babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *stringType,
                                               *stringType);
 
-    babelwires::StringValue nonDefaultValue(u8"non-default");
+    babelwires::TextValue nonDefaultValue(u8"non-default");
     oneToOne.setSourceValue(nonDefaultValue.clone());
     oneToOne.setTargetValue(nonDefaultValue.clone());
 
@@ -48,8 +48,8 @@ TEST(AddEntryToMapCommandTest, executeAndUndo) {
     EXPECT_EQ(mapProject.getNumMapEntries(), 3);
     EXPECT_EQ(*mapProject.getMapEntry(0).getData().getSourceValue(), nonDefaultValue);
     EXPECT_EQ(*mapProject.getMapEntry(0).getData().getTargetValue(), nonDefaultValue);
-    EXPECT_EQ(*mapProject.getMapEntry(1).getData().getSourceValue(), babelwires::StringValue());
-    EXPECT_EQ(*mapProject.getMapEntry(1).getData().getTargetValue(), babelwires::StringValue());
+    EXPECT_EQ(*mapProject.getMapEntry(1).getData().getSourceValue(), babelwires::TextValue());
+    EXPECT_EQ(*mapProject.getMapEntry(1).getData().getTargetValue(), babelwires::TextValue());
     command.undo(mapProject);
     EXPECT_EQ(mapProject.getNumMapEntries(), 2);
     EXPECT_EQ(*mapProject.getMapEntry(0).getData().getSourceValue(), nonDefaultValue);

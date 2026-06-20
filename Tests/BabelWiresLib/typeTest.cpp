@@ -2,7 +2,7 @@
 
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/String/textValue.hpp>
 #include <BabelWiresLib/Types/Array/arrayTypeConstructor.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>
@@ -22,7 +22,7 @@ TEST(TypeTest, typeAndValue)
     babelwires::StringType type;
     auto [valueHolder, value] = type.createValue(typeSystem);
     EXPECT_TRUE(valueHolder);
-    EXPECT_TRUE(value.tryAs<babelwires::StringValue>());
+    EXPECT_TRUE(value.tryAs<babelwires::TextValue>());
     EXPECT_TRUE(type.isValidValue(typeSystem, value));
 
     testDomain::TestEnum testEnum;

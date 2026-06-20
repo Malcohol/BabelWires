@@ -8,7 +8,7 @@
 #include <BabelWiresLib/Types/Map/MapProject/mapProjectEntry.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystem.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/String/textValue.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 
@@ -34,8 +34,8 @@ TEST(RemoveEntryFromMapCommandTest, executeAndUndo) {
 
     mapValue.emplaceBack(oneToOne.clone());
 
-    oneToOne.setSourceValue(babelwires::StringValue(u8"Source"));
-    oneToOne.setTargetValue(babelwires::StringValue(u8"Target"));
+    oneToOne.setSourceValue(babelwires::TextValue(u8"Source"));
+    oneToOne.setTargetValue(babelwires::TextValue(u8"Target"));
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());

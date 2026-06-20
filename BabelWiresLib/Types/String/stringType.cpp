@@ -7,7 +7,7 @@
  **/
 #include <BabelWiresLib/Types/String/stringType.hpp>
 
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/String/textValue.hpp>
 #include <BabelWiresLib/TypeSystem/registeredType.hpp>
 
 babelwires::StringType::StringType()
@@ -16,15 +16,15 @@ babelwires::StringType::StringType()
 #include <BaseLib/Identifiers/registeredIdentifier.hpp>
 
 babelwires::NewValueHolder babelwires::StringType::createValue(const TypeSystem& typeSystem) const {
-    return ValueHolder::makeValue<StringValue>();
+    return ValueHolder::makeValue<TextValue>();
 }
 
 bool babelwires::StringType::visitValue(const TypeSystem& typeSystem, const Value& v, ChildValueVisitor& visitor) const {
-    return v.tryAs<StringValue>();
+    return v.tryAs<TextValue>();
 }
 
 std::string babelwires::StringType::getFlavour() const {
-    return StringValue::s_serializationTypeName;
+    return TextValue::s_serializationTypeName;
 }
 
 
@@ -37,5 +37,5 @@ std::optional<babelwires::SubtypeOrder> babelwires::StringType::compareSubtypeHe
 }
 
 std::string babelwires::StringType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const { 
-    return v->as<StringValue>().toString();
+    return v->as<TextValue>().toString();
 }

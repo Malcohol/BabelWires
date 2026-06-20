@@ -49,7 +49,7 @@
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/String/textValue.hpp>
 #include <BabelWiresLib/Types/Sum/sumTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleValue.hpp>
@@ -97,7 +97,7 @@ void babelwires::registerLib(babelwires::Context& context) {
     deserializationRegistry.registerClass<SelectRecordVariantModifierData>();
     deserializationRegistry.registerClass<SetTypeVariableModifierData>();
     deserializationRegistry.registerClass<IntValue>();
-    deserializationRegistry.registerClass<StringValue>();
+    deserializationRegistry.registerClass<TextValue>();
     deserializationRegistry.registerClass<RationalValue>();
     deserializationRegistry.registerClass<EnumValue>();
     deserializationRegistry.registerClass<TupleValue>();

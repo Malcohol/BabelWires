@@ -7,7 +7,7 @@
 #include <BabelWiresLib/Types/Map/MapEntries/oneToOneMapEntryData.hpp>
 #include <BabelWiresLib/Types/Map/mapValue.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/String/textValue.hpp>
 
 #include <BaseLib/Identifiers/identifierRegistry.hpp>
 #include <BaseLib/Serialization/deserializer.hpp>
@@ -76,7 +76,7 @@ TEST(MapEntryDataTest, create) {
     EXPECT_NE(allToOneEntryData, nullptr);
     EXPECT_NE(allToSameEntryData, nullptr);
 
-    EXPECT_NE(oneToOneEntryData->getSourceValue()->tryAs<babelwires::StringValue>(), nullptr);
+    EXPECT_NE(oneToOneEntryData->getSourceValue()->tryAs<babelwires::TextValue>(), nullptr);
     EXPECT_NE(oneToOneEntryData->getTargetValue()->tryAs<babelwires::EnumValue>(), nullptr);
     EXPECT_NE(allToOneEntryData->getTargetValue()->tryAs<babelwires::EnumValue>(), nullptr);
 }
@@ -116,7 +116,7 @@ TEST(MapEntryDataTest, oneToOneEqualitySameTypes) {
     babelwires::OneToOneMapEntryData oneToOneB(typeSystem, *stringType, *stringType);
     EXPECT_EQ(oneToOneA, oneToOneB);
 
-    babelwires::StringValue sourceValue;
+    babelwires::TextValue sourceValue;
     sourceValue.set(u8"equality test");
 
     oneToOneA.setSourceValue(sourceValue.clone());
@@ -178,7 +178,7 @@ TEST(MapEntryDataTest, allToOneEqualitySameTypes) {
 
     EXPECT_EQ(allToOneA, allToOneB);
 
-    babelwires::StringValue sourceValue;
+    babelwires::TextValue sourceValue;
     sourceValue.set(u8"equality test");
 
     allToOneA.setTargetValue(sourceValue.clone());
@@ -241,7 +241,7 @@ TEST(MapEntryDataTest, oneToOneHashSameTypes) {
 
     EXPECT_EQ(oneToOneA.getHash(), oneToOneB.getHash());
 
-    babelwires::StringValue sourceValue;
+    babelwires::TextValue sourceValue;
     sourceValue.set(u8"equality test");
 
     oneToOneA.setSourceValue(sourceValue.clone());
@@ -302,7 +302,7 @@ TEST(MapEntryDataTest, allToOneHashSameTypes) {
     babelwires::AllToOneFallbackMapEntryData allToOneB(typeSystem, *stringType);
     EXPECT_EQ(allToOneA.getHash(), allToOneB.getHash());
 
-    babelwires::StringValue sourceValue;
+    babelwires::TextValue sourceValue;
     sourceValue.set(u8"equality test");
 
     allToOneA.setTargetValue(sourceValue.clone());
@@ -395,11 +395,11 @@ TEST(MapEntryDataTest, oneToOneGetAndSetValues) {
 
     babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *testEnumType);
 
-    babelwires::StringValue sourceValue;
+    babelwires::TextValue sourceValue;
     sourceValue.set(u8"source");
 
     oneToOne.setSourceValue(sourceValue.clone());
-    const auto sourceValueFromData = oneToOne.getSourceValue()->tryAs<babelwires::StringValue>();
+    const auto sourceValueFromData = oneToOne.getSourceValue()->tryAs<babelwires::TextValue>();
     ASSERT_NE(sourceValueFromData, nullptr);
     EXPECT_EQ(sourceValueFromData->get(), sourceValue.get());
 
@@ -422,11 +422,11 @@ TEST(MapEntryDataTest, allToOneGetAndSetValues) {
 
     babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, *stringType);
 
-    babelwires::StringValue targetValue;
+    babelwires::TextValue targetValue;
     targetValue.set(u8"source");
 
     allToOne.setTargetValue(targetValue.clone());
-    const auto targetValueFromData = allToOne.getTargetValue()->tryAs<babelwires::StringValue>();
+    const auto targetValueFromData = allToOne.getTargetValue()->tryAs<babelwires::TextValue>();
     ASSERT_NE(targetValueFromData, nullptr);
     EXPECT_EQ(targetValueFromData->get(), targetValue.get());
 }
@@ -443,7 +443,7 @@ TEST(MapEntryDataTest, oneToOneSerialize) {
         const auto& testEnumType = typeSystem.getRegisteredType<testDomain::TestEnum>();
 
         babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *testEnumType);
-        babelwires::StringValue sourceValue;
+        babelwires::TextValue sourceValue;
         sourceValue.set(u8"test serialization");
 
         oneToOne.setSourceValue(sourceValue.clone());
@@ -475,7 +475,7 @@ TEST(MapEntryDataTest, oneToOneSerialize) {
     ASSERT_NE(sourceValue, nullptr);
     ASSERT_NE(targetValue, nullptr);
 
-    const auto* const sourceValueFromData = sourceValue->tryAs<babelwires::StringValue>();
+    const auto* const sourceValueFromData = sourceValue->tryAs<babelwires::TextValue>();
     ASSERT_NE(sourceValueFromData, nullptr);
     EXPECT_EQ(sourceValueFromData->get(), u8"test serialization");
 
@@ -495,7 +495,7 @@ TEST(MapEntryDataTest, allToOneSerialize) {
 
         babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, *stringType);
 
-        babelwires::StringValue targetValue;
+        babelwires::TextValue targetValue;
         targetValue.set(u8"test serialization");
 
         allToOne.setTargetValue(targetValue.clone());
@@ -521,7 +521,7 @@ TEST(MapEntryDataTest, allToOneSerialize) {
     const babelwires::ValueHolder& targetValue = dataPtr->getTargetValue();
     ASSERT_NE(targetValue, nullptr);
 
-    const auto* const targetValueFromData = targetValue->tryAs<babelwires::StringValue>();
+    const auto* const targetValueFromData = targetValue->tryAs<babelwires::TextValue>();
     ASSERT_NE(targetValueFromData, nullptr);
     EXPECT_EQ(targetValueFromData->get(), u8"test serialization");
 }
@@ -566,7 +566,7 @@ TEST(MapEntryDataTest, oneToOneClone) {
 
     babelwires::OneToOneMapEntryData oneToOne(typeSystem, *stringType, *testEnumType);
 
-    babelwires::StringValue sourceValue;
+    babelwires::TextValue sourceValue;
     sourceValue.set(u8"test serialization");
 
     oneToOne.setSourceValue(sourceValue.clone());
@@ -583,7 +583,7 @@ TEST(MapEntryDataTest, oneToOneClone) {
     ASSERT_NE(sourceValueInClone, nullptr);
     ASSERT_NE(targetValueInClone, nullptr);
 
-    const auto* const sourceValueFromData = sourceValueInClone->tryAs<babelwires::StringValue>();
+    const auto* const sourceValueFromData = sourceValueInClone->tryAs<babelwires::TextValue>();
     ASSERT_NE(sourceValueFromData, nullptr);
     EXPECT_EQ(sourceValueFromData->get(), u8"test serialization");
 
@@ -601,7 +601,7 @@ TEST(MapEntryDataTest, allToOneClone) {
 
     babelwires::AllToOneFallbackMapEntryData allToOne(typeSystem, *stringType);
 
-    babelwires::StringValue targetValue;
+    babelwires::TextValue targetValue;
     targetValue.set(u8"test serialization");
 
     allToOne.setTargetValue(targetValue.clone());
@@ -612,7 +612,7 @@ TEST(MapEntryDataTest, allToOneClone) {
     const babelwires::ValueHolder& targetValueInClone = dataPtr->getTargetValue();
     ASSERT_NE(targetValueInClone, nullptr);
 
-    const auto* const targetValueFromData = targetValueInClone->tryAs<babelwires::StringValue>();
+    const auto* const targetValueFromData = targetValueInClone->tryAs<babelwires::TextValue>();
     ASSERT_NE(targetValueFromData, nullptr);
     EXPECT_EQ(targetValueFromData->get(), u8"test serialization");
 }

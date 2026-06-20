@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
 #include <BabelWiresLib/Types/String/stringType.hpp>
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/String/textValue.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
@@ -15,7 +15,7 @@ TEST(StringTypeTest, stringTypeCreateValue) {
     babelwires::ValueHolder newValue = stringType.createValue(typeSystem);
     EXPECT_TRUE(newValue);
 
-    const auto* const newStringValue = newValue->tryAs<babelwires::StringValue>();
+    const auto* const newStringValue = newValue->tryAs<babelwires::TextValue>();
     EXPECT_NE(newStringValue, nullptr);
     EXPECT_EQ(newStringValue->get(), babelwires::Text());
 }
@@ -25,7 +25,7 @@ TEST(StringTypeTest, stringTypeIsValidValue) {
     babelwires::TypeSystem typeSystem;
     babelwires::StringType stringType;
 
-    babelwires::StringValue value(u8"Hello");
+    babelwires::TextValue value(u8"Hello");
 
     EXPECT_TRUE(stringType.isValidValue(typeSystem, value));
 
