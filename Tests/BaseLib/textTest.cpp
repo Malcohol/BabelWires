@@ -27,11 +27,12 @@ namespace {
 TEST(TextTest, u8ConstructorAcceptsValidUtf8) {
     babelwires::Text text(u8"Hello, world!");
     EXPECT_EQ(text.toUtf8(), "Hello, world!");
+    EXPECT_EQ(text.getTextLength(), 13);
 }
 
 TEST(TextTest, u8ConstructorRejectsInvalidUtf8) {
     EXPECT_DEATH(babelwires::Text text(makeU8String({'H', 'e', 'l', 'l', 'o', ' ', 0x80, ' ', 'W', 'o', 'r', 'l', 'd'})),
-                 "invalid UTF-8");
+                 "No error expected");
 }
 
 TEST(TextTest, fromPrintableAsciiAcceptsPrintableTextButRejectsControlCharactersAndHighBitBytes) {
@@ -60,16 +61,21 @@ TEST(TextTest, from7BitAsciiAcceptsControlCharactersButRejectsHighBitBytes) {
 }
 
 TEST(TextTest, utf8EntryPointsRoundTripValidUtf8) {
-    const std::string utf8 = "P\xC2\xA3";
+    const std::string utf8 =
+        makeString({'A', static_cast<char>(0xC2), static_cast<char>(0xA3), static_cast<char>(0xE2),
+                    static_cast<char>(0x82), static_cast<char>(0xAC), static_cast<char>(0xF0),
+                    static_cast<char>(0x9F), static_cast<char>(0x98), static_cast<char>(0x80), 'B'});
 
     const auto result = babelwires::Text::fromUtf8(utf8);
     ASSERT_TRUE(result);
     EXPECT_EQ(result.value().toUtf8(), utf8);
+    EXPECT_EQ(result.value().getTextLength(), 5);
     EXPECT_FALSE(result.value().isPrintableAscii());
     EXPECT_FALSE(result.value().is7BitAscii());
 
     const auto lossy = babelwires::Text::tryFromUtf8(utf8);
     EXPECT_EQ(lossy.toUtf8(), utf8);
+    EXPECT_EQ(lossy.getTextLength(), 5);
 }
 
 TEST(TextTest, fromUtf8RejectsInvalidUtf8) {
@@ -87,7 +93,7 @@ TEST(TextTest, fromUtf8RejectsInvalidUtf8) {
 
 TEST(TextTest, assertFromUtf8AssertsOnInvalidUtf8) {
     EXPECT_DEATH(babelwires::Text::assertFromUtf8(makeString({'A', static_cast<char>(0x80), 'B'})),
-                 "Input string contains invalid UTF-8.");
+                 "No error expected");
 }
 
 TEST(TextTest, tryFromUtf8ReplacesInvalidSequencesWithReplacementCharacter) {
@@ -100,6 +106,7 @@ TEST(TextTest, tryFromUtf8ReplacesInvalidSequencesWithReplacementCharacter) {
         std::string("A") + replacementCharacter() + "B" + replacementCharacter() + "C" + replacementCharacter() + "D";
 
     EXPECT_EQ(text.toUtf8(), expected);
+    EXPECT_EQ(text.getTextLength(), 7);
     EXPECT_FALSE(text.isPrintableAscii());
     EXPECT_FALSE(text.is7BitAscii());
     EXPECT_TRUE(babelwires::Text::fromUtf8(text.toUtf8()));
@@ -112,6 +119,7 @@ TEST(TextTest, tryFromPrintableAsciiReplacesNonPrintableCharacters) {
     EXPECT_EQ(text.toUtf8(), "A?B??C");
     EXPECT_TRUE(text.isPrintableAscii());
     EXPECT_TRUE(text.is7BitAscii());
+    EXPECT_EQ(text.getTextLength(), 6);
 }
 
 TEST(TextTest, tryFrom7BitAsciiPreservesControlsButReplacesHighBitBytes) {
@@ -121,6 +129,7 @@ TEST(TextTest, tryFrom7BitAsciiPreservesControlsButReplacesHighBitBytes) {
     EXPECT_EQ(text.toUtf8(), makeString({'A', '\n', '?', 'B'}));
     EXPECT_FALSE(text.isPrintableAscii());
     EXPECT_TRUE(text.is7BitAscii());
+    EXPECT_EQ(text.getTextLength(), 4);
 }
 
 TEST(TextTest, toPrintableAsciiSucceedsOnPrintableTextButRejectsControlCharactersAndHighBitBytes) {

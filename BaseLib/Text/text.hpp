@@ -29,9 +29,12 @@ namespace babelwires {
         /// This asserts that the string is indeed valid UTF-8.
         Text(std::u8string data);
 
-        template<size_t N>
+        template <size_t N>
         Text(const char8_t (&data)[N])
             : Text(std::u8string(data, N - 1)) {}
+
+        /// Return the number of textual characters (i.e. unicode codepoints) in the text
+        std::size_t getTextLength() const { return m_textLength; }
 
         Text& operator=(const Text&) = default;
         Text& operator=(Text&&) = default;
@@ -69,7 +72,8 @@ namespace babelwires {
         std::string tryToPrintableAscii() const;
         std::string tryTo7BitAscii() const;
 
-        // Always succeeds
+        // Always succeeds (but should not be assumed to be a correctly encoded representation of the text as a
+        // std::string on a system where UTF-8 is not the native encoding)
         std::string toUtf8() const;
 
         std::string serializeToString() const;
@@ -81,14 +85,17 @@ namespace babelwires {
 
       private:
         // Unlike the public constructor, this version doesn't perform any validation.
-        Text(std::u8string checkedData, bool /*unused*/)
-            : m_data(std::move(checkedData)) {}
+        Text(std::u8string checkedData, std::size_t textLength)
+            : m_data(std::move(checkedData)), m_textLength(textLength) {}
 
-        explicit Text(std::string_view checkedData)
-            : m_data(std::u8string(checkedData.begin(), checkedData.end())) {}
+        explicit Text(std::string_view checkedData, std::size_t textLength)
+            : m_data(std::u8string(checkedData.begin(), checkedData.end())), m_textLength(textLength) {}
 
         /// The data is always in UTF-8 encoding.
         std::u8string m_data;
+
+        /// The number of codepoints in the stored data.
+        std::size_t m_textLength = 0;
     };
 
 } // namespace babelwires
