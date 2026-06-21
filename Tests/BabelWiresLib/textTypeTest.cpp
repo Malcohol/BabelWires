@@ -10,9 +10,9 @@
 TEST(TextTypeTest, textTypeCreateValue) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
-    babelwires::TextType textType;
+    babelwires::DefaultTextType defaultTextType;
 
-    babelwires::ValueHolder newValue = textType.createValue(typeSystem);
+    babelwires::ValueHolder newValue = defaultTextType.createValue(typeSystem);
     EXPECT_TRUE(newValue);
 
     const auto* const newStringValue = newValue->tryAs<babelwires::TextValue>();
@@ -23,28 +23,28 @@ TEST(TextTypeTest, textTypeCreateValue) {
 TEST(TextTypeTest, textTypeIsValidValue) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
-    babelwires::TextType textType;
+    babelwires::DefaultTextType defaultTextType;
 
     babelwires::TextValue value(u8"Hello");
 
-    EXPECT_TRUE(textType.isValidValue(typeSystem, value));
+    EXPECT_TRUE(defaultTextType.isValidValue(typeSystem, value));
 
-    EXPECT_FALSE(textType.isValidValue(typeSystem, babelwires::IntValue(5)));
-    EXPECT_FALSE(textType.isValidValue(typeSystem, babelwires::RationalValue(3)));
+    EXPECT_FALSE(defaultTextType.isValidValue(typeSystem, babelwires::IntValue(5)));
+    EXPECT_FALSE(defaultTextType.isValidValue(typeSystem, babelwires::RationalValue(3)));
 }
 
 TEST(TextTypeTest, textTypeGetKind) {
     testUtils::TestLog log;
-    babelwires::TextType textType;
+    babelwires::DefaultTextType defaultTextType;
 
-    EXPECT_FALSE(textType.getFlavour().empty());
+    EXPECT_FALSE(defaultTextType.getFlavour().empty());
 }
 
 TEST(TextTypeTest, textTypeIsRegistered) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::TypePtr foundType =
-        testEnvironment.m_typeSystem.tryGetRegisteredTypeById(babelwires::TextType::getThisIdentifier());
+        testEnvironment.m_typeSystem.tryGetRegisteredTypeById(babelwires::DefaultTextType::getThisIdentifier());
     EXPECT_TRUE(foundType);
-    EXPECT_NE(foundType->tryAs<babelwires::TextType>(), nullptr);
+    EXPECT_NE(foundType->tryAs<babelwires::DefaultTextType>(), nullptr);
 }

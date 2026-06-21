@@ -45,7 +45,7 @@ testDomain::RecordAB::RecordAB(const babelwires::TypeSystem& typeSystem)
     : RecordType(getThisIdentifier(), typeSystem, {{getIdForA(), TestSubEnum::getThisIdentifier()}, {getIdForB(), TestSubEnum::getThisIdentifier()}}) {}
 
 testDomain::RecordAS::RecordAS(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisIdentifier(), typeSystem, {{getIdForA(), babelwires::TextType::getThisIdentifier()}}) {}
+    : RecordType(getThisIdentifier(), typeSystem, {{getIdForA(), babelwires::DefaultTextType::getThisIdentifier()}}) {}
 
 testDomain::RecordAOpt::RecordAOpt(const babelwires::TypeSystem& typeSystem)
     : RecordType(getThisIdentifier(), 
@@ -68,7 +68,7 @@ testDomain::RecordABOpt::RecordABOpt(const babelwires::TypeSystem& typeSystem)
 
 testDomain::RecordAOptS::RecordAOptS(const babelwires::TypeSystem& typeSystem)
     : RecordType(getThisIdentifier(), typeSystem, {{getIdForA(), TestSubEnum::getThisIdentifier()},
-                  {getIdForOpt(), babelwires::TextType::getThisIdentifier(),
+                  {getIdForOpt(), babelwires::DefaultTextType::getThisIdentifier(),
                    babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
 
 testDomain::RecordABOptChild::RecordABOptChild(const babelwires::TypeSystem& typeSystem)

@@ -15,7 +15,7 @@
 babelwires::TextValue::TextValue() = default;
 babelwires::TextValue::TextValue(Text value) : m_value(std::move(value)) {}
 
-babelwires::Text babelwires::TextValue::get() const {
+const babelwires::Text& babelwires::TextValue::get() const {
     return m_value;
 }
 

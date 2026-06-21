@@ -74,7 +74,7 @@ TEST(ValueTreeGenericTypeUtilsTest, containsUnassignedTypeVariable) {
     {
         babelwires::SetTypeVariableModifierData nestedData;
         nestedData.m_typeAssignments.resize(1);
-        nestedData.m_typeAssignments[0] = babelwires::TextType::getThisIdentifier();
+        nestedData.m_typeAssignments[0] = babelwires::DefaultTextType::getThisIdentifier();
         nestedData.apply(&nestedGenericTypeNode);
     }
 
@@ -93,13 +93,13 @@ TEST(ValueTreeGenericTypeUtilsTest, containsUnassignedTypeVariable) {
     {
         babelwires::SetTypeVariableModifierData data;
         data.m_typeAssignments.resize(2);
-        data.m_typeAssignments[0] = babelwires::TextType::getThisIdentifier();
+        data.m_typeAssignments[0] = babelwires::DefaultTextType::getThisIdentifier();
         data.apply(&valueTree);
 
         // Have to re-apply to the nested generic type, because the outer application will have overwritten it.
         babelwires::SetTypeVariableModifierData nestedData;
         nestedData.m_typeAssignments.resize(1);
-        nestedData.m_typeAssignments[0] = babelwires::TextType::getThisIdentifier();
+        nestedData.m_typeAssignments[0] = babelwires::DefaultTextType::getThisIdentifier();
         nestedData.apply(&nestedGenericTypeNode);
     }
 
@@ -118,14 +118,14 @@ TEST(ValueTreeGenericTypeUtilsTest, containsUnassignedTypeVariable) {
     {
         babelwires::SetTypeVariableModifierData data;
         data.m_typeAssignments.resize(2);
-        data.m_typeAssignments[0] = babelwires::TextType::getThisIdentifier();
-        data.m_typeAssignments[1] = babelwires::TextType::getThisIdentifier();
+        data.m_typeAssignments[0] = babelwires::DefaultTextType::getThisIdentifier();
+        data.m_typeAssignments[1] = babelwires::DefaultTextType::getThisIdentifier();
         data.apply(&valueTree);
 
         // Have to re-apply to the nested generic type, because the outer application will have overwritten it.
         babelwires::SetTypeVariableModifierData nestedData;
         nestedData.m_typeAssignments.resize(1);
-        nestedData.m_typeAssignments[0] = babelwires::TextType::getThisIdentifier();
+        nestedData.m_typeAssignments[0] = babelwires::DefaultTextType::getThisIdentifier();
         nestedData.apply(&nestedGenericTypeNode);
     }
 
@@ -175,7 +175,7 @@ TEST(ValueTreeGenericTypeUtilsTest, getMaximumHeightOfUnassignedGenericType) {
     {
         babelwires::SetTypeVariableModifierData nestedData;
         nestedData.m_typeAssignments.resize(1);
-        nestedData.m_typeAssignments[0] = babelwires::TextType::getThisIdentifier();
+        nestedData.m_typeAssignments[0] = babelwires::DefaultTextType::getThisIdentifier();
         nestedData.apply(&nestedGenericTypeNode);
     }
 
@@ -193,13 +193,13 @@ TEST(ValueTreeGenericTypeUtilsTest, getMaximumHeightOfUnassignedGenericType) {
     {
         babelwires::SetTypeVariableModifierData data;
         data.m_typeAssignments.resize(2);
-        data.m_typeAssignments[0] = babelwires::TextType::getThisIdentifier();
+        data.m_typeAssignments[0] = babelwires::DefaultTextType::getThisIdentifier();
         data.apply(&valueTree);
 
         // Have to re-apply to the nested generic type, because the outer application will have overwritten it.
         babelwires::SetTypeVariableModifierData nestedData;
         nestedData.m_typeAssignments.resize(1);
-        nestedData.m_typeAssignments[0] = babelwires::TextType::getThisIdentifier();
+        nestedData.m_typeAssignments[0] = babelwires::DefaultTextType::getThisIdentifier();
         nestedData.apply(&nestedGenericTypeNode);
     }
 
@@ -217,8 +217,8 @@ TEST(ValueTreeGenericTypeUtilsTest, getMaximumHeightOfUnassignedGenericType) {
     {
         babelwires::SetTypeVariableModifierData data;
         data.m_typeAssignments.resize(2);
-        data.m_typeAssignments[0] = babelwires::TextType::getThisIdentifier();
-        data.m_typeAssignments[1] = babelwires::TextType::getThisIdentifier();
+        data.m_typeAssignments[0] = babelwires::DefaultTextType::getThisIdentifier();
+        data.m_typeAssignments[1] = babelwires::DefaultTextType::getThisIdentifier();
         data.apply(&valueTree);
 
         // The nested generic type will be unassigned.
@@ -255,7 +255,7 @@ TEST(ValueTreeGenericTypeUtilsTest, getTypeVariableAssignments) {
     {
         const auto it = assignments->find({testDomain::TestGenericType::getPathToNestedGenericType(), 0});
         ASSERT_NE(it, assignments->end());
-        EXPECT_EQ(it->second, babelwires::TextType::getThisIdentifier());
+        EXPECT_EQ(it->second, babelwires::DefaultTextType::getThisIdentifier());
     }
 }
 

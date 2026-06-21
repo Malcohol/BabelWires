@@ -40,17 +40,17 @@ TEST(SetTypeVariableModifierDataTest, setSingleTypeVariable) {
 
     babelwires::SetTypeVariableModifierData data;
     data.m_typeAssignments.resize(2);
-    data.m_typeAssignments[0] = babelwires::TextType::getThisIdentifier();
+    data.m_typeAssignments[0] = babelwires::DefaultTextType::getThisIdentifier();
 
     data.apply(&valueTree);
 
     const auto& valueAfterFirstApplication = valueTree.getValue();
     const auto* const genericValueAfterFirstApplication = valueAfterFirstApplication->tryAs<babelwires::GenericValue>();
     ASSERT_NE(genericValueAfterFirstApplication, nullptr);
-    EXPECT_EQ(type->getTypeAssignment(valueAfterFirstApplication, 0), babelwires::TextType::getThisIdentifier());
+    EXPECT_EQ(type->getTypeAssignment(valueAfterFirstApplication, 0), babelwires::DefaultTextType::getThisIdentifier());
     EXPECT_FALSE(type->getTypeAssignment(valueAfterFirstApplication, 1));
 
-    data.m_typeAssignments[1] = babelwires::TextType::getThisIdentifier();
+    data.m_typeAssignments[1] = babelwires::DefaultTextType::getThisIdentifier();
 
     data.apply(&valueTree);
 
@@ -58,8 +58,8 @@ TEST(SetTypeVariableModifierDataTest, setSingleTypeVariable) {
     const auto* const genericValueAfterSecondApplication =
         valueAfterSecondApplication->tryAs<babelwires::GenericValue>();
     ASSERT_NE(genericValueAfterSecondApplication, nullptr);
-    EXPECT_EQ(type->getTypeAssignment(valueAfterSecondApplication, 0), babelwires::TextType::getThisIdentifier());
-    EXPECT_EQ(type->getTypeAssignment(valueAfterSecondApplication, 1), babelwires::TextType::getThisIdentifier());
+    EXPECT_EQ(type->getTypeAssignment(valueAfterSecondApplication, 0), babelwires::DefaultTextType::getThisIdentifier());
+    EXPECT_EQ(type->getTypeAssignment(valueAfterSecondApplication, 1), babelwires::DefaultTextType::getThisIdentifier());
 
     data.m_typeAssignments[0] = babelwires::TypeExp();
 
@@ -69,7 +69,7 @@ TEST(SetTypeVariableModifierDataTest, setSingleTypeVariable) {
     const auto* const genericValueAfterThirdApplication = valueAfterThirdApplication->tryAs<babelwires::GenericValue>();
     ASSERT_NE(genericValueAfterThirdApplication, nullptr);
     EXPECT_FALSE(type->getTypeAssignment(valueAfterThirdApplication, 0));
-    EXPECT_EQ(type->getTypeAssignment(valueAfterThirdApplication, 1), babelwires::TextType::getThisIdentifier());
+    EXPECT_EQ(type->getTypeAssignment(valueAfterThirdApplication, 1), babelwires::DefaultTextType::getThisIdentifier());
 }
 
 TEST(SetTypeVariableModifierDataTest, failureNotAGenericType) {
@@ -77,7 +77,7 @@ TEST(SetTypeVariableModifierDataTest, failureNotAGenericType) {
 
     babelwires::SetTypeVariableModifierData data;
     data.m_typeAssignments.resize(1);
-    data.m_typeAssignments[0] = babelwires::TextType::getThisIdentifier();
+    data.m_typeAssignments[0] = babelwires::DefaultTextType::getThisIdentifier();
 
     babelwires::ValueTreeRoot valueTree(
         testEnvironment.m_typeSystem,
@@ -93,7 +93,7 @@ TEST(SetTypeVariableModifierDataTest, failureTooFewTypeVariables) {
 
     babelwires::SetTypeVariableModifierData data;
     data.m_typeAssignments.resize(1);
-    data.m_typeAssignments[0] = babelwires::TextType::getThisIdentifier();
+    data.m_typeAssignments[0] = babelwires::DefaultTextType::getThisIdentifier();
 
     babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem,
                                         testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
@@ -108,9 +108,9 @@ TEST(SetTypeVariableModifierDataTest, failureTooManyTypeVariables) {
 
     babelwires::SetTypeVariableModifierData data;
     data.m_typeAssignments.resize(3);
-    data.m_typeAssignments[0] = babelwires::TextType::getThisIdentifier();
-    data.m_typeAssignments[1] = babelwires::TextType::getThisIdentifier();
-    data.m_typeAssignments[2] = babelwires::TextType::getThisIdentifier();
+    data.m_typeAssignments[0] = babelwires::DefaultTextType::getThisIdentifier();
+    data.m_typeAssignments[1] = babelwires::DefaultTextType::getThisIdentifier();
+    data.m_typeAssignments[2] = babelwires::DefaultTextType::getThisIdentifier();
 
     babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem,
                                         testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
@@ -127,7 +127,7 @@ TEST(SetTypeVariableModifierDataTest, failureArgumentDoesNotResolve) {
     babelwires::SetTypeVariableModifierData data;
     data.m_typeAssignments.resize(2);
     data.m_typeAssignments[0] = babelwires::TypeExp(testUtils::getTestRegisteredMediumIdentifier("UnknownType"));
-    data.m_typeAssignments[1] = babelwires::TextType::getThisIdentifier();
+    data.m_typeAssignments[1] = babelwires::DefaultTextType::getThisIdentifier();
 
     babelwires::ValueTreeRoot valueTree(testEnvironment.m_typeSystem,
                                         testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestGenericType>());
@@ -143,7 +143,7 @@ TEST(SetTypeVariableModifierDataTest, clone) {
     babelwires::SetTypeVariableModifierData data;
     data.m_targetPath = *babelwires::Path::deserializeFromString("foo/bar/boo");
     data.m_typeAssignments.resize(2);
-    data.m_typeAssignments[0] = babelwires::TextType::getThisIdentifier();
+    data.m_typeAssignments[0] = babelwires::DefaultTextType::getThisIdentifier();
     data.m_typeAssignments[1] = babelwires::DefaultIntType::getThisIdentifier();
 
     auto clonePtr = data.clone();
@@ -163,7 +163,7 @@ TEST(SetTypeVariableModifierDataTest, serialize) {
         babelwires::SetTypeVariableModifierData data;
         data.m_targetPath = *babelwires::Path::deserializeFromString("foo/bar/boo");
         data.m_typeAssignments.resize(2);
-        data.m_typeAssignments[0] = babelwires::TextType::getThisIdentifier();
+        data.m_typeAssignments[0] = babelwires::DefaultTextType::getThisIdentifier();
         data.m_typeAssignments[1] = babelwires::DefaultIntType::getThisIdentifier();
 
         auto serializer = babelwires::UserDocumentSerializationFactory::createSerializer();
@@ -186,6 +186,6 @@ TEST(SetTypeVariableModifierDataTest, serialize) {
 
     EXPECT_EQ(dataPtr->m_targetPath, *babelwires::Path::deserializeFromString("foo/bar/boo"));
     ASSERT_EQ(dataPtr->m_typeAssignments.size(), 2);
-    EXPECT_EQ(dataPtr->m_typeAssignments[0], babelwires::TextType::getThisIdentifier());
+    EXPECT_EQ(dataPtr->m_typeAssignments[0], babelwires::DefaultTextType::getThisIdentifier());
     EXPECT_EQ(dataPtr->m_typeAssignments[1], babelwires::DefaultIntType::getThisIdentifier());
 }

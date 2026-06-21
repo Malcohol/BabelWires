@@ -542,7 +542,7 @@ TEST(RecordTypeTest, constructorBasics) {
     babelwires::TypeExp recordTypeExp(
         babelwires::RecordTypeConstructor::getThisIdentifier(),
         babelwires::TypeConstructorArguments{
-            {babelwires::DefaultIntType::getThisIdentifier(), babelwires::TextType::getThisIdentifier()},
+            {babelwires::DefaultIntType::getThisIdentifier(), babelwires::DefaultTextType::getThisIdentifier()},
             {babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("int0")),
              babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("str0"))}});
 
@@ -553,7 +553,7 @@ TEST(RecordTypeTest, constructorBasics) {
     EXPECT_EQ(recordType.getFields()[0].m_identifier, "int0");
     EXPECT_EQ(recordType.getFields()[0].m_type->getTypeExp(), babelwires::DefaultIntType::getThisIdentifier());
     EXPECT_EQ(recordType.getFields()[1].m_identifier, "str0");
-    EXPECT_EQ(recordType.getFields()[1].m_type->getTypeExp(), babelwires::TextType::getThisIdentifier());
+    EXPECT_EQ(recordType.getFields()[1].m_type->getTypeExp(), babelwires::DefaultTextType::getThisIdentifier());
 }
 
 TEST(RecordTypeTest, constructorWithOptionals) {
@@ -562,7 +562,7 @@ TEST(RecordTypeTest, constructorWithOptionals) {
     babelwires::TypeExp recordTypeExp(
         babelwires::RecordTypeConstructor::getThisIdentifier(),
         babelwires::TypeConstructorArguments{
-            {babelwires::DefaultIntType::getThisIdentifier(), babelwires::TextType::getThisIdentifier()},
+            {babelwires::DefaultIntType::getThisIdentifier(), babelwires::DefaultTextType::getThisIdentifier()},
             {babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("int0")),
              babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("str0"),
                                       babelwires::RecordType::Optionality::optionalDefaultInactive)}});
@@ -576,7 +576,7 @@ TEST(RecordTypeTest, constructorWithOptionals) {
     EXPECT_EQ(recordType.getFields()[0].m_type->getTypeExp(), babelwires::DefaultIntType::getThisIdentifier());
     EXPECT_EQ(recordType.getFields()[0].m_optionality, babelwires::RecordType::Optionality::alwaysActive);
     EXPECT_EQ(recordType.getFields()[1].m_identifier, "str0");
-    EXPECT_EQ(recordType.getFields()[1].m_type->getTypeExp(), babelwires::TextType::getThisIdentifier());
+    EXPECT_EQ(recordType.getFields()[1].m_type->getTypeExp(), babelwires::DefaultTextType::getThisIdentifier());
     EXPECT_EQ(recordType.getFields()[1].m_optionality, babelwires::RecordType::Optionality::optionalDefaultInactive);
 }
 
@@ -593,7 +593,7 @@ TEST(RecordTypeTest, constructorBadArgs) {
         babelwires::TypeExp recordTypeExp(
             babelwires::RecordTypeConstructor::getThisIdentifier(),
             babelwires::TypeConstructorArguments{
-                {babelwires::DefaultIntType::getThisIdentifier(), babelwires::TextType::getThisIdentifier()},
+                {babelwires::DefaultIntType::getThisIdentifier(), babelwires::DefaultTextType::getThisIdentifier()},
                 {babelwires::FieldIdValue("int0"), babelwires::IntValue(42)}});
         EXPECT_FALSE(recordTypeExp.resolve(testEnvironment.m_typeSystem));
     }
@@ -604,7 +604,7 @@ TEST(RecordTypeTest, constructorMakeRef) {
 
     babelwires::TypeExp recordTypeExp = babelwires::RecordTypeConstructor::makeTypeExp(
         testUtils::getTestRegisteredIdentifier("int0"), babelwires::DefaultIntType::getThisIdentifier(),
-        testUtils::getTestRegisteredIdentifier("str0"), babelwires::TextType::getThisIdentifier());
+        testUtils::getTestRegisteredIdentifier("str0"), babelwires::DefaultTextType::getThisIdentifier());
 
     babelwires::TypePtr type = recordTypeExp.assertResolve(testEnvironment.m_typeSystem);
     ASSERT_TRUE(type->tryAs<babelwires::RecordType>());
@@ -613,17 +613,17 @@ TEST(RecordTypeTest, constructorMakeRef) {
     EXPECT_EQ(recordType.getFields()[0].m_identifier, "int0");
     EXPECT_EQ(recordType.getFields()[0].m_type->getTypeExp(), babelwires::DefaultIntType::getThisIdentifier());
     EXPECT_EQ(recordType.getFields()[1].m_identifier, "str0");
-    EXPECT_EQ(recordType.getFields()[1].m_type->getTypeExp(), babelwires::TextType::getThisIdentifier());
+    EXPECT_EQ(recordType.getFields()[1].m_type->getTypeExp(), babelwires::DefaultTextType::getThisIdentifier());
 }
 
 TEST(RecordTypeTest, constructorName) {
     testUtils::TestEnvironment testEnvironment;
 
     babelwires::TypeExp recordTypeExp = babelwires::RecordTypeConstructor::makeTypeExp(
-        "a", babelwires::TextType::getThisIdentifier(), "b", babelwires::DefaultIntType::getThisIdentifier(), "c",
-        babelwires::TextType::getThisIdentifier());
+        "a", babelwires::DefaultTextType::getThisIdentifier(), "b", babelwires::DefaultIntType::getThisIdentifier(), "c",
+        babelwires::DefaultTextType::getThisIdentifier());
 
-    EXPECT_EQ(recordTypeExp.toString(), "Record{a, b, c : String, Integer, String}");
+    EXPECT_EQ(recordTypeExp.toString(), "Record{a, b, c : Text, Integer, Text}");
 }
 
 TEST(RecordTypeTest, typeExpSerialization) {
@@ -632,7 +632,7 @@ TEST(RecordTypeTest, typeExpSerialization) {
     babelwires::TypeExp recordTypeExp(
     babelwires::RecordTypeConstructor::getThisIdentifier(),
     babelwires::TypeConstructorArguments{
-        {babelwires::DefaultIntType::getThisIdentifier(), babelwires::TextType::getThisIdentifier(),
+        {babelwires::DefaultIntType::getThisIdentifier(), babelwires::DefaultTextType::getThisIdentifier(),
             babelwires::DefaultIntType::getThisIdentifier()},
         {babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("int0")),
             babelwires::FieldIdValue(testUtils::getTestRegisteredIdentifier("str0"),

@@ -124,7 +124,7 @@ TEST(ModifierDataTest, assignFromFeatureBadConnectionApply) {
     babelwires::ValueTreeRoot srcFeature{testEnvironment.m_typeSystem,
                                               testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultIntType>()};
     babelwires::ValueTreeRoot targetFeature{testEnvironment.m_typeSystem,
-                                                 testEnvironment.m_typeSystem.getRegisteredType<babelwires::TextType>()};
+                                                 testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultTextType>()};
 
     srcFeature.setToDefault();
     targetFeature.setToDefault();

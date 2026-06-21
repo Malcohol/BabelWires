@@ -216,15 +216,15 @@ TEST(GenericTypeTest, childTypeAndTypeNames) {
         const std::string childTypeName = childType->getName();
         EXPECT_NE(childTypeName.find("TVar(0,0,-)"), std::string::npos);
         if (var1Assigned) {
-            EXPECT_NE(childTypeName.find("TVar(1,0,String)"), std::string::npos);
+            EXPECT_NE(childTypeName.find("TVar(1,0,Text)"), std::string::npos);
         } else {
             EXPECT_NE(childTypeName.find("TVar(1,0,-)"), std::string::npos);
         }
         EXPECT_EQ(childTypeName.find("Record{"), 0);
         EXPECT_NE(childTypeName.find("Gen<1>{Record{"), std::string::npos);
         if (var0Assigned) {
-            EXPECT_EQ(childTypeName.find("TVar(0,1,String)"), std::string::npos);
-            EXPECT_NE(childTypeName.find("Array<TVar(0,0,String)>["), std::string::npos);
+            EXPECT_EQ(childTypeName.find("TVar(0,1,Text)"), std::string::npos);
+            EXPECT_NE(childTypeName.find("Array<TVar(0,0,Text)>["), std::string::npos);
         } else {
             EXPECT_NE(childTypeName.find("TVar(0,1,-)"), std::string::npos);
             EXPECT_NE(childTypeName.find("Array<TVar(0,0,-)>["), std::string::npos);
@@ -234,10 +234,10 @@ TEST(GenericTypeTest, childTypeAndTypeNames) {
     checkNames(false, false);
 
     std::vector<babelwires::TypeExp> typeAssignments(2);
-    typeAssignments[1] = babelwires::TextType::getThisIdentifier();
+    typeAssignments[1] = babelwires::DefaultTextType::getThisIdentifier();
 
     genericType->setTypeVariableAssignmentAndInstantiate(typeSystem, valueHolder, typeAssignments);
 
-    EXPECT_EQ(genericType->valueToString(typeSystem, valueHolder), "<T, String>");
+    EXPECT_EQ(genericType->valueToString(typeSystem, valueHolder), "<T, Text>");
     checkNames(false, true);
 }

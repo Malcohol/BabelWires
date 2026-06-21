@@ -32,7 +32,7 @@ testDomain::TestComplexRecordType::TestComplexRecordType(const babelwires::TypeS
                   {getSubrecordId(), TestSimpleRecordType::getThisIdentifier()},
                   {getInt1Id(), babelwires::IntTypeConstructor::makeTypeExp(c_int1min, c_int1max, c_int1default)},
                   {getOpRecId(), TestSimpleRecordType::getThisIdentifier(), Optionality::optionalDefaultInactive},
-                  {getStringId(), babelwires::TextType::getThisIdentifier()},
+                  {getStringId(), babelwires::DefaultTextType::getThisIdentifier()},
                   {getArrayId(), testDomain::TestSimpleArrayType::getThisIdentifier()},
                   {getOnOptId(), babelwires::DefaultIntType::getThisIdentifier(), Optionality::optionalDefaultActive }}) {}
 

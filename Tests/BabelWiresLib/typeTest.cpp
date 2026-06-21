@@ -19,7 +19,7 @@ TEST(TypeTest, typeAndValue)
 
     // This mostly just exercises the API.
 
-    babelwires::TextType type;
+    babelwires::DefaultTextType type;
     auto [valueHolder, value] = type.createValue(typeSystem);
     EXPECT_TRUE(valueHolder);
     EXPECT_TRUE(value.tryAs<babelwires::TextValue>());
@@ -34,11 +34,11 @@ TEST(TypeTest, typePtrTest)
     babelwires::TypeSystem typeSystem;
     testUtils::TestLog log;
 
-    typeSystem.addType<babelwires::TextType>();
+    typeSystem.addType<babelwires::DefaultTextType>();
     typeSystem.addTypeConstructor<babelwires::ArrayTypeConstructor>();
 
     babelwires::TypeExp arrayOfStringsExp = babelwires::ArrayTypeConstructor::makeTypeExp(
-        babelwires::TypeExp(babelwires::TextType::getThisIdentifier()), 0, 10); 
+        babelwires::TypeExp(babelwires::DefaultTextType::getThisIdentifier()), 0, 10); 
 
     babelwires::WeakTypePtr weakTypePtr;
     {

@@ -18,23 +18,23 @@ TEST(AddEntryToMapCommandTest, executeAndUndo) {
     testUtils::TestEnvironment environment;
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeExps({{babelwires::TextType::getThisIdentifier()}});
-    mapProject.setAllowedTargetTypeExps({{babelwires::TextType::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::DefaultTextType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeExps({{babelwires::DefaultTextType::getThisIdentifier()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeExp(babelwires::TextType::getThisIdentifier());
-    mapValue.setTargetTypeExp(babelwires::TextType::getThisIdentifier());
+    mapValue.setSourceTypeExp(babelwires::DefaultTextType::getThisIdentifier());
+    mapValue.setTargetTypeExp(babelwires::DefaultTextType::getThisIdentifier());
 
-    const babelwires::TypePtr& textType = environment.m_typeSystem.getRegisteredType<babelwires::TextType>();
+    const babelwires::TypePtr& defaultTextType = environment.m_typeSystem.getRegisteredType<babelwires::DefaultTextType>();
 
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *textType,
-                                              *textType);
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *defaultTextType,
+                                              *defaultTextType);
 
     babelwires::TextValue nonDefaultValue(u8"non-default");
     oneToOne.setSourceValue(nonDefaultValue.clone());
     oneToOne.setTargetValue(nonDefaultValue.clone());
 
-    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *textType);
+    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *defaultTextType);
 
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
@@ -60,19 +60,19 @@ TEST(AddEntryToMapCommandTest, failAtEnd) {
     testUtils::TestEnvironment environment;
 
     babelwires::MapProject mapProject(environment.m_projectContext);
-    mapProject.setAllowedSourceTypeExps({{babelwires::TextType::getThisIdentifier()}});
-    mapProject.setAllowedTargetTypeExps({{babelwires::TextType::getThisIdentifier()}});
+    mapProject.setAllowedSourceTypeExps({{babelwires::DefaultTextType::getThisIdentifier()}});
+    mapProject.setAllowedTargetTypeExps({{babelwires::DefaultTextType::getThisIdentifier()}});
 
     babelwires::MapValue mapValue;
-    mapValue.setSourceTypeExp(babelwires::TextType::getThisIdentifier());
-    mapValue.setTargetTypeExp(babelwires::TextType::getThisIdentifier());
+    mapValue.setSourceTypeExp(babelwires::DefaultTextType::getThisIdentifier());
+    mapValue.setTargetTypeExp(babelwires::DefaultTextType::getThisIdentifier());
 
-    const babelwires::TypePtr& textType = environment.m_typeSystem.getRegisteredType<babelwires::TextType>();
+    const babelwires::TypePtr& defaultTextType = environment.m_typeSystem.getRegisteredType<babelwires::DefaultTextType>();
     
-    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *textType,
-                                              *textType);
+    babelwires::OneToOneMapEntryData oneToOne(environment.m_typeSystem, *defaultTextType,
+                                              *defaultTextType);
 
-    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *textType);
+    babelwires::AllToOneFallbackMapEntryData allToOne(environment.m_typeSystem, *defaultTextType);
     mapValue.emplaceBack(oneToOne.clone());
     mapValue.emplaceBack(allToOne.clone());
     mapProject.setMapValue(mapValue);

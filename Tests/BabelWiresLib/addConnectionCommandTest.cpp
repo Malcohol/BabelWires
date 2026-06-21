@@ -179,7 +179,7 @@ namespace {
 
         const babelwires::TypeExp& typeAssignment0 = genericType->getTypeAssignment(nestedGenericNodeTree->getValue(), 0);
         if (varInstantiated) {
-            EXPECT_EQ(typeAssignment0, babelwires::TextType::getThisIdentifier());
+            EXPECT_EQ(typeAssignment0, babelwires::DefaultTextType::getThisIdentifier());
         } else {
             EXPECT_EQ(typeAssignment0, babelwires::TypeExp());
         }

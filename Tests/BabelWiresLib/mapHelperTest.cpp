@@ -76,7 +76,7 @@ namespace {
         babelwires::TextValue targetValue3;
         targetValue3.set(u8"zzz");
 
-        return setUpTestMapValue(typeSystem, babelwires::TextType::getThisIdentifier(), babelwires::TextType::getThisIdentifier(),
+        return setUpTestMapValue(typeSystem, babelwires::DefaultTextType::getThisIdentifier(), babelwires::DefaultTextType::getThisIdentifier(),
                                  sourceValue1, sourceValue2, targetValue1, targetValue2, targetValue3,
                                  allToOneFallback);
     }
@@ -120,7 +120,7 @@ namespace {
         babelwires::EnumValue targetValue3;
         targetValue3.set("Erm");
 
-        return setUpTestMapValue(typeSystem, babelwires::TextType::getThisIdentifier(), testDomain::TestEnum::getThisIdentifier(),
+        return setUpTestMapValue(typeSystem, babelwires::DefaultTextType::getThisIdentifier(), testDomain::TestEnum::getThisIdentifier(),
                                  sourceValue1, sourceValue2, targetValue1, targetValue2, targetValue3, true);
     }
 
@@ -149,7 +149,7 @@ namespace {
 TEST(MapHelperTest, unorderedMapApplicator_allToOneFallback) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addType<babelwires::TextType>();
+    typeSystem.addType<babelwires::DefaultTextType>();
 
     babelwires::MapValue mapValue = setUpTestTypeMapValue(typeSystem, mapValue, true);
 
@@ -165,7 +165,7 @@ TEST(MapHelperTest, unorderedMapApplicator_allToOneFallback) {
 TEST(MapHelperTest, unorderedMapApplicator_allToSameFallback) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addType<babelwires::TextType>();
+    typeSystem.addType<babelwires::DefaultTextType>();
 
     babelwires::MapValue mapValue = setUpTestTypeMapValue(typeSystem, mapValue, false);
 
@@ -181,7 +181,7 @@ TEST(MapHelperTest, unorderedMapApplicator_allToSameFallback) {
 TEST(MapHelperTest, unorderedMapApplicator_differentTypes) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
-    typeSystem.addType<babelwires::TextType>();
+    typeSystem.addType<babelwires::DefaultTextType>();
     typeSystem.addType<testDomain::TestEnum>();
 
     const auto& testEnum = typeSystem.getRegisteredType<testDomain::TestEnum>();

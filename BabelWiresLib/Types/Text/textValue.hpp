@@ -23,7 +23,7 @@ namespace babelwires {
         TextValue();
         TextValue(Text value);
 
-        Text get() const;
+        const Text& get() const;
         void set(Text value);
 
         void serializeContents(Serializer& serializer) const override;
