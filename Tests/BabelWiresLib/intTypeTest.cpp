@@ -158,3 +158,33 @@ TEST(IntTypeTest, typeName) {
 
     EXPECT_EQ(intTypeExp.toString(), "Integer{-12..14}");
 }
+
+TEST(IntTypeTest, subtype) {
+    testUtils::TestEnvironment testEnvironment;
+
+    const babelwires::TypePtr intTypeA =
+        babelwires::IntTypeConstructor::makeTypeExp(-5, 5, 0).assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr intTypeB =
+        babelwires::IntTypeConstructor::makeTypeExp(-10, 10, 0).assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr intTypeC =
+        babelwires::IntTypeConstructor::makeTypeExp(0, 10, 0).assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr intTypeD =
+        babelwires::IntTypeConstructor::makeTypeExp(20, 30, 20).assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr defaultIntType =
+        testEnvironment.m_typeSystem.tryGetRegisteredTypeById(babelwires::DefaultIntType::getThisIdentifier());
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*intTypeA, *intTypeA), babelwires::SubtypeOrder::IsEquivalent);
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*intTypeA, *intTypeB), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*intTypeB, *intTypeA), babelwires::SubtypeOrder::IsSupertype);
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*intTypeA, *intTypeC), babelwires::SubtypeOrder::IsIntersecting);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*intTypeC, *intTypeA), babelwires::SubtypeOrder::IsIntersecting);
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*intTypeA, *intTypeD), babelwires::SubtypeOrder::IsDisjoint);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*intTypeD, *intTypeA), babelwires::SubtypeOrder::IsDisjoint);
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*intTypeA, *defaultIntType), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*defaultIntType, *intTypeA), babelwires::SubtypeOrder::IsSupertype);
+}
+
