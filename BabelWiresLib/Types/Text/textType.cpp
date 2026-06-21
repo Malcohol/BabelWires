@@ -34,7 +34,13 @@ std::string babelwires::TextType::getFlavour() const {
 std::optional<babelwires::SubtypeOrder> babelwires::TextType::compareSubtypeHelper(const TypeSystem& typeSystem,
                                                                                    const Type& other) const {
     if (other.tryAs<TextType>()) {
-        return SubtypeOrder::IsEquivalent;
+        if (m_maxLength < other.tryAs<TextType>()->m_maxLength) {
+            return SubtypeOrder::IsSubtype;
+        } else if (m_maxLength > other.tryAs<TextType>()->m_maxLength) {
+            return SubtypeOrder::IsSupertype;
+        } else {
+            return SubtypeOrder::IsEquivalent;
+        }
     } else {
         return {};
     }

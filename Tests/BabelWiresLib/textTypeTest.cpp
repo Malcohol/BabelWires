@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include <BabelWiresLib/Types/Int/intType.hpp>
-#include <BabelWiresLib/Types/Rational/rationalValue.hpp>
 #include <BabelWiresLib/Types/Text/textType.hpp>
 #include <BabelWiresLib/Types/Text/textTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Text/textValue.hpp>
@@ -31,7 +30,6 @@ TEST(TextTypeTest, defaultTextTypeIsValidValue) {
     EXPECT_TRUE(defaultTextType.isValidValue(typeSystem, value));
 
     EXPECT_FALSE(defaultTextType.isValidValue(typeSystem, babelwires::IntValue(5)));
-    EXPECT_FALSE(defaultTextType.isValidValue(typeSystem, babelwires::RationalValue(3)));
 }
 
 TEST(TextTypeTest, constructedTextType) {
@@ -45,10 +43,14 @@ TEST(TextTypeTest, constructedTextType) {
     EXPECT_EQ(type->tryAs<babelwires::TextType>()->getMaxLength(), 5);
 
     EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::TextValue()));
+    EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::TextValue(u8"")));
+    EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::TextValue(u8"H")));
+    EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::TextValue(u8"He")));
+    EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::TextValue(u8"Hel")));
+    EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::TextValue(u8"Hell")));
     EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::TextValue(u8"Hello")));
     EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::TextValue(u8"Hello!")));
     EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::IntValue(5)));
-    EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::RationalValue(3)));
 }
 
 TEST(TextTypeTest, makeTypeExp) {
@@ -89,4 +91,22 @@ TEST(TextTypeTest, typeName) {
     babelwires::TypeExp textTypeExp(babelwires::TextTypeConstructor::getThisIdentifier(), babelwires::IntValue(18));
 
     EXPECT_EQ(textTypeExp.toString(), "Text[18]");
+}
+
+TEST(TextTypeTest, subtype) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeExp textTypeExp5(babelwires::TextTypeConstructor::getThisIdentifier(), babelwires::IntValue(5));
+    babelwires::TypeExp textTypeExp10(babelwires::TextTypeConstructor::getThisIdentifier(), babelwires::IntValue(10));
+
+    const babelwires::TypePtr textType5 = textTypeExp5.assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr textType10 = textTypeExp10.assertResolve(testEnvironment.m_typeSystem);
+    const babelwires::TypePtr defaultTextType = testEnvironment.m_typeSystem.tryGetRegisteredTypeById(babelwires::DefaultTextType::getThisIdentifier());
+
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*textType5, *textType5), babelwires::SubtypeOrder::IsEquivalent);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*textType5, *textType10), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*textType10, *textType5), babelwires::SubtypeOrder::IsSupertype);
+    
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*textType5, *defaultTextType), babelwires::SubtypeOrder::IsSubtype);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*defaultTextType, *textType5), babelwires::SubtypeOrder::IsSupertype);
 }
