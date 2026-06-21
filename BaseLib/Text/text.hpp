@@ -32,7 +32,7 @@ namespace babelwires {
         Text(const char8_t (&data)[N])
             : Text(std::u8string(data, N - 1)) {}
 
-        /// Return the number of textual characters (i.e. unicode codepoints) in the text
+        /// Return the number of textual characters (i.e. unicode code points) in the text
         std::size_t getTextLength() const { return m_textLength; }
 
         Text& operator=(const Text&) = default;

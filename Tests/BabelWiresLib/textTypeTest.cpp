@@ -3,11 +3,12 @@
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
 #include <BabelWiresLib/Types/Text/textType.hpp>
+#include <BabelWiresLib/Types/Text/textTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Text/textValue.hpp>
 
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
-TEST(TextTypeTest, textTypeCreateValue) {
+TEST(TextTypeTest, defaultTextTypeCreateValue) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     babelwires::DefaultTextType defaultTextType;
@@ -20,7 +21,7 @@ TEST(TextTypeTest, textTypeCreateValue) {
     EXPECT_EQ(newStringValue->get(), babelwires::Text());
 }
 
-TEST(TextTypeTest, textTypeIsValidValue) {
+TEST(TextTypeTest, defaultTextTypeIsValidValue) {
     testUtils::TestLog log;
     babelwires::TypeSystem typeSystem;
     babelwires::DefaultTextType defaultTextType;
@@ -33,6 +34,34 @@ TEST(TextTypeTest, textTypeIsValidValue) {
     EXPECT_FALSE(defaultTextType.isValidValue(typeSystem, babelwires::RationalValue(3)));
 }
 
+TEST(TextTypeTest, constructedTextType) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeExp textTypeExp(babelwires::TextTypeConstructor::getThisIdentifier(), babelwires::IntValue(5));
+
+    babelwires::TypePtr type = textTypeExp.tryResolve(testEnvironment.m_typeSystem);
+
+    EXPECT_NE(type->tryAs<babelwires::TextType>(), nullptr);
+    EXPECT_EQ(type->tryAs<babelwires::TextType>()->getMaxLength(), 5);
+
+    EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::TextValue()));
+    EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::TextValue(u8"Hello")));
+    EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::TextValue(u8"Hello!")));
+    EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::IntValue(5)));
+    EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::RationalValue(3)));
+}
+
+TEST(TextTypeTest, makeTypeExp) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeExp textTypeExp = babelwires::TextTypeConstructor::makeTypeExp(5);
+
+    babelwires::TypePtr type = textTypeExp.tryResolve(testEnvironment.m_typeSystem);
+
+    EXPECT_NE(type->tryAs<babelwires::TextType>(), nullptr);
+    EXPECT_EQ(type->tryAs<babelwires::TextType>()->getMaxLength(), 5);
+}
+
 TEST(TextTypeTest, textTypeGetKind) {
     testUtils::TestLog log;
     babelwires::DefaultTextType defaultTextType;
@@ -40,11 +69,24 @@ TEST(TextTypeTest, textTypeGetKind) {
     EXPECT_FALSE(defaultTextType.getFlavour().empty());
 }
 
-TEST(TextTypeTest, textTypeIsRegistered) {
+TEST(TextTypeTest, textTypeAndConstructorAreRegistered) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::TypePtr foundType =
         testEnvironment.m_typeSystem.tryGetRegisteredTypeById(babelwires::DefaultTextType::getThisIdentifier());
     EXPECT_TRUE(foundType);
     EXPECT_NE(foundType->tryAs<babelwires::DefaultTextType>(), nullptr);
+
+    const babelwires::TypeConstructor* foundConstructor =
+        testEnvironment.m_typeSystem.tryGetTypeConstructorById(babelwires::TextTypeConstructor::getThisIdentifier());
+    EXPECT_TRUE(foundConstructor);
+    EXPECT_NE(foundConstructor->tryAs<babelwires::TextTypeConstructor>(), nullptr);
+}
+
+TEST(TextTypeTest, typeName) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeExp textTypeExp(babelwires::TextTypeConstructor::getThisIdentifier(), babelwires::IntValue(18));
+
+    EXPECT_EQ(textTypeExp.toString(), "Text[18]");
 }

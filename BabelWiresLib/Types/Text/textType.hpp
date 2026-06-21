@@ -17,7 +17,13 @@ namespace babelwires {
       public:
         DOWNCASTABLE(TextType, Type);
         
-        TextType(TypeExp&& typeExpOfThis, size_t maxLength = s_maxPossibleLength);
+        /// The length value to use when no limit is intended.
+        static constexpr std::size_t s_maxPossibleLength = std::numeric_limits<std::size_t>::max();
+
+        /// Construct a TextType with a maximum length (i.e. the maximum allowed number of unicode code points in the text).
+        TextType(TypeExp&& typeExpOfThis, std::size_t maxLength);
+
+        std::size_t getMaxLength() const { return m_maxLength; }
 
         NewValueHolder createValue(const TypeSystem& typeSystem) const override;
 
@@ -30,10 +36,7 @@ namespace babelwires {
         std::string valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const override;
 
       private:
-        /// The length value used when no length limit is specified.
-        static constexpr std::size_t s_maxPossibleLength = std::numeric_limits<std::size_t>::max();
-
-        /// The maximum length of the text.
+        /// The maximum length of the text in unicode code points.
         std::size_t m_maxLength = s_maxPossibleLength;
     };
 

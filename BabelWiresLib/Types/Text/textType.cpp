@@ -45,4 +45,4 @@ std::string babelwires::TextType::valueToString(const TypeSystem& typeSystem, co
 }
 
 babelwires::DefaultTextType::DefaultTextType()
-    : TextType(getThisIdentifier()) {}
+    : TextType(getThisIdentifier(), TextType::s_maxPossibleLength) {}
