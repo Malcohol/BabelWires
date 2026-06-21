@@ -13,12 +13,12 @@
 
 namespace babelwires {
     /// Specialized instance handling for TextType.
-    template <typename VALUE_TREE_NODE, typename STRING_TYPE>
-        requires std::is_base_of_v<TextType, STRING_TYPE>
-    class InstanceImpl<VALUE_TREE_NODE, STRING_TYPE> : public InstanceCommonBase<VALUE_TREE_NODE, STRING_TYPE> {
+    template <typename VALUE_TREE_NODE, typename TEXT_TYPE>
+        requires std::is_base_of_v<TextType, TEXT_TYPE>
+    class InstanceImpl<VALUE_TREE_NODE, TEXT_TYPE> : public InstanceCommonBase<VALUE_TREE_NODE, TEXT_TYPE> {
       public:
         InstanceImpl(VALUE_TREE_NODE& valueFeature)
-            : InstanceCommonBase<VALUE_TREE_NODE, STRING_TYPE>(valueFeature) {}
+            : InstanceCommonBase<VALUE_TREE_NODE, TEXT_TYPE>(valueFeature) {}
 
         Text get() const {
             const TextValue& textValue = this->m_valueTreeNode.getValue()->template as<TextValue>();
