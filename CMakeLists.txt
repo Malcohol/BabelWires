@@ -12,6 +12,7 @@ include(CTest)
 
 # MSVC's legacy preprocessor has bugs with variadic macros.
 if(MSVC)
+    # TODO: Possible concern about compiling third-party libraries with these settings.
     add_compile_options(/Zc:preprocessor /utf-8)
 endif()
 

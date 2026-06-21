@@ -29,7 +29,7 @@
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Types/RecordWithVariants/recordWithVariantsType.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleType.hpp>
 
 void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModelRegistry, const TypeSystem& typeSystem,
@@ -48,7 +48,7 @@ void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModel
     } else if (type->tryAs<RationalType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::RationalValueModel));
         new (m_valueModel) babelwires::RationalValueModel();
-    } else if (type->tryAs<StringType>()) {
+    } else if (type->tryAs<TextType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::StringValueModel));
         new (m_valueModel) babelwires::StringValueModel();
     } else if (type->tryAs<MapType>() || type->tryAs<SumOfMapsType>()) {

@@ -7,7 +7,7 @@
  **/
 #include <Domains/TestDomain/testRecordTypeHierarchy.hpp>
 
-#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>
 
@@ -45,7 +45,7 @@ testDomain::RecordAB::RecordAB(const babelwires::TypeSystem& typeSystem)
     : RecordType(getThisIdentifier(), typeSystem, {{getIdForA(), TestSubEnum::getThisIdentifier()}, {getIdForB(), TestSubEnum::getThisIdentifier()}}) {}
 
 testDomain::RecordAS::RecordAS(const babelwires::TypeSystem& typeSystem)
-    : RecordType(getThisIdentifier(), typeSystem, {{getIdForA(), babelwires::StringType::getThisIdentifier()}}) {}
+    : RecordType(getThisIdentifier(), typeSystem, {{getIdForA(), babelwires::DefaultTextType::getThisIdentifier()}}) {}
 
 testDomain::RecordAOpt::RecordAOpt(const babelwires::TypeSystem& typeSystem)
     : RecordType(getThisIdentifier(), 
@@ -68,7 +68,7 @@ testDomain::RecordABOpt::RecordABOpt(const babelwires::TypeSystem& typeSystem)
 
 testDomain::RecordAOptS::RecordAOptS(const babelwires::TypeSystem& typeSystem)
     : RecordType(getThisIdentifier(), typeSystem, {{getIdForA(), TestSubEnum::getThisIdentifier()},
-                  {getIdForOpt(), babelwires::StringType::getThisIdentifier(),
+                  {getIdForOpt(), babelwires::DefaultTextType::getThisIdentifier(),
                    babelwires::RecordType::Optionality::optionalDefaultInactive}}) {}
 
 testDomain::RecordABOptChild::RecordABOptChild(const babelwires::TypeSystem& typeSystem)

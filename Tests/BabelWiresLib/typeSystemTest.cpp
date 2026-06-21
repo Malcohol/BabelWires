@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/Text/textValue.hpp>
 #include <BabelWiresLib/TypeSystem/typeSystemCommon.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>
@@ -49,8 +49,8 @@ TEST(TypeSystemTest, isSubTypesPrimitives) {
 TEST(TypeSystemTest, compareSubtype) {
     testUtils::TestEnvironment testEnvironment;
 
-    const babelwires::TypeExp testType4Exp(testUtils::TestMixedTypeConstructor::getThisIdentifier(), babelwires::TypeConstructorArguments{{testUtils::TestType::getThisIdentifier()}, {babelwires::StringValue("xxxx")}});
-    const babelwires::TypeExp testType6Exp(testUtils::TestMixedTypeConstructor::getThisIdentifier(), babelwires::TypeConstructorArguments{{testUtils::TestType::getThisIdentifier()}, {babelwires::StringValue("xxxxxx")}});
+    const babelwires::TypeExp testType4Exp(testUtils::TestMixedTypeConstructor::getThisIdentifier(), babelwires::TypeConstructorArguments{{testUtils::TestType::getThisIdentifier()}, {babelwires::TextValue(u8"xxxx")}});
+    const babelwires::TypeExp testType6Exp(testUtils::TestMixedTypeConstructor::getThisIdentifier(), babelwires::TypeConstructorArguments{{testUtils::TestType::getThisIdentifier()}, {babelwires::TextValue(u8"xxxxxx")}});
     
     const babelwires::TypePtr testType4 = testType4Exp.assertResolve(testEnvironment.m_typeSystem);
     const babelwires::TypePtr testType6 = testType6Exp.assertResolve(testEnvironment.m_typeSystem);

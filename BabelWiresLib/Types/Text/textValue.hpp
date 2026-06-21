@@ -1,5 +1,5 @@
 /**
- * Holds a single string.
+ * Holds a single text value.
  *
  * (C) 2021 Malcolm Tyrrell
  *
@@ -10,19 +10,21 @@
 #include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
 
+#include <BaseLib/Text/text.hpp>
+
 namespace babelwires {
 
-    class BABELWIRESLIB_API StringValue : public AlwaysEditableValue {
+    class BABELWIRESLIB_API TextValue : public AlwaysEditableValue {
       public:
-        DOWNCASTABLE(StringValue, AlwaysEditableValue);
-        CLONEABLE(StringValue);
-        SERIALIZABLE(StringValue, "string", EditableValue, 1);
+        DOWNCASTABLE(TextValue, AlwaysEditableValue);
+        CLONEABLE(TextValue);
+        SERIALIZABLE(TextValue, "text", EditableValue, 1);
 
-        StringValue();
-        StringValue(std::string value);
+        TextValue();
+        TextValue(Text value);
 
-        std::string get() const;
-        void set(std::string value);
+        const Text& get() const;
+        void set(Text value);
 
         void serializeContents(Serializer& serializer) const override;
         Result deserializeContents(Deserializer& deserializer) override;
@@ -35,7 +37,7 @@ namespace babelwires {
         std::string toString() const override;
 
       private:
-        std::string m_value;
+        Text m_value;
     };
 
 } // namespace babelwires

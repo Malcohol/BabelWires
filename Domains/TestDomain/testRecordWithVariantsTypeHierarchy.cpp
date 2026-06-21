@@ -48,7 +48,7 @@ testDomain::RecordVAB::RecordVAB(const babelwires::TypeSystem& typeSystem)
                                                       {getIdForB(), babelwires::DefaultIntType::getThisIdentifier()}}) {}
 
 testDomain::RecordVAS::RecordVAS(const babelwires::TypeSystem& typeSystem)
-    : RecordWithVariantsType(getThisIdentifier(), typeSystem, {getIdForDefaultTag()}, {{getIdForA(), babelwires::StringType::getThisIdentifier()}}) {}
+    : RecordWithVariantsType(getThisIdentifier(), typeSystem, {getIdForDefaultTag()}, {{getIdForA(), babelwires::DefaultTextType::getThisIdentifier()}}) {}
 
 testDomain::RecordVAV0::RecordVAV0(const babelwires::TypeSystem& typeSystem)
     : RecordWithVariantsType(getThisIdentifier(), typeSystem, {getIdForDefaultTag(), getIdForTag0()},

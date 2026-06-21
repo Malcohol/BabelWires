@@ -32,7 +32,7 @@ namespace {
 
     std::unique_ptr<testUtils::LocalTestModifier> createStringModifier(babelwires::Path path,
                                                                        babelwires::Node* owner = nullptr) {
-        auto data = std::make_unique<babelwires::ValueAssignmentData>(babelwires::StringValue("Hello"));
+        auto data = std::make_unique<babelwires::ValueAssignmentData>(babelwires::TextValue(u8"Hello"));
         data->m_targetPath = std::move(path);
         auto modPtr = std::make_unique<testUtils::LocalTestModifier>(std::move(data));
         modPtr->setOwner(owner);
@@ -824,14 +824,14 @@ TEST(ContentsCacheTest, unassignedTypeVariables_noAssignments) {
             {
                 babelwires::SetTypeVariableModifierData data;
                 data.m_typeAssignments.resize(2);
-                data.m_typeAssignments[0] = tAssigned ? babelwires::StringType::getThisIdentifier() : babelwires::TypeExp();
-                data.m_typeAssignments[1] = uAssigned ? babelwires::StringType::getThisIdentifier() : babelwires::TypeExp();
+                data.m_typeAssignments[0] = tAssigned ? babelwires::DefaultTextType::getThisIdentifier() : babelwires::TypeExp();
+                data.m_typeAssignments[1] = uAssigned ? babelwires::DefaultTextType::getThisIdentifier() : babelwires::TypeExp();
                 data.apply(&valueTree);
 
                 babelwires::SetTypeVariableModifierData nestedData;
                 nestedData.m_typeAssignments.resize(1);
                 nestedData.m_typeAssignments[0] =
-                    nestedTAssigned ? babelwires::StringType::getThisIdentifier() : babelwires::TypeExp();
+                    nestedTAssigned ? babelwires::DefaultTextType::getThisIdentifier() : babelwires::TypeExp();
                 nestedData.apply(&nestedGenericTypeNode);
             }
 

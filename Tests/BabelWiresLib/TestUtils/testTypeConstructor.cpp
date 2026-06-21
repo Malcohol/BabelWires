@@ -1,6 +1,6 @@
 #include <Tests/BabelWiresLib/TestUtils/testTypeConstructor.hpp>
 
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/Text/textValue.hpp>
 
 #include <BaseLib/Result/error.hpp>
 
@@ -38,12 +38,13 @@ babelwires::ResultT<babelwires::TypePtr> testUtils::TestMixedTypeConstructor::co
     assert(arguments.getValueArguments().size() == 1);
 
     const TestType* const testType = resolvedTypeArguments[0]->tryAs<TestType>();
-    const babelwires::StringValue* const stringValue = arguments.getValueArguments()[0]->tryAs<babelwires::StringValue>();
+    const babelwires::TextValue* const textValue = arguments.getValueArguments()[0]->tryAs<babelwires::TextValue>();
 
     assert(testType != nullptr);
-    assert(stringValue != nullptr);
-
+    assert(textValue != nullptr);
+    babelwires::Text stringValueText = textValue->get();
+    
     // Remember the typeExp, since there's no way to reconstruct it.
-    return babelwires::makeType<TestType>(std::move(newTypeExp), testType->m_maximumLength + stringValue->get().size(),
-                                          testType->m_defaultValue + stringValue->get());
+    return babelwires::makeType<TestType>(std::move(newTypeExp), testType->m_maximumLength + stringValueText.getData().size(),
+                                          testType->m_defaultValue.getData() + stringValueText.getData());
 }

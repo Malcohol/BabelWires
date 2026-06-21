@@ -70,12 +70,12 @@ SET( LIB_TESTS_SRCS
     setTypeVariableCommandTest.cpp
     setTypeVariableModifierDataTest.cpp
     sourceFileNodeTest.cpp
-    stringTypeTest.cpp
-    stringValueTest.cpp
     subtypeUtilsTest.cpp
     sumOfMapsTypeTest.cpp
     sumTypeTest.cpp
     targetFileNodeTest.cpp
+    textTypeTest.cpp
+    textValueTest.cpp
     tupleTypeTest.cpp
     typeExpTest.cpp
     typeSystemTest.cpp

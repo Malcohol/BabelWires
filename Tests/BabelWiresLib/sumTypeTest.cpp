@@ -5,7 +5,7 @@
 #include <BabelWiresLib/Types/Int/intValue.hpp>
 #include <BabelWiresLib/Types/Rational/rationalType.hpp>
 #include <BabelWiresLib/Types/Rational/rationalValue.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
 #include <BabelWiresLib/Types/Sum/sumType.hpp>
 #include <BabelWiresLib/Types/Sum/sumTypeConstructor.hpp>
 
@@ -138,14 +138,14 @@ TEST(SumTypeTest, compareSubtype) {
     const babelwires::TypePtr sumType = testEnvironment.m_typeSystem.getRegisteredType<testDomain::TestSumType>();
     const babelwires::TypePtr intType = testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultIntType>();
     const babelwires::TypePtr ratType = testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultRationalType>();
-    const babelwires::TypePtr stringType = testEnvironment.m_typeSystem.getRegisteredType<babelwires::StringType>();
+    const babelwires::TypePtr defaultTextType = testEnvironment.m_typeSystem.getRegisteredType<babelwires::DefaultTextType>();
 
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*intType, *sumType), babelwires::SubtypeOrder::IsSubtype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*sumType, *intType), babelwires::SubtypeOrder::IsSupertype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*ratType, *sumType), babelwires::SubtypeOrder::IsSubtype);
     EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*sumType, *ratType), babelwires::SubtypeOrder::IsSupertype);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*stringType, *sumType), babelwires::SubtypeOrder::IsDisjoint);
-    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*sumType, *stringType), babelwires::SubtypeOrder::IsDisjoint);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*defaultTextType, *sumType), babelwires::SubtypeOrder::IsDisjoint);
+    EXPECT_EQ(testEnvironment.m_typeSystem.compareSubtype(*sumType, *defaultTextType), babelwires::SubtypeOrder::IsDisjoint);
 }
 
 namespace {
@@ -210,7 +210,7 @@ TEST(SumTypeTest, compareSubtype2) {
     const babelwires::TypeExp ZwExp = babelwires::IntTypeConstructor::makeTypeExp(0, 16);
     const babelwires::TypeExp QnExp = babelwires::RationalTypeConstructor::makeTypeExp(0, 4);
     const babelwires::TypeExp QwExp = babelwires::RationalTypeConstructor::makeTypeExp(0, 16);
-    const babelwires::TypeExp SExp = babelwires::StringType::getThisIdentifier();
+    const babelwires::TypeExp SExp = babelwires::DefaultTextType::getThisIdentifier();
     const babelwires::TypeExp ZdExp = babelwires::IntTypeConstructor::makeTypeExp(8, 16, 8);
 
     const babelwires::TypeExp ZnQnExp = babelwires::SumTypeConstructor::makeTypeExp({ZnExp, QnExp});
@@ -258,7 +258,7 @@ TEST(SumTypeTest, subTypeAssociativity) {
 
     const babelwires::TypeExp Z = babelwires::DefaultIntType::getThisIdentifier();
     const babelwires::TypeExp Q = babelwires::DefaultRationalType::getThisIdentifier();
-    const babelwires::TypeExp S = babelwires::StringType::getThisIdentifier();
+    const babelwires::TypeExp S = babelwires::DefaultTextType::getThisIdentifier();
 
     const babelwires::TypeExp ZQ_S =
         babelwires::SumTypeConstructor::makeTypeExp({babelwires::SumTypeConstructor::makeTypeExp({Z, Q}), S});

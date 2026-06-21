@@ -30,7 +30,7 @@ namespace testUtils {
                       const std::vector<babelwires::TypePtr>& resolvedTypeArguments) const override;
     };
 
-    /// Takes a TestType and a StringValue and constructs a new TestType with the value concatenated onto its default.
+    /// Takes a TestType and a TextValue and constructs a new TestType with the value concatenated onto its default.
     class TestMixedTypeConstructor : public babelwires::TypeConstructor {
       public:
         TYPE_CONSTRUCTOR_WITH_REGISTERED_ID(getTestRegisteredMediumIdentifier("Mixed"), 1);

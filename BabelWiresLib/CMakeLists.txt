@@ -128,8 +128,9 @@ SET( BABELWIRESLIB_SRCS
 	Types/Rational/rationalTypeConstructor.cpp
 	Types/Sum/sumType.cpp
 	Types/Sum/sumTypeConstructor.cpp
-	Types/String/stringType.cpp
-	Types/String/stringValue.cpp
+	Types/Text/textType.cpp
+	Types/Text/textTypeConstructor.cpp
+	Types/Text/textValue.cpp
 	Instance/instanceUtils.cpp
 	TypeSystem/compoundType.cpp
 	TypeSystem/Detail/typeNameFormatter.cpp

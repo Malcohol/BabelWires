@@ -3,7 +3,7 @@
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableType.hpp>
 #include <BabelWiresLib/Project/Nodes/ValueNode/valueNodeData.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
 #include <BabelWiresLib/Project/Commands/addConnectionCommand.hpp>
 #include <BabelWiresLib/Project/Nodes/node.hpp>
 #include <BabelWiresLib/ValueTree/valueTreeNode.hpp>
@@ -179,7 +179,7 @@ namespace {
 
         const babelwires::TypeExp& typeAssignment0 = genericType->getTypeAssignment(nestedGenericNodeTree->getValue(), 0);
         if (varInstantiated) {
-            EXPECT_EQ(typeAssignment0, babelwires::StringType::getThisIdentifier());
+            EXPECT_EQ(typeAssignment0, babelwires::DefaultTextType::getThisIdentifier());
         } else {
             EXPECT_EQ(typeAssignment0, babelwires::TypeExp());
         }

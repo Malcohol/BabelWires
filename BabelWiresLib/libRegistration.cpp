@@ -48,8 +48,9 @@
 #include <BabelWiresLib/Types/Record/fieldIdValue.hpp>
 #include <BabelWiresLib/Types/Record/recordType.hpp>
 #include <BabelWiresLib/Types/Record/recordTypeConstructor.hpp>
-#include <BabelWiresLib/Types/String/stringType.hpp>
-#include <BabelWiresLib/Types/String/stringValue.hpp>
+#include <BabelWiresLib/Types/Text/textType.hpp>
+#include <BabelWiresLib/Types/Text/textTypeConstructor.hpp>
+#include <BabelWiresLib/Types/Text/textValue.hpp>
 #include <BabelWiresLib/Types/Sum/sumTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Tuple/tupleValue.hpp>
@@ -63,7 +64,7 @@ void babelwires::registerLib(babelwires::Context& context) {
     TypeSystem& typeSystem = context.get<TypeSystem>();
     typeSystem.addType<DefaultIntType>();
     typeSystem.addType<NonNegativeIntType>();
-    typeSystem.addType<StringType>();
+    typeSystem.addType<DefaultTextType>();
     typeSystem.addType<DefaultRationalType>();
     typeSystem.addType<MapEntryFallbackKind>();
     typeSystem.addType<FailureType>(typeSystem);
@@ -71,6 +72,7 @@ void babelwires::registerLib(babelwires::Context& context) {
     typeSystem.addTypeConstructor<EnumUnionTypeConstructor>();
     typeSystem.addTypeConstructor<IntTypeConstructor>();
     typeSystem.addTypeConstructor<RationalTypeConstructor>();
+    typeSystem.addTypeConstructor<TextTypeConstructor>();
     typeSystem.addTypeConstructor<SumTypeConstructor>();
     typeSystem.addTypeConstructor<MapTypeConstructor>();
     typeSystem.addTypeConstructor<ArrayTypeConstructor>();
@@ -97,7 +99,7 @@ void babelwires::registerLib(babelwires::Context& context) {
     deserializationRegistry.registerClass<SelectRecordVariantModifierData>();
     deserializationRegistry.registerClass<SetTypeVariableModifierData>();
     deserializationRegistry.registerClass<IntValue>();
-    deserializationRegistry.registerClass<StringValue>();
+    deserializationRegistry.registerClass<TextValue>();
     deserializationRegistry.registerClass<RationalValue>();
     deserializationRegistry.registerClass<EnumValue>();
     deserializationRegistry.registerClass<TupleValue>();

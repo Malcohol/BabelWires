@@ -53,11 +53,11 @@ Model
 * Consider a coercion system so numeric types can always be assigned.
 * Bool and float types
 * RationalType granularity
-* StringType length
 
 Domains:
 * standard numeric library
-* standard string library
+* standard text library
+  - Review decision to use UTF-8 as the canonical representation
 
 Refactor:
 * getChildNonConst should take a Value& not a ValueHolder&
