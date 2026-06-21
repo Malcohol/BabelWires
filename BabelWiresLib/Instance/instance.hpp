@@ -23,6 +23,6 @@
 #include <BabelWiresLib/Instance/intTypeInstance.hpp>
 #include <BabelWiresLib/Instance/mapTypeInstance.hpp>
 #include <BabelWiresLib/Instance/rationalTypeInstance.hpp>
-#include <BabelWiresLib/Instance/stringTypeInstance.hpp>
+#include <BabelWiresLib/Instance/textTypeInstance.hpp>
 #include <BabelWiresLib/Instance/recordWithVariantsTypeInstance.hpp>
 // clang-format on
