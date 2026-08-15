@@ -46,11 +46,22 @@ Other:
 * Files headers alone use `/** */` style comments.
 * The `/* */` style should never be used for regular commenting. It is reserved for easily commenting out blocks of code when iterating.
 
+## Assertions
+
+* Asserts are used liberally throughout the codebase to catch programming errors in debug builds.
+* They are not intended as a form of runtime safety mechanism for end-user scenarios.
+* No code need be written to account for runtime behaviour after an assertion fails.
+* In release builds, the compiler can assume that the assertion holds and optimize accordingly. Therefore, assertion should _never_ be used in safety-critical scenarios where fail-safe code is present.
+
 ## Error-handling
 
-* Code that can fail should use the `Result` type defined in `BaseLib/Result/result.hpp`. 
+* Methods and functions that can fail should use the `Result` or `ResultT` types defined in `BaseLib/Result/result.hpp`. 
   - Code that needs to generate or manipulate errors should use the macros in `BaseLib/Result/resultDSL.hpp`.
 * Exceptions or calls to `std::abort` (or similar) are not allowed.
+* For caller convenience, we sometimes provide three versions of methods that can fail, with the following naming convention:
+  - `foo` returns a `ResultT<T>`.
+  - `assertFoo` returns a `T` and asserts if it fails.
+  - `tryFoo` does a best effort and always returns a `T`, but not necessarily the one intended. Ideally the result can be identified as a failing value (e.g. a null pointer). Note: it is not always possible to provide a meaningful `tryFoo` method.
 
 ## Logging
 
