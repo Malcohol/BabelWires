@@ -17,6 +17,136 @@ TEST(FixedTypeTest, defaultTypeCreateValue) {
     EXPECT_EQ(fixedValue->get(), babelwires::Fixed(0, babelwires::FixedType::s_defaultPrecision));
 }
 
+TEST(FixedTypeTest, defaultTypeGetRange) {
+    babelwires::DefaultFixedType type;
+
+    auto range = type.getRange();
+
+    EXPECT_EQ(range.m_min, std::numeric_limits<babelwires::Fixed::NativeType>::min());
+    EXPECT_EQ(range.m_max, std::numeric_limits<babelwires::Fixed::NativeType>::max());
+}
+
+TEST(FixedTypeTest, defaultTypeIsValidValue) {
+    testUtils::TestEnvironment testEnvironment;
+    babelwires::DefaultFixedType type;
+
+    EXPECT_TRUE(type.isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(1, 2))));
+    EXPECT_TRUE(type.isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(0, 2))));
+    EXPECT_TRUE(type.isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(std::numeric_limits<babelwires::Fixed::NativeType>::max(), 2))));
+    EXPECT_FALSE(type.isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(1, 3))));
+}
+
+TEST(FixedTypeTest, defaultTypeGetKind) {
+    babelwires::DefaultFixedType type;
+
+    EXPECT_FALSE(type.getFlavour().empty());
+}
+
+TEST(FixedTypeTest, defaultTypeIsRegistered) {
+    testUtils::TestEnvironment testEnvironment;
+
+    const babelwires::TypePtr foundType =
+        testEnvironment.m_typeSystem.tryGetRegisteredTypeById(babelwires::DefaultFixedType::getThisIdentifier());
+    EXPECT_TRUE(foundType);
+    EXPECT_NE(foundType->tryAs<babelwires::DefaultFixedType>(), nullptr);
+}
+
+TEST(FixedTypeTest, constructedTypeCreateValue) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeExp fixedTypeExp(babelwires::FixedTypeConstructor::getThisIdentifier(),
+                                     babelwires::TypeConstructorArguments{{}, {babelwires::IntValue(2),
+                                                                               babelwires::FixedValue(babelwires::Fixed(-1, 2)),
+                                                                               babelwires::FixedValue(babelwires::Fixed(2, 2)),
+                                                                               babelwires::FixedValue(babelwires::Fixed(1, 2))}});
+
+    babelwires::TypePtr type = fixedTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    ASSERT_TRUE(type);
+
+    babelwires::ValueHolder value = type->createValue(testEnvironment.m_typeSystem);
+    ASSERT_TRUE(value);
+
+    const auto* fixedValue = value->tryAs<babelwires::FixedValue>();
+    ASSERT_NE(fixedValue, nullptr);
+    EXPECT_EQ(fixedValue->get(), babelwires::Fixed(1, 2));
+}
+
+TEST(FixedTypeTest, constructedTypeRange) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeExp fixedTypeExp(babelwires::FixedTypeConstructor::getThisIdentifier(),
+                                     babelwires::TypeConstructorArguments{{}, {babelwires::IntValue(2),
+                                                                               babelwires::FixedValue(babelwires::Fixed(-1, 2)),
+                                                                               babelwires::FixedValue(babelwires::Fixed(2, 2)),
+                                                                               babelwires::FixedValue(babelwires::Fixed(1, 2))}});
+
+    babelwires::TypePtr type = fixedTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    const auto* fixedType = type->tryAs<babelwires::FixedType>();
+    ASSERT_NE(fixedType, nullptr);
+
+    auto range = fixedType->getRange();
+    EXPECT_EQ(range.m_min, -1);
+    EXPECT_EQ(range.m_max, 2);
+}
+
+TEST(FixedTypeTest, constructedTypeIsValidValue) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeExp fixedTypeExp(babelwires::FixedTypeConstructor::getThisIdentifier(),
+                                     babelwires::TypeConstructorArguments{{}, {babelwires::IntValue(2),
+                                                                               babelwires::FixedValue(babelwires::Fixed(-1, 2)),
+                                                                               babelwires::FixedValue(babelwires::Fixed(2, 2)),
+                                                                               babelwires::FixedValue(babelwires::Fixed(1, 2))}});
+
+    babelwires::TypePtr type = fixedTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    ASSERT_TRUE(type);
+
+    EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(-2, 2))));
+    EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(-1, 2))));
+    EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(1, 2))));
+    EXPECT_TRUE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(2, 2))));
+    EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(3, 2))));
+    EXPECT_FALSE(type->isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(1, 3))));
+}
+
+TEST(FixedTypeTest, makeTypeExp) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeExp fixedTypeExp = babelwires::FixedTypeConstructor::makeTypeExp(2, babelwires::Fixed(-1, 2),
+                                                                                     babelwires::Fixed(2, 2),
+                                                                                     babelwires::Fixed(1, 2));
+
+    babelwires::TypePtr type = fixedTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    const auto* fixedType = type->tryAs<babelwires::FixedType>();
+    ASSERT_NE(fixedType, nullptr);
+
+    auto range = fixedType->getRange();
+    EXPECT_EQ(range.m_min, -1);
+    EXPECT_EQ(range.m_max, 2);
+
+    babelwires::ValueHolder value = type->createValue(testEnvironment.m_typeSystem);
+    ASSERT_TRUE(value);
+
+    const auto* fixedValue = value->tryAs<babelwires::FixedValue>();
+    ASSERT_NE(fixedValue, nullptr);
+    EXPECT_EQ(fixedValue->get(), babelwires::Fixed(1, 2));
+}
+
+TEST(FixedTypeTest, sameKind) {
+    testUtils::TestEnvironment testEnvironment;
+
+    babelwires::TypeExp fixedTypeExp(babelwires::FixedTypeConstructor::getThisIdentifier(),
+                                     babelwires::TypeConstructorArguments{{}, {babelwires::IntValue(2),
+                                                                               babelwires::FixedValue(babelwires::Fixed(-1, 2)),
+                                                                               babelwires::FixedValue(babelwires::Fixed(2, 2)),
+                                                                               babelwires::FixedValue(babelwires::Fixed(1, 2))}});
+
+    babelwires::TypePtr type = fixedTypeExp.tryResolve(testEnvironment.m_typeSystem);
+    babelwires::DefaultFixedType defaultType;
+
+    EXPECT_EQ(defaultType.getFlavour(), type->getFlavour());
+}
+
 TEST(FixedTypeTest, constructorRejectsPrecisionMismatch) {
     testUtils::TestEnvironment testEnvironment;
 

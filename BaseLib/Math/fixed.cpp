@@ -34,11 +34,9 @@ babelwires::Fixed::Fixed() = default;
 
 babelwires::Fixed::Fixed(NativeType numerator, int precision)
     : m_numerator(numerator)
-    , m_precision(normalizePrecision(precision)) {
-    assert(m_precision >= 0);
-    if (m_precision > s_maxPrecision) {
-        m_precision = s_maxPrecision;
-    }
+    , m_precision(precision) {
+    assert(precision >= 0);
+    assert(precision <= s_maxPrecision);
 }
 
 babelwires::Fixed::NativeType babelwires::Fixed::getNumerator() const {
@@ -54,8 +52,9 @@ void babelwires::Fixed::setNumerator(NativeType numerator) {
 }
 
 void babelwires::Fixed::setPrecision(int precision) {
-    m_precision = normalizePrecision(precision);
-    assert(m_precision >= 0);
+    assert(precision >= 0);
+    assert(precision <= s_maxPrecision);
+    m_precision = precision;
 }
 
 bool babelwires::Fixed::operator==(const Fixed& other) const {
@@ -111,7 +110,7 @@ std::string babelwires::Fixed::toString() const {
 
 babelwires::ResultT<babelwires::Fixed> babelwires::Fixed::deserializeFromString(std::string_view str) {
     if (str.empty()) {
-        return Error() << "Fixed::deserializeFromString expected a value but got an empty string.";
+        return Error() << "Expected a Fixed value but got an empty string.";
     }
 
     std::size_t pos = 0;
@@ -121,22 +120,22 @@ babelwires::ResultT<babelwires::Fixed> babelwires::Fixed::deserializeFromString(
         ++pos;
     }
     if (pos == str.size()) {
-        return Error() << "Fixed::deserializeFromString has no digits.";
+        return Error() << "Expected a Fixed value but got no digits.";
     }
 
     const std::size_t decimalPos = str.find('.', pos);
     if (decimalPos != std::string_view::npos) {
         if (str.find('.', decimalPos + 1) != std::string_view::npos) {
-            return Error() << "Fixed::deserializeFromString contains multiple decimal points.";
+            return Error() << "Expected a Fixed value but got multiple decimal points.";
         }
         const std::string_view integerPart = str.substr(pos, decimalPos - pos);
         const std::string_view fractionalPart = str.substr(decimalPos + 1);
         if (integerPart.empty() || fractionalPart.empty()) {
-            return Error() << "Fixed::deserializeFromString requires digits on both sides of the decimal point.";
+            return Error() << "Expected a Fixed value with digits on both sides of the decimal point.";
         }
         if (!std::all_of(integerPart.begin(), integerPart.end(), isDigit) ||
             !std::all_of(fractionalPart.begin(), fractionalPart.end(), isDigit)) {
-            return Error() << "Fixed::deserializeFromString contains non-digit characters.";
+            return Error() << "Expected a Fixed value but got non-digit characters.";
         }
 
         const int precision = static_cast<int>(fractionalPart.size());
@@ -153,7 +152,7 @@ babelwires::ResultT<babelwires::Fixed> babelwires::Fixed::deserializeFromString(
 
     const std::string_view integerPart = str.substr(pos);
     if (integerPart.empty() || !std::all_of(integerPart.begin(), integerPart.end(), isDigit)) {
-        return Error() << "Fixed::deserializeFromString contains invalid integer digits.";
+        return Error() << "Expected a Fixed value but got invalid integer digits.";
     }
 
     const std::uint64_t integerValue = parseUnsigned(integerPart);
@@ -161,14 +160,7 @@ babelwires::ResultT<babelwires::Fixed> babelwires::Fixed::deserializeFromString(
 }
 
 std::size_t babelwires::Fixed::getHash() const {
-    return hash::mixtureOf(0x14A6, m_numerator, m_precision);
-}
-
-int babelwires::Fixed::normalizePrecision(int precision) {
-    if (precision < 0) {
-        return 0;
-    }
-    return std::min(precision, s_maxPrecision);
+    return hash::mixtureOf(m_numerator, m_precision);
 }
 
 std::uint64_t babelwires::Fixed::pow10(int precision) {

@@ -52,7 +52,6 @@ namespace babelwires {
         std::size_t getHash() const;
 
       private:
-        static int normalizePrecision(int precision);
         static std::uint64_t pow10(int precision);
         static std::uint64_t abs64(NativeType value);
 

@@ -67,6 +67,7 @@ TEST(FixedTest, stringConversion) {
 
 TEST(FixedTest, deserializeFromString) {
     EXPECT_EQ(*Fixed::deserializeFromString("0"), Fixed(0, 0));
+    EXPECT_EQ(*Fixed::deserializeFromString("0.0000"), Fixed(0, 4));
     EXPECT_EQ(*Fixed::deserializeFromString("12.34"), Fixed(1234, 2));
     EXPECT_EQ(*Fixed::deserializeFromString("-1.234"), Fixed(-1234, 3));
 
