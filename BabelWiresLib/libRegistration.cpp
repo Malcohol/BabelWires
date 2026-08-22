@@ -29,6 +29,9 @@
 #include <BabelWiresLib/Types/Enum/enumValue.hpp>
 #include <BabelWiresLib/Types/Failure/failureType.hpp>
 #include <BabelWiresLib/Types/File/fileTypeConstructor.hpp>
+#include <BabelWiresLib/Types/Fixed/fixedType.hpp>
+#include <BabelWiresLib/Types/Fixed/fixedTypeConstructor.hpp>
+#include <BabelWiresLib/Types/Fixed/fixedValue.hpp>
 #include <BabelWiresLib/Types/Generic/genericTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Generic/typeVariableTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
@@ -66,12 +69,14 @@ void babelwires::registerLib(babelwires::Context& context) {
     typeSystem.addType<NonNegativeIntType>();
     typeSystem.addType<DefaultTextType>();
     typeSystem.addType<DefaultRationalType>();
+    typeSystem.addType<DefaultFixedType>();
     typeSystem.addType<MapEntryFallbackKind>();
     typeSystem.addType<FailureType>(typeSystem);
     typeSystem.addTypeConstructor<EnumAtomTypeConstructor>();
     typeSystem.addTypeConstructor<EnumUnionTypeConstructor>();
     typeSystem.addTypeConstructor<IntTypeConstructor>();
     typeSystem.addTypeConstructor<RationalTypeConstructor>();
+    typeSystem.addTypeConstructor<FixedTypeConstructor>();
     typeSystem.addTypeConstructor<TextTypeConstructor>();
     typeSystem.addTypeConstructor<SumTypeConstructor>();
     typeSystem.addTypeConstructor<MapTypeConstructor>();
@@ -101,6 +106,7 @@ void babelwires::registerLib(babelwires::Context& context) {
     deserializationRegistry.registerClass<IntValue>();
     deserializationRegistry.registerClass<TextValue>();
     deserializationRegistry.registerClass<RationalValue>();
+    deserializationRegistry.registerClass<FixedValue>();
     deserializationRegistry.registerClass<EnumValue>();
     deserializationRegistry.registerClass<TupleValue>();
     deserializationRegistry.registerClass<MapValue>();
