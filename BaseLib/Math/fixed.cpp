@@ -5,7 +5,7 @@
  *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
-#include <BabelWiresLib/Types/Fixed/fixed.hpp>
+#include <BaseLib/Math/fixed.hpp>
 
 #include <BaseLib/Result/error.hpp>
 #include <BaseLib/Result/resultDSL.hpp>

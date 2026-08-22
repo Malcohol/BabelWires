@@ -10,6 +10,7 @@ SET( COMMON_TESTS_SRCS
    downcastableTest.cpp
    fileDataSinkTest.cpp
    filePathTest.cpp
+   fixedTest.cpp
    enumFlagsTest.cpp
    hashUtilTest.cpp
    identifierTest.cpp

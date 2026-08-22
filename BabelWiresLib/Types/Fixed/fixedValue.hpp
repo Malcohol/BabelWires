@@ -9,7 +9,7 @@
 
 #include <BabelWiresLib/babelWiresLibExport.hpp>
 #include <BabelWiresLib/TypeSystem/editableValue.hpp>
-#include <BabelWiresLib/Types/Fixed/fixed.hpp>
+#include <BaseLib/Math/fixed.hpp>
 
 namespace babelwires {
 

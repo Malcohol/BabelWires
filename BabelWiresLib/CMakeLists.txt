@@ -120,7 +120,6 @@ SET( BABELWIRESLIB_SRCS
 	Types/Enum/enumType.cpp
 	Types/Enum/enumUnionTypeConstructor.cpp
 	Types/Enum/enumValue.cpp
-	Types/Fixed/fixed.cpp
 	Types/Fixed/fixedType.cpp
 	Types/Fixed/fixedTypeConstructor.cpp
 	Types/Fixed/fixedValue.cpp

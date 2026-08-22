@@ -7,7 +7,7 @@
  **/
 #pragma once
 
-#include <BabelWiresLib/babelWiresLibExport.hpp>
+#include <BaseLib/baseLibExport.hpp>
 
 #include <BaseLib/Hash/hash.hpp>
 #include <BaseLib/Result/result.hpp>
@@ -19,7 +19,7 @@
 
 namespace babelwires {
 
-    class BABELWIRESLIB_API Fixed {
+    class BASELIB_API Fixed {
       public:
         using NativeType = std::int64_t;
 
