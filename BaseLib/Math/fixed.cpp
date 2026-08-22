@@ -33,7 +33,7 @@ namespace {
 babelwires::Fixed::Fixed() = default;
 
 babelwires::Fixed::Fixed(NativeType numerator, int precision)
-    : m_numerator(normalizeNumerator(numerator))
+    : m_numerator(numerator)
     , m_precision(normalizePrecision(precision)) {
     assert(m_precision >= 0);
     if (m_precision > s_maxPrecision) {
@@ -50,7 +50,7 @@ int babelwires::Fixed::getPrecision() const {
 }
 
 void babelwires::Fixed::setNumerator(NativeType numerator) {
-    m_numerator = normalizeNumerator(numerator);
+    m_numerator = numerator;
 }
 
 void babelwires::Fixed::setPrecision(int precision) {
@@ -162,13 +162,6 @@ babelwires::ResultT<babelwires::Fixed> babelwires::Fixed::deserializeFromString(
 
 std::size_t babelwires::Fixed::getHash() const {
     return hash::mixtureOf(0x14A6, m_numerator, m_precision);
-}
-
-babelwires::Fixed::NativeType babelwires::Fixed::normalizeNumerator(NativeType numerator) {
-    if (numerator == 0) {
-        return 0;
-    }
-    return numerator;
 }
 
 int babelwires::Fixed::normalizePrecision(int precision) {

@@ -36,6 +36,8 @@ namespace babelwires {
 
         bool operator==(const Fixed& other) const;
         bool operator!=(const Fixed& other) const;
+
+        // Ordering not permitted between Fixed values of different precision.
         bool operator<(const Fixed& other) const;
         bool operator>(const Fixed& other) const;
         bool operator<=(const Fixed& other) const;
@@ -50,7 +52,6 @@ namespace babelwires {
         std::size_t getHash() const;
 
       private:
-        static NativeType normalizeNumerator(NativeType numerator);
         static int normalizePrecision(int precision);
         static std::uint64_t pow10(int precision);
         static std::uint64_t abs64(NativeType value);

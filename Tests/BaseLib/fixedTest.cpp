@@ -37,6 +37,27 @@ TEST(FixedTest, equalityAndHash) {
     EXPECT_NE(set.find(Fixed(1, 2)), set.end());
 }
 
+TEST(FixedTest, comparisonOperators) {
+    Fixed valueA(12, 3);
+    Fixed valueB(13, 3);
+    Fixed valueAA(12, 3);
+
+    EXPECT_TRUE(valueA < valueB);
+    EXPECT_FALSE(valueB < valueA);
+
+    EXPECT_TRUE(valueB > valueA);
+    EXPECT_FALSE(valueA > valueB);
+
+    EXPECT_TRUE(valueA <= valueB);
+    EXPECT_FALSE(valueB <= valueA);
+
+    EXPECT_TRUE(valueB >= valueA);
+    EXPECT_FALSE(valueA >= valueB);
+
+    EXPECT_TRUE(valueA <= valueAA);
+    EXPECT_TRUE(valueA >= valueAA);
+}
+
 TEST(FixedTest, stringConversion) {
     EXPECT_EQ(Fixed(-1234, 3).toString(), "-1.234");
     EXPECT_EQ(Fixed(-0, 4).toString(), "0.0000");
