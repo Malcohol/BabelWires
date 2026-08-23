@@ -20,6 +20,7 @@
 
 #include <BabelWiresLib/Instance/enumTypeInstance.hpp>
 #include <BabelWiresLib/Instance/arrayTypeInstance.hpp>
+#include <BabelWiresLib/Instance/fixedTypeInstance.hpp>
 #include <BabelWiresLib/Instance/intTypeInstance.hpp>
 #include <BabelWiresLib/Instance/mapTypeInstance.hpp>
 #include <BabelWiresLib/Instance/rationalTypeInstance.hpp>
