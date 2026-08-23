@@ -1,0 +1,24 @@
+/**
+ * Model for FixedValues.
+ *
+ * (C) 2026 Malcolm Tyrrell
+ *
+ * Licensed under the GPLv3.0. See LICENSE file.
+ **/
+#pragma once
+
+#include <BabelWiresQtUi/babelWiresQtUiExport.hpp>
+
+#include <BabelWiresQtUi/ValueModels/valueModel.hpp>
+
+namespace babelwires {
+
+    class BABELWIRESQTUI_API FixedValueModel : ValueModel {
+      public:
+        bool isItemEditable() const override;
+        QWidget* createEditor(QWidget* parent) const override;
+        void setEditorData(QWidget* editor) const override;
+        ValueHolder createValueFromEditorIfDifferent(QWidget* editor) const override;
+        bool validateEditor(QWidget* editor) const override;
+    };
+} // namespace babelwires

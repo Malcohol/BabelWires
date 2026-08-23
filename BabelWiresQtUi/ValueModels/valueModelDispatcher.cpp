@@ -9,6 +9,7 @@
 
 #include <BabelWiresQtUi/ValueModels/arrayValueModel.hpp>
 #include <BabelWiresQtUi/ValueModels/enumValueModel.hpp>
+#include <BabelWiresQtUi/ValueModels/fixedValueModel.hpp>
 #include <BabelWiresQtUi/ValueModels/genericTypeValueModel.hpp>
 #include <BabelWiresQtUi/ValueModels/intValueModel.hpp>
 #include <BabelWiresQtUi/ValueModels/mapValueModel.hpp>
@@ -22,6 +23,7 @@
 
 #include <BabelWiresLib/Types/Array/arrayType.hpp>
 #include <BabelWiresLib/Types/Enum/enumType.hpp>
+#include <BabelWiresLib/Types/Fixed/fixedType.hpp>
 #include <BabelWiresLib/Types/Generic/genericType.hpp>
 #include <BabelWiresLib/Types/Int/intType.hpp>
 #include <BabelWiresLib/Types/Map/SumOfMaps/sumOfMapsType.hpp>
@@ -48,6 +50,9 @@ void babelwires::ValueModelDispatcher::init(const ValueModelRegistry& valueModel
     } else if (type->tryAs<RationalType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::RationalValueModel));
         new (m_valueModel) babelwires::RationalValueModel();
+    } else if (type->tryAs<FixedType>()) {
+        static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::FixedValueModel));
+        new (m_valueModel) babelwires::FixedValueModel();
     } else if (type->tryAs<TextType>()) {
         static_assert(sizeof(babelwires::ValueModel) == sizeof(babelwires::StringValueModel));
         new (m_valueModel) babelwires::StringValueModel();

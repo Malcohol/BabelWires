@@ -55,6 +55,7 @@ SET( BABELWIRESQTUI_SRCS
     Dialogs/typeInputDialog.cpp
     ValueModels/arrayValueModel.cpp
     ValueModels/enumValueModel.cpp
+    ValueModels/fixedValueModel.cpp
     ValueModels/genericTypeValueModel.cpp
     ValueModels/intValueModel.cpp
     ValueModels/rationalValueModel.cpp

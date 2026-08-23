@@ -14,6 +14,7 @@ SET( COMMON_SRCS
 	IO/dataSource.cpp
 	IO/fileDataSink.cpp
 	IO/fileDataSource.cpp
+	Math/fixed.cpp
 	Math/rational.cpp
 	Log/log.cpp
 	Log/ostreamLogListener.cpp
