@@ -47,6 +47,44 @@ babelwires::Fixed::Fixed(NativeType numerator, int precision)
     assert(precision <= s_maxPrecision);
 }
 
+babelwires::ResultT<babelwires::Fixed> babelwires::Fixed::fromDouble(double value, int precision) {
+    assert(precision >= 0);
+    assert(precision <= s_maxPrecision);
+
+    if (!std::isfinite(value)) {
+        return Error() << "Cannot convert non-finite double to Fixed";
+    }
+
+    const double scaledValue = std::round(value * static_cast<double>(pow10(precision)));
+    if (scaledValue > static_cast<double>(std::numeric_limits<NativeType>::max())
+        || scaledValue < static_cast<double>(std::numeric_limits<NativeType>::min())) {
+        return Error() << "Fixed value " << value << " overflows when converted to precision " << precision;
+    }
+    return Fixed(static_cast<NativeType>(scaledValue), precision);
+}
+
+babelwires::Fixed babelwires::Fixed::tryFromDouble(double value, int precision) {
+    assert(precision >= 0);
+    assert(precision <= s_maxPrecision);
+
+    if (!std::isfinite(value)) {
+        return Fixed(0, precision);
+    }
+
+    const double scaledValue = std::round(value * static_cast<double>(pow10(precision)));
+    if (scaledValue > static_cast<double>(std::numeric_limits<NativeType>::max())) {
+        return Fixed(std::numeric_limits<NativeType>::max(), precision);
+    }
+    if (scaledValue < static_cast<double>(std::numeric_limits<NativeType>::min())) {
+        return Fixed(std::numeric_limits<NativeType>::min(), precision);
+    }
+    return Fixed(static_cast<NativeType>(scaledValue), precision);
+}
+
+babelwires::Fixed babelwires::Fixed::assertFromDouble(double value, int precision) {
+    return ASSERT_NO_ERROR(fromDouble(value, precision));
+}
+
 babelwires::ResultT<babelwires::Fixed> babelwires::Fixed::fromFixed(Fixed value, int precision) {
     assert(precision >= 0);
     assert(precision <= s_maxPrecision);
@@ -177,6 +215,10 @@ std::string babelwires::Fixed::toString() const {
     }
     os << whole << '.' << fractionText;
     return os.str();
+}
+
+double babelwires::Fixed::toDouble() const {
+    return static_cast<double>(m_numerator) / static_cast<double>(pow10(m_precision));
 }
 
 babelwires::ResultT<babelwires::Fixed> babelwires::Fixed::deserializeFromString(std::string_view str) {

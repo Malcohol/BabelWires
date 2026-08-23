@@ -37,6 +37,15 @@ namespace babelwires {
         /// Convert a Fixed to a different precision, asserting that the exact value is representable.
         static Fixed assertFromFixed(Fixed value, int precision);
 
+        /// Convert a floating-point value to Fixed with the given precision.
+        static ResultT<Fixed> fromDouble(double value, int precision);
+
+        /// Convert a floating-point value to Fixed, clamping if out of range.
+        static Fixed tryFromDouble(double value, int precision);
+
+        /// Convert a floating-point value to Fixed, asserting if conversion fails.
+        static Fixed assertFromDouble(double value, int precision);
+
         NativeType getNumerator() const;
         int getPrecision() const;
 
@@ -53,6 +62,7 @@ namespace babelwires {
         bool operator>=(const Fixed& other) const;
 
         std::string toString() const;
+        double toDouble() const;
         std::string serializeToString() const { return toString(); }
 
         static ResultT<Fixed> deserializeFromString(std::string_view str);
