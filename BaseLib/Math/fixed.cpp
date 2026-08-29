@@ -15,6 +15,7 @@
 #include <cmath>
 #include <ostream>
 #include <sstream>
+#include <iomanip>
 
 namespace {
     constexpr bool isDigit(char c) {
@@ -34,6 +35,36 @@ namespace {
             return static_cast<std::uint64_t>(value);
         }
         return static_cast<std::uint64_t>(-(value + 1)) + 1;
+    }
+
+    std::string toStringHelper(babelwires::Fixed::NativeType numerator, int precision, int minDisplayPrecision) {
+        assert(precision >= 0);
+        assert(minDisplayPrecision >= 0);
+        assert(minDisplayPrecision <= precision);
+        std::ostringstream oss;
+        if (precision == 0) {
+            oss << numerator;
+        } else {
+            const std::uint64_t factor = pow10(precision);
+            const std::uint64_t magnitude = abs64(numerator);
+            const std::uint64_t integerPart = magnitude / factor;
+            const std::uint64_t fractionalPart = magnitude % factor;
+            if (numerator < 0) {
+                oss << '-';
+            }
+            oss << integerPart;
+            if ((minDisplayPrecision > 0) || (fractionalPart != 0)) {
+                // Ensure the fractional part has the required number of leading zeroes.
+                const std::string fractionalPartStr = std::to_string(factor + fractionalPart);
+                std::string_view fractionalPartView = fractionalPartStr.c_str() + 1;
+                // Trim trailing zeros if the fractional part is longer than the minimum display precision
+                while (fractionalPartView.length() > static_cast<std::size_t>(minDisplayPrecision) && fractionalPartView.back() == '0') {
+                    fractionalPartView.remove_suffix(1);
+                }
+                oss << '.' << fractionalPartView;
+            }
+        }
+        return oss.str();
     }
 
 } // namespace
@@ -195,26 +226,13 @@ bool babelwires::Fixed::operator>=(const Fixed& other) const {
 }
 
 std::string babelwires::Fixed::toString() const {
-    if (m_precision == 0) {
-        return std::to_string(m_numerator);
-    }
-    const std::uint64_t factor = pow10(m_precision);
-    const std::uint64_t magnitude = abs64(m_numerator);
-    const std::uint64_t whole = magnitude / factor;
-    const std::uint64_t fractional = magnitude % factor;
+    // For display, only show the necessary precision.
+    return toStringHelper(m_numerator, m_precision, 0);
+}
 
-    std::string fractionText = std::to_string(fractional);
-    const std::size_t requiredDigits = static_cast<std::size_t>(m_precision);
-    if (fractionText.size() < requiredDigits) {
-        fractionText.insert(0, requiredDigits - fractionText.size(), '0');
-    }
-
-    std::ostringstream os;
-    if (m_numerator < 0) {
-        os << '-';
-    }
-    os << whole << '.' << fractionText;
-    return os.str();
+std::string babelwires::Fixed::serializeToString() const {
+    // For serialization, we always use the full precision to ensure exact reconstruction.
+    return toStringHelper(m_numerator, m_precision, m_precision);
 }
 
 double babelwires::Fixed::toDouble() const {

@@ -91,11 +91,34 @@ TEST(FixedTest, comparisonOperators) {
     EXPECT_TRUE(valueA >= valueAA);
 }
 
-TEST(FixedTest, stringConversion) {
-    EXPECT_EQ(Fixed(-1234, 3).toString(), "-1.234");
-    EXPECT_EQ(Fixed(-0, 4).toString(), "0.0000");
+TEST(FixedTest, toString) {
     EXPECT_EQ(Fixed(0, 0).toString(), "0");
-    EXPECT_EQ(Fixed(42, 2).toString(), "0.42");
+    EXPECT_EQ(Fixed(0, 2).toString(), "0");
+    EXPECT_EQ(Fixed(10, 0).toString(), "10");
+    EXPECT_EQ(Fixed(-10, 0).toString(), "-10");
+    EXPECT_EQ(Fixed(1000, 2).toString(), "10");
+    EXPECT_EQ(Fixed(-1000, 2).toString(), "-10");
+    EXPECT_EQ(Fixed(1010, 2).toString(), "10.1");
+    EXPECT_EQ(Fixed(1001, 2).toString(), "10.01");
+    EXPECT_EQ(Fixed(-0, 4).toString(), "0");
+    EXPECT_EQ(Fixed(-1234, 3).toString(), "-1.234");
+    EXPECT_EQ(Fixed(10, 2).toString(), "0.1");
+    EXPECT_EQ(Fixed(1, 2).toString(), "0.01");
+}
+
+TEST(FixedTest, serializeToString) {
+    EXPECT_EQ(Fixed(0, 0).serializeToString(), "0");
+    EXPECT_EQ(Fixed(0, 2).serializeToString(), "0.00");
+    EXPECT_EQ(Fixed(10, 0).serializeToString(), "10");
+    EXPECT_EQ(Fixed(-10, 0).serializeToString(), "-10");
+    EXPECT_EQ(Fixed(1000, 2).serializeToString(), "10.00");
+    EXPECT_EQ(Fixed(-1000, 2).serializeToString(), "-10.00");
+    EXPECT_EQ(Fixed(1010, 2).serializeToString(), "10.10");
+    EXPECT_EQ(Fixed(1001, 2).serializeToString(), "10.01");
+    EXPECT_EQ(Fixed(-0, 4).serializeToString(), "0.0000");
+    EXPECT_EQ(Fixed(-1234, 3).serializeToString(), "-1.234");
+    EXPECT_EQ(Fixed(10, 2).serializeToString(), "0.10");
+    EXPECT_EQ(Fixed(1, 2).serializeToString(), "0.01");
 }
 
 TEST(FixedTest, deserializeFromString) {

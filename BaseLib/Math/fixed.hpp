@@ -63,7 +63,7 @@ namespace babelwires {
 
         std::string toString() const;
         double toDouble() const;
-        std::string serializeToString() const { return toString(); }
+        std::string serializeToString() const;
 
         static ResultT<Fixed> deserializeFromString(std::string_view str);
 
