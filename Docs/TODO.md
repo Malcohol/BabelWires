@@ -36,6 +36,7 @@ Plugin architecture:
   - Domains export symbols for use by plugins. I think this isn't a blocker but it would make them weird plugins.
 * Serialized files should list domains and plugins as dependencies
   - If data depends on stuff from an unloaded plugin, is it an error or a dependency?
+* Ideally, CMake should not have hard-coded knowledge of plugins
 
 Compound Data Flow:
 1. Consider replacing NewValueHolder by a unique_ptr variant inside ValueHolder. This might allow unique ownership to last a bit longer and avoid some unnecessary clones.
@@ -69,18 +70,14 @@ Refactor:
   - Additionally, I would expect to need a value containing a type at some point.
   - Challenge: Perhaps a TypeConstructors might want to receive an unresolvable TypeExp.
 * Move some of the logic in doProcess up into Node.
-* Think about modules and dlls.
-  - Review plugin initialization
-  - add support for removing plugins.
 * Replace assert handler with own macros.
   - Provide an assert false macro that can be used in return values of arbitrary type.
 * Use std::format in logs and exceptions instead of streams - Better, esp. for internationalization
-* Proper CMake usage
 * Arrays and optional modification are special-cased in the project: Could that be handled instead by a virtual "merge" method?
   - Also, they are special cased in the removeModifierCommand. Could that be handled instead by a virtual "removeModifier" method?
   - It's slightly unfortunate to have modifierData know about commands, but overall might be worth it.
 * Clean up uses of toString, operator<<, serializeToString, etc. Make clear which resolves identifiers.
-  - Could have a custom stream (or formatter) which has a lock on the identifier registry. Deadlock a danger here.
+  - Could have a custom stream (or formatter) which has a lock on the identifier registry. Deadlock a danger here!
   - deserializeToString methods should return a tuple which includes the position after the parsed object.
   - OR deserializeToString could take a std::string_view& and update it so it points after the parsed data.
 * Command::initialize could return an enum which allows a subcommand to declare that it's not needed rather than failed. (What's the use-case?)
@@ -89,6 +86,7 @@ Refactor:
   - Should be able to parse pasted unicode rationals too.
 * Processors should have a register method, to reduce boilerplate (see libRegistration for MusicLib)
 * registeredIdentifiers.hpp should provide a macro that defines a static get_<identifier>_id() function directly.
+* Rename "Value" to "ValueWrapper" (or something like that) to avoid confusion with underlying values.
 
 UI:
 * ComplexValueEditors should work for DataLocations other than just ProjectDataLocations.

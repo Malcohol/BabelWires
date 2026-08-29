@@ -58,7 +58,7 @@ namespace {
                 const std::string fractionalPartStr = std::to_string(factor + fractionalPart);
                 std::string_view fractionalPartView = fractionalPartStr.c_str() + 1;
                 // Trim trailing zeros if the fractional part is longer than the minimum display precision
-                while (fractionalPartView.length() > static_cast<std::size_t>(minDisplayPrecision) && fractionalPartView.back() == '0') {
+                while ((fractionalPartView.length() > static_cast<std::size_t>(minDisplayPrecision)) && (fractionalPartView.back() == '0')) {
                     fractionalPartView.remove_suffix(1);
                 }
                 oss << '.' << fractionalPartView;
