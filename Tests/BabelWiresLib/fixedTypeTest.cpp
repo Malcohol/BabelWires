@@ -4,11 +4,13 @@
 #include <BabelWiresLib/Types/Fixed/fixedTypeConstructor.hpp>
 #include <BabelWiresLib/Types/Fixed/fixedValue.hpp>
 
+#include <Domains/TestDomain/testFixedType.hpp>
+
 #include <Tests/BabelWiresLib/TestUtils/testEnvironment.hpp>
 
-TEST(FixedTypeTest, defaultTypeCreateValue) {
+TEST(FixedTypeTest, testTypeCreateValue) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::DefaultFixedType type;
+    testDomain::TestFixedType type;
 
     babelwires::ValueHolder value = type.createValue(testEnvironment.m_typeSystem);
     ASSERT_TRUE(value);
@@ -17,38 +19,40 @@ TEST(FixedTypeTest, defaultTypeCreateValue) {
     EXPECT_EQ(fixedValue->get(), babelwires::Fixed(0, babelwires::FixedType::s_defaultPrecision));
 }
 
-TEST(FixedTypeTest, defaultTypeGetRange) {
-    babelwires::DefaultFixedType type;
+TEST(FixedTypeTest, testTypeGetRange) {
+    testDomain::TestFixedType type;
 
     auto range = type.getRange();
 
-    EXPECT_EQ(range.m_min, std::numeric_limits<babelwires::Fixed::NativeType>::min());
-    EXPECT_EQ(range.m_max, std::numeric_limits<babelwires::Fixed::NativeType>::max());
+    EXPECT_EQ(range.m_min, -250);
+    EXPECT_EQ(range.m_max, 425);
 }
 
-TEST(FixedTypeTest, defaultTypeIsValidValue) {
+TEST(FixedTypeTest, testTypeIsValidValue) {
     testUtils::TestEnvironment testEnvironment;
-    babelwires::DefaultFixedType type;
+    testDomain::TestFixedType type;
 
-    EXPECT_TRUE(type.isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(1, 2))));
+    EXPECT_TRUE(type.isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(-250, 2))));
     EXPECT_TRUE(type.isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(0, 2))));
-    EXPECT_TRUE(type.isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(std::numeric_limits<babelwires::Fixed::NativeType>::max(), 2))));
+    EXPECT_TRUE(type.isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(425, 2))));
+    EXPECT_FALSE(type.isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(-251, 2))));
+    EXPECT_FALSE(type.isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(426, 2))));
     EXPECT_FALSE(type.isValidValue(testEnvironment.m_typeSystem, babelwires::FixedValue(babelwires::Fixed(1, 3))));
 }
 
-TEST(FixedTypeTest, defaultTypeGetKind) {
-    babelwires::DefaultFixedType type;
+TEST(FixedTypeTest, testTypeGetKind) {
+    testDomain::TestFixedType type;
 
     EXPECT_FALSE(type.getFlavour().empty());
 }
 
-TEST(FixedTypeTest, defaultTypeIsRegistered) {
+TEST(FixedTypeTest, testTypeIsRegistered) {
     testUtils::TestEnvironment testEnvironment;
 
     const babelwires::TypePtr foundType =
-        testEnvironment.m_typeSystem.tryGetRegisteredTypeById(babelwires::DefaultFixedType::getThisIdentifier());
+        testEnvironment.m_typeSystem.tryGetRegisteredTypeById(testDomain::TestFixedType::getThisIdentifier());
     EXPECT_TRUE(foundType);
-    EXPECT_NE(foundType->tryAs<babelwires::DefaultFixedType>(), nullptr);
+    EXPECT_NE(foundType->tryAs<testDomain::TestFixedType>(), nullptr);
 }
 
 TEST(FixedTypeTest, constructedTypeCreateValue) {
@@ -142,9 +146,9 @@ TEST(FixedTypeTest, sameKind) {
                                                                                babelwires::FixedValue(babelwires::Fixed(1, 2))}});
 
     babelwires::TypePtr type = fixedTypeExp.tryResolve(testEnvironment.m_typeSystem);
-    babelwires::DefaultFixedType defaultType;
+    testDomain::TestFixedType testType;
 
-    EXPECT_EQ(defaultType.getFlavour(), type->getFlavour());
+    EXPECT_EQ(testType.getFlavour(), type->getFlavour());
 }
 
 TEST(FixedTypeTest, constructorRejectsPrecisionMismatch) {

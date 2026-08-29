@@ -10,6 +10,7 @@
 #include <BabelWiresLib/Types/Text/textType.hpp>
 
 #include <Domains/TestDomain/testEnum.hpp>
+#include <Domains/TestDomain/testFixedType.hpp>
 
 namespace {
     babelwires::ShortId getIdForA() {

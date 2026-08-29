@@ -42,13 +42,4 @@ namespace babelwires {
         int m_precision;
     };
 
-    class BABELWIRESLIB_API DefaultFixedType : public FixedType {
-      public:
-        DOWNCASTABLE(DefaultFixedType, FixedType);
-
-        DefaultFixedType();
-
-        REGISTERED_TYPE("fixed", "Fixed", "7f0e7bb1-68d0-48ad-a5c9-81db7a43f89a", 1);
-    };
-
 } // namespace babelwires

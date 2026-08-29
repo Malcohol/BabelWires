@@ -60,6 +60,3 @@ std::optional<babelwires::SubtypeOrder> babelwires::FixedType::compareSubtypeHel
 std::string babelwires::FixedType::valueToString(const TypeSystem& typeSystem, const ValueHolder& v) const {
     return v->as<FixedValue>().toString();
 }
-
-babelwires::DefaultFixedType::DefaultFixedType()
-    : FixedType(getThisIdentifier(), s_defaultPrecision) {}

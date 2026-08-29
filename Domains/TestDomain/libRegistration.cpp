@@ -10,6 +10,7 @@
 #include <Domains/TestDomain/testArrayType.hpp>
 #include <Domains/TestDomain/testEnum.hpp>
 #include <Domains/TestDomain/testFileFormats.hpp>
+#include <Domains/TestDomain/testFixedType.hpp>
 #include <Domains/TestDomain/testParallelProcessor.hpp>
 #include <Domains/TestDomain/testProcessor.hpp>
 #include <Domains/TestDomain/testRecordType.hpp>
@@ -32,6 +33,7 @@ void testDomain::registerLib(babelwires::Context& context) {
     typeSystem.addType<testDomain::TestSubEnum>();
     typeSystem.addType<testDomain::TestSubSubEnum1>();
     typeSystem.addType<testDomain::TestSubSubEnum2>();
+    typeSystem.addType<testDomain::TestFixedType>();
     typeSystem.addType<testDomain::TestSimpleArrayType>(typeSystem);
     typeSystem.addType<testDomain::TestCompoundArrayType>(typeSystem);
     typeSystem.addType<testDomain::TestSimpleRecordType>(typeSystem);
