@@ -1,5 +1,7 @@
 #include <BaseLib/IO/fileDataSource.hpp>
 
+#include <BaseLib/IO/bufferDataSource.hpp>
+
 #include <Tests/TestUtils/tempFilePath.hpp>
 
 #include <gtest/gtest.h>
@@ -211,4 +213,42 @@ TEST(DataSource, peekAndRewind) {
         EXPECT_TRUE(foo.isEof());
         EXPECT_TRUE(foo.close());
     }
+}
+
+TEST(DataSource, readBytes) {
+    testUtils::TempFilePath fooPath("foo.txt");
+    {
+        std::ofstream foo(fooPath.m_asString, std::ios_base::binary);
+        foo << testContents;
+    }
+
+    {
+        auto fooResult = FileDataSource::open(fooPath);
+        ASSERT_TRUE(fooResult.has_value());
+        auto foo = std::move(*fooResult);
+        auto readResult = foo.readBytes(10);
+        ASSERT_TRUE(readResult.has_value());
+        EXPECT_EQ(std::string(readResult->begin(), readResult->end()), "abcdefghij");
+        EXPECT_FALSE(foo.isEof());
+        auto readResult2 = foo.readBytes(16);
+        ASSERT_TRUE(readResult2.has_value());
+        EXPECT_EQ(std::string(readResult2->begin(), readResult2->end()), "klmnopqrstuvwxyz");
+        EXPECT_TRUE(foo.isEof());
+        EXPECT_TRUE(foo.close());
+    }
+}
+
+TEST(DataSource, bufferDataSource) {
+    std::vector<Byte> buffer(testContents, testContents + 3);
+    BufferDataSource bufferSource(buffer);
+    auto byteResult = bufferSource.getNextByte();
+    ASSERT_TRUE(byteResult.has_value());
+    EXPECT_EQ(*byteResult, testContents[0]);
+    byteResult = bufferSource.getNextByte();
+    ASSERT_TRUE(byteResult.has_value());
+    EXPECT_EQ(*byteResult, testContents[1]);
+    byteResult = bufferSource.getNextByte();
+    ASSERT_TRUE(byteResult.has_value());
+    EXPECT_EQ(*byteResult, testContents[2]);
+    EXPECT_TRUE(bufferSource.isEof());
 }

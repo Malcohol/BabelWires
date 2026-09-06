@@ -15,6 +15,11 @@ babelwires::DataSource::DataSource()
     : m_positionOfCursorOrBuffer(-1)
     , m_indexInBuffer(0) {}
 
+babelwires::DataSource::DataSource(std::vector<Byte> initialBuffer)
+    : m_positionOfCursorOrBuffer(-1)
+    , m_indexInBuffer(0)
+    , m_buffer(std::move(initialBuffer)) {}
+
 babelwires::DataSource::~DataSource() {}
 
 int babelwires::DataSource::getRemainingBufferSize() const {
@@ -89,4 +94,13 @@ void babelwires::DataSource::rewind() {
 
 int babelwires::DataSource::getAbsolutePosition() const {
     return m_positionOfCursorOrBuffer + m_indexInBuffer;
+}
+
+babelwires::ResultT<std::vector<babelwires::Byte>> babelwires::DataSource::readBytes(int numBytes) {
+    std::vector<babelwires::Byte> result;
+    for (int i = 0; i < numBytes; ++i) {
+        ASSIGN_OR_ERROR(babelwires::Byte b, getNextByte());
+        result.push_back(b);
+    }
+    return result;
 }

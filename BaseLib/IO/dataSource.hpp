@@ -2,13 +2,13 @@
  * A DataSource provides a source of bytes with a simple mechanism for rewinding.
  *
  * (C) 2021 Malcolm Tyrrell
- * 
+ *
  * Licensed under the GPLv3.0. See LICENSE file.
  **/
 #pragma once
 
-#include <BaseLib/common.hpp>
 #include <BaseLib/Result/result.hpp>
+#include <BaseLib/common.hpp>
 
 namespace babelwires {
 
@@ -38,8 +38,13 @@ namespace babelwires {
         /// Reset the stream to the last rewind point.
         void rewind();
 
+        /// Consume numBytes and return them.
+        /// Returns an error if the source ends before numBytes are read.
+        ResultT<std::vector<Byte>> readBytes(int numBytes);
+
       protected:
         DataSource();
+        DataSource(std::vector<Byte> initialBuffer);
 
         virtual bool doIsEof() = 0;
 

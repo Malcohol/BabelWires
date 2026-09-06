@@ -13,6 +13,7 @@ SET( COMMON_SRCS
 	IO/dataSink.cpp
 	IO/dataSource.cpp
 	IO/fileDataSink.cpp
+	IO/bufferDataSource.cpp
 	IO/fileDataSource.cpp
 	Math/fixed.cpp
 	Math/rational.cpp
