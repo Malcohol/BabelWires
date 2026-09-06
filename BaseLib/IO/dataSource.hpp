@@ -15,8 +15,6 @@ namespace babelwires {
     /// Provide a source of bytes with a simple mechanism for rewinding.
     class BASELIB_API DataSource {
       public:
-        DataSource();
-
         virtual ~DataSource();
 
         /// Consume a byte.
@@ -41,6 +39,8 @@ namespace babelwires {
         void rewind();
 
       protected:
+        DataSource();
+
         virtual bool doIsEof() = 0;
 
         virtual ResultT<babelwires::Byte> doGetNextByte() = 0;
